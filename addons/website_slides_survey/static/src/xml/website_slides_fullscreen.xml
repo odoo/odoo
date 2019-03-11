@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-extend="website.slides.fullscreen">
-        <t t-jquery=".o_wslides_fs_content" t-operation="append">
-            <div class="o_wslides_fs_certification" t-if="slide.slide_type == 'certification' &amp;&amp; !slide.certificationDone">
-                <a class="btn btn-primary" t-att-href="'/slides/slide/' + slide.slug" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
-            </div>
-            <div class="o_wslides_fs_certification" t-if="slide.slide_type == 'certification' &amp;&amp; slide.certificationDone">
-                <a role="button" t-att-data-survey_id="slide.certificationId" class="btn btn-primary o_wslides_survey_download_certification" href="#">
-                    <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
-                </a>
-            </div>
-        </t>
+    <t t-name="website.slides.fullscreen.certification">
+        <div class="o_wslides_fs_certification">
+            <a t-if="!slide.certificationDone" class="btn btn-primary" t-att-href="slide.certificationUrl" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
+            <a t-if="slide.certificationDone" role="button" t-att-data-survey_id="slide.certificationId" class="btn btn-primary o_wslides_survey_download_certification" href="#">
+                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+            </a>
+        </div>
     </t>
-
     <t t-extend="website.slides.fullscreen.title">
         <t t-jquery=".o_wslides_fs_slide_title_span" t-operation="before">
-            <i t-if="widget.get('slide').type === 'certification'" class="fa fa-trophy mr-2 text"></i>
+            <i t-if="widget.get('slide').slide_type === 'certification'" class="fa fa-trophy mr-2 text"></i>
         </t>
     </t>
 </templates>

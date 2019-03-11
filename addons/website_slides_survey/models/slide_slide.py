@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class SlidePartnerRelation(models.Model):
@@ -65,3 +66,22 @@ class Slide(models.Model):
                         'slide_partner_id': new_slide_partner.id
                     }
                 )
+
+    def action_get_slide_survey_url(self, slide):
+            if not all(s.channel_id.is_member for s in self):
+                raise UserError(_('You cannot have access to the certification if you are not among its members.'))
+
+            return self._action_get_slide_survey_url(self.env.user.partner_id, slide)
+
+    def _action_get_slide_survey_url(self, target_partner, slide):
+        certification_url = None
+        if not self.env.user._is_public() and slide.slide_type == 'certification' and slide.survey_id:
+            if slide.channel_id.is_member:
+                user_membership_id_sudo = slide.user_membership_id.sudo()
+                quizz_passed = user_membership_id_sudo.survey_quizz_passed
+                if not quizz_passed and user_membership_id_sudo.user_input_ids:
+                    last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
+                        lambda user_input: user_input.create_date, reverse=True
+                    ))
+                    certification_url = last_user_input._get_survey_url()
+        return certification_url
