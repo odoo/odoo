@@ -1270,7 +1270,7 @@ QUnit.module('relational_fields', {
                 '</tree>',
         });
         assert.containsN(list, '.o_field_many2manytags .badge', 2, "there should be 2 tags");
-        assert.containsNone(list, '.dropdown-toggle', "the tags should not be dropdowns");
+        assert.containsNone(list, '.badge.dropdown-toggle', "the tags should not be dropdowns");
 
         testUtils.intercept(list, 'switch_view', function (event) {
             assert.strictEqual(event.data.view_type, "form", "should switch to form view");
