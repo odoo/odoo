@@ -33,6 +33,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_zoom.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_dynamic_variants.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_deleted_archived_variants.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_list_view_b2c.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_no_variant_attribute.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_options.js"></script>
         </xpath>
@@ -103,8 +104,7 @@
     <template id="products_item" name="Products item">
         <t t-set="product_href" t-value="request.httprequest.url_root + keep('shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
-        <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
 
         <form action="/shop/cart/update" method="post">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -136,7 +136,7 @@
                             <t t-if="True"><!-- compatibility 12.0 -->
                                 <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </t>
-                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                         </b>
@@ -156,15 +156,10 @@
 
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
-            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <input name="product_id" t-att-value="product_variant.id" type="hidden" />
-            <t t-if="product._is_quick_add_to_cart_possible()">
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
+            <t t-if="product_variant_id">
                 <a href="#" role="button" class="btn btn-secondary btn-sm a-submit" aria-label="Shopping cart" title="Shopping cart">
-                    <span class="fa fa-shopping-cart" />
-                </a>
-            </t>
-            <t t-elif="product._is_add_to_cart_possible()">
-                <a role="button" class="btn btn-secondary btn-sm" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -629,12 +624,14 @@
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio">
-                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                        <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
+                        <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
+                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="combination_info['list_price']" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                         <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
-                            <span t-esc="variant_id.display_name"/>
-                            <t t-set="diff_price" t-value="website.currency_id.compare_amounts(variant_id.price, variant_id.product_tmpl_id.price)"/>
-                            <span class="badge badge-pill" t-if="diff_price != 0">
-                                <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(variant_id.price - variant_id.product_tmpl_id.price)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-esc="combination_info['display_name']"/>
+                            <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
+                            <span class="badge badge-pill badge-secondary" t-if="diff_price != 0">
+                                <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </span>
                         </label>
                     </div>

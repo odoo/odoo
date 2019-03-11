@@ -230,7 +230,7 @@ class WebsiteSale(ProductConfiguratorController):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        Product = request.env['product.template']
+        Product = request.env['product.template'].with_context(bin_size=True)
 
         Category = request.env['product.public.category']
         search_categories = False

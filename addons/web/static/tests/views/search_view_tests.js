@@ -1009,7 +1009,6 @@ QUnit.module('Search View', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            debug: 1,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     if (searchRead === 1) {
@@ -1082,6 +1081,35 @@ QUnit.module('Search View', {
 
         assert.containsNone(actionManager, '.o_searchview_facet_label');
         assert.strictEqual(rpcs, 2, "should have reloaded");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('selecting (no result) triggers a re-render', function (assert) {
+        assert.expect(3);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(10);
+
+        // 'a' key to filter nothing on bar
+        actionManager.$('.o_searchview_input').val('a');
+        actionManager.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete .o-selection-focus').text(), "(no result)",
+            "there should be no result for 'a' in bar");
+
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+
+        assert.containsNone(actionManager, '.o_searchview_facet_label');
+        assert.strictEqual(actionManager.$('.o_searchview_input').val(), "",
+            "the search input should be re-rendered");
 
         actionManager.destroy();
     });

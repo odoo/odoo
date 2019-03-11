@@ -10,7 +10,7 @@ import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from odoo.tests import common, HttpCase
+from odoo.tests import common, HttpCase, tagged
 
 
 def attrs(**kwargs):
@@ -264,6 +264,7 @@ class TestViewSaving(common.TransactionCase):
         )
 
 
+@tagged('-at_install', 'post_install')
 class TestCowViewSaving(common.TransactionCase):
     def setUp(self):
         super(TestCowViewSaving, self).setUp()
