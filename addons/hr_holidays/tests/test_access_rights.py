@@ -10,7 +10,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger
 
 
-@tests.tagged('access_rights')
+@tests.tagged('access_rights', 'post_install', '-at_install')
 class TestLeavesRights(TestHrHolidaysBase):
 
     def setUp(self):
