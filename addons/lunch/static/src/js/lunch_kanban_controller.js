@@ -18,11 +18,9 @@ var LunchKanbanController = KanbanController.extend({
         add_product: '_onAddProduct',
         change_location: '_onLocationChanged',
         change_user: '_onUserChanged',
-        edit_order: '_onEditOrder',
         open_wizard: '_onOpenWizard',
         order_now: '_onOrderNow',
         remove_product: '_onRemoveProduct',
-        save_order: '_onSaveOrder',
         unlink_order: '_onUnlinkOrder',
     }),
 
@@ -134,12 +132,6 @@ var LunchKanbanController = KanbanController.extend({
             self.reload();
         });
     },
-    _onEditOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = true;
-        this.reload();
-    },
     _onLocationChanged: function (ev) {
         var self = this;
 
@@ -207,12 +199,6 @@ var LunchKanbanController = KanbanController.extend({
         }).then(function () {
             self.reload();
         });
-    },
-    _onSaveOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = false;
-        this.reload();
     },
     _onUserChanged: function (ev) {
         ev.stopPropagation();
