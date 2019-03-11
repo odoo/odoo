@@ -60,8 +60,6 @@ var TableWidget = PosBaseWidget.extend({
         this.selected = false;
         this.moved    = false;
         this.dragpos  = {x:0, y:0};
-        this.handle_dragging = false;
-        this.handle   = null;
     },
     // computes the absolute position of a DOM mouse event, used
     // when resizing tables
@@ -94,81 +92,25 @@ var TableWidget = PosBaseWidget.extend({
         }
     },
     // drag and drop for moving the table, at drag start
-    dragstart_handler: function(event,$el,drag){
-        if (this.selected && !this.handle_dragging) {
-            this.dragging = true;
-            this.dragpos  = { x: drag.offsetX, y: drag.offsetY };
-        }
+    dragstart_handler:   function(event, ui){
+        this.dragging = true;
     },
     // drag and drop for moving the table, at drag end
-    dragend_handler:   function(){
+    dragend_handler:   function(event, ui){
         this.dragging = false;
-    },
-    // drag and drop for moving the table, at every drop movement.
-    dragmove_handler: function(event,$el,drag){
-        if (this.dragging) {
-            var dx   = drag.offsetX - this.dragpos.x;
-            var dy   = drag.offsetY - this.dragpos.y;
-
-            this.dragpos = { x: drag.offsetX, y: drag.offsetY };
-            this.moved   = true;
-
-            this.table.position_v += dy;
-            this.table.position_h += dx;
-
-            $el.css(this.table_style());
-        }
+        this.moved = true;
+        this.table.position_h = ui.position.left - this.table.width/2;
+        this.table.position_v = ui.position.top - this.table.height/2;
+        this.$el.css(this.table_style());
     },
     // drag and dropping the resizing handles
-    handle_dragstart_handler: function(event, $el, drag) {
-        if (this.selected && !this.dragging) {
-            this.handle_dragging = true;
-            this.handle_dragpos  = this.event_position(event);
-            this.handle          = drag.target;
-        }
-    },
-    handle_dragend_handler: function() {
-        this.handle_dragging = false;
-    },
-    handle_dragmove_handler: function(event) {
-        if (this.handle_dragging) {
-            var pos  = this.event_position(event);
-            var dx   = pos.x - this.handle_dragpos.x;
-            var dy   = pos.y - this.handle_dragpos.y;
-
-            this.handle_dragpos = pos;
-            this.moved   = true;
-
-            var cl     = this.handle.classList;
-
-            var MIN_SIZE = 40;  // smaller than this, and it becomes impossible to edit.
-
-            var tw = Math.max(MIN_SIZE, this.table.width);
-            var th = Math.max(MIN_SIZE, this.table.height);
-            var tx = this.table.position_h;
-            var ty = this.table.position_v;
-
-            if (cl.contains('left') && tw - dx >= MIN_SIZE) {
-                tw -= dx;
-                tx += dx;
-            } else if (cl.contains('right') && tw + dx >= MIN_SIZE) {
-                tw += dx;
-            }
-
-            if (cl.contains('top') && th - dy >= MIN_SIZE) {
-                th -= dy;
-                ty += dy;
-            } else if (cl.contains('bottom') && th + dy >= MIN_SIZE) {
-                th += dy;
-            }
-
-            this.table.width  = tw;
-            this.table.height = th;
-            this.table.position_h = tx;
-            this.table.position_v = ty;
-
-            this.$el.css(this.table_style());
-        }
+    handle_dragmove_handler: function(event, ui) {
+        this.moved = true;
+        this.table.width  = ui.size.width;
+        this.table.height = ui.size.height;
+        this.table.position_h = ui.position.left - ui.originalSize.width/2;
+        this.table.position_v = ui.position.top - ui.originalSize.height/2;
+        this.$el.css(this.table_style());
     },
     set_table_color: function(color){
         this.table.color = _.escape(color);
@@ -225,6 +167,15 @@ var TableWidget = PosBaseWidget.extend({
     select: function() {
         this.selected = true;
         this.renderElement();
+
+        this.$el.resizable({
+            handles: 'all',
+            resize: this.handle_dragmove_handler.bind(this),
+        });
+
+        this.$el.draggable({
+            stop: this.dragend_handler.bind(this),
+        });
     },
     // deselect the table (should be called via the floorplan)
     deselect: function() {
@@ -344,15 +295,6 @@ var TableWidget = PosBaseWidget.extend({
         this._super();
 
         this.update_click_handlers();
-
-        this.$el.on('dragstart', function(event,drag){ self.dragstart_handler(event,$(this),drag); });
-        this.$el.on('drag',      function(event,drag){ self.dragmove_handler(event,$(this),drag); });
-        this.$el.on('dragend',   function(event,drag){ self.dragend_handler(event,$(this),drag); });
-
-        var handles = this.$el.find('.table-handle');
-        handles.on('dragstart',  function(event,drag){ self.handle_dragstart_handler(event,$(this),drag); });
-        handles.on('drag',       function(event,drag){ self.handle_dragmove_handler(event,$(this),drag); });
-        handles.on('dragend',    function(event,drag){ self.handle_dragend_handler(event,$(this),drag); });
     },
 });
 
