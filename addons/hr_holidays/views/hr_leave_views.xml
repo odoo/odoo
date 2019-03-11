@@ -165,10 +165,10 @@
                         <field name="holiday_status_id" domain="['|',('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}"/>
 
                         <label for="request_date_from" string="From"/>
-                        <div>
+                        <div class="o_hr_holidays_request_date_from">
                             <field name="date_from" invisible="1"/>
                             <field name="date_to" invisible="1"/>
-                            <div class="o_row o_row_readonly">
+                            <div class="o_row o_row_readonly o_hr_holidays_request_date">
                                 <field name="request_date_from" class="oe_inline"
                                     attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <span class="oe_inline"

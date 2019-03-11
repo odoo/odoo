@@ -1,0 +1,15 @@
+@include media-breakpoint-down(sm) {
+    .o_hr_holidays_request_date_from {
+        flex-wrap: wrap;
+        flex-flow: column;
+
+        > .o_row.o_row_readonly {
+            width: 100%;
+
+            &.o_hr_holidays_request_date {
+                justify-content: space-around;
+                flex-flow: column;
+            }
+        }
+    }
+}
