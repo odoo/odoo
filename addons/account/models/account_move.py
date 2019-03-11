@@ -1904,12 +1904,13 @@ class AccountPartialReconcile(models.Model):
         # Get value of matched percentage from both move before reconciliating
         lines = self.env['account.move.line'].browse(aml)
         lines._payment_invoice_match()
-        if lines[0].account_id.internal_type in ('receivable', 'payable'):
+        tax_cash_basis_entry = not self.env.context.get('skip_tax_cash_basis_entry') and lines[0].account_id.internal_type in ('receivable', 'payable')
+        if tax_cash_basis_entry:
             percentage_before_rec = lines._get_matched_percentage()
         # Reconcile
         res = super(AccountPartialReconcile, self).create(vals)
         # if the reconciliation is a matching on a receivable or payable account, eventually create a tax cash basis entry
-        if lines[0].account_id.internal_type in ('receivable', 'payable'):
+        if tax_cash_basis_entry:
             res.create_tax_cash_basis_entry(percentage_before_rec)
         res._compute_partial_lines()
         return res
