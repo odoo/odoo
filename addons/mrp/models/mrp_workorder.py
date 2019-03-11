@@ -338,8 +338,7 @@ class MrpWorkorder(models.Model):
                 move_line.done_wo = True
 
         # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
+        self._start_nextworkorder()
 
         self.move_line_ids.filtered(
             lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
@@ -408,6 +407,12 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    @api.multi
+    def _start_nextworkorder(self):
+        for record in self:
+            if record.next_work_order_id.state == 'pending':
+                record.next_work_order_id.state = 'ready'
 
     @api.multi
     def button_start(self):
