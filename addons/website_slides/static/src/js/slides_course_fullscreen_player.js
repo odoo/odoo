@@ -6,6 +6,7 @@ odoo.define('website_slides.fullscreen', function (require) {
     var Widget = require('web.Widget');
     var core = require('web.core');
     var QWeb = core.qweb;
+    var session = require('web.session');
 
     var Quiz = require('website_slides.quiz');
 
@@ -29,10 +30,10 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         _loadYoutubeAPI: function () {
             var def = $.Deferred();
-            if(!document.querySelector('script[src="' + this.youtubeUrl + '"]')) {
+            if (!document.querySelector('script[src="' + this.youtubeUrl + '"]')) {
                 var tag = document.createElement('script');
                 tag.setAttribute('src', this.youtubeUrl);
-                tag.onload = function() {
+                tag.onload = function () {
                     def.resolve();
                 };
                 document.head.appendChild(tag);
@@ -198,7 +199,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         /**
          * Get the index of the current slide entry (slide and/or quiz)
          */
-        _getCurrentIndex: function() {
+        _getCurrentIndex: function () {
             var slide = this.get('slideEntry');
             var currentIndex = _.findIndex(this.slideEntries, function (entry) {
                 return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
@@ -305,7 +306,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             var result = this._super.apply(this,arguments);
             this.initialSlideID = defaultSlideId;
             this.slides = this._preprocessSlideData(slides);
-
+            console.log(session);
             var slide;
             if (defaultSlideId) {
                 slide = this._findSlide({id: defaultSlideId});
@@ -316,12 +317,12 @@ odoo.define('website_slides.fullscreen', function (require) {
             this.set('slide', slide);
 
             // extract data for sidebar
-            var sidebarData = _.map(this.slides, function(slide) {
+            var sidebarData = _.map(this.slides, function (slide) {
                 return {
                     id: slide.id,
                     hasNext: slide.hasNext,
                     isQuiz: slide.isQuiz,
-                }
+                };
             });
             this.sidebar = new Sidebar(this, sidebarData, {
                 id: slide.id,
@@ -401,7 +402,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          * Extend the slide data list to add informations about rendering method, and other
          * specific values according to their slide_type.
          */
-        _preprocessSlideData: function(slidesDataList) {
+        _preprocessSlideData: function (slidesDataList) {
             _.each(slidesDataList, function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
@@ -477,7 +478,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         _setCompleted: function (slideId){
             var self = this;
             var slide = this._findSlide({id: slideId});
-            if (!slide.completed) {  // no useless RPC call
+            if (!slide.completed && !session.is_website_user) {  // no useless RPC call
                 return this._rpc({
                     route: '/slides/slide/set_completed',
                     params: {
@@ -505,10 +506,10 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onChangeSlide: function (){
             var self = this;
             var slide = this.get('slide');
-            return this._fetchSlideContent().then(function() { // update title and render content
+            return this._fetchSlideContent().then(function () { // update title and render content
                 self.$('.o_wslides_fs_slide_title').html(QWeb.render('website.slides.fullscreen.title', {widget: self}));
                 return self._renderSlide();
-            }).then(function() {
+            }).then(function () {
                 if (slide._autoSetDone) {
                     self._setCompleted(slide.id);
                 }
@@ -580,7 +581,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         _getSlides: function (){
             var $slides = this.$('.o_wslides_fs_sidebar_list_item');
             var slideList = [];
-            $slides.each(function() {
+            $slides.each(function () {
                 var slideData = $(this).data();
                 slideList.push(slideData);
             });

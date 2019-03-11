@@ -3,12 +3,18 @@ odoo.define('website_slides_survey.fullscreen', function (require) {
 
     var core = require('web.core');
     var QWeb = core.qweb;
+    var session = require('web.session');
     var Fullscreen = require('website_slides.fullscreen');
 
     Fullscreen.include({
         xmlDependencies: (Fullscreen.prototype.xmlDependencies || []).concat(
             ["/website_slides_survey/static/src/xml/website_slides_fullscreen.xml"]
         ),
+        /**
+         * Fetches the certification url in case it wasn't present in the data
+         *
+         * @private
+         */
         _fetchCertificationUrl: function (){
             var slide = this.get("slide");
             var self = this;
