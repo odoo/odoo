@@ -637,9 +637,12 @@ class AccountBankStatementLine(models.Model):
 
             # Create The payment
             payment = self.env['account.payment']
+            partner_id = self.partner_id or (aml_dict.get('move_line') and aml_dict['move_line'].partner_id) or self.env['res.partner']
             if abs(total)>0.00001:
                 payment_vals = self._prepare_payment_vals(total)
-                if self.partner_id and len(account_types) == 1:
+                if not payment_vals['partner_id']:
+                    payment_vals['partner_id'] = partner_id.id
+                if payment_vals['partner_id'] and len(account_types) == 1:
                     payment_vals['partner_type'] = 'customer' if account_types == receivable_account_type else 'supplier'
                 payment = payment.create(payment_vals)
 

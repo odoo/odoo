@@ -7,13 +7,13 @@ var base = require('web_editor.base');
 // This tour relies on a data created from the python test.
 tour.register('tour_shop_no_variant_attribute', {
     test: true,
-    url: '/shop?search=Test Product',
+    url: '/shop?search=Test Product 3',
     wait_for: base.ready(),
 },
 [
     {
-        content: "select Test Product",
-        trigger: '.oe_product_cart a:containsExact("Test Product")',
+        content: "select Test Product 3",
+        trigger: '.oe_product_cart a:containsExact("Test Product 3")',
     },
     {
         content: "check price",

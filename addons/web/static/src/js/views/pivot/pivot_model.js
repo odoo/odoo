@@ -993,7 +993,6 @@ var PivotModel = AbstractModel.extend({
         var groupBys;
         var m;
 
-
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
                 for (var k = 0; k < data[index].length; k++) {
