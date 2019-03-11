@@ -49,6 +49,7 @@ class TestAutoBlacklist(common.TransactionCase):
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({
             'name': 'test',
+            'subject': 'Booooounce!',
             'mailing_domain': [('id', 'in',
                                 [self.mailing_contact_1.id])],
             'body_html': 'This is a bounced mail for auto blacklist demo'})
