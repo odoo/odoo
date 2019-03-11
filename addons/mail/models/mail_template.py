@@ -447,6 +447,7 @@ class MailTemplate(models.Model):
                     post_process=(field == 'body_html'))
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
+                    results[res_id]['template_full_ctx'] = Template._context
             # compute recipients
             if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
                 results = template.generate_recipients(results, template_res_ids)
@@ -523,6 +524,8 @@ class MailTemplate(models.Model):
         if notif_layout and values['body_html']:
             try:
                 template = self.env.ref(notif_layout, raise_if_not_found=True)
+                if 'template_full_ctx' in values and 'lang' in values['template_full_ctx']:
+                    template = template.with_context(lang=values['template_full_ctx']['lang'])
             except ValueError:
                 _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
             else:
