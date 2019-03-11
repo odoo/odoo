@@ -359,6 +359,8 @@ class ProductProduct(models.Model):
             # prefetched o2m have to be reloaded (because of active_test)
             # (eg. product.template: product_variant_ids)
             self.invalidate_cache()
+            # `_get_first_possible_variant_id` depends on variants active state
+            self.clear_caches()
         return res
 
     @api.multi
