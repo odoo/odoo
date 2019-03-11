@@ -61,10 +61,8 @@ class DeliveryCarrier(models.Model):
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
-    return_label_on_delivery = fields.Boolean(string="Generate Return Label", required=True, default=False,
-    help="The return label is automatically generated at the delivery.")
-    get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", required=True, default=False,
-    help="The return label can be downloaded by the customer from the customer portal.")
+    return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
+    get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", help="The return label can be downloaded by the customer from the customer portal.")
 
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
@@ -169,10 +167,13 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
             return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
 
-    def get_return_label(self,pickings):
+    def get_return_label(self,pickings, tracking_number=None, origin_date=None):
         self.ensure_one()
         if self.can_generate_return:
-            return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings)
+            return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings, tracking_number, origin_date)
+
+    def get_return_label_prefix(self):
+        return 'ReturnLabel-%s' % self.delivery_type
 
     def get_tracking_link(self, picking):
         ''' Ask the tracking link to the service provider
