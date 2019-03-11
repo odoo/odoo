@@ -178,7 +178,12 @@
                             </p>
                         </div>
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.token)">
-                            Start Survey
+                            <t t-if="survey.certificate">
+                                Start Certification
+                            </t>
+                            <t t-else="">
+                                Start Survey
+                            </t>
                         </a>
                     </div>
                 </div>

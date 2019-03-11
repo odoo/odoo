@@ -24,6 +24,13 @@
                             icon="fa-envelope-o">
                             <field string="Invitations" name="invite_count" widget="statinfo"/>
                         </button>
+                        <button name="action_survey_user_input_certified"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('certificate', '=', False)]}"
+                            icon="fa-trophy">
+                            <field string="Certified" name="certified_count" widget="statinfo"/>
+                        </button>
                         <button name="action_survey_user_input_completed"
                             type="object"
                             class="oe_stat_button"
