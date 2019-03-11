@@ -3487,6 +3487,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('embedded readonly one2many with handle widget', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles" readonly="1">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_int" widget="handle"/>' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_row_handle').length, 3,
+            "there should be 3 handles (one for each row)");
+        assert.strictEqual(form.$('.o_row_handle:visible').length, 0,
+            "the handles should be hidden in readonly mode");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_row_handle').length, 3,
+            "the handles should still be there");
+        assert.strictEqual(form.$('.o_row_handle:visible').length, 0,
+            "the handles should still be hidden (on readonly fields)");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange for embedded one2many in a one2many with a second page', function (assert) {
         assert.expect(1);
 
