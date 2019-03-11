@@ -532,6 +532,8 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = self.invoice_ids.id
+        result['context']['default_origin'] = self.name
+        result['context']['default_reference'] = self.partner_ref
         return result
 
     @api.multi
