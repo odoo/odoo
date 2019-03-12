@@ -209,7 +209,8 @@ exports.PosModel = Backbone.Model.extend({
         label: 'load_partners',
         fields: ['name','street','city','state_id','country_id','vat',
                  'phone','zip','mobile','email','barcode','write_date',
-                 'property_account_position_id','property_product_pricelist'],
+                 'property_account_position_id','property_product_pricelist',
+                 'lang'],
         domain: [['customer','=',true]],
         loaded: function(self,partners){
             self.partners = partners;
@@ -355,6 +356,9 @@ exports.PosModel = Backbone.Model.extend({
         },
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
+            self.product_ids = _.map(products, function(p) {
+                return p.id;
+            });
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
             var conversion_rate = self.currency.rate / self.company_currency.rate;
             self.db.add_products(_.map(products, function (product) {
@@ -503,8 +507,23 @@ exports.PosModel = Backbone.Model.extend({
             self.barcode_reader.set_barcode_parser(barcode_parser);
             return barcode_parser.is_loaded();
         },
-    }
-    ],
+    }, {
+        label: 'translations',
+        model: 'ir.translation',
+        fields: ['res_id', 'value', 'name', 'lang'],
+        domain: function (self) {
+            return [
+                ['res_id', 'in', self.product_ids],
+                ['name', '=', 'product.product,name']
+            ];
+        },
+        loaded: function (self, terms) {
+            self.translations = _.object(_.map(terms, function(term) {
+                var term_key = _.str.sprintf('%s,%s,%s', term.name, term.res_id, term.lang);
+                return [term_key, term.value];
+            }));
+        },
+    }],
 
     // loads all the needed data on the sever. returns a promise indicating when all the data has loaded.
     load_server_data: function(){
@@ -1495,6 +1514,14 @@ exports.Orderline = Backbone.Model.extend({
     get_product: function(){
         return this.product;
     },
+    // return the trnaslated name of the product
+    get_product_name: function () {
+        var product = this.get_product();
+        var client = this.pos.get_client();
+        var client_lang = client && client.lang;
+        var term_key = _.str.sprintf('product.product,name,%s,%s', product.id, client_lang);
+        return this.pos.translations[term_key] || product.display_name;
+    },
     // selects or deselects this orderline
     set_selected: function(selected){
         this.selected = selected;
@@ -1571,7 +1598,7 @@ exports.Orderline = Backbone.Model.extend({
     generate_wrapped_product_name: function() {
         var MAX_LENGTH = 24; // 40 * line ratio of .6
         var wrapped = [];
-        var name = this.get_product().display_name;
+        var name = this.get_product_name();
         var current_line = "";
 
         while (name.length > 0) {

@@ -1527,7 +1527,7 @@
                 </colgroup>
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().display_name"/>
+                        <t t-esc="orderline.get_product_name()"/>
                         <t t-if="orderline.display_discount_policy() == 'without_discount' &amp;&amp; 
                             orderline.get_unit_display_price() != orderline.get_lst_price()">
                             <div class="pos-disc-font">

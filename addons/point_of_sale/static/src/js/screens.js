@@ -34,12 +34,17 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
+var translation = require('web.translation');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
+var session = require('web.session');
+var webQWeb = require('web.QWeb');
+var ajax = require('web.ajax');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 var round_pr = utils.round_precision;
+var _t_qweb = {};
 
 /*--------------------------------------*\
  |          THE SCREEN WIDGET           |
@@ -1600,6 +1605,10 @@ gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
 
 var ReceiptScreenWidget = ScreenWidget.extend({
     template: 'ReceiptScreenWidget',
+    init: function () {
+        _t_qweb[_t.database.parameters.code] = QWeb;
+        this._super.apply(this, arguments);
+    },
     show: function(){
         this._super();
         var self = this;
@@ -1756,7 +1765,30 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     render_receipt: function() {
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
+        var self = this;
+        var client = this.pos.get_client();
+        var client_lang = client && client.lang;
+        if (!client_lang) {
+            var ticketQWeb = Promise.resolve(QWeb);
+            // self.$('.pos-receipt-container').html(Qweb.render('PosTicket', self.get_receipt_render_env()));
+        } else if (_t_qweb[client_lang]){
+            ticketQWeb = Promise.resolve(_t_qweb[client_lang]);
+        } else {
+            var new_t = new translation.TranslationDataBase().build_translation_function();
+            ticketQWeb = new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function() {
+                var newQweb = new webQWeb(false, {
+                    _t: new_t
+                });
+                return ajax.loadXML('/point_of_sale/static/src/xml/pos.xml', newQweb).then(function() {
+                    _t_qweb[client_lang] = newQweb;
+                    return newQweb;
+                });
+            });
+        }
+        ticketQWeb.then(function(qweb){
+            self.$('.pos-receipt-container').html(qweb.render('PosTicket', self.get_receipt_render_env()));
+
+        });
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
