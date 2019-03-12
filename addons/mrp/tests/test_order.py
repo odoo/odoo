@@ -702,6 +702,58 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
+    def test_product_produce_7(self):
+        """ Add components in 2 differents sub location. Do not reserve the MO
+        and checks that the move line created takes stock from location that
+        contains needed raw materials.
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=2)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.stock_shelf_1 = self.env.ref('stock.stock_location_components')
+        self.stock_shelf_2 = self.env.ref('stock.stock_location_14')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_1, 3)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 3)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_2, 2)
+
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_shelf_1, 1)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_shelf_2, 1)
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+        produce_wizard = produce_form.save()
+
+        self.assertEqual(len(produce_wizard.workorder_line_ids), 2)
+        produce_wizard.do_produce()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+        produce_wizard = produce_form.save()
+
+        self.assertEqual(len(produce_wizard.workorder_line_ids), 2)
+        produce_wizard.do_produce()
+
+        mo.button_mark_done()
+        mo_move_line_p1 = mo.move_raw_ids[1].move_line_ids
+        self.assertEqual(sum(mo_move_line_p1.filtered(lambda ml: ml.location_id == self.stock_location).mapped('qty_done')), 3)
+        self.assertEqual(sum(mo_move_line_p1.filtered(lambda ml: ml.location_id == self.stock_shelf_1).mapped('qty_done')), 3)
+        self.assertEqual(sum(mo_move_line_p1.filtered(lambda ml: ml.location_id == self.stock_shelf_2).mapped('qty_done')), 2)
+
+        self.assertEqual(self.env['stock.quant']._gather(p1, self.stock_location, strict=True).quantity, 0)
+        self.assertEqual(self.env['stock.quant']._gather(p1, self.stock_shelf_1, strict=True).quantity, 0)
+        self.assertEqual(self.env['stock.quant']._gather(p1, self.stock_shelf_2, strict=True).quantity, 0)
+
+        self.assertEqual(self.env['stock.quant']._gather(p2, self.stock_shelf_1, strict=True).quantity, 0)
+        self.assertEqual(self.env['stock.quant']._gather(p2, self.stock_shelf_2, strict=True).quantity, 0)
+
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')
         bom = self.env.ref('mrp.mrp_bom_plastic_laminate')

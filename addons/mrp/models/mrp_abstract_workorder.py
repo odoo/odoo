@@ -303,7 +303,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         # quantity into stock, we take the move location. Anyway, no
         # reservation is made, so it is still possible to change it afterwards.
         for quant in quants:
-            quantity = quant.reserved_quantity - quant.quantity
+            quantity = quant.quantity - quant.reserved_quantity
             rounding = quant.product_uom_id.rounding
             if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
                     float_compare(quantity, 0, precision_rounding=rounding) <= 0):
