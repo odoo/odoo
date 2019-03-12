@@ -69,7 +69,6 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
-        this.debug = config.debug;
     },
 
     //--------------------------------------------------------------------------
@@ -182,7 +181,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _getNumberOfCols: function () {
         var n = this.columns.length;
-        n = this.hiddenColumns ? n + 1 : n;
+        n = this.optionalColumns ? n + 1 : n;
         return this.hasSelectors ? n + 1 : n;
     },
     /**
@@ -209,11 +208,55 @@ var ListRenderer = BasicRenderer.extend({
             return reject;
         });
         var colGroup = _.groupBy(this.allColumns, function (col) {
-            return col.attrs.optional === "True" && !(col.attrs.modifiers && col.attrs.modifiers.required) ? "hiddenColumns" : "columns";
+            return (col.attrs.optional && !!JSON.parse(col.attrs.optional))
+                && !(col.attrs.modifiers && col.attrs.modifiers.required) ? "optionalColumns" : "columns";
         });
         this.columns = colGroup.columns;
-        this.hiddenColumns = colGroup.hiddenColumns;
+        this.optionalColumns = colGroup.optionalColumns;
         this.displayedColumns = _.map(this.columns, function (col) {return col.attrs.name});
+    },
+    /**
+     * Render a single <th> with dropdown menu to display optional columns of view.
+     *
+     * @private
+     * @returns {jQueryElement} a <th> element
+     */
+    _renderAddColumnOption: function () {
+        var self = this;
+        var $th = $('<th>', {
+            class: 'o_add_column text-center dropdown',
+        });
+        var $a = $("<a>", {
+            class: "dropdown-toggle text-dark",
+            href: "#",
+            role: "button",
+            'data-toggle': "dropdown",
+            'aria-expanded': false,
+        }).append($("<i class='fa fa-ellipsis-v'></i>"));
+        $a.appendTo($th);
+
+        var $dropdown = $("<div>", {
+            class: 'dropdown-menu o_add_column_dropdown',
+        });
+        _.map(this.optionalColumns, function (col) {
+            var txt = self.state.fields[col.attrs.name].string +
+                (config.debug && " (" + col.attrs.name +")" || '');
+            var $label =$('<label>', {
+                text: txt,
+                for: col.attrs.name,
+            });
+            var $checkBox = $("<input>", {
+                type: "checkbox",
+                name: col.attrs.name,
+                id: col.attrs.name,
+                checked: _.contains(self.displayedColumns, col.attrs.name) ? true : false,
+            });
+            $dropdown.append($("<div>", {
+                class: "dropdown-item",
+            }).append($checkBox.add($label)));
+        });
+        $dropdown.appendTo($th);
+        return $th;
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
@@ -533,58 +576,13 @@ var ListRenderer = BasicRenderer.extend({
     _renderHeader: function () {
         var $tr = $('<tr>')
             .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
-        if (this.hiddenColumns) {
-            $tr.append(this._renderAddColumnOption(this.hiddenColumns));
+        if (this.optionalColumns) {
+            $tr.append(this._renderAddColumnOption());
         }
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('th'));
         }
         return $('<thead>').append($tr);
-    },
-    /**
-     * Render a single <th> with dropdown menu to display hidden nodes of view.
-     *
-     * @private
-     * @param {Object} nodes
-     * @returns {jQueryElement} a <th> element
-     */
-    _renderAddColumnOption: function (nodes) {
-        var self = this;
-        var $th = $('<th>', {
-            class: 'o_add_column text-center dropdown',
-        });
-
-        var $a = $("<a>", {
-            class: "dropdown-toggle text-dark",
-            href: "#",
-            role: "button",
-            'data-toggle': "dropdown",
-            'aria-expanded': false,
-        });
-        $("<i class='fa fa-ellipsis-v'></i>").appendTo($a);
-        var $div = $("<div>", {
-            class: 'dropdown-menu o_add_column_dropdown',
-        });
-        $div.append(_.map(nodes, function (col) {
-            var txt = self.debug ? self.state.fields[col.attrs.name].string + " (" + col.attrs.name +")" : self.state.fields[col.attrs.name].string;
-            var $label =$('<label>', {
-                text: txt,
-                for: col.attrs.name,
-            });
-            var $checkBox = $("<input>", {
-                type: "checkbox",
-                value: col.attrs.name,
-                name: col.attrs.name,
-                id: col.attrs.name,
-                checked: _.contains(self.displayedColumns, col.attrs.name) ? true : false,
-            });
-            return $("<div>", {
-                class: "dropdown-item",
-            }).append($checkBox.add($label));
-        }));
-        $a.appendTo($th);
-        $div.appendTo($th);
-        return $th;
     },
     /**
      * Render a single <th> with the informations for a column. If it is not a
@@ -649,6 +647,9 @@ var ListRenderer = BasicRenderer.extend({
         var $cells = this.columns.map(function (node, index) {
             return self._renderBodyCell(record, node, index, { mode: 'readonly' });
         });
+        if (this.optionalColumns) {
+            this._renderOptionalCell($cells);
+        }
 
         var $tr = $('<tr/>', { class: 'o_data_row' })
             .data('id', record.id)
@@ -803,6 +804,30 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * When the user clicks on the checkbox in optional fields dropdown that column added
+     * to listview and displayed(not permanentely)
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAddColumn: function (ev) {
+        var self = this;
+        var currentElement = ev.currentTarget;
+        if (!currentElement.checked) {
+            var rmIndex = _.findIndex(this.columns, function (col) {
+                return col.attrs.name === currentElement.name;
+            });
+            this.displayedColumns.splice(this.displayedColumns.indexOf(currentElement.name), 1);
+            this.columns.splice(rmIndex, 1);
+        } else {
+            this.displayedColumns.push(currentElement.name);
+            this.columns = _.filter(this.allColumns, function (col) {
+                return _.contains(self.displayedColumns, col.attrs.name);
+            });
+        }
+        this._renderView();
+    },
+    /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
      *
@@ -884,24 +909,6 @@ var ListRenderer = BasicRenderer.extend({
         var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
-    },
-    _onAddColumn: function (ev) {
-        var currentElement = ev.currentTarget;
-        if (!currentElement.checked) {
-            var rmIndex = _.findIndex(this.columns, function (col) {
-                return col.attrs.name === currentElement.value;
-            });
-            var rmCol = this.columns[rmIndex];
-            this.displayedColumns.splice(this.displayedColumns.indexOf(rmCol.attrs.name), 1);
-            this.columns.splice(rmIndex, 1);
-        } else {
-            var self = this;
-            this.displayedColumns.push(currentElement.value);
-            this.columns = _.filter(this.allColumns, function (col) {
-                return _.contains(self.displayedColumns, col.attrs.name);
-            });
-        }
-        this._renderView();
     },
 });
 
