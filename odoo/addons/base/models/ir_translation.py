@@ -840,7 +840,7 @@ class IrTranslation(models.Model):
         if langs:
             lang_params = langs.read([
                 "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
+                "grouping", "decimal_point", "thousands_sep", "week_start", "code"])[0]
             lang_params['week_start'] = int(lang_params['week_start'])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
