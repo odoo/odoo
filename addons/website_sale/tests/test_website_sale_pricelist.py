@@ -136,6 +136,29 @@ def simulate_frontend_context(self, website_id=1):
     self.addCleanup(patcher.stop)
 
 
+class TestWebsitePriceListHttp(HttpCase):
+    def test_get_pricelist_available_multi_company(self):
+        ''' Test that the `property_product_pricelist` of `res.partner` is not
+            computed as SUPERUSER_ID.
+            Indeed, `property_product_pricelist` is a _compute that ends up
+            doing a search on `product.pricelist` that woule bypass the
+            pricelist multi-company `ir.rule`. Then it would return pricelists
+            from another company and the code would raise an access error when
+            reading that `property_product_pricelist`.
+        '''
+        test_company = self.env['res.company'].create({'name': 'Test Company'})
+        self.env['product.pricelist'].create({
+            'name': 'Backend Pricelist For "Test Company"',
+            'website_id': False,
+            'company_id': test_company.id,
+            'sequence': 1,
+        })
+
+        self.authenticate('portal', 'portal')
+        r = self.url_open('/shop')
+        self.assertEqual(r.status_code, 200, "The page should not raise an access error because of reading pricelists from other companies")
+
+
 class TestWebsitePriceListMultiCompany(TransactionCase):
     def setUp(self):
         ''' Create a basic multi-company pricelist environment:

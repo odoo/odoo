@@ -68,7 +68,7 @@ class Website(models.Model):
                     if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
                         pricelists |= group_pricelists
 
-        partner = self.env.user.partner_id
+        partner = self.env.user.partner_id.sudo(user=self.env.user)
         is_public = self.user_id.id == self.env.user.id
         if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
             # `property_product_pricelist` is already multi-website compliant
@@ -104,7 +104,7 @@ class Website(models.Model):
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.property_product_pricelist
+        partner_pl = partner.sudo(user=self.env.user).property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request and request.session.get('website_sale_current_pl') or None,
