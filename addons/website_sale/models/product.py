@@ -24,7 +24,7 @@ class ProductPricelist(models.Model):
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
-        # website._get_pl() is cached to avoid to recompute at each request the
+        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
         # list of available pricelists. So, we need to invalidate the cache when
         # we change the config of website price list to force to recompute.
         website = self.env['website']
