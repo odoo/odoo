@@ -55,6 +55,7 @@ class Website(models.Model):
         :param int order_pl: the current cart pricelist
         :returns: list of pricelist ids
         """
+        self.ensure_one()
         pricelists = self.env['product.pricelist']
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
@@ -76,6 +77,7 @@ class Website(models.Model):
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
 
+    # DEPRECATED (Not used anymore) -> Remove me in master (saas12.3)
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
         pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
         return self.env['product.pricelist'].browse(pl_ids)
