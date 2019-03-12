@@ -928,7 +928,7 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.model and record.res_id and 'message_ids' in self.env[record.model]:
+            if record.model and record.res_id and issubclass(self.pool[record.model], self.pool['mail.thread']):
                 self.env[record.model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',
