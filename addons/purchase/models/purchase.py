@@ -532,6 +532,8 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = self.invoice_ids.id
+        result['context']['default_origin'] = self.name
+        result['context']['default_reference'] = self.partner_ref
         return result
 
     @api.multi
@@ -757,9 +759,11 @@ class PurchaseOrderLine(models.Model):
     def _create_stock_moves(self, picking):
         moves = self.env['stock.move']
         done = self.env['stock.move'].browse()
-        for line in self:
-            for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
+        with self.env.norecompute():
+            for line in self:
+                for val in line._prepare_stock_moves(picking):
+                    done += moves.create(val)
+        self.recompute()
         return done
 
     @api.multi
