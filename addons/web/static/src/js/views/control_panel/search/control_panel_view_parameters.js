@@ -25,7 +25,7 @@ var PERIOD_OPTIONS = [
 ];
 
 // for GroupBy menu
-var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime', 'integer'];
 var DEFAULT_INTERVAL = 'month';
 var INTERVAL_OPTIONS = [
         {description: _lt('Day'), optionId: 'day', groupId: 1},
