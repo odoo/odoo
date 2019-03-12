@@ -74,6 +74,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         this.$el.last().filter('.o_tz_warning').remove();
         this.$el = this.$el.first();
         var value = this.$el.val();
+        var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
 
         if (this.$option) {
             this.$option.html(this.$option.html().split(' ')[0]);
@@ -90,15 +91,18 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         }
 
         if (this.mismatch){
-            var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
             $span.insertAfter(this.$el);
-            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to the timezone set on your user's preferences."));
+            $span.attr('title', _t("Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."));
             this.$el = this.$el.add($span);
 
             this.$option = this.$('option').filter(function () {
                 return $(this).attr('value') === value;
             });
             this._renderDateTimeTimezone();
+        } else if (value == "false") {
+            $span.insertAfter(this.$el);
+            $span.attr('title', _t("Set a timezone on your user"));
+            this.$el = this.$el.add($span);
         }
     },
     /**
