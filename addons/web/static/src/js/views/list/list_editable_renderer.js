@@ -1062,7 +1062,13 @@ ListRenderer.include({
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
         var rowIndex = $tr.prop('rowIndex') - 1;
-        var fieldIndex = Math.max($tr.find('.o_data_cell').not('.o_list_button').index($td), 0);
+        var fieldIndex = Math.max(
+            $tr.find('.o_data_cell')
+                .not('.o_list_button')
+                .not(':has(button.o_list_button)')
+                .index($td),
+            0
+        );
         this._selectCell(rowIndex, fieldIndex, {event: event});
     },
     /**

@@ -182,7 +182,6 @@ class SaleOrderOption(models.Model):
     @api.multi
     def button_add_to_order(self):
         self.add_option_to_order()
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.multi
     def add_option_to_order(self):
