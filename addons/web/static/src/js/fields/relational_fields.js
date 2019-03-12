@@ -21,6 +21,7 @@ var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
@@ -1397,6 +1398,59 @@ var FieldX2Many = AbstractField.extend({
     },
 });
 
+var One2ManyKanbanRecord = KanbanRecord.extend({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Apply same logic as in the ListRenderer: buttons with type="object"
+     * are disabled for no saved yet records, as calling the python method
+     * with no id would make no sense.
+     *
+     * To avoid to expose this logic inside all Kanban views, we define
+     * a specific KanbanRecord Class for the One2many case.
+     *
+     * This could be refactored to prevent from duplicating this logic in
+     * list and kanban views.
+     *
+     * @private
+     */
+    _postProcessObjectButtons: function () {
+        var self = this;
+        // if the res_id is defined, it's already correctly handled by the Kanban record global event click
+        if (!this.state.res_id) {
+            this.$('.oe_kanban_action[data-type=object]').each(function (index, button) {
+                var $button = $(button);
+                if ($button.attr('warn')) {
+                    $button.on('click', function (e) {
+                        e.stopPropagation();
+                        self.do_warn(_t('Warning'), _t('Please click on the "save" button first.'));
+                    });
+                } else {
+                    $button.attr('disabled', 'disabled');
+                }
+            });
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._postProcessObjectButtons();
+        });
+    },
+});
+
+var One2ManyKanbanRenderer = KanbanRenderer.extend({
+    config: _.extend({}, KanbanRenderer.prototype.config, {
+        KanbanRecord: One2ManyKanbanRecord,
+    }),
+});
+
 var FieldOne2Many = FieldX2Many.extend({
     className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
@@ -1450,6 +1504,16 @@ var FieldOne2Many = FieldX2Many.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+      * @override
+      * @private
+      */
+    _getRenderer: function () {
+        if (this.view.arch.tag === 'kanban') {
+            return One2ManyKanbanRenderer;
+        }
+        return this._super.apply(this, arguments);
+    },
     /**
      * Overrides to only render the buttons if the 'create' action is available.
      *
