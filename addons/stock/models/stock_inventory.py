@@ -13,16 +13,24 @@ class Inventory(models.Model):
     _order = "date desc, id desc"
 
     @api.model
-    def _default_location_id(self):
-        company_user = self.env.user.company_id
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
-        if warehouse:
-            return warehouse.lot_stock_id.id
-        else:
-            raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name,))
+    def _default_location_ids(self):
+        # No default location if multilocations setting is active
+        if not self.env['res.users'].has_group('stock.group_stock_multi_locations'):
+            company_user = self.env.user.company_id
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+            if warehouse:
+                return [(4, warehouse.lot_stock_id.id, None)]
+            else:
+                raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name,))
+
+    def _domain_location_id(self):
+        company_user = self.env.user.company_id.id
+        return ['&',
+                ('company_id', '=', company_user),
+                ('usage', 'not in', ['supplier', 'production'])]
 
     name = fields.Char(
-        'Inventory Reference',
+        'Inventory Reference', default="Inventory",
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     date = fields.Datetime(
@@ -50,13 +58,13 @@ class Inventory(models.Model):
         readonly=True, index=True, required=True,
         states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('stock.inventory'))
-    location_id = fields.Many2one(
-        'stock.location', 'Inventoried Location',
-        readonly=True, required=True,
+    location_ids = fields.Many2many(
+        'stock.location', string='Inventoried Location(s)',
+        readonly=True,
         states={'draft': [('readonly', False)]},
-        default=_default_location_id)
-    product_id = fields.Many2one(
-        'product.product', 'Inventoried Product',
+        default=_default_location_ids, domain=_domain_location_id)
+    product_ids = fields.Many2many(
+        'product.product', string='Inventoried Product(s)',
         readonly=True,
         states={'draft': [('readonly', False)]},
         help="Specify Product to focus your inventory on a particular Product.")
@@ -75,25 +83,20 @@ class Inventory(models.Model):
         copy=False, readonly=True,
         states={'draft': [('readonly', False)]},
         help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number.")
-    filter = fields.Selection(
-        string='Inventory of', selection='_selection_filter',
-        required=True,
-        default='none',
-        help="If you do an entire inventory, you can choose 'All Products' and it will prefill the inventory with the current stock.  If you only do some products  "
-             "(e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the "
-             "system propose for a single product / lot /... ")
     total_qty = fields.Float('Total Quantity', compute='_compute_total_qty')
     category_id = fields.Many2one(
         'product.category', 'Product Category',
         readonly=True, states={'draft': [('readonly', False)]},
         help="Specify Product Category to focus your inventory on a particular Category.")
     exhausted = fields.Boolean('Include Exhausted Products', readonly=True, states={'draft': [('readonly', False)]})
+    start_empty = fields.Boolean('Empty Inventory', default=False,
+        help="Allows to start with an empty inventory.")
 
     @api.one
-    @api.depends('product_id', 'line_ids.product_qty')
+    @api.depends('product_ids', 'line_ids.product_qty')
     def _compute_total_qty(self):
         """ For single product inventory, total quantity of the counted """
-        if self.product_id:
+        if self.product_ids and len(self.product_ids) == 1:
             self.total_qty = sum(self.mapped('line_ids').mapped('product_qty'))
         else:
             self.total_qty = 0
@@ -104,60 +107,6 @@ class Inventory(models.Model):
             if inventory.state == 'done':
                 raise UserError(_('You cannot delete a validated inventory adjustement.'))
         return super(Inventory, self).unlink()
-
-    @api.model
-    def _selection_filter(self):
-        """ Get the list of filter allowed according to the options checked
-        in 'Settings\Warehouse'. """
-        res_filter = [
-            ('none', _('All products')),
-            ('category', _('One product category')),
-            ('product', _('One product only')),
-            ('partial', _('Select products manually'))]
-
-        if self.user_has_groups('stock.group_tracking_owner'):
-            res_filter += [('owner', _('One owner only')), ('product_owner', _('One product for a specific owner'))]
-        if self.user_has_groups('stock.group_production_lot'):
-            res_filter.append(('lot', _('One Lot/Serial Number')))
-        if self.user_has_groups('stock.group_tracking_lot'):
-            res_filter.append(('pack', _('A Pack')))
-        return res_filter
-
-    @api.onchange('filter')
-    def _onchange_filter(self):
-        if self.filter not in ('product', 'product_owner'):
-            self.product_id = False
-        if self.filter != 'lot':
-            self.lot_id = False
-        if self.filter not in ('owner', 'product_owner'):
-            self.partner_id = False
-        if self.filter != 'pack':
-            self.package_id = False
-        if self.filter != 'category':
-            self.category_id = False
-        if self.filter == 'product':
-            self.exhausted = True
-            if self.product_id:
-                return {'domain': {'product_id': [('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)]}}
-
-    @api.onchange('location_id')
-    def _onchange_location_id(self):
-        if self.location_id.company_id:
-            self.company_id = self.location_id.company_id
-
-    @api.one
-    @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
-    def _check_filter_product(self):
-        if self.filter == 'none' and self.product_id and self.location_id and self.lot_id:
-            return
-        if self.filter not in ('product', 'product_owner') and self.product_id:
-            raise UserError(_('The selected product doesn\'t belong to that owner..'))
-        if self.filter != 'lot' and self.lot_id:
-            raise UserError(_('The selected lot number doesn\'t exist.'))
-        if self.filter not in ('owner', 'product_owner') and self.partner_id:
-            raise UserError(_('The selected owner doesn\'t have the proprietary of that product.'))
-        if self.filter != 'pack' and self.package_id:
-            raise UserError(_('The selected inventory options are not coherent, the package doesn\'t exist.'))
 
     def action_reset_product_qty(self):
         self.mapped('line_ids').write({'product_qty': 0})
@@ -211,28 +160,77 @@ class Inventory(models.Model):
         })
 
     def action_start(self):
-        for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
-            vals = {'state': 'confirm', 'date': fields.Datetime.now()}
-            if (inventory.filter != 'partial') and not inventory.line_ids:
-                vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
-            inventory.write(vals)
-        return True
+        for inventory in self:
+            # Confirms the inventory adjustment and generates its lines if inventory
+            # state is draft
+            if inventory.state == 'draft':
+                vals = {
+                    'state': 'confirm',
+                    'date': fields.Datetime.now()
+                }
+                if not inventory.line_ids and not inventory.start_empty:
+                    vals['line_ids'] = [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]
+                inventory.write(vals)
+            return inventory.action_open_inventory()
 
-    def action_inventory_line_tree(self):
-        action = self.env.ref('stock.action_inventory_line_tree').read()[0]
-        action['context'] = {
-            'default_location_id': self.location_id.id,
-            'default_product_id': self.product_id.id,
-            'default_prod_lot_id': self.lot_id.id,
-            'default_package_id': self.package_id.id,
-            'default_partner_id': self.partner_id.id,
-            'default_inventory_id': self.id,
+    def action_open_inventory(self):
+        self.ensure_one()
+        action = {
+            'type': 'ir.actions.act_window',
+            'views': [(self.env.ref('stock.stock_inventory_line_tree2').id, 'tree')],
+            'view_mode': 'tree',
+            'name': _('Inventory Lines'),
+            'res_model': 'stock.inventory.line',
+        }
+        context = {
+            'active_id': self.id,
+        }
+
+        # Define domains
+        domain = [
+            ('id', 'in', self.line_ids.ids),
+            ('location_id.usage', 'in', ['internal', 'transit'])]
+        if self.location_ids:
+            context['default_location_id'] = self.location_ids[0].id
+            if len(self.location_ids) == 1:
+                domain += [('location_id', 'child_of', self.location_ids[0].id)]
+                if not self.location_ids[0].child_ids:
+                    context['readonly_location_id'] = True
+            else:
+                domain += [('location_id', 'in', self.location_ids.ids)]
+
+        if self.product_ids:
+            if len(self.product_ids) == 1:
+                domain += [('product_id', '=', self.product_ids[0].id)]
+                context['default_product_id'] = self.product_ids[0].id
+            else:
+                domain += [('product_id', 'in', self.product_ids.ids)]
+
+        action['context'] = context
+        action['domain'] = domain
+        return action
+
+    def action_view_related_move_lines(self):
+        self.ensure_one()
+        domain = [('move_id', 'in', self.move_ids.ids)]
+        action = {
+            'name': _('Move Lines'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'view_type': 'list',
+            'view_mode': 'list,form',
+            'domain': domain,
         }
         return action
 
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
-        locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
+        locations = self.env['stock.location']
+        if len(self.location_ids) > 0:
+            for location_id in self.location_ids:
+                locations |= self.env['stock.location'].search([('id', 'child_of', [location_id.id])])
+        else:
+            locations = self.env['stock.location'].search(self._domain_location_id())
         domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
         args = (tuple(locations.ids),)
 
@@ -257,10 +255,10 @@ class Inventory(models.Model):
             domain += ' AND lot_id = %s'
             args += (self.lot_id.id,)
         #case 3: Filter on One product
-        if self.product_id:
+        if len(self.product_ids) == 1:
             domain += ' AND product_id = %s'
-            args += (self.product_id.id,)
-            products_to_filter |= self.product_id
+            args += (self.product_ids[0].id,)
+            products_to_filter |= self.product_ids[0]
         #case 4: Filter on A Pack
         if self.package_id:
             domain += ' AND package_id = %s'
@@ -311,7 +309,7 @@ class Inventory(models.Model):
             vals.append({
                 'inventory_id': self.id,
                 'product_id': product.id,
-                'location_id': self.location_id.id,
+                'location_id': self.location_ids[0].id or None,
             })
         return vals
 
@@ -321,13 +319,42 @@ class InventoryLine(models.Model):
     _description = "Inventory Line"
     _order = "product_id, inventory_id, location_id, prod_lot_id"
 
+    def _default_editable(self):
+        active_model = self._context.get('active_model', False)
+        if active_model == 'stock.inventory':
+            return True
+        return False
+
+    def _default_inventory_id(self):
+        if self._context.get('active_model') == 'stock.inventory':
+            return self._context.get('active_id', None)
+
+    def _domain_location_id(self):
+        domain = [('usage', 'in', ['internal', 'transit'])]
+        if self._context.get('active_model') == 'stock.inventory':
+            inventory = self.env['stock.inventory'].browse(self._context.get('active_id'))
+            if inventory.exists():
+                if len(inventory.location_ids) >= 1:
+                    domain += [('id', 'child_of', inventory.location_ids.ids)]
+        return domain
+
+    def _domain_product_id(self):
+        domain = [('type', '=', 'product')]
+        if self._context.get('active_id'):
+            inventory = self.env['stock.inventory'].browse(self._context.get('active_id'))
+            if inventory.exists():
+                if len(inventory.product_ids) >= 1:
+                    domain += [('id', 'in', inventory.product_ids.ids)]
+        return domain
+
+    editable = fields.Boolean(default=_default_editable)
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory',
-        index=True, ondelete='cascade')
+        index=True, ondelete='cascade', default=_default_inventory_id)
     partner_id = fields.Many2one('res.partner', 'Owner')
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', '=', 'product')],
+        domain=_domain_product_id,
         index=True, required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -338,7 +365,7 @@ class InventoryLine(models.Model):
         digits=dp.get_precision('Product Unit of Measure'), default=0)
     location_id = fields.Many2one(
         'stock.location', 'Location',
-        index=True, required=True)
+        index=True, required=True, domain=_domain_location_id)
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(
@@ -353,9 +380,19 @@ class InventoryLine(models.Model):
     theoretical_qty = fields.Float(
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
-    inventory_location_id = fields.Many2one(
-        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False, readonly=False)
+    difference_qty = fields.Float('Difference', compute='_compute_difference',
+        help="Indicates the gap between the product's theoretical quantity and its newest quantity.",
+        readonly=True)
+    inventory_date = fields.Datetime('Inventory Date', readonly=True,
+        default=fields.Datetime.now(),
+        help="Last date at which the On Hand Quantity has been computed.")
+    outdated = fields.Boolean(String='Quantity oudated', default=False)
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
+
+    @api.depends('product_qty', 'theoretical_qty')
+    def _compute_difference(self):
+        for line in self:
+            line.difference_qty = line.product_qty - line.theoretical_qty
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')
@@ -394,29 +431,38 @@ class InventoryLine(models.Model):
             if 'product_id' in values and 'product_uom_id' not in values:
                 values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         res = super(InventoryLine, self).create(vals_list)
-        res._check_no_duplicate_line()
+        res._check_no_duplicate_line(False)
         return res
 
     @api.multi
     def write(self,vals):
         res = super(InventoryLine, self).write(vals)
-        self._check_no_duplicate_line()
+        self._check_no_duplicate_line(False)
         return res
 
-    def _check_no_duplicate_line(self):
+    def _check_no_duplicate_line(self, cross_inventory=True):
         for line in self:
-            existings = self.search([
+            domain = [
                 ('id', '!=', line.id),
                 ('product_id', '=', line.product_id.id),
-                ('inventory_id.state', '=', 'confirm'),
                 ('location_id', '=', line.location_id.id),
                 ('partner_id', '=', line.partner_id.id),
                 ('package_id', '=', line.package_id.id),
-                ('prod_lot_id', '=', line.prod_lot_id.id)])
+                ('prod_lot_id', '=', line.prod_lot_id.id)]
+
+            if cross_inventory:
+                domain += [('inventory_id.state', '=', 'confirm')]
+                error_msg = _("You cannot have two inventory adjustments in state 'In Progress' with the same product (%s),"
+                            " same location, same package, same owner and same lot. Please first validate"
+                            " the first inventory adjustment before creating another one.") % (line.product_id.display_name)
+            else:
+                domain += [('inventory_id', '=', line.inventory_id.id)]
+                error_msg = _("There is already one inventory adjustment line for this product,"
+                              " you should rather modify this one instead of creating a new one.")
+
+            existings = self.search(domain)
             if existings:
-                raise UserError(_("You cannot have two inventory adjustments in state 'In Progress' with the same product (%s),"
-                                   " same location, same package, same owner and same lot. Please first validate"
-                                   " the first inventory adjustment before creating another one.") % (line.product_id.display_name))
+                raise UserError(error_msg)
 
     @api.constrains('product_id')
     def _check_product_id(self):
@@ -467,3 +513,26 @@ class InventoryLine(models.Model):
                 vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
+
+    def action_refresh_quantity(self):
+        for line in self:
+            if line.outdated:
+                quant = self.env['stock.quant'].search([
+                    ('product_id', '=', line.product_id.id),
+                    ('location_id', '=', line.location_id.id),
+                ], limit=1)
+                if quant.exists() and not line.theoretical_qty == quant.quantity:
+                    line.theoretical_qty = quant.quantity
+                line.inventory_date = fields.Datetime.now()
+                line.outdated = False
+
+    def action_reset_product_qty(self):
+        self.update({'product_qty': 0})
+
+    @api.model
+    def action_validate_inventory(self, inventory_id):
+        inventory = self.env['stock.inventory'].browse(inventory_id)
+        if inventory.exists() and inventory.state == 'draft':
+            inventory.action_validate()
+            return {'state': 'ok'}
+        return {'state': 'error'}

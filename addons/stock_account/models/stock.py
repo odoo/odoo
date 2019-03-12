@@ -19,15 +19,29 @@ class StockInventory(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+    account_move_ids = fields.One2many('account.move', 'inventory_id')
+    account_move_count = fields.Integer(compute='_compute_account_move_count')
+
+    def action_get_account_moves(self):
+        self.ensure_one()
+        action_ref = self.env.ref('account.action_move_journal_line')
+        if not action_ref:
+            return False
+        action_data = action_ref.read()[0]
+        action_data['domain'] = [('id', 'in', self.account_move_ids.ids)]
+        return action_data
+
+    @api.depends('account_move_ids')
+    def _compute_account_move_count(self):
+        for inventory in self:
+            inventory.account_move_count = len(inventory.account_move_ids)
 
     @api.multi
     def post_inventory(self):
-        acc_inventories = self.filtered(lambda inventory: inventory.accounting_date)
-        for inventory in acc_inventories:
+        for inventory in self:
+            if not inventory.accounting_date:
+                inventory.accounting_date = fields.Date.today()
             super(StockInventory, inventory.with_context(force_period_date=inventory.accounting_date)).post_inventory()
-        other_inventories = self - acc_inventories
-        if other_inventories:
-            super(StockInventory, other_inventories).post_inventory()
 
 
 class StockLocation(models.Model):
@@ -622,12 +636,15 @@ class StockMove(models.Model):
                 ref = 'Revaluation of %s (negative inventory)' % ref
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
+        if not ref and self.inventory_id:
+            ref = self.inventory_id.name
 
         move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
+                'inventory_id': self.inventory_id.id or None,
                 'line_ids': move_lines,
                 'date': date,
                 'ref': ref,

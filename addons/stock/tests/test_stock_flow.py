@@ -1067,8 +1067,7 @@ class TestStockFlow(TestStockCommon):
         # ------------------------------------------------
 
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': self.UnitA.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, self.UnitA.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1085,8 +1084,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(self.UnitA.qty_available, 120, 'Expecting 120 Units , got %.4f Units of quantity available!' % (self.UnitA.qty_available))
         # Create Inventory again for product UnitA.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': self.UnitA.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, self.UnitA.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', self.UnitA.id), ('inventory_id', '=', inventory.id)], limit=1)
@@ -1109,8 +1107,7 @@ class TestStockFlow(TestStockCommon):
 
         productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Inventory Product KG',
-                                        'product_id': productKG.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, productKG.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1126,8 +1123,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(productKG.qty_available, 5000, 'Expecting 5000 kg , got %.4f kg of quantity available!' % (productKG.qty_available))
         # Create Inventory again.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_id': productKG.id,
-                                        'filter': 'product'})
+                                        'product_ids': [(4, productKG.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
@@ -1152,8 +1148,8 @@ class TestStockFlow(TestStockCommon):
         packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Test Partial and Pack',
-                                        'filter': 'partial',
-                                        'location_id': self.stock_location})
+                                        'start_empty': True,
+                                        'location_ids': [(4, self.stock_location)]})
         inventory.action_start()
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.production.lot']
@@ -1178,8 +1174,8 @@ class TestStockFlow(TestStockCommon):
 
         # Create an inventory that will put the lots without lot to 0 and check that taking without pack will not take it from the pack
         inventory2 = self.InvObj.create({'name': 'Test Partial Lot and Pack2',
-                                         'filter': 'partial',
-                                         'location_id': self.stock_location})
+                                         'start_empty': True,
+                                         'location_ids': [(4, self.stock_location)]})
         inventory2.action_start()
         line_vals = []
         line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id}]
@@ -1200,8 +1196,7 @@ class TestStockFlow(TestStockCommon):
         category_id = self.ref('product.product_category_5')
         inventory3 = self.InvObj.create({
                                     'name': 'Test Category',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
+                                    'location_ids': [(4, self.stock_location)],
                                     'category_id': category_id
                                 })
         # Start Inventory
@@ -1213,8 +1208,7 @@ class TestStockFlow(TestStockCommon):
         # check category with exhausted in stock location
         inventory4 = self.InvObj.create({
                                     'name': 'Test Exhausted Product',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
+                                    'location_ids': [(4, self.stock_location)],
                                     'category_id': category_id,
                                     'exhausted': True,
                                 })
@@ -1227,8 +1221,7 @@ class TestStockFlow(TestStockCommon):
         # Check that this exhausted product is in the product category inventory adjustment
         inventory5 = self.InvObj.create({
                                     'name': 'Test Exhausted Product',
-                                    'filter': 'category',
-                                    'location_id': self.stock_location,
+                                    'location_ids': [(4, self.stock_location)],
                                     'category_id': category_id,
                                     'exhausted': True,
                                 })
@@ -1565,7 +1558,6 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1598,7 +1590,6 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1657,7 +1648,6 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -1691,7 +1681,6 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,

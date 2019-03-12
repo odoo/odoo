@@ -86,9 +86,8 @@ class ProductChangeQuantity(models.TransientModel):
                 inventory_filter = 'none'
             inventory = Inventory.create({
                 'name': _('INV: %s') % tools.ustr(wizard.product_id.display_name),
-                'filter': inventory_filter,
-                'product_id': wizard.product_id.id,
-                'location_id': wizard.location_id.id,
+                'product_ids': [(4, wizard.product_id.id)],
+                'location_ids': [(4, wizard.location_id.id)],
                 'line_ids': [(0, 0, line_data)],
             })
             inventory.action_validate()

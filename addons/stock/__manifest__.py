@@ -77,6 +77,7 @@
         'data/stock_sequence_data.xml',
     ],
     'qweb': [
+        'static/src/xml/inventory_lines.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'installable': True,

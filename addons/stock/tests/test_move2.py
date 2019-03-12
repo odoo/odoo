@@ -1130,9 +1130,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location,
-            'product_id': self.productA.id,
+            'location_ids': [(4, self.stock_location)],
+            'product_ids': [(4, self.productA.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 2
@@ -1187,9 +1186,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location,
-            'product_id': self.productA.id,
+            'location_ids': [(4, self.stock_location)],
+            'product_ids': [(4, self.productA.id)],
         })
         inventory.action_start()
         inventory.line_ids.prod_lot_id = lot1
@@ -1247,14 +1245,13 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location,
-            'product_id': self.productA.id,
+            'location_ids': [(4, self.stock_location)],
+            'product_ids': [(4, self.productA.id)],
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
-            'location_id': inventory.location_id.id,
+            'location_id': inventory.location_ids[0].id,
             'partner_id': inventory.partner_id.id,
             'prod_lot_id': lot2.id,
             'product_id': self.productA.id,
@@ -1314,14 +1311,13 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'filter': 'product',
-            'location_id': self.stock_location,
-            'product_id': self.productA.id,
+            'location_ids': [(4, self.stock_location)],
+            'product_ids': [(4, self.productA.id)],
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
-            'location_id': inventory.location_id.id,
+            'location_id': inventory.location_ids[0].id,
             'partner_id': inventory.partner_id.id,
             'prod_lot_id': serial2.id,
             'product_id': self.productA.id,

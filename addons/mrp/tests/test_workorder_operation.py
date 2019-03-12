@@ -49,7 +49,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_table_sheet.id,
                 'product_uom_id': product_table_sheet.uom_id.id,
@@ -156,7 +155,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_table_sheet.id,
                 'product_uom_id': product_table_sheet.uom_id.id,
@@ -305,7 +303,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # refuel stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory For Product C',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.product_2.id,
                 'product_uom_id': self.product_2.uom_id.id,
@@ -448,7 +445,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # --------------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_charger.id,
                 'product_uom_id': product_charger.uom_id.id,
@@ -623,7 +619,6 @@ class TestWorkOrderProcess(TestMrpCommon):
         # ----------------
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product B and C',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': product_B.id,
                 'product_uom_id': product_B.uom_id.id,

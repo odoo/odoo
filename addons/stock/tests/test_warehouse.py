@@ -15,9 +15,8 @@ class TestWarehouse(TestStockCommon):
         inventory_wizard.change_product_qty()
         inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
             'name': 'Starting for product_1',
-            'filter': 'product',
-            'location_id': self.warehouse_1.lot_stock_id.id,
-            'product_id': self.product_1.id,
+            'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
+            'product_ids': [(4, self.product_1.id)],
         })
         inventory.action_start()
         # As done in common.py, there is already an inventory line existing
@@ -202,9 +201,8 @@ class TestWarehouse(TestStockCommon):
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
             'name': 'Starting for product_1',
-            'filter': 'product',
-            'location_id': stock_location.id,
-            'product_id': productA.id,
+            'location_ids': [(4, stock_location.id)],
+            'product_ids': [(4, productA.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")

@@ -18,8 +18,14 @@
             <field name="model">stock.inventory</field>
             <field name="inherit_id" ref="stock.view_inventory_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='date']" position="after">
-                    <field name="accounting_date" attrs="{'readonly':[('state','!=', 'draft')]}" groups="base.group_no_one"/>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="accounting_date" attrs="{'readonly':[('state','=', 'done')]}"/>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <field name="account_move_count" invisible="1"/>
+                    <button name="action_get_account_moves" type="object"
+                            string="Accounting Entries" icon="fa-usd" class="oe_stat_button"
+                            attrs="{'invisible': [('account_move_count', '=', 0)]}"/>
                 </xpath>
             </field>
         </record>

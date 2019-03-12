@@ -26,8 +26,7 @@ class TestTraceability(TestMrpCommon):
         stock_id = self.env.ref('stock.stock_location_stock').id
         inventory_adjustment = self.env['stock.inventory'].create({
             'name': 'Initial Inventory',
-            'location_id': stock_id,
-            'filter': 'partial',
+            'location_ids': [(4, stock_id)],
         })
         inventory_adjustment.action_start()
         inventory_adjustment.write({

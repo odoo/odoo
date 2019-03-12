@@ -9,4 +9,5 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    inventory_id = fields.Many2one('stock.inventory')
     stock_move_id = fields.Many2one('stock.move', string='Stock Move')
