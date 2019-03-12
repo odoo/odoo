@@ -832,6 +832,9 @@ class AccountTaxTemplate(models.Model):
         domain=[('deprecated', '=', False)],
         string='Base Tax Received Account',
         help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
+    unece_type_code = fields.Char('UNECE type code')
+    unece_categ_code = fields.Char('UNECE categ code')
+    unece_due_date_code = fields.Char('UNECE due date code')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
