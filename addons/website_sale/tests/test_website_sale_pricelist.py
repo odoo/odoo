@@ -47,14 +47,14 @@ class TestWebsitePriceList(TransactionCase):
         self.addCleanup(patcher.stop)
 
     def get_pl(self, show, current_pl, country):
-        pls = self.website._get_pl(
+        pl_ids = self.website._get_pl_partner_order(
             country,
             show,
             self.website.pricelist_id.id,
             current_pl,
             self.website.pricelist_ids
         )
-        return pls
+        return self.env['product.pricelist'].browse(pl_ids)
 
     def test_get_pricelist_available_show(self):
         show = True
