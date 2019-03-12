@@ -317,6 +317,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'placement': 'left',
             'container': this.$el,
             'html': true,
+            // disable bootstrap sanitizer because we use a table that has been 
+            // rendered using qweb.render so it is safe and also because sanitizer escape table by default.
+            'sanitize': false,
             'trigger': 'hover',
             'animation': false,
             'toggle': 'popover'
