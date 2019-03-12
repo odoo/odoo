@@ -305,6 +305,7 @@ class Pricelist(models.Model):
         return pricelist.get_products_price(
             list(pycompat.izip(**products_by_qty_by_partner)))
 
+    # DEPRECATED (Not used anymore, see d39d583b2) -> Remove me in master (saas12.3)
     def _get_partner_pricelist(self, partner_id, company_id=None):
         """ Retrieve the applicable pricelist for a given partner in a given company.
 
