@@ -51,7 +51,7 @@ MyPromise.prototype.__proto__ = OriginalPromise.prototype;
 
 MyPromise.prototype.then = function (resolve, reject) {
     var self = this;
-    return OriginalPromise.prototype.then.call(this, resolve, reject && (function reason() {
+    return OriginalPromise.prototype.then.call(this, resolve, reject && (function (reason) {
         self.handled = true;
         return reject(reason);
     }));
@@ -59,7 +59,7 @@ MyPromise.prototype.then = function (resolve, reject) {
 
 MyPromise.prototype.catch = function (reject) {
     var self = this;
-    return OriginalPromise.prototype.catch.call(this, reject && (function reason() {
+    return OriginalPromise.prototype.catch.call(this, reject && (function (reason) {
         self.handled = true;
         return reject(reason);
     }));
