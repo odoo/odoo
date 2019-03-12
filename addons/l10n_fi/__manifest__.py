@@ -24,8 +24,7 @@ Chart of accounts (if COA is not defined yet), Taxes, Tax tags (used in l10n_fi_
         'base_vat',
     ],
     "data" : [
-        'view/account_type.xml',
-        'data/account_types.xml',
+        'data/account_tags.xml',
         'data/tax_tags.xml',
         'data/res.country.group.csv',
         'data/account_chart.xml',
