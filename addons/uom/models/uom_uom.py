@@ -56,6 +56,7 @@ class UoM(models.Model):
         ('smaller', 'Smaller than the reference Unit of Measure')], 'Type',
         default='reference', required=1)
     measure_type = fields.Selection(string="Type of measurement category", related='category_id.measure_type', store=True, readonly=True)
+    unece_code = fields.Char('UNECE code', help="This is an international code to ease the interchange of documents e.g. for electronic invoicing.  ")
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
