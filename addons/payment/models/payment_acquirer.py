@@ -785,10 +785,13 @@ class PaymentTransaction(models.Model):
     def _cron_post_process_after_done(self):
         if not self:
             ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
+            # we don't want to forever try to process a transaction that doesn't go through
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
                                 ('is_processed', '=', False),
                                 ('date', '<=', ten_minutes_ago),
+                                ('date', '>=', retry_limit_date),
                             ])
         for tx in self:
             try:
