@@ -1073,6 +1073,7 @@ class Message(models.Model):
             'partners': [],
             'channels': [],
         }
+        import pudb; pu.db
         res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
         author_id = msg_vals.get('author_id') or self.author_id.id if res else False
         for pid, cid, active, pshare, ctype, notif, groups in res:
