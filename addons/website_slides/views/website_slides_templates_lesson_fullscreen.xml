@@ -104,14 +104,14 @@
                             </ul>
                         </div>
                     </li>
-                    <li t-if="slide.question_ids" class="o_wslides_fs_sidebar_list_item"
+                    <li t-if="slide.question_ids and slide.slide_type != 'quiz'" class="o_wslides_fs_sidebar_list_item"
                         t-att-data-id="slide.id"
                         t-att-data-name="slide.name"
                         t-att-data-type="slide.slide_type"
                         t-att-data-has-question="1 if slide.question_ids else 0"
                         t-att-data-is-quiz="1">
                         <span class="ml-4">
-                            <i class="fa fa-flag-checkered"/> Quizz: <t t-esc="slide.name"/>
+                            <i class="fa fa-flag-checkered"/> Quiz: <t t-esc="slide.name"/>
                         </span>
                     </li>
                 </t>
