@@ -91,6 +91,17 @@ class ProductPricelist(models.Model):
             '|', ('selectable', '=', True), ('code', '!=', False),
         ]
 
+    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+        ''' If `property_product_pricelist` is read from website, we should use
+            the website's company and not the user's one.
+            Passing a `company_id` to super will avoid using the current user's
+            company.
+        '''
+        website = ir_http.get_request_website()
+        if not company_id and website:
+            company_id = website.company_id.id
+        return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
+
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
