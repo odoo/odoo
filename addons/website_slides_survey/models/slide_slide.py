@@ -71,9 +71,9 @@ class Slide(models.Model):
         self.ensure_one()
         if not self.channel_id.is_member:
             return None
-        return self._action_get_slide_survey_url(self.env.user.partner_id)
+        return self._action_get_slide_survey_url()
 
-    def _action_get_slide_survey_url(self, target_partner):
+    def _action_get_slide_survey_url(self):
         certification_url = None
         if not self.env.user._is_public() and self.slide_type == 'certification' and self.survey_id:
             if self.channel_id.is_member:
