@@ -620,9 +620,9 @@ class TestMrpOrder(TestMrpCommon):
         product_produce.do_produce()
 
         ml_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1).mapped('move_line_ids')
-        self.assertEqual(len(ml_p1), 4)
+        self.assertEqual(len(ml_p1), 3)
         for ml in ml_p1:
-            self.assertIn(ml.qty_done, [1.0, 2.0], 'Quantity done should be 1.0, 2.0 or 3.0')
+            self.assertIn(ml.qty_done, [1.0, 2.0, 3.0], 'Quantity done should be 1.0, 2.0 or 3.0')
         self.assertEqual(sum(ml_p1.mapped('qty_done')), 6.0, 'Total qty consumed should be 6.0')
         self.assertEqual(sum(ml_p1.mapped('product_uom_qty')), 5.0, 'Total qty reserved should be 5.0')
 
@@ -691,10 +691,10 @@ class TestMrpOrder(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 3
-        self.assertEqual(len(produce_form.workorder_line_ids._records), 4, 'Update the produce quantity should change the components quantity.')
+        self.assertEqual(len(produce_form.workorder_line_ids._records), 2, 'Update the produce quantity should change the components quantity.')
         self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 15, 'Update the produce quantity should change the components quantity.')
         produce_form.qty_producing = 4
-        self.assertEqual(len(produce_form.workorder_line_ids._records), 6, 'Update the produce quantity should change the components quantity.')
+        self.assertEqual(len(produce_form.workorder_line_ids._records), 2, 'Update the produce quantity should change the components quantity.')
         self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 20, 'Update the produce quantity should change the components quantity.')
         produce_form.qty_producing = 1
         self.assertEqual(len(produce_form.workorder_line_ids._records), 2, 'Update the produce quantity should change the components quantity.')
