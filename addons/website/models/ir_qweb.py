@@ -6,6 +6,7 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 
+from odoo.addons.http_routing.models.ir_http import url_for
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
@@ -37,10 +38,16 @@ class QWeb(models.AbstractModel):
         if not website and options.get('website_id'):
             website = self.env['website'].browse(options['website_id'])
 
-        if not website or not website.cdn_activated:
+        if not website:
             return atts
 
         name = self.URL_ATTRS.get(tagName)
+        if request and name and name in atts:
+            atts[name] = url_for(atts[name])
+
+        if not website.cdn_activated:
+            return atts
+
         if name and name in atts:
             atts = OrderedDict(atts)
             atts[name] = website.get_cdn_url(atts[name])
