@@ -199,6 +199,9 @@ class IrModel(models.Model):
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
+        # delete fields whose comodel is being removed
+        self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -1591,9 +1594,17 @@ class IrModelData(models.Model):
 
         # Remove non-model records first, then model fields, and finish with models
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
+
+        # Remove copied views. This must happen after removing all records from
+        # the modules to remove, otherwise ondelete='restrict' may prevent the
+        # deletion of some view. This must also happen before cleaning up the
+        # database schema, otherwise some dependent fields may no longer exist
+        # in database.
+        modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
+        modules._remove_copied_views()
+
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
 
-        modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 

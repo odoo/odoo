@@ -16,19 +16,19 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Gurkan Erdogdu <gurkan.erdogdu@mechsoft.com.tr>, 2018
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
-# Ediz Duman <neps1192@gmail.com>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
 # Martin Trigaux, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,7 +181,7 @@ msgstr "'%s' geçerli bir tamsayı (integer) değil"
 #: code:addons/web/static/src/js/fields/field_utils.js:548
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "'%s' doğru bir mali alan değildir"
 
 #. module: web
 #. openerp-web
@@ -526,6 +526,9 @@ msgid ""
 "JavaScript file served from a different origin. (Opening your browser "
 "console might give you a hint on the error.)"
 msgstr ""
+"Bilinmeyen bir CORS hatası oluştur. Hata muhtemelen farklı orijinlerden "
+"hizmet veren JavaScript dosyalarından dolayı oluştu.(Tarayıcı konsolunuzu "
+"açmak, size hata hakkında bir ipucu verebilir.)"
 
 #. module: web
 #. openerp-web
@@ -564,7 +567,7 @@ msgstr "Arşivle"
 #: code:addons/web/static/src/xml/kanban.xml:27
 #, python-format
 msgid "Archive All"
-msgstr ""
+msgstr "Hepsini Arşivle"
 
 #. module: web
 #. openerp-web
@@ -674,6 +677,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"İkili alanlar, içeriği base64 olarak kodlanmadıkça Excel'e verilemez. Bu "
+"durum için böyle görünmüyor.%s."
 
 #. module: web
 #. openerp-web
@@ -1141,7 +1146,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:557
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Satırı sil"
 
 #. module: web
 #. openerp-web
@@ -3254,6 +3259,8 @@ msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
 "(.xls) format. Consider splitting the export."
 msgstr ""
+"Excel 97-2003 (.xls) formatında dışarı aktarım için%s Çok fazla satır var "
+"(satır limiti: 65535) . Dışa aktarımı bölmeyi düşünün."
 
 #. module: web
 #. openerp-web
@@ -3578,6 +3585,14 @@ msgstr "Doğrulama hatası"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/pivot/pivot_model.js:240
+#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:174
+#, python-format
+msgid "Variation"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager.js:287
 #: code:addons/web/static/src/xml/base.xml:258
 #, python-format
@@ -3797,7 +3812,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:246
 #, python-format
 msgid "[No widget %s]"
-msgstr ""
+msgstr "[Widget yok %s]"
 
 #. module: web
 #. openerp-web
@@ -3846,7 +3861,7 @@ msgstr "tüm kayıtlar"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:28
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "altı"
 
 #. module: web
 #. openerp-web
@@ -3912,10 +3927,24 @@ msgstr "sonrası"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:190
+#, python-format
+msgid "is after or equal to"
+msgstr "sonra veya eşittir"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/search/search_filters.js:189
 #, python-format
 msgid "is before"
 msgstr "öncesi"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search/search_filters.js:191
+#, python-format
+msgid "is before or equal to"
+msgstr "önce veya eşittir"
 
 #. module: web
 #. openerp-web
@@ -3954,7 +3983,7 @@ msgstr "değildir"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:18
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "değil ="
 
 #. module: web
 #. openerp-web

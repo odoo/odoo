@@ -24,7 +24,7 @@ class TestBasic(TransactionCase):
         self.assertEqual(f.f3, 21)
         self.assertEqual(f.f4, 42)
 
-        f.f1 = 4
+        f.f1 = '4'
         self.assertEqual(f.f2, 42)
         self.assertEqual(f.f3, 21)
         self.assertEqual(f.f4, 10)
@@ -36,7 +36,7 @@ class TestBasic(TransactionCase):
         r = f.save()
         self.assertEqual(
             (r.f1, r.f2, r.f3, r.f4),
-            (4, 8, 4, 2),
+            ('4', 8, 4, 2),
         )
 
     def test_required(self):
@@ -45,12 +45,12 @@ class TestBasic(TransactionCase):
         with self.assertRaisesRegexp(AssertionError, 'f1 is a required field'):
             f.save()
         # set f1 and unset f2 => should work
-        f.f1 = 1
+        f.f1 = '1'
         f.f2 = False
         r = f.save()
         self.assertEqual(
             (r.f1, r.f2, r.f3, r.f4),
-            (1, 0, 0, 0)
+            ('1', 0, 0, 0)
         )
 
     def test_readonly(self):
@@ -61,7 +61,7 @@ class TestBasic(TransactionCase):
         f = Form(self.env['test_testing_utilities.readonly'])
 
         with self.assertRaises(AssertionError):
-            f.f1 = 5
+            f.f1 = '5'
         with self.assertRaises(AssertionError):
             f.f2 = 42
 
@@ -70,7 +70,7 @@ class TestBasic(TransactionCase):
         """
         f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
 
-        f.f1 = 1
+        f.f1 = '1'
         f.f2 = 987
         self.assertEqual(f.f5, 987)
         self.assertEqual(f.f6, 987)
@@ -86,7 +86,7 @@ class TestBasic(TransactionCase):
         # not readonly yet, should work
         f.f2 = 5
         # make f2 readonly
-        f.f1 = 63
+        f.f1 = '63'
         f.f3 = 5
         with self.assertRaises(AssertionError):
             f.f2 = 6
@@ -101,9 +101,9 @@ class TestM2O(TransactionCase):
 
         f = Form(self.env['test_testing_utilities.d'])
 
-        self.assertEqual(
-            f.f, a,
-            "The default value for the m2o should be the first Sub record"
+        self.assertFalse(
+            f.f,
+            "The default value gets overridden by the onchange"
         )
         f.f2 = "B"
         self.assertEqual(
@@ -271,6 +271,7 @@ class TestO2M(TransactionCase):
             [get(s) for s in r.subs],
             [("2", 2, 2), ("2", 2, 2)]
         )
+        self.assertEqual(r.v, 5)
 
         with Form(r, view='test_testing_utilities.o2m_parent') as f:
             with f.subs.new() as sub:
@@ -286,6 +287,7 @@ class TestO2M(TransactionCase):
             [get(s) for s in r.subs],
             [("2", 2, 2), ("5", 5, 5), ("2", 2, 2)]
         )
+        self.assertEqual(r.v, 10)
 
         with Form(r, view='test_testing_utilities.o2m_parent') as f, \
             f.subs.edit(index=0) as sub,\
@@ -430,6 +432,40 @@ class TestO2M(TransactionCase):
         with f.line_ids.edit(index=0) as new_line:
             self.assertTrue(new_line.flag)
 
+    def test_o2m_remove(self):
+        def commands():
+            return [c[0] for c in f._values['line_ids']]
+        f = Form(self.env['test_testing_utilities.onchange_count'])
+
+        self.assertEqual(f.count, 0)
+        self.assertEqual(len(f.line_ids), 0)
+
+        f.count = 5
+        self.assertEqual(f.count, 5)
+        self.assertEqual(len(f.line_ids), 5)
+
+        f.count = 2
+        self.assertEqual(f.count, 2)
+        self.assertEqual(len(f.line_ids), 2)
+
+        f.count = 4
+
+        r = f.save()
+
+        previous = r.line_ids
+        self.assertEqual(len(previous), 4)
+
+        with Form(r) as f:
+            f.count = 2
+            self.assertEqual(commands(), [0, 0, 2, 2, 2, 2], "Should contain 2 creations and 4 deletions")
+        self.assertEqual(len(r.line_ids), 2)
+
+        with Form(r) as f:
+            f.line_ids.remove(0)
+            self.assertEqual(commands(), [2, 1])
+            f.count = 1
+            self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
+        self.assertEqual(len(r.line_ids), 1)
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
@@ -439,12 +475,12 @@ class TestEdition(TransactionCase):
     """
     def test_trivial(self):
         r = self.env['test_testing_utilities.a'].create({
-            'f1': 5,
+            'f1': '5',
         })
 
         with Form(r) as f:
             self.assertEqual(f.id, r.id)
-            self.assertEqual(f.f1, 5)
+            self.assertEqual(f.f1, '5')
             self.assertEqual(f.f4, 8)
 
             f.f2 = 5

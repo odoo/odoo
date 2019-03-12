@@ -6,7 +6,7 @@ class A(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
-    f1 = fields.Integer(required=True)
+    f1 = fields.Char(required=True)
     f2 = fields.Integer(default=42)
     f3 = fields.Integer()
     f4 = fields.Integer(compute='_compute_f4')
@@ -22,7 +22,7 @@ class A(models.Model):
     @api.depends('f1', 'f2')
     def _compute_f4(self):
         for r in self:
-            r.f4 = r.f2 / (r.f1 or 1)
+            r.f4 = r.f2 / (int(r.f1) or 1)
 
 class B(models.Model):
     _name = 'test_testing_utilities.readonly'
@@ -154,7 +154,6 @@ class O2MSub(models.Model):
 
     @api.onchange('has_parent')
     def _onchange_has_parent(self):
-        self.has_parent = bool(self.parent_id)
         if self.has_parent:
             self.value = self.parent_id.value
 
@@ -212,3 +211,25 @@ class M2OOnchangeLine(models.Model):
     @api.onchange('dummy')
     def _onchange_flag(self):
         self.flag = True
+
+class O2MChangeCount(models.Model):
+    _name = 'test_testing_utilities.onchange_count'
+    _description = _name
+
+    count = fields.Integer()
+    line_ids = fields.One2many('test_testing_utilities.onchange_count_sub', 'parent')
+
+    @api.onchange('count')
+    def _onchange_count(self):
+        Sub = self.env['test_testing_utilities.onchange_count_sub']
+        recs = Sub
+        for i in range(self.count):
+            recs |= Sub.new({'name': str(i)})
+        self.line_ids = recs
+
+class O2MChangeSub(models.Model):
+    _name = 'test_testing_utilities.onchange_count_sub'
+    _description = _name
+
+    parent = fields.Many2one('test_testing_utilities.onchange_count')
+    name = fields.Char()

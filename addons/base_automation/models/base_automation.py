@@ -161,14 +161,17 @@ class BaseAutomation(models.Model):
             return records
 
     def _filter_post(self, records):
+        return self._filter_post_export_domain(records)[0]
+
+    def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
             domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
-            return records.search(domain)
+            return records.search(domain), domain
         else:
-            return records
+            return records, None
 
-    def _process(self, records):
+    def _process(self, records, domain_post=None):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
         action_done = self._context['__action_done']
@@ -193,7 +196,12 @@ class BaseAutomation(models.Model):
         # execute server actions
         if self.action_server_id:
             for record in records:
-                ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
+                ctx = {
+                    'active_model': record._name,
+                    'active_ids': record.ids,
+                    'active_id': record.id,
+                    'domain_post': domain_post,
+                }
                 self.action_server_id.with_context(**ctx).run()
 
     @api.model_cr
@@ -241,13 +249,14 @@ class BaseAutomation(models.Model):
                 # read old values before the update
                 old_values = {
                     old_vals.pop('id'): old_vals
-                    for old_vals in records.read(list(vals))
+                    for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
                 _write.origin(records, vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
-                    action._process(action._filter_post(pre[action]))
+                    records, domain_post = action._filter_post_export_domain(pre[action])
+                    action._process(records, domain_post=domain_post)
                 return True
 
             return _write

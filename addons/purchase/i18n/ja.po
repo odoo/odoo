@@ -101,7 +101,11 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase
@@ -361,7 +365,7 @@ msgstr "請求管理"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
 msgid "Bill Count"
-msgstr ""
+msgstr "請求件数"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
@@ -447,7 +451,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "取引先"
+msgstr "商業体"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -872,7 +876,7 @@ msgstr "ロック済"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主な添付"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -968,7 +972,7 @@ msgstr "自分の活動"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Purchases"
-msgstr ""
+msgstr "自分の購買"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:41

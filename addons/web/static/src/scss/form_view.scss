@@ -81,16 +81,10 @@
 
     .o_form_uri {
         display: inline-block;
+        color: $link-color;
 
-        color: $o-main-text-color;
-        &:first-line {
-            color: $link-color;
-        }
         &:hover {
-            color: darken($o-main-text-color, 1%); // hack required on chrome
-            &:first-line {
-                color: darken($link-color, 15%);
-            }
+            color: darken($link-color, 15%);
         }
     }
 
@@ -744,6 +738,10 @@
             .o_field_widget {
                 width: 50%;
                 flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;

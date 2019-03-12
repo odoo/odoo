@@ -11,7 +11,8 @@
 # fanha99 <fanha99@hotmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019
+# Nguyen Quang Toan <nqtoan@dqn.vn>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,6 +159,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kính gửi ${object.partner_id.name}<br/><br/>\n"
+"        Cám ơn quý khách đã thanh toán.\n"
+"        Đây là biên lai <strong>${(object.name or '').replace('/','-')}</strong> trị giá\n"
+"        là <strong>${format_amount(object.amount, object.currency_id)}</strong> từ ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Vui lòng liên hệ với chúng tôi nếu bạn có bất kỳ thắc mắc nào.\n"
+"        <br/><br/>\n"
+"        Trân trọng,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -191,6 +208,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kính gửi ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Đây là \n"
+"        % if object.number:\n"
+"            hóa đơn <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            hóa đơn\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        trị giá <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        từ ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Hóa đơn này đã được thanh toán.\n"
+"        % else:\n"
+"            Vui lòng thực hiện thanh toán sớm nhất có thể.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Vui lòng liên hệ với chúng tôi nếu bạn có bất kỳ thắc mắc nào.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -201,12 +246,12 @@ msgstr "<em>Hóa đơn nháp</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -219,6 +264,8 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
 "title=\"Selection\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -302,6 +349,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -309,6 +359,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -437,7 +489,7 @@ msgstr "<span role=\"separator\">Xem</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Số dư trong sổ cái</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5120,7 +5172,7 @@ msgstr "Nếu đánh dấu chọn, các thông điệp mới yêu cầu sự có
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Nếu chọn, sẽ hiển thị thông báo lỗi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -7729,7 +7781,7 @@ msgstr "Biên nhận thanh toán:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Thông tin thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -9041,7 +9093,7 @@ msgstr "Gửi hóa để chạy thử cổng thông tin khách hàng."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Gửi mẫu"
 
 #. module: account
 #: selection:account.payment,state:0

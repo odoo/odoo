@@ -3,9 +3,9 @@
 # * purchase
 # 
 # Translators:
+# Tommi Rintala <tommi.rintala@gmail.com>, 2018
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
-# Tommi Rintala <tommi.rintala@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Jussi Lehto <jussi@gulfeo.com>, 2018
@@ -19,7 +19,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # santeri valjakka <santeri.valjakka@avoin.systems>, 2018
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,11 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase
@@ -153,12 +157,14 @@ msgid ""
 "<span class=\"o_form_label\" string=\"Request for Quotation \" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\"/>\n"
 "                        <span class=\"o_form_label\" string=\"Purchase Order \" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\"/>"
 msgstr ""
+"<span class=\"o_form_label\" string=\"Request for Quotation \" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\"/>\n"
+"                        <span class=\"o_form_label\" string=\"Purchase Order \" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "<span class=\"o_stat_text\">Purchased</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ostettu</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -345,7 +351,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Hae ostotilaus"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -517,12 +523,12 @@ msgstr "Hallinta"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_method
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
-msgstr ""
+msgstr "Ostolaskut perustuvat"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
-msgstr ""
+msgstr "Luo ostolasku"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -547,7 +553,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Create a vendor bill"
-msgstr ""
+msgstr "Luo ostolasku"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
@@ -1403,7 +1409,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Oston vastuuhenkilö"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -1628,7 +1634,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "Valitse ostotilaus tai vanha ostolasku"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1807,13 +1813,13 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:156
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Tämä ostolasku on luotu perustuen: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:170
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Tätä ostolaskua on muokattu perustuen: %s"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1872,6 +1878,7 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
 msgstr ""
+"Ostotilausta ei pystytty perumaan. Peru ensin siihen liittyvät ostolaskut."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -1951,7 +1958,7 @@ msgstr "Toimittaja"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr "Toimittajalasku"
+msgstr "Ostolasku"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -1962,7 +1969,7 @@ msgstr "Toimittajalasku"
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
-msgstr "Toimittajien laskut"
+msgstr "Ostolaskut"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search

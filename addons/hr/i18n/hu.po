@@ -3,11 +3,11 @@
 # * hr
 # 
 # Translators:
-# Tamás Dombos, 2018
 # Martin Trigaux, 2018
 # krnkris, 2018
 # gezza <geza.nagy@oregional.hu>, 2018
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# Tamás Dombos, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
@@ -38,7 +38,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -233,12 +233,13 @@ msgstr "Hitelesített ügyfelek"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Részlegek automatikus feliratkoztatása"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
 msgstr ""
+"A részleghez tartozó munkatársak automatikus feliratkoztatása a csatornára"
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -409,7 +410,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "Új részleg"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -461,7 +462,7 @@ msgstr "Nyújtson általános Odoo rendszer gyakorlati oktatási szakaszokat"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr "Osztály, részleg"
+msgstr "Részleg"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -473,7 +474,7 @@ msgstr "Részleg neve"
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr "Osztályok/Részlegek"
+msgstr "Részlegek"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
@@ -705,12 +706,12 @@ msgstr "Csoportosítás ezzel"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Emberi erőforrás Osztály, részleg"
+msgstr "Munkaügyi részleg"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "Munkaügyi részlegek"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1003,7 +1004,7 @@ msgstr "Tagok"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -1036,7 +1037,7 @@ msgstr "Állampolgárság (Ország)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Következő tevékenység-határidő"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
@@ -1046,7 +1047,7 @@ msgstr "Következő tevékenység összegzése"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Következő tevékenységtípus"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1096,7 +1097,7 @@ msgstr "Alakalmazottak száma akik jelenleg betöltik ezt az állás pozíciót.
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1116,7 +1117,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -1208,7 +1209,7 @@ msgstr "Születés helye"
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Tervezett"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -1449,6 +1450,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: Az esedékesség dátuma már elmúlt\n"
+"Ma: A tevékenység dátuma ma van\n"
+"Tervezett: Jövőbeli tevékenységek."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1833,7 +1838,7 @@ msgstr ""
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "Rekurzív részlegek nem hozhatóak létre."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant

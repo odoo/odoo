@@ -9,11 +9,13 @@
 # Viktor Pogrebniak <vp@aifil.ru>, 2018
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Collex100, 2018
-# Sergey Vilizhanin, 2018
 # Dmitry sky <d.v.selitsky@gmail.com>, 2018
 # Disaster Disasterov <mobarbitr@gmail.com>, 2018
 # Дмитрий Ефременко <shiza867@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Sergey Vilizhanin, 2019
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +43,8 @@ msgstr "кол-во ордеров"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
 msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -241,6 +239,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Значения относятся к "
+"конкретной компании.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -474,6 +474,11 @@ msgid "Accept &amp; Pay"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
 msgstr ""
@@ -671,7 +676,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Автоматическое выставление счета"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
@@ -864,7 +869,7 @@ msgstr "Расчет стоимости доставки в заказах"
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Настройки конфигурации"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -1017,7 +1022,7 @@ msgstr "Заказчик"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Учетная запись заказчика"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_delivery_address
@@ -1214,11 +1219,6 @@ msgid "Details"
 msgstr "Подробная информация"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid "Digital Content"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
 msgstr "% cкидки"
@@ -1391,6 +1391,11 @@ msgstr "Подписчики (Партнеры)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1727,6 +1732,12 @@ msgid "Invoicing"
 msgstr "Выставление счёта"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Адрес для выставления счёта"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -2124,6 +2135,11 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr ""
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2378,9 +2394,14 @@ msgid "Pay now"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
-msgstr ""
+msgstr "  Оплатить"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -2953,7 +2974,7 @@ msgstr "Анализ продаж"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Отчет по анализу продаж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -3174,6 +3195,14 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Продавайте и покупайте товары в различных единицах измерения"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Продажа цифровых продуктов - обеспечить загружаемый контент на вашем портале"
+" для клиентов"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Продавайте товары упаковками по N штук "
@@ -3308,6 +3337,11 @@ msgid "Show standard terms &amp; conditions on orders"
 msgstr "Указывать стандартные условия и положения в заказах"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
+
+#. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Sign online"
@@ -3339,7 +3373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 msgid "Sold"
-msgstr ""
+msgstr "Продано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -3496,6 +3530,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Заказ на продажу %s, связанный с Аналитической учетной записью %s, отменен. "
+"Вы не можете зарегистрировать расход в отмененном заказе клиента."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:115
@@ -3505,6 +3541,10 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Заказ на продажу %s, связанный с Аналитической учетной записью %s, в "
+"настоящее время заблокирован. Вы не можете зарегистрировать расход в "
+"заблокированном Заказе на продажу. Пожалуйста, создайте новый Заказ продаж, "
+"связанную с этой аналитической учетной записью."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:111
@@ -3513,6 +3553,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Заказ на продажу %s, связанный с Аналитической учетной записью %s, должен "
+"быть проверен до регистрации расходов."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -3644,7 +3686,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Такая комбинация не существует"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

@@ -40,7 +40,7 @@
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
                             attrs="{'readonly':[('valuation','=','real_time')]}"
-                            widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
+                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                             class="float-left"/>
                         <div name="update_cost_price" class="col-lg-2">
                             <button string="Update Cost" type="action"

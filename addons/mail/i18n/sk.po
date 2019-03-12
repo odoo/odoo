@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-02-08 05:29+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
@@ -220,6 +220,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Tento mail"
+" je na čiernej listine pre hromadné posielanie\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -449,6 +453,7 @@ msgstr "Prístupové Skupiny"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
 msgstr "Potrebná akcia"
 
@@ -484,6 +489,7 @@ msgstr "Aktívna doména"
 #: code:addons/mail/static/src/xml/systray.xml:108
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -518,6 +524,7 @@ msgstr "Aktivita Mixin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
 msgstr "Stav aktivity"
 
@@ -552,6 +559,13 @@ msgstr "Typ aktivity"
 #, python-format
 msgid "Add"
 msgstr "Pridať"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/chatter.xml:30
+#, python-format
+msgid "Add Attachments"
+msgstr "Pridaj prílohy"
 
 #. module: mail
 #. openerp-web
@@ -853,6 +867,7 @@ msgstr "Príloha"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
 msgstr "Počet príloh"
 
@@ -1018,6 +1033,7 @@ msgstr "S pozdravom,"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
 msgstr "Čierna listina"
 
@@ -1207,6 +1223,7 @@ msgstr "Nastavenia kanála"
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -1392,12 +1409,13 @@ msgstr "Konverzácie"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Počítadlo počtu odrazených emailov pre tento kontakt"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:565
+#: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
 msgstr "Vytvoriť %s"
@@ -1700,7 +1718,7 @@ msgstr "Diskusie"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
-msgid "Discussion channel"
+msgid "Discussion Channel"
 msgstr "Diskusný kanál"
 
 #. module: mail
@@ -1765,6 +1783,13 @@ msgid ""
 msgstr ""
 "Neukladať kópiu emailu v histórii komunikácie dokumentu (len hromadný "
 "mailing)"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chatter.js:498
+#, python-format
+msgid "Do you really want to delete %s?"
+msgstr "Naozaj chcete zmazať%s?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2238,6 +2263,7 @@ msgstr "Odoberať"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
@@ -2248,6 +2274,7 @@ msgstr "Odberatelia"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "Odberatelia (Kanály)"
 
@@ -2256,6 +2283,7 @@ msgstr "Odberatelia (Kanály)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Odberatelia (Partneri)"
 
@@ -2516,6 +2544,7 @@ msgstr "Nečinný"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
@@ -2524,6 +2553,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
@@ -2532,6 +2562,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ak zaškrtnuté, niektoré správy majú chybu dodania."
 
@@ -2576,6 +2607,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,help:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,help:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,help:mail.field_res_users__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -2780,6 +2812,7 @@ msgstr "Je zakázaný"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
 msgstr "Je odberateľ"
 
@@ -2797,6 +2830,11 @@ msgstr "Je prečítaný"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
 msgid "Is Subscribed"
 msgstr "Je prihlásený na odber"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
+msgid "Is a chat"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -3025,13 +3063,13 @@ msgstr "Protokol"
 #: code:addons/mail/static/src/xml/chatter.xml:89
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Pridať poznámku. Sledujúci nebudú notifikovaný."
+msgstr "Pridať poznámku. Sledujúci nebudú notifikovaní."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr ""
+msgstr "Pridať poznámku..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3048,7 +3086,7 @@ msgstr "Pridať internú poznámku"
 #: code:addons/mail/static/src/xml/chatter.xml:89
 #, python-format
 msgid "Log note"
-msgstr "Poznámka logu"
+msgstr "Pridať poznámku"
 
 #. module: mail
 #. openerp-web
@@ -3148,6 +3186,7 @@ msgstr "Šablóny správy"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Hlavná príloha"
 
@@ -3275,6 +3314,7 @@ msgstr "Správa"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
 msgstr "Chyba zobrazovania správ"
 
@@ -3383,6 +3423,7 @@ msgstr "ID správy"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
@@ -3695,18 +3736,21 @@ msgstr "Ďalšie aktivity"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Ďalšia lehota aktivity"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
 msgstr "Zhrnutie ďalšej aktivity"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
 msgstr "Typ ďalšej aktivity"
 
@@ -3839,6 +3883,7 @@ msgstr "Notifikovať sledujúcich dokumentu (len pri hromadých správach)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Počet akcií"
 
@@ -3856,6 +3901,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of error"
 msgstr "Číslo chyby"
 
@@ -3864,6 +3910,7 @@ msgstr "Číslo chyby"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Počet správ ktoré vyžadujú akciu"
 
@@ -3872,6 +3919,7 @@ msgstr "Počet správ ktoré vyžadujú akciu"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Počet chýb zobrazovania správ"
 
@@ -3880,6 +3928,7 @@ msgstr "Počet chýb zobrazovania správ"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Počet neprečítaných správ"
 
@@ -4084,9 +4133,12 @@ msgid "Outgoing mail server"
 msgstr "Server odchádzajúcej pošty"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:110
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Overdue"
 msgstr "Oneskorené"
 
@@ -4245,9 +4297,12 @@ msgid "Placeholder Expression"
 msgstr "Výraz vlastníka"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:112
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Planned"
 msgstr "Plánované"
 
@@ -4656,6 +4711,7 @@ msgstr "Zodpovedný"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
 msgstr "Zodpovedný používateľ"
 
@@ -5044,6 +5100,7 @@ msgstr "Stav"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,help:mail.field_res_partner__activity_state
+#: model:ir.model.fields,help:mail.field_res_users__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -5187,12 +5244,12 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.moderation:0
 msgid "The email address must be unique per channel !"
-msgstr ""
+msgstr "Mailová adresa musí byť unikátna v rámci kanála!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Mail zaslaný"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -5336,8 +5393,9 @@ msgstr "Komu:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/activity.js:87
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:107
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:111
 #: code:addons/mail/static/src/xml/systray.xml:96
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
@@ -5417,6 +5475,8 @@ msgid ""
 "Try to add some activity on records, or make sure that\n"
 "                there is no active filter in the search bar."
 msgstr ""
+"Skúste pridať nejaké záznamy, alebo sa uistite, že je nie je žiadny aktívny "
+"filter vo vyhľadávaní."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -5442,6 +5502,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ akcie servera. Násedovné hodnoty sú dostupné:\n"
+"- 'Vykonať Python kód': blok Python kódu ktorý bude vykonaný\n"
+"- 'Vytvoriť alebo kopírovať nový záznam': vytvoriť nový záznam s novými hodnotami alebo skopírovať existujúci záznam v databáze\n"
+"- 'Zapísať do záznamu': upraviť hodnoty záznamu\n"
+"- 'Vykonať viaceré akcie': definujte akciu ktorá spustí viacero iných akcií servera\n"
+"- 'Pridať sledovateľov': pridať sledovateľov záznamu (dostupné v diskusii)\n"
+"- 'Poslať email': automaticky poslať email (dostupný v šablóne emailu)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5470,7 +5537,7 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:34
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr ""
+msgstr "Nemožno odoslať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: mail
 #. openerp-web
@@ -5515,6 +5582,7 @@ msgstr "Neznáma chyba"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
 msgstr "Neprečítané správy"
 
@@ -5523,6 +5591,7 @@ msgstr "Neprečítané správy"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Počítadlo neprečítaných správ"
 
@@ -5887,6 +5956,8 @@ msgstr "Ste administrátorom tohto kanála. Naozaj sa chcete odhlásiť?"
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr ""
+"Akúkoľvek správu môžete označiť ako 'obľúbenú', tá sa potom zobrazí v tejto "
+"mailovej schránke."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:87

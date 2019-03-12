@@ -341,7 +341,7 @@
                     <t t-raw="item.label"/>
                 </a>
             </t>
-            <div class="dropdown-menu" role="menu">
+            <div class="dropdown-menu o_dropdown_menu" role="menu">
                 <t t-foreach="widget.items[section.name]" t-as="item">
                     <t t-if="section.name == 'files'">
                         <t t-set="item.title">
@@ -838,11 +838,11 @@
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div t-attf-class="badge badge-pill dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+        <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
             <t t-set="_badge_text">
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             </t>
-            <t t-if="colorField">
+            <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
                     <t t-raw="_badge_text"/>
                 </a>

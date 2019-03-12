@@ -1,4 +1,6 @@
 <odoo>
+    <menuitem id="menu_ssf" parent="base.menu_tests" name="Server-side form"/>
+
     <record id="action_test_o2m_onchange" model="ir.actions.act_window">
         <field name="name">Test o2m onchange thing</field>
         <field name="type">ir.actions.act_window</field>
@@ -6,9 +8,31 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_o2m" parent="base.menu_tests"
+    <menuitem id="menu_o2m" parent="menu_ssf"
               name="O2M onchange test thing"
               action="action_test_o2m_onchange"/>
+
+    <record id="action_test_m2o_onchange" model="ir.actions.act_window">
+        <field name="name">test_default_and_onchange</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">test_testing_utilities.d</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_m2o" parent="menu_ssf"
+              name="test_default_and_onchange"
+              action="action_test_m2o_onchange"/>
+
+    <record id="action_test_o2m_count" model="ir.actions.act_window">
+        <field name="name">test_change_number_of_lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">test_testing_utilities.onchange_count</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_o2m_count" parent="menu_ssf"
+              name="test_change_number_of_lines"
+              action="action_test_o2m_count"/>
 
     <record id="o2m_parent" model="ir.ui.view">
         <field name="name">Parent External Form</field>
@@ -98,7 +122,7 @@
         <field name="arch" type="xml">
             <form>
                 <field name="f1"/>
-                <field name="f2" attrs="{'readonly': [['f1', '=', 63], ['f3', '=', 5]]}"/>
+                <field name="f2" attrs="{'readonly': [['f1', '=', '63'], ['f3', '=', 5]]}"/>
                 <field name="f3"/>
                 <field name="f4"/>
                 <field name="f5" readonly="1"/>

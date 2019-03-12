@@ -15,10 +15,10 @@
 # oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2019
 # Bonny Useful <bonny.useful@gmail.com>, 2019
 # Deddy Ddr <deddy.ddr@gmail.com>, 2019
-# Ryanto The <ry.the77@gmail.com>, 2019
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2019
 # Adam Damara <lorenzrenz@gmail.com>, 2019
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2019
+# Ryanto The <ry.the77@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2019\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2019\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,8 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -481,6 +477,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
 msgstr ""
 
 #. module: sale
@@ -1405,6 +1406,11 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr ""
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
@@ -1737,6 +1743,12 @@ msgid "Invoicing"
 msgstr "Penagihan"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Alamat Faktur"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -2134,6 +2146,11 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr ""
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2380,6 +2397,11 @@ msgstr "Bayar sekarang"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
 msgstr ""
 
 #. module: sale
@@ -3180,6 +3202,12 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Jual dan beli produk dalam satuan yang berbeda"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Jual produk menurut jumlah unit # tiap paket"
@@ -3312,6 +3340,11 @@ msgstr "Tampilkan harga jual dan diskon pada pelanggan"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr "Tampilkan syarat &amp; ketentuan standar di order penjualan"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0

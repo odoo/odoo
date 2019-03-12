@@ -134,7 +134,7 @@ class ProductTemplate(models.Model):
     def _website_price(self):
         current_website = self.env['website'].get_current_website()
         for template in self.with_context(website_id=current_website.id):
-            res = template._get_combination_info(template._get_first_possible_combination())
+            res = template._get_combination_info()
             template.website_price = res.get('price')
             template.website_public_price = res.get('list_price')
             template.website_price_difference = res.get('has_discounted_price')
@@ -164,9 +164,12 @@ class ProductTemplate(models.Model):
     @api.multi
     def _is_quick_add_to_cart_possible(self, parent_combination=None):
         """
-        It's possible to quickly add to cart if there's no optional product
-        and there's only one possible combination, and no attribute is set
-        to dynamic or no_variant, and no value is set to is_custom.
+        It's possible to quickly add to cart if there's no optional product,
+        there's only one possible combination and no value is set to is_custom.
+
+        Attributes set to dynamic or no_variant don't have to be tested
+        specifically because they will be taken into account when checking for
+        the possible combinations.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product
@@ -179,15 +182,14 @@ class ProductTemplate(models.Model):
 
         if not self._is_add_to_cart_possible(parent_combination):
             return False
-        if len(self._get_possible_variants(parent_combination)) != 1:
-            return False
-        if self._has_no_variant_attributes():
-            return False
-        if self.has_dynamic_attributes():
+        gen = self._get_possible_combinations(parent_combination)
+        first_possible_combination = next(gen)
+        if next(gen, False) is not False:
+            # there are at least 2 possible combinations.
             return False
         if self._has_is_custom_values():
             return False
-        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(self._get_first_possible_combination())):
+        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(first_possible_combination)):
             return False
         return True
 
@@ -198,7 +200,8 @@ class ProductTemplate(models.Model):
         The order is based on the order of the attributes and their values.
 
         See `_get_possible_variants` for the limitations of this method with
-        dynamic or no_variant attributes.
+        dynamic or no_variant attributes, and also for a warning about
+        performances.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product
@@ -229,7 +232,7 @@ class ProductTemplate(models.Model):
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
     @api.multi
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """Override for website, where we want to:
             - take the website pricelist if no pricelist is set
             - apply the b2b/b2c setting to the result
@@ -246,7 +249,9 @@ class ProductTemplate(models.Model):
             if not pricelist:
                 pricelist = current_website.get_current_pricelist()
 
-        combination_info = super(ProductTemplate, self)._get_combination_info(combination, product_id, add_qty, pricelist, parent_combination)
+        combination_info = super(ProductTemplate, self)._get_combination_info(
+            combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
+            parent_combination=parent_combination, only_template=only_template)
 
         if self.env.context.get('website_id'):
             partner = self.env.user.partner_id

@@ -8,14 +8,15 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Kulius Ray <kulius@gmail.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2019
+# Ying Chang <acc.tou@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-02-08 05:29+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2019\n"
+"Last-Translator: Ying Chang <acc.tou@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,6 +217,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -431,6 +436,7 @@ msgstr "訪問組"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
 msgstr "需要採取行動"
 
@@ -466,6 +472,7 @@ msgstr "有效域名"
 #: code:addons/mail/static/src/xml/systray.xml:108
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -500,6 +507,7 @@ msgstr "活動Mixin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
 msgstr "活動狀態"
 
@@ -534,6 +542,13 @@ msgstr "活動類型"
 #, python-format
 msgid "Add"
 msgstr "添加"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/chatter.xml:30
+#, python-format
+msgid "Add Attachments"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -829,6 +844,7 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件計數"
 
@@ -990,6 +1006,7 @@ msgstr "致以最誠摯的問候，"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
 msgstr "黑名單"
 
@@ -1179,6 +1196,7 @@ msgstr "頻道設置"
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -1361,12 +1379,13 @@ msgstr "對話"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "此聯絡人退回信件數量計數器"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:565
+#: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
 msgstr "創建 %s"
@@ -1666,8 +1685,8 @@ msgstr "討論"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
-msgid "Discussion channel"
-msgstr "討論群組"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1727,6 +1746,13 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr "不要在文件通信歷史中保留電子信件副本（僅限群發信件）"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chatter.js:498
+#, python-format
+msgid "Do you really want to delete %s?"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2184,6 +2210,7 @@ msgstr "訂閱"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
@@ -2194,6 +2221,7 @@ msgstr "訂閱者"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "關注者(渠道)"
 
@@ -2202,6 +2230,7 @@ msgstr "關注者(渠道)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "關注者(業務夥伴)"
 
@@ -2460,6 +2489,7 @@ msgstr "閒置"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked new messages require your attention."
 msgstr "查看是否有需要您留意的新信息。"
 
@@ -2468,6 +2498,7 @@ msgstr "查看是否有需要您留意的新信息。"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "如果勾選此項，有新消息會提醒您。"
 
@@ -2476,6 +2507,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
@@ -2513,6 +2545,7 @@ msgstr "如果設定完畢，隊列管理員將在指定日期之後發送電子
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,help:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,help:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,help:mail.field_res_users__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -2706,6 +2739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
 msgstr "是訂閱者"
 
@@ -2723,6 +2757,11 @@ msgstr "已讀"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
 msgid "Is Subscribed"
 msgstr "已訂閱"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
+msgid "Is a chat"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -3074,6 +3113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "主要附件"
 
@@ -3196,6 +3236,7 @@ msgstr "消息"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
 msgstr "信件傳遞錯誤"
 
@@ -3296,6 +3337,7 @@ msgstr "訊息-Id"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
@@ -3602,18 +3644,21 @@ msgstr "下一步活動"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活動截止日期"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
 msgstr "下一活動摘要"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
 msgstr "下一活動類型"
 
@@ -3744,6 +3789,7 @@ msgstr "通知此單據的關注者(只用於批量發送)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
 msgstr "行動數量"
 
@@ -3759,6 +3805,7 @@ msgstr "在執行該操作前幾天/周/月，允許操的截止日期。"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of error"
 msgstr "錯誤數量"
 
@@ -3767,6 +3814,7 @@ msgstr "錯誤數量"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "需要行動消息的數量"
 
@@ -3775,6 +3823,7 @@ msgstr "需要行動消息的數量"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "發送錯誤的信件數"
 
@@ -3783,6 +3832,7 @@ msgstr "發送錯誤的信件數"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
 msgstr "未讀消息的數量"
 
@@ -3981,9 +4031,12 @@ msgid "Outgoing mail server"
 msgstr "出向信件伺服器"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:110
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Overdue"
 msgstr "逾期"
 
@@ -4137,9 +4190,12 @@ msgid "Placeholder Expression"
 msgstr "佔位符表達式"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:112
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Planned"
 msgstr "已安排"
 
@@ -4541,6 +4597,7 @@ msgstr "負責"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
 msgstr "責任使用者"
 
@@ -4916,6 +4973,7 @@ msgstr "狀態"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,help:mail.field_res_partner__activity_state
+#: model:ir.model.fields,help:mail.field_res_users__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -5196,8 +5254,9 @@ msgstr "至:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/activity.js:87
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:107
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:111
 #: code:addons/mail/static/src/xml/systray.xml:96
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
@@ -5381,6 +5440,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
 msgstr "未讀消息"
 
@@ -5389,6 +5449,7 @@ msgstr "未讀消息"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "未讀消息計數器"
 

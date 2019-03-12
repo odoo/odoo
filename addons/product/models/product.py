@@ -279,7 +279,11 @@ class ProductProduct(models.Model):
         if isinstance(value, pycompat.text_type):
             value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
-        if self.product_tmpl_id.image:
+
+        # This is needed because when there is only one variant, the user
+        # doesn't know there is a difference between template and variant, he
+        # expects both images to be the same.
+        if self.product_tmpl_id.image and self.product_variant_count > 1:
             self.image_variant = image
         else:
             self.product_tmpl_id.image = image
@@ -338,6 +342,8 @@ class ProductProduct(models.Model):
             # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
             if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
                 product._set_standard_price(vals.get('standard_price') or 0.0)
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
         return products
 
     @api.multi
@@ -346,6 +352,13 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, self).write(values)
         if 'standard_price' in values:
             self._set_standard_price(values['standard_price'])
+        if 'attribute_value_ids' in values:
+            # `_get_variant_id_for_combination` depends on `attribute_value_ids`
+            self.clear_caches()
+        if 'active' in values:
+            # prefetched o2m have to be reloaded (because of active_test)
+            # (eg. product.template: product_variant_ids)
+            self.invalidate_cache()
         return res
 
     @api.multi
@@ -366,6 +379,8 @@ class ProductProduct(models.Model):
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
         unlink_templates.unlink()
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
         return res
 
     @api.multi
@@ -647,6 +662,10 @@ class ProductProduct(models.Model):
             - it ONLY uses valid values
             We must make sure that all attributes are used to take into account the case where
             attributes would be added to the template.
+
+            This method does not check if the combination is possible, it just
+            checks if it has valid attributes and values. A possible combination
+            is always valid, but a valid combination is not always possible.
 
             :param valid_attributes: a recordset of product.attribute
             :param valid_values: a recordset of product.attribute.value

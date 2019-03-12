@@ -198,6 +198,11 @@ function addMockEnvironment(widget, params) {
         // widget is destroyed, at the end of each test to avoid collisions
         core.bus.trigger('clear_cache');
 
+        _(services).chain()
+            .compact() // services can be defined but null (e.g. ajax)
+            .reject(function (s) { return s.isDestroyed(); })
+            .invoke('destroy');
+
         DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
         dom.DEBOUNCE = initialDOMDebounceValue;
         if (params.debounce === false) {

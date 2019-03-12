@@ -842,8 +842,8 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (ev.which != 13 && ev.which != 32) {
-                // Key is not space or enter
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
                 return;
             }
             ev.preventDefault();
@@ -1318,7 +1318,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     // what happens when we've just pushed modifications for a partner of id partner_id
     saved_client_details: function(partner_id){
         var self = this;
-        this.reload_partners().then(function(){
+        return this.reload_partners().then(function(){
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;

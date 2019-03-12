@@ -251,7 +251,7 @@ actual arch.
         for view in self:
             arch_fs = None
             xml_id = view.xml_id or view.key
-            if 'xml' in config['dev_mode'] and view.arch_fs and xml_id:
+            if (self._context.get('read_arch_from_file') or 'xml' in config['dev_mode']) and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
@@ -766,18 +766,19 @@ actual arch.
         [view_data] = root.read(fields=fields)
         view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
         if not root.inherit_id:
+            if self._context.get('inherit_branding'):
+                view_arch.attrib.update({
+                    'data-oe-model': 'ir.ui.view',
+                    'data-oe-id': str(root.id),
+                    'data-oe-field': 'arch',
+                })
             arch_tree = view_arch
         else:
+            if self._context.get('inherit_branding'):
+                self.inherit_branding(view_arch, root.id, root.id)
             parent_view = root.inherit_id.read_combined(fields=fields)
             arch_tree = etree.fromstring(parent_view['arch'])
             arch_tree = self.apply_inheritance_specs(arch_tree, view_arch, parent_view['id'])
-
-        if self._context.get('inherit_branding'):
-            arch_tree.attrib.update({
-                'data-oe-model': 'ir.ui.view',
-                'data-oe-id': str(root.id),
-                'data-oe-field': 'arch',
-            })
 
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
@@ -1196,6 +1197,7 @@ actual arch.
     def _contains_branded(self, node):
         return node.tag == 't'\
             or 't-raw' in node.attrib\
+            or 't-call' in node.attrib\
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
     def _pop_view_branding(self, element):

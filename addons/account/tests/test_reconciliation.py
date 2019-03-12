@@ -39,7 +39,8 @@ class TestReconciliation(AccountingTestCase):
 
         self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
-        
+
+        self.fx_journal = self.env['res.users'].browse(self.env.uid).company_id.currency_exchange_journal_id
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
@@ -528,6 +529,14 @@ class TestReconciliation(AccountingTestCase):
             self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
         }
+
+        payments = bank_stmt_aml.mapped('payment_id')
+        # creation and reconciliation of the over-amount statement
+        # has created an another payment
+        self.assertEqual(len(payments), 2)
+        # Check amount of second, automatically created payment
+        self.assertEqual((payments - payment).amount, 5)
+
         for aml in bank_stmt_aml:
             line = lines[aml.account_id.id]
             if type(line) == list:
@@ -1444,3 +1453,365 @@ class TestReconciliation(AccountingTestCase):
                 expected['tax_10']
             )
             index += 1
+
+    def test_reconciliation_cash_basis_fx_01(self):
+        """
+        Company's Currency EUR
+
+        Having issued an invoice at date Nov-21-2018 as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Expenses            5,301.00 USD         106,841.65              0.00
+        Taxes                 848.16 USD          17,094.66              0.00
+            Payables       -6,149.16 USD               0.00        123,936.31
+
+        On Dec-20-2018 user issues an FX Journal Entry as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Payables                0.00 USD             167.86             0.00
+            FX Gains            0.00 USD               0.00           167.86
+
+        On Same day user records a payment for:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Payables            6,149.16 USD         123,768.45              0.00
+            Bank           -6,149.16 USD               0.00        123,768.45
+
+        And then reconciles the Payables Items which shall render only one Tax
+        Cash Basis Journal Entry because of the actual payment, i.e.
+        amount_currency != 0:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Tax Base Acc.           0.00 USD         106,841.65              0.00
+            Tax Base Acc.       0.00 USD               0.00        106,841.65
+        Creditable Taxes      848.16 USD          17,094.66              0.00
+            Taxes            -848.16 USD               0.00         17,094.66
+        """
+
+        company = self.env.ref('base.main_company')
+        company.country_id = self.ref('base.us')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+
+        aml_obj = self.env['account.move.line'].with_context(
+            check_move_validity=False)
+
+        # Purchase
+        purchase_move = self.env['account.move'].create({
+            'name': 'purchase',
+            'journal_id': self.purchase_journal.id,
+        })
+
+        aml_obj.create({
+            'name': 'expenseTaxed',
+            'account_id': self.expense_account.id,
+            'debit': 106841.65,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, self.tax_cash_basis.id, False)],
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 5301.00,
+        })
+        aml_obj.create({
+            'name': 'TaxLine',
+            'account_id': self.tax_waiting_account.id,
+            'debit': 17094.66,
+            'move_id': purchase_move.id,
+            'tax_line_id': self.tax_cash_basis.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 848.16,
+        })
+        purchase_payable_line0 = aml_obj.create({
+            'name': 'Payable',
+            'account_id': self.account_rsa.id,
+            'credit': 123936.31,
+            'move_id': purchase_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': -6149.16,
+        })
+        purchase_move.post()
+
+        # FX 01 Move
+        fx_move_01 = self.env['account.move'].create({
+            'name': 'FX 01',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_01_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'debit': 167.86,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_income_account.id,
+            'credit': 167.86,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_01.post()
+
+        # Payment Move
+        payment_move = self.env['account.move'].create({
+            'name': 'payment',
+            'journal_id': self.bank_journal_usd.id,
+        })
+        payment_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'debit': 123768.45,
+            'move_id': payment_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 6149.16,
+        })
+        aml_obj.create({
+            'account_id': self.account_usd.id,
+            'credit': 123768.45,
+            'move_id': payment_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': -6149.16,
+        })
+        payment_move.post()
+
+        to_reconcile = (
+            (purchase_move + payment_move + fx_move_01).mapped('line_ids')
+            .filtered(lambda l: l.account_id.internal_type == 'payable'))
+        to_reconcile.reconcile()
+
+        # check reconciliation in Payable account
+        self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
+        self.assertEqual(
+            purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
+            purchase_payable_line0 + fx_01_payable_line + payment_payable_line)
+
+        # check cash basis
+        cash_basis_moves = self.env['account.move'].search(
+            [('journal_id', '=', self.cash_basis_journal.id)])
+
+        self.assertEqual(len(cash_basis_moves), 1)
+
+        cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
+        self.assertEqual(len(cash_basis_aml_ids), 4)
+
+        # check amounts
+        cash_basis_move1 = cash_basis_moves.filtered(
+            lambda m: m.amount == 123936.31)
+
+        self.assertTrue(cash_basis_move1.exists())
+
+        # For first move
+        move_lines = cash_basis_move1.line_ids
+        base_amount_tax_lines = move_lines.filtered(
+            lambda l: l.account_id == self.tax_base_amount_account)
+        self.assertEqual(len(base_amount_tax_lines), 2)
+        self.assertAlmostEqual(
+            sum(base_amount_tax_lines.mapped('credit')), 106841.65)
+        self.assertAlmostEqual(
+            sum(base_amount_tax_lines.mapped('debit')), 106841.65)
+
+        self.assertAlmostEqual(
+            (move_lines - base_amount_tax_lines)
+            .filtered(lambda l: l.account_id == self.tax_waiting_account)
+            .credit, 17094.66)
+        self.assertAlmostEqual(
+            (move_lines - base_amount_tax_lines)
+            .filtered(lambda l: l.account_id == self.tax_final_account)
+            .debit, 17094.66)
+
+    def test_reconciliation_cash_basis_fx_02(self):
+        """
+        Company's Currency EUR
+
+        Having issued an invoice at date Nov-21-2018 as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Expenses            5,301.00 USD         106,841.65              0.00
+        Taxes                 848.16 USD          17,094.66              0.00
+            Payables       -6,149.16 USD               0.00        123,936.31
+
+        On Nov-30-2018 user issues an FX Journal Entry as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        FX Losses               0.00 USD           1.572.96             0.00
+            Payables            0.00 USD               0.00         1.572.96
+
+        On Dec-20-2018 user issues an FX Journal Entry as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Payables                0.00 USD           1.740.82             0.00
+            FX Gains            0.00 USD               0.00         1.740.82
+
+        On Same day user records a payment for:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Payables            6,149.16 USD         123,768.45              0.00
+            Bank           -6,149.16 USD               0.00        123,768.45
+
+        And then reconciles the Payables Items which shall render only one Tax
+        Cash Basis Journal Entry because of the actual payment, i.e.
+        amount_currency != 0:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Tax Base Acc.           0.00 USD         106,841.65              0.00
+            Tax Base Acc.       0.00 USD               0.00        106,841.65
+        Creditable Taxes      848.16 USD          17,094.66              0.00
+            Taxes            -848.16 USD               0.00         17,094.66
+        """
+
+        company = self.env.ref('base.main_company')
+        company.country_id = self.ref('base.us')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+
+        aml_obj = self.env['account.move.line'].with_context(
+            check_move_validity=False)
+
+        # Purchase
+        purchase_move = self.env['account.move'].create({
+            'name': 'purchase',
+            'journal_id': self.purchase_journal.id,
+        })
+
+        aml_obj.create({
+            'name': 'expenseTaxed',
+            'account_id': self.expense_account.id,
+            'debit': 106841.65,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, self.tax_cash_basis.id, False)],
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 5301.00,
+        })
+        aml_obj.create({
+            'name': 'TaxLine',
+            'account_id': self.tax_waiting_account.id,
+            'debit': 17094.66,
+            'move_id': purchase_move.id,
+            'tax_line_id': self.tax_cash_basis.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 848.16,
+        })
+        purchase_payable_line0 = aml_obj.create({
+            'name': 'Payable',
+            'account_id': self.account_rsa.id,
+            'credit': 123936.31,
+            'move_id': purchase_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': -6149.16,
+        })
+        purchase_move.post()
+
+        # FX 01 Move
+        fx_move_01 = self.env['account.move'].create({
+            'name': 'FX 01',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_01_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'credit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_expense_account.id,
+            'debit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_01.post()
+
+        # FX 02 Move
+        fx_move_02 = self.env['account.move'].create({
+            'name': 'FX 02',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_02_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'debit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_income_account.id,
+            'credit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_02.post()
+
+        # Payment Move
+        payment_move = self.env['account.move'].create({
+            'name': 'payment',
+            'journal_id': self.bank_journal_usd.id,
+        })
+        payment_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'debit': 123768.45,
+            'move_id': payment_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 6149.16,
+        })
+        aml_obj.create({
+            'account_id': self.account_usd.id,
+            'credit': 123768.45,
+            'move_id': payment_move.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': -6149.16,
+        })
+        payment_move.post()
+
+        to_reconcile = (
+            (purchase_move + payment_move + fx_move_01 + fx_move_02)
+            .mapped('line_ids')
+            .filtered(lambda l: l.account_id.internal_type == 'payable'))
+        to_reconcile.reconcile()
+
+        # check reconciliation in Payable account
+        self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
+        self.assertEqual(
+            purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
+            purchase_payable_line0 + fx_01_payable_line + fx_02_payable_line +
+            payment_payable_line)
+
+        # check cash basis
+        cash_basis_moves = self.env['account.move'].search(
+            [('journal_id', '=', self.cash_basis_journal.id)])
+
+        self.assertEqual(len(cash_basis_moves), 1)
+
+        cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
+        self.assertEqual(len(cash_basis_aml_ids), 4)
+
+        # check amounts
+        cash_basis_move1 = cash_basis_moves.filtered(
+            lambda m: m.amount == 123936.31)
+
+        self.assertTrue(cash_basis_move1.exists())
+
+        # For first move
+        move_lines = cash_basis_move1.line_ids
+        base_amount_tax_lines = move_lines.filtered(
+            lambda l: l.account_id == self.tax_base_amount_account)
+        self.assertEqual(len(base_amount_tax_lines), 2)
+        self.assertAlmostEqual(
+            sum(base_amount_tax_lines.mapped('credit')), 106841.65)
+        self.assertAlmostEqual(
+            sum(base_amount_tax_lines.mapped('debit')), 106841.65)
+
+        self.assertAlmostEqual(
+            (move_lines - base_amount_tax_lines)
+            .filtered(lambda l: l.account_id == self.tax_waiting_account)
+            .credit, 17094.66)
+        self.assertAlmostEqual(
+            (move_lines - base_amount_tax_lines)
+            .filtered(lambda l: l.account_id == self.tax_final_account)
+            .debit, 17094.66)

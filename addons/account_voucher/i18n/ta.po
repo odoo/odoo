@@ -6,6 +6,7 @@
 # prassanna john paul augustin <prasaugus@gmail.com>, 2019
 # Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
 # Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Abul Hassan M I <miabulhassan@gmail.com>, 2019\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,37 +30,41 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+"ஒரு புதிய மற்றும் உறுதிப்படுத்தப்படாத வவுச்சரை ஒரு பயனர் குறியாக்கும் போது 'வரைவு' நிலை பயன்படுத்தப்படுகிறது.\n"
+"  ரசீது ஒரு ரசீது எண் இல்லாத போது 'ப்ரோ-ஃபார்மா' நிலை பயன்படுத்தப்படுகிறது.\n"
+"  * பயனாளர் ரசீது உருவாக்கும் போது 'இடுகையின் நிலை' பயன்படுத்தப்படுகிறது, ஒரு ரசீது எண் உருவாக்கப்பட்டிருக்கிறது, மற்றும் கணக்கில் வூச்சர் உள்ளீடுகள் உருவாக்கப்படுகின்றன.\n"
+"  * பயனர் ரத்து செய்யப்படும் போது 'ரத்து செய்யப்பட்ட' நிலை பயன்படுத்தப்படுகிறது."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_id
 msgid "Account"
-msgstr ""
+msgstr "கணக்கு"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "கணக்கு தேதி"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "கணக்கியல் தேதி"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr ""
+msgstr "பைனான்ஸ் வவுச்சர்"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Accounting Voucher Line"
-msgstr ""
+msgstr "பைனான்ஸ் வவுச்சர் வரி"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "செயல் தேவை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
@@ -69,40 +74,40 @@ msgstr "தொகை"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_analytic_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "பகுப்பாய்வு குறிச்சொற்கள்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "இந்த ரசீதை நிச்சயமாக ரத்துசெய்ய விரும்புகிறீர்களா?"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "இணைப்பு எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr ""
+msgstr "பில் தேதி"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "பில் தகவல்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "பில் குறிப்பு"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -112,18 +117,19 @@ msgstr "ரத்து"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "ரசீது ரத்துசெய்யவும்"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ரத்து"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
+"ஏற்கனவே திறக்கப்பட்ட அல்லது பணம் செலுத்தியுள்ள ரசீது (களை) நீக்க முடியாது."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
@@ -135,12 +141,12 @@ msgstr "நிறுவனம்"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "இந்த பத்திரிகை தொடர்பான நிறுவனம்"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Create a new sale receipt"
-msgstr ""
+msgstr "புதிய விற்பனை ரசீது உருவாக்கவும்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
@@ -165,7 +171,7 @@ msgstr "நாணயம்"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 msgid "Customer"
-msgstr ""
+msgstr "வாடிக்கையாளர்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -189,51 +195,51 @@ msgstr "காட்சி பெயர்"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft"
-msgstr ""
+msgstr "வரைவு"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "வரைவு வவுச்சர்கள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
 msgid "Due Date"
-msgstr ""
+msgstr "தேதி தேதி"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "கணக்கியல் உள்ளீடுகளுக்கான பயனுள்ள தேதி"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "பின்பற்றுபவர்கள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "பின்தொடர்பவர்கள் (சேனல்கள்)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "பின்பற்றுபவர்கள் (பங்குதாரர்கள்)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "ரசீது காண்பிக்கும் போது இந்த வரியை வரிசைப்படுத்துகிறது."
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr ""
+msgstr "மூலம் குழு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
@@ -244,34 +250,36 @@ msgstr "ID"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "சோதனை செய்தால் புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "சரிபார்க்கப்பட்டால், புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "சரிபார்க்கப்பட்டால், சில செய்திகளுக்கு ஒரு பிழை ஏற்பட்டது."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"வழக்கில் நாம் வரிக்கு ஒரு சுற்றுச்சூழல் சிக்கல் உள்ளது, அதை சரிசெய்ய இந்த "
+"துறையில் பயன்படுத்தவும்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "உள் குறிப்புகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "பின்பற்றுபவர்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
@@ -279,18 +287,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Journal"
-msgstr ""
+msgstr "ஜர்னல்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "ஜர்னல் நுழைவு"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr ""
+msgstr "பத்திரிகை பொருட்கள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
@@ -313,34 +321,34 @@ msgstr "கடைசியாக புதுப்பிக்கப்பட�
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "முக்கிய இணைப்பு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "செய்தி வழங்கல் பிழை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "செய்திகள்"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:109
 #, python-format
 msgid "Missing Company"
-msgstr ""
+msgstr "இல்லை கம்பெனி"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:111
 #, python-format
 msgid "Missing Currency"
-msgstr ""
+msgstr "நாணயத்தை காணவில்லை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
 msgid "Notes"
-msgstr ""
+msgstr "குறிப்புக்கள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
@@ -350,37 +358,37 @@ msgstr "எண்"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "செயல்கள் எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "பிழை எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "நடவடிக்கை தேவைப்படும் செய்திகளின் எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "விநியோக பிழை கொண்ட செய்திகளின் எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "படிக்காத செய்திகளின் எண்ணிக்கை"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "விலைக்கு விலக்கு மட்டும் வரிக்கு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
-msgstr ""
+msgstr "பணம்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
@@ -391,39 +399,39 @@ msgstr "கூட்டாளி"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "நேரடியாக செலுத்தவும்"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "பின்னர் பணம் கொடுங்கள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
-msgstr ""
+msgstr "கொடுப்பனவு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
 msgid "Payment Memo"
-msgstr ""
+msgstr "பணம் குறிப்பு"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
 msgid "Payment Method"
-msgstr ""
+msgstr "கொடுப்பனவு முறை"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட பத்திரிகையின் வரிசையை தயவுசெய்து செயல்படுத்தவும்!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:211
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "பத்திரிகையில் ஒரு காட்சியை வரையறுக்கவும்"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -431,19 +439,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr ""
+msgstr "வெளியிட்டது"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "வவுச்சர்கள்"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "புரோ-வடிவம்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
@@ -453,17 +461,17 @@ msgstr "தயாரிப்பு"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr ""
+msgstr "கொள்முதல்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "கொள்முதல் ரசீது"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "வாஷர் வாங்கவும்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
@@ -476,12 +484,12 @@ msgstr "அளவு"
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Receipts"
-msgstr ""
+msgstr "ரசீதுகள்"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "புதிய வாங்குதல் ரசீது பதிவுசெய்யவும்"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -491,19 +499,19 @@ msgstr "விற்பனை"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Information"
-msgstr ""
+msgstr "விற்பனை தகவல்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
+msgstr "விற்பனை ரசீது"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Search Vouchers"
-msgstr ""
+msgstr "தேடல் உறுதி சீட்டுகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
@@ -514,7 +522,7 @@ msgstr "வரிசை"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "வரைவை அமைக்கவும்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
@@ -522,17 +530,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Status"
-msgstr ""
+msgstr "நிலைமை"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "நிலை மாற்றம்"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "நிலை மாறப்பட்டது"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
@@ -542,43 +550,43 @@ msgstr "வரி"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
-msgstr ""
+msgstr "வரி தொகை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "வரி திருத்தம்"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "வவுச்சர் முற்றிலும் பணம் சம்பாதித்தார்."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட தயாரிப்பு தொடர்பான வருமானம் அல்லது செலவு கணக்கு."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "இந்த ஆவணத்தின் பங்குதாரர் குறிப்பு."
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr ""
+msgstr "பரிசீலிக்க"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
 msgid "Total"
-msgstr ""
+msgstr "மொத்த"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr ""
+msgstr "மொத்த தொகை"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__voucher_type
@@ -593,25 +601,25 @@ msgstr "அலகு விலை"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "படிக்காத செய்திகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "படிக்காத செய்திகள்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
-msgstr ""
+msgstr "சரிபார்க்கவும்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr ""
+msgstr "விற்பனையாளர்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -626,14 +634,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr ""
+msgstr "வவுச்சர்"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr ""
+msgstr "ரசீது பதிவுகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
@@ -642,27 +650,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr ""
+msgstr "வவுச்சர் கோடுகள்"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "ரசீது புள்ளிவிபரம்"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "உறுதிப்படுத்தல் பதிவுகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "இணைய செய்திகள்"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "வலைத்தள தகவல்தொடர்பு வரலாறு"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -670,6 +678,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"கொள்முதல் ரசீது உறுதி செய்யப்பட்டால், நீங்கள் பதிவு செய்யலாம்\n"
+"                 இந்த கொள்முதல் ரசீது தொடர்பான விற்பனையாளர் கட்டணம்."
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -677,9 +687,11 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"விற்பனை ரசீது உறுதி செய்யப்பட்டால், வாடிக்கையாளரை பதிவு செய்யலாம்\n"
+"                 இந்த விற்பனை ரசீது தொடர்பான பணம்."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
 msgid "You must first select a partner."
-msgstr ""
+msgstr "முதலில் ஒரு கூட்டாளியை தேர்ந்தெடுக்க வேண்டும்."

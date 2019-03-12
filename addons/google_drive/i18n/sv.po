@@ -3,17 +3,19 @@
 # * google_drive
 # 
 # Translators:
-# Martin Trigaux, 2018
-# deeman <da.jkpg@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018
+# Martin Trigaux, 2019
+# deeman <da.jkpg@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +78,11 @@ msgid ""
 msgstr ""
 
 #. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurations Inställningar"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
 msgstr "Skapad av"
@@ -90,6 +97,11 @@ msgstr "Skapad den"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr ""
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Kund"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
@@ -231,9 +243,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
-"                                'Agrolait_SO0001_Sales'."
+"                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
 
 #. module: google_drive
@@ -263,8 +275,3 @@ msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-
-#. module: google_drive
-#: model:ir.model,name:google_drive.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""

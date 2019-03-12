@@ -143,17 +143,17 @@ msgstr "<p>Ця картка в даний час пов'язана з наст�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Створити обліковий запис PayPal</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Отримати мої ключі Stripe</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit card(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Кредитна(і) картка(и)</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -257,49 +257,51 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Журнал повинен бути вказаний еквайєром %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Еквайєр платежу повинен створити транзакцію."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Платіжна операція вже існує."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Для створення нової платіжної операції потрібен токен."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "Операція %s з %s ініційованим використанням %s кредитної картки."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "Операцію %s з %s ініційовано."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
 msgstr ""
+"Операція не може бути пов'язана з рахунками-фактурами з різними валютами."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
 msgstr ""
+"Операція не може бути пов'язана з рахунками-фактурами з різними партнерами."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -391,7 +393,7 @@ msgstr "Сума"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "Під час обробки цього платежу сталася помилка."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -404,7 +406,7 @@ msgstr "Застосувати"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
+msgstr "Дійсно анулювати авторизовану транзакцію? Цю дію не можна скасувати."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -425,7 +427,7 @@ msgstr "Авторизований"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Авторизовані операції"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -493,7 +495,7 @@ msgstr "Скасовано"
 #: code:addons/payment/static/src/xml/payment_processing.xml:109
 #, python-format
 msgid "Cancelled payments"
-msgstr ""
+msgstr "Скасовані платежі"
 
 #. module: payment
 #. openerp-web
@@ -527,13 +529,13 @@ msgstr "Отримати суму з Odoo, коли буде завершено 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "Перевірте тут"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Виберіть метод оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -546,7 +548,7 @@ msgstr "Місто"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Натисніть тут, щоби перейти на сторінку підтвердження."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -582,7 +584,7 @@ msgstr "Налаштування"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Configure your payment methods."
-msgstr ""
+msgstr "Налаштуйте ваші методи оплати."
 
 #. module: payment
 #. openerp-web
@@ -621,22 +623,22 @@ msgstr "Країна"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "Створіть новий еквайєр платежу"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Створіть нову платіжну операцію"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "Створіть іконку платежу"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "Створіть збережені дані про оплату"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -674,7 +676,7 @@ msgstr "Власний"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Спеціальні платіжні інструкції"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -825,7 +827,7 @@ msgstr "Групувати за"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Чи було оброблено платіж"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -855,7 +857,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Якщо оплата не підтверджена, ви можете зв'язатися з нами."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -894,19 +896,19 @@ msgstr "Внутрішня довідка TX"
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Внутрішня помилка сервера"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Знайдено недійсний токен! Еквайєр токену %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Знайдено недійсний токен! Партнер токену %s != %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -1119,6 +1121,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"Не вдалося знайти спосіб оплати вручну для цієї компанії. Створіть його з "
+"меню Еквайєр платежу."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1130,7 +1134,7 @@ msgstr "Не знайдено платіжного еквайєра."
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Не оброблено жодного платежу."
 
 #. module: payment
 #. openerp-web
@@ -1179,50 +1183,52 @@ msgstr "Гаразд"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:48
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Доступ до цих даних можуть отримати лише адміністратори."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:723
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Лише чорнові операції можуть бути авторизовані."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:714
 #: code:addons/payment/models/payment_acquirer.py:775
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Можна обробляти лише чорнову операцію."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:763
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Лише чорнова/авторизована операція може бути скасована."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:732
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Лише чорнову/авторизовану операцію можна опублікувати."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1018
 #, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
+"Тільки ті транзакції, що мають статус отримання, можуть бути отримані."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
 msgstr ""
+"Тільки ті транзакції, що мають статус отримання, можуть бути скасовані."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Або відскануйте мене через ваш банкіівський додаток."
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1242,17 +1248,17 @@ msgstr "Назва партнера"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Оплатити через PayPal"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Оплатити з іншим платіжним еквайєром"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Оплатити кредитною карткою (через проведення)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1310,7 +1316,7 @@ msgstr "Іконки оплати"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Інструкції оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
@@ -1362,7 +1368,7 @@ msgstr "Платіжні операції"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Помічник залучення платіжного еквайєра"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1372,7 +1378,7 @@ msgstr "Платіж з Odoo"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Встановлено спосіб оплати!"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:252
@@ -1392,14 +1398,14 @@ msgstr "Платежі"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Платежі не вдалися"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Отримані платежі"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1463,6 +1469,8 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"Будь ласка, виконайте платіж <ul><li>Банк: %s</li><li>Номер рахунку: "
+"%s</li><li>Власник рахунку: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
@@ -1495,14 +1503,14 @@ msgstr "Будь-ласка, використовуйте ім'я замовле
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Будь ласка, очікуйте ..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Платіжні операції після обробки"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1542,7 +1550,7 @@ msgstr "Референс"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Референс має бути унікальним!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1557,7 +1565,7 @@ msgstr "Обов'язкові поля не заповнені"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "Повернути URL після оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1593,7 +1601,7 @@ msgstr "Збережені дані картки підтримуються"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Вибраний залучений метод оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1630,12 +1638,12 @@ msgstr "Помилка сервера"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Помилка сервера:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Встановіть платежі"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
@@ -1672,7 +1680,7 @@ msgstr "Конкретні країни"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Етап кроку залучення еквайєра платежу "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1727,13 +1735,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "Інформація QR-коду SEPA не встановлена правильно."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "Клієнт обрав %s оплатити цей документ."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -1741,7 +1749,7 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
-msgstr ""
+msgstr "Операцію %s з %s для %s було авторизовано. Очікуйте для отримання..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:682
@@ -1749,13 +1757,13 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
-msgstr ""
+msgstr "Операція %s з %s для %s було скасовано з наступним повідомленням: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "Операцію %s з %s для %s було скасовано."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1764,12 +1772,14 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
+"Операцію %s з %s для %s було підтверджено. Відповідні платежі опубліковано: "
+"%s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "Операція %s з %s для %s очікує на розгляд."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1824,7 +1834,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Цю операцію було скасовано."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1847,12 +1857,12 @@ msgstr "Тип"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Неможливо зв'язатися із сервером Odoo."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Використайте QR-код SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1895,13 +1905,13 @@ msgstr "Недійсна транзакція"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Очікує платежу"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "Очікує підтвердження платежу..."
 
 #. module: payment
 #. openerp-web
@@ -1937,7 +1947,7 @@ msgstr "Наразі неможливо видалити спосіб оплат
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Ми не можемо знайти ваш платіж, але не хвилюйтеся."
 
 #. module: payment
 #. openerp-web
@@ -1958,14 +1968,14 @@ msgstr "Ми не можемо перенаправити вас на форму
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr ""
+msgstr "Ми обробляємо ваш платіж, будь ласка, зачекайте..."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Ми очікуємо платіжний еквайєр для підтвердження платежу."
 
 #. module: payment
 #. openerp-web
@@ -1986,12 +1996,13 @@ msgstr "Банківський переказ"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr ""
+"Ви можете натиснути тут, для перенаправлення на сторінку підтвердження."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Вам необхідно встановити журнал для вашого еквайєра платежу %s."
 
 #. module: payment
 #. openerp-web
@@ -1999,25 +2010,28 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Через кілька хвилин ви повинні отримати електронний лист, що підтверджує "
+"оплату."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Вас буде повідомлено, коли платіж буде підтверджено."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Вас буде повідомлено, коли платіж буде повністю підтверджено."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompted with Stripe Payment page for payment information."
 msgstr ""
+"Вам буде запропоновано сторінку оплати Stripe для платіжної інформації."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -2080,14 +2094,14 @@ msgstr "Після натискання кнопки оплати, ви пере
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Ваше замовлення обробляється."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Ваше замовлення обробляється, будь ласка, зачекайте..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2099,14 +2113,14 @@ msgstr "Вашу оплату було авторизовано."
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Ваш платіж отримано, але його потрібно підтвердити вручну."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Ваш платіж перебуває у стані очікування."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -2174,7 +2188,7 @@ msgstr "довідка: номер посилання транзакції"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "щоб обрати інший спосіб оплати."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form

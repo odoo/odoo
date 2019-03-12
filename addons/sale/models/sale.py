@@ -320,7 +320,7 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'user_id': self.partner_id.user_id.id or self.env.uid
+            'user_id': self.partner_id.user_id.id or self.partner_id.commercial_partner_id.user_id.id or self.env.uid
         }
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
@@ -651,11 +651,15 @@ class SaleOrder(models.Model):
             if email_act and email_act.get('context'):
                 email_ctx = email_act['context']
                 email_ctx.update(default_email_from=order.company_id.email)
-                order.with_context(email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
+                order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
         return True
 
     @api.multi
     def action_done(self):
+        tx = self.sudo().transaction_ids.get_last_transaction()
+        if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+            tx._set_transaction_done()
+            tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     @api.multi
@@ -884,7 +888,14 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
 
+    @api.multi
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+        """Override for sales order.
+
+        If the SO is in a state where an action is required from the partner,
+        return the URL with a login token. Otherwise, return the URL with a
+        generic access token (no login).
+        """
         self.ensure_one()
         if self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
@@ -1439,6 +1450,16 @@ class SaleOrderLine(models.Model):
 
         result = {'domain': domain}
 
+        name = self.get_sale_order_line_multiline_description_sale(product)
+
+        vals.update(name=name)
+
+        self._compute_tax_id()
+
+        if self.order_id.pricelist_id and self.order_id.partner_id:
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+        self.update(vals)
+
         title = False
         message = False
         warning = {}
@@ -1450,17 +1471,6 @@ class SaleOrderLine(models.Model):
             result = {'warning': warning}
             if product.sale_line_warn == 'block':
                 self.product_id = False
-                return result
-
-        name = self.get_sale_order_line_multiline_description_sale(product)
-
-        vals.update(name=name)
-
-        self._compute_tax_id()
-
-        if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
-        self.update(vals)
 
         return result
 

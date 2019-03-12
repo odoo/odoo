@@ -57,14 +57,14 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'nvt'})"
+msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'n/b'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Betalingsbewijs (Ref ${object.name or 'nvt' })"
+"${object.company_id.name} Betalingsbewijs (Ref ${object.name or 'n/b' })"
 
 #. module: account
 #: code:addons/account/models/account.py:937
@@ -246,7 +246,7 @@ msgstr "<em>Concept factuur</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" title=\"Datum\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -264,8 +264,8 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
 "title=\"Selection\"/>"
 msgstr ""
-"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
-"title=\"Selection\"/>"
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selectie\" role=\"img\" "
+"title=\"Selectie\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -318,8 +318,8 @@ msgid ""
 "-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Wachtend op betaling</span></span>"
+" aria-label=\"Geopend\" title=\"Geopend\" role=\"img\"/><span class=\"d-none"
+" d-md-inline\"> Wachtend op betaling</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -329,7 +329,7 @@ msgid ""
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
-"check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
+"check\" aria-label=\"Betaald\" title=\"Betaald\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Betaald</span></span>"
 
 #. module: account
@@ -340,8 +340,8 @@ msgid ""
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
-"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> Geannuleerd</span></span>"
+"remove\" aria-label=\"Geannuleerd\" title=\"Geannuleerd\" "
+"role=\"img\"/><span class=\"d-none d-md-inline\"> Geannuleerd</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -416,7 +416,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Algemene BTW</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -425,7 +425,7 @@ msgid ""
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Fiscale lokalisatie</span>\n"
-"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -434,7 +434,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Hoofdvaluta</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" aria-label=\"De waarden die hier worden ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -492,12 +492,12 @@ msgstr "<span role=\"separator\">Bekijk</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr "<span title=\"Balance in Odoo\">Saldo in grootboek</span>"
+msgstr "<span title=\"Saldo in grootboek\">Saldo in grootboek</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Latest Statement\">Laatste afschrift</span>"
+msgstr "<span title=\"Laatste afschrift\">Laatste afschrift</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -2046,7 +2046,7 @@ msgstr "Avatar van auteur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-Complete"
-msgstr "Auto-complete"
+msgstr "Automatisch aanvullen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__vendor_bill_id
@@ -3931,7 +3931,7 @@ msgid ""
 msgstr ""
 "Geachte heer / mevrouw,\n"
 "\n"
-"Uit onze gegevens blijkt dat sommige rekeningen nog niet zijn betaald. Hieronder vindt u meer informatie.\n"
+"Uit onze gegevens blijkt dat sommige facturen nog niet zijn betaald. Hieronder vindt u meer informatie.\n"
 "Indien het bedrag reeds is betaald, dan kunt u dit bericht negeren. Anders willen wij u vragen om het onderstaande totaal bedrag over te maken.\n"
 "\n"
 "Als u vragen heeft over uw facturen, neem dan contact met ons op.\n"
@@ -4185,7 +4185,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr "Verslag"
+msgstr "Samenvatting"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__group_products_in_bills
@@ -9110,7 +9110,7 @@ msgstr "Selecteer een relatie of kies een tegenrekening"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Select an old vendor bill"
-msgstr "Selecteer een oude leveranciersfactuur"
+msgstr "Selecteer een leveranciersfactuur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -12230,8 +12230,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
-"U kunt gen factuur bevestigen met een negatief totaalbedrag. U dient "
-"hiervoor een credit factuur aan te maken."
+"U kunt geen factuur bevestigen met een negatief totaalbedrag. U dient "
+"hiervoor een creditfactuur aan te maken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form

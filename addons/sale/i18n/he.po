@@ -7,13 +7,14 @@
 # yizhaq agronov <yizhaq@gmail.com>, 2018
 # yacov mosbacher (‫יעקב מוסבכר‬‎) <ymosba@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Yves Goldberg <admin@ygol.com>, 2018
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # hed shefetr <hed@laylinetech.com>, 2018
+# Yves Goldberg <admin@ygol.com>, 2019
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: hed shefetr <hed@laylinetech.com>, 2018\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +42,8 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
 msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -472,6 +469,11 @@ msgid "Accept &amp; Pay"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
 msgstr ""
@@ -644,7 +646,7 @@ msgstr "בעלות"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ספירת קבצים מצורפים"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
@@ -822,32 +824,32 @@ msgstr "חברה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות  DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "חשב עלויות המשלוח ושלח באמצעות bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1207,11 +1209,6 @@ msgid "Details"
 msgstr "פרטים"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid "Digital Content"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
 msgstr ""
@@ -1333,7 +1330,7 @@ msgstr "תבנית דוא\"ל"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr ""
+msgstr "תאריך צפוי"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
@@ -1372,16 +1369,21 @@ msgstr "עוקבים"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "עוקבים (ערוצים)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "עוקבים (שותפים)"
 
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1401,7 +1403,7 @@ msgstr "חשבונית הופקה במלואה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "פעילויות עתידיות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1478,12 +1480,12 @@ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "אם סומן, הודעות חדשות דורשות את תשומת הלב שלך."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "אם סומן, לחלק מההודעות יש שגיאת משלוח."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1702,6 +1704,12 @@ msgid "Invoicing"
 msgstr "הפקת חשבוניות"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "כתובת לחשבונית"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -1730,7 +1738,7 @@ msgstr "כתובת לחשבונית ומשלוח"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "האם עוקב"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -1821,7 +1829,7 @@ msgstr "תאריך עדכון אחרון"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "פעילויות מאוחרות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1860,7 +1868,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "קובץ מצורף ראשי"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1903,7 +1911,7 @@ msgstr "שוליים"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "הודעת שגיאת משלוח"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -1987,17 +1995,17 @@ msgstr "הצעת מחיר חדשה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "תאריך היעד האחרון לפעילת הבאה "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "תקציר הפעילות הבאה "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "סוג הפעילות הבאה"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -2059,7 +2067,7 @@ msgstr "מספר ימים בין אישור ההזמנה לבין שליחת ה�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "מספר שגיאה"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2069,7 +2077,7 @@ msgstr "מספר ההודעות שדורשות פעולה"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "מספר הודעות עם שגיאת משלוח"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
@@ -2089,6 +2097,11 @@ msgstr "מספר ההודעות שלא נקראו"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
 msgstr ""
 
 #. module: sale
@@ -2296,7 +2309,7 @@ msgstr "מידע נוסף"
 #. module: sale
 #: selection:sale.order,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "איחור - שזמנו פירעונו כבר עבר"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -2338,6 +2351,11 @@ msgstr "לשלם עכשיו"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
 msgstr ""
 
 #. module: sale
@@ -2424,7 +2442,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "תכנן"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:450
@@ -3132,6 +3150,12 @@ msgid "Sell and purchase products in different units of measure"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
@@ -3260,6 +3284,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
 msgstr ""
 
 #. module: sale
@@ -3797,7 +3826,7 @@ msgstr "יחידות מידה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "לא נעול"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread

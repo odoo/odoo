@@ -96,6 +96,7 @@ var ThreadWidget = Widget.extend({
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
         }
+        this._super();
     },
     /**
      * @param {mail.model.AbstractThread} thread the thread to render.
@@ -474,7 +475,7 @@ var ThreadWidget = Widget.extend({
                     return message.getID() === messageID;
                 });
                 return QWeb.render('mail.widget.Thread.Message.MailTooltip', {
-                    data: message.getCustomerEmailData()
+                    data: message.hasCustomerEmailData() ? message.getCustomerEmailData() : [],
                 });
             },
         });

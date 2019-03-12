@@ -10,14 +10,15 @@
 # gezza <geza.nagy@oregional.hu>, 2018
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tamás Dombos, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-02-08 05:29+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: Tamás Dombos, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -210,6 +211,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -368,6 +373,8 @@ msgstr ""
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
 msgstr ""
+"Következő tevékenység csak olyan modellhez csatolható, amelynél a társalgás "
+"be van kapcsolva."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -416,6 +423,7 @@ msgstr "Csoportok hozzáférése"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
 msgstr "Művelet szükséges"
 
@@ -451,6 +459,7 @@ msgstr "Aktív domain név"
 #: code:addons/mail/static/src/xml/systray.xml:108
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -485,6 +494,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
 msgstr "Tevékenység állapota"
 
@@ -519,6 +529,13 @@ msgstr ""
 #, python-format
 msgid "Add"
 msgstr "Hozzáadás"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/chatter.xml:30
+#, python-format
+msgid "Add Attachments"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -816,6 +833,7 @@ msgstr "Melléklet"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
 msgstr "Mellékletek száma"
 
@@ -900,7 +918,7 @@ msgstr "Automatikus törlés"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Auto Schedule Next Activity"
-msgstr ""
+msgstr "Következő tevékenység automatikus ütemezése"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -981,6 +999,7 @@ msgstr "Legjobbakat,"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
 msgstr "Tiltólista"
 
@@ -1170,6 +1189,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -1355,12 +1375,13 @@ msgstr "Társalgások"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Visszadobott levél számláló ehhez a kapcsolathoz."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:565
+#: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
 msgstr "Létrehoz %s"
@@ -1664,8 +1685,8 @@ msgstr "Hozzászól"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
-msgid "Discussion channel"
-msgstr "Beszélgetési csatorna"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1731,6 +1752,13 @@ msgstr ""
 "(kizárólag tömeges levélküldés)"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chatter.js:498
+#, python-format
+msgid "Do you really want to delete %s?"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
 msgstr "Dokumentum"
@@ -1771,7 +1799,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "Kész & Következő ütemezése"
 
 #. module: mail
 #. openerp-web
@@ -2198,6 +2226,7 @@ msgstr "Követés"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
@@ -2208,6 +2237,7 @@ msgstr "Követők"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "Követők (Csatornák)"
 
@@ -2216,6 +2246,7 @@ msgstr "Követők (Csatornák)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Követők (Partnerek)"
 
@@ -2476,6 +2507,7 @@ msgstr "Üresjárat"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
@@ -2484,6 +2516,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
@@ -2492,6 +2525,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
@@ -2539,6 +2573,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,help:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,help:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,help:mail.field_res_users__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -2740,6 +2775,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
 msgstr "Ő egy követő"
 
@@ -2757,6 +2793,11 @@ msgstr "Elolvassa"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
 msgid "Is Subscribed"
 msgstr "Feliratkozott"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
+msgid "Is a chat"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -2884,20 +2925,20 @@ msgstr "Legutóbb frissítve "
 #: code:addons/mail/static/src/xml/systray.xml:94
 #, python-format
 msgid "Late"
-msgstr "Később"
+msgstr "Késésben"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
-msgstr ""
+msgstr "Késő tevékenységek"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__layout
 #: model:ir.model.fields,field_description:mail.field_mail_mail__layout
 #: model:ir.model.fields,field_description:mail.field_mail_message__layout
 msgid "Layout"
-msgstr ""
+msgstr "Elrendezés"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
@@ -3019,7 +3060,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:92
 #, python-format
 msgid "Log or schedule an activity"
-msgstr ""
+msgstr "Tevékenység rögzítése vagy időzítése"
 
 #. module: mail
 #. openerp-web
@@ -3114,6 +3155,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Fő melléklet"
 
@@ -3242,8 +3284,9 @@ msgstr "Üzenet"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -3350,6 +3393,7 @@ msgstr "Üzenet-ID azonosító"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
@@ -3570,7 +3614,7 @@ msgstr "Címzett szükséges művelet "
 #: code:addons/mail/static/src/xml/discuss.xml:182
 #, python-format
 msgid "New Channel"
-msgstr ""
+msgstr "Új csatorna"
 
 #. module: mail
 #. openerp-web
@@ -3662,20 +3706,23 @@ msgstr "Következő tevékenységek"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Következő tevékenység-határidő"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
 msgstr "Következő tevékenység összegzése"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Következő tevékenységtípus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -3694,7 +3741,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:20
 #, python-format
 msgid "No activities planned."
-msgstr ""
+msgstr "Nincsenek tervezett tevékenységek."
 
 #. module: mail
 #. openerp-web
@@ -3806,6 +3853,7 @@ msgstr "A dokumentum kiértesített követői (csak tömeges üzenetküldés)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Műveletek száma"
 
@@ -3821,14 +3869,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Üzenetek száma, melyek akciót igényelnek"
 
@@ -3837,14 +3887,16 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Olvasatlan üzenetek száma"
 
@@ -4051,9 +4103,12 @@ msgid "Outgoing mail server"
 msgstr "Kimenő levelező szerver"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:110
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Overdue"
 msgstr "lejárt"
 
@@ -4212,18 +4267,21 @@ msgid "Placeholder Expression"
 msgstr "Üres mező kifejezés"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:112
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Planned"
-msgstr ""
+msgstr "Tervezett"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:6
 #, python-format
 msgid "Planned activities"
-msgstr ""
+msgstr "Tervezett tevékenységek"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -4621,6 +4679,7 @@ msgstr "Felelős"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
 msgstr "Felelős felhasználó"
 
@@ -4684,20 +4743,20 @@ msgstr "Ütemezés"
 #: code:addons/mail/static/src/xml/chatter.xml:93
 #, python-format
 msgid "Schedule activity"
-msgstr ""
+msgstr "Tevékenység ütemezése"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:395
 #, python-format
 msgid "Schedule an Activity"
-msgstr "Ütemezzen egy művelet"
+msgstr "Tevékenység ütemezése"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:82
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Tevékenység ütemezése"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__scheduled_date
@@ -5009,12 +5068,17 @@ msgstr "Állapot"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,help:mail.field_res_partner__activity_state
+#: model:ir.model.fields,help:mail.field_res_users__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: Az esedékesség dátuma már elmúlt\n"
+"Ma: A tevékenység dátuma ma van\n"
+"Tervezett: Jövőbeli tevékenységek."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_model_object_field
@@ -5297,8 +5361,9 @@ msgstr "Címzett:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/activity.js:87
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:107
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:111
 #: code:addons/mail/static/src/xml/systray.xml:96
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
@@ -5478,6 +5543,7 @@ msgstr "Ismeretlen hiba"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
@@ -5486,6 +5552,7 @@ msgstr "Olvasatlan üzenetek"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Olvasatlan üzenetek számlálója"
 

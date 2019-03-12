@@ -14,6 +14,12 @@
     </xpath>
 </template>
 
+<template id="assets_common" name="Website Assets Common" inherit_id="web.assets_common">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website/static/src/js/tours/website_tour_reset_password.js"></script>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
@@ -864,17 +870,14 @@
             </h4>
             <div id="error_qweb" class="collapse">
                 <div class="card-body">
-                    <p t-if="exception.qweb.get('message')">
+                    <p t-if="exception.message">
                         <strong>Error message:</strong>
-                        <pre t-esc="exception.qweb.get('message')"/>
+                        <pre t-esc="exception.message"/>
                     </p>
                     <p>
-                        The error occured while rendering the template <code t-esc="qweb_exception.qweb.get('template')"/>
-                        <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
+                        The error occured while rendering the template <code t-esc="qweb_exception.name"/>
+                        <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
                     </p>
-                    <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.pretty_xml()"/>
-                    </t>
                 </div>
             </div>
         </div>
@@ -938,62 +941,74 @@
 </template>
 
 <template id="500">
-    <!-- This template should not use any variable except those provided by website.ir_http._handle_exception -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- This template should not use any variable except those provided by website.ir_http._handle_exception  -->
+    <!--    no request.crsf_token, no theme style, no assets, ... cursor can be broken during rendering !      -->
+    <!--    see test_05_reset_specific_view_controller_broken_request                                          -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <html>
         <head>
             <title t-esc="status_message">Internal Server Error</title>
             <t t-set="debug" t-value="True"/>
-            <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <script>
-                $(document).ready(function() {
-                    var button = $('#reset_templates_button');
-                    button.click(function() {
-                        var dialog = $('#reset_template_confirmation').modal('show');
-                        var input = dialog.find('input[type="text"]').val('').focus();
-                        var dialog_form = dialog.find('form');
-                        dialog_form.submit(function() {
-                            if (input.val() == dialog.find('.confirm_word').text()) {
-                                dialog.modal('hide');
-                                button.prop('disabled', true).text('Working...');
-                                $('#reset_templates_form').trigger('submit');
-                            } else {
-                                input.val('').focus();
-                            }
+
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+
+            <t t-if='views'>
+                <script>
+                    $(document).ready(function() {
+                        var button = $('#reset_templates_button');
+                        button.click(function() {
+                            var dialog = $('#reset_template_confirmation').modal('show');
+                            var input = dialog.find('input[type="text"]').val('').focus();
+                            var dialog_form = dialog.find('form');
+                            dialog_form.submit(function() {
+                                if (input.val() == dialog.find('.confirm_word').text()) {
+                                    dialog.modal('hide');
+                                    button.prop('disabled', true).text('Working...');
+                                    if ($("input[name='templates']:checked").length) {
+                                        $('#reset_templates_form').attr('action', '/website/reset_templates');
+                                        $('#reset_templates_form').trigger('submit');
+                                    }
+                                } else {
+                                    input.val('').focus();
+                                }
+                                return false;
+                            });
                             return false;
                         });
-                        return false;
                     });
-                });
-            </script>
+                </script>
+            </t>
         </head>
         <body>
-            <div role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
+            <div t-if="views" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
                 <div class="modal-dialog">
                     <form role="form">
-                    <div class="modal-content">
-                        <header class="modal-header">
-                            <h3 class="modal-title">Reset templates</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
-                        </header>
-                        <main class="modal-body">
-                            <div class="form-group row mb0">
-                                <label for="page-name" class="col-md-9 col-form-label">
-                                    <p>The selected templates will be reset to their factory settings.</p>
-                                    <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
-                                </label>
-                                <div class="col-md-3 mt16">
-                                    <input type="text" class="form-control" required="required" placeholder="yes"/>
+                        <div class="modal-content">
+                            <header class="modal-header">
+                                <h3 class="modal-title">Reset templates</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            </header>
+                            <main class="modal-body">
+                                <div class="form-group row mb0">
+                                    <label for="page-name" class="col-md-9 col-form-label">
+                                        <p>The selected templates will be reset to their factory settings.</p>
+                                        <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
+                                    </label>
+                                    <div class="col-md-3 mt16">
+                                        <input type="text" id="page-name" class="form-control" required="required" placeholder="yes"/>
+                                    </div>
                                 </div>
-                            </div>
-                        </main>
-                        <footer class="modal-footer">
-                            <input type="submit" value="Confirm" class="btn btn-primary"/>
-                            <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
-                        </footer>
-                    </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <input type="submit" value="Confirm" class="btn btn-primary"/>
+                                <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            </footer>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1015,18 +1030,20 @@
                     <div class="oe_structure">
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                     </div>
-                    <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_exception and editable" role="alert">
+                    <div class="container" t-if="views and editable">
+                        <div class="alert alert-danger" t-if="debug" role="alert">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
-                            <form action="/website/reset_templates" method="post" id="reset_templates_form">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <form action="#" method="post" id="reset_templates_form">
                                 <ul class="oe_template_fallback">
                                     <li t-foreach="views" t-as="view">
                                         <label>
                                             <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
                                             <t t-esc="view.name"/>
+                                            <span t-if="not view._get_original_view()" class="text-danger">
+                                                (!!! This view will be removed )
+                                            </span>
                                         </label>
                                     </li>
                                 </ul>

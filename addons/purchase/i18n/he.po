@@ -13,6 +13,7 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
 # hed shefetr <hed@laylinetech.com>, 2019
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: hed shefetr <hed@laylinetech.com>, 2019\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +100,11 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase
@@ -190,7 +195,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>מוצר</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -201,7 +206,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>כמות</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -334,7 +339,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ספירת קבצים מצורפים"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
@@ -408,7 +413,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
 msgid "Calendar View"
-msgstr ""
+msgstr "תצוגת לוח שנה"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -652,7 +657,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Expected Date"
-msgstr ""
+msgstr "תאריך צפוי"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -680,17 +685,17 @@ msgstr "עוקבים"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "עוקבים (ערוצים)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "עוקבים (שותפים)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "פעילויות עתידיות"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -735,12 +740,12 @@ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "אם סומן, הודעות חדשות דורשות את תשומת הלב שלך."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "אם סומן, לחלק מההודעות יש שגיאת משלוח."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -801,7 +806,7 @@ msgstr "הפקת חשבוניות"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "האם עוקב"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -831,7 +836,7 @@ msgstr "תאריך עדכון אחרון"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "פעילויות מאוחרות"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -870,7 +875,7 @@ msgstr "ננעל"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "קובץ מצורף ראשי"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -923,7 +928,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "הודעת שגיאת משלוח"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -988,17 +993,17 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "תאריך היעד האחרון לפעילת הבאה "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "תקציר הפעילות הבאה "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "סוג הפעילות הבאה"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1041,7 +1046,7 @@ msgstr "מספר הפעולות"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "מספר שגיאה"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
@@ -1051,7 +1056,7 @@ msgstr "מספר ההודעות שדורשות פעולה"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "מספר הודעות עם שגיאת משלוח"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
@@ -1127,7 +1132,7 @@ msgstr "מידע נוסף"
 #. module: purchase
 #: selection:purchase.order,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "איחור - שזמנו פירעונו כבר עבר"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1152,7 +1157,7 @@ msgstr "תנאי תשלום"
 #. module: purchase
 #: selection:purchase.order,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "תכנן"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -1841,7 +1846,7 @@ msgstr "סה\"כ מחיר"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
 msgid "Total Quantity"
-msgstr ""
+msgstr "סה\"כ כמות"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1879,7 +1884,7 @@ msgstr "יחידות מידה"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "לא נעול"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread

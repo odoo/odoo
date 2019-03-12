@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
-        for num in range(1, 100):
+        for num in range(1, 10000):
             new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
             rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
@@ -481,7 +481,7 @@ class AccountJournal(models.Model):
     post_at_bank_rec = fields.Boolean(string="Post At Bank Reconciliation", help="Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation.")
 
     # alias configuration for 'purchase' type journals
-    alias_id = fields.Many2one('mail.alias', string='Alias')
+    alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.", readonly=False)
 

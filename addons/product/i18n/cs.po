@@ -189,6 +189,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Skladovatelný produkt je výrobek, pro který spravujete sklad. Musí být nainstalována aplikace Inventory. \n"
+"Spotřební materiál je výrobek, pro který není spravován sklad.\n"
+"Služba je nehmotný produkt, který poskytujete."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -310,7 +313,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Hodnota atributu"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -541,6 +544,8 @@ msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/FIFO."
 msgstr ""
+"Náklady použité pro ocenění akcií ve standardní ceně a jako první cena "
+"stanovená v průměru / FIFO."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -563,7 +568,7 @@ msgstr "Skupiny zemí"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Create Variants"
-msgstr ""
+msgstr "Vytvořte varianty"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -669,7 +674,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Výchozí měrná jednotka používaná pro všechny akciové operace."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -678,12 +683,14 @@ msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
 msgstr ""
+"Výchozí měrná jednotka používaná pro objednávky. Musí být ve stejné "
+"kategorii jako výchozí měrná jednotka."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
 #: model:ir.model.fields,help:product.field_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "Definujte cenníky prodejců."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -848,7 +855,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1302,7 +1309,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Další typ aktivity"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1487,7 +1494,7 @@ msgstr "Cenová přirážka"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "Cena, za kterou je výrobek prodáván zákazníkům."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1677,17 +1684,17 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "Product Price List History"
-msgstr ""
+msgstr "Historie ceníku produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Product Price List Report"
-msgstr ""
+msgstr "Zpráva o ceníku produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_list
 msgid "Product Price per Unit Based on Pricelist Version"
-msgstr ""
+msgstr "Cena produktu na jednotku založená na verzi Ceníku"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2145,6 +2152,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"Prodejní cena je spravována ze šablony produktu. Kliknutím na tlačítko "
+"\"Konfigurovat varianty\" nastavíte extra atributové ceny."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2399,7 +2408,7 @@ msgstr "Varianty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Varianty a možnosti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name

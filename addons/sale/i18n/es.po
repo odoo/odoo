@@ -28,8 +28,10 @@
 # Omar Torres <otorresgi18@gmail.com>, 2018
 # Pilar Marín <pilar@odooperu.pe>, 2018
 # Carlos Lopez <celm1990@hotmail.com>, 2018
+# Sabina Batlle <sbb@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Gabriel Umaña <gabriel.umana@delfixcr.com>, 2019
+# Antonio Trueba, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -37,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Gabriel Umaña <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: Gabriel Umana <gabriel.umana@delfixcr.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,16 +55,12 @@ msgstr "# de líneas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# Orden de Venta"
+msgstr "# de Órdenes de Venta"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -138,22 +136,22 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'presupuesto' if object.state in ('draft', 'sent') else 'Pdv'\n"
+"        % set doc_name = 'presupuesto' if object.state in ('draft', 'sent') else 'pedido de venta'\n"
 "        Estimad@ ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Aqui esta\n"
+"        Aquí está\n"
 "        % if ctx.get('proforma')\n"
-"            adjunto su factura pro-forma\n"
+"            adjunta su factura pro-forma\n"
 "        % else\n"
 "            el ${doc_name} <strong>${object.name}</strong>\n"
 "        % endif\n"
 "        % if object.origin:\n"
 "            (con referencia: ${object.origin} )\n"
 "        % endif\n"
-"        monto en <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        por un monto de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)},</strong>\n"
 "        de ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
@@ -174,12 +172,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr "<i class=\"fa fa-comment\"/> Contáctenos para un nuevo presupuesto"
+msgstr "<i class=\"fa fa-comment\"/> Contáctenos para un nuevo presupuesto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get the final version."
-msgstr "<i class=\"fa fa-comment\"/>  Contáctenos para obtener la versión final"
+msgstr "<i class=\"fa fa-comment\"/>  Contáctenos para obtener la versión final."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -276,9 +274,10 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
+" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
+" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
+"role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -356,12 +355,12 @@ msgstr "<strong class=\"d-block mb-1\">Facturas</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Dirección de Facturación</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Dirección de Envío</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -377,7 +376,7 @@ msgstr "<strong class=\"text-muted\">Contacto</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr "<strong>Fecha ordenada:</strong>"
+msgstr "<strong>Fecha de Pedido:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -526,6 +525,11 @@ msgid "Accept &amp; Pay"
 msgstr "Aceptar y Pagar"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
 msgstr "Alerta de acceso"
@@ -659,7 +663,7 @@ msgstr "Cuenta analítica"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analítico para gastos"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1273,11 +1277,6 @@ msgid "Details"
 msgstr "Detalles"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid "Digital Content"
-msgstr "Contenido Digital"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
 msgstr "Descuento %"
@@ -1450,6 +1449,11 @@ msgstr "Seguidores (Empresas)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1786,6 +1790,12 @@ msgid "Invoicing"
 msgstr "Facturación"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Dirección de facturación"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -2186,6 +2196,11 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr ""
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2241,7 +2256,7 @@ msgstr "El único valor válido es un entero."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Opción no disponible"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
@@ -2447,6 +2462,11 @@ msgid "Pay now"
 msgstr "Pagar ahora"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
 msgstr "Pagar con"
@@ -2454,7 +2474,7 @@ msgstr "Pagar con"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Pago con PayPal"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -2470,7 +2490,7 @@ msgstr ""
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -2490,7 +2510,7 @@ msgstr "Métodos de pago"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Instrucciones de Pago"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -2618,7 +2638,7 @@ msgstr "Tarifas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price_method
 msgid "Pricelists Method"
-msgstr ""
+msgstr "Método de Tarifas"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
@@ -2971,7 +2991,7 @@ msgstr "Recuento de pedidos de venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Avisos para pedido de venta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
@@ -2986,7 +3006,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Advertencias de venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
@@ -2996,7 +3016,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 msgid "Sale order line"
-msgstr ""
+msgstr "Línea de Pedido de Venta"
 
 #. module: sale
 #: selection:crm.team,dashboard_graph_model:0
@@ -3092,7 +3112,7 @@ msgstr "Líneas de pedidos de ventas relacionadas con un pedido de venta mío"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Pedidos de Ventas"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:102
@@ -3143,7 +3163,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 msgid "Sales by Channel"
-msgstr ""
+msgstr "Ventas por Canal"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
@@ -3182,7 +3202,7 @@ msgstr "Comercial"
 #: code:addons/sale/models/res_company.py:60
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Simple Linea del pedido"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:57
@@ -3245,6 +3265,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Vender y comprar productos en diferentes unidades de medida"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Vender productos digitales - proporcionar contenido descargable en su portal"
+" de clientes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3326,7 +3354,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr ""
+msgstr "Establecer pagos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3387,6 +3415,11 @@ msgid "Show standard terms &amp; conditions on orders"
 msgstr "Mostrar términos por defecto &amp; condiciones en los pedidos"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
+
+#. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Sign online"
@@ -3424,7 +3457,7 @@ msgstr "Vendido"
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Vendido en los últimos 365 días"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
@@ -3766,7 +3799,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Este producto no tiene combinaciones válidas."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -3838,7 +3871,7 @@ msgstr "A facturar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr ""
+msgstr "Cantidad a Facturar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -3886,7 +3919,7 @@ msgstr "Precio total"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Total de impuestos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4201,17 +4234,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Su pedido ha sido confirmado."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
-msgstr ""
+msgstr "Se ha signado su pedido, pero tiene que pagarse para ser confirmado."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Su pedido ha sido signado."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

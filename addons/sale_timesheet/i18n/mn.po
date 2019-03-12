@@ -3,18 +3,20 @@
 # * sale_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Adyasuren Amarsanaa <adyashde19@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,6 +87,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Барааны хэрэглэгчийн гарт хүргэсэн тоо хэмжээг тооцоолох аргыг дараах байдлаар тохируулж болно:\n"
+"  - Гараар: захиалгын мөр дээр хүргэсэн тоог гараар хөтлөх\n"
+"  - Зардлын тайлангаас тооцох: хүргэсэн тоо нь батлагдсан зардлын тайлангаас тодорхойлогдох\n"
+"  - Цагийн хуудас: захиалгын мөрт холбогдсон төслийн даалгаврын нийт зарцуулсан цагаар хэмжигдэх\n"
+"  - Барааны хөдөлгөөн: агуулахын баримт батлагдах үед хүргэсэн тоо автоматаар хөтлөгдөх\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -107,7 +114,7 @@ msgstr "Шинжилгээний данс"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Зардлын тайлангаас тооцох"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -563,7 +570,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Хүргэгдсэн тоог хөтлөх арга"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -672,7 +679,7 @@ msgstr ""
 #: model:ir.actions.client,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
 #, python-format
 msgid "Overview"
-msgstr ""
+msgstr "Тойм"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
@@ -871,7 +878,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -966,7 +973,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Зарагдсан"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1173,6 +1180,8 @@ msgstr ""
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
 msgstr ""
+"Төсөл дээрх цагийн хуудас (Төсөл/Борлуулалт бүрийн цагийн үнэ өөр байх "
+"боломжтой)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1218,12 +1227,12 @@ msgstr "Ширхэг(үүд)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Нэхэмжилсэн татваргүй дүн"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх ёстой татваргүй дүн"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
@@ -1252,6 +1261,7 @@ msgstr "Харилцах Цонх"
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Та захиалагчыг Нэр, ТТД, Имэйл, дотоод код зэргээр хайж олох боломжтой."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62
