@@ -31,6 +31,8 @@ WARNING_HELP = _('Selecting the "Warning" option will notify user with the messa
 
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+USER_PROTECTED_FIELDS = ('company_id', 'name', 'image', 'image_medium', 'image_small')
+
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -535,10 +537,15 @@ class Partner(models.Model):
             result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
-        for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
-                self.env['res.users'].check_access_rights('write')
-            partner._fields_sync(vals)
+        user_fields = set(self.env['res.users']._fields)
+        partner_fields = set(self.env['res.partner']._fields)
+        user_protected_fields = user_fields - partner_fields | set(USER_PROTECTED_FIELDS)
+        if user_protected_fields & set(vals):
+            # If a user field is changed then check if has permission
+            for partner in self:
+                if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+                    self.env['res.users'].check_access_rights('write')
+                partner._fields_sync(vals)
         return result
 
     @api.model_create_multi
