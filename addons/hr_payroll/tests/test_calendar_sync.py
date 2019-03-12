@@ -1,12 +1,13 @@
 
 import os
-from datetime import datetime
+from datetime import date
+from odoo.fields import Datetime
 from odoo.tools import config, test_reports
 from odoo.tests.common import tagged
 from odoo.addons.hr_payroll.tests.common import TestPayslipContractBase
 
-class TestPayslipCalendars(TestPayslipContractBase):
 
+class TestPayslipCalendars(TestPayslipContractBase):
 
     def test_contract_state_incoming_to_open(self):
         # Employee's calendar should change
@@ -27,26 +28,26 @@ class TestPayslipCalendars(TestPayslipContractBase):
                 'time_type': 'leave',
             })
 
-        start = datetime.strptime('2015-11-17 07:00:00', '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime('2015-11-20 18:00:00', '%Y-%m-%d %H:%M:%S')
+        start = Datetime.to_datetime('2015-11-17 07:00:00')
+        end = Datetime.to_datetime('2015-11-20 18:00:00')
         leave1 = create_calendar_leave(start, end, resource=self.richard_emp.resource_id)
 
-        start = datetime.strptime('2015-11-25 07:00:00', '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime('2015-11-28 18:00:00', '%Y-%m-%d %H:%M:%S')
+        start = Datetime.to_datetime('2015-11-25 07:00:00')
+        end = Datetime.to_datetime('2015-11-28 18:00:00')
         leave2 = create_calendar_leave(start, end, resource=self.richard_emp.resource_id)
 
         # global leave
-        start = datetime.strptime('2015-11-25 07:00:00', '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime('2015-11-28 18:00:00', '%Y-%m-%d %H:%M:%S')
+        start = Datetime.to_datetime('2015-11-25 07:00:00')
+        end = Datetime.to_datetime('2015-11-28 18:00:00')
         leave3 = create_calendar_leave(start, end)
 
-        self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=self.richard_emp.resource_id, from_date=datetime.strptime('2015-11-21', '%Y-%m-%d').date())
+        self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=self.richard_emp.resource_id, from_date=date(2015, 11, 21))
 
         self.assertEqual(leave1.calendar_id, self.calendar_richard, "It should stay in Richard's calendar")
         self.assertEqual(leave3.calendar_id, self.calendar_richard, "Global leave should stay in original calendar")
         self.assertEqual(leave2.calendar_id, self.calendar_35h, "It should be transfered to the other calendar")
 
         # Transfer global leaves
-        self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=None, from_date=datetime.strptime('2015-11-21', '%Y-%m-%d').date())
+        self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=None, from_date=date(2015, 11, 21))
 
         self.assertEqual(leave3.calendar_id, self.calendar_35h, "Global leave should be transfered")
