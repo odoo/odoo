@@ -41,32 +41,35 @@
                             </t>
                             <t t-else="">
                                 <div>Unfortunately, you have failed the test.</div>
-                                <t t-if="survey.is_attempts_limited">
-                                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
-                                    <t t-if="attempts_left > 0">
-                                        <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
-                                        <p>
-                                            <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
-                                                Retry
-                                            </a>
-                                        </p>
-                                    </t>
-                                </t>
-                                <t t-else="">
-                                    <br/>
-                                    <p>
-                                        <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
-                                            Retry
-                                        </a>
-                                    </p>
-                                </t>
                             </t>
                         </t>
-                        <div t-if="survey.scoring_type != 'scoring_without_answers'">If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s' % (survey.access_token, answer.token)">review your answers</a>.</div>
+                        <t t-call="survey.retake_survey_button"/>
+                        <div t-if="survey.scoring_type != 'scoring_without_answers'">
+                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s' % (survey.access_token, answer.token)">review your answers</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="retake_survey_button" name="Retake Survey Button">
+        <div>
+            <t t-if="not answer.quizz_passed">
+                <t t-if="survey.is_attempts_limited">
+                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
+                    <t t-if="attempts_left > 0">
+                        <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
+                        <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                        Retry</a></p>
+                    </t>
+                </t>
+                <t t-else="">
+                    <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                        Retry</a></p>
+                </t>
+            </t>
+        </div>
     </template>
 
     <!-- Message when the survey is not open  -->
@@ -479,6 +482,7 @@
                     <div class='jumbotron mt32'>
                         <h1><span t-field='survey.title'/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
+                        <t t-call="survey.retake_survey_button"/>
                     </div>
                     <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.access_token, answer.token)">
                         <t t-foreach='survey.question_and_page_ids' t-as='question'>
