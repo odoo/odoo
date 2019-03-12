@@ -457,7 +457,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         var headers_type = root.headers_type;
         function traverse(field, ancestors, collection, type) {
             var subfields = field.fields;
-            var advanced_mode = self.$('input.oe_import_advanced_mode').prop('checked');
+            var advanced_mode = window.$('input.oe_import_advanced_mode').prop('checked');
             var field_path = ancestors.concat(field);
             var label = _(field_path).pluck('string').join(' / ');
             var id = _(field_path).pluck('name').join('/');
@@ -493,7 +493,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 traverse(field, []);
             }
             else {
-                if (self.$('input.oe_import_advanced_mode').prop('checked')){
+                if (window.$('input.oe_import_advanced_mode').prop('checked')){
                     traverse(field, [], undefined, ['all']);
                 }
                 else {
