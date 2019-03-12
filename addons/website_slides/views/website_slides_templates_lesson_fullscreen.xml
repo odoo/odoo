@@ -35,7 +35,7 @@
                         <a t-attf-href="/slides/#{slug(slide.channel_id)}">
                             <span class="h3" t-field="slide.channel_id.name"/>
                         </a>
-                        <div class="mt-2">
+                        <div t-if="not is_public_user" class="mt-2">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>

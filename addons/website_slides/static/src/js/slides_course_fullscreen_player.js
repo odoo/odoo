@@ -7,6 +7,8 @@ odoo.define('website_slides.fullscreen', function (require) {
     var core = require('web.core');
     var QWeb = core.qweb;
 
+    var session = require('web.session');
+
     var Quiz = require('website_slides.quiz');
 
 
@@ -485,7 +487,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 self.$('.o_wslides_fs_slide_title').html(QWeb.render('website.slides.fullscreen.title', {widget: self}));
                 return self._renderSlide();
             }).then(function() {
-                if (slide._autoSetDone) {
+                if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
                     self._setCompleted(slide.id);
                 }
                 self._pushUrlState();
@@ -512,8 +514,10 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @private
          */
         _onSlideCompleted: function (ev) {
-            var slideId = ev.data.id;
-            this._setCompleted(slideId);
+            if (!session.is_website_user) {  // no useless RPC call
+                var slideId = ev.data.id;
+                this._setCompleted(slideId);
+            }
         },
         /**
          * Go the next slide
