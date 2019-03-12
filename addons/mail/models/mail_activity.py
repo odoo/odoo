@@ -78,7 +78,6 @@ class MailActivityType(models.Model):
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
             help='Technical field to keep trace of the model at the beginning of the edition for UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
-    is_master_data = fields.Boolean(string="Master data", help="This field is used to prevent master data from the deletion.")
 
     @api.onchange('res_model_id')
     def _onchange_res_model_id(self):
@@ -91,9 +90,8 @@ class MailActivityType(models.Model):
 
     @api.multi
     def unlink(self):
-        for activity_type in self:
-            if activity_type.is_master_data:
-                raise exceptions.ValidationError("You can not delete activity type that are used as master data.")
+        if any(self.get_external_id().values()):
+            raise exceptions.ValidationError("You can not delete activity type that are used as master data.")
         return super(MailActivityType, self).unlink()
 
 
