@@ -14,7 +14,7 @@
      <template id="display_certificate">
         <t t-if="certificates">
             <div class="row">
-                <div class="col-12 col-lg-6" t-foreach="certificates" t-as="certificate">
+               <div class="col-12 col-lg-6" t-foreach="certificates" t-as="certificate">
                     <div class="card mb-2">
                         <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex">
                             <div class="pl-5 pr-4 rounded-left" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
@@ -22,11 +22,20 @@
                                 <h5 class="mt-0 mb-1" t-esc="certificate.survey_id.title"/>
                                 <div t-if="user.id == uid">
                                     <small class="font-weight-bold">Score : <span t-esc="certificate.quizz_score"/> %</small>
-                                   <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
-                                        <i class="fa fa-download"/>
-                                    </a>
+                                    <div class="float-right">
+                                        <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
+                                            <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
+                                        </a>
+                                        <a role="button" class="mr-2" href="#" data-toggle="modal"
+                                             t-att-data-target="'#slideChannelShareModal_%s' % certificate.slide_id.channel_id.id">
+                                            <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                            <t t-call="website_slides.slide_share_modal">
+                                <t t-set="record" t-value="certificate.slide_id.channel_id"/>
+                            </t>
                         </div>
                     </div>
                 </div>
