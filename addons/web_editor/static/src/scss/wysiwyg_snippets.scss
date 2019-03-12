@@ -15,7 +15,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
 
 // NOTE EDITOR
-.note-editor.o_snippets_loaded {
+.note-editor.o_snippets_loaded:not(.o_all_snippets_disabled) {
     transition: padding-left 400ms $o-wysiwyg-md-ease 0s;
     padding-left: 210px !important;
 }
@@ -148,7 +148,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
         }
     }
 
-    &.o_loaded {
+    &.o_loaded:not(.o_all_snippets_disabled) {
         left: 0 !important;
     }
 }

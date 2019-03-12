@@ -1270,6 +1270,10 @@ var SnippetsMenu = Widget.extend({
 
             $snippet.toggleClass('o_disabled', !check);
         });
+        var allSnippetsDisabledClass = 'o_all_snippets_disabled';
+        var allSnippetsDisabled = this.$snippets.not('.o_disabled').length === 0;
+        this.$el.toggleClass(allSnippetsDisabledClass, allSnippetsDisabled);
+        this.$editor.toggleClass(allSnippetsDisabledClass, allSnippetsDisabled);
     },
     /**
      * Make given snippets be draggable/droppable thanks to their thumbnail.
