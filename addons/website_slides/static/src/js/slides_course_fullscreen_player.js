@@ -188,9 +188,11 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @param {*} channelCompletion
          */
         updateProgressbar: function (channelCompletion) {
-            var completion = Math.min(100, channelCompletion);
-            this.$('.progress-bar').css('width', completion + "%" );
-            this.$('.o_wslides_progress_percentage').text(completion);
+            if (!session.is_website_user){
+                var completion = Math.min(100, channelCompletion);
+                this.$('.progress-bar').css('width', completion + "%" );
+                this.$('.o_wslides_progress_percentage').text(completion);
+            }
         },
 
         //--------------------------------------------------------------------------
@@ -306,7 +308,6 @@ odoo.define('website_slides.fullscreen', function (require) {
             var result = this._super.apply(this,arguments);
             this.initialSlideID = defaultSlideId;
             this.slides = this._preprocessSlideData(slides);
-            console.log(session);
             var slide;
             if (defaultSlideId) {
                 slide = this._findSlide({id: defaultSlideId});

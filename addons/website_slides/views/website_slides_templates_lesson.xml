@@ -18,7 +18,7 @@
                                     class="text-white"
                                     t-field="slide.channel_id.name"/>
                             </h3>
-                            <div class="d-flex align-items-center">
+                            <div t-if="not is_public_user" class="d-flex align-items-center">
                                 <div class="progress w-50" style="height: 8px;">
                                     <div class="progress-bar rounded" role="progressbar"
                                         t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"

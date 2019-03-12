@@ -67,17 +67,17 @@ class Slide(models.Model):
                     }
                 )
 
-    def action_get_slide_survey_url(self, slide):
-            if not all(s.channel_id.is_member for s in self):
-                raise UserError(_('You cannot have access to the certification if you are not among its members.'))
+    def action_get_slide_survey_url(self):
+        self.ensure_one()
+        if not self.channel_id.is_member:
+            return None
+        return self._action_get_slide_survey_url(self.env.user.partner_id)
 
-            return self._action_get_slide_survey_url(self.env.user.partner_id, slide)
-
-    def _action_get_slide_survey_url(self, target_partner, slide):
+    def _action_get_slide_survey_url(self, target_partner):
         certification_url = None
-        if not self.env.user._is_public() and slide.slide_type == 'certification' and slide.survey_id:
-            if slide.channel_id.is_member:
-                user_membership_id_sudo = slide.user_membership_id.sudo()
+        if not self.env.user._is_public() and self.slide_type == 'certification' and self.survey_id:
+            if self.channel_id.is_member:
+                user_membership_id_sudo = self.user_membership_id.sudo()
                 quizz_passed = user_membership_id_sudo.survey_quizz_passed
                 if not quizz_passed and user_membership_id_sudo.user_input_ids:
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(

@@ -24,7 +24,7 @@ odoo.define('website_slides_survey.fullscreen', function (require) {
                     slide_id: slide.id
                 }
             }).then(function (data){
-                if (data){
+                if (!data.error){
                     slide.certificationUrl = data.certification_url;
                     self.set('slide', slide);
                 }
