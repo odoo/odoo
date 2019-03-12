@@ -510,12 +510,15 @@ var BasicRenderer = AbstractRenderer.extend({
         var oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
+        var oldWidgets = this.widgets;
+        this.widgets = [];
         return this._renderView().then(function () {
             _.each(oldAllFieldWidgets, function (recordWidgets) {
                 _.each(recordWidgets, function (widget) {
                     widget.destroy();
                 });
             });
+            _.invoke(oldWidgets, 'destroy');
         });
     },
     /**
