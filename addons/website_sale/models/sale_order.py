@@ -280,14 +280,14 @@ class SaleOrder(models.Model):
 
             order_line.write(values)
 
-        # link a product to the sales order
-        if kwargs.get('linked_line_id'):
-            linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
-            order_line.write({
-                'linked_line_id': linked_line.id,
-                'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
-            })
-            linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+            # link a product to the sales order
+            if kwargs.get('linked_line_id'):
+                linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
+                order_line.write({
+                    'linked_line_id': linked_line.id,
+                    'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
+                })
+                linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
         for option_line_id in option_lines:
