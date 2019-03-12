@@ -100,7 +100,6 @@ var VariantMixin = {
                         || $variantContainer
                               .find('.variant_custom_value')
                               .data('attribute_value_id') !== parseInt(attributeValueId)){
-                    $variantContainer.find('.variant_custom_value_label').remove();
                     $variantContainer.find('.variant_custom_value').remove();
 
                     var $input = $('<input>', {
@@ -117,16 +116,12 @@ var VariantMixin = {
                         $input.addClass('custom_value_radio');
                         $target.closest('div').after($input);
                     } else {
-                        var $label = $('<label>', {
-                            html: attributeValueName + ': ',
-                            class: 'variant_custom_value_label'
-                        });
+                        $input.attr('placeholder', attributeValueName);
                         $input.addClass('custom_value_own_line');
-                        $variantContainer.append($label).append($input);
+                        $variantContainer.append($input);
                     }
                 }
             } else {
-                $variantContainer.find('.variant_custom_value_label').remove();
                 $variantContainer.find('.variant_custom_value').remove();
             }
         }
