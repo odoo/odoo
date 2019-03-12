@@ -19,6 +19,26 @@ class StockInventory(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+    has_account_moves = fields.Boolean(compute='_compute_has_account_moves')
+
+    def _compute_has_account_moves(self):
+        for inventory in self:
+            if inventory.state == 'done' and inventory.move_ids:
+                account_move = self.env['account.move'].search_count([
+                    ('stock_move_id.id', 'in', inventory.move_ids.ids)
+                ])
+                inventory.has_account_moves = account_move > 0
+            else:
+                inventory.has_account_moves = False
+
+    def action_get_account_moves(self):
+        self.ensure_one()
+        action_ref = self.env.ref('account.action_move_journal_line')
+        if not action_ref:
+            return False
+        action_data = action_ref.read()[0]
+        action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
+        return action_data
 
     @api.multi
     def post_inventory(self):
@@ -649,6 +669,8 @@ class StockMove(models.Model):
                 ref = 'Revaluation of %s (negative inventory)' % ref
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
+        if not ref and self.inventory_id:
+            ref = self.inventory_id.name
 
         move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
