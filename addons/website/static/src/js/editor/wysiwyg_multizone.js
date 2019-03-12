@@ -7,6 +7,7 @@ var HelperPlugin = require('web_editor.wysiwyg.plugin.helper');
 var TextPlugin = require('web_editor.wysiwyg.plugin.text');
 var HistoryPlugin = require('web_editor.wysiwyg.plugin.history');
 var Wysiwyg = require('web_editor.wysiwyg.snippets');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -200,6 +201,7 @@ var WysiwygMultizone = Wysiwyg.extend({
             self.$('[data-oe-readonly]').addClass('o_not_editable').attr('contenteditable', false);
             self.$('.oe_structure').attr('contenteditable', false).addClass('o_fake_not_editable');
             self.$('[data-oe-field][data-oe-type="image"]').attr('contenteditable', false).addClass('o_fake_not_editable');
+            self.$('.o_not_editable_restricted').toggleClass('o_editable', session.is_editor_and_designer).attr('contenteditable', session.is_editor_and_designer);
         });
     },
     /**
@@ -331,11 +333,11 @@ var WysiwygMultizone = Wysiwyg.extend({
         var data = this._super();
         var res_id = $editable.data('oe-id');
         var res_model = $editable.data('oe-model');
-        if (!$editable.data('oe-model')) {
-            var object = $('html').data('main-object');
-            res_model = object.split('(')[0];
-            res_id = +object.split('(')[1].split(',')[0];
-        }
+        // if (!$editable.data('oe-model')) {       // TEMP COMMENT - Error JS in restricted editor
+        //     var object = $('html').data('main-object');
+        //     res_model = object.split('(')[0];
+        //     res_id = +object.split('(')[1].split(',')[0];
+        // }
         var xpath = $editable.data('oe-xpath');
 
         if (options.type === 'media' && (res_model === 'website.page' || res_model === 'ir.ui.view')) {

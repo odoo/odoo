@@ -8,6 +8,7 @@ var registry = require('web_editor.wysiwyg.plugin.registry');
 var Plugins = require('web_editor.wysiwyg.plugins');
 var wysiwygTranslation = require('web_editor.wysiwyg.translation');
 var wysiwygOptions = require('web_editor.wysiwyg.options');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -449,7 +450,10 @@ var MediaPlugin = AbstractPlugin.extend({
      * @param {jQueryEvent} e
      */
     _onDblclick: function (e) {
-        if (dom.isMedia(e.target)) {
+        var isLogo = $(e.target.parentElement).attr('data-oe-field') === 'logo';
+        var isHomepage = $(e.currentTarget).hasClass('homepage');
+        var ableToEdit = session.is_editor_and_designer || (!isLogo && !isHomepage);
+        if (dom.isMedia(e.target) && ableToEdit) {
             var target = this._selectTarget(e.target);
             this._moveTargetSelection(target);
             this.showImageDialog();

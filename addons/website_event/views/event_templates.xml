@@ -50,21 +50,21 @@
                                 <i class="fa fa-ticket" role="img" aria-label="Event type" title="Event type"/> <span t-field="event.event_type_id"/>
                             </small>
                             <h4>
-                                <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><b itemprop="name" t-field="event.name"/></a>
+                                <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><b itemprop="name" t-field="event.name" class="o_not_editable_restricted"/></a>
                             </h4>
-                            <small t-if="event.organizer_id" class="text-muted">Organized by <span t-field="event.organizer_id" /></small>
+                            <small t-if="event.organizer_id" class="text-muted">Organized by <span t-field="event.organizer_id" class="o_not_editable_restricted"/></small>
                             <div>
                                 <i class="fa fa-clock-o text-primary mx-1" role="img" aria-label="Start date" title="Start date"/>
-                                <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'></span>
+                                <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}' class="o_not_editable_restricted"></span>
                                 <small>to</small>
-                                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'></span>
+                                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}' class="o_not_editable_restricted"></span>
                             </div>
                             <hr/>
                             <t t-if="not event.is_online">
                                 <div itemprop="location" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
-                                }'/>
+                                }' class="o_not_editable_restricted"/>
                             </t>
                         </div>
                     </div>

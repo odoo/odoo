@@ -225,6 +225,7 @@
                 odoo.session_info = {
                     is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                    is_editor_and_designer: <t t-esc="json.dumps(request.env.user._is_editor_and_designer())"/>,
                     is_frontend: true,
                     translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
@@ -299,7 +300,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 text-muted text-center text-md-left">
-                        <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
+                        <span>Copyright &amp;copy;</span> <span class="o_not_editable_restricted" t-field="res_company.name" itemprop="name">Company name</span>
                         <t t-call="website.language_selector"/>
                     </div>
                     <div class="col-lg-6 text-right o_not_editable" t-if="not editable">
@@ -363,8 +364,8 @@
                             <h5>Connect with us</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
-                                <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
+                                <li><i class="fa fa-phone"/> <span class="o_not_editable_restricted" t-field="res_company.phone"/></li>
+                                <li><i class="fa fa-envelope"/>  <span class="o_not_editable_restricted" t-field="res_company.email"/></li>
                             </ul>
                             <p>
                                 <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-sm btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
@@ -378,7 +379,7 @@
                         </div>
                         <div class="col-lg-4">
                             <h5>
-                                <span t-field="res_company.name"/>
+                                <span class="o_not_editable_restricted" t-field="res_company.name"/>
                                 <small> - <a href="/aboutus">About us</a></small>
                             </h5>
                             <p>

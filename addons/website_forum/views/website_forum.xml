@@ -227,7 +227,7 @@
             <div class="col">
                 <div class="question-name">
                     <a t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
-                        <h4 t-field="question.name" class="d-inline"/>
+                        <h4 t-field="question.name" class="d-inline o_not_editable_restricted"/>
                     </a>
                     <span t-if="not question.active and question.state!='offensive'"><b> [Deleted]</b></span>
                     <span t-if="not question.active and question.state=='offensive'"><b> [Offensive]</b></span>
@@ -239,7 +239,7 @@
                     <i t-attf-class="fa fa-question-circle" role="img" aria-label="Question" />
                     <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' class="d-inline-block"/>
                     <span class="ml-4 mr-1 fa fa-calendar"></span><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                    <span class="ml-4 mr-1 fa fa-eye"></span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
+                    <span class="ml-4 mr-1 fa fa-eye"></span><span class="o_not_editable_restricted" t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
                     <i class="ml-4 fa fa-comments text-primary"/>
                     <a t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
                         <t t-esc="question.child_count"/>

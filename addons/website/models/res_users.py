@@ -54,3 +54,8 @@ class ResUsers(models.Model):
         tools.create_unique_index(self._cr, 'res_users_login_key_unique_website_index',
             self._table, ['login', 'COALESCE(website_id,-1)'])
         return result
+
+    @api.multi
+    def _is_editor_and_designer(self):
+        self.ensure_one()
+        return self.has_group('website.group_website_designer')
