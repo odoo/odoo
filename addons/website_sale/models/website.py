@@ -32,7 +32,12 @@ class Website(models.Model):
 
     @api.one
     def _compute_pricelist_ids(self):
-        self.pricelist_ids = self.env["product.pricelist"].search([("website_id", "=", self.id)])
+        """ Return the pricelists that can be used directly or indirectly on
+        the website.
+        """
+        Pricelist = self.env["product.pricelist"]
+        domain = Pricelist._get_website_pricelists_domain(self.id)
+        self.pricelist_ids = Pricelist.search(domain)
 
     @api.multi
     def _compute_pricelist_id(self):
@@ -66,8 +71,8 @@ class Website(models.Model):
         partner = self.env.user.partner_id
         is_public = self.user_id.id == self.env.user.id
         if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
-            if partner.property_product_pricelist.website_id:
-                pricelists |= partner.property_product_pricelist
+            # `property_product_pricelist` is already multi-website compliant
+            pricelists |= partner.property_product_pricelist
 
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
@@ -75,7 +80,7 @@ class Website(models.Model):
             pricelists |= all_pl.filtered(lambda pl: pl.sudo().code)
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.ids
+        return pricelists.filtered(lambda pl: pl._is_available_on_website(self.id)).ids
 
     # DEPRECATED (Not used anymore) -> Remove me in master (saas12.3)
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
