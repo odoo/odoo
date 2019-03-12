@@ -40,7 +40,6 @@ class TestMrpAccount(common.TransactionCase):
         self.product_table_sheet.tracking = 'none'
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'filter': 'partial',
             'line_ids': [(0, 0, {
                 'product_id': self.product_table_sheet.id,  # tracking serial
                 'product_uom_id': self.product_table_sheet.uom_id.id,

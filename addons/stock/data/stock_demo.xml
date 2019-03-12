@@ -119,11 +119,14 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">80.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+             <field name="location_id" ref="stock_location_components"/>
         </record>
 
-        <function model="stock.inventory" name="action_validate">
+        <function model="stock.inventory" name="action_start">
             <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
+        </function>
+        <function model="stock.inventory" name="action_validate">
+            <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
 

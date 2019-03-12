@@ -6,10 +6,12 @@
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
-                <field name="reference" string="Reference"/>
+                <field name="reference" string="Reference"
+                       invisible="context.get('no_reference', False)"/>
                 <field name="product_id"/>
-                <field name="location_id" options="{'no_create': True}"/>
-                <field name="location_dest_id" options="{'no_create': True}"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
                 <field name="qty_done" string="Quantity Done"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="state"/>
