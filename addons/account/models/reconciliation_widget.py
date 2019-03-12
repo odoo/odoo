@@ -356,7 +356,7 @@ class AccountReconciliation(models.AbstractModel):
                 res_type == 'partner' and ", to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked" or ' ',
                 res_type == 'partner' and 'p.last_time_entries_checked AS last_time_entries_checked,' or ' ',
                 res_type == 'partner' and ', p.last_time_entries_checked' or ' ',
-                res_type == 'partner' and 'ORDER BY p.last_time_entries_checked' or 'a.code',
+                res_type == 'partner' and 'ORDER BY p.last_time_entries_checked' or 'ORDER BY a.code',
                 res_type == 'partner' and 'WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)' or ' ',
             ))
         self.env.cr.execute(query, locals())
