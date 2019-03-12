@@ -1,7 +1,7 @@
 odoo.define('website_slides.category.add', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;
@@ -47,10 +47,10 @@ var CategoryAddDialog = Dialog.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesCategoryAdd = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_section_add',
     xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
-    read_events: {
+    events: {
         'click': '_onAddSectionClick',
     },
 
@@ -78,7 +78,7 @@ sAnimations.registry.websiteSlidesCategoryAdd = sAnimations.Class.extend({
 
 return {
     categoryAddDialog: CategoryAddDialog,
-    websiteSlidesCategoryAdd: sAnimations.registry.websiteSlidesCategoryAdd
+    websiteSlidesCategoryAdd: publicWidget.registry.websiteSlidesCategoryAdd
 };
 
 });

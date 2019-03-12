@@ -1,7 +1,7 @@
 odoo.define('website_slides.slide.archive', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;
@@ -53,10 +53,10 @@ var SlideArchiveDialog = Dialog.extend({
     }
 });
 
-sAnimations.registry.websiteSlidesSlideArchive = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_archive',
     xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
-    read_events: {
+    events: {
         'click': '_onArchiveSlideClick',
     },
 
@@ -85,7 +85,7 @@ sAnimations.registry.websiteSlidesSlideArchive = sAnimations.Class.extend({
 
 return {
     slideArchiveDialog: SlideArchiveDialog,
-    websiteSlidesSlideArchive: sAnimations.registry.websiteSlidesSlideArchive
+    websiteSlidesSlideArchive: publicWidget.registry.websiteSlidesSlideArchive
 };
 
 });
