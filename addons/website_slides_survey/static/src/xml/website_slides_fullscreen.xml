@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-extend="website.slides.fullscreen">
-        <t t-jquery="t:last" t-operation="after">
-            <div t-if="widget.get('slide').type === 'certification' &amp;&amp; !widget.get('slide').certificationDone" class="o_wslides_fs_certification">
+
+    <t t-name="website.slides.fullscreen.certification">
+        <div class="justify-content-center align-self-center">
+            <div t-if="widget.get('slide').type === 'certification' &amp;&amp; !widget.get('slide').completed" class="">
                 <a class="btn btn-primary" t-att-href="'/slides/slide/' + widget.get('slide').id" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
             </div>
-            <div class="o_wslides_fs_certification" t-if="widget.get('slide').type == 'certification' &amp;&amp; widget.get('slide').completed">
+            <div class="" t-if="widget.get('slide').type === 'certification' &amp;&amp; widget.get('slide').completed">
                 <a role="button" class="btn btn-primary" t-att-href="'/survey/' + widget.get('slide').certificationId + '/get_certification'">
                     <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
                 </a>
             </div>
-        </t>
+        </div>
     </t>
 
     <t t-extend="website.slides.fullscreen.title">
