@@ -445,13 +445,6 @@ ListRenderer.include({
     // Private
     //--------------------------------------------------------------------------
 
-    _addOptionaColumn: function ($cells) {
-        if (!this.addTrashIcon) {
-            $cells.push($("<td/>", {
-                class: 'o-data-cell',
-            }));
-        }
-    },
     /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
@@ -562,6 +555,20 @@ ListRenderer.include({
             });
         }
         return $body;
+    },
+    /**
+     * Override method to render additional optional cell only if trash icon not available
+     * else trash icon will create cell and optional field icon displayed in header
+     * at same index where trash icon displayed
+     *
+     * @override
+     */
+    _renderOptionalCell: function ($cells) {
+        if (!this.addTrashIcon) {
+            $cells.push($("<td/>", {
+                class: 'o-data-cell',
+            }));
+        }
     },
     /**
      * Editable rows are possibly extended with a trash icon on their right, to
