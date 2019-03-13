@@ -1325,6 +1325,7 @@ class AccountTax(models.Model):
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
+                    'tag_ids': [(6, False, repartition_line.tag_ids.ids)], #Directly returned to avoid uselessly making sql queries in POS, when calling this function for closing a session
                 })
 
                 total_amount += line_amount

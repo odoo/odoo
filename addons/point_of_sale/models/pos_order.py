@@ -289,6 +289,8 @@ class PosOrder(models.Model):
         # Just like for invoices, a group of taxes must be present on this base line
         # As well as its children
         base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
+        base_line_taxes_repartition = base_line_tax_ids.mapped(line.qty<0 and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
+        base_line_tags = base_line_taxes_repartition.filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
         data = {
             'name': name,
             'quantity': line.qty,
@@ -298,7 +300,8 @@ class PosOrder(models.Model):
             'credit': ((amount_subtotal > 0) and amount_subtotal) or 0.0,
             'debit': ((amount_subtotal < 0) and -amount_subtotal) or 0.0,
             'tax_ids': [(6, 0, base_line_tax_ids.ids)],
-            'partner_id': partner_id
+            'partner_id': partner_id,
+            'tag_ids': [(6, 0, base_line_tags.ids)],
         }
         if currency_id != cur_company:
             data['currency_id'] = currency_id.id
@@ -309,7 +312,7 @@ class PosOrder(models.Model):
         taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
         if taxes:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            for tax in taxes.compute_all(price, currency_id, line.qty)['taxes']:
+            for tax in taxes.compute_all(price, currency_id, line.qty, is_refund=line.qty < 0)['taxes']:
                 if currency_id != cur_company:
                     round_tax = False if rounding_method == 'round_globally' else True
                     amount_tax = currency_id._convert(tax['amount'], cur_company, order.company_id, date_order, round=round_tax)
@@ -325,7 +328,9 @@ class PosOrder(models.Model):
                     'debit': ((amount_tax < 0) and -amount_tax) or 0.0,
                     'tax_line_id': tax['id'],
                     'partner_id': partner_id,
-                    'order_id': order.id
+                    'order_id': order.id,
+                    'tax_repartition_line_id': tax['tax_repartition_line_id'],
+                    'tag_ids': tax['tag_ids'],
                 }
                 if currency_id != cur_company:
                     data['currency_id'] = currency_id.id
@@ -974,7 +979,7 @@ class PosOrder(models.Model):
         self.env['account.bank.statement.line'].with_context(context).create(args)
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
- 
+
     def _prepare_refund_order_data(self, current_session=None):
         """
         Prepare data for the creation of refund order based on the current order's data. Inheritance may inject its own data here
@@ -998,7 +1003,7 @@ class PosOrder(models.Model):
             'amount_total': -self.amount_total,
             'amount_paid': 0,
             }
-         
+
     @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
@@ -1244,10 +1249,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
