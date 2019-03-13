@@ -177,15 +177,6 @@ odoo.define('website_slides.quiz', function (require) {
                 QWeb.render('slide.slide.quiz.validation', {'widget': this})
             );
         },
-
-        /**
-         * Set the slide as completed and done. Trigger up the completion.
-         *
-         * @param {Integer} completion
-         */
-        _setCompleted: function () {
-            this.trigger_up('quiz_completed', this.slide);
-        },
         /*
          * Submit the given answer, and display the result
          *
@@ -203,13 +194,12 @@ odoo.define('website_slides.quiz', function (require) {
                 if (data.error) {
                     self._alertShow(data.error);
                 } else {
-                    self.slide.completed = data.completed;
                     self.quiz = _.extend(self.quiz, data);
                     self._renderAnswersHighlighting();
                     self._renderValidationInfo();
-                    if (self.slide.completed) {
+                    if (data.completed) {
                         self._renderSuccessModal(data);
-                        self._setCompleted();
+                        self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
                     }
                 }
             });
@@ -266,10 +256,10 @@ odoo.define('website_slides.quiz', function (require) {
     });
 
     sAnimations.registry.websiteSlidesQuizNoFullscreen = sAnimations.Class.extend({
-        selector: '.o_wslides_js_lesson_quiz',
+        selector: '.o_wslides_lesson_main', // selector of complete page, as we need slide content and aside content table
         custom_events: {
             slide_go_next: '_onQuizNextSlide',
-            quiz_completed: '_onQuizCompleted',
+            slide_completed: '_onQuizCompleted',
         },
 
         //----------------------------------------------------------------------
@@ -282,8 +272,9 @@ odoo.define('website_slides.quiz', function (require) {
          */
         start: function () {
             var self = this;
+            this.quizWidgets = [];
             var defs = [this._super.apply(this, arguments)];
-            $('.o_wslides_js_lesson_quiz').each(function () {
+            this.$('.o_wslides_js_lesson_quiz').each(function () {
                 var slideData = $(this).data();
                 slideData.quizData = {
                     questions: self._extractQuestionsAndAnswers(),
@@ -300,13 +291,17 @@ odoo.define('website_slides.quiz', function (require) {
         //----------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
-
-        _onQuizCompleted: function (slideId) {
-            console.log('set completed', slideId);
+        _onQuizCompleted: function (ev) {
+            var self = this;
+            var slide = ev.data.slide;
+            var completion = ev.data.completion;
+            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check-circle').removeClass('text-600 fa-circle-o');
+            // need to use global selector as progress bar is ouside this animation widget scope
+            $('.o_wslides_lesson_header .progress-bar').css('width', completion + "%");
+            $('.o_wslides_lesson_header .progress span').text(_.str.sprintf("%s %%", completion));
         },
-
         _onQuizNextSlide: function () {
-            var url = this.$el.data('next-slide-url');
+            var url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');
             window.location.replace(url);
         },
 

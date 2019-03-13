@@ -102,7 +102,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                         if (totalTime && currentTime > totalTime - 30){
                             clearInterval(self.tid);
                             if (!self.slide.hasQuestion && !self.slide.completed){
-                                self.trigger_up('slide_completed', self.slide);
+                                self.trigger_up('slide_to_complete', self.slide);
                             }
                         }
                     }
@@ -289,8 +289,8 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         custom_events: {
             'change_slide': '_onChangeSlideRequest',
+            'slide_to_complete': '_onSlideToComplete',
             'slide_completed': '_onSlideCompleted',
-            'quiz_completed': '_onSlideCompleted',
             'slide_go_next': '_onSlideGoToNext',
         },
         /**
@@ -367,10 +367,16 @@ odoo.define('website_slides.fullscreen', function (require) {
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.type === 'webpage') {
+            if (slide.type === 'webpage' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return $.when();
+        },
+        _markAsCompleted: function (slideId, completion) {
+            var slide = findSlide(this.slides, {id: slideId});
+            slide.completed = true;
+            this.sidebar.setSlideCompleted(slide.id);
+            this.sidebar.updateProgressbar(completion);
         },
         /**
          * Extend the slide data list to add informations about rendering method, and other
@@ -459,9 +465,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                         slide_id: slide.id,
                     }
                 }).then(function (data){
-                    slide.completed = true;
-                    self.sidebar.setSlideCompleted(slide.id);
-                    self.sidebar.updateProgressbar(data.channel_completion);
+                    self._markAsCompleted(slideId, data.channel_completion);
                 });
             }
             return $.when();
@@ -505,12 +509,22 @@ odoo.define('website_slides.fullscreen', function (require) {
             this.set('slide', newSlide);
         },
         /**
+         * Triggered when subwidget has mark the slide as done, and the UI need to be adapted.
+         *
+         * @private
+         */
+        _onSlideCompleted: function (ev) {
+            var slide = ev.data.slide;
+            var completion = ev.data.completion;
+            this._markAsCompleted(slide.id, completion);
+        },
+        /**
          * Triggered when sub widget business is done and that slide
          * can now be marked as done.
          *
          * @private
          */
-        _onSlideCompleted: function (ev) {
+        _onSlideToComplete: function (ev) {
             if (!session.is_website_user) {  // no useless RPC call
                 var slideId = ev.data.id;
                 this._setCompleted(slideId);
