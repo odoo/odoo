@@ -4065,6 +4065,60 @@ QUnit.module('Views', {
         delete widgetRegistry.map.asyncWidget;
     });
 
+    QUnit.test('grouped list with expand attribute', async function (assert) {
+        assert.expect(6);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1"><field name="foo"/></tree>',
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.containsN(list, '.o_group_header', 2);
+        assert.containsN(list, '.o_data_row', 4);
+
+        assert.verifySteps([
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+        ]);
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list (two levels) with expand attribute', async function (assert) {
+        // the expand attribute only opens the first level groups
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1"><field name="foo"/></tree>',
+            groupBy: ['bar', 'int_field'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.containsN(list, '.o_group_header', 6);
+
+        assert.verifySteps([
+            'read_group', // global
+            'read_group', // first group
+            'read_group', // second group
+        ]);
+
+        list.destroy();
+    });
+
     QUnit.test('editable grouped lists', async function (assert) {
         assert.expect(4);
 
