@@ -31,8 +31,6 @@ var FIELD_CLASSES = {
     text: 'o_list_text',
 };
 
-var HEADING_COLUMNS_TO_SKIP_IN_GROUPS = 2;
-
 var ListRenderer = BasicRenderer.extend({
     events: {
         'click tbody tr': '_onRowClicked',
@@ -68,6 +66,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
+        this.groupbys = params.groupbys;
     },
 
     //--------------------------------------------------------------------------
@@ -191,7 +190,7 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         self.handleField = null;
         this.columns = _.reject(this.arch.children, function (c) {
-            if (c.tag === 'control') {
+            if (c.tag === 'control' || c.tag === 'groupby') {
                 return true;
             }
             var reject = c.attrs.modifiers.column_invisible;
@@ -212,16 +211,12 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      * @param {any} aggregateValues
-     * @param {Boolean} isHeader indicates wheter the groups rendered are on the header or on the footer
      * @returns {jQueryElement[]} a list of <td> with the aggregate values
      */
-    _renderAggregateCells: function (aggregateValues, isHeader) {
+    _renderAggregateCells: function (aggregateValues) {
         var self = this;
 
-        return _.map(this.columns, function (column, index) {
-            if (isHeader  && index === 0) {
-                return;
-            }
+        return _.map(this.columns, function (column) {
             var $cell = $('<td>');
             if (config.debug) {
                 $cell.addClass(column.attrs.name);
@@ -384,11 +379,65 @@ var ListRenderer = BasicRenderer.extend({
                 aggregates[column.attrs.name] = column.aggregate;
             }
         });
-        var $cells = this._renderAggregateCells(aggregates, false);
+        var $cells = this._renderAggregateCells(aggregates);
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
         return $('<tfoot>').append($('<tr>').append($cells));
+    },
+    /**
+     * Renders the group button element.
+     *
+     * @private
+     * @param {Object} record
+     * @param {Object} group
+     * @returns {jQuery} a <button> element
+     */
+    _renderGroupButton: function (list, node) {
+        var self = this;
+        var $button = viewUtils.renderButtonFromNode(node, {
+            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
+            textAsTitle: !!node.attrs.icon,
+        });
+        this._handleAttributes($button, node);
+        this._registerModifiers(node, list.groupData, $button);
+
+        // TODO this should be moved to a handler
+        $button.on("click", function (e) {
+            e.stopPropagation();
+            if (node.attrs.type === 'edit') {
+                self.trigger_up('group_edit_button_clicked', {
+                    record: list.groupData,
+                });
+            } else {
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: list.groupData,
+                });
+            }
+        });
+        return $button;
+    },
+    /**
+     * Renders the group buttons.
+     *
+     * @private
+     * @param {Object} record
+     * @param {Object} group
+     * @returns {jQuery} a <button> element
+     */
+    _renderGroupButtons: function (list, group) {
+        var self = this;
+        var $buttons = $();
+        if (list.value) {
+            // buttons make no sense for 'Undefined' group
+            group.arch.children.forEach(function (child) {
+                if (child.tag === 'button') {
+                    $buttons = $buttons.add(self._renderGroupButton(list, child));
+                }
+            });
+        }
+        return $buttons;
     },
     /**
      * Renders the pager for a given group
@@ -418,7 +467,7 @@ var ListRenderer = BasicRenderer.extend({
 
         var pagerProm = pager._widgetRenderAndInsert(function () {}); // start the pager
         this.defs.push(pagerProm);
-        var $el =  $('<div>');
+        var $el = $('<div>');
         pagerProm.then(function () {
             $el.replaceWith(pager.$el);
         });
@@ -434,10 +483,8 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <tr> element
      */
     _renderGroupRow: function (group, groupLevel) {
-        var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
-            return { value: value };
-        });
-        var $cells = this._renderAggregateCells(aggregateValues, true);
+        var cells = [];
+
         var name = group.value === undefined ? _t('Undefined') : group.value;
         var groupBy = this.state.groupedBy[groupLevel];
         if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
@@ -445,10 +492,7 @@ var ListRenderer = BasicRenderer.extend({
         }
         var $th = $('<th>')
             .addClass('o_group_name')
-            .text(name + ' (' + group.count + ')');
-        if (this.hasSelectors) {
-            $th.attr('colspan', HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
-        }
+            .text(name + ' (' + group.count + ')')
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -458,18 +502,55 @@ var ListRenderer = BasicRenderer.extend({
                 .toggleClass('fa-caret-down', group.isOpen);
         }
         $th.prepend($arrow);
+        cells.push($th);
+
+        var aggregateKeys = Object.keys(group.aggregateValues);
+        var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
+            return { value: value };
+        });
+        var aggregateCells = this._renderAggregateCells(aggregateValues);
+        var firstAggregateIndex = _.findIndex(this.columns, function (column) {
+            return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
+        });
+        var colspanBeforeAggregate;
+        if (firstAggregateIndex !== -1) {
+            // if there are aggregates, the first $th goes until the first
+            // aggregate then all cells between aggregates are rendered, then
+            // there is a last $th for the pager
+            colspanBeforeAggregate = firstAggregateIndex;
+            var lastAggregateIndex = _.findLastIndex(this.columns, function (column) {
+                return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
+            });
+            cells = cells.concat(aggregateCells.slice(firstAggregateIndex, lastAggregateIndex + 1));
+            cells.push($('<th>').attr('colspan', this.columns.length - 1 - lastAggregateIndex));
+        } else {
+            colspanBeforeAggregate = this.columns.length;
+        }
+        if (this.hasSelectors) {
+            colspanBeforeAggregate += 1;
+        }
+        $th.attr('colspan', colspanBeforeAggregate);
+
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
+            var $lastCell = cells[cells.length - 1];
             var $pager = this._renderGroupPager(group);
-            var $lastCell = $cells[$cells.length - 1] || $th;
             $lastCell.addClass('o_group_pager').append($pager);
+        }
+        if (group.isOpen && this.groupbys[groupBy]) {
+            var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
+            if ($buttons.length) {
+                var $buttonSection = $('<div>', {
+                    class: 'o_group_buttons',
+                }).append($buttons);
+                $th.append($buttonSection);
+            }
         }
         return $('<tr>')
             .addClass('o_group_header')
             .toggleClass('o_group_open', group.isOpen)
             .toggleClass('o_group_has_content', group.count > 0)
             .data('group', group)
-            .append($th)
-            .append($cells);
+            .append(cells);
     },
     /**
      * Render the content of a given opened group.

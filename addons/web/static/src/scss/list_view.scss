@@ -103,12 +103,26 @@
         .o_group_name {
             white-space: nowrap;
         }
+        .o_group_buttons {
+            display: inline-block;
+
+            > button {
+                background-color: transparent;
+                border: none;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
         .o_group_pager {
-            cursor: text;
-            user-select: none;
-            text-align: right;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
+            position: relative;
+
+            .o_pager {
+                @include o-position-absolute(0, 16px);
+                cursor: text;
+                user-select: none;
+                padding-top: 3px !important;
+                padding-bottom: 0 !important;
+            }
             .o_pager_previous, .o_pager_next {
                 max-height: 30px;
                 background-color: $o-list-group-header-color;

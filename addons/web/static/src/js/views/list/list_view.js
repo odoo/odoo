@@ -11,6 +11,7 @@ odoo.define('web.ListView', function (require) {
 
 var BasicView = require('web.BasicView');
 var core = require('web.core');
+var ListModel = require('web.ListModel');
 var ListRenderer = require('web.ListRenderer');
 var ListController = require('web.ListController');
 
@@ -21,6 +22,7 @@ var ListView = BasicView.extend({
     display_name: _lt('List'),
     icon: 'fa-list-ul',
     config: _.extend({}, BasicView.prototype.config, {
+        Model: ListModel,
         Renderer: ListRenderer,
         Controller: ListController,
     }),
@@ -34,11 +36,19 @@ var ListView = BasicView.extend({
      * @param {boolean} [params.hasSelectors=true]
      */
     init: function (viewInfo, params) {
+        var self = this;
         this._super.apply(this, arguments);
         var selectedRecords = []; // there is no selected records by default
 
         var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
         var expandGroups = !!JSON.parse(this.arch.attrs.expand || "0");
+
+        this.groupbys = {};
+        this.arch.children.forEach(function (child) {
+            if (child.tag === 'groupby') {
+                self._extractGroup(child);
+            }
+        });
 
         this.controllerParams.editable = this.arch.attrs.editable;
         this.controllerParams.hasSidebar = params.hasSidebar;
@@ -47,12 +57,15 @@ var ListView = BasicView.extend({
         this.controllerParams.selectedRecords = selectedRecords;
 
         this.rendererParams.arch = this.arch;
+        this.rendererParams.groupbys = this.groupbys;
         this.rendererParams.hasSelectors =
                 'hasSelectors' in params ? params.hasSelectors : true;
         this.rendererParams.editable = params.readonly ? false : this.arch.attrs.editable;
         this.rendererParams.selectedRecords = selectedRecords;
         this.rendererParams.addCreateLine = false;
         this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
+
+        this.modelParams.groupbys = this.groupbys;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.openGroupByDefault = expandGroups;
@@ -65,6 +78,14 @@ var ListView = BasicView.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Object} node
+     */
+    _extractGroup: function (node) {
+        var innerView = this.fields[node.attrs.name].views.groupby;
+        this.groupbys[node.attrs.name] = this._processFieldsView(innerView, 'groupby');
+    },
     /**
      * @override
      */

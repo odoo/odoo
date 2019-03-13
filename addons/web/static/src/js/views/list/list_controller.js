@@ -26,6 +26,7 @@ var ListController = BasicController.extend({
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
+        group_edit_button_clicked: '_onEditGroupClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
         resequence: '_onResequence',
@@ -527,6 +528,22 @@ var ListController = BasicController.extend({
             return field.attrs.name;
         });
         new DataExport(this, record, defaultExportFields).open();
+    },
+    /**
+     * Opens the related form view.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditGroupClicked: function (ev) {
+        ev.stopPropagation();
+        this.do_action({
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            res_model: ev.data.record.model,
+            res_id: ev.data.record.res_id,
+            flags: {mode: 'edit'},
+        });
     },
     /**
      * Force a resequence of the records curently on this page.

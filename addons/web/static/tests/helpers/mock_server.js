@@ -203,6 +203,7 @@ var MockServer = Class.extend({
         var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
+        var groupbyNodes = {};
 
         var doc;
         if (typeof arch === 'string') {
@@ -220,6 +221,7 @@ var MockServer = Class.extend({
             var modifiers = {};
 
             var isField = (node.tagName === 'field');
+            var isGroupby = (node.tagName === 'groupby');
 
             if (isField) {
                 var fieldName = node.getAttribute('name');
@@ -251,6 +253,10 @@ var MockServer = Class.extend({
                         modifiers[attr] = defaultValue;
                     }
                 });
+            } else if (isGroupby && !node._isProcessed) {
+                var groupbyName = node.getAttribute('name');
+                fieldNodes[groupbyName] = node;
+                groupbyNodes[groupbyName] = node;
             }
 
             // 'transfer_node_to_modifiers' simulation
@@ -290,6 +296,10 @@ var MockServer = Class.extend({
                 node.setAttribute('modifiers', JSON.stringify(modifiers));
             }
 
+            if (isGroupby && !node._isProcessed) {
+                return false;
+            }
+
             return !isField;
         });
 
@@ -316,6 +326,21 @@ var MockServer = Class.extend({
             if (name in onchanges) {
                 node.setAttribute('on_change', "1");
             }
+        });
+        _.each(groupbyNodes, function (node, name) {
+            var field = fields[name];
+            if (field.type !== 'many2one') {
+                throw new Error('groupby can only target many2one');
+            }
+            field.views = {};
+            relModel = field.relation;
+            relFields = $.extend(true, {}, self.data[relModel].fields);
+            node._isProcessed = true;
+            // postprocess simulation
+            field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
+            node.childNodes.forEach(function (child) {
+                node.removeChild(child);
+            });
         });
 
         var xmlSerializer = new XMLSerializer();

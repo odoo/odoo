@@ -333,6 +333,27 @@ Possible children elements of the list view are:
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
 
+``groupby``
+  defines custom headers (with buttons) for the current view when grouping
+  records on many2one fields. It is also possible to add `field`, inside the
+  `groupby` which can be used for modifiers. These fields thus belong on the
+  many2one comodel. These extra fields will be fetched in batch.
+
+  ``name``
+      the name of a many2one field (on the current model). Custom header will be
+      displayed when grouping the view on this field name (only for first level).
+
+  .. code-block:: xml
+
+    <groupby name="partner_id">
+      <field name="name"/> <!-- name of partner_id -->
+        <button type="edit" name"edit" string="Edit/>
+        <button type="object" name="my_method" string="Button1"
+          attrs="{'invisible': [('name', '=', 'Georges')]}"/>
+    </groupby>
+
+  A special button (`type="edit"`) can be defined to open the many2one form view.
+
 ``control``
   defines custom controls for the current view.
 

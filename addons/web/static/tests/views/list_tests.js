@@ -355,7 +355,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic grouped list rendering 1 col without selector', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = await createView({
             View: ListView,
@@ -367,12 +367,14 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
-        "group header should have exactly 1 column");
+            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "1",
+            "the header should span the whole table");
         list.destroy();
     });
 
     QUnit.test('basic grouped list rendering 1 col with selector', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = await createView({
             View: ListView,
@@ -385,11 +387,13 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
             "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
+            "the header should span the whole table");
         list.destroy();
     });
 
-    QUnit.test('basic grouped list rendering 2 col without selector', async function (assert) {
-        assert.expect(1);
+    QUnit.test('basic grouped list rendering 2 cols without selector', async function (assert) {
+        assert.expect(2);
 
         var list = await createView({
             View: ListView,
@@ -400,13 +404,15 @@ QUnit.module('Views', {
             hasSelectors: false,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
-            "group header should have exactly 2 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
+            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "2",
+            "the header should span the whole table");
         list.destroy();
     });
 
     QUnit.test('basic grouped list rendering 2 col with selector', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = await createView({
             View: ListView,
@@ -417,8 +423,40 @@ QUnit.module('Views', {
             hasSelectors: true,
         });
 
-        assert.strictEqual(list.$('.o_group_header:first').children().length, 2,
-        "group header should have exactly 2 column");
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 1,
+            "group header should have exactly 1 column");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "3",
+            "the header should span the whole table");
+        list.destroy();
+    });
+
+    QUnit.test('basic grouped list rendering 7 cols with aggregates and selector', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="datetime"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" sum="Sum1"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="qux" sum="Sum2"/>' +
+                    '<field name="date"/>' +
+                    '<field name="text"/>' +
+                '</tree>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(list.$('.o_group_header:first').children().length, 5,
+            "group header should have exactly 5 columns (one before first aggregate, one after last aggregate, and all in between");
+        assert.strictEqual(list.$('.o_group_header:first th').attr('colspan'), "3",
+            "header name should span on the two first fields + selector (colspan 3)");
+        assert.containsN(list, '.o_group_header:first td', 3,
+            "there should be 3 tds (aggregates + fields in between)");
+        assert.strictEqual(list.$('.o_group_header:first th:last').attr('colspan'), "2",
+            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)");
         list.destroy();
     });
 
@@ -1092,7 +1130,6 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-
     QUnit.test('properly apply onchange in simple case', async function (assert) {
         assert.expect(2);
 
@@ -1721,6 +1758,159 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groupby node with a button', async function (assert) {
+        assert.expect(14);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<button string="Button 1" type="object" name="button_method"/>' +
+                '</groupby>' +
+            '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (ev) {
+                    assert.deepEqual(ev.data.env.currentID, 2,
+                        'should call with correct id');
+                    assert.strictEqual(ev.data.env.model, 'res_currency',
+                        'should call with correct model');
+                    assert.strictEqual(ev.data.action_data.name, 'button_method',
+                        "should call correct method");
+                    assert.strictEqual(ev.data.action_data.type, 'object',
+                        'should have correct type');
+                    ev.data.on_success();
+                },
+            },
+        });
+
+        assert.verifySteps(['/web/dataset/search_read']);
+        assert.containsOnce(list, 'thead th:not(.o_list_record_selector)',
+            "there should be only one column");
+
+        await list.update({groupBy: ['currency_id']});
+
+        assert.verifySteps(['web_read_group']);
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(list, '.o_group_header button', 0,
+            "there should be no button in the header");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.verifySteps(['/web/dataset/search_read']);
+        assert.containsOnce(list, '.o_group_header button');
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with a button with modifiers', async function (assert) {
+        assert.expect(11);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<field name="position"/>' +
+                    '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
+                '</groupby>' +
+            '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'read' && args.model === 'res_currency') {
+                    assert.deepEqual(args.args, [[2, 1], ['position']]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            groupBy: ['currency_id'],
+        });
+
+        assert.verifySteps(['web_read_group', 'read']);
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+
+        assert.verifySteps(['/web/dataset/search_read']);
+        assert.containsOnce(list, '.o_group_header button.o_invisible_modifier',
+            "the first group (EUR) should have an invisible button");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(1)'));
+
+        assert.verifySteps(['/web/dataset/search_read']);
+        assert.containsN(list, '.o_group_header button', 2,
+            "there should be two buttons (one by header)");
+        assert.doesNotHaveClass(list, '.o_group_header:eq(1) button', 'o_invisible_modifier',
+            "the second header button should be visible");
+
+        list.destroy();
+    });
+
+    QUnit.test('reload list view with groupby node', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1">' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<field name="position"/>' +
+                    '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
+                '</groupby>' +
+            '</tree>',
+            groupBy: ['currency_id'],
+        });
+
+        assert.containsOnce(list, '.o_group_header button:not(.o_invisible_modifier)',
+            "there should be one visible button");
+
+        await list.reload({ domain: [] });
+        assert.containsOnce(list, '.o_group_header button:not(.o_invisible_modifier)',
+            "there should still be one visible button");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with edit button', async function (assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1">' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<button string="Button 1" type="edit" name="edit"/>' +
+                '</groupby>' +
+            '</tree>',
+            groupBy: ['currency_id'],
+            intercepts: {
+                do_action: function (event) {
+                    assert.deepEqual(event.data.action, {
+                        res_id: 2,
+                        res_model: 'res_currency',
+                        type: 'ir.actions.act_window',
+                        views: [[false, 'form']],
+                        flags: {mode: 'edit'},
+                    }, "should trigger do_action with correct action parameter");
+                }
+            },
+        });
+        await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, without data', async function (assert) {
         assert.expect(12);
 
@@ -2249,7 +2439,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_group_header'));
         assert.strictEqual(list.$('.o_group_header').css('height'), headerHeight,
             "height of group header shouldn't have changed");
-        assert.hasClass(list.$('.o_group_header td:last'),'o_group_pager',
+        assert.hasClass(list.$('.o_group_header th'), 'o_group_pager',
             "last cell of open group header should have classname 'o_group_header'");
         assert.strictEqual(list.$('.o_group_header .o_pager_value').text(), '1-3',
             "pager's value should be correct");

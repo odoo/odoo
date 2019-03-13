@@ -910,6 +910,30 @@ actual arch.
                 if field:
                     orm.transfer_field_to_modifiers(field, modifiers)
 
+        elif node.tag == 'groupby':
+            # groupby nodes should be considered as nested view because they may
+            # contain fields on the comodel
+            field = Model._fields.get(node.get('name'))
+            if field:
+                if field.type != 'many2one':
+                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                attrs = fields.setdefault(node.get('name'), {})
+                children = False
+                # move all children nodes into a new node <groupby>
+                groupby_node = E.groupby()
+                for child in list(node):
+                    node.remove(child)
+                    groupby_node.append(child)
+                # validate the new node as a nested view, and associate it to the field
+                xarch, xfields = self.with_context(
+                    base_model_name=model,
+                    view_is_editable=False,
+                ).postprocess_and_fields(field.comodel_name, groupby_node, view_id)
+                attrs['views'] = {'groupby': {
+                    'arch': xarch,
+                    'fields': xfields,
+                }}
+
         elif node.tag in ('form', 'tree'):
             result = Model.view_header_get(False, node.tag)
             if result:
@@ -1044,7 +1068,7 @@ actual arch.
             if node.tag in VIEW_TYPES:
                 # determine whether this view is editable
                 editable = editable and self._view_is_editable(node)
-            elif node.tag == 'field':
+            elif node.tag in ('field', 'groupby'):
                 # determine whether the field is editable
                 field = model._fields.get(node.get('name'))
                 if field:
@@ -1058,7 +1082,7 @@ actual arch.
                 elif key == 'attrs':
                     process_attrs(val, get, key, val)
 
-            if node.tag == 'field' and field and field.relational:
+            if node.tag in ('field', 'groupby') and field and field.relational:
                 if editable and not node.get('domain'):
                     domain = field._description_domain(self.env)
                     # process the field's domain as if it was in the view
