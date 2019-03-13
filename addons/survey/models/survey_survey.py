@@ -398,7 +398,7 @@ class Survey(models.Model):
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         # Calculate and return statistics for free_text, textbox, date
-        if question.question_type in ['free_text', 'textbox', 'date']:
+        if question.question_type in ['free_text', 'textbox', 'date', 'datetime']:
             result_summary = []
             for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
