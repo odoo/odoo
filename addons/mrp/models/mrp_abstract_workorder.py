@@ -210,7 +210,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         else:
             rounding = production_move.product_uom.rounding
             production_move._set_quantity_done(
-                production_move.quantity_done + float_round(self.qty_producing, precision_rounding=rounding)
+                float_round(self.qty_producing, precision_rounding=rounding)
             )
 
     def _update_raw_moves(self):
