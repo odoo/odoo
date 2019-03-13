@@ -135,19 +135,11 @@ if(!the_form.length) {
             var date_fields = $form.find('div.date > input.form-control');
             for (var i=0; i < date_fields.length; i++) {
                 var el = date_fields[i];
-                var moment_date = el.value !== '' ? field_utils.parse.date(el.value) : '';
-                if (moment_date) {
-                    moment_date.toJSON = function () {
-                        if ($(el).closest('.input-group.date').data('questiontype') === 'datetime') {
-                            return this.clone().utc().format('YYYY-MM-DD hh:mm:ss');
-                        }
-                        else {
-                            return this.clone().format('YYYY-MM-DD');
-                        }
-                    };
-                }
+                var questiontype = $(el).closest('.input-group.date').data('questiontype');
+                var moment_date = questiontype === 'datetime' ? field_utils.parse.datetime(el.value, null, {timezone: true}) : field_utils.parse.date(el.value);
+
                 var field_obj = _.findWhere(formData, {'name': el.name});
-                field_obj.value = JSON.parse(JSON.stringify(moment_date));
+                field_obj.value = moment_date ? moment_date.toJSON() : '';
             }
             $('.js_errzone').html("").hide();
         },
