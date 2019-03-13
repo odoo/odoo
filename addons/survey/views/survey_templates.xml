@@ -111,9 +111,9 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+        <div groups="survey.group_survey_manager" t-ignore="true" class="mt32 alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
             <div t-ignore="true" class="text-center">
-                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
+                <span t-if="answer and answer.test_entry">This is a test survey. </span><a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/>Edit Survey.</a>
             </div>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
         </div>
@@ -168,18 +168,21 @@
                 <div class="oe_structure" id="oe_structure_survey_init_1"/>
                 <div class="container">
                     <t t-if="answer.test_entry" t-call="survey.back" />
-                    <div class='jumbotron mt32'>
-                        <h1 t-field='survey.title' />
-                        <div t-field='survey.description' class="oe_no_empty"/>
-                        <div t-if="survey.is_time_limited">
-                            <p>
+                    <div class="row mt64 mb64">
+                        <div class="col-4 col-md-2">
+                            <img src="../static/src/img/new_survey.png" alt="Survey Logo" class="img-fluid mx-auto mb32"/>
+                        </div>
+                        <div class="col-8 col-md-10">
+                            <h1 t-field='survey.title' />
+                            <div t-field='survey.description' class="oe_no_empty"/>
+                            <div t-if="survey.is_time_limited">
                                 <span>Time limit for this survey: </span>
                                 <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
-                            </p>
+                            </div>
+                            <a role="button" class="btn btn-primary btn-lg mt8" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.token)">
+                                Start Survey
+                            </a>
                         </div>
-                        <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.token)">
-                            Start Survey
-                        </a>
                     </div>
                 </div>
                 <div class="oe_structure" id="oe_structure_survey_init_2"/>
