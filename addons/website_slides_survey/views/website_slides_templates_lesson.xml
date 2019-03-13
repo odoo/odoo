@@ -3,19 +3,18 @@
     <data>
         <template id="slide_content_detailed" inherit_id="website_slides.slide_content_detailed">
             <xpath expr="//div[hasclass('o_wslides_lesson_content_type')]" position="inside">
-                <t t-if="not certification_test_entry" t-set="begin_certification_label" t-value="'Begin certification'" />
-                <t t-if="certification_test_entry" t-set="begin_certification_label" t-value="'Test certification'" />
-                <div t-if="slide.slide_type == 'certification' and not certification_done" class="col mt32 mb8 d-flex justify-content-center">
+                <div t-if="slide.slide_type == 'certification' and not channel_progress[slide.id].get('completed')" class="col mt32 mb8 d-flex justify-content-center">
                     <a role="button"
                         class="btn btn-primary btn-lg"
-                        t-att-href="certification_url">
-                        <i class="fa fa-fw fa-graduation-cap" role="img" t-att-aria-label="begin_certification_label" t-att-title="begin_certification_label"/>
-                        <t t-esc="begin_certification_label" />
+                        t-att-href="'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id)">
+                        <i class="fa fa-fw fa-graduation-cap" role="img"/>
+                        <t t-if="slide.channel_id.is_member">Begin Certification</t>
+                        <t t-else="">Test Certification</t>
                     </a>
                 </div>
-                <div t-if="slide.slide_type == 'certification' and certification_done" class="col mt32 mb8 d-flex justify-content-center">
+                <div t-if="slide.slide_type == 'certification' and channel_progress[slide.id].get('completed')" class="col mt32 mb8 d-flex justify-content-center">
                     <a role="button"
-                        t-att-data-survey_id="survey_id"
+                        t-att-data-survey_id="certification_data[slide.id]['survey_id']"
                         class="btn btn-primary btn-lg o_wslides_survey_download_certification"
                         href="#">
                         <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>

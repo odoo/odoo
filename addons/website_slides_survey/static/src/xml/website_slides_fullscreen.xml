@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-extend="website.slides.fullscreen">
-        <t t-jquery="t:last" t-operation="after">
-            <div t-if="widget.get('slide').type === 'certification' &amp;&amp; !widget.get('slide').certificationDone" class="o_wslides_fs_certification">
-                <a class="btn btn-primary" t-att-href="'/slides/slide/' + widget.get('slide').id" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
-            </div>
-            <div class="o_wslides_fs_certification" t-if="widget.get('slide').type === 'certification' &amp;&amp; widget.get('slide').certificationDone">
-                <a role="button" t-att-data-survey_id="widget.get('slide').certificationId" class="btn btn-primary o_wslides_survey_download_certification" href="#">
-                    <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
-                </a>
-            </div>
-        </t>
+    <t t-name="website.slides.fullscreen.certification">
+        <div class="o_wslides_fs_certification">
+            <a t-if="!widget.get('slide').done" class="btn btn-primary" t-att-href="widget.get('slide').certificationUrl" target="new"><i class="fa fa-trophy"/>
+                <t t-if="widget.get('slide').isMember">Pass Certification</t>
+                <t t-else="">Test Certification</t>
+            </a>
+            <a t-else="" role="button" t-att-data-survey_id="widget.get('slide').certificationId" class="btn btn-primary o_wslides_survey_download_certification" href="#">
+                <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+            </a>
+        </div>
     </t>
 
     <t t-extend="website.slides.fullscreen.title">
