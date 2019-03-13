@@ -220,8 +220,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
      * @param  {jQuery.Event} e keydown event
      */
     _listenBarcodeScanner: function (e) {
-        if ($(':focus').not('input:text, textarea, [contenteditable], ' +
-            '[type="email"], [type="number"], [type="password"], [type="tel"]')) {
+        if (!$('input:text:focus, textarea:focus, [contenteditable]:focus').length) {
             $('body').append(this.$barcodeInput);
             this.$barcodeInput.focus();
         }
