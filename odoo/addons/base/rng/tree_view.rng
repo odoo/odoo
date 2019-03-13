@@ -6,6 +6,20 @@
          template
     -->
     <rng:include href="common.rng"/>
+
+    <rng:define name="groupby">
+        <rng:element name="groupby">
+            <rng:attribute name="name"/>
+            <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:ref name="button"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:ref name="overload"/>
@@ -61,7 +75,7 @@
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
-                    <rng:ref name="group"/>
+                    <rng:ref name="groupby"/>
                     <rng:ref name="button"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="html"/>
