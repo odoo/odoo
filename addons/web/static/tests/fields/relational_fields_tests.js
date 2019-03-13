@@ -2789,6 +2789,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many field in edit mode with optional fields and tash icon', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p"/>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,list': '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar" optional="1"/>' +
+                '</tree>',
+            },
+        });
+        // should have 2 columns 1 for foo and 1 for optional dropdown
+        assert.containsN(form.$('.o_field_one2many'), 'th', 2,
+            "should be 2 th in the one2many in readonly mode");
+        testUtils.form.clickEdit(form);
+        // should have 2 columns 1 for foo and 1 for trash icon, dropdown is displayed
+        // on trash icon cell, no separate cell created for trash icon and optional field dropdown
+        assert.containsN(form.$('.o_field_one2many'), 'th', 2,
+            "should be 2 th in the one2many edit mode");
+        assert.containsN(form.$('.o_field_one2many'), '.o_data_row:first > td', 2,
+            "should be 2 cells in the one2many in edit mode");
+        assert.hasClass(form.$('.o_field_one2many thead th:last'), 'o_add_column',
+            "should have add column option at last");
+
+        testUtils.dom.click(form.$('.o_field_one2many th.o_add_column > a.dropdown-toggle'));
+        assert.containsN(form.$('.o_field_one2many'), 'div.o_add_column_dropdown > div.dropdown-item', 1,
+            "dropdown have 1 optional field");
+        testUtils.dom.click(form.$('div.o_add_column_dropdown > div.dropdown-item:first input'));
+        assert.containsN(form.$('.o_field_one2many'), 'th', 3,
+            "should be 3 th in the one2many after enabling bar column from optional dropdown");
+
+        testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        var $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
+        assert.strictEqual($selectedRow.length, 1, "should have selected row i.e. edition mode");
+
+        testUtils.dom.click(form.$('.o_field_one2many th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(form.$('div.o_add_column_dropdown > div.dropdown-item:first input'));
+        $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
+        assert.strictEqual($selectedRow.length, 0,
+            "current edition mode discarded when selecting optional field");
+
+        form.destroy();
+    });
+
     QUnit.module('TabNavigation');
     QUnit.test('when Navigating to a many2one with tabs, it receives the focus and adds a new line', async function (assert) {
          assert.expect(3);
