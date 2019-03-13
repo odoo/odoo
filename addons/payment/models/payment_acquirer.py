@@ -356,6 +356,7 @@ class PaymentAcquirer(models.Model):
         if values is None:
             values = {}
 
+        values.setdefault('return_url', '/payment/process')
         # reference and amount
         values.setdefault('reference', reference)
         amount = float_round(amount, 2)
@@ -447,7 +448,6 @@ class PaymentAcquirer(models.Model):
             'context': self._context,
             'type': values.get('type') or 'form',
         })
-        values.setdefault('return_url', False)
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
