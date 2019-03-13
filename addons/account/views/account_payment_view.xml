@@ -151,9 +151,7 @@
                             </group>
                             <group name="right_column">
                                 <field name="payment_date"/>
-                                <field name="show_communication_field" invisible="1"/>
-                                <field name="communication" attrs="{'invisible': [('show_communication_field', '=', False)]}"/>
-                                <p colspan="2" attrs="{'invisible': [('show_communication_field', '=', True)]}">Memo will be computed from invoices</p>
+                                <field name="communication"/>
                             </group>
                             <group>
                                 <label for="amount"/>
@@ -197,34 +195,19 @@
 
         <record id="view_account_payment_form_multi" model="ir.ui.view">
             <field name="name">account.payment.form.multi</field>
-            <field name="model">account.payment</field>
-            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="model">account.payment.register</field>
             <field name="arch" type="xml">
-                <field name="invoice_ids" position="after">
-                    <field name="invoice_number" invisible="1"/>
-                    <field name="multi" invisible="1"/>
-                </field>
-                <field name="payment_date" position="after">
-                    <field name="group_invoices" attrs="{'invisible': ['|', ('invoice_number', '==', 0), ('invoice_number', '==', 1)]}"/>
-                </field>
-                <field name="amount" position="attributes">
-                    <attribute name="attrs">{'readonly': [('multi', '=', True)]}</attribute>
-                </field>
-                <field name="journal_id" position="attributes">
-                    <attribute name="attrs">{'invisible': [('amount', '=', 0), ('invoice_number', '!=', 0)]}</attribute>
-                </field>
-                <xpath expr="//header" position="attributes">
-                    <attribute name="attrs">{'invisible': [('invoice_number', '!=', 0)]}</attribute>
-                </xpath>
-                <xpath expr="//group[@name='partner_group']" position="attributes">
-                    <attribute name="attrs">{'invisible': [('invoice_number', '!=', 0)]}</attribute>
-                </xpath>
-                <xpath expr="/form" position="inside">
-                    <footer attrs="{'invisible': [('invoice_number', '==', 0)]}">
-                        <button string='Validate' name="create_payments" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                <form string="Register Payment">
+                    <group>
+                        <field name="journal_id"/>
+                        <field name="payment_date"/>
+                        <field name="payment_method_id" string=" " widget="radio"/>
+                    </group>
+                    <footer>
+                        <button string="Create Payment" name="create_payments" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
                     </footer>
-                </xpath>
+                </form>
             </field>
         </record>
 
