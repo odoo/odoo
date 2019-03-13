@@ -138,6 +138,16 @@ var KanbanController = BasicController.extend({
         return this.renderer.updateRecord(this.model.get(id));
     },
     /**
+     * Only display the pager in the ungrouped case, with data.
+     *
+     * @override
+     * @private
+     */
+    _isPagerVisible: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        return !!(state.count && !state.groupedBy.length);
+    },
+    /**
      * @private
      * @param {Widget} kanbanRecord
      * @param {Object} params

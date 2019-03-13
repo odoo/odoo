@@ -88,7 +88,6 @@ var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
-var fieldUtils = require('web.field_utils');
 var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
@@ -639,6 +638,9 @@ var BasicModel = AbstractModel.extend({
             getDomain: element.getDomain,
             getFieldNames: element.getFieldNames,
             groupedBy: element.groupedBy,
+            groupsCount: element.groupsCount,
+            groupsLimit: element.groupsLimit,
+            groupsOffset: element.groupsOffset,
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
@@ -3732,6 +3734,9 @@ var BasicModel = AbstractModel.extend({
             fields: fields,
             fieldsInfo: params.fieldsInfo,
             groupedBy: params.groupedBy || [],
+            groupsCount: 0,
+            groupsLimit: type === 'list' && params.groupsLimit || null,
+            groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : params.limit,
@@ -4245,20 +4250,25 @@ var BasicModel = AbstractModel.extend({
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
-        var orderedBy = _.filter(list.orderedBy, function(order){
+        var orderedBy = _.filter(list.orderedBy, function (order) {
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
         });
+        var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
         return this._rpc({
                 model: list.model,
-                method: 'read_group',
+                method: 'web_read_group',
                 fields: fields,
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
+                limit: list.groupsLimit,
+                offset: list.groupsOffset,
                 orderBy: orderedBy,
                 lazy: true,
             })
-            .then(function (groups) {
+            .then(function (result) {
+                var groups = result.groups;
+                list.groupsCount = result.length;
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });
@@ -4321,7 +4331,7 @@ var BasicModel = AbstractModel.extend({
                         // form view) are reloaded
                         newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         self.localData[newGroup.id] = newGroup;
-                    } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
+                    } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {
                         newGroup.isOpen = false;
                     } else if ('__fold' in group) {
                         newGroup.isOpen = !group.__fold;
@@ -4485,6 +4495,12 @@ var BasicModel = AbstractModel.extend({
         }
         if (options.offset !== undefined) {
             this._setOffset(element.id, options.offset);
+        }
+        if (options.groupsLimit !== undefined) {
+            element.groupsLimit = options.groupsLimit;
+        }
+        if (options.groupsOffset !== undefined) {
+            element.groupsOffset = options.groupsOffset;
         }
         if (options.loadMoreOffset !== undefined) {
             element.loadMoreOffset = options.loadMoreOffset;

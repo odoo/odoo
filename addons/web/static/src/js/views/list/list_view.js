@@ -38,6 +38,7 @@ var ListView = BasicView.extend({
         var selectedRecords = []; // there is no selected records by default
 
         var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
+        var expandGroups = !!JSON.parse(this.arch.attrs.expand || "0");
 
         this.controllerParams.editable = this.arch.attrs.editable;
         this.controllerParams.hasSidebar = params.hasSidebar;
@@ -54,8 +55,10 @@ var ListView = BasicView.extend({
         this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
 
         this.loadParams.limit = this.loadParams.limit || 80;
-        this.loadParams.openGroupByDefault = !!JSON.parse(this.arch.attrs.expand || "0");
+        this.loadParams.openGroupByDefault = expandGroups;
         this.loadParams.type = 'list';
+        var groupsLimit = parseInt(this.arch.attrs.groups_limit, 10);
+        this.loadParams.groupsLimit = groupsLimit || (expandGroups ? 10 : 80);
     },
 
     //--------------------------------------------------------------------------
