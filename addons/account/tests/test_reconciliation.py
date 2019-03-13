@@ -97,9 +97,9 @@ class TestReconciliation(AccountingTestCase):
             'type_tax_use': 'purchase',
             'company_id': company.id,
             'amount': 20,
-            'account_id': self.tax_waiting_account.id,
+            'account_id': self.tax_final_account.id,
             'tax_exigibility': 'on_payment',
-            'cash_basis_account_id': self.tax_final_account.id,
+            'cash_basis_transition_account_id': self.tax_waiting_account.id,
             'cash_basis_base_account_id': self.tax_base_amount_account.id,
         })
 
@@ -222,7 +222,7 @@ class TestReconciliation(AccountingTestCase):
             {'debit': 10.74,    'credit': 0.0,      'account_id': self.diff_expense_account.id},
             {'debit': 0.0,      'credit': 10.74,    'account_id': self.account_rcv.id},
         ])
-        
+
         self.assertRecordValues(supplier_move_lines, [
             {'debit': 0.0,      'credit': 27.47,    'amount_currency': -42, 'currency_id': self.currency_usd_id},
             {'debit': 27.47,    'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_swiss_id},
@@ -244,7 +244,7 @@ class TestReconciliation(AccountingTestCase):
             {'debit': 0.0,      'credit': 7.30,     'account_id': self.diff_income_account.id},
             {'debit': 7.30,     'credit': 0.0,      'account_id': self.account_rcv.id},
         ])
-        
+
         self.assertRecordValues(supplier_move_lines, [
             {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
@@ -577,12 +577,12 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01', 
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01',
             'rate': 0.75,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01', 
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01',
             'rate': 0.80,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
@@ -1454,18 +1454,18 @@ class TestReconciliation(AccountingTestCase):
                 expected['tax_10']
             )
             index += 1
-            
+
     def test_reconciliation_to_check(self):
         partner = self.env['res.partner'].create({'name': 'UncertainPartner'})
         currency = self.env.user.company_id.currency_id
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
         journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'update_posted':True})
-        
+
         statement = self.make_payment(invoice, journal, 50)
         st_line = statement.line_ids
         previous_move_lines = st_line.journal_entry_ids.ids
         previous_name = st_line.move_name
-        
+
         with self.assertRaises(UserError): #you need edition mode to be able to change it
             st_line.with_context(edition_mode=False).process_reconciliation(
                 counterpart_aml_dicts=[],
@@ -1476,7 +1476,7 @@ class TestReconciliation(AccountingTestCase):
                   'account_id': self.diff_income_account.id
                 }],
             )
-            
+
         st_line.with_context(edition_mode=True).process_reconciliation(
             counterpart_aml_dicts=[],
             new_aml_dicts = [{

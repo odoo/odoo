@@ -166,7 +166,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             invoice_line_ids=invoice_line_data
         ))
 
-        self.assertEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
+        self.assertAlmostEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
 
     def test_customer_invoice_tax_refund(self):
         company = self.env.user.company_id

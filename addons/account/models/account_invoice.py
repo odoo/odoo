@@ -1995,7 +1995,6 @@ class AccountInvoiceTax(models.Model):
             'account_id': self.account_id.id,
             'account_analytic_id': self.account_analytic_id.id,
             'analytic_tag_ids': self.analytic_tag_ids.ids or False,
-            'tax_ids': self.tax_ids and tax.tax_ids.ids,
         }
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
