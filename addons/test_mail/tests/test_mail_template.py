@@ -231,7 +231,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
             self.env['mail.test.track'].create({
                 'email_from': email_new_partner,
                 'company_id': company1.id,
-                'user_id': self.env.user.id,  # trigger tracking,
+                'user_id': self.env.user.id, # trigger track template
             })
 
         new_partner = Partner.search([('email', '=', email_new_partner)])
