@@ -277,7 +277,7 @@ Installing your theme
 
 To install your theme, you just place your theme folder inside addons in your Odoo installation.
 
-After that, navigate to the Settings page, look for your theme and click on the install button.
+After that, navigate to the Odoo **Website** module, go to Configuration --> Settings under **Website** section click the **Choose a theme** button, then hover over your theme and click **Use this theme** button.
 
 Structure of an Odoo page
 =========================
