@@ -106,6 +106,7 @@ class AccountInvoice(models.Model):
 
         self.invoice_line_ids += new_lines
         self.payment_term_id = self.purchase_id.payment_term_id
+        self.fiscal_position_id_tmp = self.purchase_id.fiscal_position_id
         self.env.context = dict(self.env.context, from_purchase_order_change=True)
         self.purchase_id = False
         return {}
@@ -130,6 +131,8 @@ class AccountInvoice(models.Model):
     def _onchange_partner_id(self):
         payment_term_id = self.env.context.get('from_purchase_order_change') and self.payment_term_id or False
         res = super(AccountInvoice, self)._onchange_partner_id()
+        if hasattr(self, 'fiscal_position_id_tmp') and self.fiscal_position_id_tmp:
+            self.fiscal_position_id = self.fiscal_position_id_tmp
         if payment_term_id:
             self.payment_term_id = payment_term_id
         if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
