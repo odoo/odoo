@@ -245,7 +245,7 @@ class GoogleCalendar(models.AbstractModel):
         if not event.active:
             data["state"] = "cancelled"
 
-        if not self.get_need_synchro_attendee():
+        if self.get_need_synchro_attendee() == "False":
             data.pop("attendees")
         if isCreating:
             other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids
@@ -429,7 +429,7 @@ class GoogleCalendar(models.AbstractModel):
         partner_record = [(4, self.env.user.partner_id.id)]
         result = {}
 
-        if self.get_need_synchro_attendee():
+        if self.get_need_synchro_attendee() == "True":
             for google_attendee in single_event_dict.get('attendees', []):
                 partner_email = google_attendee.get('email')
                 if type == "write":
@@ -574,7 +574,7 @@ class GoogleCalendar(models.AbstractModel):
                     "url": ''
                 }
 
-            if lastSync and recs.get_last_sync_date() and not recs.get_disable_since_synchro():
+            if lastSync and recs.get_last_sync_date() and recs.get_disable_since_synchro() == "False":
                 lastSync = recs.get_last_sync_date()
                 _logger.info("[%s] Calendar Synchro - MODE SINCE_MODIFIED : %s !", user_to_sync, fields.Datetime.to_string(lastSync))
             else:
@@ -705,7 +705,7 @@ class GoogleCalendar(models.AbstractModel):
 
             my_odoo_googleinternal_records = my_odoo_attendees.read(['google_internal_event_id', 'event_id'])
 
-            if self.get_print_log():
+            if self.get_print_log() == "True":
                 _logger.info("Calendar Synchro -  \n\nUPDATE IN GOOGLE\n%s\n\nRETRIEVE FROM OE\n%s\n\nUPDATE IN OE\n%s\n\nRETRIEVE FROM GG\n%s\n\n", all_event_from_google, my_google_att_ids, my_odoo_attendees.ids, my_odoo_googleinternal_records)
 
             for gi_record in my_odoo_googleinternal_records:
@@ -784,7 +784,7 @@ class GoogleCalendar(models.AbstractModel):
         for base_event in event_to_synchronize:
             for current_event in event_to_synchronize[base_event]:
                 event_to_synchronize[base_event][current_event].compute_OP(modeFull=not lastSync)
-            if self.get_print_log():
+            if self.get_print_log() == "True":
                 if not isinstance(event_to_synchronize[base_event][current_event].OP, NothingToDo):
                     _logger.info(event_to_synchronize[base_event])
 
