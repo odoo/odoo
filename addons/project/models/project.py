@@ -658,7 +658,7 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        context = dict(self.env.context, mail_create_nolog=True)
+        context = dict(self.env.context)
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))
@@ -743,10 +743,9 @@ class Task(models.Model):
     # ---------------------------------------------------
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Task, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Task, self)._track_template(changes)
         test_task = self[0]
-        changes, tracking_value_ids = tracking[test_task.id]
         if 'stage_id' in changes and test_task.stage_id.mail_template_id:
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_message': True,
@@ -756,14 +755,16 @@ class Task(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('project.mt_task_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
             return self.env.ref('project.mt_task_blocked')
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return self.env.ref('project.mt_task_ready')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
-            return self.env.ref('project.mt_task_new')
         elif 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)

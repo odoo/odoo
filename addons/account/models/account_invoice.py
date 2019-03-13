@@ -551,7 +551,7 @@ class AccountInvoice(models.Model):
                     if field not in vals and invoice[field]:
                         vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
 
-        invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+        invoice = super(AccountInvoice, self).create(vals)
 
         if any(line.invoice_line_tax_ids for line in invoice.invoice_line_ids) and not invoice.tax_line_ids:
             invoice.compute_taxes()
@@ -1613,14 +1613,18 @@ class AccountInvoice(models.Model):
         return True
 
     @api.multi
+    def _creation_subtype(self):
+        if self.type in ('out_invoice', 'out_refund'):
+            return self.env.ref('account.mt_invoice_created')
+        return super(AccountInvoice, self)._creation_subtype()
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'paid' and self.type in ('out_invoice', 'out_refund'):
             return self.env.ref('account.mt_invoice_paid')
         elif 'state' in init_values and self.state == 'open' and self.type in ('out_invoice', 'out_refund'):
             return self.env.ref('account.mt_invoice_validated')
-        elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
-            return self.env.ref('account.mt_invoice_created')
         return super(AccountInvoice, self)._track_subtype(init_values)
 
     def _amount_by_group(self):
