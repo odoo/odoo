@@ -202,12 +202,6 @@ root can have the following attributes:
     .. code-block:: xml
 
         <tree default_order="sequence,name desc">
-``colors``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
-``fonts``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
     record's attributes.
@@ -222,25 +216,11 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``
+``create``, ``edit``, ``delete``, ``duplicate``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
     the default size of a page. It should be a positive integer
-``on_write``
-    only makes sense on an ``editable`` list. Should be the name of a method
-    on the list's model. The method will be called with the ``id`` of a record
-    after having created or edited that record (in database).
-
-    The method should return a list of ids of other records to load or update.
-``string``
-    alternative translatable label for the view
-
-    .. deprecated:: 8.0
-
-        not displayed anymore
-
-.. toolbar attribute is for tree-tree views
 
 Possible children elements of the list view are:
 
