@@ -440,7 +440,7 @@ QUnit.module('Search View', {
             archs: this.archs,
             data: this.data,
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/read_group') {
+                if (route === '/web/dataset/call_kw/partner/web_read_group') {
                     assert.deepEqual(args.kwargs.groupby, groupbys.shift());
                 }
                 return this._super.apply(this, arguments);

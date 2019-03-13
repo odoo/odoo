@@ -148,25 +148,28 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     renderPager: function ($node, options) {
         var self = this;
-        var data = this.model.get(this.handle, {raw: true});
-        this.pager = new Pager(this, data.count, data.offset + 1, data.limit, options);
+        var params = this._getPagerParams();
+        this.pager = new Pager(this, params.size, params.current_min, params.limit, options);
 
         this.pager.on('pager_changed', this, function (newState) {
-            var self = this;
             this.pager.disable();
-            data = this.model.get(this.handle, {raw: true});
+            var data = this.model.get(this.handle, {raw: true});
             var limitChanged = (data.limit !== newState.limit);
-            this.reload({limit: newState.limit, offset: newState.current_min - 1})
-                .then(function () {
-                    // Reset the scroll position to the top on page changed only
-                    if (!limitChanged) {
-                        self.trigger_up('scrollTo', {top: 0});
-                    }
-                })
-                .then(this.pager.enable.bind(this.pager));
+            var reloadParams;
+            if (data.groupedBy && data.groupedBy.length) {
+                reloadParams = {groupsLimit: newState.limit, groupsOffset: newState.current_min - 1};
+            } else {
+                reloadParams = {limit: newState.limit, offset: newState.current_min - 1};
+            }
+            this.reload(reloadParams).then(function () {
+                // reset the scroll position to the top on page changed only
+                if (!limitChanged) {
+                    self.trigger_up('scrollTo', {top: 0});
+                }
+            }).then(this.pager.enable.bind(this.pager));
         });
-        return this.pager.appendTo($node).then(function() {
-            self._updatePager();  // to force proper visibility
+        return this.pager.appendTo($node).then(function () {
+            self._updatePager(); // to force proper visibility
         });
     },
     /**
@@ -413,6 +416,22 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Return the params (current_min, limit and size) to pass to the pager,
+     * according to the current state.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getPagerParams: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        var isGrouped = state.groupedBy && state.groupedBy.length;
+        return {
+            current_min: (isGrouped ? state.groupsOffset : state.offset) + 1,
+            limit: isGrouped ? state.groupsLimit : state.limit,
+            size: isGrouped ? state.groupsCount : state.count,
+        };
+    },
+    /**
      * Returns the new sidebar env
      *
      * @private
@@ -424,6 +443,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             activeIds: this.getSelectedIds(),
             model: this.modelName,
         };
+    },
+    /**
+     * Determine whether or not the pager must be displayed (probably depending
+     * on the current state). Controllers must override this to implement their
+     * own logic.
+     *
+     * @private
+     */
+    _isPagerVisible: function () {
+        return true;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -533,23 +562,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
-     * Helper method, to make sure the information displayed by the pager is up
-     * to date.
+     * Update the pager with the current state.
+     *
+     * @private
      */
     _updatePager: function () {
         if (this.pager) {
-            var data = this.model.get(this.handle, {raw: true});
-            this.pager.updateState({
-                current_min: data.offset + 1,
-                size: data.count,
-            });
-            var isRecord = data.type === 'record';
-            var hasData = !!data.count;
-            var isGrouped = data.groupedBy ? !!data.groupedBy.length : false;
-            var isNew = this.model.isNew(this.handle);
-            var isPagerVisible = isRecord ? !isNew : (hasData && !isGrouped);
-
-            this.pager.do_toggle(isPagerVisible);
+            this.pager.updateState(this._getPagerParams());
+            this.pager.do_toggle(this._isPagerVisible());
         }
     },
 

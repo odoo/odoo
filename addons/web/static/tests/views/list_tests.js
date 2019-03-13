@@ -1026,7 +1026,7 @@ QUnit.module('Views', {
             groupBy: ['foo'],
             arch: '<tree editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></tree>',
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     assert.step(args.kwargs.orderby || 'default order');
                 }
                 return this._super.apply(this, arguments);
@@ -1042,7 +1042,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody .o_list_number').text(), '51017',
             "order should be 5, 10, 17");
 
-        await   testUtils.dom.click(list.$('.o_column_sortable'));
+        await testUtils.dom.click(list.$('.o_column_sortable'));
         assert.strictEqual(list.$('tbody .o_list_number').text(), '17105',
             "initial order should be 17, 10, 5");
         assert.strictEqual(list.$('tfoot td:last()').text(), '32', "total should still be 32");
@@ -1055,10 +1055,10 @@ QUnit.module('Views', {
     QUnit.test('groups cannot be sorted on non-aggregable fields', async function (assert) {
         assert.expect(6);
         this.data.foo.fields.sort_field = {string: "sortable_field", type: "sting", sortable: true, default: "value"};
-        _.each(this.data.records, function(elem) {
+        _.each(this.data.records, function (elem) {
             elem.sort_field = "value" + elem.id;
         });
-        this.data.foo.fields.foo.sortable= true;
+        this.data.foo.fields.foo.sortable = true;
         var list = await createView({
             View: ListView,
             model: 'foo',
@@ -1066,7 +1066,7 @@ QUnit.module('Views', {
             groupBy: ['foo'],
             arch: '<tree editable="bottom"><field name="foo" /><field name="int_field"/><field name="sort_field"/></tree>',
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     assert.step(args.kwargs.orderby || 'default order');
                 }
                 return this._super.apply(this, arguments);
@@ -1252,7 +1252,7 @@ QUnit.module('Views', {
         assert.isVisible(list.pager.$el, "pager should be visible");
         assert.strictEqual(list.pager.state.size, 4, "pager's size should be 4");
         await list.update({ groupBy: ['bar']});
-        assert.isNotVisible(list.pager.$el, "pager should be invisible");
+        assert.strictEqual(list.pager.state.size, 2, "pager's size should be 2");
         list.destroy();
     });
 
@@ -2079,7 +2079,7 @@ QUnit.module('Views', {
             arch: '<tree><field name="id"/><field name="int_field"/></tree>',
             groupBy: ['m2o', 'foo'],
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     if (args.kwargs.groupby[0] === 'foo') { // nested read_group
                         // called twice (once when opening the group, once when sorting)
                         assert.deepEqual(args.kwargs.domain, [['m2o', '=', 1]],
@@ -3709,18 +3709,19 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 // Override of the read_group to display the row even if there is no record in it,
                 // to mock the behavihour of some fields e.g stage_id on the sale order.
-                if (args.method === 'read_group' && args.kwargs.groupby[0] === "m2o") {
-                    return Promise.resolve([
-                        {
+                if (args.method === 'web_read_group' && args.kwargs.groupby[0] === "m2o") {
+                    return Promise.resolve({
+                        groups: [{
                             id: 8,
-                            m2o:[1,"Value 1"],
+                            m2o: [1, "Value 1"],
                             m2o_count: 0
                         }, {
                             id: 2,
-                            m2o:[2,"Value 2"],
+                            m2o: [2, "Value 2"],
                             m2o_count: 1
-                        }
-                    ]);
+                        }],
+                        length: 1,
+                    });
                 }
                 return this._super.apply(this, arguments);
             },
@@ -4065,6 +4066,38 @@ QUnit.module('Views', {
         delete widgetRegistry.map.asyncWidget;
     });
 
+    QUnit.test('grouped lists with groups_limit attribute', async function (assert) {
+        assert.expect(8);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            groupBy: ['int_field'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsN(list, '.o_group_header', 3); // page 1
+        assert.containsNone(list, '.o_data_row');
+        assert.containsOnce(list, '.o_pager_counter'); // has a pager
+
+        await testUtils.dom.click(list.$('.o_pager_next')); // switch to page 2
+
+        assert.containsN(list, '.o_group_header', 1); // page 2
+        assert.containsNone(list, '.o_data_row');
+
+        assert.verifySteps([
+            'web_read_group', // read_group page 1
+            'web_read_group', // read_group page 2
+        ]);
+
+        list.destroy();
+    });
+
     QUnit.test('grouped list with expand attribute', async function (assert) {
         assert.expect(6);
 
@@ -4084,7 +4117,7 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_data_row', 4);
 
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
         ]);
@@ -4111,9 +4144,54 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_group_header', 6);
 
         assert.verifySteps([
-            'read_group', // global
-            'read_group', // first group
-            'read_group', // second group
+            'web_read_group', // global
+            'web_read_group', // first group
+            'web_read_group', // second group
+        ]);
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped lists with expand attribute and a lot of groups', async function (assert) {
+        assert.expect(10);
+
+        for (var i = 0; i < 15; i++) {
+            this.data.foo.records.push({foo: 'record ' + i, int_field: i});
+        }
+
+        var nbSearchRead = 0;
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1"><field name="foo"/></tree>',
+            groupBy: ['int_field'],
+            mockRPC: function (route, args) {
+                if (args.method === 'web_read_group') {
+                    assert.step(args.method);
+                }
+                if (route === '/web/dataset/search_read') {
+                    nbSearchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsN(list, '.o_group_header', 10); // page 1
+        assert.containsN(list, '.o_data_row', 11); // one group contains two records
+        assert.strictEqual(nbSearchRead, 10);
+        assert.containsOnce(list, '.o_pager_counter'); // has a pager
+
+        nbSearchRead = 0;
+        await testUtils.dom.click(list.$('.o_pager_next')); // switch to page 2
+
+        assert.containsN(list, '.o_group_header', 7); // page 2
+        assert.containsN(list, '.o_data_row', 7);
+        assert.strictEqual(nbSearchRead, 7);
+
+        assert.verifySteps([
+            'web_read_group', // read_group page 1
+            'web_read_group', // read_group page 2
         ]);
 
         list.destroy();
@@ -4628,7 +4706,7 @@ QUnit.module('Views', {
         assert.hasClass(list.$('.o_data_row:nth(4)'), 'o_selected_row');
 
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'write',
@@ -4666,7 +4744,7 @@ QUnit.module('Views', {
 
         assert.containsOnce(list, 'tbody tr td:contains(new value)');
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             'write',
             'read',
@@ -4709,7 +4787,7 @@ QUnit.module('Views', {
         assert.hasClass(list.$('tr.o_data_row:eq(3)'), 'o_selected_row');
 
         assert.verifySteps([
-            '/web/dataset/call_kw/foo/read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             'default_get',
@@ -4752,7 +4830,7 @@ QUnit.module('Views', {
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(2)'), 'o_selected_row');
 
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
         ]);
@@ -4794,7 +4872,7 @@ QUnit.module('Views', {
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(2)'), 'o_selected_row');
 
         assert.verifySteps([
-            'read_group',
+            'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
         ]);

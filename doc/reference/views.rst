@@ -220,7 +220,10 @@ root can have the following attributes:
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
-    the default size of a page. It should be a positive integer
+    the default size of a page. It must be a positive integer
+``groups_limit``
+    when the list view is grouped, the default number of groups of a page. It
+    must be a position integer
 ``expand``
     when the list view is grouped, automatically open the first level of groups
     if set to true (default: false)

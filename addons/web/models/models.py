@@ -18,6 +18,40 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
+    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
+                       lazy=True):
+        """
+        Returns the result of a read_group and the total number of groups matching the search
+        domain.
+
+        :param domain: search domain
+        :param fields: list of fields to read (see ``fields``` param of ``read_group``)
+        :param groupby: list of fields to group on (see ``groupby``` param of ``read_group``)
+        :param limit: see ``limit`` param of ``read_group``
+        :param offset: see ``offset`` param of ``read_group``
+        :param orderby: see ``orderby`` param of ``read_group``
+        :param lazy: see ``lazy`` param of ``read_group``
+        :return: {
+            'groups': array of read groups
+            'length': total number of groups
+        }
+        """
+        groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
+                                 orderby=orderby, lazy=lazy)
+
+        if not groups:
+            length = 0
+        elif limit and len(groups) == limit:
+            all_groups = self.read_group(domain, ['display_name'], groupby, lazy=True)
+            length = len(all_groups)
+        else:
+            length = len(groups) + offset
+        return {
+            'groups': groups,
+            'length': length
+        }
+
+    @api.model
     def read_progress_bar(self, domain, group_by, progress_bar):
         """
         Gets the data needed for all the kanban column progressbars.

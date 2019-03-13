@@ -146,22 +146,23 @@ QUnit.module('Views', {
                     '</search>',
             },
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     assert.deepEqual(args.kwargs, {
                         context: {},
-                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields: ["display_name","foo","bar"],
+                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        fields: ["display_name", "foo", "bar"],
                         groupby: ["bar"],
                         orderby: '',
-                        lazy: true
+                        lazy: true,
+                        limit: 80,
                     }, "should search with the complete domain (domain + search), and group by 'bar'");
                 }
                 if (search === 0 && route === '/web/dataset/search_read') {
                     search++;
                     assert.deepEqual(args, {
                         context: {},
-                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields: ["display_name","foo"],
+                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        fields: ["display_name", "foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""
@@ -169,8 +170,8 @@ QUnit.module('Views', {
                 } else if (search === 1 && route === '/web/dataset/search_read') {
                     assert.deepEqual(args, {
                         context: {},
-                        domain: [["display_name","like","a"]],
-                        fields: ["display_name","foo"],
+                        domain: [["display_name", "like", "a"]],
+                        fields: ["display_name", "foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""

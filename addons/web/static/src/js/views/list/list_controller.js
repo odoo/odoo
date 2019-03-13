@@ -11,7 +11,6 @@ var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
-var pyUtils = require('web.py_utils');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -343,6 +342,16 @@ var ListController = BasicController.extend({
         return _.extend(env, {domain: record.getDomain()});
     },
     /**
+     * Only display the pager when there are data to display.
+     *
+     * @override
+     * @private
+     */
+    _isPagerVisible: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        return !!state.count;
+    },
+    /**
      * Allows to change the mode of a single row.
      *
      * @override
@@ -395,11 +404,9 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _update: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self._toggleSidebar();
-            self._toggleCreateButton();
-        });
+        return this._super.apply(this, arguments)
+            .then(this._toggleSidebar.bind(this))
+            .then(this._toggleCreateButton.bind(this));
     },
     /**
      * This helper simply makes sure that the control panel buttons matches the
