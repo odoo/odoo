@@ -6893,7 +6893,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Form view from ordered, grouped list view correct context', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
         this.data.partner.records[0].timmy = [12];
 
         var form = createView({
@@ -6919,7 +6919,7 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                assert.step(args.method + '_' + args.model);
+                assert.step(args.model + ":" + args.method);
                 if (args.method === 'read') {
                     assert.ok(args.kwargs.context, 'context is present');
                     assert.notOk('orderedBy' in args.kwargs.context,
@@ -6931,7 +6931,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.verifySteps(['read_partner', 'read_partner_type']);
+        assert.verifySteps(['partner_type:load_views', 'partner:read', 'partner_type:read']);
 
         form.destroy();
     });
