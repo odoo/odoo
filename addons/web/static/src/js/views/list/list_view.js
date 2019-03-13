@@ -54,6 +54,7 @@ var ListView = BasicView.extend({
         this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
 
         this.loadParams.limit = this.loadParams.limit || 80;
+        this.loadParams.openGroupByDefault = !!JSON.parse(this.arch.attrs.expand || "0");
         this.loadParams.type = 'list';
     },
 
