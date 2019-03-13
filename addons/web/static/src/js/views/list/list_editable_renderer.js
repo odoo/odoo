@@ -285,6 +285,8 @@ ListRenderer.include({
             this.currentRow = null;
         }
 
+        // destroy widgets first
+        this._destroyFieldWidgets(recordID);
         // remove the row
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
         if (this.state.count >= 4) {
@@ -292,8 +294,6 @@ ListRenderer.include({
         } else {
             $row.replaceWith(this._renderEmptyRow());
         }
-
-        this._destroyFieldWidgets(recordID);
     },
     /**
      * Updates the already rendered row associated to the given recordID so that

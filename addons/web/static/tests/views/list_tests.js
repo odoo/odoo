@@ -275,6 +275,52 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list datetimepicker destroy widget', async function (assert) {
+        assert.expect(7);
+        var eventPromise = testUtils.makeTestPromise();
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+        list.$el.on({
+            'show.datetimepicker': async function () {
+                assert.equal($('.bootstrap-datetimepicker-widget').length, 1,
+                    'The datetimepicker is open');
+
+                assert.equal(list.$('.o_data_row').length, 5,
+                    'There should be 5 rows');
+
+                assert.equal(list.$('.o_selected_row').length, 1,
+                    'One row in edit mode');
+
+                await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
+
+                assert.equal(list.$('.o_data_row').length, 4,
+                    'There should be 4 rows');
+
+                assert.equal(list.$('.o_selected_row').length, 0,
+                    'No row should be in edit mode');
+
+                eventPromise.resolve();
+            }
+        });
+        assert.equal(list.$('.o_data_row').length, 4,
+            'There should be 4 rows');
+
+        assert.equal(list.$('.o_selected_row').length, 0,
+            'No row should be in edit mode');
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        await eventPromise;
+        list.destroy();
+    });
+
     QUnit.test('at least 4 rows are rendered, even if less data', async function (assert) {
         assert.expect(1);
 

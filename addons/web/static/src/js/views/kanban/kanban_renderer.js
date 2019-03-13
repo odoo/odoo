@@ -249,7 +249,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     updateState: function (state) {
         this._setState(state);
-        this._toggleNoContentHelper();
         return this._super.apply(this, arguments);
     },
 

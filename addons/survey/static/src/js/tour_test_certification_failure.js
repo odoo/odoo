@@ -9,8 +9,8 @@ odoo.define('survey.tour_test_certification_failure', function (require) {
 var tour = require('web_tour.tour');
 
 var failSteps = [{ // Page-1
-    content: "Clicking on Start Survey",
-    trigger: 'a.btn.btn-primary.btn-lg:contains("Start Survey")',
+    content: "Clicking on Start Certification",
+    trigger: 'a.btn.btn-primary.btn-lg:contains("Start Certification")',
 }, { // Question: Do we sell Acoustic Bloc Screens?
     content: "Selecting answer 'No'",
     trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") select',

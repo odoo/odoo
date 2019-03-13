@@ -1326,7 +1326,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 self.save_client_details(partner);
             });
         };
-        this.reload_partners().then( function() {
+        return this.reload_partners().then( function() {
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;

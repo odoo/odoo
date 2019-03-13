@@ -10,18 +10,18 @@
     </template>
 
     <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
-        <xpath expr="//tr[@id='profile_abstract_info_company']" position="after">
+        <xpath expr="//table[@id='o_wprofile_sidebar_table']//tr[last()]" position="after">
             <t t-if="forum and (up_votes or down_votes)">
                 <tr id="profile_abstract_info_company">
-                    <th style="width: 30%"><span class="font-weight-bold text-muted">Votes</span></th>
-                    <th style="width: 70%">
+                    <th><small class="font-weight-bold">Votes</small></th>
+                    <td>
                         <span>
                             <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
                             <span class="font-weight-bold" t-esc="up_votes"/>
                             <i class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
                             <span class="font-weight-bold" t-esc="down_votes"/>
                         </span>
-                    </th>
+                    </td>
                 </tr>
             </t>
         </xpath>
@@ -45,7 +45,7 @@
             <t t-if="forum">
                 <div role="tabpanel" class="tab-pane" id="questions">
                     <div class="mb32">
-                        <h4><i class="fa fa-question"/> Questions</h4>
+                        <h5 class="border-bottom pb-1">Questions</h5>
                         <t t-if="questions">
                             <div class="mb16" t-foreach="questions" t-as="question">
                                 <t t-call="website_forum.display_post"/>
@@ -57,7 +57,7 @@
                     </div>
                     <t t-if="favourite">
                         <div class="mb32">
-                            <h4><i class="fa fa-star"/> Favourite Questions</h4>
+                            <h5 class="border-bottom pb-1">Favourite Questions</h5>
                             <div t-foreach="favourite" t-as="question">
                                 <t t-call="website_forum.display_post"/>
                             </div>
@@ -65,7 +65,7 @@
                     </t>
                     <t t-if="followed">
                         <div class="mb32">
-                            <h4><i class="fa fa-eye"/> Followed Questions</h4>
+                            <h5 class="border-bottom pb-1">Followed Questions</h5>
                             <div t-foreach="followed" t-as="question" class="mb16">
                                 <t t-call="website_forum.display_post"/>
                             </div>
@@ -74,7 +74,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="answers">
                     <div class="mb32">
-                        <h4><i class="fa fa-reply"/> Answers</h4>
+                        <h5 class="border-bottom pb-1">Answers</h5>
                         <t t-if="answers">
                             <div t-foreach="answers" t-as="answer">
                                 <t t-call="website_forum.display_post_answer"/>
@@ -87,13 +87,13 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="votes" t-if="uid == user.id">
                     <div class="mb32">
-                        <h4><i class="fa fa-thumbs-up"/> Votes</h4>
+                        <h5 class="border-bottom pb-1">Votes</h5>
                         <t t-call="website_forum.user_votes"/>
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="activity" t-if="uid == user.id">
                     <div class="mb32">
-                        <h4><i class="fa fa-history"/> Activities</h4>
+                        <h5 class="border-bottom pb-1">Activities</h5>
                         <t t-call="website_forum.display_activities"/>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
             </div>
         </t>
         <t t-else="">
-            <span class="font-weight-bold">No activities yet!</span>
+            <p class="text-muted">No activities yet!</p>
         </t>
     </template>
 
@@ -139,7 +139,7 @@
             </t>
         </div>
         <div class="mb16" t-if="not vote_post">
-            <span class="font-weight-bold">No vote given by you yet!</span>
+            <p class="text-muted">No vote given by you yet!</p>
         </div>
     </template>
 </data></odoo>

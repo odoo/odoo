@@ -491,6 +491,26 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+QUnit.test('save immediately before iframe is rendered in edit mode', async function (assert) {
+    assert.expect(1);
+
+    var form = await testUtils.createAsyncView({
+        View: FormView,
+        model: 'note.note',
+        data: this.data,
+        arch: '<form>' +
+            '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
+            '</form>',
+        res_id: 1,
+    });
+    testUtils.form.clickEdit(form);
+    await testUtils.nextTick();
+    testUtils.form.clickSave(form);
+    await testUtils.nextTick();
+    assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
+    form.destroy();
+});
+
         QUnit.test('use colorpicker and save', async function (assert) {
             assert.expect(1);
 

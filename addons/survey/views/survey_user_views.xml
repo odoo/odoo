@@ -16,6 +16,7 @@
                 <separator/>
                 <filter string="Invite" name="invite" domain="[('input_type', '=', 'link')]"/>
                 <separator/>
+                <filter string="Quizz passed" name="quizz_passed" domain="[('quizz_passed','=', True)]"/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
@@ -50,7 +51,9 @@
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
                             <field name="test_entry" groups="base.group_no_one"/>
-                            <field name="quizz_score" groups="base.group_no_one"/>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="quizz_score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <field name="quizz_passed" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                         </group>
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
@@ -76,10 +79,11 @@
                 <field name="deadline"/>
                 <field name="partner_id"/>
                 <field name="email"/>
-                <field name="input_type"/>
+                <field name="input_type" groups="base.group_no_one"/>
                 <field name="state"/>
                 <field name="test_entry" invisible="True"/>
-                <field name="quizz_score" groups="base.group_no_one"/>
+                <field name="quizz_passed"/>
+                <field name="quizz_score"/>
             </tree>
         </field>
     </record>
@@ -109,7 +113,7 @@
                                     <field name="create_date"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right mr4">
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                    <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
                                 </div>
                             </div>
                         </div>

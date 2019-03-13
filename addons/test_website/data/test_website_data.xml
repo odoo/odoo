@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+
+        <!-- RECORDS FOR RESET VIEWS TESTS -->
         <record id="test_view" model="ir.ui.view">
             <field name="name">Test View</field>
             <field name="type">qweb</field>
@@ -50,5 +52,11 @@
                 <p>placeholder</p>
             </xpath>
         </template>
+
+        <!-- RECORDS FOR MODULE OPERATION TESTS -->
+        <template id="update_module_base_view">
+            <div>I am a base view</div>
+        </template>
+
     </data>
 </odoo>

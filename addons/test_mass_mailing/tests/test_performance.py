@@ -43,6 +43,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
     def test_send_mailing(self):
         mailing = self.env['mail.mass_mailing'].create({
             'name': 'Test',
+            'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'email',
             'mailing_model_id': self.ref('test_mass_mailing.model_mass_mail_test'),
@@ -80,6 +81,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
     def test_send_mailing_w_bl(self):
         mailing = self.env['mail.mass_mailing'].create({
             'name': 'Test',
+            'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'email',
             'mailing_model_id': self.ref('test_mass_mailing.model_mass_mail_test_bl'),

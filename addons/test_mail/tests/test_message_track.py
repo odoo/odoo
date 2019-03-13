@@ -149,3 +149,9 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         msg_admin = self.partner_admin.sudo(self.user_admin)._notify_prepare_template_context(self.record.message_ids, self.record)
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_admin.get('tracking_values'), "should have protected tracking values")
+
+    def test_unknown_field(self):
+        self.record.sudo().write({'email_from': 'X'})  # create a tracking value
+        tracking = self.record.sudo().mapped('message_ids.tracking_value_ids')[0]
+        tracking.field = 'I do not exist'
+        self.assertEqual(tracking.groups, 'base.group_system')

@@ -92,6 +92,16 @@ var SnippetEditor = Widget.extend({
             });
         }
 
+        this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', function () {
+            self._targetIsAnimated = true;
+        });
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', function () {
+            self._targetIsAnimated = false;
+            if (self.$el.is('.oe_active')) {
+                self.cover();
+            }
+        });
+
         return Promise.all(defs);
     },
     /**
@@ -101,6 +111,7 @@ var SnippetEditor = Widget.extend({
         this.cleanForSave();
         this._super.apply(this, arguments);
         this.$target.removeData('snippet-editor');
+        this.$target.off('.snippet_editor');
     },
 
     //--------------------------------------------------------------------------
@@ -132,6 +143,11 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
+        if (this._targetIsAnimated) {
+            // Do not cover a target being animated, it will be covered once the
+            // animation is completed.
+            return;
+        }
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
@@ -605,7 +621,7 @@ var SnippetsMenu = Widget.extend({
         // Active snippet editor on click in the page
         var lastClickedElement;
         this.$document.on('click.snippets_menu', '*', function (ev) {
-            var srcElement = ev.srcElement || (ev.originalEvent && (ev.originalEvent.originalTarget || ev.originalEvent.target) || ev.target);
+            var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (lastClickedElement === srcElement || !srcElement) {
                 return;
             }

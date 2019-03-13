@@ -45,7 +45,7 @@ class TestLinkTracker(common.MassMailingCase):
 
     @users('marketing')
     def test_add_link_mail_stat(self):
-        mailing = self.env['mail.mass_mailing'].create({'name': 'Test Mailing'})
+        mailing = self.env['mail.mass_mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
         stat = self.env['mail.mail.statistics'].create({'mass_mailing_id': mailing.id})

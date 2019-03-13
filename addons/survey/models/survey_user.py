@@ -32,6 +32,7 @@ class SurveyUserInput(models.Model):
 
     # description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
+    scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
@@ -58,7 +59,7 @@ class SurveyUserInput(models.Model):
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
 
-    quizz_score = fields.Float("Score for the quiz (%)", compute="_compute_quizz_score", default=0.0)
+    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score")
     # Stored for performance reasons while displaying results page
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
 

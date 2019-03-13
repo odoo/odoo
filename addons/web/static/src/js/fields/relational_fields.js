@@ -242,7 +242,7 @@ var FieldMany2One = AbstractField.extend({
     _bindAutoComplete: function () {
         var self = this;
         // avoid ignoring autocomplete="off" by obfuscating placeholder, see #30439
-        if (this.$input.attr('placeholder')) {
+        if ($.browser.chrome && this.$input.attr('placeholder')) {
             this.$input.attr('placeholder', function (index, val) {
                 return val.split('').join('\ufeff');
             });
@@ -1901,6 +1901,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
 
         this.colorField = this.nodeOptions.color_field;
+        this.hasDropdown = false;
     },
 
     //--------------------------------------------------------------------------
@@ -1969,6 +1970,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         return {
             colorField: this.colorField,
             elements: elements,
+            hasDropdown: this.hasDropdown,
             readonly: this.mode === "readonly",
         };
     },
@@ -2080,6 +2082,14 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
     }),
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.hasDropdown = !!this.colorField;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

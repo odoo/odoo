@@ -24,21 +24,22 @@ class SlidePartnerRelation(models.Model):
     _table = 'slide_slide_partner'
 
     slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
-    channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
-    partner_id = fields.Many2one('res.partner', index=True, required=True)
+    channel_id = fields.Many2one(
+        'slide.channel', string="Channel",
+        related="slide_id.channel_id", store=True, index=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
-
-    quiz_attempts_count = fields.Integer(string="Number of times this user attempted the quiz")
+    quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
 
 class SlideLink(models.Model):
     _name = 'slide.slide.link'
     _description = "External URL for a particular slide"
 
-    slide_id = fields.Many2one('slide.slide', required=True)
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
     name = fields.Char('Title', required=True)
-    link = fields.Char("External Link", required=True)
+    link = fields.Char('External Link', required=True)
 
 
 class EmbeddedSlide(models.Model):
@@ -51,8 +52,10 @@ class EmbeddedSlide(models.Model):
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
-    def add_embed_url(self, slide_id, url):
+    def _add_embed_url(self, slide_id, url):
         baseurl = urls.url_parse(url).netloc
+        if not baseurl:
+            return 0
         embeds = self.search([('url', '=', baseurl), ('slide_id', '=', int(slide_id))], limit=1)
         if embeds:
             embeds.count_views += 1
@@ -85,6 +88,7 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
+        'sequence': 'category_sequence asc, sequence asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
@@ -338,22 +342,6 @@ class Slide(models.Model):
     # Business Methods
     # ---------------------------------------------------------
 
-    def _get_related_slides(self, limit=20):
-        # TDE FIXME: should build a smarter domain
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('id', '!=', self.id)]
-        if self.category_id:
-            domain += [('category_id', '=', self.category_id.id)]
-        for record in self.search(domain, limit=limit):
-            yield record
-
-    def _get_most_viewed_slides(self, limit=20):
-        # TDE FIXME: should build a smarter domain
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('id', '!=', self.id)]
-        for record in self.search(domain, limit=limit, order='total_views desc'):
-            yield record
-
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
@@ -423,51 +411,112 @@ class Slide(models.Model):
             })
             self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
 
-    def action_set_viewed(self):
+    def action_set_viewed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
-        return bool(self._action_set_viewed(self.env.user.partner_id))
+        return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
 
-    def _action_set_viewed(self, target_partner):
+    def _action_set_viewed(self, target_partner, quiz_attempts_inc=False):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
+        if quiz_attempts_inc:
+            for exsting_slide in existing_sudo:
+                exsting_slide.write({
+                    'quiz_attempts_count': exsting_slide.quiz_attempts_count + 1
+                })
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
+            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0} for new_slide in new_slides])
 
-    def action_set_completed(self):
+    def action_set_completed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
-        return self._action_set_completed(self.env.user.partner_id)
+        return self._action_set_completed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc)
 
-    def _action_set_completed(self, target_partner):
+    def _action_set_completed(self, target_partner, quiz_attempts_inc=False):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        existing_sudo.write({'completed': True})
+        if quiz_attempts_inc:
+            for existing_slide in existing_sudo:
+                existing_slide.write({
+                    'completed': True,
+                    'quiz_attempts_count': existing_slide.quiz_attempts_count + 1
+                })
+        else:
+            existing_sudo.write({'completed': True})
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
+            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0,
             'completed': True} for new_slide in new_slides])
 
         return True
+
+    def _action_set_quiz_done(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
+
+        points = 0
+        for slide in self:
+            if not slide.user_membership_id or slide.user_membership_id.completed or not slide.user_membership_id.quiz_attempts_count:
+                continue
+
+            gains = [slide.quiz_first_attempt_reward,
+                     slide.quiz_second_attempt_reward,
+                     slide.quiz_third_attempt_reward,
+                     slide.quiz_fourth_attempt_reward]
+            points += gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
+
+        return self.env.user.sudo().add_karma(points)
+
+    def _compute_quiz_info(self, target_partner, quiz_done=False):
+        result = dict.fromkeys(self.ids, False)
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
+        for slide in self:
+            if not slide.question_ids:
+                gains = [0]
+            else:
+                gains = [slide.quiz_first_attempt_reward,
+                         slide.quiz_second_attempt_reward,
+                         slide.quiz_third_attempt_reward,
+                         slide.quiz_fourth_attempt_reward]
+            result[slide.id] = {
+                'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
+                'quiz_karma_gain': gains[0],  # what would be gained at next test
+                'quiz_karma_won': 0,  # what has been gained
+                'quiz_attempts_count': 0,  # number of attempts
+            }
+            slide_partner = slide_partners_map.get(slide.id)
+            if slide.question_ids and slide_partner:
+                if slide_partner.quiz_attempts_count:
+                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count <= len(gains) else gains[-1]
+                    result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
+                if quiz_done or slide_partner.completed:
+                    result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+        return result
 
     # --------------------------------------------------
     # Parsing methods

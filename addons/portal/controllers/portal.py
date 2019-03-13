@@ -55,6 +55,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'url': get_url(page),
             'num': page
         },
+        "page_first": {
+            'url': get_url(1),
+            'num': 1
+        },
         "page_start": {
             'url': get_url(pmin),
             'num': pmin
@@ -70,6 +74,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
         "page_end": {
             'url': get_url(pmax),
             'num': pmax
+        },
+        "page_last": {
+            'url': get_url(page_count),
+            'num': page_count
         },
         "pages": [
             {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)

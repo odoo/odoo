@@ -199,6 +199,9 @@ class IrModel(models.Model):
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
+        # delete fields whose comodel is being removed
+        self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -725,7 +728,7 @@ class IrModelFields(models.Model):
                 if vals.get('name', item.name) != item.name:
                     # We need to rename the field
                     item._prepare_update()
-                    if item.ttype in ('one2many', 'many2many'):
+                    if item.ttype in ('one2many', 'many2many', 'binary'):
                         # those field names are not explicit in the database!
                         pass
                     else:

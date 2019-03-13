@@ -52,7 +52,7 @@
                                     <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
                                         <span groups="uom.group_uom" class="oe_read_only">per
                                             <field name="uom_name"/>
                                         </span>
@@ -62,6 +62,7 @@
                                     <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>

@@ -42,6 +42,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     willStart: function () {
         var self = this;
+        this.isRendered = false;
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
         var defAsset;
         if (this.nodeOptions.cssReadonly) {
@@ -93,7 +94,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
-        if (this.mode == "readonly") {
+        if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
@@ -166,6 +167,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         return this.wysiwyg.attachTo(this.$target).then(function () {
             self.$content = self.wysiwyg.$editor;
             self._onLoadWysiwyg();
+            self.isRendered = true;
         });
     },
     /**

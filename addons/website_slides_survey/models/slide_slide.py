@@ -20,6 +20,19 @@ class SlidePartnerRelation(models.Model):
         for record in self:
             record.survey_quizz_passed = record in passed_slide_partners
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('survey_quizz_passed'):
+                vals['completed'] = True
+        return super(SlidePartnerRelation, self).create(vals_list)
+
+    @api.multi
+    def _write(self, vals):
+        if vals.get('survey_quizz_passed'):
+            vals['completed'] = True
+        return super(SlidePartnerRelation, self)._write(vals)
+
 
 class Slide(models.Model):
     _inherit = 'slide.slide'
@@ -32,10 +45,10 @@ class Slide(models.Model):
         ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
-    def _action_set_viewed(self, target_partner):
+    def _action_set_viewed(self, target_partner, quiz_attempts_inc=False):
         """ If the slide viewed is a certification, we initialize the first survey.user_input
         for the current partner. """
-        new_slide_partners = super(Slide, self)._action_set_viewed(target_partner)
+        new_slide_partners = super(Slide, self)._action_set_viewed(target_partner, quiz_attempts_inc=quiz_attempts_inc)
         certification_slides = self.search([
             ('id', 'in', new_slide_partners.mapped('slide_id').ids),
             ('slide_type', '=', 'certification'),

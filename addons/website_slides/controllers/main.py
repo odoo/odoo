@@ -5,6 +5,7 @@ import base64
 import itertools
 import logging
 import werkzeug
+import math
 
 from odoo import http, modules, tools, _
 from odoo.exceptions import AccessError, UserError
@@ -19,8 +20,9 @@ _logger = logging.getLogger(__name__)
 
 
 class WebsiteSlides(WebsiteProfile):
-    _slides_per_page = 12
-    _slides_per_list = 20
+    SLIDES_PER_PAGE = 12
+    SLIDES_PER_ASIDE = 20
+    SLIDES_PER_CATEGORY = 4
     _channel_order_by_criterion = {
         'vote': 'total_votes desc',
         'view': 'total_views desc',
@@ -36,6 +38,9 @@ class WebsiteSlides(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    # SLIDE UTILITIES
+    # --------------------------------------------------
+
     def _fetch_slide(self, slide_id):
         slide = request.env['slide.slide'].browse(int(slide_id)).exists()
         if not slide:
@@ -47,54 +52,117 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'slide_access'}
         return {'slide': slide}
 
-    def _set_viewed_slide(self, slide):
-        if request.env.user._is_public() or slide.is_preview or not slide.channel_id.is_member:
+    def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
+        if request.env.user._is_public() or not slide.website_published or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
             if slide.id not in viewed_slides:
                 slide.sudo().public_views += 1
                 viewed_slides.append(slide.id)
                 request.session['viewed_slides'] = viewed_slides
         else:
-            slide.action_set_viewed()
+            slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
         return True
 
-    def _set_completed_slide(self, slide):
+    def _set_completed_slide(self, slide, quiz_attempts_inc=False):
         if slide.website_published and slide.channel_id.is_member:
-            slide.action_set_completed()
+            slide.action_set_completed(quiz_attempts_inc=quiz_attempts_inc)
         return True
 
     def _get_slide_detail(self, slide):
-        most_viewed_slides = slide._get_most_viewed_slides(self._slides_per_list)
-        related_slides = slide._get_related_slides(self._slides_per_list)
+        base_domain = self._get_channel_slides_base_domain(slide.channel_id)
+        if slide.channel_id.channel_type == 'documentation':
+            related_domain = expression.AND([base_domain, [('category_id', '=', slide.category_id.id)]])
+
+            most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self.SLIDES_PER_ASIDE, order='total_views desc')
+            related_slides = request.env['slide.slide'].search(related_domain, limit=self.SLIDES_PER_ASIDE)
+            category_data = []
+            uncategorized_slides = request.env['slide.slide']
+        else:
+            most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
+            category_data = slide.channel_id._get_categorized_slides(
+                base_domain, order=request.env['slide.slide']._order_by_strategy['sequence'],
+                force_void=True)
+            # temporarily kept for fullscreen, to remove asap
+            uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
+            uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
+
+        channel_slides_ids = slide.channel_id.slide_ids.ids
+        slide_index = channel_slides_ids.index(slide.id)
+        previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
+        next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+
         values = {
+            # slide
             'slide': slide,
             'most_viewed_slides': most_viewed_slides,
             'related_slides': related_slides,
+            'previous_slide': previous_slide,
+            'next_slide': next_slide,
+            'uncategorized_slides': uncategorized_slides,
+            'category_data': category_data,
+            # user
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
+            # rating and comments
             'comments': slide.website_message_ids or [],
-            'user_progress': {}
         }
-        if slide.channel_id.channel_type == "training":
-            channel_slides_ids = slide.channel_id.slide_ids.ids
-            slide_index = channel_slides_ids.index(slide.id)
-            previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
-            next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+
+        # allow rating and comments
+        if slide.channel_id.allow_comment:
             values.update({
-                'previous_slide': slug(previous_slide) if previous_slide else "",
-                'next_slide': slug(next_slide) if next_slide else ""
+                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
+                'message_post_pid': request.env.user.partner_id.id,
             })
+
         return values
 
-    def _get_quiz_points(self, slide, attempt_count):
-        possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
-        return possible_points[attempt_count] if attempt_count < len(possible_points) else possible_points[-1]
+    def _get_slide_quiz_info(self, slide, quiz_done=False):
+        return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
 
-    def _get_user_progress(self, channel):
-        user_progress = { slide_partner.slide_id.id: slide_partner for slide_partner in request.env['slide.slide.partner'].sudo().search([('channel_id', '=', channel.id),('partner_id', '=', request.env.user.partner_id.id)])}
-        return {
-            'user_progress': user_progress
-        }
+    # CHANNEL UTILITIES
+    # --------------------------------------------------
+
+    def _get_channel_slides_base_domain(self, channel):
+        """ base domain when fetching slide list data related to a given channel
+
+         * website related domain, and restricted to the channel;
+         * if publisher: everything is ok;
+         * if not publisher but has user: either slide is published, either
+           current user is the one that uploaded it;
+         * if not publisher and public: published;
+        """
+        base_domain = expression.AND([request.website.website_domain(), [('channel_id', '=', channel.id)]])
+        if not channel.can_publish:
+            if request.website.is_public_user():
+                base_domain = expression.AND([base_domain, [('website_published', '=', True)]])
+            else:
+                base_domain = expression.AND([base_domain, ['|', ('website_published', '=', True), ('user_id', '=', request.env.user.id)]])
+        return base_domain
+
+    def _get_channel_progress(self, channel, include_quiz=False):
+        """ Replacement to user_progress. Both may exist in some transient state. """
+        slides = request.env['slide.slide'].sudo().search([('channel_id', '=', channel.id)])
+        channel_progress = dict((sid, dict()) for sid in slides.ids)
+        if not request.env.user._is_public() and channel.is_member:
+            slide_partners = request.env['slide.slide.partner'].sudo().search([
+                ('channel_id', '=', channel.id),
+                ('partner_id', '=', request.env.user.partner_id.id)
+            ])
+            for slide_partner in slide_partners:
+                channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
+                if slide_partner.slide_id.question_ids:
+                    gains = [slide_partner.slide_id.quiz_first_attempt_reward,
+                             slide_partner.slide_id.quiz_second_attempt_reward,
+                             slide_partner.slide_id.quiz_third_attempt_reward,
+                             slide_partner.slide_id.quiz_fourth_attempt_reward]
+                    channel_progress[slide_partner.slide_id.id]['quiz_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+
+        if include_quiz:
+            quiz_info = slides._compute_quiz_info(request.env.user.partner_id, quiz_done=False)
+            for slide_id, slide_info in quiz_info.items():
+                channel_progress[slide_id].update(slide_info)
+
+        return channel_progress
 
     def _extract_channel_tag_search(self, **post):
         tags = request.env['slide.channel.tag']
@@ -133,11 +201,8 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
 
-    def _prepare_channel_values(self, **kwargs):
-        return dict(**kwargs)
-
     # --------------------------------------------------
-    # MAIN / SEARCH
+    # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
     @http.route('/slides', type='http', auth="public", website=True)
@@ -146,7 +211,7 @@ class WebsiteSlides(WebsiteProfile):
         domain = request.website.website_domain()
         channels_all = request.env['slide.channel'].search(domain)
         if not request.env.user._is_public():
-            channels_my = channels_all.filtered(lambda channel: channel.completion > 0).sorted('completion', reverse=True)[:3]
+            channels_my = channels_all.filtered(lambda channel: channel.is_member).sorted('completion', reverse=True)[:3]
         else:
             channels_my = request.env['slide.channel']
         channels_popular = channels_all.sorted('total_votes', reverse=True)[:3]
@@ -244,12 +309,7 @@ class WebsiteSlides(WebsiteProfile):
         if not channel.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        domain = [('channel_id', '=', channel.id)]
-        if not channel.can_publish:
-            domain = expression.AND([
-                domain,
-                ['&', ('website_published', '=', True), ('channel_id.website_published', '=', True)]
-            ])
+        domain = self._get_channel_slides_base_domain(channel)
 
         pager_url = "/slides/%s" % (channel.id)
         pager_args = {}
@@ -278,14 +338,18 @@ class WebsiteSlides(WebsiteProfile):
                 pager_url += "?slide_type=%s" % slide_type
 
         # sorting criterion
-        actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+        if channel.channel_type == 'documentation':
+            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+        else:
+            actual_sorting = 'sequence'
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
         pager_args['sorting'] = actual_sorting
 
-        pager_count = request.env['slide.slide'].sudo().search_count(domain)
-        pager = request.website.pager(url=pager_url, total=pager_count, page=page,
-                                      step=self._slides_per_page, scope=self._slides_per_page,
-                                      url_args=pager_args)
+        slide_count = request.env['slide.slide'].sudo().search_count(domain)
+        page_count = math.ceil(slide_count / self.SLIDES_PER_PAGE)
+        pager = request.website.pager(url=pager_url, total=slide_count, page=page,
+                                      step=self.SLIDES_PER_PAGE, url_args=pager_args,
+                                      scope=page_count if page_count < self.PAGER_MAX_PAGE else self.PAGER_MAX_PAGE)
 
         values = {
             'channel': channel,
@@ -323,63 +387,26 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rating_value': last_message_data.get('rating_value'),
             })
 
-        # Display uncategorized slides
-        # fetch slides; done as sudo because we want to display all of them but
-        # unreachable ones won't be clickable (+ slide controller will crash anyway)
-        if not category and not uncategorized:
-            category_data = []
-            for category in request.env['slide.slide'].sudo().read_group(domain, ['category_id'], ['category_id']):
-                category_id, name = category.get('category_id') or (False, _('Uncategorized'))
-                slides_sudo = request.env['slide.slide'].sudo().search(category['__domain'], limit=4, offset=0, order=order)
-                category_data.append({
-                    'id': category_id,
-                    'name': name,
-                    'slug_name': slug((category_id, name)) if category_id else name,
-                    'total_slides': category['category_id_count'],
-                    'slides': slides_sudo,
-                })
-        elif uncategorized:
-            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
-            category_data = [{
-                'id': False,
-                'name':  _('Uncategorized'),
-                'slug_name':  _('Uncategorized'),
-                'total_slides': len(slides_sudo),
-                'slides': slides_sudo,
-            }]
-        else:
-            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
-            category_data = [{
-                'id': category.id,
-                'name': category.name,
-                'slug_name': slug(category),
-                'total_slides': len(slides_sudo),
-                'slides': slides_sudo,
-            }]
-
-        # post slide-fetch computation: promoted, user completion (separated because sudo-ed)
-        if not request.website.is_public_user() and channel.is_member:
-            displayed_slide_ids = list(set(sid for item in category_data for sid in item['slides'].ids))
-            done_slide_ids = request.env['slide.slide.partner'].sudo().search([
-                ('slide_id', 'in', displayed_slide_ids),
-                ('partner_id', '=', request.env.user.partner_id.id),
-                ('completed', '=', True)
-            ]).mapped('slide_id').ids
-        else:
-            done_slide_ids = []
-        values['done_slide_ids'] = done_slide_ids
+        # fetch slides and handle uncategorized slides; done as sudo because we want to display all
+        # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
+        # documentation mode may display less slides than content by category but overhead of
+        # computation is reasonable
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
-        values['category_data'] = category_data
+        values['category_data'] = channel._get_categorized_slides(
+            domain, order,
+            force_void=True,
+            limit=self.SLIDES_PER_CATEGORY if channel.channel_type == 'documentation' else False,
+            offset=pager['offset'])
+        values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         values = self._prepare_additional_channel_values(values, **kw)
 
-        if channel.channel_type == "training":
-            values.update(self._get_user_progress(channel))
-            values['uncategorized_slides'] = channel.slide_ids.filtered(lambda slide: not slide.category_id)
-
         return request.render('website_slides.course_main', values)
 
-    @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
+    # SLIDE.CHANNEL UTILS
+    # --------------------------------------------------
+
+    @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
     def slide_channel_create(self, *args, **kw):
         channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
         return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
@@ -400,30 +427,69 @@ class WebsiteSlides(WebsiteProfile):
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
+    @http.route('/slides/channel/enroll', type='http', auth='public', website=True)
+    def slide_channel_join_http(self, channel_id):
+        # TDE FIXME: why 2 routes ?
+        if not request.website.is_public_user():
+            channel = request.env['slide.channel'].browse(int(channel_id))
+            channel.action_add_member()
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
+    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
+    def slide_channel_join(self, channel_id):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        success = request.env['slide.channel'].browse(channel_id).action_add_member()
+        if not success:
+            return {'error': 'join_done'}
+        return success
+
+    @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
+    def resequence_slides(self, channel_id, slides_data):
+        """" Reorder the slides within the channel by reassigning their 'sequence' field.
+        This method also handles slides that are put in a new category (or uncategorized). """
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        if not channel.can_publish:
+            return {'error': 'Only the publishers of the channel can edit it'}
+
+        slides = request.env['slide.slide'].search([
+            ('id', 'in', [int(key) for key in slides_data.keys()]),
+            ('channel_id', '=', channel.id)
+        ])
+
+        for slide in slides:
+            slide_key = str(slide.id)
+            slide.sequence = slides_data[slide_key]['sequence']
+            slide.category_id = slides_data[slide_key]['category_id'] if 'category_id' in slides_data[slide_key] else False
+
+    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
     # --------------------------------------------------
-    # SLIDE.SLIDE CONTOLLERS
+    # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------
 
     @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
+        self._set_viewed_slide(slide)
 
-        self._set_viewed_slide(slide)
         values = self._get_slide_detail(slide)
-        # allow rating and comments
-        if slide.channel_id.allow_comment:
-            values.update({
-                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
-                'message_post_pid': request.env.user.partner_id.id,
-            })
-        self._set_viewed_slide(slide)
-        if slide.channel_id.channel_type == "training":
-            values.update(self._get_user_progress(slide.channel_id))
-            values['uncategorized_slides'] = slide.channel_id.slide_ids.filtered(lambda slide: not slide.category_id)
-            if 'fullscreen' in kwargs:
-                return request.render("website_slides.slide_fullscreen", values)
-        return request.render("website_slides.slide_detail_view", values)
+        # quiz-specific: update with karma and quiz information
+        if slide.question_ids:
+            values.update(self._get_slide_quiz_info(slide))
+        # sidebar: update with user channel progress
+        values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
+
+        if 'fullscreen' in kwargs:
+            return request.render("website_slides.slide_fullscreen", values)
+        return request.render("website_slides.slide_main", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
@@ -463,87 +529,25 @@ class WebsiteSlides(WebsiteProfile):
         response.status_code = status
         return response
 
-    @http.route('/slide/html_content/get', type="json", auth="public", website=True)
+    # SLIDE.SLIDE UTILS
+    # --------------------------------------------------
+
+    @http.route('/slides/slide/get_html_content', type="json", auth="public", website=True)
     def get_html_content(self, slide_id):
-        slide = request.env['slide.slide'].browse(slide_id)
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
         return {
-            'html_content': slide.html_content
+            'html_content': fetch_res['slide'].html_content
         }
-
-    #SLIDE QUIZ CONTROLLERS
-
-    @http.route('/slide/quiz/get', type="json", auth="public", website=True)
-    def get_quiz(self, **kw):
-        if 'slide_id' in kw:
-            slide = request.env['slide.slide'].browse(kw['slide_id'])
-            slide_partner = request.env['slide.slide.partner'].search([('slide_id', '=', slide.id), ('partner_id', '=', request.env.user.partner_id.id)])
-            possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
-            points = 0
-            if slide_partner.quiz_attempts_count < len(possible_points):
-                points = possible_points[slide_partner.quiz_attempts_count]
-            else:
-                points = possible_points[len(possible_points)-1]
-            res = {
-                'questions':[
-                    {'title': question.question,
-                        'id': question.id,
-                        'answers': [{'text': answer.text_value, 'correct':answer.is_correct,'id': answer.id} for answer in question.answer_ids]
-                        } for question in slide.question_ids
-                    ],
-                'nb_attempts': slide_partner.quiz_attempts_count if slide_partner else 0,
-                'possible_rewards': possible_points,
-                'reward': points
-            }
-            return res
-
-    @http.route('/slide/quiz/submit', type="json", auth="user", website=True)
-    def submit_quiz(self, slide_id, answer_ids,**kw):
-        slide = request.env['slide.slide'].browse(slide_id)
-        good_answers = request.env['slide.answer'].search([('id', 'in', answer_ids), ('is_correct', '=', True)])
-        bad_answers = request.env['slide.answer'].browse(answer_ids) - good_answers
-        slide_partner = request.env['slide.slide.partner'].search([('slide_id', '=', slide_id), ('partner_id', '=', request.env.user.partner_id.id)])
-        points = 0
-        if not slide_partner:
-            slide.action_set_viewed()
-        if not slide_partner.completed:
-            points = self._get_quiz_points(slide, slide_partner.quiz_attempts_count)
-            slide_partner.sudo().write({
-                'quiz_attempts_count': slide_partner.quiz_attempts_count if not bad_answers else slide_partner.quiz_attempts_count + 1,
-                'points_won': points if not bad_answers else 0,
-                'completed': not bad_answers
-            })
-            user = {}
-            if not bad_answers:
-                request.env.user.sudo().add_karma(points)
-                lower_bound = request.env.user.rank_id.karma_min
-                upper_bound = request.env.user.next_rank_id.karma_min
-                user= {
-                        'lower_bound': lower_bound,
-                        'upper_bound': upper_bound,
-                        'karma': request.env.user.karma,
-                        'progress_bar_percentage': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
-                    }
-            return {
-                'goodAnswers': [good_answer.id for good_answer in good_answers],
-                'badAnswers': [bad_answer.id for bad_answer in bad_answers],
-                'passed': not bad_answers,
-                'points': points if not bad_answers else 0,
-                'attempts_count': slide_partner.quiz_attempts_count if slide_partner else 0,
-                'channel_completion': slide.channel_id.completion,
-                'user': user
-            }
-        return {
-            'error': "You already passed this quiz"
-        }
-
-    # --------------------------------------------------
-    # SLIDE.SLIDE TOOLS CONTOLLERS
-    # --------------------------------------------------
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
-    def slide_set_completed_and_redirect(self, slide, next_slide=None):
+    def slide_set_completed_and_redirect(self, slide, next_slide_id=None):
         self._set_completed_slide(slide)
-        return werkzeug.utils.redirect("/slides/slide/%s" % (next_slide if next_slide else slide.id))
+        next_slide = None
+        if next_slide_id:
+            next_slide = self._fetch_slide(next_slide_id).get('slide', None)
+        return werkzeug.utils.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
 
     @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
     def slide_set_completed(self, slide_id):
@@ -593,6 +597,76 @@ class WebsiteSlides(WebsiteProfile):
         return result
 
     # --------------------------------------------------
+    # QUIZZ SECTION
+    # --------------------------------------------------
+
+    @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
+    def slide_quiz_get(self, slide_id):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+        quiz_info = self._get_slide_quiz_info(slide)
+        return {
+            'questions': [{
+                'id': question.id,
+                'question': question.question,
+                'answers': [{
+                    'id': answer.id,
+                    'text_value': answer.text_value,
+                    'is_correct': answer.is_correct,
+                } for answer in question.answer_ids],
+            } for question in slide.question_ids],
+            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
+            'quizKarmaGain': quiz_info['quiz_karma_gain'],
+            'quizKarmaWon': quiz_info['quiz_karma_won'],
+        }
+
+    @http.route('/slides/slide/quiz/submit', type="json", auth="user", website=True)
+    def slide_quiz_submit(self, slide_id, answer_ids):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+
+        if slide.user_membership_id.completed:
+            return {'error': 'slide_quiz_done'}
+
+        all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
+
+        user_answers = request.env['slide.answer'].sudo().search([('id', 'in', answer_ids)])
+        if user_answers.mapped('question_id') != all_questions:
+            return {'error': 'slide_quiz_incomplete'}
+
+        user_bad_answers = user_answers.filtered(lambda answer: not answer.is_correct)
+        user_good_answers = user_answers - user_bad_answers
+
+        self._set_viewed_slide(slide, quiz_attempts_inc=True)
+        quiz_info = self._get_slide_quiz_info(slide, quiz_done=True)
+
+        rank_progress = {}
+        if not user_bad_answers:
+            slide._action_set_quiz_done()
+            lower_bound = request.env.user.rank_id.karma_min
+            upper_bound = request.env.user.next_rank_id.karma_min
+            rank_progress = {
+                'lowerBound': lower_bound,
+                'upperBound': upper_bound,
+                'currentKarma': request.env.user.karma,
+                'motivational': request.env.user.next_rank_id.description_motivational,
+                'progress': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
+            }
+        return {
+            'goodAnswers': user_good_answers.ids,
+            'badAnswers': user_bad_answers.ids,
+            'completed': not user_bad_answers,
+            'quizKarmaWon': quiz_info['quiz_karma_won'],
+            'quizKarmaGain': quiz_info['quiz_karma_gain'],
+            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
+            'rankProgress': rank_progress
+        }
+
+    # --------------------------------------------------
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
 
@@ -626,43 +700,8 @@ class WebsiteSlides(WebsiteProfile):
         return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
 
     # --------------------------------------------------
-    # TOOLS
+    # SLIDE.UPLOAD
     # --------------------------------------------------
-
-    @http.route(['/slides/channel/enroll'], type='http', auth='public', website=True)
-    def slide_channel_join_http(self, channel_id):
-        # TDE FIXME: why 2 routes ?
-        if not request.website.is_public_user():
-            channel = request.env['slide.channel'].browse(int(channel_id))
-            channel.action_add_member()
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
-
-    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
-    def slide_channel_join(self, channel_id):
-        if request.website.is_public_user():
-            return {'error': 'public_user'}
-        success = request.env['slide.channel'].browse(channel_id).action_add_member()
-        if not success:
-            return {'error': 'join_done'}
-        return success
-
-    @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
-    def resequence_slides(self, channel_id, slides_data):
-        """" Reorder the slides within the channel by reassigning their 'sequence' field.
-        This method also handles slides that are put in a new category (or uncategorized). """
-        channel = request.env['slide.channel'].browse(int(channel_id))
-        if not channel.can_publish:
-            return {'error': 'Only the publishers of the channel can edit it'}
-
-        slides = request.env['slide.slide'].search([
-            ('id', 'in', [int(key) for key in slides_data.keys()]),
-            ('channel_id', '=', channel.id)
-        ])
-
-        for slide in slides:
-            slide_key = str(slide.id)
-            slide.sequence = slides_data[slide_key]['sequence']
-            slide.category_id = slides_data[slide_key]['category_id'] if 'category_id' in slides_data[slide_key] else False
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
@@ -743,14 +782,6 @@ class WebsiteSlides(WebsiteProfile):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
             'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
 
-    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
-    def slide_channel_tag_search_read(self, fields, domain):
-        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
-        return {
-            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
-            'can_create': can_create,
-        }
-
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
         can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
@@ -762,6 +793,7 @@ class WebsiteSlides(WebsiteProfile):
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
     # --------------------------------------------------
+
     @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
         # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
@@ -776,7 +808,7 @@ class WebsiteSlides(WebsiteProfile):
         try:
             slide = request.env['slide.slide'].browse(slide_id)
             if is_embedded:
-                request.env['slide.embed'].sudo().add_embed_url(slide.id, referrer_url)
+                request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)
             values['page'] = page
             values['is_embedded'] = is_embedded

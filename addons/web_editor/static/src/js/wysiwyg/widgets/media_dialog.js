@@ -48,7 +48,7 @@ var MediaDialog = Dialog.extend({
         this.$media = $(media);
 
         this.multiImages = options.multiImages;
-        var onlyImages = options.onlyImages || this.multiImages || (this.media && (this.$media.parent().data('oeField') === 'image' || this.$media.parent().data('oeType') === 'image'));
+        var onlyImages = options.onlyImages || this.multiImages;
         this.noImages = options.noImages;
         this.noDocuments = onlyImages || options.noDocuments;
         this.noIcons = onlyImages || options.noIcons;
@@ -79,10 +79,6 @@ var MediaDialog = Dialog.extend({
         } else if (this.documentDialog && this.$media.is('a.o_image')) {
             this.active = this.documentDialog;
         } else if (this.videoDialog && this.$media.hasClass('media_iframe_video')) {
-            this.active = this.videoDialog;
-        } else if (this.videoDialog && this.$media.parent().hasClass('media_iframe_video')) {
-            this.$media = this.$media.parent();
-            this.media = this.$media[0];
             this.active = this.videoDialog;
         } else if (this.iconDialog && this.$media.is('span, i')) {
             this.active = this.iconDialog;

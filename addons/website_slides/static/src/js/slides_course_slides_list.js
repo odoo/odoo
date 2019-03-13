@@ -28,17 +28,17 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
      * @private
      */
     _bindSortable: function () {
-        this.$('ul.o_wslides_slides_list_container').sortable({
+        this.$('ul.o_wslides_js_slides_list_container').sortable({
             handle: '.fa-arrows',
             stop: this._reorderCategories.bind(this),
             items: '.o_wslides_slide_list_category'
         });
 
-        this.$('.o_wslides_slides_list_container ul').sortable({
+        this.$('.o_wslides_js_slides_list_container ul').sortable({
             handle: '.fa-arrows',
-            connectWith: '.o_wslides_slides_list_container ul',
+            connectWith: '.o_wslides_js_slides_list_container ul',
             stop: this._reorderSlides.bind(this),
-            items: '.o_wslides_slides_list_slide:not(.o_wslides_empty_category)'
+            items: '.o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty)'
         });
     },
 
@@ -50,8 +50,8 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
      * @private
      */
     _checkForEmptySections: function (){
-        this.$('.o_wslides_slides_list_container ul').each(function (){
-            var $emptyCategory = $(this).find('.o_wslides_empty_category');
+        this.$('.o_wslides_js_slides_list_container ul').each(function (){
+            var $emptyCategory = $(this).find('.o_wslides_js_slides_list_empty');
             if ($(this).find('li.o_wslides_slides_list_slide[data-slide-id]').length === 0) {
                 $emptyCategory.removeClass('d-none').addClass('d-flex');
             } else {
@@ -130,7 +130,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
      * @private
      */
     _updateHref: function () {
-        this.$(".o_wslides_slides_list_slide_link").each(function (){
+        this.$(".o_wslides_js_slides_list_slide_link").each(function (){
             var href = $(this).attr('href');
             var operator = href.indexOf('?') !== -1 ? '&' : '?';
             $(this).attr('href', href + operator + "fullscreen=1");

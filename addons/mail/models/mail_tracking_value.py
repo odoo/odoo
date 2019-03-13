@@ -40,7 +40,9 @@ class MailTracking(models.Model):
     def _compute_groups(self):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
-            tracking.groups = model._fields[tracking.field].groups
+            field = model._fields.get(tracking.field)
+            # field may not exist anymore if module has been uninstalled
+            tracking.groups = field.groups if field else 'base.group_system'
 
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence):

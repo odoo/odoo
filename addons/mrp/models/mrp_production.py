@@ -605,7 +605,8 @@ class MrpProduction(models.Model):
             for move_raw in production.move_raw_ids:
                 move_raw.write({
                     'group_id': production.procurement_group_id.id,
-                    'unit_factor': move_raw.product_uom_qty / production.product_qty
+                    'unit_factor': move_raw.product_uom_qty / production.product_qty,
+                    'reference': self.name,  # set reference when MO name is different than 'New'
                 })
             production._generate_finished_moves()
             production.move_raw_ids._adjust_procure_method()
@@ -825,8 +826,8 @@ class MrpProduction(models.Model):
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish._action_done()
             order.action_assign()
-            consume_move_lines = moves_to_do.mapped('active_move_line_ids')
-            for moveline in moves_to_finish.mapped('active_move_line_ids'):
+            consume_move_lines = moves_to_do.mapped('move_line_ids')
+            for moveline in moves_to_finish.mapped('move_line_ids'):
                 if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':
                     if any([not ml.lot_produced_id for ml in consume_move_lines]):
                         raise UserError(_('You can not consume without telling for which lot you consumed it'))

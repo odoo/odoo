@@ -535,6 +535,9 @@ ActionManager.include({
                     return newController(controller.jsID);
                 } else {
                     return Promise.resolve(controller.widget.willRestore()).then(function () {
+                        viewOptions = _.extend({}, viewOptions, {
+                            breadcrumbs: self._getBreadcrumbs(self.controllerStack.slice(0, index)),
+                        });
                         return controller.widget.reload(viewOptions).then(function () {
                             return controller;
                         });

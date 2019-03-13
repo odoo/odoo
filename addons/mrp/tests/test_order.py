@@ -676,6 +676,32 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done, 20, 'Update the produce quantity should not impact already produced quantity.')
         mo.button_mark_done()
 
+    def test_product_produce_6(self):
+        """ Build some final products and change the quantity to produce
+        directly in the wizard. The component line should be updated .
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        mo.action_assign()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 3
+        self.assertEqual(len(produce_form.workorder_line_ids._records), 4, 'Update the produce quantity should change the components quantity.')
+        self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 15, 'Update the produce quantity should change the components quantity.')
+        produce_form.qty_producing = 4
+        self.assertEqual(len(produce_form.workorder_line_ids._records), 6, 'Update the produce quantity should change the components quantity.')
+        self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 20, 'Update the produce quantity should change the components quantity.')
+        produce_form.qty_producing = 1
+        self.assertEqual(len(produce_form.workorder_line_ids._records), 2, 'Update the produce quantity should change the components quantity.')
+        self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 5, 'Update the produce quantity should change the components quantity.')
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')
         bom = self.env.ref('mrp.mrp_bom_plastic_laminate')
