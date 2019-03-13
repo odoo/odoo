@@ -273,7 +273,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Applicant, self).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -346,10 +346,9 @@ class Applicant(models.Model):
         }
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Applicant, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Applicant, self)._track_template(changes)
         applicant = self[0]
-        changes, dummy = tracking[applicant.id]
         if 'stage_id' in changes and applicant.stage_id.template_id:
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_message': True,
@@ -359,13 +358,15 @@ class Applicant(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('hr_recruitment.mt_applicant_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
             return self.env.ref('hr_recruitment.mt_applicant_hired')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
-            return self.env.ref('hr_recruitment.mt_applicant_new')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
+        elif 'stage_id' in init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 

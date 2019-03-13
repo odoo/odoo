@@ -312,8 +312,7 @@ class Lead(models.Model):
             partner = self.env['res.partner'].browse(context['default_partner_id'])
             vals['email_from'] = partner.email
 
-        # context: no_log, because subtype already handle this
-        return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
+        return super(Lead, self.with_context(context)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -1103,6 +1102,8 @@ class Lead(models.Model):
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
+    def _creation_subtype(self):
+        return self.env.ref('crm.mt_lead_create')
 
     @api.multi
     def _track_subtype(self, init_values):
@@ -1111,8 +1112,6 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
             return self.env.ref('crm.mt_lead_lost')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:
-            return self.env.ref('crm.mt_lead_create')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)

@@ -117,6 +117,24 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
 
+    def test_message_track_template_at_create(self):
+        """ Create a record with tracking template on create, template should be sent."""
+
+        Model = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context)
+        Model = Model.with_context(mail_notrack=False)
+        record = Model.create({
+            'name': 'Test',
+            'customer_id': self.user_admin.partner_id.id,
+            'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id,
+        })
+
+        self.assertEqual(len(record.message_ids), 1, 'should have 1 new messages for template')
+        # one new message containing the template linked to tracking
+        self.assertEqual(record.message_ids[0].subject, 'Test Template')
+        self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
+        # one email send due to template
+        self.assertEqual(len(self._mails), 1)
+
     def test_message_tracking_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
         self.record.write({

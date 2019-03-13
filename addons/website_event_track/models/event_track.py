@@ -134,10 +134,9 @@ class Track(models.Model):
         return stages.search([], order=order)
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Track, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Track, self)._track_template(changes)
         track = self[0]
-        changes, tracking_value_ids = tracking[track.id]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'composition_mode': 'comment',

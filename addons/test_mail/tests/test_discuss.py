@@ -45,17 +45,21 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
 
     def test_chatter_mail_notrack(self):
         """ Test disable of automatic value tracking at create and write """
-        rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'mail_notrack': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        rec = self.env['mail.test.track'].sudo(self.user_employee).create({'name': 'Test', 'user_id': self.user_employee.id})
+        self.assertEqual(len(rec.message_ids), 1,
+                         "A creation message without tracking values should have been posted")
+        self.assertEqual(len(rec.message_ids.sudo().tracking_value_ids), 0,
+                         "A creation message without tracking values should have been posted")
 
-        rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'mail_notrack': True}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
-
-        rec.write({'user_id': self.user_admin.id})
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
+        rec.with_context({'mail_notrack': True}).write({'user_id': self.user_admin.id})
+        self.assertEqual(len(rec.message_ids), 1,
+                         "No new message should have been posted with mail_notrack key")
 
         rec.with_context({'mail_notrack': False}).write({'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.message_ids), 2,
+                         "A tracking message should have been posted")
+        self.assertEqual(len(rec.message_ids.sudo().mapped('tracking_value_ids')), 1,
+                         "New tracking message should have tracking values")
 
     def test_chatter_tracking_disable(self):
         """ Test disable of all chatter features at create and write """
@@ -70,8 +74,10 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
 
         rec = self.env['mail.test.track'].sudo(self.user_employee).with_context({'tracking_disable': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
-        self.assertEqual(len(rec.sudo().message_ids), 2)
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.sudo().message_ids), 1,
+                         "Creation message without tracking values should have been posted")
+        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 0,
+                         "Creation message without tracking values should have been posted")
 
 
 class TestNotifications(BaseFunctionalTest, MockEmails):
