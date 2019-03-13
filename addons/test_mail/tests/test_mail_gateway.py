@@ -79,6 +79,13 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             'message_id': '<123456-openerp-%s-mail.test.simple@%s>' % (cls.test_record.id, socket.gethostname()),
         })
 
+        cls.user_1 = cls.env['res.users'].create({
+            'name': 'Project 2501',
+            'login': 'kusanagi',
+            'email': 'major@section9.co.jp',
+            'active': False,
+        })
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_parse_eml(self):
         """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
@@ -510,7 +517,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test: message recipients
         self.assertEqual(msg2.author_id, self.partner_1,
                          'message_post: private discussion: wrong author through mailgateway based on email')
-        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
@@ -520,7 +527,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         msg = self.env['mail.message'].browse(msg3.id)
         self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
@@ -546,3 +553,13 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(msg_fw.model, 'mail.test.simple')
         self.assertFalse(msg_fw.parent_id)
         self.assertTrue(msg_fw.res_id == new_record.id)
+
+    def test_recipients_active(self):
+        msg1_pids = [self.env.user.partner_id.id, self.partner_1.id, self.user_1.partner_id]
+
+        # Do: Raoul writes to Bert, Project 2501 and Administrator, the message should be sent to Bert only since the others have their users' inactive
+        msg = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
+        self.assertEqual(msg.partner_ids, self.user_employee.partner_id,
+                         'message_post: private discussion: incorrect recipients when replying')
+        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id,
+                         'message_post: private discussion: incorrect notified recipients when replying')
