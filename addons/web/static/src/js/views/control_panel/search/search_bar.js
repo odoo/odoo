@@ -187,10 +187,16 @@ var SearchBar = Widget.extend({
      */
     _onAutoCompleteSelected: function (e, ui) {
         e.preventDefault();
-        var filter = ui.item.facet.filter;
+        var facet = ui.item.facet;
+        if (!facet) {
+            // this happens when selecting "(no result)" item
+            this.trigger_up('reset');
+            return;
+        }
+        var filter = facet.filter;
         if (filter.type === 'field') {
             var values = filter.autoCompleteValues;
-            values.push(ui.item.facet.values[0]);
+            values.push(facet.values[0]);
             this.trigger_up('autocompletion_filter', {
                 filterId: filter.id,
                 autoCompleteValues: values,

@@ -10,7 +10,6 @@ var FormRenderer = require('web.FormRenderer');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
-var _t = core._t;
 
 var BaseSettingRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
@@ -34,20 +33,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         return prom;
     },
 
-    /**
-     * @override
-     * overridden to show statusbar buttons and a message if there are changes
-     */
-    confirmChange: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            if (self.$('.o_statusbar_buttons').hasClass('d-none')) {
-                self.$('.o_statusbar_buttons')
-                    .append($('<span/>', {text: _t("There are unsaved changes"), class: 'text-muted ml-2'}))
-                    .removeClass('d-none');
-            }
-        });
-    },
     /**
      * @override
      */
@@ -287,7 +272,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             self._initModules();
             self._renderLeftPanel();
             self._initSearch();
-            self.$('.o_statusbar_buttons').addClass('d-none');
+            
             if (config.device.isMobile) {
                 self._enableSwipe();
             }

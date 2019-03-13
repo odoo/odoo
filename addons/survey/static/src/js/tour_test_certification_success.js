@@ -8,8 +8,8 @@ tour.register('test_certification_success', {
     url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8ddb95ac'
 },
 [{ // Page-1
-        content: "Clicking on Start Survey",
-        trigger: 'a.btn.btn-primary.btn-lg:contains("Start Survey")',
+        content: "Clicking on Start Certification",
+        trigger: 'a.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?
         content: "Selecting answer 'Yes'",
         trigger: 'div.js_question-wrapper:contains("Do we sell Acoustic Bloc Screens") select',

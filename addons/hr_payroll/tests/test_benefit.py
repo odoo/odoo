@@ -1,10 +1,8 @@
 # # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import pytz
 from dateutil.relativedelta import relativedelta
-from odoo import exceptions
 from odoo.fields import Datetime, Date
 from odoo.tests.common import tagged
 from odoo.addons.hr_payroll.tests.common import TestPayslipBase
@@ -130,7 +128,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
             'benefit_type_id': self.benefit_type.id,
         })
-        benefit.action_validate(benefit.ids)
+        benefit.action_validate()
         benefits = self.env['hr.benefit'].search([('employee_id', '=', self.richard_emp.id)])
         self.assertTrue(all((b.state == 'validated' for b in benefits)), "Benefits should be approved")
         self.assertEqual(len(benefits), 3, "Benefit should be split in three")
@@ -204,7 +202,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        benef.action_validate(benef.ids)
+        benef.action_validate()
         calendar_leave = self.env['resource.calendar.leaves'].search([('name', '=', 'Richard leave from benef')])
         self.assertTrue(calendar_leave, "It should have created a leave in the calendar")
         self.assertEqual(calendar_leave.benefit_type_id, benef.benefit_type_id, "It should have the same benefit type")
@@ -220,7 +218,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end + relativedelta(hours=5),
         })
-        benef2 = self.env['hr.benefit'].create({
+        self.env['hr.benefit'].create({
             'name': '2',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.env.ref('hr_payroll.benefit_type_attendance').id,
@@ -228,7 +226,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start + relativedelta(hours=3),
             'date_stop': end,
         })
-        self.assertFalse(benef1.action_validate(benef1.ids), "It should not validate benefits conflicting with others")
+        self.assertFalse(benef1.action_validate(), "It should not validate benefits conflicting with others")
         self.assertTrue(benef1.display_warning)
         self.assertNotEqual(benef1.state, 'validated')
 
@@ -241,7 +239,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': self.start,
             'date_stop': self.end,
         })
-        leave_1 = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'Doctor Appointment',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
@@ -249,7 +247,7 @@ class TestBenefit(TestPayslipBase):
             'date_to': self.start + relativedelta(days=1),
             'number_of_days': 2,
         })
-        self.assertFalse(benef1.action_validate(benef1.ids),"It should not validate benefits conflicting with non approved leaves")
+        self.assertFalse(benef1.action_validate(), "It should not validate benefits conflicting with non approved leaves")
         self.assertTrue(benef1.display_warning)
 
     def test_validate_undefined_benefit(self):
@@ -260,7 +258,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': self.start,
             'date_stop': self.end,
         })
-        self.assertFalse(benef1.action_validate(benef1.ids),"It should not validate benefits without a type")
+        self.assertFalse(benef1.action_validate(), "It should not validate benefits without a type")
 
     def test_approve_leave_benefit(self):
         start = self.to_datetime_tz('2015-11-01 09:00:00')
@@ -273,7 +271,7 @@ class TestBenefit(TestPayslipBase):
             'date_to': start + relativedelta(days=1),
             'number_of_days': 2,
         })
-        benef = self.env['hr.benefit'].create({
+        self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
             'contract_id': self.richard_emp.contract_id.id,
@@ -299,7 +297,7 @@ class TestBenefit(TestPayslipBase):
         self.assertTrue(new_benef, "It should have created a benefit for the last two days")
         self.assertTrue(new_leave_benef, "It should have created a leave benefit for the first day")
 
-        self.assertTrue(benef.action_validate((new_benef | new_leave_benef).ids), "It should be able to validate the benefits")
+        self.assertTrue((new_benef | new_leave_benef).action_validate(), "It should be able to validate the benefits")
 
     def test_refuse_leave_benefit(self):
         start = self.to_datetime_tz('2015-11-01 09:00:00')
@@ -321,7 +319,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
             'leave_id': leave.id
         })
-        benef.action_validate(benef.ids)
+        benef.action_validate()
         self.assertTrue(benef.display_warning, "It should have an error (conflicting leave to approve")
         leave.action_refuse()
         self.assertFalse(benef.display_warning, "It should not have an error")
@@ -342,7 +340,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        benef.action_validate(benef.ids)
+        benef.action_validate()
         data = self.richard_emp._get_benefit_days_data(self.benefit_type, self.start, self.end)
         self.assertEqual(data['hours'], 7.0)
 
@@ -358,7 +356,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        leave_benef.action_validate(leave_benef.ids)
+        leave_benef.action_validate()
         data = self.richard_emp._get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
         self.assertEqual(data['hours'], 5.0, "It should equal the number of hours richard should have worked")
 
@@ -374,7 +372,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        leave_benef.action_validate(leave_benef.ids)
+        leave_benef.action_validate()
         data = self.richard_emp._get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
         self.assertEqual(data['hours'], 0.0, "It should equal the number of hours richard should have worked")
 
@@ -390,7 +388,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        leave_benef.action_validate(leave_benef.ids)
+        leave_benef.action_validate()
         payslip_wizard = self.env['hr.payslip.employees'].create({'employee_ids': [(4, self.richard_emp.id)]})
         payslip_wizard.with_context({'default_date_start': Date.to_string(start), 'default_date_end': Date.to_string(end)}).compute_sheet()
         payslip = self.env['hr.payslip'].search([('employee_id', '=', self.richard_emp.id)])
@@ -414,7 +412,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        benef.action_validate(benef.ids)
+        benef.action_validate()
         payslip_wizard = self.env['hr.payslip.employees'].create({'employee_ids': [(4, self.richard_emp.id)]})
         payslip_wizard.with_context({
             'default_date_start': Date.to_string(start),

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="slide.slide.quiz">
+        <div class="o_wslides_fs_quiz_container">
+            <div class="mx-5">
+                <div t-foreach="widget.quiz.questions" t-as="question"
+                    class="o_wslides_js_lesson_quiz_question mt-3" t-att-data-question-id="question.id" t-att-data-title="question.question">
+                    <div class="h3">
+                        <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question.question"/>
+                    </div>
+                    <ul class="bg-white list-unstyled">
+                        <t t-foreach="question.answers" t-as="answer">
+                            <li t-att-data-answer-id="answer.id"
+                                t-att-data-text="answer.text_value"
+                                class="o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center">
+
+                                <label class="mb-0 d-flex align-items-center justify-content-center mr-3 ml-3">
+                                    <input type="radio"
+                                        t-att-name="question.id"
+                                        t-att-value="answer.id"
+                                        class="d-none"/>
+                                    <i class="fa fa-circle text-muted"></i>
+                                    <i class="fa fa-times-circle text-danger d-none"></i>
+                                    <i class="fa fa-check-circle text-success d-none"></i>
+                                </label>
+                                <span t-esc="answer.text_value"/>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+                <div class="alert alert-danger o_wslides_js_lesson_quiz_error d-none" role="alert">
+                    <span></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&amp;times;</span>
+                    </button>
+                </div>
+                <div class="o_wslides_js_lesson_quiz_validation"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="slide.slide.quiz.validation">
+        <t t-if="widget.readonly">
+            <button class="btn btn-primary" role="button" title="Join" aria-label="Join" disabled="disabled">Join course to take quiz</button>
+            <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma"
+                class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">+ <t t-esc="widget.quiz.quizKarmaGain"/> XP</span>
+        </t>
+        <t t-else="">
+            <button t-if="! widget.slide.completed" role="button" title="Check answers" aria-label="Check answers"
+                class="btn btn-primary text-uppercase font-weight-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
+            <button t-if="widget.slide.completed" role="button" title="Quiz done" aria-label="Quiz done" disabled="disabled"
+                class="btn btn-primary text-uppercase font-weight-bold">Done !</button>
+            <span t-if="! widget.slide.completed"  role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma"
+                class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">+ <t t-esc="widget.quiz.quizKarmaGain"/> XP</span>
+            <span t-if="widget.slide.completed" role="button" title="Gained karma" aria-label="Gained karma"
+                class="badge badge-pill badge-success text-white font-weight-bold ml-3 px-2 py-1">+ <t t-esc="widget.quiz.quizKarmaWon"/> XP</span>
+            <button t-if="widget.slide.completed &amp;&amp; widget.slide.hasNext"
+                class="btn btn-primary ml-3 o_wslides_quiz_continue">Continue</button>
+        </t>
+    </t>
+
+    <t t-name="slide.slide.quiz.finish">
+        <div class="modal o_wslides_quiz_modal" tabindex="-1" role="dialog" id="slides_quiz_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body d-flex p-0">
+                        <div class="w-50 bg-brand"></div>
+                        <div class="w-50 d-flex flex-column p-3">
+                            <h1>Amazing!</h1>
+                            <div class="pb-3">
+                                <span class="pb-2">You gained <span class="badge badge-pill badge-success text-white font-weight-bold"><t t-esc="widget.quiz.quizKarmaWon"/> XP !</span> !</span>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.progress" aria-valuemin="0" aria-valuemax="100"
+                                        t-attf-style="heigth: 8px; width: #{widget.quiz.rankProgress.progress}%"/>
+                                </div>
+                                <small t-if="widget.quiz.rankProgress.lowerBound" class="float-left"><t t-esc="widget.quiz.rankProgress.lowerBound"/></small>
+                                <small t-if="widget.quiz.rankProgress.upperBound" class="float-right"><t t-esc="widget.quiz.rankProgress.upperBound"/></small>
+                            </div>
+                            <div class="pb-3" t-raw="widget.quiz.rankProgress.motivational"/>
+                            <button t-if="widget.slide.hasNext" type="button" class="btn btn-light o_wslides_quiz_btn align-self-end">Next <i class="fa fa-chevron-right"/></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

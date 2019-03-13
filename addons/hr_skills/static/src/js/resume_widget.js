@@ -90,7 +90,7 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
         return qweb.render('hr_trash_button');
     },
 
-    _renderAddItemButton(group) {
+    _renderAddItemButton: function (group) {
         return qweb.render(this.addLineButtonTemplate, {
             context: JSON.stringify(this._getCreateLineContext(group)),
         });
@@ -141,8 +141,8 @@ var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
         var date_start = data.date_start && data.date_start.format(dateFormat) || "";
         var date_end = data.date_end && data.date_end.format(dateFormat) || _t("Current");
         return _.extend(data, {
-            date_start,
-            date_end,
+            date_start: date_start,
+            date_end: date_end,
         });
     },
 

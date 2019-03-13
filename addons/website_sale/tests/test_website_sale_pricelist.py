@@ -38,6 +38,10 @@ class TestWebsitePriceList(TransactionCase):
             'country_group_ids': [(6, 0, [ca_group.id])],
             'sequence': 10
         })
+        self.args = {
+            'show': False,
+            'current_pl': False,
+        }
         patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -87,11 +91,6 @@ class TestWebsitePriceList(TransactionCase):
 
     def test_get_pricelist_available_promocode(self):
         christmas_pl = self.ref('website_sale.list_christmas')
-        public_pl = self.ref('product.list0')
-        self.args = {
-            'show': False,
-            'current_pl': public_pl,
-        }
 
         country_list = {
             False: True,

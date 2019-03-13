@@ -1085,6 +1085,41 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('selecting (no result) triggers a re-render', async function (assert) {
+        assert.expect(3);
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(10);
+        await testUtils.nextTick();
+
+        // 'a' key to filter nothing on bar
+        actionManager.$('.o_searchview_input').val('a');
+        actionManager.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        await testUtils.nextTick();
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        await testUtils.nextTick();
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
+        await testUtils.nextTick();
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        await testUtils.nextTick();
+
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete .o-selection-focus').text(), "(no result)",
+            "there should be no result for 'a' in bar");
+
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+        assert.containsNone(actionManager, '.o_searchview_facet_label');
+        assert.strictEqual(actionManager.$('.o_searchview_input').val(), "",
+            "the search input should be re-rendered");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('TimeRangeMenu');
 
     QUnit.test('time range menu stays hidden', async function (assert) {
