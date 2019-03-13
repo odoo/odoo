@@ -43,6 +43,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     commitChanges: function () {
         var self = this;
+        if (!this.wysiwyg || !this.isRendered) {
+            return this._super();
+        }
         var fieldName = this.nodeOptions['inline-field'];
 
         if (this.mode == "readonly") {

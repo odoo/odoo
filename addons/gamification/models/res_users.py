@@ -47,9 +47,10 @@ class Users(models.Model):
 
     @api.multi
     def write(self, vals):
+        result = super(Users, self).write(vals)
         if 'karma' in vals:
             self._recompute_rank()
-        return super(Users, self).write(vals)
+        return result
 
     @api.multi
     def add_karma(self, karma):
@@ -72,13 +73,16 @@ class Users(models.Model):
                  self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
         for user in self:
             old_rank = user.rank_id
-            for i in range(0, len(ranks)):
-                if user.karma >= ranks[i]['karma_min']:
-                    user.write({
-                        'rank_id': ranks[i]['rank'].id,
-                        'next_rank_id': ranks[i - 1]['rank'].id if i > 0 else False
-                    })
-                    break
+            if user.karma == 0 and ranks:
+                user.write({'next_rank_id': ranks[-1]['rank'].id})
+            else:
+                for i in range(0, len(ranks)):
+                    if user.karma >= ranks[i]['karma_min']:
+                        user.write({
+                            'rank_id': ranks[i]['rank'].id,
+                            'next_rank_id': ranks[i - 1]['rank'].id if 0 < i else False
+                        })
+                        break
             if old_rank != user.rank_id:
                 user._rank_changed()
 

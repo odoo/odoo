@@ -56,6 +56,7 @@ class TestMassMailingShortener(common.TransactionCase):
             "contact_list_ids": [[6, False, [mailing_list_A.id]]],
             "mass_mailing_campaign_id": False,
             "name": "sdf",
+            "subject": "test_00_test_mass_mailing_shortener",
             "body_html": """
 Hi,
 % set url = "www.odoo.com"

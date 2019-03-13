@@ -7,6 +7,7 @@ from odoo.http import request
 
 
 class WebsiteSlides(WebsiteSlides):
+
     def _get_valid_slide_post_values(self):
         result = super(WebsiteSlides, self)._get_valid_slide_post_values()
         result.append('survey_id')
@@ -24,10 +25,12 @@ class WebsiteSlides(WebsiteSlides):
         This is used in the context of a website_publisher designing a course."""
         result = super(WebsiteSlides, self)._get_slide_detail(slide)
         if not request.env.user._is_public() and slide.slide_type == 'certification' and slide.survey_id:
+            result['certification_test_entry'] = not slide.channel_id.is_member
+            result['certification_done'] = False
             if slide.channel_id.is_member:
                 user_membership_id_sudo = slide.user_membership_id.sudo()
                 quizz_passed = user_membership_id_sudo.survey_quizz_passed
-                result['quizz_passed'] = quizz_passed
+                result['certification_done'] = quizz_passed
                 result['survey_id'] = slide.survey_id.id
                 if not quizz_passed:
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
@@ -35,8 +38,6 @@ class WebsiteSlides(WebsiteSlides):
                     ))
                     result['certification_url'] = last_user_input._get_survey_url()
             else:
-                result['quizz_passed'] = False
-                result['test_entry'] = True
                 user_input = slide.survey_id._create_answer(
                     partner=request.env.user.partner_id,
                     check_attempts=False,

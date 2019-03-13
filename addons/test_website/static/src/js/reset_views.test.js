@@ -21,7 +21,7 @@ tour.register('test_reset_page_view_complete_flow_part1', {
         },
         {
             content: "save the page",
-            extra_trigger: '#oe_structure_test_website_page .s_cover',
+            extra_trigger: '#oe_structure_test_website_page.o_dirty',
             trigger: "#web_editor-top-edit button[data-action=save]",
         },
         // 2. Edit that COW'd view in the HTML editor to break it.
@@ -77,7 +77,7 @@ tour.register('test_reset_page_view_complete_flow_part2', {
         },
         {
             content: "select oe_structure view",
-            trigger: '#ace-view-list',
+            trigger: '#s2id_ace-view-list',  // use select2 version
             run: function () {
                 var viewId = $('#ace-view-list option:contains("oe_structure")').val();
                 $('#ace-view-list').val(viewId).trigger('change');
