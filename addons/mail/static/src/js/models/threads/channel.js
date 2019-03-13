@@ -40,6 +40,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @param {integer} [params.data.partners_info[i].partner_id]
      * @param {integer} [params.data.partners_info[i].fetched_message_id]
      * @param {integer} [params.data.partners_info[i].seen_message_id]
+     * @param {string} [params.data.public] either 'public' or 'private' or 'groups'
      * @param {string} params.data.state
      * @param {string} [params.data.uuid]
      * @param {Object} params.options
@@ -68,6 +69,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._groupBasedSubscription = data.group_based_subscription;
         this._isModerated = data.moderation;
         this._isMyselfModerator = data.is_moderator;
+        this._isGroups = data.public === 'groups';
         this._lastMessageDate = undefined;
         this._members = data.members || [];
         // Promise that is resolved on fetched members of this channel.
@@ -265,6 +267,14 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      */
     isChannel: function () {
         return true;
+    },
+    /**
+     * States whether the channel is limited to a single group for inviting users
+     *
+     * @returns {boolean}
+     */
+    isGroupBased: function () {
+        return this._isGroups;
     },
     /**
      * States whether the channel auto-subscribes some users in a group

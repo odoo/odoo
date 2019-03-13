@@ -258,36 +258,85 @@ class Partner(models.Model):
         return [users, partners]
 
     @api.model
-    def im_search(self, name, limit=20):
+    def im_search(self, name, limit=20, channel_id=None):
         """ Search partner with a name and return its id, name and im_status.
             Note : the user must be logged
             :param name : the partner name to search
             :param limit : the limit of result to return
+            :param channel_id : the channel ID is used to check
+                - if it's a 'mailing list' (to return the full list of res.partners)
+                - if the channel has a group_public_id to filter the result
         """
+
+        channel = None
+        is_mailing_list = False
+        if channel_id and isinstance(channel_id, int):
+            channel = self.env['mail.channel'].browse(int(channel_id))
+            is_mailing_list = channel.email_send
+
         # This method is supposed to be used only in the context of channel creation or
         # extension via an invite. As both of these actions require the 'create' access
         # right, we check this specific ACL.
         if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
             name = '%' + name + '%'
             excluded_partner_ids = [self.env.user.partner_id.id]
-            self.env.cr.execute("""
-                SELECT
-                    U.id as user_id,
-                    P.id as id,
-                    P.name as name,
-                    CASE WHEN B.last_poll IS NULL THEN 'offline'
-                         WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
-                         WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
-                         ELSE 'online'
-                    END as im_status
-                FROM res_users U
-                    JOIN res_partner P ON P.id = U.partner_id
-                    LEFT JOIN bus_presence B ON B.user_id = U.id
-                WHERE P.name ILIKE %s
-                    AND P.id NOT IN %s
-                    AND U.active = 't'
-                LIMIT %s
-            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+            has_restricted_group = channel and channel.public == "groups" and channel.group_public_id
+            if is_mailing_list and not has_restricted_group:
+                self._execute_mailing_list_search_query(name, limit, excluded_partner_ids)
+            else:
+                self._execute_regular_channel_search_query(name, limit, excluded_partner_ids, channel)
             return self.env.cr.dictfetchall()
         else:
             return {}
+
+    def _execute_mailing_list_search_query(self, name, limit, excluded_partner_ids):
+        return self.env.cr.execute("""
+            SELECT
+                P.id as id,
+                P.name as name
+            FROM res_partner P
+            WHERE P.name ILIKE %s
+                AND P.id NOT IN %s
+                AND P.active = 't'
+                AND (P.company_id = %s OR P.company_id is null)
+                AND P.email_normalized NOT IN (SELECT email FROM mail_blacklist)
+            LIMIT %s
+        """, (name, tuple(excluded_partner_ids), self.env.user.company_id.id, limit))
+
+    def _execute_regular_channel_search_query(self, name, limit, excluded_partner_ids, channel):
+        query = ["""
+            SELECT
+                U.id as user_id,
+                P.id as id,
+                P.name as name,
+                CASE WHEN B.last_poll IS NULL THEN 'offline'
+                    WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                    WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
+                    ELSE 'online'
+                END as im_status
+            FROM res_users U
+                JOIN res_partner P ON P.id = U.partner_id
+                LEFT JOIN bus_presence B ON B.user_id = U.id
+            """]
+
+        has_restricted_group = channel and channel.public == "groups" and channel.group_public_id
+        if has_restricted_group:
+            query.append("JOIN res_groups_users_rel GU ON U.id = GU.uid")
+
+        query.append("""
+            WHERE P.name ILIKE %s
+            AND P.id NOT IN %s
+            AND U.active = 't'
+        """)
+
+        if has_restricted_group:
+            query.append("AND GU.gid = %s")
+
+        query.append("LIMIT %s")
+
+        query_parameters = ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids))
+        if has_restricted_group:
+            query_parameters += (channel.group_public_id.id,)
+        query_parameters += (limit,)
+
+        self.env.cr.execute(''.join(query), query_parameters)

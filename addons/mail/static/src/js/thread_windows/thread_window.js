@@ -240,8 +240,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
             .autocomplete({
                 autoFocus: true,
                 source: function (request, response) {
-                    self.call('mail_service', 'searchPartner', request.term, 10)
-                        .then(response);
+                    self.call('mail_service', 'searchPartner', {
+                        searchVal: request.term,
+                        limit: 10
+                    }).then(response);
                 },
                 select: function (event, ui) {
                     // remember partner ID so that we can replace this window

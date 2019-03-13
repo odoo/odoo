@@ -63,14 +63,17 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('mail_service', 'searchPartner', query.term, 20)
-                    .then(function (partners) {
-                        query.callback({
-                            results: _.map(partners, function (partner) {
-                                return _.extend(partner, { text: partner.label });
-                            }),
-                        });
+                self.call('mail_service', 'searchPartner', {
+                    searchVal: query.term,
+                    limit: 20,
+                    channelID: self._channelID
+                }).then(function (partners) {
+                    query.callback({
+                        results: _.map(partners, function (partner) {
+                            return _.extend(partner, { text: partner.label });
+                        }),
                     });
+                });
             }
         });
         return this._super.apply(this, arguments);
@@ -689,7 +692,10 @@ var Discuss = AbstractAction.extend({
                 autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).then(response);
+                    self.call('mail_service', 'searchPartner', {
+                        searchVal: self._lastSearchVal,
+                        limit: 10
+                    }).then(response);
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;

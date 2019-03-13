@@ -394,17 +394,31 @@ var MailManager =  AbstractService.extend({
     /**
      * Search among prefetched partners, using the string 'searchVal'
      *
-     * @param {string} searchVal
-     * @param {integer} limit max number of found partners in the response
-     * @returns {Promise<Object[]>} list of found partners (matching
+     * @param {object} params
+     * @param {string} params.searchVal
+     * @param {integer} params.limit max number of found partners in the response
+     * @param {integer} params.[channelID] used to check if the channel is group based or if the channel is a mass mailing
+     * - Group based: Only the users from this group are displayed
+     * - Mass mailing (and not group based): All partners are displayed
+     * @returns {$.Promise<Object[]>} list of found partners (matching
      *   'searchVal')
      */
-    searchPartner: function (searchVal, limit) {
+    searchPartner: function (params) {
         var self = this;
-        var partners = this._searchPartnerPrefetch(searchVal, limit);
+
+        var partners = [];
+        var channel = this.getChannel(params.channelID);
+        if (
+            params.channelID === undefined ||
+            (!channel.isGroupBased() && !channel.isMassMailing())
+        ) {
+            partners = this._searchPartnerPrefetch(params);
+        }
+
         return new Promise(function (resolve, reject) {
+            // if mass mailing OR group based, we need to fetch from server
             if (!partners.length) {
-                resolve(self._searchPartnerFetch(searchVal, limit));
+                resolve(self._searchPartnerFetch(params));
             } else {
                 resolve(partners);
             }
@@ -1111,36 +1125,40 @@ var MailManager =  AbstractService.extend({
     /**
      * Extend the research to all users
      *
-     * @private
-     * @param {string} searchVal
-     * @param {integer} limit
+     * @param {object} params
+     * @param {string} params.searchVal
+     * @param {integer} params.limit max number of found partners in the response
+     * @param {integer} params.[channelID] used to check if the channel is group based or if the channel is a mass mailing
+     * - Group based: Only the users from this group are displayed
+     * - Mass mailing (and not group based): All partners are displayed
      * @returns {Promise<Object[]>} fetched partners matching 'searchVal'
      */
-    _searchPartnerFetch: function (searchVal, limit) {
+    _searchPartnerFetch: function (params) {
         return this._rpc({
                 model: 'res.partner',
                 method: 'im_search',
-                args: [searchVal, limit || 20],
+                args: [params.searchVal, params.limit || 20, params.channelID],
             }, { shadow: true });
     },
     /**
      * Search among prefetched partners
      *
      * @private
-     * @param {string} searchVal
-     * @param {integer} limit
+     * @param {object} params
+     * @param {string} params.searchVal
+     * @param {integer} params.limit max number of found partners in the response
      * @returns {string[]} partner suggestions that match searchVal
      *   (max limit, exclude session partner)
      */
-    _searchPartnerPrefetch: function (searchVal, limit) {
+    _searchPartnerPrefetch: function (params) {
         var values = [];
-        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(searchVal)), 'i');
+        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(params.searchVal)), 'i');
         _.each(this._mentionPartnerSuggestions, function (partners) {
-            if (values.length < limit) {
+            if (values.length < params.limit) {
                 values = values.concat(_.filter(partners, function (partner) {
                     return (session.partner_id !== partner.id) &&
                             searchRegexp.test(partner.name);
-                })).splice(0, limit);
+                })).splice(0, params.limit);
             }
         });
         return values;
