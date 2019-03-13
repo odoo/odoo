@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website_slides.controllers.main import WebsiteSlides
+import werkzeug
 
+from odoo.addons.website_slides.controllers.main import WebsiteSlides
+from odoo import _
 from odoo.http import request
 
 
@@ -48,6 +50,13 @@ class WebsiteSlides(WebsiteSlides):
                 result['certification_url'] = user_input._get_survey_url()
 
         return result
+
+    # Utils
+    # ---------------------------------------------------
+    def _set_completed_slide(self, slide, quiz_attempts_inc=False):
+        if slide.slide_type == 'certification':
+            raise werkzeug.exceptions.Forbidden(_("Certification slides are completed when the survey is succeeded."))
+        return super(WebsiteSlides, self)._set_completed_slide(slide, quiz_attempts_inc=quiz_attempts_inc)
 
     # Profile
     # ---------------------------------------------------
