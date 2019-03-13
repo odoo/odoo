@@ -75,10 +75,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
                             line_values['to_delete'] = workorder_line
                     else:
                         new_val = workorder_line.qty_to_consume - qty_todo
+                        new_reserved = max(0, workorder_line.qty_reserved - qty_todo)
                         line_values['to_update'][workorder_line] = {
                             'qty_to_consume': new_val,
                             'qty_done': new_val,
-                            'qty_reserved': new_val,
+                            'qty_reserved': new_reserved,
                         }
                         qty_todo = 0
             else:
