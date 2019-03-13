@@ -221,6 +221,9 @@ root can have the following attributes:
     corresponding attribute to ``false``
 ``limit``
     the default size of a page. It should be a positive integer
+``expand``
+    when the list view is grouped, automatically open the first level of groups
+    if set to true (default: false)
 
 Possible children elements of the list view are:
 

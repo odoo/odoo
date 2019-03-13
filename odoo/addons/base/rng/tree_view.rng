@@ -42,6 +42,14 @@
                     </rng:choice>
                 </rng:attribute>
             </rng:optional>
+            <rng:optional>
+                <rng:attribute name="expand">
+                    <rng:choice>
+                        <rng:value>1</rng:value>
+                        <rng:value>0</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="control"/>

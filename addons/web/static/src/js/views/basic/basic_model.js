@@ -4323,8 +4323,11 @@ var BasicModel = AbstractModel.extend({
                         self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
                         newGroup.isOpen = false;
+                    } else if ('__fold' in group) {
+                        newGroup.isOpen = !group.__fold;
                     } else {
-                        newGroup.isOpen = '__fold' in group ? !group.__fold : true;
+                        // open the group iff it is a first level group
+                        newGroup.isOpen = !self.localData[newGroup.parentID].parentID;
                     }
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
