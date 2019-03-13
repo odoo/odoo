@@ -76,11 +76,10 @@ class PaymentTransaction(models.Model):
         # to confirm the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_authorized()
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.action_confirm()
+        sales_orders.force_quotation_send()
 
     @api.multi
     def _reconcile_after_transaction_done(self):
