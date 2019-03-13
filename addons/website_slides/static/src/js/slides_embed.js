@@ -32,6 +32,7 @@ $(document).ready(function () {
                 this.$('canvas').show();
                 this.$('#page_count').text(this.pdf_viewer.pdf_page_total);
                 this.$('#PDFViewerLoader').hide();
+                this.$('#PDFViewerLoader').toggleClass('d-flex');
                 if (this.pdf_viewer.pdf_page_total > 1) {
                     this.$('.o_slide_navigation_buttons').removeClass('hide');
                 }
