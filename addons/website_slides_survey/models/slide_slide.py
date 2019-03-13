@@ -45,23 +45,41 @@ class Slide(models.Model):
         ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
-    def _action_set_viewed(self, target_partner, quiz_attempts_inc=False):
-        """ If the slide viewed is a certification, we initialize the first survey.user_input
-        for the current partner. """
-        new_slide_partners = super(Slide, self)._action_set_viewed(target_partner, quiz_attempts_inc=quiz_attempts_inc)
-        certification_slides = self.search([
-            ('id', 'in', new_slide_partners.mapped('slide_id').ids),
-            ('slide_type', '=', 'certification'),
-            ('survey_id', '!=', False)
-        ])
-
-        for new_slide_partner in new_slide_partners:
-            if new_slide_partner.slide_id in certification_slides and not new_slide_partner.user_input_ids:
-                new_slide_partner.slide_id.survey_id._create_answer(
-                    partner=target_partner,
+    @api.multi
+    def _generate_certification_url(self):
+        """ get a map of certification url for certification slide from `self`. The url will come from the survey user input:
+                1/ existing and not done user_input for member of the course
+                2/ create a new user_input for member
+                3/ for no member, a test user_input is created and the url is returned
+            Note: the slide.slides.partner should already exist
+        """
+        certification_urls = {}
+        for slide in self.filtered(lambda slide: slide.slide_type == 'certification' and slide.survey_id):
+            if slide.channel_id.is_member:
+                user_membership_id_sudo = slide.user_membership_id.sudo()
+                quizz_passed = user_membership_id_sudo.survey_quizz_passed
+                if not quizz_passed and user_membership_id_sudo.user_input_ids:
+                    last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
+                        lambda user_input: user_input.create_date, reverse=True
+                    ))
+                    certification_urls[slide.id] = last_user_input._get_survey_url()
+                elif not user_membership_id_sudo.user_input_ids:
+                    user_input = slide.survey_id.sudo()._create_answer(
+                        partner=self.env.user.partner_id,
+                        check_attempts=False,
+                        **{
+                            'slide_id': slide.id,
+                            'slide_partner_id': user_membership_id_sudo.id
+                        }
+                    )
+                    certification_urls[slide.id] = user_input._get_survey_url()
+            else:
+                user_input = slide.survey_id.sudo()._create_answer(
+                    partner=self.env.user.partner_id,
                     check_attempts=False,
-                    **{
-                        'slide_id': new_slide_partner.slide_id.id,
-                        'slide_partner_id': new_slide_partner.id
+                    test_entry=True, **{
+                        'slide_id': slide.id
                     }
                 )
+                certification_urls[slide.id] = user_input._get_survey_url()
+        return certification_urls

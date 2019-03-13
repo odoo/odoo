@@ -492,7 +492,7 @@ class WebsiteSlides(WebsiteProfile):
         # sidebar: update with user channel progress
         values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
 
-        if 'fullscreen' in kwargs:
+        if kwargs.get('fullscreen') == '1':
             return request.render("website_slides.slide_fullscreen", values)
         else:
             values['slide_access'] = slide.sudo(request.env.user)._get_slide_action_access()[slide.id]
