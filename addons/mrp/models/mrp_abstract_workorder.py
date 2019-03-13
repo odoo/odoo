@@ -63,7 +63,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             # Remove or lower quantity on exisiting workorder lines
             if float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
                 qty_todo = abs(qty_todo)
-                for workorder_line in move_workorder_lines:
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved):
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
                     if float_compare(workorder_line.qty_to_consume, qty_todo, precision_rounding=rounding) <= 0:
