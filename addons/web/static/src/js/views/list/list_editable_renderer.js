@@ -445,6 +445,13 @@ ListRenderer.include({
     // Private
     //--------------------------------------------------------------------------
 
+    _addOptionaColumn: function ($cells) {
+        if (!this.addTrashIcon) {
+            $cells.push($("<td/>", {
+                class: 'o-data-cell',
+            }));
+        }
+    },
     /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
@@ -469,6 +476,12 @@ ListRenderer.include({
         var n = this._super();
         if (this.addTrashIcon) {
             n++;
+        }
+        // super method will always do n+1 but we do not want to have extra cell when there
+        // is trash icon available, we will have optional dropdown icon on header and all rows
+        // of tbody will have trash icon, so if trash icon and optionalColumns available then n--
+        if (this.addTrashIcon && this.optionalColumns) {
+            n--
         }
         return n;
     },

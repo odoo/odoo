@@ -99,6 +99,17 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adds cell for optional column, as we have additional cell in header for optional column,
+     * we need to add additional cell in table body, this method can be overridden in editable list
+     *
+     * @private
+     */
+    _addOptionaColumn: function ($cells) {
+        $cells.push($("<td/>", {
+            class: 'o-data-cell',
+        }));
+    },
+    /**
      * This method does a in-memory computation of the aggregate values, for
      * each columns that corresponds to a numeric field with a proper aggregate
      * function.
