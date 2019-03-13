@@ -477,14 +477,15 @@ class Slide(models.Model):
 
         points = 0
         for slide in self:
-            if not slide.user_membership_id or slide.user_membership_id.completed or not slide.user_membership_id.quiz_attempts_count:
+            user_membership_sudo = slide.user_membership_id.sudo()
+            if not user_membership_sudo or user_membership_sudo.completed or not user_membership_sudo.quiz_attempts_count:
                 continue
 
             gains = [slide.quiz_first_attempt_reward,
                      slide.quiz_second_attempt_reward,
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
-            points += gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
+            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
 
         return self.env.user.sudo().add_karma(points)
 

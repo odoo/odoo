@@ -631,7 +631,7 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         slide = fetch_res['slide']
 
-        if slide.user_membership_id.completed:
+        if slide.user_membership_id.sudo().completed:
             return {'error': 'slide_quiz_done'}
 
         all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
