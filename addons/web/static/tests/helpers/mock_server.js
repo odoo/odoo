@@ -808,7 +808,8 @@ var MockServer = Class.extend({
      * @param {string[]} kwargs.fields fields that we are aggregating
      * @param {Array} kwargs.domain the domain used for the read_group
      * @param {boolean} kwargs.lazy still mostly ignored
-     * @param {integer} kwargs.limit ignored as well
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
      * @returns {Object[]}
      */
     _mockReadGroup: function (model, kwargs) {
@@ -980,6 +981,11 @@ var MockServer = Class.extend({
                 }
                 return 0;
             });
+        }
+
+        if (kwargs.limit) {
+            var offset = kwargs.offset || 0;
+            result = result.slice(offset, kwargs.limit + offset);
         }
 
         return result;
@@ -1165,6 +1171,34 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Simulate a 'web_read_group' call to the server.
+     *
+     * Note: some keys in kwargs are still ignored
+     *
+     * @private
+     * @param {string} model a string describing an existing model
+     * @param {Object} kwargs various options supported by read_group
+     * @param {string[]} kwargs.groupby fields that we are grouping
+     * @param {string[]} kwargs.fields fields that we are aggregating
+     * @param {Array} kwargs.domain the domain used for the read_group
+     * @param {boolean} kwargs.lazy still mostly ignored
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
+     * @returns {Object[]}
+     */
+    _mockWebReadGroup: function (model, kwargs) {
+        var allGroups = this._mockReadGroup(model, {
+            domain: kwargs.domain,
+            fields: ['display_name'],
+            groupby: kwargs.groupby,
+            lazy: kwargs.lazy,
+        });
+        return {
+            groups: this._mockReadGroup(model, kwargs),
+            length: allGroups.length,
+        };
+    },
+    /**
      * Simulate a 'write' operation
      *
      * @private
@@ -1242,6 +1276,9 @@ var MockServer = Class.extend({
 
             case 'read_group':
                 return Promise.resolve(this._mockReadGroup(args.model, args.kwargs));
+
+            case 'web_read_group':
+                return Promise.resolve(this._mockWebReadGroup(args.model, args.kwargs));
 
             case 'read_progress_bar':
                 return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));
