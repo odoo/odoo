@@ -80,6 +80,10 @@ class test_guess_mimetype(unittest.TestCase):
         mimetype = guess_mimetype(b"   " + content, default='test')
         self.assertNotIn("svg", mimetype)
 
+    def test_mimetype_xml(self):
+        content = base64.b64decode(XML)
+        mimetype = guess_mimetype(content, default='test')
+        self.assertTrue(mimetype.startswith('application/xml'))
 
 
 if __name__ == '__main__':
