@@ -189,6 +189,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
         # I validate the holiday request by clicking on "To Approve" button.
         hol3.action_approve()
+        hol3.action_validate()
         self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
         # Check left days for casual leave: 19 days left
         _check_holidays_status(hol3_status, 20.0, 1.0, 19.0, 19.0)
