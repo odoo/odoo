@@ -7,6 +7,14 @@ from odoo import api, fields, models
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
+    @api.multi
+    def _post_add_create(self):
+        """ Overrides behaviour when the attachment is created through the controller
+        """
+        super(IrAttachment, self)._post_add_create()
+        for record in self:
+            record.register_as_main_attachment()
+
     def register_as_main_attachment(self):
         """ Registers this attachment as the main one of the model it is
         attached to.

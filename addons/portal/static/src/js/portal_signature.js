@@ -116,14 +116,21 @@ odoo.define('portal.signature_form', function (require){
 
     base.ready().then(function () {
         $('.o_portal_signature_form').each(function () {
+            var hasBeenReset = false;
             var $elem = $(this);
             var form = new SignatureForm(null, $elem.data());
             form.appendTo($elem);
-        });
-        // Make the signature responsive when it is displayed in bootstrap modal.
-        // More precisely it is too small if this code is not here.
-        $('.o_portal_signature_form').parents('.modal').on('shown.bs.modal', function (ev) {
-            $('.o_portal_signature_form').trigger('resize');
+            // Make the signature responsive when it is displayed in bootstrap modal.
+            // More precisely it is too small if this code is not here.
+            $elem.parents('.modal').on('shown.bs.modal', function (ev) {
+                $elem.trigger('resize');
+                if (!hasBeenReset) {
+                    // Reset it only the first time it is open to get correct
+                    // size. After we want to keep its content on reopen.
+                    hasBeenReset = true;
+                    form.initSign();
+                }
+            });
         });
     });
 

@@ -51,7 +51,8 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     def test_02_reset_specific_view_controller(self):
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_view.with_context(website_id=1))
+        # `t-att-data="not.exist"` will test the case where exception.html contains branding
+        break_view(self.test_view.with_context(website_id=1), to='<p t-att-data="not.exist" />')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_view')
 
