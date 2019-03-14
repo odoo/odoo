@@ -7079,9 +7079,9 @@ QUnit.module('Views', {
                 '</form>',
             archs: {
                 'partner_type,false,list':
-                    '<list>' +
+                    '<tree>' +
                         '<field name="name"/>' +
-                    '</list>',
+                    '</tree>',
             },
             viewOptions: {
                 // Simulates coming from a list view with a groupby and filter
