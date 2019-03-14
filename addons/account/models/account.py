@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
-        for num in range(1, 100):
+        for num in range(1, 10000):
             new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
             rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
