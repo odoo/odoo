@@ -8,8 +8,4 @@
         <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['hr.leave', 'hr.leave.allocation'])]</field>
         <field name="context">{'default_res_model': 'hr.leave'}</field>
     </record>
-    <menuitem id="hr_holidays_menu_config_activity_type"
-        action="mail_activity_type_action_config_hr_holidays"
-        parent="menu_hr_holidays_configuration"
-        groups="base.group_no_one"/>
 </odoo>
