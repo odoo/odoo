@@ -453,22 +453,24 @@ class Channel(models.Model):
         if uncategorized_slides or force_void:
             category_data.append({
                 'category': False, 'id': False,
-                'name':  _('Uncategorized'), 'slug_name':  _('Uncategorized'),
+                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
                 'total_slides': len(uncategorized_slides),
                 'slides': uncategorized_slides[(offset or 0):(limit or len(uncategorized_slides))],
+                'slides_access': uncategorized_slides.sudo(self.env.user)._get_slide_action_access()
             })
         # Then all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
                 continue
+            slides = category_slides[(offset or 0):(limit or len(category_slides))]
             category_data.append({
                 'category': category, 'id': category.id,
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
-                'slides': category_slides[(offset or 0):(limit or len(category_slides))],
+                'slides': slides,
+                'slides_access': slides.sudo(self.env.user)._get_slide_action_access()
             })
-
         return category_data
 
 

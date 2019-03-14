@@ -387,7 +387,7 @@
                 </div>
                 <div class="col-8">
                     <h3 class="w-100" t-att-title="slide_promoted.name">
-                        <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
+                        <t t-if="slide_promoted_access['can_access']">
                             <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
                         </t>
                         <t t-else="">
@@ -420,7 +420,9 @@
             </div>
             <div class="row mx-n2 mt8">
                 <t t-foreach="category['slides']" t-as="slide">
-                    <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+                    <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card">
+                        <t t-set="slide_access" t-value="category['slides_access'][slide.id]"/>
+                    </div>
                 </t>
             </div>
         </div>
@@ -438,15 +440,14 @@
 <template id='lesson_card' name="Lesson Card">
     <div class="card w-100 o_wslides_lesson_card mb-4">
         <t t-set="lesson_image" t-value="'/slides/slide/%s/get_image?field=image_large' % slide.id"/>
-        <t t-set="can_access" t-value="slide.is_preview or channel.is_member or is_slides_publisher"/>
-        <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
+        <a t-if="slide_access['can_access']" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
             <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
         </a>
         <t t-else="">
             <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
         </t>
         <div class="card-body">
-            <a t-if="can_access" class="card-title h5" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
+            <a t-if="slide_access['can_access']" class="card-title h5" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
             <span t-else="" class="card-title h5 text-muted" t-esc="slide.name"/>
             <div class="card-subtitle mb-2 text-muted">
                 <t t-if="slide.is_preview">
@@ -469,11 +470,11 @@
             <div class="d-flex align-items-center small">
                 <span class="font-weight-bold mr-auto" t-field="slide.completion_time" t-options='{"widget": "float_time"}'/>
                 <div class="o_wslides_js_slide_like mr-2">
-                    <span class="o_wslides_js_slide_like_up" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                    <span t-att-class="('o_wslides_js_slide_like_up %s') % ('disabled' if not (slide_access['can_access'] and slide_access['can_vote']) else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
                         <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
                         <span t-esc="slide.likes"/>
                     </span>
-                    <span class="o_wslides_js_slide_like_down" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                    <span t-att-class="('o_wslides_js_slide_like_down %s') % ('disabled' if not (slide_access['can_access'] and slide_access['can_vote']) else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
                         <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
                         <span t-esc="slide.dislikes"/>
                     </span>

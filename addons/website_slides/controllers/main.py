@@ -45,10 +45,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = request.env['slide.slide'].browse(int(slide_id)).exists()
         if not slide:
             return {'error': 'slide_wrong'}
-        try:
-            slide.check_access_rights('read')
-            slide.check_access_rule('read')
-        except:
+        if not slide._check_read_access():
             return {'error': 'slide_access'}
         return {'slide': slide}
 
@@ -370,7 +367,6 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
-            'is_slides_publisher': request.env.user.has_group('website.group_website_publisher'),
         }
         if not request.env.user._is_public():
             last_message_values = request.env['mail.message'].search([
@@ -402,10 +398,11 @@ class WebsiteSlides(WebsiteProfile):
             force_void=True,
             limit=self._slides_per_category if channel.channel_type == 'documentation' else False,
             offset=pager['offset'])
+
+        values['slide_promoted_access'] = values['slide_promoted'].sudo(request.env.user)._get_slide_action_access()[values['slide_promoted'].id]
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         values = self._prepare_additional_channel_values(values, **kw)
-
         return request.render('website_slides.course_main', values)
 
     # SLIDE.CHANNEL UTILS
@@ -494,6 +491,8 @@ class WebsiteSlides(WebsiteProfile):
 
         if 'fullscreen' in kwargs:
             return request.render("website_slides.slide_fullscreen", values)
+        else:
+            values['slide_access'] = slide.sudo(request.env.user)._get_slide_action_access()[slide.id]
         return request.render("website_slides.slide_main", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
@@ -576,7 +575,12 @@ class WebsiteSlides(WebsiteProfile):
         ])
         if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
             return {'error': 'vote_done'}
-        slide = request.env['slide.slide'].browse(int(slide_id))
+        # check slide access
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        # check slide operation
+        slide = fetch_res['slide']
         if not slide.channel_id.allow_comment:
             return {'error': 'comment_disabled'}
         if not slide.can_vote:
