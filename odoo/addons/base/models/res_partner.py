@@ -275,8 +275,32 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        self.env.cr.execute("""
+        WITH RECURSIVE cpid(id, parent_id, commercial_partner_id, final) AS (
+            SELECT
+                id, parent_id, id,
+                (coalesce(is_company, false) OR parent_id IS NULL) as final
+            FROM res_partner
+            WHERE id = ANY(%s)
+        UNION
+            SELECT
+                cpid.id, p.parent_id, p.id,
+                (coalesce(is_company, false) OR p.parent_id IS NULL) as final
+            FROM res_partner p
+            JOIN cpid ON (cpid.parent_id = p.id)
+            WHERE NOT cpid.final
+        )
+        SELECT cpid.id, cpid.commercial_partner_id
+        FROM cpid
+        WHERE final AND id = ANY(%s);
+        """, [self.ids, self.ids])
+
+        d = dict(self.env.cr.fetchall())
         for partner in self:
-            if partner.is_company or not partner.parent_id:
+            fetched = d.get(partner.id)
+            if fetched is not None:
+                partner.commercial_partner_id = fetched
+            elif partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
