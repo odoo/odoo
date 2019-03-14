@@ -114,7 +114,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
         # add so line with produdct "create task in new project".
-        so_line_ordered_task_new_project = self.env['sale.order.line'].create({
+        so_line_ordered_task_in_project = self.env['sale.order.line'].create({
             'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 3,
@@ -142,7 +142,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         invoice2 = self.env['account.invoice'].browse(invoice_id2)
 
         self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
-        self.assertTrue(float_is_zero(invoice2.amount_total - so_line_ordered_task_new_project.price_unit * 3, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
+        self.assertTrue(float_is_zero(invoice2.amount_total - so_line_ordered_task_in_project.price_unit * 3, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
 
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, since we are in ordered quantity")
