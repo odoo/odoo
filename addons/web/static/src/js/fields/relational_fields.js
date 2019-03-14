@@ -2209,6 +2209,26 @@ var FieldMany2ManyTags = AbstractField.extend({
     },
 });
 
+var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
+    tag_template: 'FieldMany2ManyTagAvatar',
+    className: 'o_field_many2manytags avatar',
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _getRenderTagsContext: function () {
+        var result = this._super.apply(this, arguments);
+        result.avatarModel = this.nodeOptions.avatarModel || this.field.relation;
+        result.avatarField = this.nodeOptions.avatarField || 'image';
+        return result;
+    },
+});
+
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .dropdown-toggle': '_onOpenColorPicker',
@@ -2972,6 +2992,7 @@ return {
     FieldMany2ManyBinaryMultiFiles: FieldMany2ManyBinaryMultiFiles,
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
+    FieldMany2ManyTagsAvatar: FieldMany2ManyTagsAvatar,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
     KanbanFieldMany2ManyTags: KanbanFieldMany2ManyTags,
 
