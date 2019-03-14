@@ -27,13 +27,11 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
-            identification_number = int(re.match('.*?([0-9]+)$', order.name).group(1))
-            prefix = order.name
+            return order.name
         else:
             # self.acquirer_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
-            prefix = 'CUST'
-        return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
+            return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
