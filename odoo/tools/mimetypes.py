@@ -122,16 +122,18 @@ _mime_mappings = (
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
-    _Entry('application/xml', [b'<'], [
-        _check_svg,
-    ]),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
     _Entry('application/msword', [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'\x0D\x44\x4F\x43'], [
         _check_olecf
     ]),
     # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
     _Entry('application/zip', [b'PK\x03\x04'], [_check_ooxml, _check_open_container_format]),
+    _Entry('application/xml', [b'<'], [
+        _check_svg,
+    ]),
 )
+
+
 def guess_mimetype(bin_data, default='application/octet-stream'):
     """ Attempts to guess the mime type of the provided binary data, similar
     to but significantly more limited than libmagic
