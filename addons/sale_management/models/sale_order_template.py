@@ -78,17 +78,33 @@ class SaleOrderTemplateLine(models.Model):
         if self.product_id and self.product_uom_id:
             self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.product_uom_id)
 
+    def _quote_line_translation(self, product_id):
+        Translation = self.env['ir.translation']
+        product_tmpl_id = self.env['product.product'].browse(product_id).product_tmpl_id.id
+        for quote_line in self:
+            quote_translation = Translation.search([('name', '=', 'sale.order.template.line,name'), ('res_id', '=', quote_line.id), ('type', '=', 'model')])
+            if not quote_translation:
+                product_translation = Translation.search([('name', '=', 'product.template,name'), ('res_id', '=', product_tmpl_id), ('type', '=', 'model')])
+                for translation in product_translation:
+                    translation.copy(default={'name': 'sale.order.template.line,name', 'res_id': quote_line.id})
+
     @api.model
     def create(self, values):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
-        return super(SaleOrderTemplateLine, self).create(values)
+        quote_line = super(SaleOrderTemplateLine, self).create(values)
+        if values.get('product_id'):
+            quote_line._quote_line_translation(values['product_id'])
+        return quote_line
 
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
-        return super(SaleOrderTemplateLine, self).write(values)
+        res = super(SaleOrderTemplateLine, self).write(values)
+        if values.get('product_id'):
+            self._quote_line_translation(values['product_id'])
+        return res
 
     _sql_constraints = [
         ('accountable_product_id_required',
