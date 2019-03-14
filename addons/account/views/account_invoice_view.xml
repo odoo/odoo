@@ -267,7 +267,7 @@
                 <form string="Vendor Bill">
                 <header>
                         <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
-                        <button name="%(action_account_invoice_from_list)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                        <button name="action_register_payment" type="object" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask for a Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','in_payment','paid'))]}"/>
                         <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" />
@@ -420,7 +420,7 @@
                 <header>
                     <button name="action_invoice_sent" string="Send &amp; Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','in_payment','paid'))]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_invoice_sent" string="Send &amp; Print" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','in_payment','paid'))]}" groups="base.group_user"/>
-                    <button name="%(action_account_invoice_from_list)d" id="account_invoice_payment_btn" type="action"
+                    <button name="action_register_payment" id="account_invoice_payment_btn" type="object"
                             attrs="{'invisible': [('state', '!=', 'open')]}"
                             string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="account.group_account_invoice"/>

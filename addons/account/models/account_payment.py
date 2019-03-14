@@ -172,6 +172,17 @@ class account_payment(models.Model):
             return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}}
         return {}
 
+    @api.onchange('invoice_ids')
+    def _onchange_invoice_ids(self):
+        # There should be only one invoice_id
+        self.currency_id = self.invoice_ids[0].currency_id
+        amount = self._compute_payment_amount(self.invoice_ids)
+        self.amount = abs(amount)
+        self.payment_type = 'inbound' if amount > 0 else 'outbound'
+        self.partner_id = self.invoice_ids[0].commercial_partner_id
+        self.partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[self.invoice_ids[0].type]
+        self.communication = self.invoice_ids[0].reference or self.invoice_ids[0].number
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         if self.invoice_ids and self.invoice_ids[0].partner_bank_id:
@@ -357,12 +368,12 @@ class account_payment(models.Model):
 
         return {
             'name': _('Register Payment'),
-            'res_model': 'account.payment.register',
+            'res_model': len(active_ids) == 1 and 'account.payment' or 'account.payment.register',
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': self.env.ref('account.view_account_payment_form_multi').id,
+            'view_id': len(active_ids) != 1 and self.env.ref('account.view_account_payment_form_multi').id,
             'context': {**self.env.context, **{'default_invoice_ids': [(6, False, active_ids)]}},
-            'target': 'new',
+            'target': len(active_ids) == 1 and 'current' or 'new',
             'type': 'ir.actions.act_window',
         }
 
@@ -640,7 +651,7 @@ class account_payment(models.Model):
 
 class payment_register(models.TransientModel):
     _name = 'account.payment.register'
-    _description = 'Register payment_type'
+    _description = 'Register Payment'
 
     payment_date = fields.Date(required=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])

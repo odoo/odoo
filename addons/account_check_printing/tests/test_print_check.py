@@ -2,11 +2,12 @@
 from __future__ import division
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.addons.l10n_us_check_printing.report import print_check
+from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
+from odoo.tests.common import Form
 import time
-
 import math
+
 
 
 @tagged('post_install', '-at_install')
@@ -49,14 +50,14 @@ class TestPrintCheck(AccountingTestCase):
         return invoice
 
     def create_payment(self, invoices):
-        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=invoices.ids).default_get(self.payment_model.fields_get_keys())
-        register_payments = self.payment_model.new({**default_dict, **{
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal.id,
-            'payment_method_id': self.payment_method_check.id,
-        }})
-        register_payments.create_payments()
-        return self.env['account.payment'].search([], order="id desc", limit=1)
+        payment_register = Form(self.env['account.payment'].with_context(default_invoice_ids=invoices.ids))
+        payment_register.payment_date = time.strftime('%Y') + '-07-15'
+        payment_register.journal_id = self.bank_journal
+        payment_register.payment_method_id = self.payment_method_check
+        payment = payment_register.save()
+        payment.post()
+
+        return payment
 
     def test_print_check(self):
         # Make a payment for 10 invoices and 5 credit notes
@@ -68,7 +69,7 @@ class TestPrintCheck(AccountingTestCase):
         # Check the data generated for the report
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': True})
         report_pages = payment._check_get_pages()
-        self.assertEqual(len(report_pages), int(math.ceil(len(invoices.ids) / print_check.INV_LINES_PER_STUB)))
+        self.assertEqual(len(report_pages), int(math.ceil(len(invoices.ids) / INV_LINES_PER_STUB)))
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': False})
         report_pages = payment._check_get_pages()
         self.assertEqual(len(report_pages), 1)

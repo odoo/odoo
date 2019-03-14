@@ -634,7 +634,7 @@ class AccountInvoice(models.Model):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
             return self.env.ref('account.account_invoices_without_payment').report_action(self)
-    
+
     @api.multi
     def action_reconcile_to_check(self, params):
         self.ensure_one()
@@ -985,6 +985,10 @@ class AccountInvoice(models.Model):
         if self.filtered(lambda inv: inv.state not in ('in_payment', 'paid')):
             raise UserError(_('Invoice must be paid in order to set it to register payment.'))
         return self.write({'state': 'open'})
+
+    @api.multi
+    def action_register_payment(self):
+        return self.env['account.payment'].with_context(active_ids=[self.env.context['params']['id']], active_model='account.invoice').action_register_payment()
 
     @api.multi
     def action_invoice_cancel(self):
@@ -1817,7 +1821,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
