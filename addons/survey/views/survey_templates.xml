@@ -209,14 +209,18 @@
     <template id="survey_header" name="Header">
         <div class="o_page_header o_survey_header">
             <div class="container">
-                <div class="row m-0">
+                <div class="row m-0 text-secondary">
                     <div class="col-lg-8 p-0"><h1 t-esc="survey.title"></h1></div>
                     <div
                         t-if="survey.is_time_limited"
-                        class="js_survey_timer col-lg-4 p-0"
+                        class="js_survey_timer col-lg-4 p-0 text-right"
                         t-att-data-timer="answer.start_datetime.isoformat()"
                         t-att-data-time_limit_minutes="survey.time_limit">
-                        <h1 class="timer text-right">00:00</h1>
+                        <h1 class="timer mb0">00 : 00</h1>
+                        <span class="text-dark d-none d-md-block">
+                            <small class="mr8"><b>Minutes</b></small>
+                            <small><b>Seconds</b></small>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -249,52 +253,54 @@
         <t t-if="survey.questions_layout == 'page_per_section'" t-set="page_or_question_id" t-value="page.id" />
         <t t-if="survey.questions_layout == 'page_per_question'" t-set="page_or_question_id" t-value="question.id" />
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="survey.id"
+        <div class="row">
+            <form role="form" method="post" class="js_surveyform col-8" t-att-name="survey.id"
                 t-att-action="'/survey/fill/%s/%s' % (survey.access_token, answer.token)"
                 t-att-data-prefill="'/survey/prefill/%s/%s?page_or_question_id=%s' % (survey.access_token, answer.token, page_or_question_id)"
                 t-att-data-validate="'/survey/validate/%s/%s' % (survey.access_token, answer.token)"
                 t-att-data-submit="'/survey/submit/%s/%s' % (survey.access_token, answer.token)">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <input type="hidden" name="token" t-att-value="answer.token" />
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="token" t-att-value="answer.token" />
 
-            <t t-if="survey.questions_layout == 'one_page'">
-                <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                    <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question" />
+                <t t-if="survey.questions_layout == 'one_page'">
+                    <t t-foreach='survey.question_and_page_ids' t-as='question'>
+                        <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title text-uppercase text-muted mt32" />
+                        <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question" />
+                    </t>
+
+                    <div class="text-center mt16 mb256">
+                        <button type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    </div>
                 </t>
 
-                <div class="text-center mt16 mb256">
-                    <button type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
-                </div>
-            </t>
+                <t t-if="survey.questions_layout == 'page_per_section'">
+                    <h2 t-field='page.title' class="o_survey_title text-uppercase text-muted mt32" />
+                    <div t-field='page.description' class="oe_no_empty"/>
 
-            <t t-if="survey.questions_layout == 'page_per_section'">
-                <h2 t-field='page.title' class="o_survey_title" />
-                <div t-field='page.description' class="oe_no_empty"/>
+                    <input type="hidden" name="page_id" t-att-value="page.id" />
+                    <t t-foreach='page.question_ids' t-as='question'>
+                        <t t-if="question in answer.question_ids" t-call="survey.question" />
+                    </t>
 
-                <input type="hidden" name="page_id" t-att-value="page.id" />
-                <t t-foreach='page.question_ids' t-as='question'>
-                    <t t-if="question in answer.question_ids" t-call="survey.question" />
+                    <div class="text-center mt16 mb256">
+                        <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
+                        <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
+                        <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    </div>
                 </t>
 
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
-                    <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
-                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
-                </div>
-            </t>
+                <t t-if="survey.questions_layout == 'page_per_question'">
+                    <input type="hidden" name="question_id" t-att-value="question.id" />
+                    <t t-call="survey.question" />
 
-            <t t-if="survey.questions_layout == 'page_per_question'">
-                <input type="hidden" name="question_id" t-att-value="question.id" />
-                <t t-call="survey.question" />
-
-                <div class="text-center mt16 mb256">
-                    <button t-if="survey.users_can_go_back and question != answer.question_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous question</button>
-                    <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next question</button>
-                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
-                </div>
-            </t>
-        </form>
+                    <div class="text-center mt16 mb256">
+                        <button t-if="survey.users_can_go_back and question != answer.question_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous question</button>
+                        <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next question</button>
+                        <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    </div>
+                </t>
+            </form>
+        </div>
 
         <!-- Modal used to display error message, i.c.o. ajax error -->
         <div role="dialog" class="modal fade" id="AJAXErrorModal" >
@@ -313,8 +319,8 @@
 
     <template id="question" name="Question">
         <t t-set="prefix" t-value="'%s_%s' % (survey.id, question.id)" />
-        <div class="js_question-wrapper" t-att-id="prefix">
-            <h4>
+        <div class="js_question-wrapper mb16" t-att-id="prefix">
+            <h4 class="mb0">
                 <span t-field='question.question' />
                 <span t-if="question.constr_mandatory" class="text-danger">*</span>
             </h4>
@@ -393,11 +399,10 @@
             </div>
         </div>
         <div t-if="question.display_mode == 'columns' or not answer.token" class="row js_radio">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="radio" t-att-name="prefix" t-att-value='label.id' />
-                    <span t-field='label.value'/>
-                </label>
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-4">
+                <input type="radio" t-att-name="prefix" t-att-value='label.id' />
+                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None"></label>
+                <span t-field='label.value'/>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <label>
@@ -415,11 +420,11 @@
 
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-4">
+                <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                 <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
-                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
-                    <span t-field='label.value'/>
                 </label>
+                <span t-field='label.value'/>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <label>
