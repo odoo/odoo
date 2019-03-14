@@ -170,6 +170,15 @@ var ListRenderer = BasicRenderer.extend({
             };
         }
     },
+    _computeOptionalColumns: function () {
+        var self = this;
+         return _.groupBy(this.allColumns, function (col) {
+            return (col.attrs.optional && !!JSON.parse(col.attrs.optional))
+                && !(col.attrs.modifiers && col.attrs.modifiers.required)
+                && !_.contains(self.optionalColumnsEnabled, col.attrs.name)
+                ? "optionalColumns" : "columns";
+        });
+    },
     /**
      * return the number of visible columns.  Note that this number depends on
      * the state of the renderer.  For example, in editable mode, it could be
@@ -207,13 +216,10 @@ var ListRenderer = BasicRenderer.extend({
             }
             return reject;
         });
-        var colGroup = _.groupBy(this.allColumns, function (col) {
-            return (col.attrs.optional && !!JSON.parse(col.attrs.optional))
-                && !(col.attrs.modifiers && col.attrs.modifiers.required) ? "optionalColumns" : "columns";
-        });
-        this.columns = colGroup.columns;
-        this.optionalColumns = colGroup.optionalColumns;
-        this.displayedColumns = _.map(this.columns, function (col) {return col.attrs.name});
+        this.optionalColumnsEnabled = [];
+        var columnGroups = this._computeOptionalColumns();
+        this.columns = columnGroups.columns;
+        this.optionalColumns = columnGroups.optionalColumns;
     },
     /**
      * Render a single <th> with dropdown menu to display optional columns of view.
@@ -249,7 +255,7 @@ var ListRenderer = BasicRenderer.extend({
                 type: "checkbox",
                 name: col.attrs.name,
                 id: col.attrs.name,
-                checked: _.contains(self.displayedColumns, col.attrs.name) ? true : false,
+                checked: _.contains(self.optionalColumnsEnabled, col.attrs.name) ? true : false,
             });
             $dropdown.append($("<div>", {
                 class: "dropdown-item",
@@ -825,16 +831,13 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         var currentElement = ev.currentTarget;
         if (!currentElement.checked) {
-            var rmIndex = _.findIndex(this.columns, function (col) {
-                return col.attrs.name === currentElement.name;
-            });
-            this.displayedColumns.splice(this.displayedColumns.indexOf(currentElement.name), 1);
-            this.columns.splice(rmIndex, 1);
+            this.optionalColumnsEnabled.splice(this.optionalColumnsEnabled.indexOf(currentElement.name), 1);
+            var columnGroups = this._computeOptionalColumns();
+            this.columns = columnGroups.columns;
         } else {
-            this.displayedColumns.push(currentElement.name);
-            this.columns = _.filter(this.allColumns, function (col) {
-                return _.contains(self.displayedColumns, col.attrs.name);
-            });
+            this.optionalColumnsEnabled.push(currentElement.name);
+            var columnGroups = this._computeOptionalColumns();
+            this.columns = columnGroups.columns;
         }
         this._renderView();
     },
