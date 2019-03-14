@@ -408,7 +408,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('location_src_id', 'move_raw_ids', 'routing_id')
     def _onchange_location(self):
-        source_location = self._get_raw_location()
+        source_location = self.location_src_id
         self.move_raw_ids.update({
             'warehouse_id': source_location.get_warehouse().id,
             'location_id': source_location.id,
@@ -501,7 +501,7 @@ class MrpProduction(models.Model):
             return self.env['stock.move']
         if bom_line.product_id.type not in ['product', 'consu']:
             return self.env['stock.move']
-        source_location = self._get_raw_location()
+        source_location = self.location_src_id
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
@@ -527,16 +527,6 @@ class MrpProduction(models.Model):
             'propagate': self.propagate,
         }
         return data
-
-    def _get_raw_location(self):
-        if self.routing_id:
-            routing = self.routing_id
-        else:
-            routing = self.bom_id.routing_id
-        if routing and routing.location_id:
-            return routing.location_id
-        else:
-            return self.location_src_id
 
     @api.multi
     def _update_raw_move(self, bom_line, line_data):
