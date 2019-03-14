@@ -182,6 +182,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     reload: function (params) {
         params = params || {};
+        var self = this;
         var def;
         var controllerState = params.controllerState || {};
         var cpState = controllerState.cpState;
@@ -190,7 +191,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 params = _.extend({}, params, searchQuery);
             });
         }
-        return Promise.resolve(def).then(this.update.bind(this, params, {}));
+        return Promise.resolve(def).then(function () {
+            return self.update(params, {});
+        });
     },
     /**
      * For views that require a pager, this method will be called to allow the
