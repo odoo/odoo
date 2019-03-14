@@ -741,6 +741,11 @@
         </div>
     </t>
 </t>
+<t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
+    <t t-jquery="span:first" t-operation="prepend">
+        <img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" class="rounded-circle"/>
+    </t>
+</t>
 <t t-name="FieldMany2ManyTag.colorpicker">
     <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
         <ul>
