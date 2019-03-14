@@ -143,7 +143,7 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
-                            <field name="invoice_id" invisible="1"/>
+                            <field name="invoice_ids" invisible="1"/>
                             <group name="partner_group">
                                 <field name="payment_type" widget="radio"/>
                                 <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>

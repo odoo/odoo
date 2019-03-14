@@ -96,6 +96,7 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
+    payment_group_by_partner = fields.Boolean(string="Group payments by partner", related='company_id.payment_group_by_partner', readonly=False)
 
     @api.multi
     def set_values(self):
