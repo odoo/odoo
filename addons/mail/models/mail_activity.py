@@ -434,19 +434,21 @@ class MailActivity(models.Model):
             activity_domain.append(('res_id', 'in', res.ids))
         grouped_activities = self.env['mail.activity'].read_group(
             activity_domain,
-            ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
+            ['res_id', 'activity_type_id', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
             ['res_id', 'activity_type_id'],
             lazy=False)
+        # filter out unreadable records
+        if not domain:
+            res_ids = tuple(a['res_id'] for a in grouped_activities)
+            res = self.env[res_model].search([('id', 'in', res_ids)])
+            grouped_activities = [a for a in grouped_activities if a['res_id'] in res.ids]
         activity_type_ids = self.env['mail.activity.type']
-        res_id_to_name = {}
         res_id_to_deadline = {}
         activity_data = defaultdict(dict)
         for group in grouped_activities:
             res_id = group['res_id']
-            res_name = group['res_name']
             activity_type_id = group['activity_type_id'][0]
             activity_type_ids |= self.env['mail.activity.type'].browse(activity_type_id)  # we will get the name when reading mail_template_ids
-            res_id_to_name[res_id] = res_name
             res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {
@@ -456,6 +458,7 @@ class MailActivity(models.Model):
                 'o_closest_deadline': group['date_deadline'],
             }
         res_ids_sorted = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
+        res_id_to_name = dict(self.env[res_model].browse(res_ids_sorted).name_get())
         activity_type_infos = []
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
