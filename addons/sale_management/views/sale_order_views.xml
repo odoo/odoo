@@ -68,9 +68,9 @@
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
-                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="uom_id" string="UoM" groups="uom.group_uom"/>
                             <field name="price_unit"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                            <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line"/>
                             <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
                         </tree>
                     </field>
