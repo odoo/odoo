@@ -46,7 +46,7 @@
                     <field name="allow_timesheets"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                 </xpath>
             </field>
         </record>

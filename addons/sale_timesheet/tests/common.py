@@ -28,11 +28,16 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'reconcile': True,
             'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
         })
+        cls.analytic_account_sale = cls.env['account.analytic.account'].create({
+            'name': 'Project for selling timesheet - AA',
+            'code': 'AA-2030'
+        })
 
         # Create projects
         cls.project_global = cls.env['project.project'].create({
             'name': 'Project for selling timesheets',
             'allow_timesheets': True,
+            'analytic_account_id': cls.analytic_account_sale.id,
         })
         cls.project_template = cls.env['project.project'].create({
             'name': 'Project TEMPLATE for services',
@@ -88,7 +93,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_type': 'timesheet',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
@@ -166,7 +171,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-DELI3',
             'service_type': 'timesheet',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
@@ -244,7 +249,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-DELI3',
             'service_type': 'manual',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,

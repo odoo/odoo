@@ -73,6 +73,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
         # create SO
         sale_order = self.env['sale.order'].create({
+            'project_id': self.project_id.id,
             'partner_id': self.partner_id.id,
             'analytic_account_id': self.project_id.analytic_account_id.id,
             'client_order_ref': self.project_id.name,
@@ -103,7 +104,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         # trying to simulate the SO line created a task, according to the product configuration
         # To avoid, generating a task when confirming the SO
         task_id = False
-        if self.product_id.service_tracking in ['task_new_project', 'task_global_project']:
+        if self.product_id.service_tracking in ['task_in_project', 'task_global_project']:
             task_id = self.env['project.task'].search([('project_id', '=', self.project_id.id)], order='create_date DESC', limit=1).id
 
         # create SO line
@@ -157,9 +158,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
                     'price_unit': wizard_line.price_unit,
                     'product_uom_qty': 0.0,
                 }
-                if wizard_line.product_id.service_tracking in ['task_new_project', 'task_global_project']:
+                if wizard_line.product_id.service_tracking in ['task_in_project', 'task_global_project']:
                     values['task_id'] = task_id
-                if wizard_line.product_id.service_tracking in ['task_new_project', 'project_only']:
+                if wizard_line.product_id.service_tracking in ['task_in_project', 'project_only']:
                     values['project_id'] = project_id
 
                 sale_order_line = self.env['sale.order.line'].create(values)

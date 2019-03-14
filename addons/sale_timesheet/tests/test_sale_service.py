@@ -390,6 +390,106 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line2.project_id.sale_line_id, so_line2, "SO line of project should be the one that create it.")
         self.assertEqual(so_line5.project_id.sale_line_id, so_line5, "SO line of project with template B should be the one that create it.")
 
+    def test_sale_task_in_project_with_project(self):
+        """ This will test the new 'task_in_project' service tracking correctly creates tasks and projects
+            when a project_id is configured on the parent sale_order (ref task #1915660).
+
+            Setup:
+            - Configure a project_id on the SO
+            - SO line 1: a product with its delivery tracking set to 'task_in_project'
+            - SO line 2: the same product as SO line 1
+            - SO line 3: a product with its delivery tracking set to 'project_only'
+            - Confirm sale_order
+
+            Expected result:
+            - 2 tasks created on the project_id configured on the SO
+            - 1 project created with the correct template for the 'project_only' product
+        """
+
+        self.sale_order.write({'project_id': self.project_global.id})
+        self.sale_order._onchange_project_id()
+        self.assertEqual(self.sale_order.analytic_account_id, self.analytic_account_sale, "Changing the project on the SO should set the analytic account accordingly.")
+
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.product_order_timesheet3.name,
+            'product_id': self.product_order_timesheet3.id,
+            'product_uom_qty': 11,
+            'product_uom': self.product_order_timesheet3.uom_id.id,
+            'price_unit': self.product_order_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+        so_line2 = self.env['sale.order.line'].create({
+            'name': self.product_order_timesheet3.name,
+            'product_id': self.product_order_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_timesheet3.uom_id.id,
+            'price_unit': self.product_order_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+        so_line3 = self.env['sale.order.line'].create({
+            'name': self.product_order_timesheet4.name,
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order_timesheet4.uom_id.id,
+            'price_unit': self.product_order_timesheet4.list_price,
+            'order_id': self.sale_order.id,
+        })
+
+        # temporary project_template_id for our checks
+        self.product_order_timesheet4.write({
+            'project_template_id': self.project_template.id
+        })
+        self.sale_order.action_confirm()
+        # remove it after the confirm because other tests don't like it
+        self.product_order_timesheet4.write({
+            'project_template_id': False
+        })
+
+        self.assertTrue(so_line1.task_id, "so_line1 should create a task as its product's service_tracking is set as 'task_in_project'")
+        self.assertEqual(so_line1.task_id.project_id, self.project_global, "The project on so_line1's task should be project_global as configured on its parent sale_order")
+        self.assertTrue(so_line2.task_id, "so_line2 should create a task as its product's service_tracking is set as 'task_in_project'")
+        self.assertEqual(so_line2.task_id.project_id, self.project_global, "The project on so_line2's task should be project_global as configured on its parent sale_order")
+        self.assertFalse(so_line3.task_id.name, "so_line3 should not create a task as its product's service_tracking is set as 'project_only'")
+        self.assertNotEqual(so_line3.project_id, self.project_template, "so_line3 should create a new project and not directly use the configured template")
+        self.assertIn(self.project_template.name, so_line3.project_id.name, "The created project for so_line3 should use the configured template")
+
+    def test_sale_task_in_project_without_project(self):
+        """ This will test the new 'task_in_project' service tracking correctly creates tasks and projects
+            when the parent sale_order does NOT have a configured project_id (ref task #1915660).
+
+            Setup:
+            - SO line 1: a product with its delivery tracking set to 'task_in_project'
+            - Confirm sale_order
+
+            Expected result:
+            - 1 project created with the correct template for the 'task_in_project' because the SO
+              does not have a configured project_id
+            - 1 task created from this new project
+        """
+
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.product_order_timesheet3.name,
+            'product_id': self.product_order_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_timesheet3.uom_id.id,
+            'price_unit': self.product_order_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+
+        # temporary project_template_id for our checks
+        self.product_order_timesheet3.write({
+            'project_template_id': self.project_template.id
+        })
+        self.sale_order.action_confirm()
+        # remove it after the confirm because other tests don't like it
+        self.product_order_timesheet3.write({
+            'project_template_id': False
+        })
+
+        self.assertTrue(so_line1.task_id, "so_line1 should create a task as its product's service_tracking is set as 'task_in_project'")
+        self.assertNotEqual(so_line1.project_id, self.project_template, "so_line1 should create a new project and not directly use the configured template")
+        self.assertIn(self.project_template.name, so_line1.project_id.name, "The created project for so_line1 should use the configured template")
+
     def test_billable_task_and_subtask(self):
         """ Test if subtasks and tasks are billed on the correct SO line """
         # create SO line and confirm it
