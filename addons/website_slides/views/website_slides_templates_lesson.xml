@@ -191,9 +191,10 @@
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="fa fa-chevron-left mr-2"></i> Prev
                 </a>
-                <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if slide.question_ids or channel_progress[slide.id].get('completed') else '')"
-                    role="button" t-att-aria-disabled="'true' if slide.question_ids or channel_progress[slide.id].get('completed') else None"
-                    t-att-href="'#' if slide.question_ids or channel_progress[slide.id].get('completed') else '/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '')">
+                <t t-set="allow_done_btn" t-value="slide.slide_type in ['infographic', 'presentation', 'document', 'webpage'] and not slide.question_ids and not channel_progress[slide.id].get('completed')"/>
+                <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if not allow_done_btn else '')"
+                    role="button" t-att-aria-disabled="'true' if not allow_done_btn else None"
+                    t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '') if allow_done_btn else '#'">
                     Set Done
                 </a>
                 <a t-att-class="'btn btn-light border %s' % ('disabled' if not next_slide else '')"
