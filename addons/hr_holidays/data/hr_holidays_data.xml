@@ -3,21 +3,13 @@
     <data noupdate="1">
         <!-- Casual leave -->
         <record id="holiday_status_cl" model="hr.leave.type">
-            <field name="name" eval="'Paid Time Off '+time.strftime('%Y')"/>
+            <field name="name">Paid Time Off</field>
             <field name="allocation_type">fixed</field>
+            <field name="validation_type">both</field>
             <field name="color_name">black</field>
-            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
-            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
             <field name="allocation_notif_subtype_id" eval="ref('mt_leave_allocation')"/>
-        </record>
-
-         <!-- Home working -->
-        <record id="holiday_status_hw" model="hr.leave.type">
-            <field name="name">Home Workings</field>
-            <field name="color_name">lightgreen</field>
-            <field name="validity_start" eval="False"/>
-            <field name="leave_notif_subtype_id" eval="ref('mt_leave_home_working')"/>
+            <field name="validity_start" eval="time.strftime('%Y-%m-01')"/>
         </record>
 
         <!-- Sick leave -->
@@ -33,19 +25,20 @@
         <record id="holiday_status_comp" model="hr.leave.type">
             <field name="name">Compensatory Days</field>
             <field name="allocation_type">fixed_allocation</field>
+            <field name="validation_type">both</field>
             <field name="request_unit">hour</field>
             <field name="color_name">lavender</field>
-            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
-            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+            <field name="validity_start" eval="False"/>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
         </record>
 
         <!--Unpaid Leave -->
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
-            <field name="allocation_type">fixed_allocation</field>
+            <field name="allocation_type">no</field>
             <field name="validation_type">both</field>
             <field name="color_name">brown</field>
+            <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave_unpaid')"/>

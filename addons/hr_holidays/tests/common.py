@@ -20,12 +20,6 @@ class TestHrHolidaysBase(common.TransactionCase):
         self.user_employee = mail_new_test_user(self.env, login='david', groups='base.group_user')
         self.user_employee_id = self.user_employee.id
 
-        self.user_hrmanager_2 = mail_new_test_user(self.env, login='florence', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
-        self.user_hrmanager_2_id = self.user_hrmanager_2.id
-
-        self.user_team_leader = mail_new_test_user(self.env, login='arthur', groups='base.group_user,hr_holidays.group_hr_holidays_team_leader')
-        self.user_team_leader_id = self.user_team_leader.id
-
         # Hr Data
         Department = self.env['hr.department'].with_context(tracking_disable=True)
 
@@ -54,13 +48,8 @@ class TestHrHolidaysBase(common.TransactionCase):
             'name': 'Bastien HrManager',
             'user_id': self.user_hrmanager_id,
             'department_id': self.hr_dept.id,
+            'parent_id': self.employee_hruser_id,
         })
         self.employee_hrmanager_id = self.employee_hrmanager.id
-
-        self.employee_hrmanager_2_id = self.env['hr.employee'].create({
-            'name': 'Florence HrManager',
-            'user_id': self.user_hrmanager_2_id,
-            'parent_id': self.employee_hrmanager_id,
-        }).id
 
         self.rd_dept.write({'manager_id': self.employee_hruser_id})

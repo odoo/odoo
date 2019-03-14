@@ -10,14 +10,9 @@ from odoo.tools.float_utils import float_round
 class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
-    def _group_hr_user_domain(self):
-        group = self.env.ref('hr_holidays.group_hr_holidays_team_leader', raise_if_not_found=False)
-        return [('groups_id', 'in', group.ids)] if group else []
-
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
-        domain=_group_hr_user_domain,
-        help="User responsible of leaves approval. Should be Team Leader or Department Manager.")
+        help="User responsible of leaves approval.")
     remaining_leaves = fields.Float(
         compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
         help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
@@ -128,7 +123,7 @@ class HrEmployeeBase(models.AbstractModel):
         super(HrEmployeeBase, self)._onchange_parent_id()
         previous_manager = self._origin.parent_id.user_id
         manager = self.parent_id.user_id
-        if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
+        if manager and self.leave_manager_id == previous_manager:
             self.leave_manager_id = manager
 
     def _compute_show_leaves(self):
@@ -148,10 +143,20 @@ class HrEmployeeBase(models.AbstractModel):
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
+    @api.model
+    def create(self, values):
+        if 'parent_id' in values:
+            manager = self.env['hr.employee'].browse(values['parent_id']).user_id
+            values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
+        return super(HrEmployeeBase, self).create(values)
+
     def write(self, values):
+        if 'parent_id' in values:
+            manager = self.env['hr.employee'].browse(values['parent_id']).user_id
+            values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
         res = super(HrEmployeeBase, self).write(values)
-        today_date = fields.Datetime.now()
         if 'parent_id' in values or 'department_id' in values:
+            today_date = fields.Datetime.now()
             hr_vals = {}
             if values.get('parent_id') is not None:
                 hr_vals['manager_id'] = values['parent_id']
