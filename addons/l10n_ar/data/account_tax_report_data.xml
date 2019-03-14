@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_base_imp" model="account.tax.report.line">
+        <field name="name">Base Imponible</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_ventas" model="account.tax.report.line">
+        <field name="name">Base Imponible - Ventas</field>
+        <field name="parent_line_id" ref='tax_report_base_imp'/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_ventas_grav_iva" model="account.tax.report.line">
+        <field name="name">Ventas Gravadas con IVA</field>
+        <field name="tag_name">Ventas Gravadas con IVA</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_ventas'/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_ventas_no_grav" model="account.tax.report.line">
+        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
+        <field name="tag_name">Ventas NO Gravadas (Exoneradas)</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_ventas'/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_ventas_grav_ambi" model="account.tax.report.line">
+        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
+        <field name="tag_name">Ventas Gravadas Fuera de Ámbito</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_ventas'/>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_compras" model="account.tax.report.line">
+        <field name="name">Base Imponible - Compras</field>
+        <field name="parent_line_id" ref='tax_report_base_imp'/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_compras_grav_iva" model="account.tax.report.line">
+        <field name="name">Compras Gravadas con IVA</field>
+        <field name="tag_name">Compras Gravadas con IVA</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_compras'/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_compras_no_grav" model="account.tax.report.line">
+        <field name="name">Compras NO Gravadas (Exoneradas)</field>
+        <field name="tag_name">Compras NO Gravadas (Exoneradas)</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_compras'/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_base_imp_compras_grav_ambi" model="account.tax.report.line">
+        <field name="name">Compras Gravadas Fuera de Ámbito</field>
+        <field name="tag_name">Compras Gravadas Fuera de Ámbito</field>
+        <field name="parent_line_id" ref='tax_report_base_imp_compras'/>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen" model="account.tax.report.line">
+        <field name="name">Impuesto General a las Ventas (IVA) Total a Pagar</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_pagado" model="account.tax.report.line">
+        <field name="name">Impuesto Pagado</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen"/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_pagado_iva" model="account.tax.report.line">
+        <field name="name">Impuesto Pagado IVA</field>
+        <field name="tag_name">Impuesto Pagado IVA</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_pagado"/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_pagado_exo" model="account.tax.report.line">
+        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
+        <field name="tag_name">Impuesto Pagado de Exonerados al IVA</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_pagado"/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_pagado_ambi" model="account.tax.report.line">
+        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
+        <field name="tag_name">Impuesto Pagado Fuera de Ámbito</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_pagado"/>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_cobrado" model="account.tax.report.line">
+        <field name="name">Impuesto Cobrado</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen"/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+    <record id="tax_report_impuesto_gen_cobrado_iva" model="account.tax.report.line">
+        <field name="name">Impuesto Cobrado IVA</field>
+        <field name="tag_name">Impuesto Cobrado IVA</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_cobrado"/>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_cobrado_exo" model="account.tax.report.line">
+        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
+        <field name="tag_name">Impuesto Cobrado de Exonerados al IVA</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_cobrado"/>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_gen_cobrado_ambi" model="account.tax.report.line">
+        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+        <field name="tag_name">Impuesto Cobrado Fuera de Ámbito</field>
+        <field name="parent_line_id" ref="tax_report_impuesto_gen_cobrado"/>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_nac" model="account.tax.report.line">
+        <field name="name">Impuesto Nacionales a Pagar</field>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_nac_ganancias" model="account.tax.report.line">
+        <field name="name">Impuesto a las Ganancias a Pagar</field>
+        <field name="formula">0</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_impuesto_nac"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_nac_bienes_perso" model="account.tax.report.line">
+        <field name="name">Impuesto a los Bienes Personales a Pagar</field>
+        <field name="formula">0</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_impuesto_nac"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_nac_minima_pres" model="account.tax.report.line">
+        <field name="name">Impuesto a la Ganancia Mínima Presunta a Pagar</field>
+        <field name="formula">0</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="tax_report_impuesto_nac"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record id="tax_report_impuesto_nac_monotributo" model="account.tax.report.line">
+        <field name="name">Monotributo a Pagar</field>
+        <field name="formula">0</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="tax_report_impuesto_nac"/>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+</odoo>
