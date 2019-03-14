@@ -1019,10 +1019,10 @@ def start(preload=None, stop=False):
 
     rc = server.run(preload, stop)
 
+    if watcher:
+        watcher.stop()
     # like the legend of the phoenix, all ends with beginnings
     if getattr(odoo, 'phoenix', False):
-        if watcher:
-            watcher.stop()
         _reexec()
 
     return rc if rc else 0
