@@ -14,7 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
@@ -273,6 +273,7 @@ class Slide(models.Model):
 
     @api.multi
     def _compute_karma_rights(self):
+        """ This method supposed current user have access to the slide. If not, I will crash, meaning he can not execute the action """
         for slide in self:
             slide.can_comment = self.env.user.karma >= slide.channel_id.karma_slide_comment
             slide.can_vote = self.env.user.karma >= slide.channel_id.karma_slide_vote
@@ -355,6 +356,28 @@ class Slide(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
+
+    # ---------------------------------------------------------
+    # Access Rights Methods
+    # ---------------------------------------------------------
+
+    def _check_read_access(self):
+        try:
+            self.check_access_rights('read')
+            self.check_access_rule('read')
+        except AccessError:
+            return False
+        return True
+
+    def _get_slide_action_access(self):
+        result = dict((slide_id, dict(can_access=False, can_vote=False, can_comment=False)) for slide_id in self.ids)
+        for slide in self:
+            can_access = slide._check_read_access()
+            if can_access and (slide.channel_id.is_member or slide.is_preview or slide.can_publish):
+                result[slide.id]['can_access'] = True
+                result[slide.id]['can_vote'] = slide.can_vote
+                result[slide.id]['can_comment'] = slide.can_comment
+        return result
 
     # ---------------------------------------------------------
     # Business Methods

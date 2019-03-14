@@ -32,8 +32,10 @@ $o-enterprise-radient-color: #62495B !default;
 
     .o_wslides_js_slide_like_up,
     .o_wslides_js_slide_like_down {
-        cursor: pointer;
-        color: $link-color;
+        &:not(.disabled) {
+            cursor: pointer;
+            color: $link-color;
+        }
     }
 
     .o_wslides_js_lesson_quiz_question {
