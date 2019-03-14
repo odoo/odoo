@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class MailTracking(models.Model):
@@ -41,8 +41,7 @@ class MailTracking(models.Model):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
             field = model._fields.get(tracking.field)
-            # field may not exist anymore if module has been uninstalled
-            tracking.groups = field.groups if field else 'base.group_system'
+            tracking.groups = field.groups
 
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence):
