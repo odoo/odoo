@@ -115,6 +115,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             .o_thread_message_sidebar {
                 margin-right: 5px;
             }
+            .o_attachment {
+                @include media-breakpoint-up(md) {
+                    width: percentage(1/3);
+                }
+            }
         }
     }
 
