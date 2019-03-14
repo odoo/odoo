@@ -506,6 +506,10 @@ class IrAttachment(models.Model):
             self.browse().check('write', values=values)
         return super(IrAttachment, self).create(vals_list)
 
+    @api.multi
+    def _post_add_create(self):
+        pass
+
     @api.one
     def generate_access_token(self):
         if self.access_token:
