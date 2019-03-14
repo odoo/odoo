@@ -1,7 +1,11 @@
 #!/usr/bin/python3
+
+from odoo import http, _
+
 import logging
 import time
 from threading import Thread, Event
+from traceback import format_exc
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
@@ -117,6 +121,7 @@ class StatusController(http.Controller):
 
 drivers = []
 bt_devices = {}
+socket_devices = {}
 iot_devices = {}
 
 class DriverMetaClass(type):
@@ -348,6 +353,7 @@ class Manager(Thread):
             updated_devices = self.usb_loop()
             updated_devices.update(self.video_loop())
             updated_devices.update(bt_devices)
+            updated_devices.update(socket_devices)
             if cpt % 40 == 0:
                 printer_devices = self.printer_loop()
                 cpt = 0
@@ -388,6 +394,81 @@ class BtManager(Thread):
         dm.start_discovery()
         dm.run()
 
+class SocketManager(Thread):
+
+    def run(self):
+        ser = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ser.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        ser.bind(('', 9000))
+        ser.listen(1)
+        conn, addr = ser.accept()
+        if addr and addr[0] not in socket_devices:
+            try:
+                path = "soc_%s" % (addr[0],)
+                iot_device = IoTDevice(self.SocketDeviceWrapper(conn, addr, ser), 'socket')
+                socket_devices[path] = iot_device
+            except socket.error:
+                _logger.log(format_exc())
+
+    """Wrapping class for Socket devices.
+    This wrapper makes it possible to reconnect the socket if the connections gets lost. Without this wrapper a device
+    can only be reconnected after restarting the IoT Box.
+    """
+    class SocketDeviceWrapper(object):
+    
+        def __init__(self, connection, address, socket):
+            self.addr = address
+            self.socket = socket
+            self.dev = connection
+    
+        def recv(self, length):
+            try:
+                return self.dev.recv(length)
+            except socket.error as exc:
+                if (self._try_connect()):
+                    return self.dev.recv(length)
+                _logger.log(format_exc())
+            return False
+    
+        def getpeername(self):
+            try:
+                return self.dev.getpeername()
+            except socket.error as exc:
+                if (self._try_connect()):
+                    return self.dev.getpeername();
+                _logger.log(format_exc())
+    
+        def send(self, request):
+            try:
+                return self.dev.send(request)
+            except socket.error as exc:
+                if (self._try_connect()):
+                    return self.dev.send(request)
+                _logger.log(format_exc())
+    
+        def _try_connect(self, **kwargs):
+            sockname = ''
+            if ('sockname' in kwargs):
+                sockname = kwargs['sockname']
+            else:
+                sockname = self.socket.getsockname()
+            for i in range(3):
+                try:
+                    # initialise new socket connection
+                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    self.socket.bind(sockname)
+                    self.socket.listen(1)
+                    self.dev, self.addr = self.socket.accept()
+                    return True;
+                except socket.error:
+                    if (i == 3):
+                        _logger.log(format_exc())
+                    else:
+                        sleep(2)
+            return False
+
+
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
@@ -395,6 +476,10 @@ printers = conn.getPrinters()
 m = Manager()
 m.daemon = True
 m.start()
+
+s = SocketManager()
+s.daemon = True
+s.start()
 
 bm = BtManager()
 bm.daemon = True
