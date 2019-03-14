@@ -2208,7 +2208,7 @@ QUnit.module('ActionManager', {
     QUnit.test('orderedBy in context is not propagated when executing another action', async function (assert) {
         assert.expect(6);
 
-        this.data.partner.fields.foo.sortable = true,
+        this.data.partner.fields.foo.sortable = true;
 
         this.archs['partner,false,form'] = '<header>' +
                                                 '<button name="8" string="Execute action" type="action"/>' +
@@ -2418,6 +2418,40 @@ QUnit.module('ActionManager', {
             "value should be correct for kanban");
         assert.strictEqual($('.o_control_panel .o_pager_limit').text(), '5',
             "limit should be correct for kanban");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("domain is kept when switching between views", async function (assert) {
+        assert.expect(5);
+
+        this.actions[2].search_view_id = [1, 'a custom search view'];
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(3);
+        assert.containsN(actionManager, '.o_data_row', 5);
+
+        // activate a domain
+        await testUtils.dom.click(actionManager.$('.o_search_options .o_filters_menu_button'));
+        await testUtils.dom.click(actionManager.$('.o_search_options .o_filters_menu a:contains(Bar)'));
+        assert.containsN(actionManager, '.o_data_row', 2);
+
+        // switch to kanban
+        await testUtils.dom.click(actionManager.$('.o_control_panel .o_cp_switch_kanban'));
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+
+        // remove the domain
+        await testUtils.dom.click(actionManager.$('.o_searchview .o_facet_remove'));
+        assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 5);
+
+        // switch back to list
+        await testUtils.dom.click(actionManager.$('.o_control_panel .o_cp_switch_list'));
+        assert.containsN(actionManager, '.o_data_row', 5);
 
         actionManager.destroy();
     });
