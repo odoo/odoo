@@ -199,9 +199,13 @@
             <field name="arch" type="xml">
                 <form string="Register Payment">
                     <group>
-                        <field name="journal_id"/>
-                        <field name="payment_date"/>
-                        <field name="payment_method_id" string=" " widget="radio"/>
+                        <group>
+                            <field name="payment_method_id" string=" " widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="payment_date"/>
+                        </group>
                     </group>
                     <footer>
                         <button string="Create Payment" name="create_payments" type="object" class="oe_highlight"/>

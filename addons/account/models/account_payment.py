@@ -657,18 +657,17 @@ class payment_register(models.TransientModel):
         rec = super(payment_register, self).default_get(fields)
         active_ids = self._context.get('active_ids')
         active_model = self._context.get('active_model')
-
         invoices = self.env['account.invoice'].browse(active_ids)
 
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
-
-        currency = invoices[0].currency_id
-
-        rec.update({
-            'invoice_ids': [(6, 0, invoices.ids)],
-        })
+        if 'invoice_ids' not in rec:
+            rec['invoice_ids'] = [(6, 0, invoices.ids)]
+        if 'journal_id' not in rec:
+            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
+        if 'payment_method_id' not in rec:
+            rec['payment_method_id'] = self.env['account.payment.method'].search([], limit=1).id
         return rec
 
     @api.multi
