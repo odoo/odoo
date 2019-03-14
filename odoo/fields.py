@@ -11,6 +11,7 @@ from operator import attrgetter
 import itertools
 import logging
 import base64
+import binascii
 
 import pytz
 
@@ -1771,7 +1772,8 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
-        if value[:1] == b'P':  # Fast detection of first 6 bits of '<' (0x3C)
+        if value[:2] in [b'PH', b'PD']:
+            # if fast detection of first 12 bits of '<?' or '<s'
             decoded_value = base64.b64decode(value)
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
