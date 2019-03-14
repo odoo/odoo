@@ -941,7 +941,7 @@ def start(preload=None, stop=False):
         server = ThreadedServer(odoo.service.wsgi_server.application)
 
     watcher = None
-    if 'reload' in config['dev_mode']:
+    if 'reload' in config['dev_mode'] and not odoo.evented:
         if watchdog:
             watcher = FSWatcher()
             watcher.start()
