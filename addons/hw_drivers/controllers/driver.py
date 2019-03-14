@@ -18,6 +18,7 @@ from cups import Connection as cups_connection
 from glob import glob
 from base64 import b64decode
 from pathlib import Path
+import socket
 
 from odoo import http, _
 from odoo.modules.module import get_resource_path
@@ -117,6 +118,7 @@ class StatusController(http.Controller):
 
 drivers = []
 bt_devices = {}
+socket_devices = {}
 iot_devices = {}
 
 class DriverMetaClass(type):
@@ -348,6 +350,7 @@ class Manager(Thread):
             updated_devices = self.usb_loop()
             updated_devices.update(self.video_loop())
             updated_devices.update(bt_devices)
+            updated_devices.update(socket_devices)
             if cpt % 40 == 0:
                 printer_devices = self.printer_loop()
                 cpt = 0
@@ -388,6 +391,19 @@ class BtManager(Thread):
         dm.start_discovery()
         dm.run()
 
+class SocketManager(Thread):
+
+    def run(self):
+        while True:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.bind(('', 9000))
+            sock.listen(1)
+            dev, addr = sock.accept()
+            if addr and addr[0] not in socket_devices:
+                iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
+                socket_devices[addr[0]] = iot_device
+
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
@@ -399,3 +415,7 @@ m.start()
 bm = BtManager()
 bm.daemon = True
 bm.start()
+
+sm = SocketManager()
+sm.daemon = True
+sm.start()
