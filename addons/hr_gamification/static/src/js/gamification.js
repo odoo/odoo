@@ -13,7 +13,7 @@ KanbanRecord.include({
      * @private
      */
     _openRecord: function () {
-        if (this.modelName === 'gamification.badge.user') {
+        if (this.modelName === 'gamification.badge.user' && this.$el.parents('.o_gamification_badge_user_kanban').length) {
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'gamification.badge',
