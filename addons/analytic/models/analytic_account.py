@@ -160,7 +160,10 @@ class AccountAnalyticAccount(models.Model):
         if operator == 'ilike' and not (name or '').strip():
             domain = []
         else:
-            domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('partner_id.name', operator, name)]
+            # search by partner separately because auto_join field can break searches
+            partner_domain = [('partner_id.name', operator, name)]
+            ids_partner = self._search(expression.AND([partner_domain, args]), limit=limit, access_rights_uid=name_get_uid)
+            domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('id', 'in', ids_partner)]
         analytic_account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(analytic_account_ids).name_get()
 
