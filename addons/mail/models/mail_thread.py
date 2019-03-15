@@ -2027,7 +2027,6 @@ class MailThread(models.AbstractModel):
         for record in self.filtered(lambda self: self.id in part):
             record.write({'message_follower_ids': part[record.id]})
 
-        self.invalidate_cache()
         return True
 
     @api.multi
