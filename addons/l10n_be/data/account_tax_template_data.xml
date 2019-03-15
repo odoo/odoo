@@ -1,187 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Tax Tags, used in VAT report-->
-        <record id="tax_tag_00" model="account.tax.tag.template">
-            <field name="name">00</field>
-            <field name="complete_name">00 - Opérations soumises à un régime particulier</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
 
-        <record id="tax_tag_01" model="account.tax.tag.template">
-            <field name="name">01</field>
-            <field name="complete_name">01 - Opérations avec TVA à 6%</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_02" model="account.tax.tag.template">
-            <field name="name">02</field>
-            <field name="complete_name">02 - Opérations avec TVA à 12%</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_03" model="account.tax.tag.template">
-            <field name="name">03</field>
-            <field name="complete_name">03 - Opérations avec TVA à 21%</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_44" model="account.tax.tag.template">
-            <field name="name">44</field>
-            <field name="complete_name">44 - Services intra-communautaires</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_45" model="account.tax.tag.template">
-            <field name="name">45</field>
-            <field name="complete_name">45 - Opérations avec TVA due par le cocontractant</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_46L" model="account.tax.tag.template">
-            <field name="name">46L</field>
-            <field name="complete_name">46L - Livraisons biens intra-communautaires exemptées</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_46T" model="account.tax.tag.template">
-            <field name="name">46T</field>
-            <field name="complete_name">46T - Livraisons biens intra-communautaire exemptées</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_47" model="account.tax.tag.template">
-            <field name="name">47</field>
-            <field name="complete_name">47 - Autres opérations exemptées</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_48s44" model="account.tax.tag.template">
-            <field name="name">48s44</field>
-            <field name="complete_name">48s44 - Notes de crédit aux opérations grilles [44]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_48s46L" model="account.tax.tag.template">
-            <field name="name">48s46L</field>
-            <field name="complete_name">48s46L - Notes de crédit aux opérations grilles [46L]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_48s46T" model="account.tax.tag.template">
-            <field name="name">48s46T</field>
-            <field name="complete_name">48s46T - Notes de crédit aux opérations grilles [46T]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_49" model="account.tax.tag.template">
-            <field name="name">49</field>
-            <field name="complete_name">49 - Notes de crédit aux opérations du point II</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_54" model="account.tax.tag.template">
-            <field name="name">54</field>
-            <field name="complete_name">54 - TVA sur opérations des grilles [01], [02], [03]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_55" model="account.tax.tag.template">
-            <field name="name">55</field>
-            <field name="complete_name">55 - TVA sur opérations des grilles [86] et [88]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_56" model="account.tax.tag.template">
-            <field name="name">56</field>
-            <field name="complete_name">56 - TVA sur opérations de la grille [87]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_57" model="account.tax.tag.template">
-            <field name="name">57</field>
-            <field name="complete_name">57 - TVA relatives aux importations</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_59" model="account.tax.tag.template">
-            <field name="name">59</field>
-            <field name="complete_name">59 - TVA déductible</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_61" model="account.tax.tag.template">
-            <field name="name">61</field>
-            <field name="complete_name">61 - Diverses régularisations en faveur de l'Etat</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_62" model="account.tax.tag.template">
-            <field name="name">62</field>
-            <field name="complete_name">62 - Diverses régularisations en faveur du déclarant</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_63" model="account.tax.tag.template">
-            <field name="name">63</field>
-            <field name="complete_name">63 - TVA à reverser sur notes de crédit recues</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_64" model="account.tax.tag.template">
-            <field name="name">64</field>
-            <field name="complete_name">64 - TVA à recuperer sur notes de crédit delivrées</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_81" model="account.tax.tag.template">
-            <field name="name">81</field>
-            <field name="complete_name">81 - Marchandises, matières premières et auxiliaires</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_82" model="account.tax.tag.template">
-            <field name="name">82</field>
-            <field name="complete_name">82 - Services et biens divers</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_83" model="account.tax.tag.template">
-            <field name="name">83</field>
-            <field name="complete_name">83 - Biens d'investissement</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_84" model="account.tax.tag.template">
-            <field name="name">84</field>
-            <field name="complete_name">84 - Notes de crédits sur opérations case [86] et [88]</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_85" model="account.tax.tag.template">
-            <field name="name">85</field>
-            <field name="complete_name">85 - Notes de crédits autres opérations</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_86" model="account.tax.tag.template">
-            <field name="name">86</field>
-            <field name="complete_name">86 - Acquisition intra-communautaires et ventes ABC</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_87" model="account.tax.tag.template">
-            <field name="name">87</field>
-            <field name="complete_name">87 - Autres opérations</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <record id="tax_tag_88" model="account.tax.tag.template">
-            <field name="name">88</field>
-            <field name="complete_name">88 - Acquisition services intra-communautaires</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
-
-        <!-- account.tax.template -->
         <record id="attn_VAT-OUT-21-L" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="description">TVA 21%</field>
@@ -196,14 +15,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_03')],
+                    'plus_tag_ids': [ref('tax_report_tag_03')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')],
+                    'plus_tag_ids': [ref('tax_report_tag_54')],
                 }),
 
             ]"/>
@@ -211,14 +30,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -238,28 +57,28 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_03')],
+                    'plus_tag_ids': [ref('tax_report_tag_03')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')]
+                    'plus_tag_ids': [ref('tax_report_tag_54')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -279,28 +98,28 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_02')],
+                    'plus_tag_ids': [ref('tax_report_tag_02')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')]
+                    'plus_tag_ids': [ref('tax_report_tag_54')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -319,28 +138,28 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_02')],
+                    'plus_tag_ids': [ref('tax_report_tag_02')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')]
+                    'plus_tag_ids': [ref('tax_report_tag_54')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -360,28 +179,28 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_01')],
+                    'plus_tag_ids': [ref('tax_report_tag_01')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')]
+                    'plus_tag_ids': [ref('tax_report_tag_54')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -400,28 +219,28 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_01')],
+                    'plus_tag_ids': [ref('tax_report_tag_01')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_54')]
+                    'plus_tag_ids': [ref('tax_report_tag_54')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a451054'),
-                    'plus_tag_ids': [ref('tax_tag_64')],
+                    'plus_tag_ids': [ref('tax_report_tag_64')],
                 }),
             ]"/>
         </record>
@@ -441,7 +260,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_00')],
+                    'plus_tag_ids': [ref('tax_report_tag_00')],
                 }),
 
                 (0,0, {
@@ -454,7 +273,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
@@ -479,7 +298,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_00')],
+                    'plus_tag_ids': [ref('tax_report_tag_00')],
                 }),
 
                 (0,0, {
@@ -493,7 +312,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
@@ -519,7 +338,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_45')],
+                    'plus_tag_ids': [ref('tax_report_tag_45')],
                 }),
 
                 (0,0, {
@@ -532,7 +351,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
@@ -558,7 +377,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_44')],
+                    'plus_tag_ids': [ref('tax_report_tag_44')],
                 }),
 
                 (0,0, {
@@ -571,7 +390,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_48s44')],
+                    'plus_tag_ids': [ref('tax_report_tag_48s44')],
                 }),
 
                 (0,0, {
@@ -596,7 +415,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_46L')],
+                    'plus_tag_ids': [ref('tax_report_tag_46L')],
                 }),
 
                 (0,0, {
@@ -609,7 +428,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_48s46L')],
+                    'plus_tag_ids': [ref('tax_report_tag_48s46L')],
                 }),
 
                 (0,0, {
@@ -635,7 +454,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_46T')],
+                    'plus_tag_ids': [ref('tax_report_tag_46T')],
                 }),
 
                 (0,0, {
@@ -648,7 +467,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_48s46T')],
+                    'plus_tag_ids': [ref('tax_report_tag_48s46T')],
                 }),
 
                 (0,0, {
@@ -673,7 +492,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_47')],
+                    'plus_tag_ids': [ref('tax_report_tag_47')],
                 }),
 
                 (0,0, {
@@ -686,7 +505,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_49')],
+                    'plus_tag_ids': [ref('tax_report_tag_49')],
                 }),
 
                 (0,0, {
@@ -711,29 +530,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_81')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -752,29 +571,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_81')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -793,29 +612,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_81')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -834,7 +653,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_81')],
                 }),
 
                 (0,0, {
@@ -847,8 +666,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -873,29 +692,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -915,29 +734,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -957,29 +776,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -999,29 +818,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1041,29 +860,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1083,29 +902,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1125,29 +944,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1167,7 +986,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
@@ -1180,8 +999,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1207,7 +1026,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
@@ -1220,8 +1039,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1247,29 +1066,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_83')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1289,29 +1108,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_83')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1331,29 +1150,29 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_83')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -1373,7 +1192,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_83')],
                 }),
 
                 (0,0, {
@@ -1386,8 +1205,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1412,14 +1231,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1432,8 +1251,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1465,14 +1284,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1485,8 +1304,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1518,14 +1337,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1538,8 +1357,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1571,7 +1390,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -1584,8 +1403,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1611,14 +1430,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1631,8 +1450,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1664,14 +1483,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1684,8 +1503,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1717,14 +1536,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1737,8 +1556,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1770,7 +1589,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -1783,8 +1602,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1810,14 +1629,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1830,8 +1649,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1863,14 +1682,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1883,8 +1702,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1916,14 +1735,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_56'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_56'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -1936,8 +1755,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -1969,7 +1788,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -1982,8 +1801,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -2008,44 +1827,44 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 50,
                     'repartition_type': 'tax',
                     'account_id': ref('a64012'),
-                    'plus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 50,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_59')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_85')],
-                    'minus_tag_ids': [ref('tax_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
                 }),
 
                 (0,0, {
                     'factor_percent': 50,
                     'repartition_type': 'tax',
                     'account_id': ref('a64012'),
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
                     'factor_percent': 50,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_63')],
+                    'plus_tag_ids': [ref('tax_report_tag_63')],
                 }),
             ]"/>
         </record>
@@ -2064,14 +1883,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2084,8 +1903,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2117,14 +1936,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2137,8 +1956,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2170,14 +1989,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2190,8 +2009,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2223,7 +2042,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
@@ -2236,8 +2055,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2263,14 +2082,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_88')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_88')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2283,8 +2102,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2316,14 +2135,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2336,8 +2155,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2369,14 +2188,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_88')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_88')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2389,8 +2208,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2422,14 +2241,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2442,8 +2261,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2475,14 +2294,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_88')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_88')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2495,8 +2314,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2528,14 +2347,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2548,8 +2367,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2581,7 +2400,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_88')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_88')],
                 }),
 
                 (0,0, {
@@ -2594,8 +2413,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2621,14 +2440,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2641,8 +2460,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2674,7 +2493,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
@@ -2687,8 +2506,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2714,14 +2533,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2734,8 +2553,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2765,7 +2584,7 @@
             <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
             <field name="invoice_repartition_line_ids" eval="[
                 (0,0, {
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
                     'factor_percent': 100,
                     'repartition_type': 'base',
                 }),
@@ -2774,7 +2593,7 @@
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_55'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_55'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2787,8 +2606,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2820,7 +2639,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83', ref('tax_tag_86'))],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
                 }),
 
                 (0,0, {
@@ -2833,8 +2652,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_86')],
-                    'plus_tag_ids': [ref('tax_tag_84')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_86')],
+                    'plus_tag_ids': [ref('tax_report_tag_84')],
                 }),
 
                 (0,0, {
@@ -2859,14 +2678,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2879,8 +2698,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -2912,14 +2731,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2932,8 +2751,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -2965,14 +2784,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -2985,8 +2804,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3018,7 +2837,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -3031,8 +2850,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_81'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_81'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3058,14 +2877,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3078,8 +2897,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3111,14 +2930,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3131,8 +2950,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3164,14 +2983,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3184,8 +3003,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3217,7 +3036,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -3230,8 +3049,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_82'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_82'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3257,14 +3076,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3277,8 +3096,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3310,14 +3129,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3330,8 +3149,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3363,14 +3182,14 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('a411059'),
-                    'plus_tag_ids': [ref('tax_tag_57'), ref('tax_tag_59')],
+                    'plus_tag_ids': [ref('tax_report_tag_57'), ref('tax_report_tag_59')],
                 }),
 
                 (0,0, {
@@ -3383,8 +3202,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3416,7 +3235,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
                 }),
 
                 (0,0, {
@@ -3429,8 +3248,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_tag_ids': [ref('tax_tag_83'), ref('tax_tag_87')],
-                    'plus_tag_ids': [ref('tax_tag_85')],
+                    'minus_tag_ids': [ref('tax_report_tag_83'), ref('tax_report_tag_87')],
+                    'plus_tag_ids': [ref('tax_report_tag_85')],
                 }),
 
                 (0,0, {
@@ -3459,7 +3278,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_tag_ids': [ref('tax_tag_61')],
+                    'plus_tag_ids': [ref('tax_report_tag_61')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
@@ -3471,7 +3290,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'minus_tag_ids': [ref('tax_tag_61')],
+                    'minus_tag_ids': [ref('tax_report_tag_61')],
                 }),
             ]"/>
         </record>
@@ -3494,7 +3313,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_tag_ids': [ref('tax_tag_62')],
+                    'plus_tag_ids': [ref('tax_report_tag_62')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[
@@ -3506,7 +3325,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'plus_tag_ids': [ref('tax_tag_62')],
+                    'plus_tag_ids': [ref('tax_report_tag_62')],
                 }),
             ]"/>
         </record>

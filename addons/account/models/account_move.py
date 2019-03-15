@@ -757,10 +757,10 @@ class AccountMoveLine(models.Model):
     def _compute_tax_audit_str(self):
         for record in self:
             audit_str = ''
-            for tag in record.tag_ids.filtered(lambda x: x.tax_tag_template_id).sorted(lambda x: x.tax_tag_template_id.id):
+            for tag in record.tag_ids.filtered(lambda x: x.tax_report_line_id).sorted(lambda x: x.tax_report_line_id.id):
                 audit_str += ', ' if audit_str else ''
                 tag_amount = (tag.tax_negate and -1 or 1) * record.balance
-                audit_str += tag.tax_tag_template_id.name + ': ' + str(tag_amount)
+                audit_str += tag.tax_report_line_id.name + ': ' + str(tag_amount)
 
             record.tax_audit_str = audit_str
 

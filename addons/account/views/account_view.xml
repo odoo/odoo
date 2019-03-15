@@ -1161,38 +1161,33 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="amount_type"/>
                         </group>
                         <group>
                             <field name="type_tax_use"/>
+                            <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                <field name="amount" class="oe_inline"/>
+                                <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
+                            </div>
                         </group>
                     </group>
                     <notebook>
                         <page string="Definition">
-                            <group>
-                                <group>
-                                    <field name="id" invisible="1"/> <!--To trigger the call to onchange('id'), initializing the repartition lines-->
-                                    <field name="amount_type" />
-                                    <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                            <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
+                                <group string="Repartition for Invoices">
+                                    <field name="invoice_repartition_line_ids" nolabel="1"/>
                                 </group>
-                                <group>
-                                    <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
-                                        <field name="amount" class="oe_inline" />
-                                        <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
-                                    </div>
+                                <group string="Repartition for Credit Notes">
+                                    <field name="refund_repartition_line_ids" nolabel="1"/>
                                 </group>
-                            </group>
-                            <group attrs="{'invisible': [('amount_type', '=', 'group')]}">
-                                <field name="invoice_repartition_line_ids"/>
-                                <field name="refund_repartition_line_ids"/>
-                            </group>
-                            <field name="children_tax_ids"
-                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
-                                domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                            </div>
+                            <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">
-                                    <field name="sequence" widget="handle" />
+                                    <field name="sequence" widget="handle"/>
                                     <field name="name"/>
-                                    <field name="amount_type" />
-                                    <field name="amount" />
+                                    <field name="amount_type"/>
+                                    <field name="amount"/>
                                 </tree>
                             </field>
                         </page>
