@@ -758,6 +758,8 @@ class HolidaysRequest(models.Model):
                     if holiday.employee_id != current_employee:
                         raise UserError(_('Only a Leave Manager can reset other people leaves.'))
                 else:
+                    if val_type == 'no_validation' and current_employee == holiday.employee_id:
+                        continue
                     # use ir.rule based first access check: department, members, ... (see security.xml)
                     holiday.check_access_rule('write')
 
