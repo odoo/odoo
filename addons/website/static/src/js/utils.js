@@ -13,13 +13,13 @@ var qweb = core.qweb;
  * @returns {Deferred<string[]>}
  */
 function loadAnchors(url) {
-    var def;
-    if (url !== window.location.pathname && url[0] !== '#') {
-        def = $.get(window.location.origin + url);
-    } else {
-        def = Promise.resolve(document.body.outerHTML);
-    }
-    return def.then(function (response) {
+    return new Promise(function (resolve, reject) {
+        if (url !== window.location.pathname && url[0] !== '#') {
+            $.get(window.location.origin + url).then(resolve, reject);
+        } else {
+            resolve(document.body.outerHTML);
+        }
+    }).then(function (response) {
         return _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });

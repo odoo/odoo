@@ -951,7 +951,7 @@ var PageManagement = Widget.extend({
 // TODO: This function should be integrated in a widget in the future
 function _deletePage(pageId, fromPageManagement) {
     var self = this;
-    var prom = new Promise(function (resolve, reject) {
+    new Promise(function (resolve, reject) {
         // Search the page dependencies
         self._getPageDependencies(pageId)
         .then(function (dependencies) {
@@ -974,8 +974,7 @@ function _deletePage(pageId, fromPageManagement) {
         }).then(function () {
             if (fromPageManagement) {
                 window.location.reload(true);
-            }
-            else {
+            } else {
                 window.location.href = '/';
             }
         }, reject);

@@ -65,7 +65,7 @@ var WebsiteAceEditor = AceEditor.extend({
             }
             return Promise.all(defs).then((function () {
                 window.location.reload();
-                return new Promise(function() { });
+                return new Promise(function () {});
             }));
         }).bind(this));
     },
