@@ -1,5 +1,18 @@
 .js_question-wrapper {
 
+    .js_errzone {
+        background: transparent;
+        border-top: 3px solid $danger;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+
+        p {
+            color: $danger;
+        }
+    }
+
     .form-control {
         background-color: transparent;
         border:none;
@@ -12,80 +25,94 @@
         }
 
     }
+    
+    // For matrix positioning
+    table {
+        label {
+            position: relative;
+        }
+        input {
+            left: 38px;
+            top: 10px;
+        }
+    }
+
     select {
         appearance: none;
         -webkit-appearance:none;
+    }
 
-        &:before {
-            content: '';
-            position: absolute;
-            top: 18px;
-            right: 10px;
-            /* Styling the down arrow */
+    .o_dropdown_button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        &:after {
+            content: "";
+            display: inline-block;
             width: 0;
             height: 0;
-            padding: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid $gray-500;
+            vertical-align: middle;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+            border-right: 0.3em solid transparent;
+            border-top: 0.3em solid $gray-500;
             pointer-events: none;
         }
     }
 
-    input[type="radio"] ~ label, input[type="checkbox"] ~ label {
-        &:before {}
+    input[type="checkbox"], input[type="radio"] {
+        opacity: 0;
+        z-index: 1;
+        position: relative;
+        width: 20px;
+        height: 20px;
     }
 
-    input[type="radio"] ~ label {
+    input[type="radio"] ~ label, input[type="checkbox"] ~ label {
         &:before {
             position: absolute;
             top: 0;
             left: 15px;
             width: 20px;
             height: 20px;
-            border-radius: 50%;
             content: "";
             display: block;
             background: no-repeat 50% / 50% 50%;
             border: 1px solid $gray-300;
         }
-        /* Custom Radio */
+    }
+
+    input[type="radio"] ~ label, input[type="checkbox"] ~ label {
         &:after {
             content: "";
             display: inline-block;
+            position: absolute;
             height: 8px;
+        }
+    }
+
+    input[type="radio"] ~ label {
+        &:before {
+            border-radius: 50%;
+        }
+        /* Custom Radio */
+        &:after {
             width: 8px;
             background-color: #fff;
             border-radius: 50%;
-            position: absolute;
             left: 21px;
             top: 6px;
         }
     }
 
     input[type="checkbox"] ~ label {
-        &:before {
-            position: absolute;
-            top: 0;
-            left: 15px;
-            width: 20px;
-            height: 20px;
-            content: "";
-            display: block;
-            background: no-repeat 50% / 50% 50%;
-            border: 1px solid $gray-300;
-        }
         /* Custom Checkmark */
         &:after {
-            content: "";
-            display: inline-block;
-            height: 8px;
             width: 12px;
             border-left: 2px solid;
             border-bottom: 2px solid;
             border-color: #fff;
             transform: rotate(-45deg);
-            position: absolute;
             left: 19px;
             top: 4px;
         }
@@ -102,13 +129,5 @@
 
     input:checked ~ label:before {
         background-color: #00A09D;
-    }
-
-    input[type="checkbox"], input[type="radio"] {
-        opacity: 0;
-        z-index: 1;
-        position: relative;
-        width: 20px;
-        height: 20px;
     }
 }
