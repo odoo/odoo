@@ -218,17 +218,17 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
         var def = new Promise(function (resolve, reject) {
             var $image = $('<img/>');
-            var editor = new weWidgets.MediaDialog(this, {
+            var editor = new weWidgets.MediaDialog(self, {
                 onlyImages: true,
                 firstFilters: ['background'],
             }, $image[0]);
 
-            editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
+            editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
                 var src = $(media).attr('src');
                 self._rpc({
                     model: 'ir.model.data',
                     method: 'get_object_reference',
-                    args: ['website', this.CUSTOM_BODY_IMAGE_XML_ID],
+                    args: ['website', self.CUSTOM_BODY_IMAGE_XML_ID],
                 }).then(function (data) {
                     return self._rpc({
                         model: 'ir.ui.view',
@@ -241,7 +241,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     });
                 }).then(resolve).guardedCatch(resolve);
             });
-            editor.on('cancel', this, function () {
+            editor.on('cancel', self, function () {
                 resolve();
             });
 
@@ -435,15 +435,15 @@ var ThemeCustomizeDialog = Dialog.extend({
         var colorType = $color.data('colorType');
 
         return new Promise(function (resolve, reject) {
-            var colorpicker = new ColorpickerDialog(this, {
+            var colorpicker = new ColorpickerDialog(self, {
                 defaultColor: $color.css('background-color'),
             });
             var chosenColor = undefined;
-            colorpicker.on('colorpicker:saved', this, function (ev) {
+            colorpicker.on('colorpicker:saved', self, function (ev) {
                 ev.stopPropagation();
                 chosenColor = ev.data.cssColor;
             });
-            colorpicker.on('closed', this, function (ev) {
+            colorpicker.on('closed', self, function (ev) {
                 if (chosenColor === undefined) {
                     resolve();
                     return;
@@ -461,7 +461,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     colors['epsilon'] = 'null';
                 }
 
-                self._makeSCSSCusto(url, colors).always(resolve);
+                self._makeSCSSCusto(url, colors).then(resolve).guardedCatch(resolve);
             });
             colorpicker.open();
         });
@@ -499,25 +499,27 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _quickEdit: function ($inputData) {
+        var self = this;
         var text = $inputData.text().trim();
         var value = parseFloat(text) || '';
         var unit = text.match(/([^\s\d]+)$/)[1];
 
         var def = new Promise(function (resolve, reject) {
-            var qEdit = new QuickEdit(this, value, unit);
-            qEdit.on('QuickEdit:save', this, function (ev) {
+            var qEdit = new QuickEdit(self, value, unit);
+            qEdit.on('QuickEdit:save', self, function (ev) {
                 ev.stopPropagation();
 
                 var value = ev.data.value;
                 // Convert back to rem if needed
                 if ($inputData.data('unit') === 'rem' && unit === 'px' && value !== 'null') {
-                    value = parseFloat(value) / this.PX_BY_REM + 'rem';
+                    value = parseFloat(value) / self.PX_BY_REM + 'rem';
                 }
 
                 var values = {};
                 values[$inputData.data('value')] = value;
-                this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
-                    .always(resolve);
+                self._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                    .then(resolve)
+                    .guardedCatch(resolve);
             });
             qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
         });
