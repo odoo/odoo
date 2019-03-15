@@ -77,7 +77,7 @@ msgstr "Хуурмаг нэр"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgstr "Нийлүүлэгчийн нэхэмжлэлийн имэйл нэр"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
@@ -98,12 +98,12 @@ msgstr "Аль хэдийнээ импорт хийгдсэн мөрүүд"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Төлбөр хүлээн авах сувагтай"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Төлбөр илгээх сувагтай"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
@@ -140,7 +140,7 @@ msgstr "Банкны хуулгын мөр"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Банкны данс тохируулга"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
@@ -169,6 +169,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Үүнийг сонгосноор энэхүү журналд бүртгэгдэх нэхэмжлэл болон буцаалтууд нь "
+"дахин давтагдашгүй дугаарлалттай байх болно"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
@@ -239,7 +241,7 @@ msgstr "Валют"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Буцаалтын тусдаа дугаарлалт"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -254,7 +256,7 @@ msgstr "Үндсэн дебит данс"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Банкны хуулга хэрхэн бүртгэгдэхийг тодорхойлно"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -363,7 +365,7 @@ msgstr "Энэ бол дебит гүйлгээний үндсэн данс"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
-msgstr ""
+msgstr "Имэйл илгээснээр нийлүүлэгчийн ноорог нэхэмжлэл бүртгэгдэнэ."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -437,6 +439,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Гараар: Бэлэн мөнгөөр төлөгдөх эсвэл Odoo системээс гадуур ямар нэг төлбөрийн хэрэгслээр төлөгдөх.\n"
+"Электрон: Ямар нэг онлайн төлбөрийн хэрэгсэлээр төлөлт хийх үед автоматаар захиалагчийн гүйлгээ бүртгэгдэх (төлбөрийн token).\n"
+"Багц төлбөр: Захиалагч хэд хэдэн төлөлтийг нэгтгэн банкнаар нэг төлбөр шилжүүлэх тохиолдол. Odoo-д банкны гүйлгээ хөтлөгдөх үед танд холбогдох нэхэмжлэлүүдийг сонгож тулгах боломж олгогдоно. Энэ боломжыг тохиргооноос идэвхижүүлээрэй."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
@@ -445,6 +450,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Гараар: Бэлэн мөнгөөр төлөгдөх эсвэл Odoo системээс гадуур ямар нэг төлбөрийн хэрэгслээр төлөгдөх.\n"
+"Чек: Нэхэмжлэлийг чекээр төлж төлбөрийн баримтыг Odoo-с хэвлэх.\n"
+"SEPA Credit Transfer: SEPA Credit Transfer систем ашиглан нэхэмжлэлийн төлбөрийг банк руу дамжуулах. Үүний тулд account_sepa модуль суулгах шаардлагатай. "
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
@@ -465,7 +473,7 @@ msgstr "OK"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr ""
+msgstr "Банкны тулгалтаар баталгаажуулах"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -499,6 +507,8 @@ msgstr "Дараалал"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
+"Идэвхитэй талбарыг үгүй утгаар тэмдэглэснээр журналыг устгалгүйгээр нуух "
+"боломжтой."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
@@ -548,12 +558,12 @@ msgstr "Энэ журналийн бичилтүүдийн нэр нь энэ у
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "Дараагийн буцаалтын нэхэмжлэл дээр ашиглагдах дараагийн дугаар"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Дараагийн нэхэмжлэл дээр ашиглагдах дараагийн дугаар"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -561,6 +571,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"Энэ талбар нь уг журналд хичнээн буцаалтын нэхэмжлэл бүртгэгдсэн тухай "
+"мэдээллийг агуулна."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -618,6 +630,9 @@ msgid ""
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
 msgstr ""
+"Энэ журналд бүртгэгдсэн төлбөр төлөлтийн гүйлгээнүүд ноорог төлөвтэй байх ба"
+" банкны хуулгатай ижилсүүлэлт буюу тулгалт хийсний эцэст батлагдсан төлөвт "
+"шилжинэ."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
