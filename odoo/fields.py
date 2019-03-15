@@ -2438,7 +2438,7 @@ class One2many(_RelationalMulti):
                 vals_list.clear()
 
         def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 lines.unlink()
             else:
                 lines.write({inverse: False})
@@ -2484,7 +2484,7 @@ class One2many(_RelationalMulti):
                 vals_list.clear()
 
         def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 lines.unlink()
             else:
                 lines.write({inverse: False})
