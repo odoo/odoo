@@ -156,6 +156,7 @@
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -187,6 +188,8 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="1" string="Group By">
                     <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
                     <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>

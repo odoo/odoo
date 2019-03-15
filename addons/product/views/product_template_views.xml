@@ -16,6 +16,7 @@
                 <field name="type" optional="hide"/>
                 <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show"/>
                 <field name="active" invisible="1"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
