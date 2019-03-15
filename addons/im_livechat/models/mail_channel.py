@@ -105,7 +105,15 @@ class MailChannel(models.Model):
         if self.livechat_operator_id in self.channel_partner_ids:
             partners = self.channel_partner_ids - self.livechat_operator_id
             if partners:
-                return ', '.join(partners.mapped('name'))
+                partner_name = False
+                for partner in partners:
+                    if not partner_name:
+                        partner_name = partner.name
+                    else:
+                        partner_name += ', %s' % partner.name
+                    if partner.country_id:
+                        partner_name += ' (%s)' % partner.country_id.name
+                return partner_name
         if self.anonymous_name:
             return self.anonymous_name
         return _("Visitor")
