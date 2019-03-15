@@ -184,8 +184,7 @@ class Channel(models.Model):
         for cp in channel_partners:
             result.setdefault(cp.channel_id.id, []).append(cp.partner_id.id)
         for channel in self:
-            channel.valid_channel_partner_ids = result.get(channel.id, False)
-            channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
+            channel.is_member = channel.is_member = self.env.user.partner_id.id in result.get(channel.id, [])
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
