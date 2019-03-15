@@ -49,10 +49,13 @@ weWidgets.LinkDialog.include({
             _.each(anchors, function (anchor) {
                 $selectMenu.append($('<option>', {text: anchor}));
             });
-        }).always(function () {
+            always();
+        }).guardedCatch(always);
+
+        function always() {
             $anchorsLoading.addClass('d-none');
             $selectMenu.prop("selectedIndex", -1);
-        });
+        }
     },
 
     //--------------------------------------------------------------------------
