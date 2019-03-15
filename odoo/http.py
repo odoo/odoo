@@ -451,6 +451,7 @@ def route(route=None, **kw):
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
+    :param bool cors_credentials: The Access-Control-Allow-Credentials header.
     :param bool csrf: Whether CSRF protection should be enabled for the route.
 
                       Defaults to ``True``. See :ref:`CSRF Protection
@@ -1212,6 +1213,8 @@ class Response(werkzeug.wrappers.Response):
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
             self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
+            if request.endpoint.routing.get('cors_credentials') == True:
+                self.headers.set('Access-Control-Allow-Credentials', 'true')
             methods = 'GET, POST'
             if request.endpoint.routing['type'] == 'json':
                 methods = 'POST'
