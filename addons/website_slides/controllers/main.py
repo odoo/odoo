@@ -113,7 +113,6 @@ class WebsiteSlides(WebsiteProfile):
         # allow rating and comments
         if slide.channel_id.allow_comment:
             values.update({
-                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
                 'message_post_pid': request.env.user.partner_id.id,
             })
 
