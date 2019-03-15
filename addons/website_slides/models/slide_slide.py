@@ -83,7 +83,7 @@ class SlideTag(models.Model):
 class Slide(models.Model):
     _name = 'slide.slide'
     _inherit = [
-        'mail.thread', 'rating.mixin',
+        'mail.thread',
         'image.mixin',
         'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
@@ -96,9 +96,6 @@ class Slide(models.Model):
     }
     _order = 'category_sequence asc, sequence asc'
 
-    def _default_access_token(self):
-        return str(uuid.uuid4())
-
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
@@ -109,7 +106,6 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
-    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     # subscribers
@@ -359,15 +355,6 @@ class Slide(models.Model):
                 email_layout_xmlid='mail.mail_notification_light',
             )
         return True
-
-    def _generate_signed_token(self, partner_id):
-        """ Lazy generate the acces_token and return it signed by the given partner_id
-            :rtype tuple (string, int)
-            :return (signed_token, partner_id)
-        """
-        if not self.access_token:
-            self.write({'access_token': self._default_access_token()})
-        return self._sign_token(partner_id)
 
     def _send_share_email(self, email):
         # TDE FIXME: template to check
