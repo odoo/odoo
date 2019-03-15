@@ -325,7 +325,7 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {string[]} [params.searchMenuTypes=[]]
      * @param {Object} [params.timeRanges]
      * @param {boolean} [params.withSearchBar]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         var self = this;
@@ -337,11 +337,11 @@ var ControlPanelModel = mvc.Model.extend({
             // and the info comming from arch put in params.groups (if any)
             // will be lost. This is not a problem because the state
             // won't be use elsewhere.
-            return $.when();
+            return Promise.resolve();
         }
         if (params.initialState) {
             this.importState(params.initialState);
-            return $.when();
+            return Promise.resolve();
         } else {
             var groups = params.groups || [];
             groups.forEach(function (group) {
@@ -351,7 +351,7 @@ var ControlPanelModel = mvc.Model.extend({
                 this._createEmptyGroup('groupBy');
             }
             this._createGroupOfTimeRanges();
-            return $.when.apply($, self._loadSearchDefaults()).then(function () {
+            return Promise.all(self._loadSearchDefaults()).then(function () {
                 return self._loadFavorites().then(function () {
                     if (self.query.length === 0) {
                         self._activateDefaultFilters();
@@ -910,7 +910,7 @@ var ControlPanelModel = mvc.Model.extend({
      * if this.activateDefaultFavorite is true.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadFavorites: function () {
         var self = this;
@@ -980,7 +980,7 @@ var ControlPanelModel = mvc.Model.extend({
      * is asynchronous.
      *
      * @private
-     * @returns {Deferred[]}
+     * @returns {Promise[]}
      */
     _loadSearchDefaults: function () {
         var self = this;
@@ -1044,7 +1044,7 @@ var ControlPanelModel = mvc.Model.extend({
      *
      * @private
      * @param {Object} favorite
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _saveQuery: function (favorite) {
         var self = this;

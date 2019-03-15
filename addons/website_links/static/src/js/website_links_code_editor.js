@@ -43,7 +43,7 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _submitCode: function () {
         var initCode = $('#edit-code-form #init_code').val();
@@ -75,7 +75,7 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
             });
         }
 
-        return $.when();
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------

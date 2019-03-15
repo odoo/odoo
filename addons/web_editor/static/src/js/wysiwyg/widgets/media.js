@@ -119,10 +119,10 @@ var ImageWidget = MediaWidget.extend({
      * @override
      */
     willStart: function () {
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             this.search('', true)
-        );
+        ]);
     },
     /**
      * @override
@@ -345,14 +345,15 @@ var ImageWidget = MediaWidget.extend({
                     class: 'img-fluid',
                     src: $div.data('url') || $div.data('src'),
                 });
-                var def = $.Deferred();
-                $img[0].onload = def.resolve.bind(def);
-                $div.addClass('o_webimage').append($img);
-                return def;
+                var prom = new Promise(function (resolve, reject) {
+                    $img[0].onload = resolve();
+                    $div.addClass('o_webimage').append($img);
+                });
+                return prom;
             }
         });
         if (withEffect) {
-            $.when.apply($, imageDefs).then(function () {
+            Promise.all(imageDefs).then(function () {
                 _.delay(function () {
                     $divs.removeClass('o_image_loading');
                 }, 400);
@@ -374,9 +375,9 @@ var ImageWidget = MediaWidget.extend({
             return this.media;
         }
 
-        var def = $.when();
+        var prom;
         if (!img.access_token) {
-            def = this._rpc({
+            prom = this._rpc({
                 model: 'ir.attachment',
                 method: 'generate_access_token',
                 args: [[img.id]]
@@ -385,7 +386,7 @@ var ImageWidget = MediaWidget.extend({
             });
         }
 
-        return def.then(function () {
+        return Promise.resolve(prom).then(function () {
             if (!img.isDocument) {
                 if (img.access_token && self.options.res_model !== 'ir.ui.view') {
                     img.src += _.str.sprintf('?access_token=%s', img.access_token);
@@ -464,61 +465,64 @@ var ImageWidget = MediaWidget.extend({
     _uploadFile: function () {
         return this._mutex.exec(this._uploadImageIframe.bind(this));
     },
+    /**
+     * @returns {Promise}
+     */
     _uploadImageIframe: function () {
         var self = this;
-        var def = $.Deferred();
-        /**
-         * @todo file upload cannot be handled with _rpc smoothly. This uses the
-         * form posting in iframe trick to handle the upload.
-         */
-        var $iframe = this.$('iframe');
-        $iframe.on('load', function () {
-            var iWindow = $iframe[0].contentWindow;
+        return new Promise(function (resolve) {
 
-            var attachments = iWindow.attachments || [];
-            var error = iWindow.error;
+            /**
+             * @todo file upload cannot be handled with _rpc smoothly. This uses the
+             * form posting in iframe trick to handle the upload.
+             */
+            var $iframe = self.$('iframe');
+            $iframe.on('load', function () {
+                var iWindow = $iframe[0].contentWindow;
 
-            self.$('.well > span').remove();
-            self.$('.well > div').show();
-            _.each(attachments, function (record) {
-                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name)); // Name is added for SEO purposes
-                record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
+                var attachments = iWindow.attachments || [];
+                var error = iWindow.error;
+
+                self.$('.well > span').remove();
+                self.$('.well > div').show();
+                _.each(attachments, function (record) {
+                    record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name)); // Name is added for SEO purposes
+                    record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
+                });
+                if (error || !attachments.length) {
+                    _processFile(null, error || !attachments.length);
+                }
+                self.images = attachments;
+                for (var i = 0 ; i < attachments.length ; i++) {
+                    _processFile(attachments[i], error);
+                }
+
+                if (self.options.onUpload) {
+                    self.options.onUpload(attachments);
+                }
+
+                resolve();
+
+                function _processFile(attachment, error) {
+                    var $button = self.$('.o_upload_image_button');
+                    if (!error) {
+                        $button.addClass('btn-success');
+                        self._toggleImage(attachment, true);
+                    } else {
+                        $button.addClass('btn-danger');
+                        self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                        self.$el.find('.form-text').text(error);
+                    }
+
+                    if (!self.multiImages) {
+                        self.trigger_up('save_request');
+                    }
+                }
             });
-            if (error || !attachments.length) {
-                _processFile(null, error || !attachments.length);
-            }
-            self.images = attachments;
-            for (var i = 0 ; i < attachments.length ; i++) {
-                _processFile(attachments[i], error);
-            }
+            self.$el.submit();
 
-            if (self.options.onUpload) {
-                self.options.onUpload(attachments);
-            }
-
-            def.resolve();
-
-            function _processFile(attachment, error) {
-                var $button = self.$('.o_upload_image_button');
-                if (!error) {
-                    $button.addClass('btn-success');
-                    self._toggleImage(attachment, true);
-                } else {
-                    $button.addClass('btn-danger');
-                    self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                    self.$el.find('.form-text').text(error);
-                }
-
-                if (!self.multiImages) {
-                    self.trigger_up('save_request');
-                }
-            }
+            self.$('.o_file_input').val('');
         });
-        this.$el.submit();
-
-        this.$('.o_file_input').val('');
-
-        return def;
     },
 
 
@@ -734,7 +738,7 @@ var IconWidget = MediaWidget.extend({
         this.$('div.font-icons-icons').html(
             QWeb.render('wysiwyg.widgets.font-icons.icons', {iconsParser: iconsParser})
         );
-        return $.when();
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------

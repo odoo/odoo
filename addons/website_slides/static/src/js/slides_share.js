@@ -67,7 +67,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
                 self._updateStatistics(key, self.slideURL);
             });
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -128,13 +128,14 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
      * @param {Object} ev
      */
     _onSlidesSocialShare: function (ev) {
+        var self = this;
         ev.preventDefault();
         var key = $(ev.currentTarget).attr('social-key');
         var popUpURL = $(ev.currentTarget).attr('href');
         var popUp = window.open(popUpURL, 'Share Dialog', 'width=626,height=436');
         $(window).on('focus', function () {
             if (popUp.closed) {
-                this._updateStatistics(key, this.slide_url);
+                self._updateStatistics(key, self.slide_url);
                 $(window).off('focus');
             }
         });

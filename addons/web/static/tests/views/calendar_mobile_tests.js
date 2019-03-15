@@ -4,7 +4,7 @@ odoo.define('web.calendar_mobile_tests', function (require) {
 var CalendarView = require('web.CalendarView');
 var testUtils = require('web.test_utils');
 
-var createAsyncView = testUtils.createAsyncView;
+var createView = testUtils.createView;
 
 var initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
@@ -24,7 +24,7 @@ QUnit.module('Views', {
                     {id: 1, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00"},
                 ],
                 check_access_rights: function () {
-                    return $.when(true);
+                    return Promise.resolve(true);
                 }
             },
         };
@@ -37,7 +37,7 @@ QUnit.module('Views', {
         assert.expect(3);
         var done = assert.async();
 
-        createAsyncView({
+        createView({
             View: CalendarView,
             model: 'event',
             data: this.data,

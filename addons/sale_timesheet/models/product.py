@@ -19,10 +19,13 @@ class ProductTemplate(models.Model):
     service_tracking = fields.Selection([
         ('no', 'Don\'t create task'),
         ('task_global_project', 'Create a task in an existing project'),
-        ('task_new_project', 'Create a task in a new project'),
+        ('task_in_project', 'Create a task in sale order\'s project'),
         ('project_only', 'Create a new project but no task'),
-    ], string="Service Tracking", default="no",
-       help="On Sales order confirmation, this product can generate a project and/or task. From those, you can track the service you are selling.")
+        ], string="Service Tracking", default="no",
+        help="On Sales order confirmation, this product can generate a project and/or task. \
+        From those, you can track the service you are selling.\n \
+        'In sale order\'s project': Will use the sale order\'s configured project if defined or fallback to \
+        creating a new project based on the selected template.")
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True, domain=[('billable_type', '=', 'no')],
         help='Select a non billable project on which tasks can be created. This setting must be set for each company.')
@@ -73,7 +76,7 @@ class ProductTemplate(models.Model):
                 raise ValidationError(_('The product %s should not have a project nor a project template since it will not generate project.') % (product.name,))
             elif product.service_tracking == 'task_global_project' and product.project_template_id:
                 raise ValidationError(_('The product %s should not have a project template since it will generate a task in a global project.') % (product.name,))
-            elif product.service_tracking in ['task_new_project', 'project_only'] and product.project_id:
+            elif product.service_tracking in ['task_in_project', 'project_only'] and product.project_id:
                 raise ValidationError(_('The product %s should not have a global project since it will generate a project.') % (product.name,))
 
     @api.onchange('service_tracking')
@@ -83,17 +86,18 @@ class ProductTemplate(models.Model):
             self.project_template_id = False
         elif self.service_tracking == 'task_global_project':
             self.project_template_id = False
-        elif self.service_tracking in ['task_new_project', 'project_only']:
+        elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
 
     @api.onchange('type')
     def _onchange_type(self):
-        super(ProductTemplate, self)._onchange_type()
+        res = super(ProductTemplate, self)._onchange_type()
         if self.type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
         elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+        return res
 
 
 class ProductProduct(models.Model):
@@ -106,5 +110,5 @@ class ProductProduct(models.Model):
             self.project_template_id = False
         elif self.service_tracking == 'task_global_project':
             self.project_template_id = False
-        elif self.service_tracking in ['task_new_project', 'project_only']:
+        elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False

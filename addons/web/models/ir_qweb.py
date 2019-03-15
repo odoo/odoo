@@ -3,6 +3,7 @@
 
 import hashlib
 from collections import OrderedDict
+from werkzeug.urls import url_quote
 
 from odoo import api, models
 from odoo.tools import pycompat
@@ -45,17 +46,26 @@ class Image(models.AbstractModel):
         sha = hashlib.sha1(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
         avoid_if_small = '&avoid_if_small=true' if options.get('avoid_if_small') else ''
-        src = '/web/image/%s/%s/%s%s?unique=%s%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, sha, avoid_if_small)
 
-        alt = None
+        if options.get('filename-field') and getattr(record, options['filename-field'], None):
+            filename = record[options['filename-field']]
+        elif options.get('filename'):
+            filename = options['filename']
+        else:
+            filename = record.display_name
+
+        src = '/web/image/%s/%s/%s%s/%s?unique=%s%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha, avoid_if_small)
+
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
             alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']
+        else:
+            alt = escape(record.display_name)
 
         src_zoom = None
         if options.get('zoom') and getattr(record, options['zoom'], None):
-            src_zoom = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, sha)
+            src_zoom = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, url_quote(filename), sha)
         elif options.get('zoom'):
             src_zoom = options['zoom']
 

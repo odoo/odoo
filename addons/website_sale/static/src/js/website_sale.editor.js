@@ -21,7 +21,7 @@ WebsiteNewMenu.include({
      * and redirects the user to this new product.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewProduct: function () {
         var self = this;
@@ -29,18 +29,18 @@ WebsiteNewMenu.include({
             id: "editor_new_product",
             window_title: _t("New Product"),
             input: _t("Name"),
-        }).then(function (name) {
-            if (!name) {
+        }).then(function (result) {
+            if (!result.val) {
                 return;
             }
             return self._rpc({
                 route: '/shop/add_product',
                 params: {
-                    name: name,
+                    name: result.val,
                 },
             }).then(function (url) {
                 window.location.href = url;
-                return $.Deferred();
+                return new Promise(function () {});
             });
         });
     },
@@ -56,7 +56,7 @@ require('web.dom_ready');
 var options = require('web_editor.snippets.options');
 
 if (!$('.js_sale').length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_sale'");
+    return Promise.reject("DOM doesn't contain '.js_sale'");
 }
 
 $('.oe_website_sale').on('click', '.oe_currency_value:o_editable', function (ev) {

@@ -148,10 +148,12 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         """ Force values to stay consistent with integrity constraints """
+        res = super(ProductTemplate, self)._onchange_type()
         if self.type == 'consu':
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
             self.service_type = 'manual'
+        return res
 
     @api.model
     def get_import_templates(self):
@@ -169,7 +171,7 @@ class ProductTemplate(models.Model):
         return res
 
     @api.multi
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """ Return info about a given combination.
 
         Note: this method does not take into account whether the combination is
@@ -194,6 +196,9 @@ class ProductTemplate(models.Model):
             given, it will try to find the first possible combination, taking
             into account parent_combination (if set) for the exclusion rules.
 
+        :param only_template: boolean, if set to True, get the info for the
+            template only: ignore combination and don't try to find variant
+
         :return: dict with product/combination info:
 
             - product_id: the variant id matching the combination (if it exists)
@@ -215,6 +220,8 @@ class ProductTemplate(models.Model):
                 discount applied (price < list_price), else False
         """
         self.ensure_one()
+        # get the name before the change of context to benefit from prefetch
+        display_name = self.name
 
         quantity = self.env.context.get('quantity', add_qty)
         context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
@@ -222,10 +229,12 @@ class ProductTemplate(models.Model):
 
         combination = combination or product_template.env['product.template.attribute.value']
 
-        if not product_id and not combination:
+        if not product_id and not combination and not only_template:
             combination = product_template._get_first_possible_combination(parent_combination)
 
-        if product_id and not combination:
+        if only_template:
+            product = product_template.env['product.product']
+        elif product_id and not combination:
             product = product_template.env['product.product'].browse(product_id)
         else:
             product = product_template._get_variant_for_combination(combination)
@@ -253,8 +262,6 @@ class ProductTemplate(models.Model):
             list_price = product_template.price_compute('list_price')[product_template.id]
             price = product_template.price if pricelist else list_price
 
-        display_name = product_template.name
-
         filtered_combination = combination._without_no_variant_attributes()
         if filtered_combination:
             display_name = '%s (%s)' % (display_name, ', '.join(filtered_combination.mapped('name')))
@@ -281,8 +288,7 @@ class ProductTemplate(models.Model):
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
         It's possible to add to cart (potentially after configuration) if
-        there is at least one possible combination, or if there is no
-        `product.template.attribute.line` at all.
+        there is at least one possible combination.
 
         :param parent_combination: the combination from which `self` is an
             optional or accessory product.
@@ -293,9 +299,9 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         if not self.active:
+            # for performance: avoid calling `_get_possible_combinations`
             return False
-        combination = self._get_first_possible_combination(parent_combination)
-        return True if combination else self._is_combination_possible(combination, parent_combination)
+        return next(self._get_possible_combinations(parent_combination), False) is not False
 
     @api.multi
     def _get_current_company_fallback(self, **kwargs):

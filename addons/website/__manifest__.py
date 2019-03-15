@@ -3,7 +3,7 @@
 
 {
     'name': 'Website',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 7,
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/page/website-builder',
@@ -36,4 +36,5 @@
     ],
     'qweb': ['static/src/xml/website.backend.xml'],
     'application': True,
+    'uninstall_hook': 'uninstall_hook',
 }

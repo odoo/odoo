@@ -93,7 +93,7 @@ var BasicView = AbstractView.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadData: function (model) {
         if (this.recordID) {
@@ -195,7 +195,7 @@ var BasicView = AbstractView.extend({
                     }
                 });
             }
-            return $.when(def).then(function () {
+            return Promise.resolve(def).then(function () {
                 return model.get(record.id);
             });
         }

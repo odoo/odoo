@@ -6,21 +6,29 @@ from odoo import api, fields, models, _
 class Job(models.Model):
     _name = "hr.job"
     _inherit = ["mail.alias.mixin", "hr.job"]
+    _order = "state desc, name asc"
 
     @api.model
     def _default_address_id(self):
         return self.env.user.company_id.partner_id
+
+    def _get_default_favorite_user_ids(self):
+        return [(6, 0, [self.env.uid])]
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
+    new_application_count = fields.Integer(
+        compute='_compute_new_application_count', string="New Application",
+        help="Number of applications that are new in the flow (typically at first step of the flow)")
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruitment Responsible", tracking=True)
-    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", tracking=True,
+    user_id = fields.Many2one('res.users', "Responsible", tracking=True)
+    hr_responsible_id = fields.Many2one(
+        'res.users', "HR Responsible", tracking=True,
         help="Person responsible of validating the employee's contracts.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
@@ -28,6 +36,22 @@ class Job(models.Model):
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
     color = fields.Integer("Color Index")
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
+    favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
+
+    def _compute_is_favorite(self):
+        for job in self:
+            job.is_favorite = self.env.user in job.favorite_user_ids
+
+    def _inverse_is_favorite(self):
+        unfavorited_jobs = favorited_jobs = self.env['hr.job']
+        for job in self:
+            if self.env.user in job.favorite_user_ids:
+                unfavorited_jobs |= job
+            else:
+                favorited_jobs |= job
+        favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
+        unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
@@ -54,6 +78,22 @@ class Job(models.Model):
         for job in self:
             job.application_count = result.get(job.id, 0)
 
+    def _get_first_stage(self):
+        self.ensure_one()
+        return self.env['hr.recruitment.stage'].search([
+            '|',
+            ('job_id', '=', False),
+            ('job_id', '=', self.id)], order='sequence asc', limit=1)
+
+    def _compute_new_application_count(self):
+        first_stages = {job.id: job._get_first_stage().id for job in self}
+        mapped_data = dict.fromkeys(self.ids, 0)
+        for applicant in self.mapped('application_ids'):
+            if applicant.stage_id.id == first_stages.get(applicant.job_id.id): 
+                mapped_data[applicant.job_id.id] += 1
+        for job in self:
+            job.new_application_count = mapped_data.get(job.id)
+
     def get_alias_model_name(self, vals):
         return 'hr.applicant'
 
@@ -68,6 +108,7 @@ class Job(models.Model):
 
     @api.model
     def create(self, vals):
+        vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
         return super(Job, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.multi

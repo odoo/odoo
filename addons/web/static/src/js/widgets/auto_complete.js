@@ -201,10 +201,8 @@ return Widget.extend({
         this.current_result = $li.data('result');
     },
     select_item: function (ev) {
-        if (this.current_result.facet) {
-            this.select(ev, {item: {facet: this.current_result.facet}});
-            this.close();
-        }
+        this.select(ev, {item: {facet: this.current_result.facet}});
+        this.close();
     },
     show: function () {
         this.$el.show();

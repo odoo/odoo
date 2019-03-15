@@ -6,7 +6,7 @@ var Registry = require('web.Registry');
 return new Registry();
 });
 
-odoo.define('web._field_registry', function(require) {
+odoo.define('web._field_registry', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
@@ -37,7 +37,6 @@ registry
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
-    .add('signature', basic_fields.FieldBinarySignature)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
@@ -45,8 +44,9 @@ registry
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('label_selection', basic_fields.LabelSelection)
+    .add('kanban_label_selection', basic_fields.LabelSelection) // deprecated, use label_selection
     .add('state_selection', basic_fields.StateSelectionWidget)
-    .add('kanban_state_selection', basic_fields.StateSelectionWidget)
+    .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
     .add('boolean_toggle', basic_fields.BooleanToggle)

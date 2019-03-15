@@ -33,7 +33,7 @@ return core.Class.extend({
      *
      * @param {int|string} [action_id] the action id or xmlid
      * @param {Object} [additional_context] used to load the action
-     * @return {Deferred} resolved with the action whose id or xmlid is action_id
+     * @return {Promise} resolved with the action whose id or xmlid is action_id
      */
     load_action: function (action_id, additional_context) {
         var self = this;
@@ -69,7 +69,7 @@ return core.Class.extend({
      *     - options.load_filters: whether or not to load the filters,
      *     - options.action_id: the action_id (required to load filters),
      *     - options.toolbar: whether or not a toolbar will be displayed,
-     * @return {Deferred} resolved with the requested views information
+     * @return {Promise} resolved with the requested views information
      */
     load_views: function (params, options) {
         var self = this;
@@ -108,12 +108,12 @@ return core.Class.extend({
                     var fvg = result.fields_views[view_descr[1]];
                     fvg.viewFields = fvg.fields;
                     fvg.fields = result.fields;
-                    self._cache.fields_views[fv_key] = $.when(fvg);
+                    self._cache.fields_views[fv_key] = Promise.resolve(fvg);
                 });
 
                 // Insert filters, if any, into the filters cache
                 if (result.filters) {
-                    self._cache.filters[filters_key] = $.when(result.filters);
+                    self._cache.filters[filters_key] = Promise.resolve(result.filters);
                 }
 
                 return result.fields_views;
@@ -130,7 +130,7 @@ return core.Class.extend({
      * @param {string} params.modelName
      * @param {Object} params.context
      * @param {integer} params.actionId
-     * @return {Deferred} resolved with the requested filters
+     * @return {Promise} resolved with the requested filters
      */
     load_filters: function (params) {
         var key = this._gen_key(params.modelName, params.actionId);
@@ -143,7 +143,7 @@ return core.Class.extend({
                 },
                 model: 'ir.filters',
                 method: 'get_filters',
-            }).fail(this._invalidate.bind(this, this._cache.filters, key));
+            }).guardedCatch(this._invalidate.bind(this, this._cache.filters, key));
         }
         return this._cache.filters[key];
     },
@@ -152,7 +152,7 @@ return core.Class.extend({
      * Calls 'create_or_replace' on 'ir_filters'.
      *
      * @param {Object} [filter] the filter description
-     * @return {Deferred} resolved with the id of the created or replaced filter
+     * @return {Promise} resolved with the id of the created or replaced filter
      */
     create_filter: function (filter) {
         var self = this;
@@ -175,7 +175,7 @@ return core.Class.extend({
      * Calls 'unlink' on 'ir_filters'.
      *
      * @param {integer} filterId Id of the filter to remove
-     * @return {Deferred}
+     * @return {Promise}
      */
     delete_filter: function (filterId) {
         var self = this;

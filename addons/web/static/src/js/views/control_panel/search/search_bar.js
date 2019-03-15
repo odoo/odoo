@@ -46,7 +46,7 @@ var SearchBar = Widget.extend({
             defs.push(self._renderFacet(facet));
         });
         defs.push(this._setupAutoCompletion());
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -116,18 +116,21 @@ var SearchBar = Widget.extend({
      * @param {Function} callback
      */
     _getAutoCompleteSources: function (req, callback) {
-        var defs = _.invoke(this.autoCompleteSources, 'getAutocompletionValues', req.term);
-        $.when.apply($, defs).then(function () {
-            callback(_(arguments).chain()
+        var defs = this.autoCompleteSources.map(function (source) {
+            return source.getAutocompletionValues(req.term);
+        });
+        Promise.all(defs).then(function (result) {
+            var resultCleaned = _(result).chain()
                 .compact()
                 .flatten(true)
-                .value());
-            });
+                .value();
+            callback(resultCleaned);
+        });
     },
     /**
      * @private
      * @param {Object} facet
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderFacet: function (facet) {
         var searchFacet = new SearchFacet(this, facet);
@@ -136,7 +139,7 @@ var SearchBar = Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setupAutoCompletion: function () {
         var self = this;
@@ -184,10 +187,16 @@ var SearchBar = Widget.extend({
      */
     _onAutoCompleteSelected: function (e, ui) {
         e.preventDefault();
-        var filter = ui.item.facet.filter;
+        var facet = ui.item.facet;
+        if (!facet) {
+            // this happens when selecting "(no result)" item
+            this.trigger_up('reset');
+            return;
+        }
+        var filter = facet.filter;
         if (filter.type === 'field') {
             var values = filter.autoCompleteValues;
-            values.push(ui.item.facet.values[0]);
+            values.push(facet.values[0]);
             this.trigger_up('autocompletion_filter', {
                 filterId: filter.id,
                 autoCompleteValues: values,

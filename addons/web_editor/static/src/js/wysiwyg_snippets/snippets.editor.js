@@ -92,7 +92,17 @@ var SnippetEditor = Widget.extend({
             });
         }
 
-        return $.when.apply($, defs);
+        this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', function () {
+            self._targetIsAnimated = true;
+        });
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', function () {
+            self._targetIsAnimated = false;
+            if (self.$el.is('.oe_active')) {
+                self.cover();
+            }
+        });
+
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -101,6 +111,7 @@ var SnippetEditor = Widget.extend({
         this.cleanForSave();
         this._super.apply(this, arguments);
         this.$target.removeData('snippet-editor');
+        this.$target.off('.snippet_editor');
     },
 
     //--------------------------------------------------------------------------
@@ -132,6 +143,11 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
+        if (this._targetIsAnimated) {
+            // Do not cover a target being animated, it will be covered once the
+            // animation is completed.
+            return;
+        }
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
@@ -161,7 +177,7 @@ var SnippetEditor = Widget.extend({
         });
 
         var $parent = this.$target.parent();
-        this.$target.find('*').andSelf().tooltip('dispose');
+        this.$target.find('*').addBack().tooltip('dispose');
         this.$target.remove();
         this.$el.remove();
 
@@ -325,7 +341,7 @@ var SnippetEditor = Widget.extend({
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -605,7 +621,7 @@ var SnippetsMenu = Widget.extend({
         // Active snippet editor on click in the page
         var lastClickedElement;
         this.$document.on('click.snippets_menu', '*', function (ev) {
-            var srcElement = ev.srcElement || (ev.originalEvent && (ev.originalEvent.originalTarget || ev.originalEvent.target) || ev.target);
+            var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (lastClickedElement === srcElement || !srcElement) {
                 return;
             }
@@ -654,7 +670,7 @@ var SnippetsMenu = Widget.extend({
             $(range && range.sc).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             // Trigger a resize event once entering edit mode as the snippets
             // menu will take part of the screen width (delayed because of
             // animation). (TODO wait for real animation end)
@@ -675,9 +691,7 @@ var SnippetsMenu = Widget.extend({
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         core.bus.off('snippet_editor_clean_for_save', this, this._onCleanForSaveDemand);
-        if (this._defLoadSnippets.state() === "pending") {
-            delete this.cacheSnippetTemplate[this.options.snippets];
-        }
+        delete this.cacheSnippetTemplate[this.options.snippets];
     },
 
     //--------------------------------------------------------------------------
@@ -722,8 +736,8 @@ var SnippetsMenu = Widget.extend({
     /**
      * Sets the instance variables $editor, $body and selectorEditableArea.
      *
-     * @param {JQuery} $editor 
-     * @param {String} selectorEditableArea 
+     * @param {JQuery} $editor
+     * @param {String} selectorEditableArea
      */
     setSelectorEditableArea: function ($editor, selectorEditableArea) {
         this.selectorEditableArea = selectorEditableArea;
@@ -908,7 +922,7 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery|false} $snippet
      *        The DOM element whose editor need to be enabled. Only disable the
      *        current one if false is given.
-     * @returns {Deferred<SnippetEditor>}
+     * @returns {Promise<SnippetEditor>}
      *          (might be async when an editor must be created)
      */
     _activateSnippet: function ($snippet) {
@@ -917,7 +931,7 @@ var SnippetsMenu = Widget.extend({
                 $snippet = globalSelector.closest($snippet);
             }
             if (this.$activeSnippet && this.$activeSnippet[0] === $snippet[0]) {
-                return $.when($snippet.data('snippet-editor'));
+                return Promise.resolve($snippet.data('snippet-editor'));
             }
         }
         var editor = null;
@@ -937,7 +951,7 @@ var SnippetsMenu = Widget.extend({
                 return editor;
             });
         }
-        return $.when(editor);
+        return Promise.resolve(editor);
     },
     /**
      * @private
@@ -958,7 +972,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} callback
      *        Given two arguments: the snippet editor associated to the snippet
      *        being managed and the DOM element of this snippet.
-     * @returns {Deferred} (might be async if snippet editors need to be created
+     * @returns {Promise} (might be async if snippet editors need to be created
      *                     and/or the callback is async)
      */
     _callForEachChildSnippet: function ($snippet, callback) {
@@ -971,7 +985,7 @@ var SnippetsMenu = Widget.extend({
                 }
             });
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Creates and returns a set of helper functions which can help finding
@@ -1222,13 +1236,13 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      * @param {jQuery} $snippet
-     * @returns {Deferred<SnippetEditor>}
+     * @returns {Promise<SnippetEditor>}
      */
     _createSnippetEditor: function ($snippet) {
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
-            return $.when(snippetEditor);
+            return Promise.resolve(snippetEditor);
         }
 
         var def;
@@ -1237,7 +1251,7 @@ var SnippetsMenu = Widget.extend({
             def = this._createSnippetEditor($parent);
         }
 
-        return $.when(def).then(function (parentEditor) {
+        return Promise.resolve(def).then(function (parentEditor) {
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, self.getEditableArea(), self.options);
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
@@ -1348,7 +1362,7 @@ var SnippetsMenu = Widget.extend({
                 $toInsert.removeClass('oe_snippet_body');
 
                 if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
-                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                     if ($el.length) {
                         $el.after($toInsert);
                         dropped = true;

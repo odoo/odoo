@@ -23,19 +23,15 @@
             <div id="iframe_target" style="height: calc(100vh - 6px);"/>
             <script type="text/javascript">
                 window.$ = window.jQuery = window.top.jQuery;
-                var _summernoteMaster = $.summernote;
-                var _fnSummernoteMaster = $.fn.summernote;
-                delete $.summernote;
-                delete $.fn.summernote;
             </script>
             <script type="text/javascript" src="/web_editor/static/lib/summernote/summernote.js"/>
             <script type="text/javascript">
                 window._summernoteSlave = $.summernote;
                 window._summernoteSlave.iframe = true;
-                window._summernoteSlave.lang = _summernoteMaster.lang;
+                window._summernoteSlave.lang = window.top._summernoteMaster.lang;
                 window._fnSummenoteSlave = $.fn.summernote;
-                $.summernote = _summernoteMaster;
-                $.fn.summernote = _fnSummernoteMaster;
+                $.summernote = window.top._summernoteMaster;
+                $.fn.summernote = window.top._fnSummernoteMaster;
                 if (window.top.<t t-esc="updateIframeId"/>) {
                     window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
                 }

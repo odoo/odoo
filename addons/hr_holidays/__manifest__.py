@@ -4,7 +4,7 @@
 {
     'name': 'Time Off',
     'version': '1.5',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Time Off',
     'summary': 'Allocate time off and follow time off requests',
     'website': 'https://www.odoo.com/page/leaves',
     'description': """

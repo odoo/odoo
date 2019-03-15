@@ -130,9 +130,9 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
-    activity_category = fields.Selection(related='activity_type_id.category', readonly=False)
-    activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=False)
-    icon = fields.Char('Icon', related='activity_type_id.icon', readonly=False)
+    activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
+    activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
+    icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary')
     note = fields.Html('Note')
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.context_today)
@@ -149,14 +149,14 @@ class MailActivity(models.Model):
         ('today', 'Today'),
         ('planned', 'Planned')], 'State',
         compute='_compute_state')
-    recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type")
-    previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type')
+    recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type", readonly=True)
+    previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type', readonly=True)
     has_recommended_activities = fields.Boolean(
         'Next activities available',
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
-    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=False)
-    force_next = fields.Boolean(related='activity_type_id.force_next', readonly=False)
+    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
+    force_next = fields.Boolean(related='activity_type_id.force_next', readonly=True)
     # access
     can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
 
@@ -296,6 +296,12 @@ class MailActivity(models.Model):
                     activity.user_id.display_name)
             else:
                 try:
+                    target_user = activity.user_id
+                    target_record = self.env[activity.res_model].browse(activity.res_id)
+                    if hasattr(target_record, 'company_id') and (
+                        target_record.company_id != target_user.company_id and (
+                            len(target_user.company_ids) > 1)):
+                        return  # in that case we skip the check, assuming it would fail because of the company
                     model.browse(activity.res_id).check_access_rule('read')
                 except exceptions.AccessError:
                     raise exceptions.UserError(

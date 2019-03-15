@@ -276,12 +276,11 @@ class StockRule(models.Model):
         }
 
     def _make_po_get_domain(self, company_id, values, partner):
-        domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
                 (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
 
-        domain += (
+        domain = (
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
             ('picking_type_id', '=', self.picking_type_id.id),

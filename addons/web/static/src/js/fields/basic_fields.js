@@ -213,7 +213,7 @@ var InputField = DebouncedField.extend({
                 // sure they are recomputed.
                 this._applyDecorations();
             }
-            return $.when();
+            return Promise.resolve();
         } else {
             return this._render();
         }
@@ -486,8 +486,6 @@ var LinkButton = AbstractField.extend({
 
 });
 
-
-
 var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
@@ -513,7 +511,7 @@ var FieldDate = InputField.extend({
      */
     start: function () {
         var self = this;
-        var def;
+        var prom;
         if (this.mode === 'edit') {
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
@@ -522,13 +520,13 @@ var FieldDate = InputField.extend({
                     this._setValue(value);
                 }
             });
-            def = this.datewidget.appendTo('<div>').done(function () {
+            prom = this.datewidget.appendTo('<div>').then(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
                 self._replaceElement(self.datewidget.$el);
             });
         }
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.resolve(prom).then(this._super.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -728,7 +726,7 @@ var FieldMonetary = InputField.extend({
         this.$el.empty();
 
         // Prepare and add the input
-        this._prepareInput(this.$input).appendTo(this.$el);
+        var def = this._prepareInput(this.$input).appendTo(this.$el);
 
         if (this.currency) {
             // Prepare and add the currency symbol
@@ -739,6 +737,7 @@ var FieldMonetary = InputField.extend({
                 this.$el.prepend($currencySymbol);
             }
         }
+        return def;
     },
     /**
      * @override
@@ -1136,7 +1135,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     reset: function () {
         var self = this;
-        return $.when(this._super.apply(this, arguments)).then(function () {
+        return Promise.resolve(this._super.apply(this, arguments)).then(function () {
             if (self.mode === 'edit') {
                 self.$input.trigger('change');
             }
@@ -1331,7 +1330,9 @@ var CopyClipboard = {
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this.clipboard.destroy();
+        if (this.clipboard) {
+            this.clipboard.destroy();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1346,8 +1347,8 @@ var CopyClipboard = {
         var $clipboardBtn = this.$('.o_clipboard_button');
         $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
         this.clipboard = new ClipboardJS($clipboardBtn[0], {
-            text: function (_) {
-               return self.value.trim();
+            text: function () {
+                return self.value.trim();
             },
             // Container added because of Bootstrap modal that give the focus to another element.
             // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
@@ -1363,40 +1364,31 @@ var CopyClipboard = {
             });
         });
     },
+    /**
+     * @override
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            this.$el.append($(qweb.render(this.clipboardTemplate)));
+            this._initClipboard();
+        }
+    }
 };
 
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardText')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardText',
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardChar')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardChar',
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -2568,7 +2560,7 @@ var JournalDashboardGraph = AbstractField.extend({
         if (this._isInDOM) {
             return this._renderInDOM();
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Render the widget. This function assumes that it is attached to the DOM.
@@ -2743,13 +2735,13 @@ var FieldDomain = AbstractField.extend({
     /**
      * @private
      * @override _render from AbstractField
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         // If there is no model, only change the non-domain-selector content
         if (!this._domainModel) {
             this._replaceContent();
-            return $.when();
+            return Promise.resolve();
         }
 
         // Convert char value to array value
@@ -2901,7 +2893,7 @@ var AceEditor = DebouncedField.extend({
     /**
      * @override start from AbstractField (Widget)
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this._startAce(this.$('.ace-view-editor')[0]);

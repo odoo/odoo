@@ -651,7 +651,7 @@ class Picking(models.Model):
                                 move_ids_without_package |= move
                         else:
                             move_ids_without_package |= move
-            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: move.picking_type_id == picking.picking_type_id)
+            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _set_move_without_package(self):
         self.move_lines |= self.move_ids_without_package
@@ -723,7 +723,7 @@ class Picking(models.Model):
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
             raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
@@ -1023,12 +1023,15 @@ class Picking(models.Model):
 
         return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
-    def check_destinations(self):
-        if len(self.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id).mapped('location_dest_id')) > 1:
+    def _pre_put_in_pack_hook(self, move_line_ids):
+        return self._check_destinations(move_line_ids)
+
+    def _check_destinations(self, move_line_ids):
+        if len(move_line_ids.mapped('location_dest_id')) > 1:
             view_id = self.env.ref('stock.stock_package_destination_form_view').id
             wiz = self.env['stock.package.destination'].create({
                 'picking_id': self.id,
-                'location_dest_id': self.move_line_ids[0].location_dest_id.id,
+                'location_dest_id': move_line_ids[0].location_dest_id.id,
             })
             return {
                 'name': _('Choose destination location'),
@@ -1044,48 +1047,52 @@ class Picking(models.Model):
         else:
             return {}
 
-    def _put_in_pack(self):
+    def _put_in_pack(self, move_line_ids):
         package = False
-        for pick in self.filtered(lambda p: p.state not in ('done', 'cancel')):
-            move_line_ids = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
-            if move_line_ids:
-                move_lines_to_pack = self.env['stock.move.line']
-                package = self.env['stock.quant.package'].create({})
-                for ml in move_line_ids:
-                    if float_compare(ml.qty_done, ml.product_uom_qty,
-                                     precision_rounding=ml.product_uom_id.rounding) >= 0:
-                        move_lines_to_pack |= ml
-                    else:
-                        quantity_left_todo = float_round(
-                            ml.product_uom_qty - ml.qty_done,
-                            precision_rounding=ml.product_uom_id.rounding,
-                            rounding_method='UP')
-                        done_to_keep = ml.qty_done
-                        new_move_line = ml.copy(
-                            default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
-                        ml.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
-                        new_move_line.write({'product_uom_qty': done_to_keep})
-                        move_lines_to_pack |= new_move_line
-
-                package_level = self.env['stock.package_level'].create({
-                    'package_id': package.id,
-                    'picking_id': pick.id,
-                    'location_id': False,
-                    'location_dest_id': move_line_ids.mapped('location_dest_id').id,
-                    'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
-                })
-                move_lines_to_pack.write({
-                    'result_package_id': package.id,
-                })
-            else:
-                raise UserError(_('You must first set the quantity you will put in the pack.'))
+        for pick in self:
+            move_lines_to_pack = self.env['stock.move.line']
+            package = self.env['stock.quant.package'].create({})
+            for ml in move_line_ids:
+                if float_compare(ml.qty_done, ml.product_uom_qty,
+                                 precision_rounding=ml.product_uom_id.rounding) >= 0:
+                    move_lines_to_pack |= ml
+                else:
+                    quantity_left_todo = float_round(
+                        ml.product_uom_qty - ml.qty_done,
+                        precision_rounding=ml.product_uom_id.rounding,
+                        rounding_method='UP')
+                    done_to_keep = ml.qty_done
+                    new_move_line = ml.copy(
+                        default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
+                    ml.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                    new_move_line.write({'product_uom_qty': done_to_keep})
+                    move_lines_to_pack |= new_move_line
+            package_level = self.env['stock.package_level'].create({
+                'package_id': package.id,
+                'picking_id': pick.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
+            })
+            move_lines_to_pack.write({
+                'result_package_id': package.id,
+            })
         return package
 
     def put_in_pack(self):
-        res = self.check_destinations()
-        if res.get('type'):
-            return res
-        return self._put_in_pack()
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            move_line_ids = self.move_line_ids.filtered(lambda ml:
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                and not ml.result_package_id
+            )
+            if move_line_ids:
+                res = self._pre_put_in_pack_hook(move_line_ids)
+                if not res:
+                    res = self._put_in_pack(move_line_ids)
+                return res
+            else:
+                raise UserError(_('You must first set the quantity you will put in the pack.'))
 
     def button_scrap(self):
         self.ensure_one()

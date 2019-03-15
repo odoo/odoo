@@ -48,7 +48,7 @@ var MediaDialog = Dialog.extend({
         this.$media = $(media);
 
         this.multiImages = options.multiImages;
-        var onlyImages = options.onlyImages || this.multiImages || (this.media && (this.$media.parent().data('oeField') === 'image' || this.$media.parent().data('oeType') === 'image'));
+        var onlyImages = options.onlyImages || this.multiImages;
         this.noImages = options.noImages;
         this.noDocuments = onlyImages || options.noDocuments;
         this.noIcons = onlyImages || options.noIcons;
@@ -79,10 +79,6 @@ var MediaDialog = Dialog.extend({
         } else if (this.documentDialog && this.$media.is('a.o_image')) {
             this.active = this.documentDialog;
         } else if (this.videoDialog && this.$media.hasClass('media_iframe_video')) {
-            this.active = this.videoDialog;
-        } else if (this.videoDialog && this.$media.parent().hasClass('media_iframe_video')) {
-            this.$media = this.$media.parent();
-            this.media = this.$media[0];
             this.active = this.videoDialog;
         } else if (this.iconDialog && this.$media.is('span, i')) {
             this.active = this.iconDialog;
@@ -127,7 +123,7 @@ var MediaDialog = Dialog.extend({
             defs.push(this.videoDialog.appendTo(this.$("#editor-media-video")));
         }
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             self._setActive(self.active);
         });
     },
@@ -143,7 +139,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var _super = this._super;
         var args = arguments;
-        return $.when(this.active.save()).then(function (data) {
+        return Promise.resolve(this.active.save()).then(function (data) {
             self.final_data = data;
             // In the case of multi images selection we suppose this was not to
             // replace an old media, so we only retrieve the images and save.

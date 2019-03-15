@@ -95,14 +95,12 @@ var ProductComparison = publicWidget.Widget.extend(ProductConfiguratorMixin, {
                 }
             }
 
-            var productReady = this.selectOrCreateProduct(
+            this.selectOrCreateProduct(
                 $elem.closest('form'),
                 productId,
                 $elem.closest('form').find('.product_template_id').val(),
                 false
-            );
-
-            productReady.done(function (productId) {
+            ).then(function (productId) {
                 productId = parseInt(productId, 10);
 
                 if (!productId) {
@@ -247,7 +245,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
         this.productComparison = new ProductComparison(this);
-        return $.when(def, this.productComparison.appendTo(this.$el));
+        return Promise.all([def, this.productComparison.appendTo(this.$el)]);
     },
 
     //--------------------------------------------------------------------------

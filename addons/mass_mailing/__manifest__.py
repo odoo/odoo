@@ -8,7 +8,7 @@
     'version': '2.0',
     'sequence': 110,
     'website': 'https://www.odoo.com/page/mailing',
-    'category': 'Marketing',
+    'category': 'Marketing/Email Marketing',
     'depends': [
         'contacts',
         'mail',

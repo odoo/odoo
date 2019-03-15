@@ -69,9 +69,9 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
 
         if (this.isWebsite) {
-            delete this.events['change [data-attribute_exclusions]'];
             delete this.events['click button.js_add_cart_json'];
         }
+        this._productImageField = 'image_medium';
     },
      /**
      * @override
@@ -103,7 +103,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         });
 
         var parentInit = self._super.apply(self, arguments);
-        return $.when(getModalContent, parentInit);
+        return Promise.all([getModalContent, parentInit]);
     },
 
     /**
@@ -124,7 +124,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 self.$modal.removeAttr("aria-hidden");
                 self.$modal.modal().appendTo(self.container);
                 self.$modal.focus();
-                self._opened.resolve();
+                self._openedResolver();
             }
         });
         if (options && options.shouldFocusButtons) {
@@ -353,14 +353,12 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             $main_product.after($parent);
         }
 
-        var productReady = this.selectOrCreateProduct(
+        this.selectOrCreateProduct(
             $parent,
             $parent.find('.product_id').val(),
             productTemplateId,
             true
-        );
-
-        productReady.done(function (productId){
+        ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
             ajax.jsonRpc(self._getUri("/product_configurator/optional_product_items"), 'call', {
@@ -440,7 +438,17 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             delete optionalProductsMap[optionId];
         }
     },
+    /**
+     * @override
+     */
+    _onChangeCombination:function (ev, $parent, combination) {
+        $parent
+            .find('.td-product_name .product-name')
+            .first()
+            .text(combination.display_name);
 
+        ProductConfiguratorMixin._onChangeCombination.apply(this, arguments);
+    },
     /**
      * When the quantity of the root product is updated, we need to update
      * the quantity of all the selected optional products.

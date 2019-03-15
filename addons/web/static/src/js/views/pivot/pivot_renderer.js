@@ -72,7 +72,7 @@ var PivotRenderer = AbstractRenderer.extend({
     /**
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         if (!this._hasContent()) {

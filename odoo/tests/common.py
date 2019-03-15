@@ -734,7 +734,13 @@ class ChromeBrowser():
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     self._logger.error("Running code returned an error")
                     return False
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
+            elif res and res.get('method') == 'Runtime.exceptionThrown':
+                exception_details = res.get('params', {}).get('exceptionDetails', {})
+                self._logger.error(exception_details)
+                self.take_screenshot()
+                self._save_screencast()
+                return False
+            elif res and res.get('method') in 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
@@ -1430,12 +1436,12 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] == 1} if current else {}
+            c = {t[1]: t[2] for t in current if t[0] in (1, 2)} if current else {}
             # which view should this be???
             subfields = descr['views']['edition']['fields']
             for command in value:
-                # TODO: get existing sub-values so we can pass them along?
                 if command[0] in (0, 1):
+                    c.pop(command[1], None) # remove record from currents
                     v.append((command[0], command[1], {
                         k: self._cleanup_onchange(
                             subfields[k], v, None
@@ -1443,10 +1449,14 @@ class Form(object):
                         for k, v in command[2].items()
                         if k in subfields
                     }))
+                elif command[0] == 2:
+                    v.append((2, command[1], False))
                 elif command[0] == 4:
-                    v.append((1, command[1], c.get(command[1], {})))
+                    v.append((1, command[1], c.pop(command[1], {})))
                 elif command[0] == 5:
                     v = []
+            # explicitly mark all non-relinked (or modified) records as deleted
+            for id_ in c: v.append((2, id_, False))
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6

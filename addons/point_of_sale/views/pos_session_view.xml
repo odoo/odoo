@@ -125,6 +125,9 @@
                         </tree>
                     </field>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
             </form>
         </field>
     </record>
@@ -161,7 +164,7 @@
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><span><field name="config_id"/></span></strong>
                                 </div>
-                                <field name="state" widget="kanban_label_selection" options="{'classes': {'opening_control': 'default',
+                                <field name="state" widget="label_selection" options="{'classes': {'opening_control': 'default',
                                         'opened': 'success', 'closing_control': 'warning', 'closed': 'warning'}}"/>
                             </div>
                             <div class="o_kanban_record_body">
@@ -215,6 +218,15 @@
                 A session is a period of time, usually one day, during which you sell through the Point of Sale.
             </p>
         </field>
+    </record>
+
+    <record id="mail_activity_old_session" model="mail.activity.type">
+        <field name="name">Session open over 7 days</field>
+        <field name="summary">note</field>
+        <field name="category">default</field>
+        <field name="res_model_id" ref="model_pos_session"/>
+        <field name="icon">fa-tasks</field>
+        <field name="delay_count">0</field>
     </record>
 
     <menuitem

@@ -452,7 +452,7 @@
         <field name="act_window_id" ref="hr_leave_action_new_request"/>
         <field name="view_id" ref="hr_leave_view_tree_my"/>
     </record>
-    <record id="hhr_leave_action_new_request_view_form" model="ir.actions.act_window.view">
+    <record id="hr_leave_action_new_request_view_form" model="ir.actions.act_window.view">
         <field name="sequence">3</field>
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="hr_leave_action_new_request"/>
@@ -521,8 +521,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{
-            'search_default_managed_people': 1,
-            'search_default_my_team_leaves': 1
+            'search_default_managed_people':1,
+            'search_default_my_team_leaves':1,
             'search_default_approve':1}
         </field>
         <field name="domain">[]</field>

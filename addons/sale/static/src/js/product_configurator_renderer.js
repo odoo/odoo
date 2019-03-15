@@ -16,8 +16,10 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
      * @override
      */
     start: function () {
-        this._super.apply(this, arguments);
-        this.$el.append($('<div>', {class: 'configurator_container'}));
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$el.append($('<div>', {class: 'configurator_container'}));
+        });
     },
 
     //--------------------------------------------------------------------------

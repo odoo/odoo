@@ -126,7 +126,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
                 $window.trigger('resize');
             });
         }
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             if (!self.noAutohide) {
                 dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
             }

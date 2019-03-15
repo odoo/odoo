@@ -10,7 +10,6 @@ var FormRenderer = require('web.FormRenderer');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
-var _t = core._t;
 
 var BaseSettingRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
@@ -25,28 +24,15 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     start: function () {
-        this._super.apply(this, arguments);
+        var prom = this._super.apply(this, arguments);
         if (config.device.isMobile) {
             core.bus.on("DOM_updated", this, function () {
                 this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
         }
+        return prom;
     },
 
-    /**
-     * @override
-     * overridden to show statusbar buttons and a message if there are changes
-     */
-    confirmChange: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            if (self.$('.o_statusbar_buttons').hasClass('d-none')) {
-                self.$('.o_statusbar_buttons')
-                    .append($('<span/>', {text: _t("There are unsaved changes"), class: 'text-muted ml-2'}))
-                    .removeClass('d-none');
-            }
-        });
-    },
     /**
      * @override
      */
@@ -281,15 +267,16 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _render: function () {
-        var res = this._super.apply(this, arguments);
-        this._initModules();
-        this._renderLeftPanel();
-        this._initSearch();
-        this.$('.o_statusbar_buttons').addClass('d-none');
-        if (config.device.isMobile) {
-            this._enableSwipe();
-        }
-        return res;
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            self._initModules();
+            self._renderLeftPanel();
+            self._initSearch();
+            
+            if (config.device.isMobile) {
+                self._enableSwipe();
+            }
+        });
     },
 
     _renderLeftPanel: function () {

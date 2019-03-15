@@ -37,7 +37,7 @@ var SelectBox = publicWidget.Widget.extend({
                 return {id: val.id, text: val.name};
             });
         }));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -365,7 +365,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         defs.push(sourceSelect.attachTo($('#source-select')));
 
         // Recent Links Widgets
-        this.recentLinks = new RecentLinks();
+        this.recentLinks = new RecentLinks(this);
         defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
         this.recentLinks.getRecentLinks('newest');
 
@@ -376,7 +376,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         $('[data-toggle="tooltip"]').tooltip();
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

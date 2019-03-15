@@ -143,11 +143,12 @@ class AccountReconciliation(models.AbstractModel):
             else:
                 aml_ids = matching_amls[line.id]['aml_ids']
                 bank_statements_left += line.statement_id
+                target_currency = line.currency_id or line.journal_id.currency_id or line.journal_id.company_id.currency_id
 
                 amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
                 line_vals = {
                     'st_line': self._get_statement_line(line),
-                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
+                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls, target_currency=target_currency, target_date=line.date) or [],
                     'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
                     'write_off': matching_amls[line.id].get('status') == 'write_off',
                 }
@@ -303,11 +304,10 @@ class AccountReconciliation(models.AbstractModel):
         aml_ids = self._context.get('active_ids') and self._context.get('active_model') == 'account.move.line' and tuple(self._context.get('active_ids'))
 
         query = ("""
-            SELECT {0} account_id, account_name, account_code, max_date,
-                   to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked
+            SELECT {0} account_id, account_name, account_code, max_date {10}
             FROM (
                     SELECT {1}
-                        {res_alias}.last_time_entries_checked AS last_time_entries_checked,
+                        {11}
                         a.id AS account_id,
                         a.name AS account_name,
                         a.code AS account_code,
@@ -339,10 +339,10 @@ class AccountReconciliation(models.AbstractModel):
                             AND l.amount_residual < 0
                         )
                         {8}
-                    GROUP BY {9} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
-                    ORDER BY {res_alias}.last_time_entries_checked
+                    GROUP BY {9} a.id, a.name, a.code {12}
+                    {13}
                 ) as s
-            WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+            {14}
         """.format(
                 is_partner and 'partner_id, partner_name,' or ' ',
                 is_partner and 'p.id AS partner_id, p.name AS partner_name,' or ' ',
@@ -354,7 +354,11 @@ class AccountReconciliation(models.AbstractModel):
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 aml_ids and 'AND l.id IN %(aml_ids)s' or '',
                 is_partner and 'l.partner_id, p.id,' or ' ',
-                res_alias=res_alias
+                res_type == 'partner' and ", to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked" or ' ',
+                res_type == 'partner' and 'p.last_time_entries_checked AS last_time_entries_checked,' or ' ',
+                res_type == 'partner' and ', p.last_time_entries_checked' or ' ',
+                res_type == 'partner' and 'ORDER BY p.last_time_entries_checked' or 'ORDER BY a.code',
+                res_type == 'partner' and 'WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)' or ' ',
             ))
         self.env.cr.execute(query, locals())
 
@@ -409,9 +413,6 @@ class AccountReconciliation(models.AbstractModel):
             if datum['type'] == 'partner':
                 partners = Partner.browse(datum['id'])
                 partners.mark_as_reconciled()
-            if datum['type'] == 'account':
-                accounts = Account.browse(datum['id'])
-                accounts.mark_as_reconciled()
 
     ####################################################
     # Private
@@ -419,6 +420,7 @@ class AccountReconciliation(models.AbstractModel):
 
     def _str_domain_for_mv_line(self, search_str):
         return [
+            '|', ('account_id.code', 'ilike', search_str),
             '|', ('move_id.name', 'ilike', search_str),
             '|', ('move_id.ref', 'ilike', search_str),
             '|', ('date_maturity', 'like', search_str),
@@ -485,21 +487,12 @@ class AccountReconciliation(models.AbstractModel):
             ('payment_id', '<>', False)
         ]
 
-        # Black lines = unreconciled & (not linked to a payment or open balance created by statement
-        domain_matching = [('reconciled', '=', False)]
-        if partner_id:
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.internal_type', 'in', ['payable', 'receivable'])]
-            ])
-        else:
-            # TODO : find out what use case this permits (match a check payment, registered on a journal whose account type is other instead of liquidity)
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.reconcile', '=', True)]
-            ])
+        # default domain matching
+        domain_matching = expression.AND([
+            [('reconciled', '=', False)],
+            [('account_id.reconcile', '=', True)]
+        ])
 
-        # Let's add what applies to both
         domain = expression.OR([domain_reconciliation, domain_matching])
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])

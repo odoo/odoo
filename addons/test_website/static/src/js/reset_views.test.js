@@ -2,12 +2,10 @@ odoo.define('test_website.reset_views', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 tour.register('test_reset_page_view_complete_flow_part1', {
     test: true,
     url: '/test_page_view',
-    wait_for: base.ready()
 },
     [
         // 1. Edit the page through Edit Mode, it will COW the view
@@ -23,7 +21,7 @@ tour.register('test_reset_page_view_complete_flow_part1', {
         },
         {
             content: "save the page",
-            extra_trigger: '#oe_structure_test_website_page .s_cover',
+            extra_trigger: '#oe_structure_test_website_page.o_dirty',
             trigger: "#web_editor-top-edit button[data-action=save]",
         },
         // 2. Edit that COW'd view in the HTML editor to break it.
@@ -56,7 +54,6 @@ tour.register('test_reset_page_view_complete_flow_part1', {
 tour.register('test_reset_page_view_complete_flow_part2', {
     test: true,
     url: '/test_page_view',
-    wait_for: base.ready()
 },
     [
         {
@@ -80,7 +77,7 @@ tour.register('test_reset_page_view_complete_flow_part2', {
         },
         {
             content: "select oe_structure view",
-            trigger: '#ace-view-list',
+            trigger: '#s2id_ace-view-list',  // use select2 version
             run: function () {
                 var viewId = $('#ace-view-list option:contains("oe_structure")').val();
                 $('#ace-view-list').val(viewId).trigger('change');

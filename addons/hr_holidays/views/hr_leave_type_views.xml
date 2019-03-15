@@ -50,6 +50,7 @@
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
+                            <field name="responsible_id" attrs="{'invisible': [('validation_type', 'in', ['no_validation', 'manager'])], 'required': [('validation_type', 'in', ['hr', 'both'])]}"/>
                         </group>
                         <group name="visibility" string="Allocation">
                             <field name="allocation_type" widget="radio" force_save="1"/>

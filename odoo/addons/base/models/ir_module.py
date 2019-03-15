@@ -111,7 +111,6 @@ class ModuleCategory(models.Model):
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
 
-
 class MyFilterMessages(Transform):
     """
     Custom docutils transform to remove `system message` for a document and

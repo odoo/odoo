@@ -37,7 +37,7 @@ function _checkClass(w, className, shouldHaveClass, msg) {
         var descr = `${shouldHaveClass ? 'hasClass' : 'doesNotHaveClass'} ${className}`;
         QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
     } else {
-        msg = msg || `target ${$el.selector || ''} should ${shouldHaveClass ? '' : 'not'} have class ${className}`;
+        msg = msg || `target should ${shouldHaveClass ? '' : 'not'} have class ${className}`;
         var hasClass = $el.hasClass(className);
         var condition = shouldHaveClass ? hasClass : !hasClass;
         QUnit.assert.ok(condition, msg);
@@ -63,8 +63,15 @@ function _checkVisible(w, shouldBeVisible, msg) {
         var descr = `${shouldBeVisible ? 'isVisible' : 'isNotVisible'}`;
         QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
     } else {
-        msg = msg || `target ${$el.selector} should ${shouldBeVisible ? '' : 'not'} be visible`;
+        msg = msg || `target should ${shouldBeVisible ? '' : 'not'} be visible`;
         var isVisible = $el.is(':visible');
+        if (isVisible) {
+            // Additional test to see if $el is really visible, since jQuery
+            // considers an element visible if it has a DOWRect, even if its
+            // width and height are equal to zero.
+            var boundingClientRect = $el[0].getBoundingClientRect();
+            isVisible = boundingClientRect.width + boundingClientRect.height;
+        }
         var condition = shouldBeVisible ? isVisible : !isVisible;
         QUnit.assert.ok(condition, msg);
     }
@@ -96,9 +103,7 @@ function containsN(w, selector, n, msg) {
     var $matches = $el.find(selector);
     if (!msg) {
         msg = `Selector '${selector}' should have exactly ${n} matches`;
-        if ($el.selector) {
-            msg += ` (inside '${$el.selector}')`;
-        }
+        msg += ` (inside the target)`;
     }
     QUnit.assert.strictEqual($matches.length, n, msg);
 }
@@ -181,7 +186,7 @@ function hasAttrValue(w, attr, value, msg) {
         var descr = `hasAttrValue (${attr}: ${value})`;
         QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
     } else {
-        msg = msg || `attribute '${attr}' of target ${$el.selector || ''} should be '${value}'`;
+        msg = msg || `attribute '${attr}' of target should be '${value}'`;
         QUnit.assert.strictEqual($el.attr(attr), value, msg);
     }
 }

@@ -43,6 +43,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     commitChanges: function () {
         var self = this;
+        if (!this.wysiwyg || !this.isRendered) {
+            return this._super();
+        }
         var fieldName = this.nodeOptions['inline-field'];
 
         if (this.mode == "readonly") {
@@ -54,8 +57,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
 
-        return this.wysiwyg.save().then(function (isDirty) {
-            self._isDirty = isDirty;
+        return this.wysiwyg.save().then(function (result) {
+            self._isDirty = result.isDirty;
 
             convertInline.attachmentThumbnailToLinkImg($editable);
             convertInline.fontToImg($editable);

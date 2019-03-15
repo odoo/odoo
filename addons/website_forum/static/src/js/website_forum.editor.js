@@ -21,7 +21,7 @@ WebsiteNewMenu.include({
      * and redirects the user to this new forum.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewForum: function () {
         var self = this;
@@ -42,7 +42,9 @@ WebsiteNewMenu.include({
                 $add.find('label').append(_t("Add to menu"));
                 $group.after($add);
             }
-        }).then(function (forum_name, field, $dialog) {
+        }).then(function (result) {
+            var forum_name = result.val;
+            var $dialog = result.dialog;
             if (!forum_name) {
                 return;
             }
@@ -55,7 +57,7 @@ WebsiteNewMenu.include({
                 },
             }).then(function (url) {
                 window.location.href = url;
-                return $.Deferred();
+                return new Promise(function () {});
             });
         });
     },

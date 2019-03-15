@@ -275,9 +275,9 @@ class HrBenefit(models.Model):
             }]
         self.env['resource.calendar.attendance'].create(vals_list)
 
-    @api.model
-    def action_validate(self, ids):
-        benefits = self.env['hr.benefit'].search([('id', 'in', ids), ('state', '!=', 'validated')])
+    @api.multi
+    def action_validate(self):
+        benefits = self.filtered(lambda benefit: benefit.state != 'validated')
         benefits.write({'display_warning': False})
         if not benefits._check_if_error():
             benefits.write({'state': 'validated'})

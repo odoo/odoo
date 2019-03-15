@@ -70,7 +70,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
         this._members = data.members || [];
-        // Deferred that is resolved on fetched members of this channel.
+        // Promise that is resolved on fetched members of this channel.
         this._membersDef = undefined;
         // number of messages that are 'needaction', which is equivalent to the
         // number of messages in this channel that are in inbox.
@@ -129,19 +129,21 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @pverride
      */
     detach: function () {
-        this._super.apply(this, arguments);
-        this._rpc({
-            model: 'mail.channel',
-            method: 'channel_minimize',
-            args: [this.getUUID(), true],
-        }, {
-            shadow: true,
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._rpc({
+                model: 'mail.channel',
+                method: 'channel_minimize',
+                args: [self.getUUID(), true],
+            }, {
+                shadow: true,
+            });
         });
     },
     /**
      * Force fetch members of the channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {Promise<Object[]>} resolved with list of channel listeners
      */
     forceFetchMembers: function () {
         this._membersDef = undefined;
@@ -186,7 +188,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * Get listeners of a channel
      *
-     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     * @returns {Promise<Object[]>} resolved with list of list of
      *   channel listeners.
      */
     getMentionPartnerSuggestions: function () {
@@ -302,7 +304,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * Unsubscribes from channel
      *
      * @abstract
-     * @returns {$.Promise} resolve when unsubscribed
+     * @returns {Promise} resolve when unsubscribed
      */
     unsubscribe: function () {},
     /**
@@ -381,19 +383,19 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      *
      * @override
      * @private
-     * @returns {$.Promise} resolved when message has been marked as read
+     * @returns {Promise} resolved when message has been marked as read
      */
     _markAsRead: function () {
         var superDef = this._super.apply(this, arguments);
         var seenDef = this._notifySeen();
-        return $.when(superDef, seenDef);
+        return Promise.all([superDef, seenDef]);
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
      * @private
      * @param {Object} params
      * @param {boolean} params.typing
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _notifyMyselfTyping: function (params) {
         return this._rpc({
@@ -424,7 +426,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @override
      * @private
      * @param {Object} data data related to the new message
-     * @returns {$.Promise<Object>} resolved when the message has been sent to
+     * @returns {Promise<Object>} resolved when the message has been sent to
      *   the server, with the object message that has been sent to the server.
      */
     _postMessage: function (data) {

@@ -276,8 +276,9 @@ class PosOrder(models.Model):
             raise UserError(_('Please define income '
                               'account for this product: "%s" (id:%d).')
                             % (line.product_id.name, line.product_id.id))
-        if order.fiscal_position_id.account_ids:
-            income_account = order.fiscal_position_id.map_account(income_account)
+        fpos = order.fiscal_position_id or order.partner_id.property_account_position_id
+        if fpos:
+            income_account = fpos.map_account(income_account)
 
         name = line.product_id.name
         if line.notice:
@@ -385,7 +386,12 @@ class PosOrder(models.Model):
             current_company = order.sale_journal.company_id
             account_def = IrProperty.get(
                 'property_account_receivable_id', 'res.partner')
-            order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
+            order_account = order.partner_id.property_account_receivable_id or account_def
+            # If fiscal position, then map order account
+            fpos = order.fiscal_position_id or order.partner_id.property_account_position_id
+            if fpos:
+                order_account = fpos.map_account(order_account)
+
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if not move:
                 # Create an entry for the sale
@@ -462,7 +468,7 @@ class PosOrder(models.Model):
                 amount_total = order.amount_total
             data = {
                 'name': _("Trade Receivables"),  # order.name,
-                'account_id': order_account,
+                'account_id': order_account.id,
                 'credit': ((amount_total < 0) and -amount_total) or 0.0,
                 'debit': ((amount_total > 0) and amount_total) or 0.0,
                 'partner_id': partner_id

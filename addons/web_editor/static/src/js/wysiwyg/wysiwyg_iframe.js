@@ -13,6 +13,8 @@ $.fn.summernote = function () {
     var summernote = this[0].ownerDocument.defaultView._fnSummenoteSlave || _fnSummernoteMaster;
     return summernote.apply(this, arguments);
 };
+window._fnSummernoteMaster = $.fn.summernote;
+window._summernoteMaster = _summernoteMaster;
 
 /**
  * Add option (inIframe) to load Wysiwyg in an iframe.
@@ -45,7 +47,7 @@ Wysiwyg.include({
         if (this.options.iframeCssAssets) {
             this.defAsset = ajax.loadAsset(this.options.iframeCssAssets);
         } else {
-            this.defAsset = $.when({cssLibs: [], cssContents: []});
+            this.defAsset = Promise.resolve({cssLibs: [], cssContents: []});
         }
         this.$target = this.$el;
         return this.defAsset
@@ -137,6 +139,7 @@ Wysiwyg.include({
      * @returns {Promise}
      */
     _loadIframe: function () {
+        var self = this;
         this.$iframe = $('<iframe class="wysiwyg_iframe">').css({
             'min-height': '400px',
             width: '100%'
@@ -144,19 +147,19 @@ Wysiwyg.include({
         var avoidDoubleLoad = 0; // this bug only appears on some configurations.
 
         // resolve deferred on load
-
-        var def = $.Deferred();
-        this.$iframe.data('load-def', def);  // for unit test
-        window.top[this._onUpdateIframeId] = function (_avoidDoubleLoad) {
-            if (_avoidDoubleLoad !== avoidDoubleLoad) {
-                console.warn('Wysiwyg iframe double load detected');
-                return;
-            }
-            delete window.top[this._onUpdateIframeId];
-            var $iframeTarget = this.$iframe.contents().find('#iframe_target');
-            $iframeTarget.append(this.$target);
-            def.resolve();
-        }.bind(this);
+        var def = new Promise(function (resolve) {
+            window.top[self._onUpdateIframeId] = function (_avoidDoubleLoad) {
+                if (_avoidDoubleLoad !== avoidDoubleLoad) {
+                    console.warn('Wysiwyg iframe double load detected');
+                    return;
+                }
+                delete window.top[self._onUpdateIframeId];
+                var $iframeTarget = self.$iframe.contents().find('#iframe_target');
+                $iframeTarget.append(self.$target);
+                resolve();
+            };
+        });
+        this.$iframe.data('loadDef', def);  // for unit test
 
         // inject content in iframe
 
@@ -180,7 +183,7 @@ Wysiwyg.include({
 
         this.$iframe.insertAfter(this.$target);
 
-        return def.promise();
+        return def;
     },
 });
 

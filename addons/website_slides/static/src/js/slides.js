@@ -28,7 +28,7 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
             $(el).text(displayStr);
         });
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 
@@ -101,7 +101,7 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
         $('iframe.o_wslides_iframe_viewer').on('ready', this._onIframeViewerReady.bind(this));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

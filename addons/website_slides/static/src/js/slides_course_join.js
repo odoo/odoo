@@ -73,11 +73,11 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-        var defs = [this._super.apply(this, arguments)];
+        var proms = [this._super.apply(this, arguments)];
         $('.o_wslides_js_course_join').each(function () {
-            defs.push(new CourseJoinWidget(self).attachTo($(this)));
+            proms.push(new CourseJoinWidget(self).attachTo($(this)));
         });
-        return $.when.apply($, defs);
+        return Promise.all(proms);
     },
 });
 

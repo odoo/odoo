@@ -55,7 +55,7 @@ var SearchPanel = Widget.extend({
         var loadProm = this._fetchCategories().then(function () {
             return self._fetchFilters().then(self._applyDefaultFilterValues.bind(self));
         });
-        return $.when(loadProm, this._super.apply(this, arguments));
+        return Promise.all([loadProm, this._super.apply(this, arguments)]);
     },
     /**
      * @override
@@ -82,18 +82,18 @@ var SearchPanel = Widget.extend({
      *
      * @param {Object} params
      * @param {Array[]} params.searchDomain domain coming from controlPanel
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     update: function (params) {
         var currentSearchDomainStr = JSON.stringify(this.searchDomain);
         var newSearchDomainStr = JSON.stringify(params.searchDomain);
-        var def;
+        var filtersProm;
         if (this.needReload || (currentSearchDomainStr !== newSearchDomainStr)) {
             this.needReload = false;
             this.searchDomain = params.searchDomain;
-            def = this._fetchFilters();
+            filtersProm = this._fetchFilters();
         }
-        return $.when(def).then(this._render.bind(this));
+        return Promise.resolve(filtersProm).then(this._render.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -231,21 +231,21 @@ var SearchPanel = Widget.extend({
      * Fetch values for each category. This is done only once, at startup.
      *
      * @private
-     * @returns {$.Promise} resolved when all categories have been fetched
+     * @returns {Promise} resolved when all categories have been fetched
      */
     _fetchCategories: function () {
         var self = this;
-        var defs = Object.keys(this.categories).map(function (categoryId) {
+        var proms = Object.keys(this.categories).map(function (categoryId) {
             var category = self.categories[categoryId];
             var field = self.fields[category.fieldName];
-            var def;
+            var categoriesProm;
             if (field.type === 'selection') {
                 var values = field.selection.map(function (value) {
                     return {id: value[0], display_name: value[1]};
                 });
-                def = $.when(values);
+                categoriesProm = Promise.resolve(values);
             } else {
-                def = self._rpc({
+                categoriesProm = self._rpc({
                     method: 'search_panel_select_range',
                     model: self.model,
                     args: [category.fieldName],
@@ -254,18 +254,18 @@ var SearchPanel = Widget.extend({
                     return result.values;
                 });
             }
-            return def.then(function (values) {
+            return categoriesProm.then(function (values) {
                 self._createCategoryTree(categoryId, values);
             });
         });
-        return $.when.apply($, defs);
+        return Promise.all(proms);
     },
     /**
      * Fetch values for each filter. This is done at startup, and at each reload
      * (when the controlPanel or searchPanel domain changes).
      *
      * @private
-     * @returns {$.Promise} resolved when all filters have been fetched
+     * @returns {Promise} resolved when all filters have been fetched
      */
     _fetchFilters: function () {
         var self = this;
@@ -276,7 +276,7 @@ var SearchPanel = Widget.extend({
         });
         var categoryDomain = this._getCategoryDomain();
         var filterDomain = this._getFilterDomain();
-        var defs = Object.keys(this.filters).map(function (filterId) {
+        var proms = Object.keys(this.filters).map(function (filterId) {
             var filter = self.filters[filterId];
             return self._rpc({
                 method: 'search_panel_select_multi_range',
@@ -294,7 +294,7 @@ var SearchPanel = Widget.extend({
                 self._createFilterTree(filterId, values);
             });
         });
-        return $.when.apply($, defs);
+        return Promise.all(proms);
     },
     /**
      * Compute and return the domain based on the current active categories.

@@ -1695,7 +1695,7 @@ var dom = {
     isCustomStyleTag: isCustomStyleTag
 };
 
-$$1.summernote = $$1.summernote || {
+$$1.summernote = {
     lang: {}
 };
 $$1.extend($$1.summernote.lang, {

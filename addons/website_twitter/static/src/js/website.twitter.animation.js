@@ -99,7 +99,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             self._startScrolling();
         });
 
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), def]);
     },
     /**
      * @override

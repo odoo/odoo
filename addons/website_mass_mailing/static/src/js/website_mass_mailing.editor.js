@@ -28,15 +28,15 @@ var mass_mailing_common = options.Class.extend({
                     });
             },
         });
-        def.then(function (mailing_list_id) {
-            self.$target.attr("data-list-id", mailing_list_id);
+        def.then(function (result) {
+            self.$target.attr("data-list-id", result.val);
         });
         return def;
     },
     onBuilt: function () {
         var self = this;
         this._super();
-        this.select_mailing_list('click').fail(function () {
+        this.select_mailing_list('click').guardedCatch(function () {
             self.getParent()._onRemoveClick($.Event( "click" ));
         });
     },

@@ -75,7 +75,7 @@ var ActionMixin = {
      * Called by the action manager when action is restored (typically, when the
      * user clicks on the action in the breadcrumb)
      *
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     willRestore: function () {},
 
@@ -89,14 +89,14 @@ var ActionMixin = {
      * example, if the user has edited a form, maybe we should ask him if we
      * can discard all his changes when we switch to another action.  In that
      * case, the action manager will call this method.  If the returned
-     * deferred is succesfully resolved, then we can destroy the current action,
+     * promise is succesfully resolved, then we can destroy the current action,
      * otherwise, we need to stop.
      *
-     * @returns {Deferred} resolved if the action can be removed, rejected
+     * @returns {Promise} resolved if the action can be removed, rejected
      *   otherwise
      */
     canBeRemoved: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * This function is called when the current state of the action

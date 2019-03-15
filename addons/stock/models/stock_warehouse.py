@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.osv import expression
 
 import logging
 
@@ -495,12 +496,39 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        code = vals.get('code') or self.code
+        code = code.replace(' ', '').upper()
         sub_locations = {
-            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
-            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
-            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
-            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
-            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+            'lot_stock_id': {
+                'name': _('Stock'),
+                'active': True,
+                'usage': 'internal',
+                'barcode': code + '-STOCK'
+            },
+            'wh_input_stock_loc_id': {
+                'name': _('Input'),
+                'active': reception_steps != 'one_step',
+                'usage': 'internal',
+                'barcode': code + '-INPUT'
+            },
+            'wh_qc_stock_loc_id': {
+                'name': _('Quality Control'),
+                'active': reception_steps == 'three_steps',
+                'usage': 'internal',
+                'barcode': code + '-QUALITY'
+            },
+            'wh_output_stock_loc_id': {
+                'name': _('Output'),
+                'active': delivery_steps != 'ship_only',
+                'usage': 'internal',
+                'barcode': code + '-OUTPUT'
+            },
+            'wh_pack_stock_loc_id': {
+                'name': _('Packing Zone'),
+                'active': delivery_steps == 'pick_pack_ship',
+                'usage': 'internal',
+                'barcode': code + '-PACKING'
+            },
         }
         return sub_locations
 
@@ -936,10 +964,22 @@ class Orderpoint(models.Model):
     lead_type = fields.Selection(
         [('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type',
         required=True, default='supplier')
+    allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    @api.depends('warehouse_id')
+    def _compute_allowed_location_ids(self):
+        loc_domain = [('usage', 'in', ('internal', 'view'))]
+        # We want to keep only the locations
+        #  - strictly belonging to our warehouse
+        #  - not belonging to any warehouses
+        other_warehouses = self.env['stock.warehouse'].search([('id', '!=', self.warehouse_id.id)])
+        for view_location_id in other_warehouses.mapped('view_location_id'):
+            loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
+        self.allowed_location_ids = self.env['stock.location'].search(loc_domain)
 
     def _quantity_in_progress(self):
         """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule

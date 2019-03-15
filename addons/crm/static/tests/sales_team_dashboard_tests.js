@@ -52,7 +52,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
                 assert.ok(true, "should call /retrieve_sales_dashboard");
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             return this._super(route, args);
         },
@@ -79,12 +79,12 @@ QUnit.test('dashboard set a new target', function (assert) {
             if (args.method === 'retrieve_sales_dashboard') {
                 // should be called twice: for the first rendering, and after the target update
                 assert.ok(true, "should call /retrieve_sales_dashboard");
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             if (args.method === 'modify_target_sales_dashboard') {
                 assert.ok(true, "should call /modify_target_sales_dashboard");
                 dashboard_data[args.args[0]].target = args.args[1];
-                return $.when();
+                return Promise.resolve();
             }
             return this._super(route, args);
         },
@@ -117,7 +117,7 @@ QUnit.test('dashboard: click on a button to execute an action', function (assert
               '</kanban>',
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
-                return $.when(dashboard_data);
+                return Promise.resolve(dashboard_data);
             }
             return this._super(route, args);
         },
@@ -151,7 +151,7 @@ QUnit.test('dashboard should be displayed even if there is no content', function
         domain: [['id', '=', 239]], // no record will match this domain
         mockRPC: function (route, args) {
             if (args.method === 'retrieve_sales_dashboard') {
-                return $.when(dashboardData);
+                return Promise.resolve(dashboardData);
             }
             return this._super(route, args);
         },

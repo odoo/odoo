@@ -1,0 +1,20 @@
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery" name="Shipping tracking on orders followup" inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//div[hasclass('o_sale_stock_picking')]/div" position="after">
+            <div t-if="i.carrier_tracking_ref" class="small d-lg-inline-block">
+                Tracking:
+                <t t-if="i.carrier_tracking_url">
+                    <a t-att-href="i.carrier_tracking_url" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                </t>
+                <t t-else="">
+                     <span t-field="i.carrier_id.name"/> <span t-field="i.carrier_tracking_ref"/>
+                </t>
+            </div>
+            <t t-if="i.carrier_id.get_return_label_from_portal and i.return_label_ids">
+                <div>
+                    <a class="ml-3"  t-attf-href="/web/content/#{i.return_label_ids[:1].id}" target="_blank">Print Return Label</a>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -21,14 +21,14 @@ options.registry.subscribe = options.Class.extend({
                     args: ['', [['public', '=', 'public']]],
                 });
             },
-        }).then(function (mail_channel_id) {
-            self.$target.attr("data-id", mail_channel_id);
+        }).then(function (result) {
+            self.$target.attr("data-id", result.val);
         });
     },
     onBuilt: function () {
         var self = this;
         this._super();
-        this.select_mailing_list("click").fail(function () {
+        this.select_mailing_list("click").guardedCatch(function () {
             self.getParent().removeSnippet();
         });
     },

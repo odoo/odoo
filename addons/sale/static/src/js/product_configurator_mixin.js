@@ -183,7 +183,7 @@ var ProductConfiguratorMixin = {
      */
     triggerVariantChange: function ($container) {
         var self = this;
-        $container.find('ul[data-attribute_exclusions]').trigger('change');
+        $container.find('ul[data-attribute_exclusions]').trigger('change', {$container: $container});
         $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
             self.handleCustomValues($(this));
         });
@@ -280,25 +280,25 @@ var ProductConfiguratorMixin = {
     },
 
     /**
-     * Will return a deferred:
+     * Will return a promise:
      *
      * - If the product already exists, immediately resolves it with the product_id
      * - If the product does not exist yet ("dynamic" variant creation), this method will
-     *   create the product first and then resolve the deferred with the created product's id
+     *   create the product first and then resolve the promise with the created product's id
      *
      * @param {$.Element} $container the container to look into
      * @param {integer} productId the product id
      * @param {integer} productTemplateId the corresponding product template id
      * @param {boolean} useAjax wether the rpc call should be done using ajax.jsonRpc or using _rpc
-     * @returns {$.Deferred} the deferred that will be resolved with a {integer} productId
+     * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
         var self = this;
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
-        var productReady = $.Deferred();
+        var productReady = Promise.resolve();
         if (productId) {
-            productReady.resolve(productId);
+            productReady = Promise.resolve(productId);
         } else {
             var params = {
                 product_template_id: productTemplateId,
@@ -559,14 +559,16 @@ var ProductConfiguratorMixin = {
     _updateProductImage: function ($productContainer, productId, productTemplateId) {
         var model = productId ? 'product.product' : 'product.template';
         var modelId = productId || productTemplateId;
-        var imageSrc = '/web/image/{0}/{1}/image'
+        var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image');
+        var imageSrc = imageUrl
             .replace("{0}", model)
             .replace("{1}", modelId);
 
         var imagesSelectors = [
             'span[data-oe-model^="product."][data-oe-type="image"] img:first',
             'img.product_detail_img',
-            'span.variant_image img'
+            'span.variant_image img',
+            'img.variant_image',
         ];
 
         var $img = $productContainer.find(imagesSelectors.join(', '));

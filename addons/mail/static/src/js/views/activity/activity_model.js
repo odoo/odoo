@@ -19,7 +19,7 @@ var ActivityModel = AbstractModel.extend({
      * @override
      * @param {Object} params
      * @param {Array[]} params.domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         this.domain = params.domain;
@@ -31,7 +31,7 @@ var ActivityModel = AbstractModel.extend({
      * @param {any} handle
      * @param {Object} params
      * @param {Array[]} params.domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reload: function (handle, params) {
         if (params && 'domain' in params) {
@@ -48,7 +48,7 @@ var ActivityModel = AbstractModel.extend({
      * Fetch activity data.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _fetchData: function () {
         var self = this;

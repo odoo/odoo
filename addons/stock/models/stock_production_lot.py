@@ -16,7 +16,7 @@ class ProductionLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', 'in', ['product', 'consu'])], required=True)
+        domain=[('type', '=', 'product')], required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True, readonly=False)

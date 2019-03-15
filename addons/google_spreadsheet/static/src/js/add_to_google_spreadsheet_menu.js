@@ -64,7 +64,7 @@ var AddToGoogleSpreadsheetMenu = Widget.extend({
         var ds = new data.DataSet(this, 'google.drive.config');
 
         ds.call('set_spreadsheet', [modelName, Domain.prototype.arrayToString(domain), groupBys, list_view_id])
-            .done(function (res) {
+            .then(function (res) {
                 if (res.url){
                     window.open(res.url, '_blank');
                 }

@@ -39,7 +39,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
                     var backend_price = backend_result[0].price;
                     assert(frontend_price === backend_price,
                            JSON.stringify(debug_info) + ' DOESN\'T MATCH -> ' + backend_price + ' (backend) != ' + frontend_price + ' (frontend)');
-                    return (new $.Deferred()).resolve();
+                    return Promise.resolve();
                 });
         };
     }
