@@ -295,13 +295,6 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
-                  <xpath expr="//field[@name='payment_term_id']" position="after">
-                      <div name='carrier_selection'>
-                          <div class="alert alert-info" role="status" attrs="{'invisible': [('delivery_message','=',False)]}">
-                            <field name='delivery_message' force_save="1"/>
-                          </div>
-                      </div>
-                  </xpath>
                     <xpath expr="//field[@name='partner_id']" position='after'>
                         <field name="delivery_set" invisible="1"/>
                         <field name="recompute_delivery_price" invisible="1"/>
