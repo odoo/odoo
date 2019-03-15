@@ -350,7 +350,7 @@ class Message(models.Model):
         message_to_tracking = dict()
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
         for tracking in tracking_values:
-            groups = tracking.groups
+            groups = tracking.field_groups
             if not groups or self.user_has_groups(groups):
                 message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
                 tracking_tree[tracking.id] = {
