@@ -590,6 +590,35 @@ class MailActivityMixin(models.AbstractModel):
         related='activity_ids.summary', readonly=False,
         search='_search_activity_summary',
         groups="base.group_user",)
+    activity_exception_decoration = fields.Selection([
+        ('warning', 'Alert'),
+        ('danger', 'Error')],
+        compute='_compute_activity_exception_type',
+        search='_search_activity_exception_decoration',
+        help="Type of the exception activity on record.")
+    activity_exception_icon = fields.Char('Icon', help="Icon to indicate an exception activity.",
+        compute='_compute_activity_exception_type')
+
+    @api.depends('activity_ids.activity_type_id.decoration_type', 'activity_ids.activity_type_id.icon')
+    def _compute_activity_exception_type(self):
+        # prefetch all activity types for all activities, this will avoid any query in loops
+        self.mapped('activity_ids.activity_type_id.decoration_type')
+
+        for record in self:
+            activity_type_ids = record.activity_ids.mapped('activity_type_id')
+            exception_activity_type_id = False
+            for activity_type_id in activity_type_ids:
+                if activity_type_id.decoration_type == 'danger':
+                    exception_activity_type_id = activity_type_id
+                    break
+                if activity_type_id.decoration_type == 'warning':
+                    exception_activity_type_id = activity_type_id
+            if exception_activity_type_id:
+                record.activity_exception_decoration = exception_activity_type_id.decoration_type
+                record.activity_exception_icon = exception_activity_type_id.icon
+
+    def _search_activity_exception_decoration(self, operator, operand):
+        return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
     @api.depends('activity_ids.state')
     def _compute_activity_state(self):
