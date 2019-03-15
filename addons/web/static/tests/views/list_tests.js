@@ -4214,7 +4214,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('optional fields are disappear at the reload', function (assert) {
+    QUnit.test('optional fields not disappear even after listview re-rendering(reload)', function (assert) {
         assert.expect(6);
 
         var list = createView({
@@ -4244,10 +4244,10 @@ QUnit.module('Views', {
 
         // reload listview
         list.reload();
-        assert.containsN(list, 'th', 5,
-            "should have 5 th 1 for selector, 3 for columns and 1 for optional field dropdown");
-        assert.notOk(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
-            "should not have a visible m2o field");
+        assert.containsN(list, 'th', 6,
+            "should have 6 th 1 for selector, 4 for columns and 1 for optional field dropdown even after listview reload");
+        assert.ok(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
+            "should have a visible m2o field event after listview reload");
 
         testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
         assert.notOk(list.$('th.o_add_column .dropdown-item [name="m2o"]').is(":checked"));

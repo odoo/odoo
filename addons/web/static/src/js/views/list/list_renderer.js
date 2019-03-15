@@ -57,6 +57,8 @@ var ListRenderer = BasicRenderer.extend({
         // This attribute lets us know if there is a handle widget on a field,
         // and on which field it is set.
         this.handleField = null;
+        this.isX2Many = params.isX2Many || false;
+        this.optionalColumnsEnabled = [];
         this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
@@ -216,10 +218,13 @@ var ListRenderer = BasicRenderer.extend({
             }
             return reject;
         });
-        this.optionalColumnsEnabled = [];
-        var columnGroups = this._computeOptionalColumns();
-        this.columns = columnGroups.columns;
-        this.optionalColumns = columnGroups.optionalColumns;
+        if (!this.isX2Many) {
+            var columnGroups = this._computeOptionalColumns();
+            this.columns = columnGroups.columns;
+            this.optionalColumns = columnGroups.optionalColumns;
+        } else {
+            this.columns = this.allColumns;
+        }
     },
     /**
      * Render a single <th> with dropdown menu to display optional columns of view.
@@ -582,7 +587,7 @@ var ListRenderer = BasicRenderer.extend({
     _renderHeader: function () {
         var $tr = $('<tr>')
             .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
-        if (this.optionalColumns) {
+        if (this.optionalColumns && this.optionalColumns.length) {
             $tr.append(this._renderAddColumnOption());
         }
         if (this.hasSelectors) {
