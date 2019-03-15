@@ -301,7 +301,7 @@ odoo.define('website_rating.thread', function(require) {
                 'res_model': false,
                 'res_id': false,
                 'pid': 0,
-                'display_composer': !session.is_website_user,
+                'display_composer': options['disable_composer'] ? false : !session.is_website_user,
                 'display_rating': true,
                 'csrf_token': odoo.csrf_token,
                 'user_id': session.user_id,

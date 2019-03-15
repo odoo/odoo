@@ -237,19 +237,21 @@
                 </t>
             </div>
 
-            <span class="text-muted font-weight-bold mr-3">Rating</span>
-            <div class="text-muted border-left pl-3">
-                <div class="o_wslides_js_slide_like mr-2">
-                    <span class="o_wslides_js_slide_like_up" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
-                        <span t-esc="slide.likes"/>
-                    </span>
-                    <span class="o_wslides_js_slide_like_down ml-3" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
-                        <span t-esc="slide.dislikes"/>
-                    </span>
+            <t t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'">
+                <span class="text-muted font-weight-bold mr-3">Rating</span>
+                <div class="text-muted border-left pl-3">
+                    <div class="o_wslides_js_slide_like mr-2">
+                        <span t-att-class="('o_wslides_js_slide_like_up %s') % ('disabled' if not (slide_access['can_access'] and slide_access['can_vote']) else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                            <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
+                            <span t-esc="slide.likes"/>
+                        </span>
+                        <span t-att-class="('o_wslides_js_slide_like_down ml-3 %s') % ('disabled' if not (slide_access['can_access'] and slide_access['can_vote']) else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                            <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
+                            <span t-esc="slide.dislikes"/>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </t>
         </div>
     </div>
     <div class="row mb-5">
@@ -287,8 +289,7 @@
             <div role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
                 <t t-call="portal.message_thread">
                     <t t-set="object" t-value="slide"/>
-                    <t t-set="hash" t-value="message_post_hash"/>
-                    <t t-set="pid" t-value="message_post_pid"/>
+                    <t t-set="disable_composer" t-value="not (slide_access['can_comment'] and slide.channel_id.allow_comment and slide.channel_id.channel_type == 'training')"/>
                     <t t-set="display_rating" t-value="False"/>
                 </t>
             </div>

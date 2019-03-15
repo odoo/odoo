@@ -13,7 +13,8 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import Warning, UserError
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
+from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
@@ -155,6 +156,9 @@ class Slide(models.Model):
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+    # Karma Based action
+    can_comment = fields.Boolean('Can Comment', compute='_compute_karma_rights')
+    can_vote = fields.Boolean('Can Vote', compute='_compute_karma_rights')
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
@@ -267,6 +271,13 @@ class Slide(models.Model):
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
+    @api.multi
+    def _compute_karma_rights(self):
+        """ This method supposed current user have access to the slide. If not, I will crash, meaning he can not execute the action """
+        for slide in self:
+            slide.can_comment = self.env.user.karma >= slide.channel_id.karma_slide_comment
+            slide.can_vote = self.env.user.karma >= slide.channel_id.karma_slide_vote
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -314,6 +325,14 @@ class Slide(models.Model):
     # ---------------------------------------------------------
 
     @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, message_type='notification', **kwargs):
+        self.ensure_one()
+        if message_type == 'comment' and not self.can_comment:  # user comments have a restriction on karma
+            raise KarmaError(_('Not enough karma to comment'))
+        return super(Slide, self).message_post(message_type=message_type, **kwargs)
+
+    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
@@ -337,6 +356,28 @@ class Slide(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
+
+    # ---------------------------------------------------------
+    # Access Rights Methods
+    # ---------------------------------------------------------
+
+    def _check_read_access(self):
+        try:
+            self.check_access_rights('read')
+            self.check_access_rule('read')
+        except AccessError:
+            return False
+        return True
+
+    def _get_slide_action_access(self):
+        result = dict((slide_id, dict(can_access=False, can_vote=False, can_comment=False)) for slide_id in self.ids)
+        for slide in self:
+            can_access = slide._check_read_access()
+            if can_access and (slide.channel_id.is_member or slide.is_preview or slide.can_publish):
+                result[slide.id]['can_access'] = True
+                result[slide.id]['can_vote'] = slide.can_vote
+                result[slide.id]['can_comment'] = slide.can_comment
+        return result
 
     # ---------------------------------------------------------
     # Business Methods
@@ -395,7 +436,9 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id)
         ])
-        new_slides = self_sudo - slide_partners.mapped('slide_id')
+        slide_id = slide_partners.mapped('slide_id')
+        new_slides = self_sudo - slide_id
+        channel = slide_id.channel_id
 
         for slide_partner in slide_partners:
             if upvote:
@@ -409,7 +452,10 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
-            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
+        if new_vote != 0:
+            self.env.user.add_karma(channel.karma_gen_slide_vote)
+        else:
+            self.env.user.add_karma(-channel.karma_gen_slide_vote)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):

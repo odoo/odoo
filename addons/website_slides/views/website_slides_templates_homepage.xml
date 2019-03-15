@@ -41,7 +41,15 @@
                         </div>
                     </div>
                 </nav>
+                <div class="o_wprofile_email_validation_container mb16 mt16">
+                    <t t-call="website_profile.email_validation_banner">
+                        <t t-set="redirect_url" t-value="'/slides'"/>
+                        <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the eLearning.'"/>
+                        <t t-set="additional_validated_email_message" t-value="' You may now participate to our eLearning.'"/>
+                    </t>
+                </div>
             </div>
+
             <div class="container o_wslides_home_main">
                 <div class="row">
                     <div t-if="is_public_user" class="col-lg-3 order-3 order-lg-2">
@@ -206,6 +214,13 @@
                         </form>
                     </div>
                 </nav>
+                <div class="o_wprofile_email_validation_container mb16 mt16">
+                    <t t-call="website_profile.email_validation_banner">
+                        <t t-set="redirect_url" t-value="'/slides'"/>
+                        <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the eLearning.'"/>
+                        <t t-set="additional_validated_email_message" t-value="' You may now participate to our eLearning.'"/>
+                    </t>
+                </div>
             </div>
             <div class="container o_wslides_home_main pb-5">
                 <div t-if="search_term and not channels" class="alert alert-info mb-5">
@@ -383,5 +398,4 @@
         t-att-src="'/profile/avatar/%s?field=image_medium' % user.id"
         t-att-alt="user.name"/>
 </template>
-
 </data></odoo>
