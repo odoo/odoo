@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_bemess" model="account.tax.report.line">
+        <field name="name">Bemessungsgrundlage</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst" model="account.tax.report.line">
+        <field name="name">Vorsteuer (dient lediglich der Verprobung)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_einfuhren" model="account.tax.report.line">
+        <field name="name">Einfuhren</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_einfuhren_10" model="account.tax.report.line">
+        <field name="name">Einfuhren zum Steuersatz von 10 %</field>
+        <field name="tag_name">Einfuhren zum Steuersatz von 10 %</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst_einfuhren"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_einfuhren_20" model="account.tax.report.line">
+        <field name="name">Einfuhren zum Steuersatz von 20 %</field>
+        <field name="tag_name">Einfuhren zum Steuersatz von 20 %</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst_einfuhren"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_rechnungen" model="account.tax.report.line">
+        <field name="name">Rechnungen von anderen Unternehmern und innergemeinschaftliche Dreiecksgeschäfte</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_rechnungen_10" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 10 %</field>
+        <field name="tag_name">zum Steuersatz von 10 %</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst_rechnungen"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_vorst_rechnungen_20" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess_vorst_rechnungen"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern" model="account.tax.report.line">
+        <field name="name">Steuern</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern_lief" model="account.tax.report.line">
+        <field name="name">Lieferungen und sonstige Leistungen (einschließlich unentgeltlicher Wertabgaben)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="tax_report_bemess_steuern"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern_lief_steuerfreie" model="account.tax.report.line">
+        <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess_steuern_lief"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern_lief_steuerfreie_ausf" model="account.tax.report.line">
+        <field name="name">§ 6 Abs. 1 Z 1 iVm § 7 (Ausfuhrlieferungen)</field>
+        <field name="tag_name">§ 6 Abs. 1 Z 1 iVm § 7 (Ausfuhrlieferungen)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_bemess_steuern_lief_steuerfreie"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern_lief_steuerfreie_inn" model="account.tax.report.line">
+        <field name="name">Art. 6 Abs. 1 (Innergemeinschaftliche Lieferungen)</field>
+        <field name="tag_name">Art. 6 Abs. 1 (Innergemeinschaftliche Lieferungen)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess_steuern_lief_steuerfreie"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_bemess_steuern_lief_innergemeinschaf" model="account.tax.report.line">
+        <field name="name">Innergemeinschaftliche Erwerbe</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_bemess_steuern_lief"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust" model="account.tax.report.line">
+        <field name="name">UST Vorauszahlung / Überschuss - bitte dem Betrag ein Minuszeichen voranstellen</field>
+        <field name="code">toto</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern" model="account.tax.report.line">
+        <field name="name">Steuern</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_lief" model="account.tax.report.line">
+        <field name="name">Lieferungen, sonstige Leistungen und Eigenverbrauch</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_lief_steu" model="account.tax.report.line">
+        <field name="name">Steuerpflichtige Umsätze (Lieferungen, sonstige Leistungen und Eigenverbrauch)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_lief"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_lief_steu_20" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_lief_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_lief_steu_10" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 10%</field>
+        <field name="tag_name">zum Steuersatz von 10%</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_lief_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft" model="account.tax.report.line">
+        <field name="name">Innergemeinschaftliche Erwerbe</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_steu" model="account.tax.report.line">
+        <field name="name">Steuerpflichtige Umsätze (Lieferungen, sonstige Leistungen und Eigenverbrauch)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_innergemeinschaft"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_steu_20" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 20 %</field>
+        <field name="tag_name">zum Steuersatz von 20 %</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_steu_bmg_20" model="account.tax.report.line">
+        <field name="name">BMGzum Steuersatz von 20 %</field>
+        <field name="tag_name">BMGzum Steuersatz von 20 %</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_steu_10" model="account.tax.report.line">
+        <field name="name">zum Steuersatz von 10 %</field>
+        <field name="tag_name">zum Steuersatz von 10 %</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_steu_bmg_10" model="account.tax.report.line">
+        <field name="name">BMGzum Steuersatz von 10 %</field>
+        <field name="tag_name">BMGzum Steuersatz von 10 %</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern_innergemeinschaft_steu"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_ust_steuern_innergemeinschaft_vorsteuer" model="account.tax.report.line">
+        <field name="name">Vorsteuer aus innergemeinschaftlichem Erwerb</field>
+        <field name="tag_name">Vorsteuer aus innergemeinschaftlichem Erwerb</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="tax_report_ust_steuern"/>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+</odoo>

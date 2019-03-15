@@ -52,6 +52,7 @@ class AccountAccountTag(models.Model):
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
     _description = 'Account Tax Tag Template'
+    _order = 'sequence'
 
     name = fields.Char(string="Name", help="Complete name for this report line, to be used in report.")
     tag_name = fields.Char(string="Tag Name", help="Short name for the tax grid corresponding to this report line. Leave empty if this report line should not correspond to any such grid.")
