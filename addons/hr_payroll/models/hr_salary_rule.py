@@ -49,24 +49,19 @@ class HrPayrollStructure(models.Model):
         ]
 
     name = fields.Char(required=True)
-    code = fields.Char(string='Reference', required=True)
-    type_id = fields.Many2one('hr.payroll.structure.type', default=lambda self: self.env.ref('hr_payroll.structure_type_employee', raise_if_not_found=False))
-    country_id = fields.Many2one('res.country', string='Country')
+    type_id = fields.Many2one(
+        'hr.payroll.structure.type', required=True,
+        default=lambda self: self.env.ref('hr_payroll.structure_type_employee', raise_if_not_found=False))
+    country_id = fields.Many2one('res.country', string='Country', default=lambda self: self.env.user.company_id.country_id)
     note = fields.Text(string='Description')
     rule_ids = fields.One2many(
         'hr.salary.rule', 'struct_id',
         string='Salary Rules', default=_get_default_rule_ids)
     report_id = fields.Many2one('ir.actions.report',
-        string="Report", required=True, domain="[('model','=','hr.payslip'),('report_type','=','qweb-pdf')]", default=_get_default_report_id)
+        string="Report", domain="[('model','=','hr.payslip'),('report_type','=','qweb-pdf')]", default=_get_default_report_id)
     payslip_name = fields.Char(string="Payslip Name", translate=True,
         help="Name to be set on a payslip. Example: 'End of the year bonus'. If not set, the default value is 'Salary Slip'")
-
-    @api.multi
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, code=_("%s (copy)") % (self.code))
-        return super(HrPayrollStructure, self).copy(default)
+    regular_pay = fields.Boolean("Regular Pay", help="Check this option if this structure is the common one")
 
 
 class HrPayrollStructureType(models.Model):
@@ -85,7 +80,16 @@ class HrPayrollStructureType(models.Model):
     ], string='Default Scheduled Pay', default='monthly',
     help="Defines the frequency of the wage payment.")
     default_resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Default Working Hours')
+        'resource.calendar', 'Default Working Hours',
+        default=lambda self: self.env.user.company_id.resource_calendar_id)
+    struct_ids = fields.One2many('hr.payroll.structure', 'type_id', string="Structures")
+    default_struct_id = fields.Many2one('hr.payroll.structure', compute='_compute_default_struct_id')
+
+    def _compute_default_struct_id(self):
+        for structure_type in self:
+            sorted_structures = sorted(structure_type.struct_ids, key=lambda struct: struct.regular_pay, reverse=True)
+            structure_type.default_struct_id = sorted_structures[0] if sorted_structures else False
+
 
 class HrContributionRegister(models.Model):
     _name = 'hr.contribution.register'
@@ -124,7 +128,7 @@ class HrSalaryRule(models.Model):
     code = fields.Char(required=True,
         help="The code of salary rules can be used as reference in computation of other rules. "
              "In that case, it is case sensitive.")
-    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
+    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure", required=True)
     sequence = fields.Integer(required=True, index=True, default=5,
         help='Use to arrange calculation sequence')
     quantity = fields.Char(default='1.0',

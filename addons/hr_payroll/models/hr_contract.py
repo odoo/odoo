@@ -9,8 +9,7 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
 
-    struct_id = fields.Many2one('hr.payroll.structure', string='Salary Structure')
-    structure_type_id = fields.Many2one(related='struct_id.type_id')
+    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
     schedule_pay = fields.Selection([
         ('monthly', 'Monthly'),
         ('quarterly', 'Quarterly'),
@@ -30,12 +29,12 @@ class HrContract(models.Model):
     def _check_contracts(self):
         self._get_leaves()._check_contracts()
 
-    @api.onchange('struct_id')
-    def _onchange_struct_id(self):
-        if self.struct_id.type_id.default_schedule_pay:
-            self.schedule_pay = self.struct_id.type_id.default_schedule_pay
-        if self.struct_id.type_id.default_resource_calendar_id:
-            self.resource_calendar_id = self.struct_id.type_id.default_resource_calendar_id
+    @api.onchange('structure_type_id')
+    def _onchange_structure_type_id(self):
+        if self.structure_type_id.default_schedule_pay:
+            self.schedule_pay = self.structure_type_id.default_schedule_pay
+        if self.structure_type_id.default_resource_calendar_id:
+            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.multi
     def _get_leaves(self):

@@ -20,11 +20,10 @@
         </record>
 
         <!-- Salary Structure -->
-
         <record id="structure_002" model="hr.payroll.structure">
-            <field name="code">MEGG</field>
             <field name="name">Marketing Executive for Gilles Gravie</field>
             <field name="type_id" ref="structure_type_employee"/>
+            <field name="regular_pay" eval="True"/>
         </record>
 
         <!-- Salary Rules for Marketing Executive for Gilles Gravie-->
@@ -113,7 +112,7 @@
             <field name="name">Marketing Executive Contract</field>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
-            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="structure_type_id" ref="hr_payroll.structure_type_employee"/>
             <field name="employee_id" ref="hr_employee_payroll"/>
             <field name="notes">Default contract for marketing executives</field>
             <field eval="4000.0" name="wage"/>
@@ -124,7 +123,7 @@
             <field name="name">Contract For Gilles Gravie</field>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
-            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="structure_type_id" ref="hr_payroll.structure_type_employee"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
             <field name="notes">This is Gilles Gravie's contract</field>
             <field eval="5000.0" name="wage"/>
@@ -134,7 +133,7 @@
             <field name="name">Contract For Mitchell Admin</field>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
-            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="structure_type_id" ref="hr_payroll.structure_type_employee"/>
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="notes">This is Mitchell Admin's contract</field>
             <field eval="5500.0" name="wage"/>

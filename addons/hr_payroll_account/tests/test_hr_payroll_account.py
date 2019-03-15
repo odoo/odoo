@@ -50,7 +50,7 @@ class TestHrPayrollAccount(common.TransactionCase):
             'name': 'Contract for John',
             'wage': 5000.0,
             'employee_id': self.hr_employee_john.id,
-            'struct_id': self.env.ref('hr_payroll.structure_002').id,
+            'structure_type_id': self.env.ref('hr_payroll.structure_type_employee').id,
             'journal_id': self.ref('hr_payroll_account.expenses_journal'),
         })
 

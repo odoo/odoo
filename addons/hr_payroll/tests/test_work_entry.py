@@ -23,7 +23,7 @@ class TestWorkEntry(TestPayslipBase):
             'resource_calendar_id': self.resource_calendar_id.id,
             'wage': 1000,
             'employee_id': self.richard_emp.id,
-            'struct_id': self.developer_pay_structure.id,
+            'structure_type_id': self.structure_type.id,
             'state': 'open',
         })
         self.richard_emp.resource_calendar_id = self.resource_calendar_id

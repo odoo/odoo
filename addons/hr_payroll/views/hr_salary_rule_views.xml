@@ -9,9 +9,9 @@
             <tree string="Employee Function">
                 <field name="name"/>
                 <field name="type_id" invisible="1"/>
-                <field name="code"/>
                 <field name="rule_ids"/>
                 <field name="country_id" options="{'no_create': True}"/>
+                <field name="regular_pay"/>
             </tree>
         </field>
     </record>
@@ -29,11 +29,6 @@
                                     <strong><field name="name"/></strong>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <span>Code: <field name="code"/></span>
-                                </div>
-                            </div>
                         </div>
                     </t>
                 </templates>
@@ -46,7 +41,7 @@
         <field name="model">hr.payroll.structure</field>
         <field name="arch" type="xml">
             <search string="Payroll Structures">
-                <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                <field name="name" string="Structure Name"/>
                 <group col="8" colspan="4" expand="0" string="Group By">
                     <filter string="Structure Type" name="group_by_type_id" context="{'group_by': 'type_id'}"/>
                 </group>
@@ -62,9 +57,9 @@
             <sheet>
                 <group name="salary_details" col="4">
                     <field name="name"/>
-                    <field name="code"/>
                     <field name="report_id"/>
                     <field name="type_id"/>
+                    <field name="regular_pay"/>
                     <field name="country_id" options="{'no_create': True}"/>
                 </group>
                 <notebook colspan="4">

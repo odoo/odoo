@@ -98,7 +98,7 @@ class TestPayslipMultiContract(TestPayslipContractBase):
                 'resource_calendar_id': self.calendar_40h.id,
                 'wage': 5000.0,
                 'employee_id': self.richard_emp.id,
-                'struct_id': self.developer_pay_structure.id,
+                'structure_type_id': self.structure_type.id,
                 'state': 'open',
             })
 
