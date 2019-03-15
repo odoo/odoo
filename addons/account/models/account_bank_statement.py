@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
+import copy
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
@@ -811,9 +812,10 @@ class AccountBankStatementLine(models.Model):
             :param list of dicts data: must contains the keys 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
+        data_copy = copy.deepcopy(data)
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
-        for st_line, datum in pycompat.izip(self, data):
+        for st_line, datum in pycompat.izip(self, data_copy):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
