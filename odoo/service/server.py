@@ -763,6 +763,8 @@ class Worker(object):
             while self.alive:
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
+                if not self.alive:
+                    break
                 self.process_work()
                 self.check_limits()
         except:
