@@ -23,15 +23,17 @@
                     </div>
                     <field name="bank_payment_barcode"/>
                 </xpath>
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name='reference_type'/>
+                </xpath>
                 <xpath expr="//header" position="after">
                     <field name='is_reference_duplicate' invisible="1"/>
-                    <field name='is_valid_reference' invisible="1"/>
                     <div class="alert alert-danger mt0 mb0 text-center" role="alert"
                          attrs="{'invisible' : ['|',('is_reference_duplicate','=',False),('state','!=','draft')]}">
                         Alert, duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.
                     </div>
                     <div class="alert alert-warning mt0 mb0 text-center" role="alert"
-                         attrs="{'invisible' : ['|',('is_valid_reference','=',True),('state','!=','draft')]}">
+                         attrs="{'invisible' : ['|',('state','!=','draft'), '|', ('reference', '=', False), '|', ('reference_type','!=','none')]}">
                        Alert, reference doesn't match finnish or international ISO 11649 standard for structured references.
                     </div>
                 </xpath>

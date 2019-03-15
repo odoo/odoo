@@ -26,4 +26,5 @@
     ],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': 'set_default_reference_type',
 }

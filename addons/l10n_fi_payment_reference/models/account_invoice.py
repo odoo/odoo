@@ -8,7 +8,7 @@
 #
 ##############################################################################
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 
@@ -105,8 +105,19 @@ class AccountInvoice(models.Model):
     is_reference_duplicate = fields.Boolean('Duplicate vendor refenrence', compute='_compute_is_reference_duplicate',
         help="This field is used for alerting the user about duplicated vendor references")
 
-    is_valid_reference = fields.Boolean('Valid vendor refenrence', compute='_compute_is_valid_reference',
-        help="This field is used for alerting the user about invalid vendor references")
+    reference_type = fields.Selection(
+        selection=[
+            ('none', 'Free Reference'),
+            ('fi_bank_reference', _('Finnish Bank Reference')),
+            ('rf_bank_reference', _('International Bank Reference')),
+        ],
+        string='Reference Type',
+        readonly=True,
+        default='none',
+        compute='_compute_reference_type',
+        help="The type of the vendor reference. Structured references are handled differently when generating payment files.",
+    )
+
 
     @api.one
     def _compute_is_reference_duplicate(self):
@@ -167,28 +178,32 @@ class AccountInvoice(models.Model):
             amount = "%06d%02d" % (int(self.amount_total), (self.amount_total - int(self.amount_total)) * 100)
             acc_number = partner_bank_id.acc_number[2:18]
             due_date = str(self.date_due).replace('-','')[2:8]
-            if self.reference:
-                if is_valid_fi(self.reference):
-                    reference = "%020d" % (int(self.reference))
-                    # full barcode, version 4
-                    barcode = "4%s%s000%s%s" % (acc_number, amount, reference, due_date)
-                elif is_valid_rf(self.reference):
-                    # barcode, version 5
-                    reference = self.reference.replace(' ', '')[2:]
-                    reference = "%02d%021d" % (int(reference[:2]), int(reference[2:]))
-                    barcode = "5%s%s%s%s" % (acc_number, amount, reference, due_date)
+            # If self.reference isn't valid self.reference_type will be 'none'
+            if self.reference_type == 'fi_bank_reference':
+                reference = "%020d" % (int(self.reference))
+                # full barcode, version 4
+                barcode = "4%s%s000%s%s" % (acc_number, amount, reference, due_date)
+            elif self.reference_type == 'rf_bank_reference':
+                # barcode, version 5
+                reference = self.reference.replace(' ', '')[2:]
+                reference = "%02d%021d" % (int(reference[:2]), int(reference[2:]))
+                barcode = "5%s%s%s%s" % (acc_number, amount, reference, due_date)
         self.bank_payment_barcode = barcode
 
     @api.one
-    @api.depends('reference', 'company_id.invoice_reference_type')
-    def _compute_is_valid_reference(self):
+    @api.depends('reference')
+    def _compute_reference_type(self):
         """ If reference is set and it doesn't match ISO 11649 or finnish standard
-        for structured references, this 'is_valid_reference' field will be False resulting in
+        for structured references, this 'reference_type' field will be 'none' resulting in
         alert for user viewing the invoice."""
         if self.reference:
-            self.is_valid_reference = is_valid_rf(self.reference) or is_valid_fi(self.reference)
-            return
-        self.is_valid_reference = True
+            if is_valid_fi(self.reference):
+                self.reference_type = 'fi_bank_reference'
+                return
+            elif is_valid_rf(self.reference):
+                self.reference_type = 'rf_bank_reference'
+                return
+        self.reference_type = 'none'
 
 
     @api.multi
