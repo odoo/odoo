@@ -5,10 +5,10 @@
 
         <!-- Salary Structure -->
         <record id="hr_payroll_structure_cp200_employee_salary" model="hr.payroll.structure">
-            <field name="code">CP 200</field>
-            <field name="name">Belgian Employee</field>
+            <field name="name">CP200: Monthly Pay</field>
             <field name="country_id" ref="base.be"/>
             <field name="type_id" ref="l10n_be_hr_payroll.structure_type_employee_cp200"/>
+            <field name="regular_pay" eval="True"/>
         </record>
 
         <!-- Salary Rules -->

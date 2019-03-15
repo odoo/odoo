@@ -9,8 +9,7 @@
             <xpath expr="//field[@name='reported_to_secretariat']" position="before">
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" invisible="1"/>
-                <field name="struct_id" required="1"/>
-                <field name="structure_type_id" readonly="1"/>
+                <field name="structure_type_id" required="1"/>
             </xpath>
              <xpath expr="//field[@name='resource_calendar_id']" position="after">
                 <field name="schedule_pay"/>

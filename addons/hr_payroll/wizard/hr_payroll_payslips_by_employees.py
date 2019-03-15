@@ -50,7 +50,7 @@ class HrPayslipEmployees(models.TransientModel):
             for contract in employee._get_contracts(payslip_run.date_start, payslip_run.date_end, states=['open', 'pending', 'close']):
                 values.update({
                     'contract_id': contract.id,
-                    'struct_id': contract.struct_id.id,
+                    'struct_id': contract.structure_type_id.default_struct_id.id,
                 })
                 payslip = self.env['hr.payslip'].new(values)
                 payslip.onchange_employee()

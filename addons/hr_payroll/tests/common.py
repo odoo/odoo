@@ -28,13 +28,18 @@ class TestPayslipBase(TransactionCase):
             'department_id': self.ref('hr.dep_rd')
         })
 
+        self.structure_type = self.env['hr.payroll.structure.type'].create({
+            'name': 'Test - Developer',
+        })
+
         # I create a salary structure for "Software Developer"
         self.developer_pay_structure = self.env['hr.payroll.structure'].create({
             'name': 'Salary Structure for Software Developer',
-            'code': 'SD',
             'rule_ids': [(4, self.hra_rule_id), (4, self.conv_rule_id),
                          (4, self.prof_tax_rule_id), (4, self.pf_rule_id),
                          (4, self.mv_rule_id)],
+            'type_id': self.structure_type.id,
+            'regular_pay': True, 
         })
 
         # I create a contract for "Richard"
@@ -44,7 +49,7 @@ class TestPayslipBase(TransactionCase):
             'name': 'Contract for Richard',
             'wage': 5000.0,
             'employee_id': self.richard_emp.id,
-            'struct_id': self.developer_pay_structure.id,
+            'structure_type_id': self.structure_type.id,
         })
 
         self.work_entry_type_leave = self.env['hr.work.entry.type'].create({
@@ -91,7 +96,7 @@ class TestPayslipContractBase(TestPayslipBase):
             'resource_calendar_id': self.calendar_40h.id,
             'wage': 5000.0,
             'employee_id': self.richard_emp.id,
-            'struct_id': self.developer_pay_structure.id,
+            'structure_type_id': self.structure_type.id,
             'state': 'close',
         })
 
@@ -102,6 +107,6 @@ class TestPayslipContractBase(TestPayslipBase):
             'resource_calendar_id': self.calendar_35h.id,
             'wage': 5000.0,
             'employee_id': self.richard_emp.id,
-            'struct_id': self.developer_pay_structure.id,
+            'structure_type_id': self.structure_type.id,
             'state': 'open',
         })

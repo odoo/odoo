@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="structure_type_employee_fr_cadre" model="hr.payroll.structure.type">
+        <field name="name">FR: Employé Cadre</field>
+    </record>
+
     <!-- Salary Structure -->
     <record id="hr_payroll_salary_structure_employe_cadre" model="hr.payroll.structure">
-        <field name="code">Fr-C</field>
-        <field name="name">Employe cadre</field>
+        <field name="name">Employé cadre</field>
         <field name="country_id" ref="base.fr"/>
+        <field name="structure_type_id" ref="structure_type_employee_fr_cadre"/>
+        <field name="regular_pay" eval="True"/>
     </record>
 
     <!-- HR SALARY RULES-->

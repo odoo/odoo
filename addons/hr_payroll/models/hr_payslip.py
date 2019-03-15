@@ -254,10 +254,10 @@ class HrPayslip(models.Model):
         if not self.contract_id: # Add a default contract if not already defined
             contracts = employee._get_contracts(date_from, date_to)
 
-            if not contracts or not contracts[0].struct_id:
+            if not contracts or not contracts[0].structure_type_id.default_struct_id:
                 return
             self.contract_id = contracts[0]
-            self.struct_id = contracts[0].struct_id
+            self.struct_id = contracts[0].structure_type_id.default_struct_id
 
 
         #computation of the salary worked days
