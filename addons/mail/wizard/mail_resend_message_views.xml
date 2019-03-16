@@ -20,7 +20,9 @@
                             <field name="resend" widget="boolean_toggle"/>
                         </tree>
                     </field>
-                    <p attrs="{'invisible':[('has_cancel', '==', False)]}"> <span class="fa fa-info-circle"/> Caution: It won't be possible to send this mail again to the recipients you did not select.</p>
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('has_cancel', '=', False)]}">
+                        <span class="fa fa-info-circle"/> Caution: It won't be possible to send this mail again to the recipients you did not select.
+                    </div>
                     <footer>
                         <button string="Resend to selected" name="resend_mail_action" type="object" class="btn-primary o_mail_send"/>
                         <button string="Ignore all failures" name="cancel_mail_action" type="object" class="btn-secondary" />
