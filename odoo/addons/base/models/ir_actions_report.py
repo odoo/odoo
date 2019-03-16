@@ -13,6 +13,7 @@ import base64
 import io
 import logging
 import os
+from odoo.tests.common import ChromeBrowser
 import lxml.html
 import tempfile
 import subprocess
@@ -27,6 +28,7 @@ from collections import OrderedDict
 
 
 _logger = logging.getLogger(__name__)
+browser_size = '1366x768'
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
 # started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
@@ -39,39 +41,33 @@ except Exception:
     pass
 
 
-def _get_wkhtmltopdf_bin():
-    return find_in_path('wkhtmltopdf')
+def _get_chrome_bin():
+    return find_in_path('google-chrome')
 
 
-# Check the presence of Wkhtmltopdf and return its version at Odoo start-up
-wkhtmltopdf_state = 'install'
-wkhtmltopdf_dpi_zoom_ratio = False
+# Check the presence of GoogleChrome and return its version at Odoo start-up
+chromeheadless_state = 'install'
 try:
     process = subprocess.Popen(
-        [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        [_get_chrome_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
 except (OSError, IOError):
-    _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
+    _logger.info('You need ChromeBrowser to print a pdf version of the reports.')
 else:
-    _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
+    _logger.info('Will use the ChromeBrowser binary at %s' % _get_chrome_bin())
     out, err = process.communicate()
     match = re.search(b'([0-9.]+)', out)
     if match:
         version = match.group(0).decode('ascii')
-        if LooseVersion(version) < LooseVersion('0.12.0'):
-            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-            wkhtmltopdf_state = 'upgrade'
+        _logger.info('Will use the ChromeBrowser version: %s' % version)
+        if LooseVersion(version) < LooseVersion('59'):
+            _logger.info('Upgrade ChromeBrowser to (at least) 59')
+            chromeheadless_state = 'upgrade'
         else:
-            wkhtmltopdf_state = 'ok'
-        if LooseVersion(version) >= LooseVersion('0.12.2'):
-            wkhtmltopdf_dpi_zoom_ratio = True
-
-        if config['workers'] == 1:
-            _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-            wkhtmltopdf_state = 'workers'
+            chromeheadless_state = 'ok'
     else:
-        _logger.info('Wkhtmltopdf seems to be broken.')
-        wkhtmltopdf_state = 'broken'
+        _logger.info('ChromeBrowser seems to be broken.')
+        chromeheadless_state = 'broken'
 
 
 class IrActionsReport(models.Model):
@@ -195,92 +191,24 @@ class IrActionsReport(models.Model):
         * ok: A binary was found with a recent version (>= 0.12.0).
         * workers: Not enough workers found to perform the pdf rendering process (< 2 workers).
         * broken: A binary was found but not responding.
-
         :return: wkhtmltopdf_state
         '''
-        return wkhtmltopdf_state
+        return self._get_chrome_state()
+
+    @api.model
+    def _get_chrome_state(self):
+        '''Get the current state of wkhtmltopdf: install, ok, upgrade or broken.
+        * install: Starting state.
+        * upgrade: The binary is an older version (< 59).
+        * ok: A binary was found with a recent version (>= 59).
+        * broken: A binary was found but not responding.
+        return chromeheadless_state
+        '''
+        return chromeheadless_state
 
     @api.model
     def get_paperformat(self):
         return self.paperformat_id or self.env.user.company_id.paperformat_id
-
-    @api.model
-    def _build_wkhtmltopdf_args(
-            self,
-            paperformat_id,
-            landscape,
-            specific_paperformat_args=None,
-            set_viewport_size=False):
-        '''Build arguments understandable by wkhtmltopdf bin.
-
-        :param paperformat_id: A report.paperformat record.
-        :param landscape: Force the report orientation to be landscape.
-        :param specific_paperformat_args: A dictionary containing prioritized wkhtmltopdf arguments.
-        :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
-        :return: A list of string representing the wkhtmltopdf process command args.
-        '''
-        if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
-            landscape = specific_paperformat_args.get('data-report-landscape')
-
-        command_args = ['--disable-local-file-access']
-        if set_viewport_size:
-            command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
-
-        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        try:
-            if request:
-                command_args.extend(['--cookie', 'session_id', request.session.sid])
-        except AttributeError:
-            pass
-
-        # Less verbose error messages
-        command_args.extend(['--quiet'])
-
-        # Build paperformat args
-        if paperformat_id:
-            if paperformat_id.format and paperformat_id.format != 'custom':
-                command_args.extend(['--page-size', paperformat_id.format])
-
-            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
-                command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
-                command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
-
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
-                command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-            else:
-                command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
-
-            dpi = None
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                dpi = int(specific_paperformat_args['data-report-dpi'])
-            elif paperformat_id.dpi:
-                if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
-                    _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    dpi = 96
-                else:
-                    dpi = paperformat_id.dpi
-            if dpi:
-                command_args.extend(['--dpi', str(dpi)])
-                if wkhtmltopdf_dpi_zoom_ratio:
-                    command_args.extend(['--zoom', str(96.0 / dpi)])
-
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
-                command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
-            elif paperformat_id.header_spacing:
-                command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
-
-            command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-            command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
-            command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
-            if not landscape and paperformat_id.orientation:
-                command_args.extend(['--orientation', str(paperformat_id.orientation)])
-            if paperformat_id.header_line:
-                command_args.extend(['--header-line'])
-
-        if landscape:
-            command_args.extend(['--orientation', 'landscape'])
-
-        return command_args
 
     @api.multi
     def _prepare_html(self, html):
@@ -300,6 +228,8 @@ class IrActionsReport(models.Model):
         IrConfig = self.env['ir.config_parameter'].sudo()
         base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
 
+        paperformat_id = self.get_paperformat()
+
         # Return empty dictionary if 'web.minimal_layout' not found.
         layout = self.env.ref('web.minimal_layout', False)
         if not layout:
@@ -309,8 +239,8 @@ class IrActionsReport(models.Model):
         root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
-        header_node = etree.Element('div', id='minimal_layout_report_headers')
-        footer_node = etree.Element('div', id='minimal_layout_report_footers')
+        headers = []
+        footers = []
         bodies = []
         res_ids = []
 
@@ -319,13 +249,15 @@ class IrActionsReport(models.Model):
         for node in root.xpath(match_klass.format('header')):
             body_parent = node.getparent()
             node.getparent().remove(node)
-            header_node.append(node)
+            header = layout.render(dict(subst=True, body=lxml.html.tostring(node), base_url=base_url, paperformat=paperformat_id, display_css=False))
+            headers.append(header)
 
         # Retrieve footers
         for node in root.xpath(match_klass.format('footer')):
             body_parent = node.getparent()
             node.getparent().remove(node)
-            footer_node.append(node)
+            footer = layout.render(dict(subst=True, body=lxml.html.tostring(node), base_url=base_url, paperformat=paperformat_id, display_css=False))
+            footers.append(footer)
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
@@ -333,7 +265,7 @@ class IrActionsReport(models.Model):
             # set context language to body language
             if node.get('data-oe-lang'):
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url, paperformat=paperformat_id, display_css=True))
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -351,10 +283,7 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
-
-        return bodies, res_ids, header, footer, specific_paperformat_args
+        return bodies, res_ids, headers, footers, specific_paperformat_args
 
     @api.model
     def _run_wkhtmltopdf(
@@ -365,7 +294,24 @@ class IrActionsReport(models.Model):
             landscape=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
-        '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
+        return self._run_webtopdf(
+            bodies=bodies,
+            headers=header and [header] or None,
+            footers=footer and [footer] or None,
+            landscape=landscape,
+            specific_paperformat_args=specific_paperformat_args,
+            set_viewport_size=set_viewport_size)
+
+    @api.model
+    def _run_webtopdf(
+            self,
+            bodies,
+            headers=None,
+            footers=None,
+            landscape=False,
+            specific_paperformat_args=None,
+            set_viewport_size=False):
+        '''Execute chromeheadless as a subprocess in order to convert html given in input into a pdf
         document.
 
         :param bodies: The html bodies of the report, one per page.
@@ -376,29 +322,8 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: Content of the pdf as a string
         '''
-        paperformat_id = self.get_paperformat()
 
-        # Build the base command args for wkhtmltopdf bin
-        command_args = self._build_wkhtmltopdf_args(
-            paperformat_id,
-            landscape,
-            specific_paperformat_args=specific_paperformat_args,
-            set_viewport_size=set_viewport_size)
-
-        files_command_args = []
         temporary_files = []
-        if header:
-            head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-            with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
-                head_file.write(header)
-            temporary_files.append(head_file_path)
-            files_command_args.extend(['--header-html', head_file_path])
-        if footer:
-            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
-                foot_file.write(footer)
-            temporary_files.append(foot_file_path)
-            files_command_args.extend(['--footer-html', foot_file_path])
 
         paths = []
         for i, body in enumerate(bodies):
@@ -412,27 +337,48 @@ class IrActionsReport(models.Model):
         pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
         os.close(pdf_report_fd)
         temporary_files.append(pdf_report_path)
-
         try:
-            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            out, err = process.communicate()
-
-            if process.returncode not in [0, 1]:
-                if process.returncode == -11:
-                    message = _(
-                        'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
-                else:
-                    message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
-                raise UserError(message % (str(process.returncode), err[-1000:]))
+            chrome = ChromeBrowser(_logger, browser_size)
+            chrome._websocket_send('Network.enable')
+            chrome._websocket_send('Runtime.enable')
+            chrome._websocket_send('Page.enable')
+            streams = []
+            params = {
+                'displayHeaderFooter': True,
+                'preferCSSPageSize': True,
+                'printBackground': True,
+            }
+            if len(paths) == 1:
+                params.update({
+                    'headerTemplate': headers[0].decode("utf-8") if headers else "",
+                    'footerTemplate': footers[0].decode("utf-8") if footers else ""
+                })
+                chrome.navigate_to("file://" + paths[0], wait_stop=True)
+                chrome._websocket_wait_event('Network.loadingFinished')
+                res_id = chrome._websocket_send('Page.printToPDF', params=params)
+                res = chrome._websocket_wait_id(res_id)
+                content = res.get('result', {}).get('data')
+                pdf_content = base64.decodebytes(bytes(content.encode('utf-8')))
             else:
-                if err:
-                    _logger.warning('wkhtmltopdf: %s' % err)
+                loaded_network = False
+                for i, path in enumerate(paths):
+                    params.update({
+                        'headerTemplate': headers[i].decode("utf-8"),
+                        'footerTemplate': footers[i].decode("utf-8")
+                    })
+                    chrome.navigate_to("file://" + path, True)
+                    if not loaded_network:
+                        chrome._websocket_wait_event('Network.loadingFinished')
+                        loaded_network = True
+                    res_id = chrome._websocket_send('Page.printToPDF', params=params)
+                    res = chrome._websocket_wait_id(res_id)
+                    content = res.get('result', {}).get('data')
+                    pdf_content = base64.decodebytes(bytes(content.encode('utf-8')))
+                    streams.append(io.BytesIO(pdf_content))
+                pdf_content = self._merge_pdfs(streams)
+            chrome.stop()
         except:
             raise
-
-        with open(pdf_report_path, 'rb') as pdf_document:
-            pdf_content = pdf_document.read()
 
         # Manual cleanup of the temporary files
         for temporary_file in temporary_files:
@@ -671,28 +617,21 @@ class IrActionsReport(models.Model):
             _logger.info('The PDF report has been generated from attachments.')
             return self._post_pdf(save_in_attachment), 'pdf'
 
-        if self.get_wkhtmltopdf_state() == 'install':
-            # wkhtmltopdf is not installed
-            # the call should be catched before (cf /report/check_wkhtmltopdf) but
-            # if get_pdf is called manually (email template), the check could be
-            # bypassed
-            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
-
         html = self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
         # Ensure the current document is utf-8 encoded.
         html = html.decode('utf-8')
 
-        bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+        bodies, html_ids, headers, footers, specific_paperformat_args = self.with_context(context)._prepare_html(html)
 
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
                 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
-        pdf_content = self._run_wkhtmltopdf(
+        pdf_content = self._run_webtopdf(
             bodies,
-            header=header,
-            footer=footer,
+            headers=headers,
+            footers=footers,
             landscape=context.get('landscape'),
             specific_paperformat_args=specific_paperformat_args,
             set_viewport_size=context.get('set_viewport_size'),

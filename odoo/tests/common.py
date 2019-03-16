@@ -467,7 +467,7 @@ class ChromeBrowser():
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
         self.sigxcpu_handler = None
-        if os.name == 'posix':
+        if os.name == 'posix' and threading.current_thread() is threading.main_thread():  # fixme work aroung solution
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
 
@@ -532,6 +532,8 @@ class ChromeBrowser():
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
+            '--disable-web-security': '',  # avoid cross orgin error while executing css urls. for eg. font awesome
+            '--run-all-compositor-stages-before-draw': ''
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]

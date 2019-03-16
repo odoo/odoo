@@ -74,43 +74,162 @@
         <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <html style="height: 0;">
             <head>
-                <t t-call-assets="web.report_assets_pdf" t-js="false"/>
-                <t t-call-assets="web.report_assets_common" t-js="false"/>
-                <t t-call-assets="web.report_assets_pdf" t-css="false"/>
-                <meta charset="utf-8"/>
-                <t t-set="subst_needed" t-value="subst is True"/>
-                <t t-if="subst_needed">
-                    <script>
-                        function subst() {
-                            var vars = {};
-                            var x = document.location.search.substring(1).split('&amp;');
-                            for (var i in x) {
-                                var z = x[i].split('=', 2);
-                                vars[z[0]] = unescape(z[1]);
-                            }
-                            var fromPage = document.getElementsByClassName('page');
-                            for(var j = 0; j&lt;fromPage.length; j++)
-                                fromPage[j].textContent = vars['sitepage'];
-                            var toPage = document.getElementsByClassName('topage');
-                            for(var j = 0; j&lt;toPage.length; j++)
-                                toPage[j].textContent = vars['sitepages'];
+                <t t-if="display_css">
+                    <t t-call-assets="web.report_assets_pdf" t-js="false"/>
+                    <t t-call-assets="web.report_assets_common" t-js="false"/>
+                    <t t-call-assets="web.report_assets_pdf" t-css="false"/>
+                </t>
+                <t t-else="">
+                    <style>
+                        .header, .footer {
+                            margin-left: <t t-if="paperformat"><t t-esc="paperformat.margin_left" />mm</t><t t-else="">7mm</t>;
+                            margin-right: <t t-if="paperformat"><t t-esc="paperformat.margin_right" />mm</t><t t-else="">7mm</t>;
+                            font-family: 'Arial';
+                            font-size: 10px;
+                            -webkit-print-color-adjust: exact;
+                            line-height: 1.4;
+                            text-align: left;
+                            width:100%
+                        }
+                        .header address, .footer address {
+                            font-style: normal;
+                            font-size: 9px;
+                        }
+                        .text-muted {
+                            color:#6c757d;
+                        }
+                        .list-inline-item {
+                            padding-left: 0;
+                            display: inline-block;
+                            margin-bottom: 0;
+                            margin-right:2px;
+                        }
+                        img {
+                            height:35px;
+                        }
+                        .text-center {
+                            text-align: center;
+                        }
+                        .text-right {
+                            text-align: right;
+                        }
+                        .float-left {
+                            float: left;
+                        }
+                        .float-right {
+                            float: right;
+                        }
+                        .clearfix::after {
+                            display: block;
+                            clear: both;
+                            content: "";
+                        }
+                        .mb8 {
+                            margin-bottom: 8px;
+                        }
+                        ul {
+                            margin-top:1px;
+                            margin-bottom:2px;
+                            padding-left: 0;
+                        }
+                        .list-unstyled {
+                            padding-left: 0;
+                            list-style: none;
+                        }
+                        .o_background_header, .o_boxed_header {
+                            border-bottom: 1px solid #e9ecef
+                        }
+                        .o_clean_header {
+                            border-bottom: 1px solid #00A09D;
+                        }
+                        .o_clean_footer {
+                            margin-top: 200px;
+                            border-top: 3px solid #875A7B;
+                        }
+                        .o_background_footer, .o_background_header, .o_report_layout_background, .o_boxed_header, .o_boxed_footer{
+                            font-family: 'Lato';
+                            color: #495057;
+                            font-size: 9px;
+                        }
+                        .o_boxed_footer {
+                            margin-top: 200px;
+                            white-space: nowrap;
+                            border-top: 2px solid #495057;
+                        }
+                        .o_background_footer ul {
+                            border-top: 1px solid #875A7B;
+                            border-bottom: 1px solid #875A7B;
+                            padding: 4px 0;
+                            margin: 0 0 4px 0;
+                        }
+                        .o_background_footer ul li {
+                            color: #875A7B;
+                        }
 
-                            var index = vars['webpage'].split('.', 4)[3]
-                            var header = document.getElementById('minimal_layout_report_headers');
-                            if(header !== null){
-                                var companyHeader = header.children[index];
-                                header.textContent = '';
-                                header.appendChild(companyHeader);
+                        .col-3 {
+                            flex: 0 0 25%;
+                            max-width: 25%;
+                            position: relative;
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                        }
+                        .col-4 {
+                            flex: 0 0 33.33333333%;
+                            max-width: 33.33333333%;
+                            position: relative;
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                        }
+                        // Fontawesome should be installed on system than only style will apply.
+                        // HTML unicodes are supported so that it can be use in place of fontawesome. 
+                        .fa {
+                            display: inline-block;
+                            font-family: FontAwesome;
+                            font-size: inherit;
+                            text-rendering: auto;
+                            font-style: normal;
+                        }
+                        .fa-phone:before {
+                            content: "\f095";
+                        }
+                        .fa-at:before {
+                            content: "\f1fa";
+                        }
+                        .fa-globe:before {
+                            content: "\f0ac";
+                        }
+                        .o_clean_footer .pagenumber {
+                            border: 2px solid #875A7B;
+                            background-color: #00A09D;
+                            color: white;
+                            padding: 4px 8px;
+                            text-align: center;
+                        }
+                    </style>
+                </t>
+                <t t-if="paperformat">
+                    <style>
+                        @page {
+                            size: <t t-esc="paperformat.format"/> <t t-esc="paperformat.orientation"/>;
+                            margin: <t t-esc="paperformat.margin_top"/>mm <t t-esc="paperformat.margin_right"/>mm <t t-esc="paperformat.margin_bottom"/>mm <t t-esc="paperformat.margin_left"/>mm
+                        }
+                        @media print {
+                            .table td, .table th {
+                                background-color: inherit !important;
                             }
-                            var footer = document.getElementById('minimal_layout_report_footers');
-                            if(footer !== null){
-                                var companyFooter = footer.children[index];
-                                footer.textContent = '';
-                                footer.appendChild(companyFooter);
+                            .o_report_layout_boxed table tbody tr td.o_price_total {
+                                background-color: #e9ecef !important;
+                            }
+                            .o_report_layout_boxed div#total table tr.o_total td {
+                                background-color: #495057 !important;
                             }
                         }
-                    </script>
+                       
+                    </style>
                 </t>
+                <meta charset="utf-8"/>
             </head>
             <body class="container" t-att-onload="subst_needed and 'subst()'">
                 <t t-raw="body"/>
@@ -171,9 +290,9 @@
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'" class="text-muted">
                     Page:
-                    <span class="page"/>
+                    <span class="pageNumber"/>
                     of
-                    <span class="topage"/>
+                    <span class="totalPages"/>
                 </div>
             </div>
         </div>
@@ -184,16 +303,17 @@
             <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    <img t-if="company.logo" class="float-left" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-6 text-right mb4">
+                <div class="float-right col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
                     <div name="company_address" class="mb4">
-                        <span class="company_address" t-field="company.partner_id"
+                        <span class="company_address text-right" t-field="company.partner_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
                 </div>
             </div>
+            <div class="clearfix mb8"/>
             </div>
         </div>
 
@@ -212,7 +332,7 @@
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
-                    Page: <span class="page"/> / <span class="topage"/>
+                    Page: <span class="pageNumber"/> / <span class="totalPages"/>
                 </div>
             </div>
         </div>
@@ -222,10 +342,10 @@
         <div class="header">
             <div class="o_clean_header">
             <div class="row">
-                <div class="col-6">
+                <div class="col-6 float-left">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-5 offset-1" name="company_address">
+                <div class="col-5 offset-1 float-right" name="company_address" >
                     <ul class="list-unstyled">
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
                         <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
@@ -235,6 +355,7 @@
                     </ul>
                 </div>
             </div>
+            <div class="clearfix mb8"/>
             </div>
         </div>
 
@@ -248,16 +369,16 @@
                 <div class="col-3">
                     <span t-field="company.report_footer"/>
                 </div>
-                <div class="col-4 text-right">
+                <div class="col-4 text-right float-left" style="margin-left:120px;">
                     <span class="company_address" t-field="company.partner_id"
                         t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                 </div>
                 <div class="col-4">
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
-                <div class="col-1">
+                <div class="col-1 float-right">
                     <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-right text-center">
-                        <li class="list-inline-item"><strong><span class="page"/></strong></li>
+                        <li class="list-inline-item"><strong><span class="pageNumber"/></strong></li>
                     </ul>
                 </div>
             </div>
@@ -303,9 +424,8 @@
                 <div name="financial_infos">
                     <span t-field="company.report_footer"/>
                 </div>
-
                 <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page: <span class="page"/> / <span class="topage"/>
+                    Page: <span class="pageNumber"/> / <span class="totalPages"/>
                 </div>
             </div>
         </div>
