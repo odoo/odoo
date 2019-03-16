@@ -24,7 +24,7 @@
         AbstractController.include({
             start: function(){
                 this.$el.attr('data-view-type', this.viewType);
-                return this._super();
+                return this._super.apply(this, arguments);
             },
             update: function(params, options) {
                 return this._super(params, options).then(function (){
@@ -36,7 +36,7 @@
         if (Discuss) {
             Discuss.include({
                 _fetchAndRenderThread: function() {
-                    return this._super().then(function (){
+                    return this._super.apply(this, arguments).then(function (){
                         viewUpdateCount++;
                     });
                 },
@@ -56,8 +56,6 @@
         var $listOfAppMenuItems;
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise");
-            var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-            $homeMenu.click();
             $listOfAppMenuItems = $(".o_app, .o_menuitem");
         } else {
             console.log("Odoo flavor: Community");
@@ -74,6 +72,7 @@
             console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
         }).catch(function () {
             console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
+            console.error('test failed')
             console.error("Error !");
         });
     }
@@ -102,6 +101,11 @@
                 // no effect in community
                 var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
                 $homeMenu.click();
+                return new Promise(function(resolve){
+                    setTimeout(function(){
+                      resolve();
+                    }, 0);
+                });
         });
     }
 
@@ -140,6 +144,7 @@
             }
         }).catch(function () {
             console.error("Error while testing", element);
+            return Promise.reject();
         });
     };
 
@@ -232,7 +237,7 @@
     function waitForCondition(stopCondition) {
         var prom = new Promise(function (resolve, reject) {
             var interval = 250;
-            var timeLimit = 15000;
+            var timeLimit = 5000;
 
             function checkCondition() {
                 if (stopCondition()) {

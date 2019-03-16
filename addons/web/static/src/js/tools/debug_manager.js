@@ -213,6 +213,8 @@ var DebugManager = Widget.extend({
         });
     },
     perform_click_everywhere_test: function () {
+        var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
+        $homeMenu.click();
         startClickEverywhere();
     },
     split_assets: function() {
