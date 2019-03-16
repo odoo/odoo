@@ -698,7 +698,7 @@ class IrActionsReport(models.Model):
             set_viewport_size=context.get('set_viewport_size'),
         )
         if res_ids:
-            _logger.info('The PDF report has been generated for records %s.' % (str(res_ids)))
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self.model, str(res_ids)))
             return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
