@@ -13,19 +13,19 @@
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2018
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
-# Martin Trigaux, 2018
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
 # Maksym <ms@myodoo.pl>, 2018
 # Mariusz, 2019
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 10:48+0000\n"
+"POT-Creation-Date: 2019-03-15 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -831,6 +831,11 @@ msgstr "E-mail Marketing"
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
 msgstr "Statystyka email"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_template
+msgid "Email Templates"
+msgstr "Szablony wiadomości"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -2251,9 +2256,14 @@ msgid "Unsubscription Date"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:806
+#: code:addons/mass_mailing/models/mass_mailing.py:880
 #, python-format
-msgid "Unsupported mass mailing model %r"
+msgid "Unsupported mass mailing model %s"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+msgid "Update my subscriptions"
 msgstr ""
 
 #. module: mass_mailing

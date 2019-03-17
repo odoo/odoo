@@ -8,7 +8,7 @@
 # laznikd <laznik@mentis.si>, 2019
 # Martin Trigaux, 2019
 # matjaz k <matjaz@mentis.si>, 2019
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>, 2019\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Znesek:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -52,12 +52,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Sklic:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Nazaj na Moj račun"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -81,23 +81,23 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Plačaj</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"> Dodaj novo kartico</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Izbriši"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Preklic,</i> Vaše plačilo je preklicano."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -106,6 +106,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Opravljeno,</i> vaše spletno plačilo je bilo uspešno obdelano. Hvala za "
+"naročilo."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:128
@@ -115,6 +117,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Napaka.</i> Med transakcijo je prišlo do napake. Naročilo je bilo "
+"potrjeno, a ne bo plačano. V primeru, da imate vprašanja glede stanja vašega"
+" naročila, prosimo, da nas pokličite."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -131,7 +136,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Ta kartica je trenutno povezana z naslednjimi zapisi:<p/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -154,6 +159,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Testno</span>\n"
+"                                    <span class=\"o_stat_text\">okolje</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -161,6 +168,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Produkcijsko</span>\n"
+"                                    <span class=\"o_stat_text\">okolje</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -313,32 +322,32 @@ msgstr "Prejemnik"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Konto ponudnika plačilnih storitev"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Sklic plač.pon."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Sklic ponudnika plačilnih storitev"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Ponudniki"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Seznam ponudnikov"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr ""
+msgstr "Aktiviraj"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -360,7 +369,7 @@ msgstr "Naslov"
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -402,7 +411,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -435,7 +444,7 @@ msgstr "Naziv banke"
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
@@ -1279,7 +1288,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Dnevnik plačil"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1381,7 +1390,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1411,7 +1420,7 @@ msgstr "Telefon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Nastavite ponudnika plačilnih storitev"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1464,7 +1473,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Obdelal"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -1621,7 +1630,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Določene države"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1638,7 +1647,7 @@ msgstr "Status"
 #: selection:payment.acquirer,provider:0
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
@@ -1759,6 +1768,8 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"Ta predloga upodobi gumb ponudnika plačilnih storitev s potrebnimi vrednostmi.\n"
+"                                            Upodobljena je s qWeb v naslednjem kontekstu vrednotenja:"
 
 #. module: payment
 #. openerp-web
