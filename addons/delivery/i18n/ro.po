@@ -3,17 +3,18 @@
 # * delivery
 # 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2017
-# Dorin Hongu <dhongu@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +271,7 @@ msgstr "Transportator"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "Costul de livrare"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -333,7 +334,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Destinații Disponibile"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
@@ -369,7 +370,6 @@ msgid "Environment"
 msgstr "Mediu"
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_grid.py:50
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
@@ -398,6 +398,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Completarea acestui formular vă permite să filtrați operatorii de transport "
+"în funcție de adresa de livrare a clientului dvs."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -415,7 +417,7 @@ msgstr "Fără taxă de livrare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Gratuit dacă valoarea comenzii este mai mare"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -461,6 +463,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Dacă suma totală a comenzii (cu excepția livrării) este mai mare sau egală "
+"cu această valoare, clientul beneficiază de o livrare gratuită"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:125
@@ -590,6 +594,8 @@ msgstr ""
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Nicio regulă de preț care să corespundă acestei comenzi; costul de livrare "
+"nu poate fi calculat."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier

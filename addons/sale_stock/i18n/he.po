@@ -42,23 +42,23 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>הפניית לקוח:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>תנאי שילוח בינלאומיים:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "לאחר המכירה"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "החל מסלולים מיוחדים מהזמנות (לדוגמה, דרופשיפינג, ייצור לפי הזמנה)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -76,17 +76,17 @@ msgstr "חברות"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "ספק את כל המוצרים בבת אחת"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "ספק כל מוצר כאשר הוא זמין"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr ""
+msgstr "משלוח"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
@@ -101,7 +101,7 @@ msgstr "משלוח הזמנות"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "הצגת את תנאי סחר בהזמנת ובחשבוניות קשורות"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -111,7 +111,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "לאפשר מסלול על שורת הזמנת"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -119,7 +119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr ""
+msgstr "מונחי סחר בינלאומיים "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
@@ -128,6 +128,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incoterms הם סדרה של תנאי המכירה. הם משמשים לחלק את עלויות השילוח ואחריות "
+"בין הקונה לבין המוכר ומשקפים שיטות תחבורה החדישות ביותר."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -135,6 +137,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"תנאים מסחריים בינלאומיים הם סדרה של מונחים מסחריים מוגדרים מראש המשמשים "
+"בעסקאות בינלאומיות."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -163,6 +167,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"מרווח טעות לתאריכים שהובטחו ללקוחות. המוצרים יהיו מסודרים למסירה ימים רבים "
+"מוקדם יותר מאשר התאריך המובטחת בפועל, כדי להתמודד עם עיכובים בלתי צפויים "
+"בשרשרת האספקה."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -173,28 +180,31 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"מרווח טעות לתאריכים שהובטחו ללקוחות. המוצרים יהיו מסודרים לרכישה ימים רבים "
+"מוקדם יותר מאשר התאריך המובטחת בפועל, כדי להתמודד עם עיכובים בלתי צפויים "
+"בשרשרת האספקה."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "העבר תאריכי אספקה צפויים לפי"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "אין מספיק מלאי!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "מסלולים ספציפיים להזמנה"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "הכמות שהוזמנה ירדה!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -204,7 +214,7 @@ msgstr "חבילה"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Pickings"
-msgstr ""
+msgstr "בחירות"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
@@ -234,21 +244,24 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"מומלץ לנהל טוב יותר סדרי עדיפויות הזמנת מוצרים באופן ידני בהזמנות משלוח או "
+"על ידי הפעלת מתזמן במקרה של זמן אספקה ארוך לקוחות ו / או במקרה שאזל המלאי. "
+"כברירת מחדל, המתזמן פועל אוטומטית כל 24 שעות."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
-msgstr ""
+msgstr "מסלול"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "נתיבים עבור קווי הזמנת מכירות"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "שורת מכירה "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -288,22 +301,22 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "תזמן משלוחים מוקדם יותר כדי למנוע עיכובים"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "אבטח את זמן האספקה"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "אבטח את זמן האספקה עבור המכירות"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "ניתן לבחירה על שורת הזמנה"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -313,12 +326,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "שלח את כל המוצרים בבת-אחת"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "שלח מוצרים בהקדם האפשרי, יחד עם  הזמנות חוזרות"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -333,17 +346,17 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "מדיניות המשלוח"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "תנועת מלאי"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
 msgid "Stock Moves"
-msgstr ""
+msgstr "תנועות מלאי"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -353,12 +366,15 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"מאפשר להחיל מסלול מיוחד על שורת הזמנות (למשל: דרופשיפינג, ייצור לפי הזמנה) "
+"במקרה של תרחיש יוצא דופן. כדי להיות זמין להזמנות , נתיבים חייבים להיות "
+"מסומנת בטופס ההתקנה שלהם כ 'שורת הזמנת מכירה' ."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "מוצר זה נארוז על ידי %.2f %s. אתה צריך למכור %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -385,7 +401,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "מתי להתחיל לשלח"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:189
@@ -394,6 +410,7 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
+"אתה מפחית את כמות ההזמנה! אל תשכח לעדכן ידנית את סדר המשלוח במידת הצורך."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:166
