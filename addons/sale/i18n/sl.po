@@ -9,7 +9,7 @@
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2018
 # jl2035 <jaka.luthar@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:23+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>, 2019\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -586,7 +586,7 @@ msgstr "Analitične oznake"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr "Pri strošku"
+msgstr "po nabavni ceni"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -871,12 +871,12 @@ msgstr "Dostavljeno"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
-msgstr "Dostavljena Količina"
+msgstr "Dobavljena količina"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr "Dostavljene Količine"
+msgstr "Dobavljena količina"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
@@ -1287,7 +1287,7 @@ msgstr "Obračun"
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Obračunska politika"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
@@ -1646,7 +1646,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "Naročena količina"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1655,6 +1655,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Naročena količina: obračun na osnovi količine, ki jo je kupec naročil.\n"
+"Dobavljena količina: obračun na osnovi količine, ki jo je dobavitelj dobavil (čas ali dobave)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1664,7 +1666,7 @@ msgstr "Datum prodajenga naloga"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "Naročena količina"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -1692,6 +1694,9 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Nalogi z nadgradno prodajo vsebujejo proizvode z obračunsko\n"
+"                politiko na osnovi<i>naročene količine</i> in ki ste jih dobavili\n"
+"                več od naročene količine."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2545,6 +2550,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Proizvod, ki se uporablja za obračun predplačila oz. pologa, mora imeti "
+"nastavljeno obračunsko politiko na \"Naročena količina\". Posodobite svoj "
+"proizvod za polog da boste lahko ustvarili račun za polog."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
