@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
 from odoo.addons import decimal_precision as dp
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
@@ -22,6 +23,10 @@ class ProductPricelist(models.Model):
     def _default_website(self):
         """ Find the first company's website, if there is one. """
         company_id = self.env.user.company_id.id
+
+        if self._context.get('default_company_id'):
+            company_id = self._context.get('default_company_id')
+
         domain = [('company_id', '=', company_id)]
         return self.env['website'].search(domain, limit=1)
 
@@ -38,6 +43,11 @@ class ProductPricelist(models.Model):
 
     @api.model
     def create(self, data):
+        if data.get('company_id') and not data.get('website_id'):
+            # l10n modules install will change the company currency, creating a
+            # pricelist for that currency. Do not use user's company in that
+            # case as module install are done with OdooBot (company 1)
+            self = self.with_context(default_company_id=data['company_id'])
         res = super(ProductPricelist, self).create(data)
         self.clear_cache()
         return res
@@ -103,6 +113,22 @@ class ProductPricelist(models.Model):
         if not company_id and website:
             company_id = website.company_id.id
         return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        ''' Show only the company's website '''
+        domain = self.company_id and [('company_id', '=', self.company_id.id)] or []
+        return {'domain': {'website_id': domain}}
+
+    @api.constrains('company_id', 'website_id')
+    def _check_websites_in_company(self):
+        '''Prevent misconfiguration multi-website/multi-companies.
+           If the record has a company, the website should be from that company.
+        '''
+        for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
+            if record.website_id.company_id != record.company_id:
+                raise ValidationError(_("Only the company's websites are allowed. \
+                    Leave the Company field empty or select a website from that company."))
 
 
 class ProductPublicCategory(models.Model):
