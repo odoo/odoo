@@ -1,9 +1,9 @@
 {
  'name': 'To-Do Application',
- 'description': 'Manage personal to-do tasks.',
- 'author': 'Daniel Reis',
+ 'description': 'Test Module of Dat Nguyen',
+ 'author': 'Dat Nguyen',
  'depends': ['base'],
  'application': True,
- 'installable': False,
+ 'installable': True,
  'auto_install': False,
 }
