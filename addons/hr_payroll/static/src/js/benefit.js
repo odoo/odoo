@@ -56,8 +56,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             e.stopImmediatePropagation();
             this.do_action('hr_payroll.action_generate_payslips_from_benefits', {
                 additional_context: {
-                    default_date_start: time.datetime_to_str(this.firstDay),
-                    default_date_end: time.datetime_to_str(this.lastDay),
+                    default_date_start: time.date_to_str(this.firstDay),
+                    default_date_end: time.date_to_str(this.lastDay),
                 },
             });
         },
