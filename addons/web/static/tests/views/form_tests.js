@@ -5413,7 +5413,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('form rendering with groups with col/colspan', async function (assert) {
-        assert.expect(46);
+        assert.expect(45);
 
         var form = await createView({
             View: FormView,
@@ -5529,10 +5529,6 @@ QUnit.module('Views', {
         assert.strictEqual($fieldGroupFifthRowTds.eq(0).attr('style').substr(0, 9), "width: 50", "the first td should 50% width");
         assert.hasClass($fieldGroupFifthRowTds.eq(1),'o_td_label', "the second td should be a label td");
         assert.strictEqual($fieldGroupFifthRowTds.eq(2).attr('style').substr(0, 9), "width: 50", "the third td should 50% width");
-
-        // Verify that one2many list table hasn't been impacted
-        assert.hasAttrValue(form.$('.o_field_one2many th:first'), 'style', undefined,
-            "o2m list columns should have no width harcoded");
 
         form.destroy();
     });
@@ -6744,7 +6740,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "yopblip",
             "table has some initial order");
 
-        await testUtils.dom.click($('.modal-body .o_form_view .o_list_view th'));
+        await testUtils.dom.click($('.modal-body .o_form_view .o_list_view th.o_column_sortable'));
         assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "blipyop",
             "table is now sorted");
         form.destroy();

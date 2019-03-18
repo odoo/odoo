@@ -328,6 +328,10 @@ Possible children elements of the list view are:
         dynamic attributes based on record values. Only effects the current
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
+    ``width_factor`` (for ``editable``)
+        the column relative width (as the layout is fixed)
+    ``width`` (for ``editable``)
+        the column width (as the layout is fixed)
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
