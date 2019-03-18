@@ -74,7 +74,6 @@ class TestPayslipMultiContract(TestPayslipContractBase):
         start = datetime.strptime('2015-11-05 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-12-15 18:00:00', '%Y-%m-%d %H:%M:%S')
         self.contract_cdi.write({'date_start': datetime.strptime('2015-12-30', '%Y-%m-%d').date()})
-        print(self.contract_cdi.date_start, 'test')
         # begins during contract, ends after contract
         leave = self.create_leave(start, end)
         leave.action_approve()
