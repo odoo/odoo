@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Date, Datetime
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 
 
 class TestStockValuation(TransactionCase):
@@ -1206,9 +1206,10 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.standard_price, 16)
 
         # return
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=[out_pick.id], active_id=out_pick.id)\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=out_pick.ids, active_id=out_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])

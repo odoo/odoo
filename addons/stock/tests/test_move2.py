@@ -3,8 +3,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
-from odoo import api, registry
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form
 
 
 class TestPickShip(TestStockCommon):
@@ -174,10 +173,12 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'assigned')
 
         # return a part of what we've done
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
-            .create({})
-        stock_return_picking.product_return_moves.quantity = 2.0 # Return only 2
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 2.0  # Return only 2
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 2.0
@@ -197,9 +198,10 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'assigned')
 
         # return more than we've done
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 12.0 # Return 2 extra
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -440,18 +442,20 @@ class TestPickShip(TestStockCommon):
         output. This return should not be available and should only have
         picking pick as origin move.
         """
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
 
         self.assertEqual(return_pick_picking.state, 'waiting')
 
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -514,9 +518,10 @@ class TestPickShip(TestStockCommon):
         picking_ship.move_lines[0].move_line_ids[0].qty_done = 1.0
         picking_ship.action_done()
 
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -527,9 +532,10 @@ class TestPickShip(TestStockCommon):
         })
         return_ship_picking.action_done()
 
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pack_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -537,9 +543,10 @@ class TestPickShip(TestStockCommon):
         return_pack_picking.move_lines[0].move_line_ids[0].qty_done = 1.0
         return_pack_picking.action_done()
 
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -680,9 +687,10 @@ class TestPickShip(TestStockCommon):
         picking_client.action_done()
 
         # return half in the pick location
-        return1 = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_client.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_client.ids, active_id=picking_client.ids[0],
+            active_model='stock.picking'))
+        return1 = stock_return_picking_form.save()
         return1.product_return_moves.quantity = 5.0
         return1.location_id = pick_location.id
         return_to_pick_picking_action = return1.create_returns()
@@ -692,9 +700,10 @@ class TestPickShip(TestStockCommon):
         return_to_pick_picking.action_done()
 
         # return the remainig products in the return warehouse
-        return2 = self.env['stock.return.picking']\
-            .with_context(active_ids=picking_pick.ids, active_id=picking_client.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_client.ids, active_id=picking_client.ids[0],
+            active_model='stock.picking'))
+        return2 = stock_return_picking_form.save()
         return2.product_return_moves.quantity = 5.0
         return2.location_id = return_location.id
         return_to_return_picking_action = return2.create_returns()
