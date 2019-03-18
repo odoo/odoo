@@ -1293,7 +1293,7 @@ class AccountTax(models.Model):
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
-        base = total_included = total_excluded = total_void
+        base = total_included = total_void = total_excluded
 
         taxes_vals = []
         i = 0
