@@ -83,6 +83,9 @@ class Employee(models.Model):
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
+    def _get_date_start_work(self):
+        return self.create_date
+
     def _get_remaining_leaves(self):
         """ Helper to compute the remaining leaves for the current employees
             :returns dict where the key is the employee id, and the value is the remain leaves
