@@ -166,16 +166,15 @@ class HolidaysAllocation(models.Model):
 
             # We have to check when the employee has been created
             # in order to not allocate him/her too much leaves
-            creation_date = fields.Datetime.from_string(holiday.employee_id.create_date)
-
+            start_date = holiday.employee_id._get_date_start_work()
             # If employee is created after the period, we cancel the computation
-            if period_end <= creation_date:
+            if period_end <= start_date:
                 holiday.write(values)
                 continue
 
             # If employee created during the period, taking the date at which he has been created
-            if period_start <= creation_date:
-                period_start = creation_date
+            if period_start <= start_date:
+                period_start = start_date
 
             worked = holiday.employee_id.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
             left = holiday.employee_id.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
