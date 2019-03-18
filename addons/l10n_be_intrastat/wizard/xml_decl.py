@@ -223,11 +223,13 @@ class XmlDeclaration(models.TransientModel):
         if dispatchmode:
             mode1 = 'out_invoice'
             mode2 = 'in_refund'
+            extrf = "29"
             declcode = self._get_expedition_code(extendedmode)
             declform = self._get_expedition_form(extendedmode)
         else:
             mode1 = 'in_invoice'
             mode2 = 'out_refund'
+            extrf = "19"
             declcode = self._get_reception_code(extendedmode)
             declform = self._get_reception_form(extendedmode)
 
@@ -272,7 +274,7 @@ class XmlDeclaration(models.TransientModel):
         invoicelines = self.env['account.invoice.line'].browse(invoicelines_ids)
 
         for inv_line in invoicelines:
-            linekey = self._get_intrastat_linekey(declcode, inv_line, dispatchmode, extendedmode)
+            linekey = self._get_intrastat_linekey(extrf, inv_line, dispatchmode, extendedmode)
             if linekey is None:
                 continue
 
