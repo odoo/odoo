@@ -185,7 +185,7 @@ class AccountMove(models.Model):
 
         def _find_existing_tax_line(line_ids, tax_repartition_line_id, analytic_tag_ids, analytic_account_id):
             if tax.analytic:
-                return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_reparition_line_id and x.analytic_tag_ids.ids == analytic_tag_ids and x.analytic_account_id.id == analytic_account_id)
+                return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_repartition_line_id and x.analytic_tag_ids.ids == analytic_tag_ids and x.analytic_account_id.id == analytic_account_id)
             return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_repartition_line_id)
 
         def _get_lines_to_sum(line_ids, tax, tag_ids, analytic_account_id):
@@ -223,11 +223,6 @@ class AccountMove(models.Model):
             for tax in to_process_taxes:
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
 
-                if not lines_to_sum:
-                    # Drop tax line because the originator tax is no longer used.
-                    self.line_ids -= tax_line
-                    continue
-
                 balance = sum([l.balance for l in lines_to_sum])
 
                 # Compute the tax amount one by one.
@@ -238,8 +233,11 @@ class AccountMove(models.Model):
                     for line_vals in taxes_vals['taxes']:
                         tax_line = _find_existing_tax_line(self.line_ids, line_vals['tax_repartition_line_id'], parsed_key['tag_ids'], parsed_key['analytic_account_id'])
                         if tax_line:
-                            # Update the existing tax_line.
-                            if balance:
+                            if not lines_to_sum:
+                                # Drop tax line because the originator tax is no longer used.
+                                self.line_ids -= tax_line
+                            elif balance:
+                                # Update the existing tax_line.
                                 # Update the debit/credit amount according to the new balance.
                                 amount = line_vals['amount']
                                 account = line_vals['account_id'] or line.account_id
