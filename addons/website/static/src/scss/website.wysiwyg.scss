@@ -258,63 +258,6 @@ body.editor_enable {
                             color: $o-we-color-text-light;
                         }
                     }
-
-                    // CUSTOMIZE MENU BUTTON
-                    >.oe_options {
-                        .btn {
-                            background-color: $o-we-color-dark;
-                            color: $o-we-color-text-light;
-
-                            &:hover,
-                            &:active,
-                            &:focus {
-                                background-color: lighten($o-we-color-dark, 5%);
-                                border-color: lighten($o-we-color-dark, 10%);
-                            }
-
-                            &:before,
-                            &:after {
-                                background-color: $o-we-color-text-light;
-                            }
-                        }
-
-                        // Open menu
-                        &.show .btn {
-                            // background-color: $o-we-color-light;
-                        }
-
-                        // CUSTOMIZE MENU
-                        .dropdown-menu {
-                            border: 1px solid $o-we-color-dark;
-                            background-color: $o-we-color-light;
-
-                            .dropdown-item {
-                                color: $o-we-color-text-light;
-
-                                &:hover {
-                                    background-color: fade-out($o-we-color-dark, 0.5);
-                                }
-
-                                &.active {
-                                    background-color: fade-out($o-we-color-dark, 0.5);
-                                }
-                            }
-
-                            .dropdown-header {
-                                color: wheat;
-
-                                &.o_parent_editor_header {
-                                    color: wheat;
-                                }
-                            }
-
-                            .dropdown-submenu {
-                                &::before {
-                                    border-left-color: $o-we-color-text-light;
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -322,7 +265,6 @@ body.editor_enable {
                 top: $o-we-handle-border-width;
                 right: $o-we-handle-border-width;
             }
-
         }
     }
 

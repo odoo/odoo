@@ -1176,7 +1176,7 @@ registry.many2one = SnippetOption.extend({
 
         // create search button and bind search bar
         this.$btn = $(qweb.render('web_editor.many2one.button'))
-            .insertAfter(this.$overlay.find('.oe_options'));
+            .insertAfter(this.$overlay.find('.oe_overlay_options a'));
 
         this.$ul = this.$btn.find('ul');
         this.$search = this.$ul.find('li:first');
@@ -1184,19 +1184,19 @@ registry.many2one = SnippetOption.extend({
             e.stopPropagation();
         });
 
-        // move menu item
-        setTimeout(function () {
-            if (self.$overlay.find('.oe_options').hasClass('d-none')) {
-                self.$btn.css('height', '0').find('> a').addClass('d-none');
-                self.$ul.show().css({
-                    'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
-                });
-            } else {
-                self.$btn.find('a').on('click', function (e) {
-                    self._clear();
-                });
-            }
-        },0);
+        // move menu item FIXME
+        // setTimeout(function () {
+        //     if (self.$overlay.find('.oe_options').hasClass('d-none')) {
+        //         self.$btn.css('height', '0').find('> a').addClass('d-none');
+        //         self.$ul.show().css({
+        //             'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
+        //         });
+        //     } else {
+        //         self.$btn.find('a').on('click', function (e) {
+        //             self._clear();
+        //         });
+        //     }
+        // },0);
 
         // bind search input
         this.$search.find('input')

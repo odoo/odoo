@@ -25,7 +25,6 @@ var SnippetEditor = Widget.extend({
         'click .oe_snippet_parent': '_onParentButtonClick',
         'click .oe_snippet_clone': '_onCloneClick',
         'click .oe_snippet_remove': '_onRemoveClick',
-        'mousedown .oe_options [data-toggle="dropdown"]:first': '_onOpenCusomize',
     },
     custom_events: {
         cover_update: '_onCoverUpdate',
@@ -225,9 +224,7 @@ var SnippetEditor = Widget.extend({
         var do_action = (focus ? _do_action_focus : _do_action_blur);
 
         // Attach own and parent options on the current overlay
-        var $style_button = this.$el.find('.oe_options');
-        var $ul = $style_button.find('.dropdown-menu:first');
-        var $headers = $ul.find('.dropdown-header:data(editor)');
+        var $headers = this.$options.find('.dropdown-header:data(editor)');
         _.each($headers, (function (el) {
             var $el = $(el);
             var styles = _.values($el.data('editor').styles);
@@ -245,7 +242,9 @@ var SnippetEditor = Widget.extend({
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass('d-none', $ul.children(':not(.o_main_header):not(.dropdown-divider):not(.d-none)').length === 0);
+        this.trigger_up('toggle_snippets_menu_options', {
+            stuff: this.$options,
+        });
         this.cover();
         this.$el.toggleClass('oe_active', !!focus);
 
@@ -292,20 +291,23 @@ var SnippetEditor = Widget.extend({
      */
     _initializeOptions: function () {
         var self = this;
-        var $styles = this.$el.find('.oe_options');
-        var $ul = $styles.find('.dropdown-menu:first');
+        this.$options = $('<div/>');
         this.styles = {};
         this.selectorSiblings = [];
         this.selectorChildren = [];
 
         var i = 0;
-        $ul.append($('<div/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
-        var defs = _.map(this.templateOptions, function (val, option_id) {
+        this.$options.append($('<div/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
+        var defs = _.map(this.templateOptions, function (val) {
             if (!val.selector.is(self.$target)) {
                 return;
             }
-            if (val['drop-near']) self.selectorSiblings.push(val['drop-near']);
-            if (val['drop-in']) self.selectorChildren.push(val['drop-in']);
+            if (val['drop-near']) {
+                self.selectorSiblings.push(val['drop-near']);
+            }
+            if (val['drop-in']) {
+                self.selectorChildren.push(val['drop-in']);
+            }
 
             var optionName = val.option;
             var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
@@ -320,7 +322,7 @@ var SnippetEditor = Widget.extend({
             option.__order = i++;
             return option.attachTo($el);
         });
-        $ul.append($('<div/>', {class: 'dropdown-divider mt-2'}));
+        this.$options.append($('<div/>', {class: 'dropdown-divider mt-2'}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
@@ -328,7 +330,10 @@ var SnippetEditor = Widget.extend({
             if (parentEditor) {
                 for (var styleName in parentEditor.styles) {
                     if (!parentEditor.styles[styleName].preventChildPropagation) {
-                        $ul.append($('<div/>', {class: 'dropdown-header o_parent_editor_header', text: parentEditor._getName()}).data('editor', parentEditor));
+                        self.$options.append($('<div/>', {
+                            class: 'dropdown-header o_parent_editor_header',
+                            text: parentEditor._getName(),
+                        }).data('editor', parentEditor));
                         break;
                     }
                 }
@@ -558,14 +563,15 @@ var SnippetsMenu = Widget.extend({
     cacheSnippetTemplate: {},
     activeSnippets: [],
     custom_events: {
-        activate_insertion_zones: '_onActivateInsertionZones',
-        call_for_each_child_snippet: '_onCallForEachChildSnippet',
-        deactivate_snippet: '_onDeactivateSnippet',
-        drag_and_drop_stop: '_onDragAndDropStop',
-        go_to_parent: '_onGoToParent',
-        remove_snippet: '_onRemoveSnippet',
-        snippet_removed: '_onSnippetRemoved',
-        reload_snippet_dropzones: '_disableUndroppableSnippets',
+        'activate_insertion_zones': '_onActivateInsertionZones',
+        'call_for_each_child_snippet': '_onCallForEachChildSnippet',
+        'deactivate_snippet': '_onDeactivateSnippet',
+        'drag_and_drop_stop': '_onDragAndDropStop',
+        'go_to_parent': '_onGoToParent',
+        'remove_snippet': '_onRemoveSnippet',
+        'snippet_removed': '_onSnippetRemoved',
+        'reload_snippet_dropzones': '_disableUndroppableSnippets',
+        'toggle_snippets_menu_options': '_toggleSnippetOptions',
     },
 
     /**
@@ -1512,6 +1518,12 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetRemoved: function () {
         this._disableUndroppableSnippets();
+    },
+    /**
+     * @private
+     */
+    _toggleSnippetOptions: function (ev) {
+        this.$el.html(ev.data.stuff);
     },
 });
 
