@@ -17,16 +17,16 @@
                         <t t-foreach="question.answers" t-as="answer">
                             <a t-att-data-answer-id="answer.id" href="#"
                                 t-att-data-text="answer.text_value"
-                                t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center #{widget.slide.completed ? 'disabled bg-transparent' : 'list-group-item-action' }">
+                                t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center #{widget.slide.completed ? 'disabled bg-transparent' : 'list-group-item-action' } #{widget.slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
 
                                 <label class="my-0 d-flex align-items-center justify-content-center mr-2">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i class="fa fa-circle text-400"></i>
+                                    <i t-att-class="'fa fa-circle text-400' + (!(widget.slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
                                     <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i class="fa fa-check-circle text-success d-none"></i>
+                                    <i t-att-class="'fa fa-check-circle text-success' + (widget.slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
                                 </label>
                                 <span t-esc="answer.text_value"/>
                             </a>
