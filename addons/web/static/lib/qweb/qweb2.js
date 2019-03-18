@@ -173,7 +173,7 @@ var QWeb2 = {
                         new_dict[as_first] = index === 0;
                         new_dict[as_last] = index + 1 === size;
                         new_dict[as_parity] = (index % 2 == 1 ? 'odd' : 'even');
-                        if (cur.constructor === Object) {
+                        if (cur && cur.constructor === Object) {
                             this.extend(new_dict, cur);
                         }
                         new_dict[as] = cur;
