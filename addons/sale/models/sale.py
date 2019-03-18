@@ -842,13 +842,29 @@ class SaleOrder(models.Model):
             'sale_order_ids': [(6, 0, self.ids)],
         })
 
-        transaction = self.env['payment.transaction'].create(vals)
+        domain = self._domainize_transaction_vals(vals) + [('state', '=', 'draft')]
+        transaction = self.env['payment.transaction'].sudo().search(domain, limit=1)
+        if not transaction:
+            transaction = self.env['payment.transaction'].create(vals)
 
         # Process directly if payment_token
         if transaction.payment_token_id:
             transaction.s2s_do_transaction()
 
         return transaction
+
+    @api.model
+    def _domainize_transaction_vals(self, vals):
+        domain = []
+        scalar_fields = ['amount', 'currency_id', 'partner_id', 'acquirer_id']
+        o2m_fields = ['sale_order_ids']
+        for scalar in scalar_fields:
+            if vals.get(scalar):
+                domain.append((scalar, '=', vals.get(scalar)))
+        for o2m in o2m_fields:
+            if vals.get(o2m):
+                domain.append((o2m, 'in', vals.get(o2m)[0][2]))
+        return domain
 
     @api.multi
     def preview_sale_order(self):
