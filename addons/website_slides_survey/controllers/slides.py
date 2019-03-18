@@ -29,10 +29,10 @@ class WebsiteSlides(WebsiteSlides):
 
     # Utils
     # ---------------------------------------------------
-    def _set_completed_slide(self, slide, quiz_attempts_inc=False):
+    def _set_completed_slide(self, slide):
         if slide.slide_type == 'certification':
             raise werkzeug.exceptions.Forbidden(_("Certification slides are completed when the survey is succeeded."))
-        return super(WebsiteSlides, self)._set_completed_slide(slide, quiz_attempts_inc=quiz_attempts_inc)
+        return super(WebsiteSlides, self)._set_completed_slide(slide)
 
     def _get_valid_slide_post_values(self):
         result = super(WebsiteSlides, self)._get_valid_slide_post_values()
