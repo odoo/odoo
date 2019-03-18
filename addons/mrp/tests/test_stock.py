@@ -28,7 +28,7 @@ class TestWarehouse(common.TestMrpCommon):
 
         self.laptop = self.env.ref("product.product_product_25")
         graphics_card = self.env.ref("product.product_product_24")
-        unit = self.env.ref("product.product_uom_unit")
+        unit = self.env.ref("uom.product_uom_unit")
         mrp_routing = self.env.ref("mrp.mrp_routing_0")
 
         bom_laptop = self.env['mrp.bom'].create({
