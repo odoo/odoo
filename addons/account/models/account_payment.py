@@ -74,7 +74,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.onchange('journal_id')
     def _onchange_journal(self):
         if self.journal_id:
-            self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
+            self.currency_id = self.journal_id.currency_id or self.currency_id or self.company_id.currency_id
             # Set default payment method (we consider the first to be the default one)
             payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
             self.payment_method_id = payment_methods and payment_methods[0] or False
@@ -546,8 +546,8 @@ class account_payment(models.Model):
             Return the journal entry.
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        invoice_currency = False
-        if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
+        invoice_currency = self.currency_id
+        if not invoice_currency and self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
             #if all the invoices selected share the same currency, record the paiement in that currency too
             invoice_currency = self.invoice_ids[0].currency_id
         debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id, invoice_currency)
@@ -557,7 +557,7 @@ class account_payment(models.Model):
         #Write line corresponding to invoice payment
         counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, False)
         counterpart_aml_dict.update(self._get_counterpart_move_line_vals(self.invoice_ids))
-        counterpart_aml_dict.update({'currency_id': currency_id})
+        counterpart_aml_dict.update({'currency_id': currency_id != self.company_id.currency_id.id and currency_id})
         counterpart_aml = aml_obj.create(counterpart_aml_dict)
 
         #Reconcile with the invoices
