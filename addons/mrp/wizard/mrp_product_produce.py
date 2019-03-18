@@ -84,6 +84,7 @@ class MrpProductProduce(models.TransientModel):
                 existing_move_line.product_uom_qty += produced_qty
                 existing_move_line.qty_done += produced_qty
             else:
+                location_dest_id = produce_move.location_dest_id.get_putaway_strategy(self.product_id).id or produce_move.location_dest_id.id
                 vals = {
                   'move_id': produce_move.id,
                   'product_id': produce_move.product_id.id,
@@ -93,7 +94,7 @@ class MrpProductProduce(models.TransientModel):
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
                   'location_id': produce_move.location_id.id,
-                  'location_dest_id': produce_move.location_dest_id.id,
+                  'location_dest_id': location_dest_id,
                 }
                 self.env['stock.move.line'].create(vals)
 

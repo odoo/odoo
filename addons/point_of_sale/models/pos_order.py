@@ -884,6 +884,7 @@ class PosOrder(models.Model):
                 for pack_lot in pack_lots:
                     lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
                     self.env['stock.move.line'].create({
+                        'picking_id': move.picking_id.id,
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,

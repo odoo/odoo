@@ -6,6 +6,52 @@ from odoo.exceptions import except_orm
 
 
 class TestWarehouse(common.TestMrpCommon):
+    def setUp(self):
+        super(TestWarehouse, self).setUp()
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.depot_location = self.env['stock.location'].create({
+            'name': 'Depot',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->depot',
+            'fixed_location_ids': [(0, 0, {
+                'category_id': self.env.ref('product.product_category_all').id,
+                'fixed_location_id': self.depot_location.id,
+            })]
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        self.laptop = self.env.ref("product.product_product_25")
+        graphics_card = self.env.ref("product.product_product_24")
+        unit = self.env.ref("uom.product_uom_unit")
+        mrp_routing = self.env.ref("mrp.mrp_routing_0")
+
+        bom_laptop = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.laptop.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': unit.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': graphics_card.id,
+                'product_qty': 1,
+                'product_uom_id': unit.id
+            })],
+            'routing_id': mrp_routing.id
+        })
+
+        # Return a new Manufacturing Order for laptop
+        def new_mo_laptop():
+            return self.env['mrp.production'].create({
+                'product_id': self.laptop.id,
+                'product_qty': 1,
+                'product_uom_id': unit.id,
+                'bom_id': bom_laptop.id
+            })
+        self.new_mo_laptop = new_mo_laptop
 
     def test_manufacturing_route(self):
         warehouse_1_stock_manager = self.warehouse_1.sudo(self.user_stock_manager)
@@ -101,3 +147,69 @@ class TestWarehouse(common.TestMrpCommon):
 
 #        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.scrapped)
 #        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
+
+    def test_putaway_after_manufacturing_1(self):
+        """ This test checks a manufactured product without tracking will go to
+        location defined in putaway strategy.
+        """
+        mo_laptop = self.new_mo_laptop()
+
+        mo_laptop.button_plan()
+        workorder = mo_laptop.workorder_ids[0]
+
+        workorder.button_start()
+        workorder.record_production()
+        mo_laptop.button_mark_done()
+
+        # We check if the laptop go in the depot and not in the stock
+        move = mo_laptop.move_finished_ids
+        location_dest = move.move_line_ids.location_dest_id
+        self.assertEqual(location_dest.id, self.depot_location.id)
+        self.assertNotEqual(location_dest.id, self.stock_location.id)
+
+    def test_putaway_after_manufacturing_2(self):
+        """ This test checks a tracked manufactured product will go to location
+        defined in putaway strategy.
+        """
+        self.laptop.tracking = 'serial'
+        mo_laptop = self.new_mo_laptop()
+
+        mo_laptop.button_plan()
+        workorder = mo_laptop.workorder_ids[0]
+
+        workorder.button_start()
+        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
+        workorder.final_lot_id = serial
+        workorder.record_production()
+        mo_laptop.button_mark_done()
+
+        # We check if the laptop go in the depot and not in the stock
+        move = mo_laptop.move_finished_ids
+        location_dest = move.move_line_ids.location_dest_id
+        self.assertEqual(location_dest.id, self.depot_location.id)
+        self.assertNotEqual(location_dest.id, self.stock_location.id)
+
+    def test_putaway_after_manufacturing_3(self):
+        """ This test checks a tracked manufactured product will go to location
+        defined in putaway strategy when the production is recorded with
+        product.produce wizard.
+        """
+        self.laptop.tracking = 'serial'
+        mo_laptop = self.new_mo_laptop()
+        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
+
+        product_produce = self.env['mrp.product.produce'].with_context({
+            'active_id': mo_laptop.id,
+            'active_ids': [mo_laptop.id],
+        }).create({
+            'product_qty': 1.0,
+            'lot_id': serial.id,
+        })
+        product_produce.do_produce()
+        mo_laptop.button_mark_done()
+
+        # We check if the laptop go in the depot and not in the stock
+        move = mo_laptop.move_finished_ids
+        location_dest = move.move_line_ids.location_dest_id
+        self.assertEqual(location_dest.id, self.depot_location.id)
+        self.assertNotEqual(location_dest.id, self.stock_location.id)
