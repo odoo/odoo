@@ -1,79 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Tax Definitions -->
-    <record id="tag_vn_01" model="account.account.tag">
-        <field name="name">HHDV mua vào</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_02" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV mua vào</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_03" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV mua vào chịu thuế 0%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_04" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV mua vào chịu thuế 5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_05" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV mua vào chịu thuế 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_06" model="account.account.tag">
-        <field name="name">Giá trị HHDV mua vào</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_07" model="account.account.tag">
-        <field name="name">Giá trị HHDV mua vào chịu thuế 0%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_08" model="account.account.tag">
-        <field name="name">Giá trị HHDV mua vào chịu thuế 5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_09" model="account.account.tag">
-        <field name="name">Giá trị HHDV mua vào chịu thuế 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_10" model="account.account.tag">
-        <field name="name">HHDV bán ra</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_11" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV bán ra</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_12" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV bán ra chịu thuế 0%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_13" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV bán ra chịu thuế 5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_14" model="account.account.tag">
-        <field name="name">Thuế GTGT HHDV bán ra chịu thuế 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_15" model="account.account.tag">
-        <field name="name">Giá trị HHDV bán ra</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_16" model="account.account.tag">
-        <field name="name">Giá trị HHDV bán ra chịu thuế 0%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_17" model="account.account.tag">
-        <field name="name">Giá trị HHDV bán ra chịu thuế 5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tag_vn_18" model="account.account.tag">
-        <field name="name">Giá trị HHDV bán ra chịu thuế 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
     <!-- for purchase -->
     <record id="tax_purchase_vat10" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -81,11 +8,34 @@
         <field name="description">Thuế GTGT được khấu trừ 10%</field>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart1331"/>
-        <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_09'),ref('tag_vn_05')])]"/>
         <field name="tax_group_id" ref="tax_group_10"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_03_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_tag_ids': [ref('account_tax_report_line_03_01_01_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_03_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'plus_tag_ids': [ref('account_tax_report_line_03_01_01_vn')],
+                }),
+            ]"/>
     </record>
     <record id="tax_purchase_vat5" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -93,11 +43,34 @@
         <field name="description">Thuế GTGT được khấu trừ 5%</field>
         <field name="amount" eval="5"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart1331"/>
-        <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_08'),ref('tag_vn_04')])]"/>
         <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_02_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_tag_ids': [ref('account_tax_report_line_02_01_01_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_02_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'plus_tag_ids': [ref('account_tax_report_line_02_01_01_vn')],
+                }),
+            ]"/>
     </record>
     <record id="tax_purchase_vat0" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -105,11 +78,32 @@
         <field name="description">Thuế GTGT được khấu trừ 0%</field>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart1331"/>
-        <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_07')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_01_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_01_02_01_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                }),
+            ]"/>
     </record>
 
     <!-- for sale -->
@@ -119,11 +113,34 @@
         <field name="description">Thuế GTGT phải nộp 10%</field>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart33311"/>
-        <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_18'),ref('tag_vn_14')])]"/>
         <field name="tax_group_id" ref="tax_group_10"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_03_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'plus_tag_ids': [ref('account_tax_report_line_03_01_02_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_03_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'minus_tag_ids': [ref('account_tax_report_line_03_01_02_vn')],
+                }),
+            ]"/>
     </record>
     <record id="tax_sale_vat5" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -131,11 +148,34 @@
         <field name="description">Thuế GTGT phải nộp 5%</field>
         <field name="amount" eval="5"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart33311"/>
-        <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_17'),ref('tag_vn_13')])]"/>
         <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_02_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'plus_tag_ids': [ref('account_tax_report_line_02_01_02_vn')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_02_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'minus_tag_ids': [ref('account_tax_report_line_02_01_02_vn')],
+                }),
+            ]"/>
     </record>
     <record id="tax_sale_vat0" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -143,10 +183,31 @@
         <field name="description">Thuế GTGT phải nộp 0%</field>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
-        <field name="account_id" ref="chart33311"/>
-        <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_16')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_tag_ids': [ref('account_tax_report_line_01_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_tag_ids': [ref('account_tax_report_line_01_02_02_vn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                }),
+            ]"/>
     </record>
 </odoo>
