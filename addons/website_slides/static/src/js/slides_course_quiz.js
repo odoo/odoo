@@ -127,22 +127,22 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _renderAnswersHighlighting: function () {
             var self = this;
-            this.$('li.o_wslides_quiz_answer').each(function () {
+            this.$('a.o_wslides_quiz_answer').each(function () {
                 var $answer = $(this);
                 var answerId = $answer.data('answerId');
                 if (_.contains(self.quiz.goodAnswers, answerId)) {
-                    $answer.removeClass('border-danger').addClass('border border-success');
+                    $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-check-circle').removeClass('d-none');
                 }
                 else if (_.contains(self.quiz.badAnswers, answerId)) {
-                    $answer.removeClass('border-success').addClass('border border-danger');
+                    $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-times-circle').removeClass('d-none');
                     $answer.find('label input').prop('checked', false);
                 }
                 else {
-                    $answer.removeClass('border border-danger border-success');
+                    $answer.removeClass('list-group-item-danger list-group-item-success');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-circle').removeClass('d-none');
                 }
@@ -295,7 +295,7 @@ odoo.define('website_slides.quiz', function (require) {
             var self = this;
             var slide = ev.data.slide;
             var completion = ev.data.completion;
-            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check-circle').removeClass('text-600 fa-circle-o');
+            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check').removeClass('text-600 fa-circle-o');
             // need to use global selector as progress bar is ouside this animation widget scope
             $('.o_wslides_lesson_header .progress-bar').css('width', completion + "%");
             $('.o_wslides_lesson_header .progress span').text(_.str.sprintf("%s %%", completion));
