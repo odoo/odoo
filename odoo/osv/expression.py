@@ -564,13 +564,13 @@ class ExtendedLeaf(object):
         alias, alias_statement = generate_table_alias(self._models[0]._table, links)
         return alias
 
-    def add_join_context(self, model, lhs_col, table_col, link):
+    def add_join_context(self, model, lhs_col, table_col, link, outer=False):
         """ See above comments for more details. A join context is a tuple like:
-                ``(lhs, model, lhs_col, col, link)``
+                ``(lhs, model, lhs_col, col, link, outer)``
 
             After adding the join, the model of the current leaf is updated.
         """
-        self.join_context.append((self.model, model, lhs_col, table_col, link))
+        self.join_context.append((self.model, model, lhs_col, table_col, link, outer))
         self._models.append(model)
         self.model = model
 
@@ -578,10 +578,23 @@ class ExtendedLeaf(object):
         conditions = []
         alias = self._models[0]._table
         for context in self.join_context:
+            if context[5]:
+                continue
             previous_alias = alias
             alias += '__' + context[4]
             conditions.append('"%s"."%s"="%s"."%s"' % (previous_alias, context[2], alias, context[3]))
         return conditions
+
+    def get_outer_joins(self):
+        joins = {}
+        alias = self._models[0]._table
+        for context in self.join_context:
+            if not context[5]:
+                continue
+            previous_alias = alias
+            alias += '__' + context[4]
+            joins.setdefault(previous_alias, []).append((alias, context[2], context[3], context[5]))
+        return joins
 
     def get_tables(self):
         tables = set()
@@ -684,8 +697,16 @@ class expression(object):
                     tables.append(table)
         table_name = _quote(self.root_model._table)
         if table_name not in tables:
-            tables.append(table_name)
+            tables.insert(0, table_name)
         return tables
+
+    def get_outer_joins(self):
+        """ Returns the list of outer join tables """
+        joins = {}
+        for leaf in self.result:
+            for table, join in leaf.get_outer_joins().items():
+                joins.setdefault(table, []).extend(join)
+        return joins
 
     # ----------------------------------------
     # Parsing
@@ -883,12 +904,12 @@ class expression(object):
 
             elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
-                leaf.add_join_context(comodel, path[0], 'id', path[0])
+                leaf.add_join_context(comodel, path[0], 'id', path[0], outer='LEFT JOIN')
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
-                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0])
+                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0], outer='LEFT JOIN')
                 domain = field.domain(model) if callable(field.domain) else field.domain
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
                 if domain:

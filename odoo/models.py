@@ -3870,10 +3870,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = [where_clause] if where_clause else []
+            joins = e.get_outer_joins()
         else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
+            where_clause, where_params, tables, joins = [], [], ['"%s"' % self._table], None
 
-        return Query(tables, where_clause, where_params)
+        return Query(tables, where_clause, where_params, joins)
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
