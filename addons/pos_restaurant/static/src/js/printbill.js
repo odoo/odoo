@@ -34,7 +34,7 @@ var PrintBillButton = screens.ActionButtonWidget.extend({
         if(order.get_orderlines().length > 0){
             var receipt = order.export_for_printing();
             receipt.bill = true;
-            this.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
+            this.pos.proxy.printer.print_receipt(QWeb.render('BillReceipt',{
                 receipt: receipt, widget: this, pos: this.pos, order: order,
             }));
         }

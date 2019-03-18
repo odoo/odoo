@@ -25,6 +25,8 @@ PKGS_TO_INSTALL="
     fswebcam \
     nginx-full \
     dnsmasq \
+    dbus \
+    dbus-x11 \
     cups \
     printer-driver-all \
     cups-ipp-utils \

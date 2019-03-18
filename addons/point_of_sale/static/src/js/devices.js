@@ -3,12 +3,8 @@ odoo.define('point_of_sale.devices', function (require) {
 
 var core = require('web.core');
 var mixins = require('web.mixins');
-var rpc = require('web.rpc');
 var Session = require('web.Session');
-var PosBaseWidget = require('point_of_sale.BaseWidget');
-
-var QWeb = core.qweb;
-var _t = core._t;
+var Printer = require('point_of_sale.Printer').Printer;
 
 // the JobQueue schedules a sequence of 'jobs'. each job is
 // a function returning a promise. The queue waits for each job to finish
@@ -126,8 +122,6 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         };
         this.custom_payment_status = this.default_payment_status;
 
-        this.receipt_queue = [];
-
         this.notifications = {};
         this.bypass_proxy = false;
 
@@ -141,8 +135,8 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
 
         this.on('change:status',this,function(eh,status){
             status = status.newValue;
-            if(status.status === 'connected'){
-                self.print_receipt();
+            if(status.status === 'connected' && self.printer) {
+                self.printer.print_receipt();
             }
         });
 
@@ -175,6 +169,9 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         var self = this;
         this.connection = new Session(undefined,url, { use_cors: true});
         this.host = url;
+        if (this.pos.config.iface_print_via_proxy) {
+            this.connect_to_printer();
+        }
         this.set_connection_status('connecting',{});
 
         return this.message('handshake').then(function(response){
@@ -192,6 +189,10 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             });
     },
 
+    connect_to_printer: function () {
+        this.printer = new Printer(this.host, this.pos);
+    },
+
     /**
      * Find a proxy and connects to it.
      *
@@ -204,6 +205,9 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     autoconnect: function (options) {
         var self = this;
         this.set_connection_status('connecting',{});
+        if (this.pos.config.iface_print_via_proxy) {
+            this.connect_to_printer();
+        }
         var found_url = new Promise(function () {});
 
         if (options.force_ip) {
@@ -444,67 +448,6 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     debug_reset_weight: function(){
         this.use_debug_weight = false;
         this.debug_weight = 0;
-    },
-
-    // ask for the cashbox (the physical box where you store the cash) to be opened
-    open_cashbox: function(){
-        return this.message('open_cashbox');
-    },
-
-    /*
-     * ask the printer to print a receipt
-     */
-    print_receipt: function(receipt){
-        var self = this;
-        if(receipt){
-            this.receipt_queue.push(receipt);
-        }
-        function send_printing_job(){
-            if (self.receipt_queue.length > 0){
-                var r = self.receipt_queue.shift();
-                self.message('print_xml_receipt',{ receipt: r },{ timeout: 5000 })
-                    .then(function(){
-                        send_printing_job();
-                    },function(error){
-                        if (error) {
-                            self.pos.gui.show_popup('error-traceback',{
-                                'title': _t('Printing Error: ') + error.data.message,
-                                'body':  error.data.debug,
-                            });
-                            return;
-                        }
-                        self.receipt_queue.unshift(r);
-                    });
-            }
-        }
-        send_printing_job();
-    },
-
-    /** Print an overview of todays sales.
-     *
-     * By default this will print all sales of the day for current PoS config.
-     */
-    print_sale_details: function() {
-        var self = this;
-        rpc.query({
-                model: 'report.point_of_sale.report_saledetails',
-                method: 'get_sale_details',
-                args: [false, false, false, [this.pos.pos_session.id]],
-            })
-            .then(function(result){
-                var env = {
-                    widget: new PosBaseWidget(self),
-                    company: self.pos.company,
-                    pos: self.pos,
-                    products: result.products,
-                    payments: result.payments,
-                    taxes: result.taxes,
-                    total_paid: result.total_paid,
-                    date: (new Date()).toLocaleString(),
-                };
-                var report = QWeb.render('SaleDetailsReport', env);
-                self.print_receipt(report);
-            });
     },
 
     update_customer_facing_display: function(html) {

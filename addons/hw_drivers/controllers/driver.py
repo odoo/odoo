@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import logging
 import time
-from threading import Thread, Event
+from threading import Thread, Event, Lock
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
@@ -353,7 +353,8 @@ class Manager(Thread):
 
     def printer_loop(self):
         printer_devices = {}
-        devices = conn.getDevices()
+        with cups_lock:
+            devices = conn.getDevices()
         for path in [printer_lo for printer_lo in devices if devices[printer_lo]['device-make-and-model'] != 'Unknown']:
             if 'uuid=' in path:
                 serial = sub('[^a-zA-Z0-9 ]+', '', path.split('uuid=')[1])
@@ -443,6 +444,7 @@ class SocketManager(Thread):
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
+cups_lock = Lock()  # We can only make one call to Cups at a time
 
 m = Manager()
 m.daemon = True
