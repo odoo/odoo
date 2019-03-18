@@ -1293,7 +1293,7 @@ class AccountTax(models.Model):
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
-        base = total_included = total_excluded
+        base = total_included = total_excluded = total_void
 
         taxes_vals = []
         i = 0
@@ -1335,6 +1335,8 @@ class AccountTax(models.Model):
                 })
 
                 total_amount += line_amount
+                if not repartition_line.account_id:
+                    total_void += line_amount
                 repartition_lines_to_treat -= 1
 
             # Affect subsequent taxes
@@ -1348,6 +1350,7 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
             'total_included': sign * (currency.round(total_included) if round_total else total_included),
+            'total_void': currency.round(total_void) if round_total else total_void,
         }
 
     @api.model
