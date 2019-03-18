@@ -54,7 +54,6 @@ var ListRenderer = BasicRenderer.extend({
         // This attribute lets us know if there is a handle widget on a field,
         // and on which field it is set.
         this.handleField = null;
-        this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
                 return DECORATIONS.indexOf(key) >= 0;
@@ -67,6 +66,7 @@ var ListRenderer = BasicRenderer.extend({
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this._processColumns(params.columnInvisibleFields || {});
     },
 
     //--------------------------------------------------------------------------
@@ -188,7 +188,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _processColumns: function (columnInvisibleFields) {
         var self = this;
-        self.handleField = null;
+        this.handleField = null;
         this.columns = _.reject(this.arch.children, function (c) {
             if (c.tag === 'control' || c.tag === 'groupby') {
                 return true;
@@ -313,7 +313,7 @@ var ListRenderer = BasicRenderer.extend({
             isPassword: 'password' in node.attrs,
         });
         this._handleAttributes($td, node);
-        return $td.html(formattedValue);
+        return $td.html(formattedValue).attr('title', formattedValue);
     },
     /**
      * Renders the button element associated to the given node and record.
@@ -641,13 +641,14 @@ var ListRenderer = BasicRenderer.extend({
         }
         var description;
         if (node.attrs.widget) {
+            $th.addClass(' o_' + node.attrs.widget + '_cell');
             description = this.state.fieldsInfo.list[name].Widget.prototype.description;
         }
         if (description === undefined) {
             description = node.attrs.string || field.string;
         }
         $th.text(description)
-            .data('name', name)
+            .attr('data-name', name)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
             .addClass(field.sortable && 'o_column_sortable');
@@ -669,6 +670,8 @@ var ListRenderer = BasicRenderer.extend({
                 attrs: node.attrs,
             };
             this._addFieldTooltip(fieldDescr, $th);
+        } else {
+            $th.attr('title', description);
         }
         return $th;
     },
@@ -722,7 +725,7 @@ var ListRenderer = BasicRenderer.extend({
         if (disableInput) {
             $content.find("input[type='checkbox']").prop('disabled', disableInput);
         }
-        return $('<' + tag + ' width="1">')
+        return $('<' + tag + '>')
             .addClass('o_list_record_selector')
             .append($content);
     },

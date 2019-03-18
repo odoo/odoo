@@ -207,6 +207,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable rendering with handle', async function (assert) {
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="m2o"/>' +
+                '</tree>',
+        });
+        assert.containsN(list, 'thead th', 4, "there should be 4 th");
+        assert.hasClass(list.$('thead th:eq(0)'), 'o_list_record_selector');
+        assert.hasClass(list.$('thead th:eq(1)'), 'o_handle_cell');
+        assert.strictEqual(list.$('thead th:eq(2)').attr('style'), "width: 50%;");
+        assert.strictEqual(list.$('thead th:eq(3)').attr('style'), "width: 50%;");
+        list.destroy();
+    });
+
     QUnit.test('invisible columns are not displayed', async function (assert) {
         assert.expect(1);
 

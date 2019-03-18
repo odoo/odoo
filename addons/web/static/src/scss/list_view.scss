@@ -21,15 +21,17 @@
     thead {
         color: $o-main-text-color;
         border-bottom: 1px solid #cacaca;
-        > tr > th {
+        > tr > th:not(.o_list_record_selector) {
             border-left: 1px solid #dfdfdf;
-            @include media-breakpoint-down(sm) {
-                white-space: nowrap;
-            }
+            @include o-text-overflow(table-cell);
             &:not(.o_column_sortable):hover {
                 cursor: default;
             }
         }
+    }
+    tbody > tr > td:not(.o_list_record_selector) {
+        @include o-text-overflow(table-cell);
+        white-space: normal;
     }
 
     tfoot {
@@ -76,7 +78,7 @@
         }
     }
 
-    .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
+    .o_list_record_selector {
         width: 1px;  // to prevent the column to expand
     }
 
@@ -161,6 +163,18 @@
     //--------------------------------------------------------------------------
     // Edition
     //--------------------------------------------------------------------------
+
+    &.o_editable_list {
+        table-layout: fixed;
+
+        .o_list_record_selector {
+            width: 40px;
+        }
+        .o_list_record_remove_header, .o_handle_cell {
+            width: 32px;
+        }
+    }
+
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
         position: relative;
 
