@@ -1604,8 +1604,7 @@
                         <span t-else="">An error occured while processing your payment. Please try again or contact your administrator.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span t-if="payment_tx_id.acquirer_id.auth_msg" t-raw="payment_tx_id.acquirer_id.auth_msg"/>
-                        <span t-else="">Your payment has been authorized.</span>
+                        <span>Your payment has been authorized.</span>
                     </t>
                 </div>
                 <div t-if="payment_tx_id.acquirer_id.post_msg" t-att-class="'card-body %s' % (
