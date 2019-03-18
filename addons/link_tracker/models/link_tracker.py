@@ -185,11 +185,11 @@ class LinkTracker(models.Model):
     @api.model
     def recent_links(self, filter, limit):
         if filter == 'newest':
-            return self.search_read([], order='create_date DESC', limit=limit)
+            return self.search_read([], order='create_date DESC, id DESC', limit=limit)
         elif filter == 'most-clicked':
             return self.search_read([('count', '!=', 0)], order='count DESC', limit=limit)
         elif filter == 'recently-used':
-            return self.search_read([('count', '!=', 0)], order='write_date DESC', limit=limit)
+            return self.search_read([('count', '!=', 0)], order='write_date DESC, id DESC', limit=limit)
         else:
             return {'Error': "This filter doesn't exist."}
 
