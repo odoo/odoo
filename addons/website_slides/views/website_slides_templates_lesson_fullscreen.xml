@@ -22,6 +22,9 @@
                     <span class="o_wslides_fs_slide_title_span" t-esc="slide.name"/>
                 </div>
                 <div class="d-flex">
+                    <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}">
+                        <i class="fa fa-sign-out d-md-none"/><span class="d-none d-md-inline-block ml-1">Exit Fullscreen</span>
+                    </a>
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}">
                         <i class="fa fa-sign-out d-md-none"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
                     </a>
@@ -82,6 +85,7 @@
         <ul class="o_wslides_fs_sidebar_section_slides collapse show position-relative px-0 pb-1 my-0 mx-n3" t-att-id="('collapse-%s') % (category.id if category else 0)">
             <t t-foreach="slides" t-as="slide">
                 <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
+                <t t-set="is_member" t-value="slide.channel_id.is_member"/>
                 <li t-att-class="'o_wslides_fs_sidebar_list_item d-flex align-items-top py-2 %s text-truncate' % ('active' if slide.id == current_slide.id else '')"
                     t-att-data-id="slide.id"
                     t-att-data-name="slide.name"
@@ -91,11 +95,11 @@
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
                     t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
-                    t-att-data-readonly="not channel_progress[slide.id]"
+                    t-att-data-readonly="not is_member"
                     >
                     <span class="ml-3 pt-1">
-                        <i t-if="not slide_completed" class="fa fa-circle-thin overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
-                        <i t-if="slide_completed" class="o_wslides_slide_completed fa fa-check-circle rounded-circle text-success bg-white border border-success overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
+                        <i t-if="not slide_completed and is_member" class="fa fa-circle-thin overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
+                        <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fa fa-check-circle rounded-circle text-success bg-white border border-success overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
                     </span>
                     <div class="ml-2">
                         <a class="d-block pt-1" href="#">
@@ -109,7 +113,7 @@
                         </a>
                         <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
                             <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
-                                <a class="o_wslides_fs_slide_link" t-att-href="link.link" target="new">
+                                <a class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
                             </li>
