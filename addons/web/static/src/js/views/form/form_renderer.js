@@ -384,7 +384,7 @@ var FormRenderer = BasicRenderer.extend({
         var visible_buttons = buttons_partition[1];
 
         // Get the unfolded buttons according to window size
-        var nb_buttons = [2, 2, 4, 6][config.device.size_class] || 7;
+        var nb_buttons = this._renderButtonBoxNbButtons();
         var unfolded_buttons = visible_buttons.slice(0, nb_buttons).concat(invisible_buttons);
 
         // Get the folded buttons
@@ -423,6 +423,13 @@ var FormRenderer = BasicRenderer.extend({
         this._handleAttributes($result, node);
         this._registerModifiers(node, this.state, $result);
         return $result;
+    },
+    /**
+    * @private
+    * @returns {integer}
+    */
+    _renderButtonBoxNbButtons: function () {
+        return [2, 2, 4, 6][config.device.size_class] || 7;
     },
     /**
      * @private
