@@ -237,9 +237,10 @@ class ProcurementGroup(models.Model):
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        moves_to_assign = self.env['stock.move'].search([
-            ('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)
-        ], limit=None, order='priority desc, date_expected asc')
+        domain = [('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)]
+        if company_id:
+            domain.append(('company_id', '=', company_id))
+        moves_to_assign = self.env['stock.move'].search(domain, limit=None, order='priority desc, date_expected asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
