@@ -3360,3 +3360,23 @@ class TestUnlinkConstraints(common.TransactionCase):
         # should fail since it's at_uninstall=True
         with self.assertRaises(ValueError, msg="You didn't say if you wanted it crudo or cotto..."):
             self.undeletable_foo_uninstall.unlink()
+
+
+@common.tagged('wrong_related_path')
+class TestWrongRelatedError(common.TransactionCase):
+    def test_wrong_related_path(self):
+        class Foo(models.Model):
+            _module = None
+            _name = _description = 'test_new_api.wrong_related_path'
+
+            foo_id = fields.Many2one('test_new_api.foo')
+            foo_non_existing = fields.Char(related='foo_id.non_existing_field')
+        Foo._build_model(self.registry, self.env.cr)
+        self.addCleanup(self.registry.__delitem__, Foo._name)
+
+        errMsg = (
+            "Field non_existing_field referenced in related field definition "
+            "test_new_api.wrong_related_path.foo_non_existing does not exist."
+        )
+        with self.assertRaisesRegex(KeyError, errMsg):
+            self.registry.setup_models(self.env.cr)
