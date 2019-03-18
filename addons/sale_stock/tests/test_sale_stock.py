@@ -3,7 +3,7 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -159,9 +159,10 @@ class TestSaleStock(TestSale):
         self.inv_1.action_invoice_open()
 
         # Create return picking
-        StockReturnPicking = self.env['stock.return.picking']
-        default_data = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).create(default_data)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
         return_wiz.product_return_moves.quantity = 2.0 # Return only 2
         return_wiz.product_return_moves.to_refund = True # Refund these 2
         res = return_wiz.create_returns()
