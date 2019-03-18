@@ -141,7 +141,7 @@
                 <li class="p-0 pb-1">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide))"
                         t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s' % ('bg-100 py-1 active' if aside_slide == slide else '')">
-                        <div>
+                        <div t-if="aside_slide.channel_id.is_member" >
                             <i t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
                                 t-att-class="'mr-1 fa fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle-o')">
                             </i>
@@ -164,7 +164,7 @@
                             </li>
                         </t>
                         <li class="pl-4">
-                            <a t-if="aside_slide.question_ids" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
+                            <a t-if="aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </a>
                         </li>
@@ -177,6 +177,7 @@
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
+    <t t-set="is_training_channel" t-value="slide.channel_id.channel_type == 'training'"/>
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-center">
@@ -204,7 +205,7 @@
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="fa fa-chevron-left mr-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
-                <t t-set="allow_done_btn" t-value="slide.slide_type in ['infographic', 'presentation', 'document', 'webpage'] and not slide.question_ids and not channel_progress[slide.id].get('completed')"/>
+                <t t-set="allow_done_btn" t-value="slide.slide_type in ['infographic', 'presentation', 'document', 'webpage', 'video'] and not slide.question_ids and not channel_progress[slide.id].get('completed') and slide.channel_id.is_member"/>
                 <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if not allow_done_btn else '')"
                     role="button" t-att-aria-disabled="'true' if not allow_done_btn else None"
                     t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '') if allow_done_btn else '#'">
@@ -216,7 +217,7 @@
                     <span class="d-none d-sm-inline-block">Next</span> <i class="fa fa-chevron-right ml-2"></i>
                 </a>
             </div>
-            <a t-if="slide.channel_id.channel_type == 'training'" class="btn btn-light border ml-2" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
+            <a t-if="is_training_channel" class="btn btn-light border ml-2" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
                 <i class="fa fa-desktop mr-2"/>
                 <span class="d-none d-sm-inline-block">Fullscreen</span>
             </a>
@@ -336,7 +337,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-12 col-md">
+                    <div t-if="slide.channel_id.allow_comment" class="col-12 col-md">
                         <table class="table table-sm">
                             <tbody>
                                 <tr>
@@ -389,12 +390,12 @@
                         <t t-set="slide" t-value="slide"/>
                     </t>
                     <div class="row">
-                        <div t-attf-class="col-12 #{'col-lg-6' if not slide.document_id else ''}">
+                        <div t-attf-class="col-12 #{'col-lg-6' if slide.embed_code else ''}">
                             <t t-call="website_slides.slide_social_email">
                                 <t t-set="slide" t-value="slide"/>
                             </t>
                         </div>
-                        <div class="col-12 col-lg-6" t-if="not slide.document_id">
+                        <div class="col-12 col-lg-6" t-if="slide.embed_code">
                             <t t-call="website_slides.slide_social_embed">
                                 <t t-set="slide" t-value="slide"/>
                             </t>
