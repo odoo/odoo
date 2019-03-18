@@ -447,6 +447,41 @@ ListRenderer.include({
         }
     },
     /**
+     * Returns the relative width according to the widget or the field type.
+     * @see _renderHeader
+     *
+     * @param {Object} column a `field` arch node
+     */
+    _getColumnWidthFactor: function (column) {
+        if (column.attrs.width) {
+            // the width attribute has precedence on the width factor
+            return 0;
+        }
+        var fieldType = this.state.fields[column.attrs.name].type;
+        var widget = this.state.fieldsInfo.list[column.attrs.name].Widget.prototype;
+        if ('widthFactor' in widget) {
+            return widget.widthFactor;
+        }
+        switch (fieldType) {
+            case 'binary': return 1;
+            case 'boolean': return 0.4;
+            case 'char': return 1;
+            case 'date': return 1;
+            case 'datetime': return 1.5;
+            case 'float': return 1;
+            case 'html': return 3;
+            case 'integer': return 0.8;
+            case 'many2many': return 2.2;
+            case 'many2one': return 1.5;
+            case 'monetary': return 1.2;
+            case 'one2many': return 2.2;
+            case 'reference': return 1.5;
+            case 'selection': return 1.5;
+            case 'text': return 3;
+            default: return 1;
+        }
+    },
+    /**
      *
      * @returns {integer}
      */
@@ -655,6 +690,30 @@ ListRenderer.include({
         });
     },
     /**
+     * Overridden to set weights on columns for the fixed layout.
+     *
+     * @override
+     * @private
+     */
+    _processColumns: function () {
+        this._super.apply(this, arguments);
+
+        if (this.editable) {
+            var self = this;
+            this.columns.forEach(function (column) {
+                if (column.attrs.width_factor) {
+                    column.attrs.widthFactor = parseFloat(column.attrs.width_factor, 10);
+                } else {
+                    if (column.tag === 'field') {
+                        column.attrs.widthFactor = self._getColumnWidthFactor(column);
+                    } else {
+                        column.attrs.widthFactor = 1;
+                    }
+                }
+            });
+        }
+    },
+    /**
      * @override
      * @returns {Promise}
      */
@@ -707,6 +766,34 @@ ListRenderer.include({
             });
         }
         return $body;
+    },
+    /**
+     * Override to optionally add a th in the header for the remove icon column.
+     *
+     * @override
+     * @private
+     */
+    _renderHeader: function () {
+        var $thead = this._super.apply(this, arguments);
+
+        if (this.editable) {
+            var totalWidth = this.columns.reduce(function (acc, column) {
+                return acc + column.attrs.widthFactor;
+            }, 0);
+            this.columns.forEach(function (column) {
+                var $cell = $thead.find('th[data-name=' + column.attrs.name + ']');
+                if (column.attrs.width) {
+                    $cell.css('width', column.attrs.width);
+                } else if (column.attrs.widthFactor) {
+                    $cell.css('width', (column.attrs.widthFactor / totalWidth * 100) + '%');
+                }
+            });
+        }
+
+        if (this.addTrashIcon) {
+            $thead.find('tr').append($('<th>', {class: 'o_list_record_remove_header'}));
+        }
+        return $thead;
     },
     /**
      * Editable rows are possibly extended with a trash icon on their right, to
