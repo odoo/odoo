@@ -430,7 +430,7 @@ class Partner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner.with_prefetch()._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
     @api.multi
