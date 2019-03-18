@@ -321,7 +321,7 @@
 
 <template id="event_description_full">
     <t t-call="website_event.event_details">
-        <div class="col-lg-9">
+        <div class="col">
             <div t-if="event.state == 'done' or not registrable" class="alert alert-info" role="status">Registration for this event is now closed</div>
             <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
@@ -344,7 +344,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-lg-3 css_noprint">
+        <div class="col-lg-4 css_noprint">
             <div class="clearfix"/>
             <t t-if="not event.is_online">
                 <div class="card bg-secondary" t-if="event.address_id">
@@ -355,7 +355,7 @@
                                <img t-att-src="event.google_map_img()" width="100%%" alt="Google Maps"/>
                             </a>
                         </t>
-                        <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
+                        <div t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
                             "widget": "contact",
                             "fields": ["name"]
                         }'/>
@@ -373,17 +373,19 @@
             <div class="card bg-secondary my-3">
                 <h4 class="card-header">When</h4>
                 <div class="card-body">
-                    <span class="font-weight-bold small">From</span>
+                    <i class="fa fa-clock-o"/>
+                    <span>From</span>
                     <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/>
                     <hr/>
-                    <span class="font-weight-bold small">To</span>
+                    <i class="fa fa-clock-o"/>
+                    <span>To</span>
                     <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 </div>
             </div>
             <div class="card bg-secondary my-3" t-if="event.organizer_id">
                 <h4 class="card-header">Organizer</h4>
                 <div class="card-body">
-                    <h4 t-field="event.organizer_id" class="text-secondary font-weight-bold"/>
+                    <div t-field="event.organizer_id" class="text-secondary font-weight-bold"/>
                     <div itemprop="location" t-field="event.organizer_id" t-options='{
                         "widget": "contact",
                         "fields": ["phone", "mobile", "email"]
