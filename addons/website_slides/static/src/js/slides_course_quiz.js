@@ -117,7 +117,7 @@ odoo.define('website_slides.quiz', function (require) {
         _renderAnswers: function () {
             var self = this;
             this.$('input[type=radio]').each(function () {
-                $(this).prop('disabled', self.slide.readonly);
+                $(this).prop('disabled', self.slide.readonly || self.slide.completed);
             });
         },
 
@@ -142,9 +142,11 @@ odoo.define('website_slides.quiz', function (require) {
                     $answer.find('label input').prop('checked', false);
                 }
                 else {
-                    $answer.removeClass('border border-danger border-success');
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-circle').removeClass('d-none');
+                    if (!self.slide.completed){
+                        $answer.removeClass('border border-danger border-success');
+                        $answer.find('i.fa').addClass('d-none');
+                        $answer.find('i.fa-circle').removeClass('d-none');
+                    }
                 }
             });
         },
@@ -195,12 +197,13 @@ odoo.define('website_slides.quiz', function (require) {
                     self._alertShow(data.error);
                 } else {
                     self.quiz = _.extend(self.quiz, data);
-                    self._renderAnswersHighlighting();
-                    self._renderValidationInfo();
                     if (data.completed) {
                         self._renderSuccessModal(data);
+                        self.slide.completed = true;
                         self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
                     }
+                    self._renderAnswersHighlighting();
+                    self._renderValidationInfo();
                 }
             });
         },
@@ -216,7 +219,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param OdooEvent ev
          */
         _onAnswerClick: function (ev) {
-            if (! this.slide.readonly) {
+            if (! this.slide.readonly && ! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }
             this._alertHide();

@@ -123,7 +123,9 @@
                                 t-att-data-type="slide.slide_type"
                                 t-att-data-slug="slug(slide)"
                                 t-att-data-has-question="1 if slide.question_ids else 0"
-                                t-att-data-is-quiz="1">
+                                t-att-data-is-quiz="1"
+                                t-att-data-completed="1 if slide_completed else 0"
+                                t-att-data-readonly="not is_member">
                                 <a class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
                                 </a>

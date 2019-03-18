@@ -374,12 +374,13 @@
 
 <!-- Slide sub-tempalte: render a quiz serverside. Should be sync with JS qweb template "slide.slide.quiz" -->
 <template id="lesson_content_quiz" name="Lesson: Quiz specific content">
+    <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
     <div class="o_wslides_js_lesson_quiz col" id="lessonQuiz"
         t-att-data-id="slide.id"
         t-att-data-name="slide.name"
         t-att-data-slide-type="slide.slide_type"
-        t-att-data-readonly="not channel_progress[slide.id]"
-        t-att-data-completed="channel_progress[slide.id].get('completed')"
+        t-att-data-readonly="not slide.channel_id.is_member"
+        t-att-data-completed="1 if slide_completed else 0"
         t-att-data-quiz-attempts-count="quiz_attempts_count"
         t-att-data-quiz-karma-max="quiz_karma_max"
         t-att-data-quiz-karma-gain="quiz_karma_gain"
@@ -395,15 +396,16 @@
                 <t t-foreach="question.answer_ids" t-as="answer">
                     <li t-att-data-answer-id="answer.id"
                         t-att-data-text="answer.text_value"
-                        class="o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center">
+                        t-att-class="'o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center %s' % (' border border-success' if slide_completed and answer.is_correct else '')">
                         <label class="mb-0 d-flex align-items-center justify-content-center mr-3 ml-3">
                             <input type="radio"
                                 t-att-name="question.id"
                                 t-att-value="answer.id"
-                                class="d-none"/>
-                            <i class="fa fa-circle text-muted"></i>
+                                class="d-none"
+                                t-att-disabled="True if not slide.channel_id.is_member or slide_completed else ''"/>
+                            <i t-att-class="'fa fa-circle text-muted %s' % ('d-none' if slide_completed and answer.is_correct else '')"></i>
                             <i class="fa fa-times-circle text-danger d-none"></i>
-                            <i class="fa fa-check-circle text-success d-none"></i>
+                            <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (slide_completed and answer.is_correct) else '')"></i>
                         </label>
                         <span t-esc="answer.text_value"/>
                     </li>

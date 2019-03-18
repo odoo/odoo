@@ -12,16 +12,15 @@
                         <t t-foreach="question.answers" t-as="answer">
                             <li t-att-data-answer-id="answer.id"
                                 t-att-data-text="answer.text_value"
-                                class="o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center">
-
+                                t-att-class="'o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center' + (widget.slide.completed &amp;&amp; answer.is_correct ? ' border border-success' : '')">
                                 <label class="mb-0 d-flex align-items-center justify-content-center mr-3 ml-3">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i class="fa fa-circle text-muted"></i>
+                                    <i t-att-class="'fa fa-circle text-muted' + (!(widget.slide.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
                                     <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i class="fa fa-check-circle text-success d-none"></i>
+                                    <i t-att-class="'fa fa-check-circle text-success' + (widget.slide.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
                                 </label>
                                 <span t-esc="answer.text_value"/>
                             </li>
