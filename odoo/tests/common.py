@@ -1778,11 +1778,11 @@ class TagsSelector(object):
         tags = getattr(arg, 'test_tags', set())
         inter_no_test = self.exclude.intersection(tags)
         if inter_no_test:
-            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
+            _logger.info("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
             return False
         inter_to_test = self.include.intersection(tags)
         if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
+            _logger.info("Test '%s' not selected because it was not tagged with %s", arg, self.include)
             return False
         _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
         return True
