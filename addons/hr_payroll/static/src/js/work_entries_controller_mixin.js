@@ -55,7 +55,7 @@ odoo.define('hr_payroll.WorkEntryControllerMixin', function(require) {
             this._rpc({
                 model: 'hr.employee',
                 method: 'generate_work_entry',
-                args: [time.datetime_to_str(this.firstDay), time.datetime_to_str(this.lastDay)],
+                args: [time.date_to_str(this.firstDay), time.date_to_str(this.lastDay)],
             }).then(function () {
                 self.reload();
             });
@@ -64,8 +64,8 @@ odoo.define('hr_payroll.WorkEntryControllerMixin', function(require) {
         _generatePayslips: function () {
             this.do_action('hr_payroll.action_generate_payslips_from_work_entries', {
                 additional_context: {
-                    default_date_start: time.datetime_to_str(this.firstDay),
-                    default_date_end: time.datetime_to_str(this.lastDay),
+                    default_date_start: time.date_to_str(this.firstDay),
+                    default_date_end: time.date_to_str(this.lastDay),
                 },
             });
         },
