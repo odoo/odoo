@@ -50,7 +50,7 @@ class TestPrintCheck(AccountingTestCase):
         return invoice
 
     def create_payment(self, invoices):
-        payment_register = Form(self.env['account.payment'].with_context(default_invoice_ids=invoices.ids))
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=invoices.ids))
         payment_register.payment_date = time.strftime('%Y') + '-07-15'
         payment_register.journal_id = self.bank_journal
         payment_register.payment_method_id = self.payment_method_check
@@ -62,9 +62,11 @@ class TestPrintCheck(AccountingTestCase):
     def test_print_check(self):
         # Make a payment for 10 invoices and 5 credit notes
         invoices = self.env['account.invoice']
-        for i in range(0,15):
+        for i in range(0, 15):
             invoices |= self.create_invoice(is_refund=(i % 3 == 0))
         payment = self.create_payment(invoices)
+        self.assertEqual(all(payment.mapped('check_amount_in_words')), True, 'The amount in words is not set on all the payments')
+        self.assertEqual(all(payment.mapped('check_number')), True, 'The check number is not set on all the payments')
 
         # Check the data generated for the report
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': True})
@@ -73,3 +75,16 @@ class TestPrintCheck(AccountingTestCase):
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': False})
         report_pages = payment._check_get_pages()
         self.assertEqual(len(report_pages), 1)
+
+    def test_from_register(self):
+        invoices = self.env['account.invoice']
+        for i in range(0, 3):
+            invoices |= self.create_invoice(is_refund=(i % 3 == 0))
+        payment_register = Form(self.env['account.payment.register'].with_context(active_model='account.invoice', active_ids=invoices.ids))
+        payment_register.payment_date = time.strftime('%Y') + '-07-15'
+        payment_register.journal_id = self.bank_journal
+        payment_register.payment_method_id = self.payment_method_check
+        domain = payment_register.save().create_payments()['domain']
+        payment = self.env['account.payment'].search(domain)
+
+        self.assertEqual(all(payment.mapped('check_amount_in_words')), True, 'The amount in words is not set on all the payments')

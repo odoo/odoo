@@ -512,7 +512,7 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: ".o_form_sheet_bg .btn-primary",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -648,12 +648,11 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
-    run: 'text(Bank (USD))',
+    run: 'text Bank(USD)',
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: ".o_form_sheet_bg .btn-primary",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -765,7 +764,7 @@ tour.register('main_flow_tour', {
     position: "right",
 }, {
     edition: "enterprise",
-    trigger: ".button_close_statement",
+    trigger: ".button_back_to_statement",
     content: _t('<p><b>Close this statement.</p>'),
     position: "bottom",
 }]);

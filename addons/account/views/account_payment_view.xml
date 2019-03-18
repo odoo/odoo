@@ -159,7 +159,7 @@
                                     <field name="amount"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                 </div>
-                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
+                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
@@ -175,8 +175,6 @@
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
                                         <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
-                                        <label for="journal_id" string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
-                                        <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
                                         <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                     </div>
@@ -203,13 +201,13 @@
                             <field name="payment_method_id" string=" " widget="radio"/>
                         </group>
                         <group>
-                            <field name="journal_id"/>
+                            <field name="journal_id" widget="selection"/>
                             <field name="payment_date"/>
                         </group>
                     </group>
                     <footer>
                         <button string="Create Payment" name="create_payments" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

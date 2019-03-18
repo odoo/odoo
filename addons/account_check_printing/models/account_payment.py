@@ -7,6 +7,18 @@ from odoo.tools.misc import formatLang, format_date
 
 INV_LINES_PER_STUB = 9
 
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
+
+    def _prepare_payment_vals(self, invoices):
+        res = super(AccountPaymentRegister, self)._prepare_payment_vals(invoices)
+        if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
+            currency_id = self.env['res.currency'].browse(res['currency_id'])
+            res.update({
+                'check_amount_in_words': currency_id.amount_to_text(res['amount']),
+            })
+        return res
+
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
@@ -37,14 +49,6 @@ class AccountPayment(models.Model):
                 return
             if len(communication) > 60:
                 raise ValidationError(_("A check memo cannot exceed 60 characters."))
-
-    def _prepare_payment_vals(self, invoices):
-        res = super(AccountPayment, self)._prepare_payment_vals(invoices)
-        if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
-            res.update({
-                'check_amount_in_words': self.currency_id.amount_to_text(res['amount']),
-            })
-        return res
 
     @api.multi
     def post(self):

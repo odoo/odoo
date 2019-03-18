@@ -4,6 +4,19 @@ from odoo.tests.common import Form
 import time
 
 
+class group_invoices:
+    def __init__(self, model, group):
+        self.model = model
+        self.group = group
+
+    def __enter__(self):
+        self.previous_state = self.model.env.user.company_id.payment_group_by_partner
+        self.model.env.user.company_id.payment_group_by_partner = self.group
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.model.env.user.company_id.payment_group_by_partner = self.previous_state
+
+
 @tagged('post_install', '-at_install')
 class TestPayment(AccountingTestCase):
 
@@ -43,19 +56,6 @@ class TestPayment(AccountingTestCase):
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
         self.form_payment = Form(self.env['account.payment'])
-        self.form_payment_register = Form(self.env['account.payment.register'])
-
-    class group_invoices:
-        def __init__(self, model, group):
-            self.model = model
-            self.group = group
-
-        def __enter__(self):
-            self.previous_state = self.model.env.user.company_id.payment_group_by_partner
-            self.model.env.user.company_id.payment_group_by_partner = self.group
-
-        def __exit__(self, exception_type, exception_value, traceback):
-            self.model.env.user.company_id.payment_group_by_partner = self.previous_state
 
     def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
@@ -108,7 +108,7 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        with self.group_invoices(self, True):
+        with group_invoices(self, True):
             register_payments.create_payments()
         payment = self.payment_model.search([], order="id desc", limit=1)
 
@@ -186,7 +186,7 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        with self.group_invoices(self, True):
+        with group_invoices(self, True):
             register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
@@ -237,7 +237,7 @@ class TestPayment(AccountingTestCase):
         # Test Customer Invoice
         inv_1 = self.create_invoice(amount=600)
         ids = [inv_1.id]
-        payment_register = Form(self.env['account.payment'].with_context(default_invoice_ids=ids))
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=ids))
         with payment_register as pr:
             pr.payment_date = time.strftime('%Y') + '-07-15'
             pr.journal_id = self.bank_journal_euro
@@ -261,7 +261,7 @@ class TestPayment(AccountingTestCase):
         # Test Vendor Bill
         inv_2 = self.create_invoice(amount=500, type='in_invoice', partner=self.partner_china_exp.id)
         ids = [inv_2.id]
-        payment_register = Form(self.env['account.payment'].with_context(default_invoice_ids=ids))
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=ids))
         with payment_register as pr:
             pr.payment_date = time.strftime('%Y') + '-07-15'
             pr.journal_id = self.bank_journal_euro
@@ -302,7 +302,7 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        with self.group_invoices(self, True):
+        with group_invoices(self, True):
             register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
@@ -351,7 +351,7 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        with self.group_invoices(self, True):
+        with group_invoices(self, True):
             register_payments1.create_payments()
         payment_ids1 = self.payment_model.search([('invoice_ids', 'in', ids1)], order="id desc")
         self.assertEqual(len(payment_ids1), 3, "3 payments should have been created, one fo each (partner, receivable account).")
@@ -363,7 +363,7 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        with self.group_invoices(self, False):
+        with group_invoices(self, False):
             register_payments2.create_payments()
         payment_ids2 = self.payment_model.search([('invoice_ids', 'in', ids2)], order="id desc")
         self.assertEqual(len(payment_ids2), 4, "Not grouping payments should always create a distinct payment per invoice.")

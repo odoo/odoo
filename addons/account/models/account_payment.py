@@ -59,7 +59,7 @@ class account_payment(models.Model):
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
-    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})  # TODO: transfer only on single payments ?
+    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, readonly=True, states={'draft': [('readonly', False)]}, oldname="payment_method",
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
@@ -96,7 +96,7 @@ class account_payment(models.Model):
     @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
-        active_ids = self._context.get('active_id')
+        active_ids = self._context.get('active_ids') or self._context.get('active_id')
         active_model = self._context.get('active_model')
 
         # Check for selected invoices ids
@@ -108,6 +108,17 @@ class account_payment(models.Model):
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
+
+        amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
+        rec.update({
+            'currency_id': invoices[0].currency_id.id,
+            'amount': abs(amount),
+            'payment_type': 'inbound' if amount > 0 else 'outbound',
+            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': invoices[0].reference or invoices[0].number,
+            'invoice_ids': [(6, 0, invoices.ids)],
+        })
         return rec
 
     @api.one
@@ -141,7 +152,7 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id', 'payment_type')
     def _compute_payment_difference(self):
-        for pay in self.filtered(lambda p: p.invoice_ids):
+        for pay in self.filtered(lambda p: p.invoice_ids and p.state == 'draft'):
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
             pay.payment_difference = pay._compute_payment_amount() - payment_amount
 
@@ -161,27 +172,16 @@ class account_payment(models.Model):
 
             # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
-            # if i add paypal, empty/useless field appears, can only select in multi
 
-            # TODO: check this works https://github.com/odoo/odoo/commit/ec7109c
+            domain = {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}
+
             if self.env.context.get('active_model') == 'account.invoice':
                 active_ids = self._context.get('active_ids')
                 invoices = self.env['account.invoice'].browse(active_ids)
                 self.amount = abs(self._compute_payment_amount(invoices))
 
-            return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}}
+            return {'domain': domain}
         return {}
-
-    @api.onchange('invoice_ids')
-    def _onchange_invoice_ids(self):
-        # There should be only one invoice_id
-        self.currency_id = self.invoice_ids[0].currency_id
-        amount = self._compute_payment_amount(self.invoice_ids)
-        self.amount = abs(amount)
-        self.payment_type = 'inbound' if amount > 0 else 'outbound'
-        self.partner_id = self.invoice_ids[0].commercial_partner_id
-        self.partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[self.invoice_ids[0].type]
-        self.communication = self.invoice_ids[0].reference or self.invoice_ids[0].number
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -230,6 +230,8 @@ class account_payment(models.Model):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
+        if self.invoice_ids:
+            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
             # In case of payment with 0 amount, allow to select a journal of type 'general' like
             # 'Miscellaneous Operations' and set this journal by default.
@@ -247,19 +249,24 @@ class account_payment(models.Model):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
         domain_on_types = [('type', 'in', list(journal_types))]
-        if self.journal_id.type not in journal_types:
+        if self.invoice_ids:
+            domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        if self.journal_id.type not in journal_types or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
             self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
         return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.onchange('currency_id')
     def _onchange_currency(self):
-        self.amount = abs(self._compute_payment_amount())  # never check inbound/outbound ?
+        self.amount = abs(self._compute_payment_amount())
+
+        if self.journal_id:  # TODO: only return if currency differ?
+            return
 
         # Set by default the first liquidity journal having this currency if exists.
-        if self.journal_id:
-            return
-        journal = self.env['account.journal'].search(
-            [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
+        domain = [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)]
+        if self.invoice_ids:
+            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        journal = self.env['account.journal'].search(domain, limit=1)
         if journal:
             return {'value': {'journal_id': journal.id}}
 
@@ -372,7 +379,7 @@ class account_payment(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': len(active_ids) != 1 and self.env.ref('account.view_account_payment_form_multi').id,
-            'context': {**self.env.context, **{'default_invoice_ids': [(6, False, active_ids)]}},
+            'context': {**self.env.context, **{'active_model': 'account.invoice', 'active_ids': active_ids}},
             'target': len(active_ids) == 1 and 'current' or 'new',
             'type': 'ir.actions.act_window',
         }
@@ -678,8 +685,25 @@ class payment_register(models.TransientModel):
         if 'journal_id' not in rec:
             rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
         if 'payment_method_id' not in rec:
-            rec['payment_method_id'] = self.env['account.payment.method'].search([], limit=1).id
+            if invoices[0].type in ('out_invoice', 'in_refund'):
+                domain = [('payment_type', '=', 'inbound')]
+            else:
+                domain = [('payment_type', '=', 'outbound')]
+            rec['payment_method_id'] = self.env['account.payment.method'].search(domain, limit=1).id
         return rec
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(payment_register, self).fields_view_get(view_id, view_type, toolbar, submenu)
+        if 'active_domain' not in self.env.context:
+            return res
+
+        type = [dom[2] for dom in self.env.context['active_domain'] if dom[0] == 'type'][0]
+        if type in ('out_invoice', 'in_refund'):
+            res['fields']['payment_method_id']['domain'] = [('payment_type', '=', 'inbound')]
+        else:
+            res['fields']['payment_method_id']['domain'] = [('payment_type', '=', 'outbound')]
+        return res
 
     @api.multi
     def _prepare_payment_vals(self, invoices):
