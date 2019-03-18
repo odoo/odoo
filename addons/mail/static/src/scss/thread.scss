@@ -316,3 +316,20 @@
         left: 0px;
     }
 }
+
+// ------------------------------------------------------------------
+// Mobile
+// ------------------------------------------------------------------
+@include media-breakpoint-down(sm) {
+
+    .o_thread_message {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .o_thread_message_sidebar {
+        margin-left: 10px ! important;
+    }
+    .o_thread_message_core{
+        min-width: 80% !important;
+    }
+}

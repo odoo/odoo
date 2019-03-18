@@ -15,6 +15,17 @@
     </t>
 
     <!--
+        Swip template
+        @param {string|integer} bgColor
+        @param {string} icon
+    -->
+    <t t-name="mail.mobile.swip">
+        <div class="o_thread_swip" t-attf-style="background-color: #{bgColor}">
+            <i t-attf-class="ml-5 fa #{icon}"/>
+        </div>
+    </t>
+
+    <!--
         @param {string|integer} activeThreadID
         @param {mail.model.Channel[]} channels
         @param {boolean} isMyselfModerator
@@ -330,7 +341,7 @@
                         <t t-raw="preview.body"/>
                     </t>
                 </div>
-                <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>
+                <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check d-none d-sm-block" t-if="preview.unreadCounter"/>
             </div>
         </div>
     </t>

@@ -103,5 +103,77 @@ QUnit.test('on_{attach/detach}_callback', function (assert) {
     });
 });
 
+QUnit.test('mobile discuss swip', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.message'].records = [{
+        author_id: ["1", "John Doe 1"],
+        body: '<p>test 1</p>',
+        date: "2019-03-20 09:35:40",
+        id: 1,
+        is_discussion: true,
+        is_starred: false,
+        res_id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }];
+
+    var swipeStatus;
+
+    // mimic touchSwipe library's swipe method
+    $.fn.swipe = function (params) {
+        swipeStatus = params.swipeStatus;
+    };
+
+    var discuss = await createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'set_message_done') {
+                assert.step('mark_as_read');
+            }
+            if (args.method === 'toggle_message_starred') {
+                var messageData = _.findWhere(
+                    this.data['mail.message'].records,
+                    { id: args.args[0][0] }
+                );
+                messageData.is_starred = !messageData.is_starred;
+                var data = {
+                    info: false,
+                    message_ids: [messageData.id],
+                    starred: messageData.is_starred,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                discuss.call('bus_service', 'trigger', 'notification', [notification]);
+                return Promise.resolve();
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+
+    var $message = discuss.$('.o_thread_message').eq(0);
+    // Left side swip
+    await testUtils.dom.triggerEvents($message, ['touchstart', 'click']);
+    await testUtils.dom.triggerEvents($message, ['touchmove', 'click']);
+    assert.ok(discuss.$('.o_thread_message .o_thread_message_star.fa-star-o').length, "messages should be not starred");
+    swipeStatus(this,'','left', 200);
+    await testUtils.dom.triggerEvents($message, ['touchend', 'click']);
+    assert.ok(discuss.$('.o_thread_message .o_thread_message_star.fa-star').length, "messages should be starred");
+
+    // Right side swip
+    var $message = discuss.$('.o_thread_message').eq(0);
+    await testUtils.dom.triggerEvents($message, ['touchstart', 'click']);
+    await testUtils.dom.triggerEvents($message, ['touchmove', 'click']);
+    assert.ok(discuss.$('.o_thread_message').length, "messages should be unread");
+    swipeStatus(this,'','right', 200);
+    assert.verifySteps(['mark_as_read'], "should mail as read");
+    await testUtils.dom.triggerEvents($message, ['touchend', 'click']);
+    discuss.destroy();
+});
 });
 });
