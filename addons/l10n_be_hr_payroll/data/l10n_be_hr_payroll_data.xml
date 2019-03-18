@@ -498,7 +498,7 @@ result = -contract.car_atn
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">-100.0</field>
         <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
-        <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
+        <field name="quantity">payslip.meal_voucher_count</field>
         <field name="appears_on_payslip" eval="True"/>
         <field name="register_id" ref="contrib_register_meal_vouchers"/>
     </record>

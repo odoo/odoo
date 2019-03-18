@@ -258,7 +258,7 @@
                 <filter string="To Compute" name="draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                 <filter string="To Confirm" name="draft" domain="[('state','=','verify')]" help="Slips to Confirm"/>
                 <filter string="Done" name="done" domain="[('state','=','done')]" help="Done Slip"/>
-                <filter name="date_filter" string="Date" date="date_to" default_period="last_month"/>
+                <filter name="date_filter" string="Date" date="date_to" default_period="this_year"/>
                 <separator/>
                 <filter string="Credit Notes" name="credit_note" domain="[('credit_note', '=', True)]"/>
                 <group expand="0" string="Group By">
