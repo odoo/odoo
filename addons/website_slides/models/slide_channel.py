@@ -160,7 +160,9 @@ class Channel(models.Model):
     karma_review = fields.Integer('Add a review', default=10, help="Karma needed to add a review on the course")
     karma_slide_comment = fields.Integer('Add a comment', default=3, help="Karma needed to add a comment on a slide of this course")
     karma_slide_vote = fields.Integer('Vote on slide', default=3, help="Karma needed to like/dislike a slide of this course.")
-    can_review = fields.Boolean('Can Review', compute='_compute_karma_rights')
+    can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
+    can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
+    can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -268,9 +270,17 @@ class Channel(models.Model):
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.multi
-    def _compute_karma_rights(self):
+    def _compute_action_rights(self):
+        user_karma = self.env.user.karma
         for channel in self:
-            channel.can_review = self.env.user.karma >= channel.karma_review
+            if channel.can_publish:
+                channel.can_vote = channel.can_comment = channel.can_review = True
+            elif not channel.is_member:
+                channel.can_vote = channel.can_comment = channel.can_review = False
+            else:
+                channel.can_review = user_karma >= channel.karma_review
+                channel.can_comment = user_karma >= channel.karma_slide_comment
+                channel.can_vote = user_karma >= channel.karma_slide_vote
 
     # ---------------------------------------------------------
     # ORM Overrides
@@ -482,20 +492,17 @@ class Channel(models.Model):
                 'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
                 'total_slides': len(uncategorized_slides),
                 'slides': uncategorized_slides[(offset or 0):(limit or len(uncategorized_slides))],
-                'slides_access': uncategorized_slides.sudo(self.env.user)._get_slide_action_access()
             })
         # Then all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
                 continue
-            slides = category_slides[(offset or 0):(limit or len(category_slides))]
             category_data.append({
                 'category': category, 'id': category.id,
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
-                'slides': slides,
-                'slides_access': slides.sudo(self.env.user)._get_slide_action_access()
+                'slides': category_slides[(offset or 0):(limit or len(category_slides))],
             })
         return category_data
 

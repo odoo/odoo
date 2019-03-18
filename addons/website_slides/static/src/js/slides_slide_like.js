@@ -61,9 +61,11 @@ var SlideLikeWidget = Widget.extend({
                     self._popoverAlert(self.$el, _t('You have already voted for this lesson'));
                 } else if (data.error === 'slide_access') {
                     self._popoverAlert(self.$el, _t('You don\'t have access to this lesson'));
-                } else if (data.error === 'comment_disabled') {
-                    self._popoverAlert(self.$el, _t('Votes and comments are disabled for this channel'));
-                } else if (data.error === 'missing_karma') {
+                } else if (data.error === 'channel_membership_required') {
+                    self._popoverAlert(self.$el, _t('You must be member of this course to vote'));
+                } else if (data.error === 'channel_comment_disabled') {
+                    self._popoverAlert(self.$el, _t('Votes and comments are disabled for this course'));
+                } else if (data.error === 'channel_karma_required') {
                     self._popoverAlert(self.$el, _t('You don\'t have enough karma to vote'));
                 } else {
                     self._popoverAlert(self.$el, _t('Unknown error'));
