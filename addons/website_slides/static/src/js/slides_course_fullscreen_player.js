@@ -236,7 +236,6 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _onClickTab: function (ev) {
             ev.stopPropagation();
-            ev.preventDefault();
             var $elem = $(ev.currentTarget);
             var isQuiz = $elem.data('isQuiz');
             var slideID = parseInt($elem.data('id'));
@@ -412,8 +411,10 @@ odoo.define('website_slides.fullscreen', function (require) {
         _pushUrlState: function (){
             var urlParts = window.location.pathname.split('/');
             urlParts[urlParts.length-1] = this.get('slide').slug;
-            var url = _.str.sprintf('%s?fullscreen=1', urlParts.join('/'));
-            history.pushState(null, '', url);
+            var url =  urlParts.join('/');
+            this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
+            var fullscreenUrl = _.str.sprintf('%s?fullscreen=1', url);
+            history.pushState(null, '', fullscreenUrl);
         },
         /**
          * Render the current slide content using specific mecanism according to slide type:
