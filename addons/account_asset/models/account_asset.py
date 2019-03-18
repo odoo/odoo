@@ -510,6 +510,7 @@ class AccountAssetDepreciationLine(models.Model):
             move_vals = self._prepare_move(line)
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
+            line_moves[line] = move
             created_moves |= move
 
         if post_move and created_moves:
@@ -551,7 +552,6 @@ class AccountAssetDepreciationLine(models.Model):
             'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
         }
         return move_vals
-            line_moves[line] = move
 
     def _prepare_move_grouped(self):
         category_id = self[0].asset_id.category_id  # we can suppose that all lines have the same category
@@ -619,7 +619,6 @@ class AccountAssetDepreciationLine(models.Model):
         assets_to_close.write({'state': 'close'})
         for asset in assets_to_close:
             asset.message_post(body=_("Document closed."))
-
 
     @api.multi
     def log_message_when_posted(self):
