@@ -45,7 +45,10 @@ class WebsiteSlides(WebsiteProfile):
         slide = request.env['slide.slide'].browse(int(slide_id)).exists()
         if not slide:
             return {'error': 'slide_wrong'}
-        if not slide._check_read_access():
+        try:
+            slide.check_access_rights('read')
+            slide.check_access_rule('read')
+        except AccessError:
             return {'error': 'slide_access'}
         return {'slide': slide}
 
@@ -401,8 +404,6 @@ class WebsiteSlides(WebsiteProfile):
             force_void=True,
             limit=self._slides_per_category if channel.channel_type == 'documentation' else False,
             offset=pager['offset'])
-
-        values['slide_promoted_access'] = values['slide_promoted'].sudo(request.env.user)._get_slide_action_access()[values['slide_promoted'].id]
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         values = self._prepare_additional_channel_values(values, **kw)
@@ -494,8 +495,6 @@ class WebsiteSlides(WebsiteProfile):
 
         if kwargs.get('fullscreen') == '1':
             return request.render("website_slides.slide_fullscreen", values)
-        else:
-            values['slide_access'] = slide.sudo(request.env.user)._get_slide_action_access()[slide.id]
         return request.render("website_slides.slide_main", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
@@ -584,10 +583,12 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         # check slide operation
         slide = fetch_res['slide']
+        if not slide.channel_id.is_member:
+            return {'error': 'channel_membership_required'}
         if not slide.channel_id.allow_comment:
-            return {'error': 'comment_disabled'}
-        if not slide.can_vote:
-            return {'error': 'missing_karma'}
+            return {'error': 'channel_comment_disabled'}
+        if not slide.channel_id.can_vote:
+            return {'error': 'channel_karma_required'}
         if upvote:
             slide.action_like()
         else:
