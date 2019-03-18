@@ -18,7 +18,5 @@ class AccountMove(models.Model):
 
     @api.multi
     def post(self):
-        for move in self:
-            for depreciation_line in move.asset_depreciation_ids:
-                depreciation_line.post_lines_and_close_asset()
+        self.mapped('asset_depreciation_ids').post_lines_and_close_asset()
         return super(AccountMove, self).post()
