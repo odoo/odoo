@@ -524,7 +524,11 @@ class Field(MetaField('DummyField', (object,), {})):
         # determine the chain of fields, and make sure they are all set up
         model_name = self.model_name
         for name in self.related.split('.'):
-            field = model.pool[model_name]._fields[name]
+            field = model.pool[model_name]._fields.get(name)
+            if field is None:
+                raise KeyError(
+                    f"Field {name} referenced in related field definition {self} does not exist."
+                )
             if not field._setup_done:
                 field.setup(model.env[model_name])
             model_name = field.comodel_name
