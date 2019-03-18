@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="account_tax_report_line_chtax_299" model="account.tax.report.line">
+        <field name="name">299 Chiffre d'affaires imposable</field>
+        <field name="sequence" eval="1"/>
+        <field name="formula">tax_ch_200 - tax_ch_289</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
+        <field name="name">200 Chiffre d'affaires</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">tax_ch_200</field>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_299"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_302a" model="account.tax.report.line">
+        <field name="name">302a Chiffre d'affaires imposable a 7.7% (TS)</field>
+        <field name="tag_name">302a Chiffre d'affaires imposable a 7.7% (TS)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>    
+    <record id="account_tax_report_line_chtax_311a" model="account.tax.report.line">
+        <field name="name">311a Chiffre d'affaires imposable a 2.5% (TR)</field>
+        <field name="tag_name">311a Chiffre d'affaires imposable a 2.5% (TR)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_342a" model="account.tax.report.line">
+        <field name="name">342a Chiffre d'affaires imposable a 3.7% (TS)</field>
+        <field name="tag_name">342a Chiffre d'affaires imposable a 3.7% (TS)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_381a" model="account.tax.report.line">
+        <field name="name">381a Impots sur les acquisitions</field>
+        <field name="tag_name">381a Impots sur les acquisitions</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_381a_200" model="account.tax.report.line">
+        <field name="name">381a Impots sur les acquisitions (car exclu du 200)</field>
+        <field name="tag_name">381a Impots sur les acquisitions (car exclu du 200)</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_382a" model="account.tax.report.line">
+        <field name="name">382a Impots sur les acquisitions</field>
+        <field name="tag_name">382a Impots sur les acquisitions</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_382a_200" model="account.tax.report.line">
+        <field name="name">382a Impots sur les acquisitions (car exclu du 200)</field>
+        <field name="tag_name">382a Impots sur les acquisitions (car exclu du 200)</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_220_200" model="account.tax.report.line">
+        <field name="name">220 Chiffre d'affaires imposable a 0% (export)</field>
+        <field name="tag_name">220 Chiffre d'affaires imposable a 0% (export)</field>
+        <field name="sequence" eval="8"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_230_200" model="account.tax.report.line">
+        <field name="name">230 Chiffre d'affaires non-imposable a 0% (exclu)</field>
+        <field name="tag_name">230 Chiffre d'affaires non-imposable a 0% (exclu)</field>
+        <field name="sequence" eval="9"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_200"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_289" model="account.tax.report.line">
+        <field name="name">289 Total 220 à 280</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">tax_ch_289</field>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_299"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_220_289" model="account.tax.report.line">
+        <field name="name">220 Chiffre d'affaires imposable a 0% (export)</field>
+        <field name="tag_name">220 Chiffre d'affaires imposable a 0% (export)</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_221" model="account.tax.report.line">
+        <field name="name">221 Prestations fournies à l'étranger</field>
+        <field name="tag_name">221 Prestations fournies à l'étranger</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_225" model="account.tax.report.line">
+        <field name="name">225 Transfer avec la procédure de déclaration</field>
+        <field name="tag_name">225 Transfer avec la procédure de déclaration</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_230_289" model="account.tax.report.line">
+        <field name="name">230 Chiffre d'affaires non-imposable a 0% (exclu)</field>
+        <field name="tag_name">230 Chiffre d'affaires non-imposable a 0% (exclu)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_235" model="account.tax.report.line">
+        <field name="name">235 Diminution de la contre-prestation</field>
+        <field name="tag_name">235 Diminution de la contre-prestation</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_280" model="account.tax.report.line">
+        <field name="name">280 Divers (p.ex valeur du terrain)</field>
+        <field name="tag_name">280 Divers (p.ex valeur du terrain)</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_399" model="account.tax.report.line">
+        <field name="name">399 TVA Due </field>
+        <field name="code">tax_ch_399</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_302b" model="account.tax.report.line">
+        <field name="name">302b TVA due a 7.7% (TS)</field>
+        <field name="tag_name">302b TVA due a 7.7% (TS)</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_311b" model="account.tax.report.line">
+        <field name="name">311b TVA due a 2.5% (TR)</field>
+        <field name="tag_name">311b TVA due a 2.5% (TR)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_342b" model="account.tax.report.line">
+        <field name="name">342b TVA due a 3.7% (TS)</field>
+        <field name="tag_name">342b TVA due a 3.7% (TS)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_381b" model="account.tax.report.line">
+        <field name="name">381b Impots sur les acquisitions </field>
+        <field name="tag_name">381b Impots sur les acquisitions </field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+        <record id="account_tax_report_line_chtax_382b" model="account.tax.report.line">
+        <field name="name">382b Impots sur les acquisitions </field>
+        <field name="tag_name">382b Impots sur les acquisitions </field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_479" model="account.tax.report.line">
+        <field name="name">479 TVA préalable sur acquisitions (a récupérer)</field>
+        <field name="sequence" eval="3"/>
+        <field name="code">tax_ch_479</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_400" model="account.tax.report.line">
+        <field name="name">400 TVA préalable sur biens et services</field>
+        <field name="tag_name">400 TVA préalable sur biens et services</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_405" model="account.tax.report.line">
+        <field name="name">405 TVA préalable sur invest. et autres ch.</field>
+        <field name="tag_name">405 TVA préalable sur invest. et autres ch.</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_410" model="account.tax.report.line">
+        <field name="name">410 Dégrèvement ultérieur de l'impot préalable</field>
+        <field name="tag_name">410 Dégrèvement ultérieur de l'impot préalable</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_415" model="account.tax.report.line">
+        <field name="name">415 Correction de l'impot préalable</field>
+        <field name="tag_name">415 Correction de l'impot préalable</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_420" model="account.tax.report.line">
+        <field name="name">420 Réduction de la déduction de l'impot préalable</field>
+        <field name="tag_name">420 Réduction de la déduction de l'impot préalable</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_cadre2_total" model="account.tax.report.line">
+        <field name="name">Solde</field>
+        <field name="sequence" eval="4"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_500" model="account.tax.report.line">
+        <field name="name">500 Solde de TVA a payer a l'AFC</field>
+        <field name="sequence" eval="1"/>
+        <field name="formula">tax_ch_399 - tax_ch_479 &gt; 0 and tax_ch_399 - tax_ch_479 or 0.0</field>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_cadre2_total"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="account_tax_report_line_chtax_510" model="account.tax.report.line">
+        <field name="name">510 Solde de TVA a recevoir de l'AFC</field>
+        <field name="sequence" eval="2"/>
+        <field name="formula">tax_ch_479 - tax_ch_399 &gt; 0 and tax_ch_479 - tax_ch_399 or 0.0</field>
+        <field name="parent_line_id" ref="account_tax_report_line_chtax_cadre2_total"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+</odoo>
