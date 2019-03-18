@@ -150,7 +150,7 @@ class HardwareScreen(web.Home):
                 </head>
                 <body class="original_body">
                     <div hidden class="shadow"></div>
-                    <div class="container">
+                    <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4">
                             <h1>Odoo Point of Sale</h1>
