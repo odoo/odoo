@@ -706,6 +706,9 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(produce_form.workorder_line_ids._records), 2, 'Update the produce quantity should change the components quantity.')
         self.assertEqual(sum([x['qty_done'] for x in produce_form.workorder_line_ids._records]), 5, 'Update the produce quantity should change the components quantity.')
         self.assertEqual(sum([x['qty_reserved'] for x in produce_form.workorder_line_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        # try adding another product that doesn't belong to the BoM
+        with produce_form.workorder_line_ids.new() as line:
+            line.product_id = self.product_4
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
