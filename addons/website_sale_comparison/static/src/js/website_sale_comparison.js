@@ -178,8 +178,10 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
         var self = this;
         this.$('.o_comparelist_products .o_product_row').remove();
         _.each(this.comparelist_product_ids, function (res) {
-            var $template = self.product_data[res].render;
-            self.$('.o_comparelist_products').append($template);
+            if (self.product_data[res]) {
+                var $template = self.product_data[res].render;
+                self.$('.o_comparelist_products').append($template);
+            }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
             $('#comparelist .o_product_panel_header').popover('show');
