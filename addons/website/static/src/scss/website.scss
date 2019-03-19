@@ -38,7 +38,7 @@ $-font-numbers: (
     }
 
     // 5) Use final value used by the theme
-    $-h1-color: if($headings-color == inherit, $body-color, $headings-color);
+    $-h1-color: if($headings-color == inherit or not $headings-color, $body-color, $headings-color);
     $-h2-color: if(color('h2'), color('h2'), $-h1-color);
     $-h3-color: if(color('h3'), color('h3'), $-h2-color);
     $-h4-color: if(color('h4'), color('h4'), $-h3-color);

@@ -358,7 +358,7 @@ ActionManager.include({
                     viewID: view[0],
                     Widget: View,
                 });
-            } else {
+            } else if (config.debug === 'assets') {
                 console.error("View type '" + viewType + "' is not present in the view registry.");
             }
         });
