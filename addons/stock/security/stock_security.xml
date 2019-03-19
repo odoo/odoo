@@ -69,14 +69,14 @@
         <field name="name">stock_picking multi-company</field>
         <field name="model_id" search="[('model','=','stock.picking')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_picking_type_rule">
         <field name="name">Stock Operation Type multi-company</field>
         <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('warehouse_id', '=', False), '|',('warehouse_id.company_id','=',False),('warehouse_id.company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|', ('warehouse_id', '=', False), '|',('warehouse_id.company_id','=',False),('warehouse_id.company_id','=',user.company_id.id)]</field>
     </record>
 
 
@@ -85,77 +85,77 @@
         <field name="name">Warehouse multi-company</field>
         <field name="model_id" ref="model_stock_warehouse"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_location_comp_rule">
         <field name="name">Location multi-company</field>
         <field name="model_id" ref="model_stock_location"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
      <record model="ir.rule" id="stock_move_rule">
          <field name="name">stock_move multi-company</field>
         <field name="model_id" search="[('model','=','stock.move')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
      </record>
 
      <record model="ir.rule" id="stock_move_line_rule">
         <field name="name">stock_move_line multi-company</field>
         <field name="model_id" search="[('model','=','stock.move.line')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
      </record>
 
     <record model="ir.rule" id="stock_quant_rule">
         <field name="name">stock_quant multi-company</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_inventory_line_comp_rule">
         <field name="name">Inventory Line multi-company</field>
         <field name="model_id" ref="model_stock_inventory_line"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_inventory_comp_rule">
         <field name="name">Inventory multi-company</field>
         <field name="model_id" ref="model_stock_inventory"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_warehouse_orderpoint_rule">
         <field name="name">stock_warehouse.orderpoint multi-company</field>
         <field name="model_id" search="[('model','=','stock.warehouse.orderpoint')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
     </record>
 
      <record model="ir.rule" id="product_pulled_flow_comp_rule">
         <field name="name">product_pulled_flow multi-company</field>
         <field name="model_id" ref="model_stock_rule"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="stock_location_route_comp_rule">
         <field name="name">stock_location_route multi-company</field>
         <field name="model_id" ref="model_stock_location_route"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record model="ir.rule" id="product_pulled_flow_comp_rule">
         <field name="name">product_pulled_flow multi-company</field>
         <field name="model_id" ref="model_stock_rule"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
 </data>

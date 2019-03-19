@@ -20,7 +20,7 @@
                 (or company-less), this is usually a better default for
                 multicompany setups.
             -->
-            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','=',user.company_id.id),('company_id','=',False)]</field>
             <field name="active" eval="False"/>
         </record>
 
@@ -64,13 +64,13 @@
             <!--
                 Same as res_partner above.
             -->
-            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','=',user.company_id.id),('company_id','=',False)]</field>
 	</record>
 
         <record id="res_currency_rate_rule" model="ir.rule">
             <field name="name">multi-company currency rate rule</field>
             <field name="model_id" ref="model_res_currency_rate"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
         </record>
 
         <!-- Security restriction for private addresses -->
@@ -147,21 +147,21 @@
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_portal')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">[('id','=',user.company_id.id)]</field>
         </record>
         <record id="res_company_rule_employee" model="ir.rule">
             <field name="name">company rule employee</field>
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">[('id','=',user.company_id.id)]</field>
         </record>
         <record id="res_company_rule_public" model="ir.rule">
             <field name="name">company rule public</field>
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_public')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">[('id','=',user.company_id.id)]</field>
         </record>
         <record id="res_company_rule_erp_manager" model="ir.rule">
             <field name="name">company rule erp manager</field>
@@ -176,7 +176,7 @@
             <field name="name">user rule</field>
             <field name="model_id" ref="model_res_users"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">[('company_ids','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">[('company_ids','=',user.company_id.id)]</field>
         </record>
     </data>
 </odoo>

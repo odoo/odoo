@@ -21,7 +21,7 @@
             <field name="name">HR Contract: Multi Company</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', '=', user.company_id.id)]</field>
         </record>
 
     </data>

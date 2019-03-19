@@ -32,7 +32,7 @@
             <field name="global" eval="True"/>
             <field name="domain_force">['|',
                                             ('company_id', '=', False),
-                                            ('company_id', 'child_of', [user.company_id.id]),
+                                            ('company_id', '=', user.company_id.id),
                                         ]
             </field>
         </record>
@@ -42,7 +42,7 @@
             <field name="global" eval="True"/>
             <field name="domain_force">['|',
                                             ('company_id', '=', False),
-                                            ('company_id', 'child_of', [user.company_id.id]),
+                                            ('company_id', '=', user.company_id.id),
                                         ]
             </field>
         </record>

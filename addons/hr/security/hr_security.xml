@@ -30,21 +30,21 @@
         <field name="name">Employee multi company rule</field>
         <field name="model_id" ref="model_hr_employee"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>
         <field name="model_id" ref="model_hr_department"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record id="hr_job_comp_rule" model="ir.rule">
         <field name="name">Job multi company rule</field>
         <field name="model_id" ref="model_hr_job"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
 </data>
