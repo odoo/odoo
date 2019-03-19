@@ -3,4 +3,4 @@
 
 from . import onboarding
 from . import portal
-from . import product_configurator
+from . import variant
