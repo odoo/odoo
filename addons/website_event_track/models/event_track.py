@@ -8,11 +8,11 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 class TrackTag(models.Model):
     _name = "event.track.tag"
-    _description = 'Event Track Tag'
+    _description = 'Event Talk Tag'
     _order = 'name'
 
     name = fields.Char('Tag')
-    track_ids = fields.Many2many('event.track', string='Tracks')
+    track_ids = fields.Many2many('event.track', string='Talks')
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
@@ -22,14 +22,14 @@ class TrackTag(models.Model):
 
 class TrackLocation(models.Model):
     _name = "event.track.location"
-    _description = 'Event Track Location'
+    _description = 'Event Talk Location'
 
     name = fields.Char('Room')
 
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'
-    _description = 'Event Track Stage'
+    _description = 'Event Talk Stage'
     _order = 'sequence, id'
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
@@ -37,7 +37,7 @@ class TrackStage(models.Model):
     mail_template_id = fields.Many2one(
         'mail.template', string='Email Template',
         domain=[('model', '=', 'event.track')],
-        help="If set an email will be sent to the customer when the track reaches this step.")
+        help="If set an email will be sent to the customer when the talk reaches this step.")
     fold = fields.Boolean(
         string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
@@ -47,7 +47,7 @@ class TrackStage(models.Model):
 
 class Track(models.Model):
     _name = "event.track"
-    _description = 'Event Track'
+    _description = 'Event Talk'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
 
@@ -74,12 +74,12 @@ class Track(models.Model):
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True, tracking=True,
-        help="A track's kanban state indicates special situations affecting it:\n"
+        help="A talk's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
-             " * Red indicates something is preventing the progress of this track\n"
-             " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
-    date = fields.Datetime('Track Date')
+             " * Red indicates something is preventing the progress of this talk\n"
+             " * Green indicates the talk is ready to be pulled to the next stage")
+    description = fields.Html('Talk Description', translate=html_translate, sanitize_attributes=False)
+    date = fields.Datetime('Talk Date')
     duration = fields.Float('Duration', default=1.5)
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)

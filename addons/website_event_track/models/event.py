@@ -8,8 +8,8 @@ from odoo.addons.http_routing.models.ir_http import slug
 class EventType(models.Model):
     _inherit = 'event.type'
 
-    website_track = fields.Boolean('Tracks on Website')
-    website_track_proposal = fields.Boolean('Tracks Proposals on Website')
+    website_track = fields.Boolean('Talks on Website')
+    website_track_proposal = fields.Boolean('Talks Proposals on Website')
 
     @api.onchange('website_menu')
     def _onchange_website_menu(self):
@@ -24,27 +24,27 @@ class EventMenu(models.Model):
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
     event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
-    menu_type = fields.Selection([('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')])
+    menu_type = fields.Selection([('track', 'Event Talks Menus'), ('track_proposal', 'Event Proposals Menus')])
 
 
 class Event(models.Model):
     _inherit = "event.event"
 
-    track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
-    track_count = fields.Integer('Track Count', compute='_compute_track_count')
+    track_ids = fields.One2many('event.track', 'event_id', 'Talks')
+    track_count = fields.Integer('Talk Count', compute='_compute_track_count')
 
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
 
-    website_track = fields.Boolean('Tracks on Website')
+    website_track = fields.Boolean('Talks on Website')
     website_track_proposal = fields.Boolean('Proposals on Website')
 
-    track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
+    track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Talks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
 
-    allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
+    allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Talk Tags')
     tracks_tag_ids = fields.Many2many(
-        'event.track.tag', relation='event_track_tags_rel', string='Track Tags',
+        'event.track.tag', relation='event_track_tags_rel', string='Talk Tags',
         compute='_compute_tracks_tag_ids', store=True)
 
     @api.multi

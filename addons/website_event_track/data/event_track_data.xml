@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Email templates -->
         <record id="mail_template_data_track_confirmation" model="mail.template">
-            <field name="name">Track: Confirmation</field>
+            <field name="name">Talk: Confirmation</field>
             <field name="model_id" ref="website_event_track.model_event_track"/>
             <field name="subject">Confirmation of ${object.name}</field>
             <field name="use_default_to" eval="True"/>
@@ -72,26 +72,26 @@
 
         <!-- Event-related subtypes for new track / Chatter -->
         <record id="mt_event_track" model="mail.message.subtype">
-            <field name="name">New Track</field>
+            <field name="name">New Talk</field>
             <field name="res_model">event.event</field>
-            <field name="description">New Track Created</field>
+            <field name="description">New Talk Created</field>
             <field name="default" eval="False"/>
         </record>
 
         <!-- Track subtypes -->
         <record id="mt_track_blocked" model="mail.message.subtype">
-            <field name="name">Track Blocked</field>
+            <field name="name">Talk Blocked</field>
             <field name="res_model">event.track</field>
             <field name="default" eval="False"/>
             <field name="internal" eval="True"/>
-            <field name="description">Track blocked</field>
+            <field name="description">Talk blocked</field>
         </record>
         <record id="mt_track_ready" model="mail.message.subtype">
-            <field name="name">Track Ready</field>
+            <field name="name">Talk Ready</field>
             <field name="res_model">event.track</field>
             <field name="default" eval="True"/>
             <field name="internal" eval="True"/>
-            <field name="description">Track Ready for Next Stage</field>
+            <field name="description">Talk Ready for Next Stage</field>
         </record>
     </data>
 </odoo>

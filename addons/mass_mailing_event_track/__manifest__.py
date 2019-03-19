@@ -2,15 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mass mailing on track speakers',
+    'name': 'Mass mailing on talk speakers',
     'category': 'Hidden',
     'version': '1.0',
     'description':
         """
-Mass mail event track speakers
+Mass mail event talk speakers
 ==============================
 
-Bridge module adding UX requirements to ease mass mailing of event track speakers.
+Bridge module adding UX requirements to ease mass mailing of event talk speakers.
         """,
     'depends': ['website_event_track', 'mass_mailing'],
     'data': [

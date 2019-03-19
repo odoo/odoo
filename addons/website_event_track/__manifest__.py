@@ -4,7 +4,7 @@
 {
     'name': 'Advanced Events',
     'category': 'Marketing',
-    'summary': 'Sponsors, Tracks, Agenda, Event News',
+    'summary': 'Sponsors, Talks, Agenda, Event News',
     'version': '1.0',
     'description': "",
     'depends': ['website_event'],

@@ -23,8 +23,8 @@
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
-                                        <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
-                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                                        <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Talk</a>
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Talk</a></t>
                                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
@@ -62,7 +62,7 @@
             <field name="model">event.track</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id">
+                <calendar date_start="date" date_delay="duration" string="Event Talks" color="location_id">
                     <field name="name"/>
                     <field name="event_id"/>
                 </calendar>
@@ -73,7 +73,7 @@
             <field name="name">event.track.search</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <search string="Event Tracks">
+                <search string="Event Talks">
                     <field name="name"/>
                     <field name="event_id"/>
                     <field name="location_id"/>
@@ -108,11 +108,11 @@
             <field name="name">event.track.form</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <form string="Event Track">
+                <form string="Event Talk">
                     <header>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
-                    <sheet string="Track">
+                    <sheet string="Talk">
                         <div class="oe_button_box" name="button_box">
                             <field name="website_url" invisible="1"/>
                             <button class="oe_stat_button" name="website_publish_button"
@@ -166,7 +166,7 @@
             <field name="name">event.track.tree</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <tree string="Event Track">
+                <tree string="Event Talk">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="event_id"/>
@@ -178,7 +178,7 @@
             <field name="name">event.track.graph</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <graph string="Tracks" type="bar" orientation="horizontal">
+                <graph string="Talks" type="bar" orientation="horizontal">
                     <field name="location_id"/>
                     <field name="duration" operator="+"/>
                 </graph>
@@ -186,36 +186,36 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_track">
-            <field name="name">Event Tracks</field>
+            <field name="name">Event Talks</field>
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                  Add a new track
+                  Add a new talk
                 </p><p>
-                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                  Talks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_track_from_event">
             <field name="res_model">event.track</field>
-            <field name="name">Event Tracks</field>
+            <field name="name">Event Talks</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Add a new track
+                Add a new talk
               </p><p>
-                Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                Talks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
               </p>
             </field>
         </record>
 
         <menuitem
             id="menu_event_track"
-            name="Event Tracks"
+            name="Event Talks"
             action="action_event_track"
             parent="event.event_main_menu"
             groups="base.group_no_one"/>
@@ -319,7 +319,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_sponsor_from_event">
-            <field name="name">Event Tracks</field>
+            <field name="name">Event Talks</field>
             <field name="res_model">event.sponsor</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
@@ -327,10 +327,10 @@
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">
-            <field name="name">Track Tags</field>
+            <field name="name">Talk Tags</field>
             <field name="model">event.track.tag</field>
             <field name="arch" type="xml">
-                <form string="Event Track Tag">
+                <form string="Event Talk Tag">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -341,17 +341,17 @@
         </record>
 
         <record model="ir.ui.view" id="view_event_track_tag_tree">
-            <field name="name">Tracks Tag</field>
+            <field name="name">Talks Tag</field>
             <field name="model">event.track.tag</field>
             <field name="arch" type="xml">
-                <tree string="Event Track Tag" editable="bottom">
+                <tree string="Event Talk Tag" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_track_tag">
-            <field name="name">Track Tags</field>
+            <field name="name">Talk Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
 
@@ -366,8 +366,8 @@
             <field name="name">event.track.stage.view.search</field>
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
-                <search string="Track Stage">
-                   <field name="name" string="Track Stages"/>
+                <search string="Talk Stage">
+                   <field name="name" string="Talk Stages"/>
                 </search>
             </field>
         </record>
@@ -376,7 +376,7 @@
             <field name="name">event.track.stage.view.form</field>
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
-                <form string="Track Stage">
+                <form string="Talk Stage">
                     <sheet>
                         <group>
                             <group>
@@ -399,7 +399,7 @@
             <field name="name">event.track.stage.view.tree</field>
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
-                <tree string="Track Stage">
+                <tree string="Talk Stage">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="fold"/>
@@ -428,7 +428,7 @@
         </record>
 
         <record id="event_track_stage_action" model="ir.actions.act_window">
-            <field name="name">Track Stages</field>
+            <field name="name">Talk Stages</field>
             <field name="res_model">event.track.stage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
@@ -438,14 +438,14 @@
                 Add a new stage in the task pipeline
               </p><p>
                 Define the steps that will be used in the event from the
-                creation of the track, up to the closing of the track.
+                creation of the talk, up to the closing of the talk.
                 You will use these stages in order to track the progress in
-                solving an event track.
+                solving an event talk.
               </p>
             </field>
         </record>
 
-        <menuitem name="Track Stages"
+        <menuitem name="Talk Stages"
             id="event_track_stage_menu"
             action="event_track_stage_action"
             parent="event.menu_event_configuration"
