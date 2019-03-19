@@ -95,17 +95,8 @@ class SaleOrder(models.Model):
 
         if line_id:
             return lines
-        linked_line_id = kwargs.get('linked_line_id', False)
-        optional_product_ids = set(kwargs.get('optional_product_ids', []))
 
-        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
-        if optional_product_ids:
-            # only match the lines with the same chosen optional products on the existing lines
-            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
-        else:
-            lines = lines.filtered(lambda line: not line.option_line_ids)
-
-        return lines
+        return self.env['sale.order.line']
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
