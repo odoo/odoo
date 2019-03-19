@@ -172,13 +172,18 @@ var ListRenderer = BasicRenderer.extend({
             };
         }
     },
-    _computeOptionalColumns: function () {
+    _computeColumns: function () {
         var self = this;
-         return _.groupBy(this.allColumns, function (col) {
+        return _.filter(this.allColumns, function (col) {
+            return !(col.attrs.optional && !!JSON.parse(col.attrs.optional))
+                || (col.attrs.modifiers && col.attrs.modifiers.required)
+                || _.contains(self.optionalColumnsEnabled, col.attrs.name);
+        });
+    },
+    _computeOptionalColumns: function () {
+        return _.filter(this.allColumns, function (col) {
             return (col.attrs.optional && !!JSON.parse(col.attrs.optional))
-                && !(col.attrs.modifiers && col.attrs.modifiers.required)
-                && !_.contains(self.optionalColumnsEnabled, col.attrs.name)
-                ? "optionalColumns" : "columns";
+                && !(col.attrs.modifiers && col.attrs.modifiers.required);
         });
     },
     /**
@@ -219,9 +224,8 @@ var ListRenderer = BasicRenderer.extend({
             return reject;
         });
         if (!this.isX2Many) {
-            var columnGroups = this._computeOptionalColumns();
-            this.columns = columnGroups.columns;
-            this.optionalColumns = columnGroups.optionalColumns;
+            this.columns = this._computeColumns();
+            this.optionalColumns = this._computeOptionalColumns();
         } else {
             this.columns = this.allColumns;
         }
@@ -837,12 +841,10 @@ var ListRenderer = BasicRenderer.extend({
         var currentElement = ev.currentTarget;
         if (!currentElement.checked) {
             this.optionalColumnsEnabled.splice(this.optionalColumnsEnabled.indexOf(currentElement.name), 1);
-            var columnGroups = this._computeOptionalColumns();
-            this.columns = columnGroups.columns;
+            this.columns = this._computeColumns();
         } else {
             this.optionalColumnsEnabled.push(currentElement.name);
-            var columnGroups = this._computeOptionalColumns();
-            this.columns = columnGroups.columns;
+            this.columns = this._computeColumns();
         }
         this._renderView();
     },

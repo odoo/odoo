@@ -791,6 +791,16 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * override this method to unselect editing row before adding optional column
+     * @override
+     */
+    _onAddColumn: function (ev) {
+        var _super = this._super.bind(this);
+        this.unselectRow().then(function () {
+            _super.apply(self, [ev]);
+        });
+    },
+    /**
      * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
@@ -1042,12 +1052,6 @@ ListRenderer.include({
         }
 
         this.unselectRow();
-    },
-    _onAddColumn: function (ev) {
-        var self = this;
-        this.unselectRow().then(function () {
-            self._super.apply(self, [ev]);
-        });
     },
 });
 
