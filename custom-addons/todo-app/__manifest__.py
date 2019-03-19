@@ -6,5 +6,11 @@
  'application': True,
  'installable': True,
  'auto_install': False,
+ 'data': [
+        'views/todo_menu.xml',
+        'views/todo_view.xml',
+        'views/index_template.xml',
+        'views/res_partner_view.xml'
+    ],
  'qweb': [],
 }
