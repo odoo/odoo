@@ -157,4 +157,92 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         trigger: '#cart_products:contains("Customizable Desk (Steel, White)") .js_quantity[value="1"]',
     },
     ]);
+
+
+    tour.register('product_comparison_dynamic_variant', {
+        test: true,
+        url: "/",
+    }, [
+    {
+        content: "create product with newly created attribute and its value and set alternative product 'Conference Chair'",
+        trigger: '#wrapwrap',
+        run: function () {
+            rpc.query({
+                model: 'product.template',
+                method: 'search',
+                args: [[['name', '=', "Conference Chair"]]],
+            }).then(function (product_id) {
+                rpc.query({
+                    model: 'product.attribute',
+                    method: 'create',
+                    args: [{
+                        'name': 'color',
+                        'type': 'color',
+                        'create_variant': 'dynamic'
+                    }],
+                }).then(function (attribute_id) {
+                    rpc.query({
+                        model: 'product.template',
+                        method: 'create',
+                        args: [{
+                            'name': 'Bottle',
+                            'is_published': true,
+                            'attribute_line_ids': [[0, 0 , {
+                                'attribute_id': attribute_id,
+                                'value_ids': [[0, 0, {
+                                        'name': 'red',
+                                        'attribute_id': attribute_id,
+                                    }],
+                                    [0, 0, {
+                                        'name': 'blue',
+                                        'attribute_id': attribute_id,
+                                    }],
+                                    [0, 0, {
+                                        'name': 'black',
+                                        'attribute_id': attribute_id,
+                                    }],
+                                    ]
+                                }]],
+                            'alternative_product_ids': [[6, 0, product_id]],
+                        }],
+                    })
+                })
+                .then(function () {
+                    window.location.href = '/shop';
+                });
+            })
+        },
+    },
+    {
+        content: "search product 'Bottle'",
+        extra_trigger: '.js_sale',
+        trigger: '#wrapwrap',
+        run: function() {
+            window.location.href = '/shop?search=Bottle';
+        },
+    },
+    {
+        content: "click on product",
+        trigger: '.oe_product_cart a:contains("Bottle")',
+    },
+    {
+        content: "click on compare button",
+        trigger: '.btn.btn-primary:not(.btn-block):contains("Compare")',
+    },
+    {
+        content: "check product 'Bottle' with first variant(red) is on compare page",
+        trigger: '.product_summary:contains("Bottle (red)")',
+        run: function () {},
+    },
+    {
+        content: "check there are correct attribute legs",
+        trigger: '.General:contains("Legs")',
+        run: function () {},
+    },
+    {
+        content: "check there are correct attribute color",
+        trigger: '.Uncategorized:contains("color")',
+        run: function () {},
+    },
+    ]);
 });

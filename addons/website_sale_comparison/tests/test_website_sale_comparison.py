@@ -62,3 +62,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_comparison(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('product_comparison')", "odoo.__DEBUG__.services['web_tour.tour'].tours.product_comparison.ready", login='admin')
+
+    def test_02_admin_tour_product_comparison_dynamic_variant(self):
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('product_comparison_dynamic_variant')", "odoo.__DEBUG__.services['web_tour.tour'].tours.product_comparison_dynamic_variant.ready", login='admin')
