@@ -3,10 +3,10 @@
     <data>
         <template id="survey_templates_inherit_website_slides" inherit_id="survey.sfinished">
             <xpath expr="//div[hasclass('jumbotron')]/div[last()]" position="after">
-                <div t-if="slide_url" class="mt16">
+                <div t-if="channel_url" class="mt16">
                     <a role="button"
                         class="btn btn-primary btn-lg"
-                        t-att-href="slide_url">
+                        t-att-href="channel_url">
                         Go back to course
                     </a>
                 </div>
