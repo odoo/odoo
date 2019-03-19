@@ -274,6 +274,11 @@
                         <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" />
                 </header>
+                <field name="refund_tax_mismatch" invisible="1"/>
+                <div attrs="{'invisible': [('refund_tax_mismatch', '=', False)]}" class="alert alert-warning" role="alert" style="margin-bottom:0px;">
+                    The tax amount for this credit note does not correspond to the invoice it has been created for, probably due to manual adjustments on the invoice. <br/>
+                    You can fix that by doing the same manual adjustment on the credit note.
+                </div>
                 <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
                     You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                 </div>

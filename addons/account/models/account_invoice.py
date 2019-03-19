@@ -392,6 +392,7 @@ class AccountInvoice(models.Model):
     cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
         readonly=True, states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.')
+    refund_tax_mismatch = fields.Boolean(string="Refund Tax Mismatch", compute='_compute_refund_tax_mismatch', help="For refund invoices, true if the total tax amount of the refund is different from the one of the invoice it was created for (this can occur in case of manual adjustment of invoice taxes).")
 
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
@@ -475,6 +476,15 @@ class AccountInvoice(models.Model):
         super(AccountInvoice, self)._compute_access_url()
         for invoice in self:
             invoice.access_url = '/my/invoices/%s' % (invoice.id)
+
+    @api.depends('refund_invoice_id.tax_line_ids', 'tax_line_ids')
+    def _compute_refund_tax_mismatch(self):
+        for record in self.filtered(lambda x: x.refund_invoice_id):
+            invoice_tax_sum = sum(record.refund_invoice_id.mapped('tax_line_ids.amount'))
+            # Unlikely to happen, but it is possible to create a refund in another currency, so we convert the sum
+            invoice_tax_sum_converted = record.refund_invoice_id.currency_id._convert(invoice_tax_sum, record.currency_id, record.company_id, record.date or fields.Date.today())
+            refund_tax_sum = sum(record.mapped('tax_line_ids.amount'))
+            record.refund_tax_mismatch = record.currency_id.compare_amounts(invoice_tax_sum_converted, refund_tax_sum) != 0
 
     @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
@@ -1086,7 +1096,7 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
                     for field in default_tax_group_fields:
-                        tax_grouped[key][field] += val.get(field) or 0
+                        tax_grouped[key][field] += round_curr(val.get(field)) or 0
 
                 if tax.amount_type == "group":
                     affecting_base_tax_ids += tax.children_tax_ids.filtered(lambda t: is_tax_affecting_base_amount(t)).ids
@@ -1485,21 +1495,6 @@ class AccountInvoice(models.Model):
             result.append((0, 0, values))
         return result
 
-    @api.model
-    def _refund_tax_lines_account_change(self, lines, taxes_to_change):
-        # Let's change the account on tax lines when
-        # @param {list} lines: a list of orm commands
-        # @param {dict} taxes_to_change
-        #   key: tax ID, value: refund account
-
-        if not taxes_to_change:
-            return lines
-
-        for line in lines:
-            if isinstance(line[2], dict) and line[2]['tax_id'] in taxes_to_change:
-                line[2]['account_id'] = taxes_to_change[line[2]['tax_id']]
-        return lines
-
     def _get_refund_common_fields(self):
         return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
 
@@ -1543,14 +1538,6 @@ class AccountInvoice(models.Model):
                 values[field] = invoice[field] or False
 
         values['invoice_line_ids'] = self._refund_cleanup_lines(invoice.invoice_line_ids)
-
-        tax_lines = invoice.tax_line_ids
-        taxes_to_change = {
-            line.tax_id.id: line.tax_id.refund_account_id.id
-            for line in tax_lines.filtered(lambda l: l.tax_id.refund_account_id != l.tax_id.account_id)
-        }
-        cleaned_tax_lines = self._refund_cleanup_lines(tax_lines)
-        values['tax_line_ids'] = self._refund_tax_lines_account_change(cleaned_tax_lines, taxes_to_change)
 
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)

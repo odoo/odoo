@@ -193,8 +193,32 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             'amount': 15.0,
             'amount_type': 'percent',
             'type_tax_use': 'sale',
-            'account_id': tax_account.id,
-            'refund_account_id': tax_refund_account.id
+            'invoice_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': tax_account.id,
+                    }),
+
+                ],
+            'refund_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': tax_refund_account.id,
+                    }),
+
+                ],
         })
 
         invoice_line_data = [

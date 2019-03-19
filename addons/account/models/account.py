@@ -1324,7 +1324,7 @@ class AccountTax(models.Model):
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
                     'amount': line_amount,
-                    'base': sign * round(base, prec),
+                    'base': round(sign * base, prec),
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,

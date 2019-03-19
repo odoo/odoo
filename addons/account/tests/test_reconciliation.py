@@ -97,10 +97,33 @@ class TestReconciliation(AccountingTestCase):
             'type_tax_use': 'purchase',
             'company_id': company.id,
             'amount': 20,
-            'account_id': self.tax_final_account.id,
             'tax_exigibility': 'on_payment',
             'cash_basis_transition_account_id': self.tax_waiting_account.id,
             'cash_basis_base_account_id': self.tax_base_amount_account.id,
+            'invoice_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': self.tax_final_account.id,
+                    }),
+                ],
+            'refund_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': self.tax_final_account.id,
+                    }),
+                ],
         })
 
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
@@ -1215,6 +1238,7 @@ class TestReconciliation(AccountingTestCase):
             'debit': 16.67,
             'move_id': purchase_move.id,
             'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_move.post()
 
@@ -1333,6 +1357,7 @@ class TestReconciliation(AccountingTestCase):
             'debit': 5,
             'move_id': purchase_move.id,
             'tax_line_id': tax_cash_basis10percent.id,
+            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         AccountMoveLine.create({
             'name': 'expenseTaxed 20%',
@@ -1347,6 +1372,7 @@ class TestReconciliation(AccountingTestCase):
             'debit': 16.67,
             'move_id': purchase_move.id,
             'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_move.post()
 
@@ -1557,6 +1583,7 @@ class TestReconciliation(AccountingTestCase):
             'tax_line_id': self.tax_cash_basis.id,
             'currency_id': self.currency_usd_id,
             'amount_currency': 848.16,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_payable_line0 = aml_obj.create({
             'name': 'Payable',
@@ -1728,6 +1755,7 @@ class TestReconciliation(AccountingTestCase):
             'debit': 17094.66,
             'move_id': purchase_move.id,
             'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
             'currency_id': self.currency_usd_id,
             'amount_currency': 848.16,
         })
