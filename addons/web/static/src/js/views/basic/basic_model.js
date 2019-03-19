@@ -4250,22 +4250,22 @@ var BasicModel = AbstractModel.extend({
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
-                        // restore the internal state of the group
                         delete self.localData[newGroup.id];
-                        var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
+                        // restore the internal state of the group
+                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
                         if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
                             // sub-groups
                             // Also keep data if we only reload groups' own data
-                            delete updatedProps.data;
+                            updatedProps.data = oldGroup.data;
                         }
+                        _.extend(newGroup, updatedProps);
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
-                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
-                        _.extend(oldGroup, updatedProps);
-                        newGroup = oldGroup;
+                        newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
+                        self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
                         newGroup.isOpen = false;
                     } else {
