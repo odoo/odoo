@@ -354,7 +354,6 @@ class Department(models.Model):
         employees.write({'parent_id': manager_id})
 
     @api.multi
-    @api.onchange
     def _checkin(self):
         self.env['hr.checkin'].create(
             {
