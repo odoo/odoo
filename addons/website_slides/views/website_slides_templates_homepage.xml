@@ -11,7 +11,7 @@
                         <h1 class="display-3 mb-0">Reach new heights</h1>
                         <h2 class="mb-4">Start your online course today !</h2>
                         <div class="row mt-1 mb-3">
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <p>Skill up and have an impact! Your business career starts here. Time to start a course.</p>
                             </div>
                             <div class="col-lg-3">
@@ -22,28 +22,33 @@
                 </div>
             </section>
             <div class="container mt16 o_wslides_home_nav position-relative">
-                <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: white!important">
-                    <button class="navbar-toggler" type="button"
+                <nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: white!important">
+                    <form method="GET" class="form-inline o_wslides_nav_navbar_right order-lg-3" t-attf-action="/slides/all" role="search">
+                        <div class="input-group">
+                            <input type="search" name="search" class="form-control" placeholder="Search courses" aria-label="Search" t-att-value="search_term"/>
+                            <div class="input-group-append">
+                                <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="navbar-toggler px-2 order-1" type="button"
                         data-toggle="collapse" data-target="#navbarSlidesHomepage"
                         aria-controls="navbarSlidesHomepage" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"/>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSlidesHomepage">
-                        <div class="navbar-nav">
+                    <div class="collapse navbar-collapse order-2" id="navbarSlidesHomepage">
+                        <div class="navbar-nav pt-3 pt-lg-0">
                             <a class="nav-link nav-link mr-md-2 o_wslides_home_all_slides" href="/slides/all"><i class="fa fa-graduation-cap mr-1"/>All courses</a>
-                        </div>
-                        <div class="navbar-nav o_wslides_nav_navbar_right">
-                            <t t-if="is_public_user">
-                                <a class="nav-link nav-link" href="/web/login?redirect=/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
-                            </t><t t-else="">
-                                <a class="nav-link nav-link" href="/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
-                            </t>
                         </div>
                     </div>
                 </nav>
-                <div class="o_wprofile_email_validation_container mb16 mt16">
+                <div class="o_wprofile_email_validation_container">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/slides'"/>
+                        <t t-set="send_alert_classes" t-value="'alert alert-danger alert-dismissable mt-4 mb-0'"/>
+                        <t t-set="done_alert_classes" t-value="'alert alert-success alert-dismissable mt-4 mb-0'"/>
                         <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the eLearning.'"/>
                         <t t-set="additional_validated_email_message" t-value="' You may now participate to our eLearning.'"/>
                     </t>
@@ -73,10 +78,10 @@
                                         <t t-set="img_style" t-value="'height: 22px'"/>
                                     </t>
                                     <h5 t-esc="user.name" class="d-flex flex-grow-1 mb-0"/>
-                                    <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">Edit</a>
+                                    <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
                                     <a class="d-lg-none btn btn-sm bg-white border" href="#" data-toggle="collapse" data-target="#o_wslides_home_aside_content">More info</a>
                                 </div>
-                                <hr class="d-none d-lg-block mt-2"/>
+                                <hr class="d-none d-lg-block mt-2 pt-2 mb-1"/>
                             </div>
                             <div id="o_wslides_home_aside_content" class="collapse d-lg-block">
                                 <div class="row mb-5 mt-3 mt-lg-0">
@@ -94,12 +99,12 @@
                     <div class="col-lg-9 pr-lg-5 order-lg-1">
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
-                            <div class="o_wslides_home_content_section mb-5">
+                            <div class="o_wslides_home_content_section mb-3">
                                 <div class="row o_wslides_home_content_section_title align-items-center">
                                     <div class="col">
-                                        <a href="slides/all" class="float-right">View all</a>
-                                        <h5 class="m-0">Complete latest courses</h5>
-                                        <hr class="mt-2"/>
+                                        <a href="/slides/all?my=1" class="float-right">View all</a>
+                                        <h5 class="m-0">My courses</h5>
+                                        <hr class="mt-2 pb-1 mb-1"/>
                                     </div>
                                 </div>
                                 <div class="row mx-n2 mt8">
@@ -109,12 +114,12 @@
                                 </div>
                             </div>
                         </t>
-                        <div class="o_wslides_home_content_section mb-5">
+                        <div class="o_wslides_home_content_section mb-3">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
                                     <h5 class="m-0">Most popular courses</h5>
-                                    <hr class="mt-2"/>
+                                    <hr class="mt-2 pb-1 mb-1"/>
                                 </div>
                             </div>
                             <div class="row mx-n2 mt8">
@@ -123,12 +128,12 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="o_wslides_home_content_section mb-5">
+                        <div class="o_wslides_home_content_section mb-3">
                             <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
                                     <h5 class="m-0">Newest courses</h5>
-                                    <hr class="mt-2"/>
+                                    <hr class="mt-2 pb-1 mb-1"/>
                                 </div>
                             </div>
                             <div class="row mx-n2 mt8">
@@ -142,8 +147,14 @@
             </div>
             <section class="s_banner" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
                 <div class="container py-5">
-                    <h2 class="text-white mb-4">Meet the people who transformed their company</h2>
-                    <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md">
+                            <h2 class="my-4 text-white">Meet the people who transformed their company</h2>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -203,10 +214,10 @@
                         <form method="GET" class="form-inline o_wslides_nav_navbar_right">
                             <div class="input-group">
                                 <input type="search" name="search" class="form-control"
-                                    placeholder="Search something" aria-label="Search"
+                                    placeholder="Search courses" aria-label="Search"
                                     t-att-value="search_term"/>
                                 <div class="input-group-append">
-                                    <button class="btn border oe_search_button" type="submit" aria-label="Search" title="Search">
+                                    <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
                                         <i class="fa fa-search"/>
                                     </button>
                                 </div>
@@ -233,15 +244,13 @@
                 </div>
             </div>
 
-            <section class="s_banner bg-900" style="background-image: url(&quot;/website/static/src/img/backgrounds/people.jpg&quot;); background-size: cover; background-position: 65% 55%">
+            <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
                 <div class="container py-5">
-                    <h1 class="display-3 mb-0">Meet the people who transformed their company</h1>
-                    <h2 class="mb-4">Nobody gave me a real text so instead of a lorem ipsum I put that one.</h2>
-                    <div class="row mt-1 mb-3">
-                        <div class="col-lg-4">
-                            <p>Nobody gave me a real text so instead of a lorem ipsum I put that one.</p>
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md">
+                            <h2 class="my-4">Meet the people who transformed their company</h2>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-12 col-md-4">
                             <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
                         </div>
                     </div>
@@ -260,18 +269,18 @@
                 <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
             </div>
         </a>
-        <div class="card-body">
-            <a class="card-title h5" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+        <div class="card-body p-3">
+            <a class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <div class="card-text mt-1">
-                <div class="font-weight-light oe_no_empty" t-field="channel.description"/>
-                <div t-if="channel.tag_ids" class="border-top mt-2 pt-1">
+                <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description"/>
+                <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
                         <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
         </div>
-        <div class="card-footer border-top-0 text-600">
+        <div class="card-footer border-top-0 text-600 px-3">
             <div class="d-flex justify-content-between align-items-center">
                 <small class="font-weight-bold" t-field="channel.total_time" t-options='{"widget": "float_time"}'/>
                 <div class="d-flex flex-grow-1 justify-content-end">
@@ -327,7 +336,7 @@
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
                 <h5 class="m-0">Heroes of the week</h5>
-                <hr class="mt-2"/>
+                <hr class="mt-2 pt-2"/>
             </div>
         </div>
         <div class="row">
@@ -352,7 +361,9 @@
         <div style="line-height:1.3">
             <span class="font-weight-bold" t-esc="user.name"/>
             <div class="d-flex align-items-center">
-                <span class="text-muted" t-esc="user.rank_id.name"/><span class="ml8 mr8">&#8226;</span><span t-esc="user.karma" class="badge badge-success"/>
+                <t t-esc="user.rank_id.name"/>
+                <span class="text-500 mx-2">&#8226;</span>
+                <span class="badge badge-success"><t t-esc="user.karma"/> xp</span>
             </div>
         </div>
     </div>
