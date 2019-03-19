@@ -1504,7 +1504,13 @@ class AccountInvoice(models.Model):
                 if name in MAGIC_COLUMNS:
                     continue
                 elif field.type == 'many2one':
-                    values[name] = line[name].id
+                    # `lines` could here be recordset of either `account.invoice.line` or `account.invoice.tax` model, and we want `account_id`
+                    # to be set for `account.invoice.line` records only, hence checking it with `_name` class property
+                    if lines._name == 'account.invoice.line' and line.invoice_id.type == 'out_invoice' and field.name == 'account_id':
+                        income_refund_account = line.product_id.product_tmpl_id.get_product_accounts(line.invoice_id.fiscal_position_id.id).get('income_refund')
+                        values[name] = income_refund_account and income_refund_account.id or line[name].id
+                    else:
+                        values[name] = line[name].id
                 elif field.type not in ['many2many', 'one2many']:
                     values[name] = line[name]
                 elif name == 'invoice_line_tax_ids':
@@ -1828,8 +1834,10 @@ class AccountInvoiceLine(models.Model):
     @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
         accounts = product.product_tmpl_id.get_product_accounts(fpos)
-        if type in ('out_invoice', 'out_refund'):
+        if type == 'out_invoice':
             return accounts['income']
+        if type == 'out_refund':
+            return accounts['income_refund']
         return accounts['expense']
 
     def _set_currency(self):

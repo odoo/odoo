@@ -119,8 +119,10 @@ class AccountChartTemplate(models.Model):
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
     property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account', oldname="property_account_expense_categ")
     property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account', oldname="property_account_income_categ")
+    property_account_income_refund_categ_id = fields.Many2one('account.account.template', string='Category of Income Refund Account')
     property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template', oldname="property_account_expense")
     property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template', oldname="property_account_income")
+    property_account_income_refund_id = fields.Many2one('account.account.template', string='Income Refund Account on Product Template')
     property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
@@ -458,12 +460,22 @@ class AccountChartTemplate(models.Model):
             ('property_account_payable_id', 'res.partner', 'account.account'),
             ('property_account_expense_categ_id', 'product.category', 'account.account'),
             ('property_account_income_categ_id', 'product.category', 'account.account'),
+            ('property_account_income_refund_categ_id', 'product.category', 'account.account'),
             ('property_account_expense_id', 'product.template', 'account.account'),
             ('property_account_income_id', 'product.template', 'account.account'),
+            ('property_account_income_refund_id', 'product.template', 'account.account'),
         ]
         for record in todo_list:
             account = getattr(self, record[0])
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            # If a CoA is not defining `property_account_income_refund_categ_id` and/or `property_account_income_refund_id`,
+            # it should be set with the value of `property_account_income_categ_id` and/or `property_account_income_id` respectively
+            if record[0] == 'property_account_income_refund_categ_id' and not value:
+                account = getattr(self, 'property_account_income_categ_id')
+                value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            elif record[0] == 'property_account_income_refund_id' and not value:
+                account = getattr(self, 'property_account_income_id')
+                value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
                 field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
