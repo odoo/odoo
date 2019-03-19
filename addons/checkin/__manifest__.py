@@ -4,7 +4,7 @@
  'author': 'Dat Nguyen',
  'depends': ['base'],
  'data': [
-        'checkin_menu.xml'
+        'views/checkin_menu.xml'
     ],
  'installable': True,
  'application': True,
