@@ -85,6 +85,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onShareArticle: function (ev) {
         var url = '';
+        ev.preventDefault();
         var $element = $(ev.currentTarget);
         if ($element.is('*[class*="_complete"]')) {
             var blogTitleComplete = $('#blog_post_name').html() || '';
