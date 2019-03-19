@@ -249,6 +249,11 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         if self.product_id.tracking == 'serial':
             self.qty_done = 1
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id and not self.move_id:
+            self.product_uom_id = self.product_id.uom_id
+
     @api.onchange('qty_done')
     def _onchange_qty_done(self):
         """ When the user is encoding a produce line for a tracked product, we apply some logic to
