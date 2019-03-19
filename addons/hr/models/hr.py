@@ -360,7 +360,7 @@ class Department(models.Model):
     @api.onchange
     def _checkin(self):
         if self.checkin_status == True:
-            checkin_create = self.env['hr.checkin'].create(
+            self.env['hr.checkin'].create(
                 {
                     'checkin_status' : self.checkin_status,
                     'time_checkin' : datetime.datetime.now(),
