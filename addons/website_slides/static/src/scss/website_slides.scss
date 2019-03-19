@@ -9,7 +9,6 @@ $o-wslides-fs-side-width: 300px;
 
 // Common to new slides pages
 // **************************************************
-
 .o_wslides_gradient {
     background-image: linear-gradient(120deg, #875A7B, darken(#875A7B, 10%));
 }
@@ -32,7 +31,7 @@ $o-wslides-fs-side-width: 300px;
     .o_wslides_home_nav {
         top: -40px;
 
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(lg) {
             font-size: 1rem;
 
             .o_wslides_nav_navbar_right {
@@ -73,7 +72,6 @@ $o-wslides-fs-side-width: 300px;
 
     // tools
     // ****************************************
-
     .text_small_caps {
         font-variant: small-caps;
     }
@@ -102,10 +100,8 @@ $o-wslides-fs-side-width: 300px;
     }
 }
 
-
 // New home page
 // **************************************************
-
 .o_wslides_home_main {
     .o_wslides_home_aside_loggedin {
         @include media-breakpoint-up(lg) {
@@ -272,9 +268,8 @@ $o-wslides-fs-side-width: 300px;
 }
 
 
-// New lesson page
+// New lesson page (not fullscreens)
 // **************************************************
-
 .o_wslides_lesson_main {
     .o_wslides_lesson_aside {
         .o_wslides_lesson_aside_collapse.collapsed {
