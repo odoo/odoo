@@ -52,6 +52,9 @@ class Slide(models.Model):
                 2/ create a new user_input for member
                 3/ for no member, a test user_input is created and the url is returned
             Note: the slide.slides.partner should already exist
+
+            We have to generate a new invite_token to differentiate pools of attempts since the
+            course can be enrolled multiple times.
         """
         certification_urls = {}
         for slide in self.filtered(lambda slide: slide.slide_type == 'certification' and slide.survey_id):
@@ -70,7 +73,8 @@ class Slide(models.Model):
                         **{
                             'slide_id': slide.id,
                             'slide_partner_id': user_membership_id_sudo.id
-                        }
+                        },
+                        invite_token=self.env['survey.user_input']._generate_invite_token()
                     )
                     certification_urls[slide.id] = user_input._get_survey_url()
             else:
