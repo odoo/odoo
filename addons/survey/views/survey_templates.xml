@@ -406,12 +406,13 @@
         </div>
         <div t-if="question.display_mode == 'columns' or not answer.token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-4">
-                <input type="radio" t-att-name="prefix" t-att-value='label.id' />
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None"></label>
-                <span t-field='label.value'/>
+                <label t-att-class="' bg-success o_simple_choice ' if quizz_correction and label.answer_score > 0.0 else 'o_simple_choice'">
+                    <input type="radio" t-att-name="prefix" t-att-value='label.id' />
+                    <span t-field='label.value'/>
+                </label>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
-                <label>
+                <label class="o_simple_choice">
                     <input type="radio" t-att-name="prefix" value="-1"/>
                     <span t-field="question.comments_message" />
                 </label>
@@ -427,13 +428,13 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-4">
-                <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
-                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
+                <label t-att-class="' bg-success o_multiple_choice ' if quizz_correction and label.answer_score > 0.0 else 'o_multiple_choice'">
+                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
+                    <span t-field='label.value'/>
                 </label>
-                <span t-field='label.value'/>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
-                <label>
+                <label class="o_multiple_choice">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
                     <p class="mt16 mb0"><span t-field="question.comments_message" /></p>
                 </label>
@@ -458,10 +459,10 @@
                 <tr t-foreach="question.labels_ids_2" t-as="row_label">
                     <th><span t-field="row_label.value" /></th>
                     <td t-foreach="question.labels_ids" t-as="col_label">
-                        <!-- <input t-if="question.matrix_subtype == 'simple'" type="radio" t-att-name="'%s_%s' % (prefix, row_label.id)" t-att-value='col_label.id' />
-                        <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None"></label> -->
+                        <input t-if="question.matrix_subtype == 'simple'" type="radio" t-att-name="'%s_%s' % (prefix, row_label.id)" t-att-value='col_label.id' />
+                        <!-- <label  t-if="question.matrix_subtype == 'simple'" t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else 'o_simple_choice'"></label> -->
                         <input t-if="question.matrix_subtype == 'multiple'" type="checkbox" t-att-name="'%s_%s_%s' % (prefix, row_label.id, col_label.id)" t-att-value='col_label.id' />
-                        <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None"></label>
+                        <!-- <label  t-if="question.matrix_subtype == 'multiple'" t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else 'o_multiple_choice'"></label> -->
                     </td>
                 </tr>
             </tbody>

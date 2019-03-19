@@ -23,17 +23,15 @@
             border-bottom:2px solid $gray-500;
             box-shadow: none;
         }
-
     }
     
     // For matrix positioning
     table {
-        label {
+        .o_multiple_choice, .o_simple_choice {
             position: relative;
-        }
-        input {
-            left: 38px;
-            top: 10px;
+            &:before {
+                left: 0;
+            }
         }
     }
 
@@ -60,15 +58,16 @@
         }
     }
 
-    input[type="checkbox"], input[type="radio"] {
+    .o_multiple_choice input, .o_simple_choice input {
         opacity: 0;
         z-index: 1;
         position: relative;
         width: 20px;
         height: 20px;
+        margin-right: 15px;
     }
 
-    input[type="radio"] ~ label, input[type="checkbox"] ~ label {
+    .o_simple_choice, .o_multiple_choice {
         &:before {
             position: absolute;
             top: 0;
@@ -82,52 +81,51 @@
         }
     }
 
-    input[type="radio"] ~ label, input[type="checkbox"] ~ label {
-        &:after {
-            content: "";
-            display: inline-block;
-            position: absolute;
-            height: 8px;
-        }
-    }
-
-    input[type="radio"] ~ label {
+    .o_simple_choice {
         &:before {
             border-radius: 50%;
         }
-        /* Custom Radio */
-        &:after {
-            width: 8px;
-            background-color: #fff;
+    }
+
+    // No parent selector...
+    .o_simple_choice input:checked, .o_multiple_choice input:checked {
+        opacity: 1;
+        &:before {
+            background-color: #00A09D;
+            color: #fff;
+            position: absolute;
+            font-weight: 800;
+        }
+        
+    }
+    .o_simple_choice input:checked {
+        &:before {
+            content: "\2219";
             border-radius: 50%;
-            left: 21px;
-            top: 6px;
+            bottom: -1px;
+            left: -2px;
+            padding: 0 8px;
+            padding-bottom: 1px;
+        }
+    }
+    .o_multiple_choice input:checked {
+        &:before {
+            content: "\2713";
+            padding: 0 4px;
         }
     }
 
-    input[type="checkbox"] ~ label {
-        /* Custom Checkmark */
-        &:after {
-            width: 12px;
-            border-left: 2px solid;
-            border-bottom: 2px solid;
-            border-color: #fff;
-            transform: rotate(-45deg);
-            left: 19px;
-            top: 4px;
+    //Result position
+    .bg-success {
+        padding: 5px;
+        border-radius: 8px;
+        position: relative;
+        left: -7px;
+        bottom: 3px;
+
+        &:before {
+            top: 7px;
+            left: 7px;
         }
-    }
-
-    /*Hide the checkmark by default*/
-    input[type="checkbox"] + label:after {
-        content: none;
-    }
-    /*Unhide the checkmark on the checked state*/
-    input[type="checkbox"]:checked + label:after {
-        content: "";
-    }
-
-    input:checked ~ label:before {
-        background-color: #00A09D;
-    }
+    } 
 }
