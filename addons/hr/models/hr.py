@@ -100,8 +100,6 @@ class Employee(models.Model):
 
     _mail_post_access = 'read'
 
-    checkin = fields.One2many(comodel_name="hr.checkin",string="")
-
 
     
 
