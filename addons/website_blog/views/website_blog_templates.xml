@@ -172,10 +172,10 @@
                                         <a class="badge badge-primary" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
                                     </t>
                                     <div class="o_sharing_links">
-                                        <a class="fa fa-twitter-square o_twitter" aria-label="Twitter" title="Twitter"></a>
-                                        <a class="fa fa-facebook-square o_facebook" aria-label="Facebook" title="Facebook"></a>
-                                        <a class="fa fa-linkedin-square o_linkedin" aria-label="LinkedIn" title="LinkedIn"></a>
-                                        <a class="fa fa-google-plus-square o_google" aria-label="Google Plus" title="Google Plus"></a>
+                                        <a href="#" class="fa fa-lg fa-twitter-square text-twitter o_twitter" aria-label="Twitter" title="Twitter"/>
+                                        <a href="#" class="fa fa-lg fa-facebook-square text-facebook o_facebook" aria-label="Facebook" title="Facebook"/>
+                                        <a href="#" class="fa fa-lg fa-linkedin-square text-linkedin o_linkedin" aria-label="LinkedIn" title="LinkedIn"/>
+                                        <a href="#" class="fa fa-lg fa-google-plus-square text-google-plus o_google" aria-label="Google Plus" title="Google Plus"/>
                                     </div>
                                 </div>
                             </div>
@@ -500,14 +500,14 @@
             <div class="card-body">
                 <span>Participate on our social stream.</span>
                 <h2 class="mt4">
-                    <a t-att-href="website.social_facebook" t-if="website.social_facebook" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square"/></a>
-                    <a t-att-href="website.social_twitter" t-if="website.social_twitter" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter"/></a>
-                    <a t-att-href="website.social_linkedin" t-if="website.social_linkedin" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"/></a>
-                    <a t-att-href="website.social_youtube" t-if="website.social_youtube" aria-label="Youtube" title="Youtube"><i class="fa fa-youtube-play"/></a>
-                    <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" aria-label="Google Plus" title="Google Plus"><i class="fa fa-google-plus-square"/></a>
-                    <a t-att-href="website.social_github" t-if="website.social_github" aria-label="Github" title="Github"><i class="fa fa-github"/></a>
-                    <a t-att-href="website.social_instagram" t-if="website.social_instagram" aria-label="Instagram" title="Instagram"><i class="fa fa-instagram"/></a>
-                    <a t-att-href="'/blog/%s/feed' % (blog.id)" aria-label="RSS" title="RSS"><i class="fa fa-rss-square"/></a>
+                    <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="fa fa-lg fa-facebook-square text-facebook" aria-label="Facebook" title="Facebook"/>
+                    <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="fa fa-lg fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/>
+                    <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="fa fa-lg fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/>
+                    <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="fa fa-lg fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/>
+                    <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="fa fa-lg fa-google-plus-square text-google-plus" aria-label="Google Plus" title="Google Plus"/>
+                    <a t-if="website.social_github" t-att-href="website.social_github" class="fa fa-lg fa-github text-github" aria-label="Github" title="Github"/>
+                    <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="fa fa-lg fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/>
+                    <a t-att-href="'/blog/%s/feed' % (blog.id)" class="fa fa-lg fa-rss-square" aria-label="RSS" title="RSS"/>
                 </h2>
                 <hr/>
                 <t t-if="blog">
