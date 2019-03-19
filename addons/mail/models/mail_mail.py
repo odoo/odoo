@@ -235,7 +235,7 @@ class MailMail(models.Model):
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
-                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
+                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas']) if a['datas'] is not False]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
