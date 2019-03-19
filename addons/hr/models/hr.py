@@ -100,7 +100,6 @@ class Employee(models.Model):
 
     _mail_post_access = 'read'
 
-    checkin_status = fields.Boolean('Check-In Status')
     checkin = fields.One2many(comodel_name="hr.checkin",string="")
 
 
@@ -359,12 +358,11 @@ class Department(models.Model):
     @api.multi
     @api.onchange
     def _checkin(self):
-        if self.checkin_status == True:
-            self.env['hr.checkin'].create(
-                {
-                    'checkin_status' : self.checkin_status,
-                    'time_checkin' : datetime.datetime.now(),
-                    'employee_id' : self.user_id,
-                    'employee_name' : self.name
-                }
-            )
+        self.env['hr.checkin'].create(
+            {
+                'checkin_status' : True,
+                'time_checkin' : datetime.datetime.now(),
+                'employee_id' : self.user_id,
+                'employee_name' : self.name
+            }
+        )
