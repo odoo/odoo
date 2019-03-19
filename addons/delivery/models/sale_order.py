@@ -14,6 +14,12 @@ class SaleOrder(models.Model):
     delivery_rating_success = fields.Boolean(copy=False)
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
+    is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
+
+    @api.depends('order_line')
+    def _compute_is_service_products(self):
+        for so in self:
+            so.is_all_service = all(line.product_id.type == 'service' for line in so.order_line)
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
