@@ -100,6 +100,8 @@ class Employee(models.Model):
 
     _mail_post_access = 'read'
 
+    checkin = fields.One2many(comodel_name="hr.checkin",string="Checkin")
+
 
     
 
@@ -354,6 +356,7 @@ class Department(models.Model):
         employees.write({'parent_id': manager_id})
 
     @api.multi
+    @api.onchange
     def checkin(self):
         self.env['hr.checkin'].create(
             {
