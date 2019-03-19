@@ -120,7 +120,7 @@ class Base(models.AbstractModel):
         return r
 
     @api.model
-    def search_panel_select_range(self, field_name):
+    def search_panel_select_range(self, field_name, **kwargs):
         """
         Return possible values of the field field_name (case select="one")
         and the parent field (if any) used to hierarchize them.

@@ -245,10 +245,17 @@ var SearchPanel = Widget.extend({
                 });
                 categoriesProm = Promise.resolve(values);
             } else {
+                var categoryDomain = self._getCategoryDomain();
+                var filterDomain = self._getFilterDomain();
                 categoriesProm = self._rpc({
                     method: 'search_panel_select_range',
                     model: self.model,
                     args: [category.fieldName],
+                    kwargs: {
+                        category_domain: categoryDomain,
+                        filter_domain: filterDomain,
+                        search_domain: self.searchDomain,
+                    },
                 }).then(function (result) {
                     category.parentField = result.parent_field;
                     return result.values;
