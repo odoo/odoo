@@ -877,6 +877,8 @@ var MockServer = Class.extend({
                     return moment(val).format('YYYY-MM-DD');
                 } else if (aggregateFunction === 'week') {
                     return moment(val).format('ww YYYY');
+                } else if (aggregateFunction === 'quarter') {
+                    return 'Q' + moment(val).format('Q YYYY');
                 } else if (aggregateFunction === 'year') {
                     return moment(val).format('Y');
                 } else {
