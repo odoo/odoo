@@ -32,7 +32,7 @@ class TestWarehouse(common.TestMrpCommon):
         unit = self.env.ref("uom.product_uom_unit")
         mrp_routing = self.env.ref("mrp.mrp_routing_0")
 
-        bom_laptop = self.env['mrp.bom'].create({
+        self.bom_laptop = self.env['mrp.bom'].create({
             'product_tmpl_id': self.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': unit.id,
@@ -44,15 +44,15 @@ class TestWarehouse(common.TestMrpCommon):
             'routing_id': mrp_routing.id
         })
 
-        # Return a new Manufacturing Order for laptop
-        def new_mo_laptop():
-            return self.env['mrp.production'].create({
-                'product_id': self.laptop.id,
-                'product_qty': 1,
-                'product_uom_id': unit.id,
-                'bom_id': bom_laptop.id
-            })
-        self.new_mo_laptop = new_mo_laptop
+    def new_mo_laptop(self):
+        form = Form(self.env['mrp.production'])
+        form.product_id = self.laptop
+        form.product_qty = 1
+        form.bom_id = self.bom_laptop
+        p = form.save()
+        p.action_confirm()
+        p.action_assign()
+        return p
 
     def test_manufacturing_route(self):
         warehouse_1_stock_manager = self.warehouse_1.sudo(self.user_stock_manager)
