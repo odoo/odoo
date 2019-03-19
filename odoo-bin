@@ -1,8 +1,52 @@
 #!/usr/bin/env python3
 
 # set server timezone in UTC before time module imported
+
 __import__('os').environ['TZ'] = 'UTC'
 import odoo
+import uuid
+import os
+import base64
+
+def _add_magic_fields(self):
+    def add(name, field):
+        """ add ``field`` with the given ``name`` if it does not exist yet """
+        if name not in self._fields:
+            self._add_field(name, field)
+
+    # cyclic import
+    from odoo import fields
+
+    # this field 'id' must override any other column or field
+    self._add_field('id', fields.Id(automatic=True))
+
+    add('display_name', fields.Char(string='Display Name', automatic=True,
+        compute='_compute_display_name'))
+    add('reference_guid', fields.Char(
+        string='GUID', default=lambda self: str(uuid.uuid4()), readonly=True))
+    #the is_created field has been added to be used to ensure that the active toggle is not shown while creating a record.
+    add('is_created',fields.Boolean('Created', default=False, readonly=True))
+    if self._log_access:
+        add('create_uid', fields.Many2one(
+            'res.users', string='Created by', automatic=True, readonly=True))
+        add('create_date', fields.Datetime(
+            string='Created on', automatic=True, readonly=True))
+        add('write_uid', fields.Many2one(
+            'res.users', string='Last Updated by', automatic=True, readonly=True))
+        add('write_date', fields.Datetime(
+            string='Last Updated on', automatic=True, readonly=True))
+        last_modified_name = 'compute_concurrency_field_with_access'
+    else:
+        last_modified_name = 'compute_concurrency_field'
+
+    # this field must override any other column or field
+    self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
+        string='Last Modified on', compute=last_modified_name, automatic=True))
+
+# Monkeypatching
+odoo.models.BaseModel._add_magic_fields = _add_magic_fields
 
 if __name__ == "__main__":
     odoo.cli.main()
+
+
