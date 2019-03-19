@@ -1118,7 +1118,7 @@ QUnit.module('Views', {
                                pivot_row_groupby: []};
 
         // Check that column groupbys were not lost
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
             'Column groupby not lost after first reload');
 
         // Set a column groupby
@@ -1132,7 +1132,7 @@ QUnit.module('Views', {
                                pivot_measures: ['__count'],
                                pivot_row_groupby: []};
 
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
             'Column groupby not lost after second reload');
 
         pivot.destroy();
@@ -1158,13 +1158,13 @@ QUnit.module('Views', {
         var expectedContext = {pivot_column_groupby: ['customer'],
                                pivot_measures: ['__count'],
                                pivot_row_groupby: []};
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
             'Column groupby not lost after empty results');
 
         // Set a domain for not empty results
         pivot.update({domain: [['product_id', '=', 37]]});
 
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
             'Column groupby not lost after reload after empty results');
 
         pivot.destroy();
