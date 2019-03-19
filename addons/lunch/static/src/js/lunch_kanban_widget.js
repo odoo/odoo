@@ -23,11 +23,9 @@ var LunchKanbanWidget = Widget.extend({
         field_changed: '_onFieldChanged',
     },
     events: {
-        'click .o_add_money': '_onAddMoney',
         'click .o_add_product': '_onAddProduct',
         'click .o_lunch_widget_order_button': '_onOrderNow',
         'click .o_remove_product': '_onRemoveProduct',
-        'click .o_lunch_widget_save': '_onSaveOrder',
         'click .o_lunch_widget_unlink': '_onUnlinkOrder',
         'click .o_lunch_open_wizard': '_onLunchOpenWizard',
     },
@@ -124,11 +122,6 @@ var LunchKanbanWidget = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    _onAddMoney: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.trigger_up('add_money', {});
-    },
     _onAddProduct: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -162,12 +155,6 @@ var LunchKanbanWidget = Widget.extend({
         ev.stopPropagation();
 
         this.trigger_up('remove_product', {lineId: $(ev.currentTarget).data('id')});
-    },
-    _onSaveOrder: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        this.trigger_up('save_order', {});
     },
     _onUnlinkOrder: function (ev) {
         ev.preventDefault();

@@ -6,6 +6,8 @@
     height: 100%;
     .o_lunch_kanban_banner {
         flex: 0 0 auto;
+        border-bottom: 1px solid #CED4DA;
+        background-color: white;
     }
     .o_kanban_view {
         flex: 1 1 100%;
@@ -19,52 +21,47 @@
     }
 
     .o_lunch_widget {
-        display: flex;
-        border-bottom: 1px solid #CED4DA;
-        background-color: white;
         min-height: 90px;
         max-height: 33vh;
         overflow-y: auto;
 
-        .o_lunch_widget_info {
-            padding: 5px 12px;
-            margin: 4px 8px;
-            width: 300px;
-            flex: 1 1 auto;
-            overflow-y: auto;
-
-            .o_lunch_ordered {
-                color: white;
-                background-color: #F0D970;
-                padding: 1px 3px;
-                border-radius: .25em;
+        .o_lunch_widget_info.card {
+            &, .card-title, .card-body {
+                color: $o-main-text-color;
+                background-color: inherit !important;
             }
 
-            .o_lunch_confirmed {
-                color: white;
-                background-color: #00BA4E;
-                padding: 1px 3px;
-                border-radius: .25em;
-            }
-
-            .o_lunch_widget_title {
+            .card-title {
                 font-weight: bold;
-                font-size: initial;
+                margin-bottom: 0;
             }
 
-            .o_lunch_widget_order_button {
-                display: block;
-                width: 100%;
-                margin-bottom: 4px;
-                margin-top: 12px;
+            .card-body {
+                padding: 0.5rem 1rem;
             }
 
-            .o_lunch_open_wizard {
-                cursor: pointer;
-                &:hover {
-                    font-weight: bolder;
+            .btn-link {
+                padding: 0;
+                &.o_lunch_open_wizard {
+                    color: $o-main-text-color;
+                    font-weight: normal;
                 }
             }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_lunch_kanban {
+        details summary {
+            // Hide the caret. For details see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
+            list-style-type: none;
+            &::-webkit-details-marker {
+                display: none
+            }
+        }
+        .o_lunch_widget {
+            max-height: 100%
         }
     }
 }
