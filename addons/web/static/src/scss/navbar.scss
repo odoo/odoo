@@ -163,4 +163,70 @@ body.o_is_superuser .o_menu_systray {
             transform: translateY(-2px);
         }
     }
+    .navbar-brand{
+        img{
+            height: 80%;
+        }
+        &:hover{
+            background-color: none !important;
+        }
+    }
+    .app-name{
+        text-align: right;
+        span{
+            line-height: 46px;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+}
+
+.border-bottom-none{
+    border-bottom: none;
+}
+
+.dhi-top-navbar {
+    padding: 0 !important;
+    background-color: whitesmoke;
+    
+    .navbar-brand {
+        padding: 0 12px 0 16px;
+        height: 46px;
+        line-height: 46px;
+        img {
+            height: 75%;
+            vertical-align: top;
+        }
+        h1 {
+            display: inline-block;
+            line-height: 46px;
+            margin-right: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: $o-community-color;
+            margin-left: 5px;
+
+            span {
+                font-weight: normal;
+                font-size: 12px;
+            }
+        }
+
+        &:hover {
+            background-color: none;
+        }
+    }
+    .client-logo {
+        height: 46px;
+        color: white;
+        line-height: 46px;
+        margin-right: 15px;
+
+        img {
+            height: 80%;
+            margin-top: 4px;
+            margin-bottom: 5px;
+        }
+    }
 }

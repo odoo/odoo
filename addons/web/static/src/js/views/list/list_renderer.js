@@ -560,7 +560,7 @@ var ListRenderer = BasicRenderer.extend({
         }
 
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
-            $th.css({ textAlign: 'right' });
+            $th.css({ textAlign: 'left' });
         }
 
         if (config.debug) {
