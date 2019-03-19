@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.addons.resource.models.resource import Intervals
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
+
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -22,20 +22,18 @@ class HrEmployee(models.Model):
 
     @api.multi
     def generate_benefit(self, date_start, date_stop):
-        date_start = date_start.replace(tzinfo=pytz.utc)
-        date_stop = date_stop.replace(tzinfo=pytz.utc)
+        date_start = fields.Datetime.to_datetime(date_start)
+        date_stop = fields.Datetime.to_datetime(date_stop)
         attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
         vals_list = []
-        leaves = self.env['hr.leave']
 
         for employee in self:
-
             # Approved leaves
             emp_leaves = employee.resource_calendar_id.leave_ids.filtered(
                 lambda r:
                     r.resource_id == employee.resource_id and
-                    r.date_from.replace(tzinfo=pytz.utc) <= date_stop and
-                    r.date_to.replace(tzinfo=pytz.utc) >= date_start
+                    r.date_from <= date_stop and
+                    r.date_to >= date_start
                 )
             global_leaves = employee.resource_calendar_id.global_leave_ids
 
@@ -43,9 +41,8 @@ class HrEmployee(models.Model):
             vals_list.extend(employee_leaves._get_benefits_values())
 
             for contract in employee._get_contracts(date_start, date_stop):
-
-                date_start_benefits = max(date_start, datetime.combine(contract.date_start, datetime.min.time()).replace(tzinfo=pytz.utc))
-                date_stop_benefits = min(date_stop, datetime.combine(contract.date_end or datetime.max.date(), datetime.max.time()).replace(tzinfo=pytz.utc))
+                date_start_benefits = max(date_start, fields.Datetime.to_datetime(contract.date_start)).replace(tzinfo=pytz.utc)
+                date_stop_benefits = min(date_stop, datetime.combine(contract.date_end or datetime.max.date(), datetime.max.time())).replace(tzinfo=pytz.utc)
 
                 calendar = contract.resource_calendar_id
                 resource = employee.resource_id
@@ -53,10 +50,11 @@ class HrEmployee(models.Model):
                 # Attendances
                 for interval in attendances:
                     benefit_type_id = interval[2].mapped('benefit_type_id')[:1] or attendance_type
+                    # All benefits generated here are using datetimes converted from the employee's timezone
                     vals_list += [{
                         'name': "%s: %s" % (benefit_type_id.name, employee.name),
-                        'date_start': interval[0].astimezone(pytz.utc),
-                        'date_stop': interval[1].astimezone(pytz.utc),
+                        'date_start': interval[0].astimezone(pytz.utc).replace(tzinfo=None),
+                        'date_stop': interval[1].astimezone(pytz.utc).replace(tzinfo=None),
                         'benefit_type_id': benefit_type_id.id,
                         'employee_id': employee.id,
                         'state': 'confirmed',

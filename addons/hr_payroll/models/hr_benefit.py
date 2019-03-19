@@ -139,7 +139,9 @@ class HrBenefit(models.Model):
             r['employee_id'][0],
             r['benefit_type_id'][0] if r['benefit_type_id'] else False,
         ) for r in month_recs}
-        new_vals = [v for v in vals_list if (v['date_start'].replace(tzinfo=None), v['date_stop'].replace(tzinfo=None), v['employee_id'], v['benefit_type_id']) not in existing_entries]
+        assert all(v['date_start'].tzinfo is None for v in vals_list)
+        assert all(v['date_stop'].tzinfo is None for v in vals_list)
+        new_vals = [v for v in vals_list if (v['date_start'], v['date_stop'], v['employee_id'], v['benefit_type_id']) not in existing_entries]
         # Remove duplicates from vals_list, shouldn't be necessary from saas-12.2
         unique_new_vals = set()
         for values in new_vals:
@@ -184,8 +186,6 @@ class HrBenefit(models.Model):
             if benefit.date_start.date() == benefit.date_stop.date():
                 new_benefits |= benefit
             else:
-                tz = pytz.timezone(benefit.employee_id.tz)
-                benefit_start, benefit_stop = tz.localize(benefit.date_start), tz.localize(benefit.date_stop)
                 values = {
                     'name': benefit.name,
                     'employee_id': benefit.employee_id.id,
@@ -193,9 +193,9 @@ class HrBenefit(models.Model):
                 }
                 benefit_state = benefit.state
                 benefits_to_unlink |= benefit
-                for start, stop in _split_range_by_day(benefit_start, benefit_stop):
-                    values['date_start'] = start.astimezone(pytz.utc)
-                    values['date_stop'] = stop.astimezone(pytz.utc)
+                for start, stop in _split_range_by_day(benefit.date_start, benefit.date_stop):
+                    values['date_start'] = start
+                    values['date_stop'] = stop
                     new_benefit = self.create(values)
                     # Write the state after the creation due to the ir.rule on benefit state
                     new_benefit.state = benefit_state
@@ -244,8 +244,8 @@ class HrBenefit(models.Model):
     def _duplicate_to_calendar_attendance(self):
         mapped_data = {
             benefit: [
-                pytz.utc.localize(benefit.date_start).astimezone(pytz.timezone(benefit.employee_id.tz)), # Start date
-                pytz.utc.localize(benefit.date_stop).astimezone(pytz.timezone(benefit.employee_id.tz)) # End date
+                benefit.date_start,
+                benefit.date_stop,
             ] for benefit in self
         }
 
