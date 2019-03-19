@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
+from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 
 
@@ -17,14 +18,17 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     def _default_website(self):
-        return self.env['website'].search([], limit=1)
+        """ Find the first company's website, if there is one. """
+        company_id = self.env.user.company_id.id
+        domain = [('company_id', '=', company_id)]
+        return self.env['website'].search(domain, limit=1)
 
-    website_id = fields.Many2one('website', string="website", default=_default_website)
+    website_id = fields.Many2one('website', string="Website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
-        # website._get_pl() is cached to avoid to recompute at each request the
+        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
         # list of available pricelists. So, we need to invalidate the cache when
         # we change the config of website price list to force to recompute.
         website = self.env['website']
@@ -47,6 +51,56 @@ class ProductPricelist(models.Model):
         res = super(ProductPricelist, self).unlink()
         self.clear_cache()
         return res
+
+    def _get_partner_pricelist_multi_search_domain_hook(self):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+        website = ir_http.get_request_website()
+        if website:
+            domain += self._get_website_pricelists_domain(website.id)
+        return domain
+
+    def _get_partner_pricelist_multi_filter_hook(self):
+        res = super(ProductPricelist, self)._get_partner_pricelist_multi_filter_hook()
+        website = ir_http.get_request_website()
+        if website:
+            res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
+        return res
+
+    @api.multi
+    def _is_available_on_website(self, website_id):
+        """ To be able to be used on a website, a pricelist should either:
+        - Have its `website_id` set to current website (specific pricelist).
+        - Have no `website_id` set and should be `selectable` (generic pricelist)
+          or should have a `code` (generic promotion).
+
+        Note: A pricelist without a website_id, not selectable and without a
+              code is a backend pricelist.
+
+        Change in this method should be reflected in `_get_website_pricelists_domain`.
+        """
+        self.ensure_one()
+        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.code))
+
+    def _get_website_pricelists_domain(self, website_id):
+        ''' Check above `_is_available_on_website` for explanation.
+        Change in this method should be reflected in `_is_available_on_website`.
+        '''
+        return [
+            '|', ('website_id', '=', website_id),
+            '&', ('website_id', '=', False),
+            '|', ('selectable', '=', True), ('code', '!=', False),
+        ]
+
+    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+        ''' If `property_product_pricelist` is read from website, we should use
+            the website's company and not the user's one.
+            Passing a `company_id` to super will avoid using the current user's
+            company.
+        '''
+        website = ir_http.get_request_website()
+        if not company_id and website:
+            company_id = website.company_id.id
+        return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
 
 
 class ProductPublicCategory(models.Model):

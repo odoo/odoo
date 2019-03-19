@@ -81,14 +81,16 @@ odoo.define('payment.processing', function (require) {
                 'tx_cancel': [],
                 'tx_error': [],
             };
+
+            if (transactions.length > 0 && transactions[0].acquirer_provider == 'transfer') {
+                window.location = transactions[0].return_url;
+                return;
+            }
+
             // group the transaction according to their state
             transactions.forEach(function (tx) {
                 var key = 'tx_' + tx.state;
                 if(key in render_values) {
-                    if (tx.acquirer_provider === 'transfer') {
-                        window.location = tx.return_url;
-                        return;
-                    }
                     render_values[key].push(tx);
                 }
             });
