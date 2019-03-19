@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import logging
+import datetime
 
 from odoo import api, fields, models
 from odoo import tools, _
@@ -98,6 +99,12 @@ class Employee(models.Model):
     _inherit = ['mail.thread', 'resource.mixin']
 
     _mail_post_access = 'read'
+
+    checkin_status = fields.Boolean('Check-In Status')
+    checkin = fields.One2many(comodel_name="hr.checkin",string="")
+
+
+    
 
     @api.model
     def _default_image(self):
@@ -348,3 +355,16 @@ class Department(models.Model):
                 ('parent_id', '=', department.manager_id.id)
             ])
         employees.write({'parent_id': manager_id})
+
+    @api.multi
+    @api.onchange
+    def _checkin(self):
+        if self.checkin_status == True:
+            checkin_create = self.env['hr.checkin'].create(
+                {
+                    'checkin_status' : self.checkin_status,
+                    'time_checkin' : datetime.datetime.now(),
+                    'employee_id' : self.user_id,
+                    'employee_name' : self.name
+                }
+            )
