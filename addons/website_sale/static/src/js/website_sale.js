@@ -143,6 +143,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
+        'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
@@ -420,6 +421,83 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAdd: function (ev) {
+        ev.preventDefault();
+        return this._handleAdd($(ev.currentTarget).closest('form'));
+    },
+
+    /**
+     * Initializes the optional products modal
+     * and add handlers to the modal events (confirm, back, ...)
+     *
+     * @private
+     * @param {$.Element} $form the related webshop form
+     */
+    _handleAdd: function ($form) {
+        var self = this;
+        this.$form = $form;
+
+        var productSelector = [
+            'input[type="hidden"][name="product_id"]',
+            'input[type="radio"][name="product_id"]:checked'
+        ];
+
+        var productReady = this.selectOrCreateProduct(
+            $form,
+            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
+            $form.find('.product_template_id').val(),
+            false
+        );
+
+        productReady.then(function (productId){
+            $form.find(productSelector.join(', ')).val(productId);
+
+            self.rootProduct = {
+                product_id: productId,
+                quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+                product_custom_attribute_values: self.getCustomVariantValues($form.find('.js_product')),
+                variant_values: self.getSelectedVariantValues($form.find('.js_product')),
+                no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
+            };
+
+            return self._onProductReady();
+        });
+
+        return productReady;
+    },
+
+    _onProductReady: function () {
+        this._submitForm();
+    },
+
+    /**
+     * Add custom variant values and attribute values that do not generate variants
+     * in the form data and trigger submit.
+     *
+     * @private
+     */
+    _submitForm: function () {
+        var $productCustomVariantValues = $('<input>', {
+            name: 'product_custom_attribute_values',
+            type: "hidden",
+            value: JSON.stringify(this.rootProduct.product_custom_attribute_values)
+        });
+        this.$form.append($productCustomVariantValues);
+
+        var $productNoVariantAttributeValues = $('<input>', {
+            name: 'no_variant_attribute_values',
+            type: "hidden",
+            value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
+        });
+        this.$form.append($productNoVariantAttributeValues);
+
+        this.$form.trigger('submit', [true]);
+    },
 
     /**
      * @private
