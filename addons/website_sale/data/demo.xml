@@ -5,11 +5,6 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
-        <record id="sale.product_product_1_product_template" model="product.template">
-            <field name="website_sequence">100</field>
-            <field name="website_published" eval="True"/>
-        </record>
-
         <record id="product.product_product_24" model="product.product">
             <field name="website_published" eval="True"/>
         </record>
@@ -662,9 +657,6 @@
         <record id="product_product_1_product_template" model="product.template">
             <field name="attribute_line_ids" eval="[(6,0,[ref('product_template_attribute_line_1')])]"/>
             <field name="public_categ_ids" eval="[(6,0,[ref('website_sale.services')])]"/>
-        </record>
-        <record id="product.product_product_4_product_template" model="product.template">
-            <field name="optional_product_ids" eval="[(6,0,[ref('product.product_product_11_product_template'), ref('product_product_1_product_template')])]"/>
         </record>
 
         <!-- Handle automatically created product.template.attribute.value -->

@@ -240,14 +240,13 @@ class ProductTemplate(models.Model):
 
         if not self._is_add_to_cart_possible(parent_combination):
             return False
+        # TODO FIXME awa: not optimal since rebased on p. configurator v2
         gen = self._get_possible_combinations(parent_combination)
         first_possible_combination = next(gen)
         if next(gen, False) is not False:
             # there are at least 2 possible combinations.
             return False
         if self._has_is_custom_values():
-            return False
-        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(first_possible_combination)):
             return False
         return True
 
