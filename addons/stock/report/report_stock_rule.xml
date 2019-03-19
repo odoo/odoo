@@ -27,7 +27,7 @@
                                                 <t t-foreach="header_lines[location.id]['putaway']" t-as="lines">
                                                     <t t-foreach="lines" t-as="line">
                                                         <div class="o_report_stock_rule_putaway" t-att-res-id="location.id" t-att-res-model="location._name" view-type="form">
-                                                            <p>Putaway: <t t-esc="line.fixed_location_id.display_name"/></p>
+                                                            <p>Putaway: <t t-esc="line.location_out_id.display_name"/></p>
                                                         </div>
                                                     </t>
                                                 </t>
