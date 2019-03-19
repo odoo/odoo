@@ -14,18 +14,36 @@
         <!-- ************************************************************* -->
 
         <record id="fp_nacional" model="account.fiscal.position.template">
+            <field name="sequence">1</field>
             <field name="name">Régimen Nacional</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.es"/>
+        </record>
+
+        <record id="fp_intra_private" model="account.fiscal.position.template">
+            <field name="sequence">2</field>
+            <field name="name">EU privado</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
         </record>
 
         <record id="fp_intra" model="account.fiscal.position.template">
+            <field name="sequence">3</field>
             <field name="name">Régimen Intracomunitario</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
         </record>
 
         <record id="fp_extra" model="account.fiscal.position.template">
+            <field name="sequence">4</field>
             <field name="name">Régimen Extracomunitario / Canarias, Ceuta y Melilla</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="auto_apply" eval="True"/>
         </record>
 
         <record id="fp_recargo" model="account.fiscal.position.template">
