@@ -703,7 +703,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
             model, path = model0, path0
             for fname in dotnames.split('.'):
-                field = model._fields[fname]
+                field = model._fields.get(fname)
+                if field is None:
+                    raise KeyError(_("Field %s depends on unknown field %s") % (self, dotnames))
                 result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
                 path = None if path is None else path + [fname]
