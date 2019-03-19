@@ -68,7 +68,7 @@ var ProductConfiguratorMixin = {
 
         self._checkExclusions($parent, combination);
 
-        ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
+        ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
             product_template_id: parseInt($parent.find('.product_template_id').val()),
             product_id: this._getProductId($parent),
             combination: combination,
@@ -311,7 +311,7 @@ var ProductConfiguratorMixin = {
             // We don't handle that compatibility because the previous code was
             // not working either: it was making an RPC that failed with any
             // non-admin user anyway. To use this feature, restart the server.
-            var route = '/product_configurator/create_product_variant';
+            var route = '/sale/create_product_variant';
             if (useAjax) {
                 productReady = ajax.jsonRpc(route, 'call', params);
             } else {

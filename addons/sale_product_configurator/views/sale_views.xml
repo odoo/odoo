@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_view_form" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sale.product.configurator</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']" position="after">
+                <group name="options" groups="product.group_product_variant">
+                    <group string="Options">
+                        <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
