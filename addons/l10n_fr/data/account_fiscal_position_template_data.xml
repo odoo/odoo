@@ -16,10 +16,18 @@
             <field name="name">Domestique - France</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
             <field name="auto_apply" eval="True" />
+            <field name="vat_required" eval="True" />
             <field name="country_id" ref="base.fr"></field>
         </record>
-        <record id="fiscal_position_template_intraeub2b" model="account.fiscal.position.template">
+        <record id="fiscal_position_template_intraeub2c" model="account.fiscal.position.template">
             <field name="sequence">2</field>
+            <field name="name">EU privé</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="auto_apply" eval="True" />
+            <field name="country_group_id" ref="base.europe"></field>
+        </record>
+        <record id="fiscal_position_template_intraeub2b" model="account.fiscal.position.template">
+            <field name="sequence">3</field>
             <field name="name">Intra-EU B2B</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
             <field name="note">French VAT exemption according to articles 262 ter I (for products) and/or 283-2 (for services) of "CGI"</field>
