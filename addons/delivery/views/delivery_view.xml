@@ -300,6 +300,7 @@
                 <data>
                     <xpath expr="//field[@name='partner_id']" position='after'>
                         <field name="delivery_set" invisible="1"/>
+                        <field name="is_all_service" invisible="1"/>
                         <field name="recompute_delivery_price" invisible="1"/>
                     </xpath>
                     <xpath expr="//group[@name='note_group']" position="before">
@@ -308,20 +309,20 @@
                                 string="Add a shipping method"
                                 name="action_open_delivery_wizard"
                                 type="object"
-                                attrs="{'invisible': ['|', ('order_line', '=', []), ('delivery_set', '=', True)]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
                                 class="text-warning btn-secondary"
-                                attrs="{'invisible': ['|', ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
-                                attrs="{'invisible': ['|', ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
+                                attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
                         </div>
                     </xpath>
