@@ -1,10 +1,10 @@
-odoo.define('sale.ProductConfiguratorFormController', function (require) {
+odoo.define('sale_product_configurator.ProductConfiguratorFormController', function (require) {
 "use strict";
 
 var core = require('web.core');
 var _t = core._t;
 var FormController = require('web.FormController');
-var OptionalProductsModal = require('sale.OptionalProductsModal');
+var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
 
 var ProductConfiguratorFormController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events, {
@@ -127,8 +127,7 @@ var ProductConfiguratorFormController = FormController.extend({
                 pricelistId: self.renderer.pricelistId,
                 okButtonText: _t('Confirm'),
                 cancelButtonText: _t('Back'),
-                title: _t('Configure'),
-                context: self.initialState.context,
+                title: _t('Configure')
             }).open();
 
             self.optionalProductsModal.on('options_empty', null,

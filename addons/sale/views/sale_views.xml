@@ -81,13 +81,6 @@
                 <xpath expr="//page[@name='sales']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
-                <xpath expr="//group[@name='sale']" position="after">
-                    <group name="options" groups="product.group_product_variant">
-                        <group string="Options">
-                            <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
-                        </group>
-                    </group>
-                </xpath>
             </field>
         </record>
 

@@ -5,16 +5,6 @@ from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
-
-    optional_product_ids = fields.Many2many(
-        'product.template', 'product_optional_rel', 'src_id', 'dest_id',
-        string='Optional Products', help="Optional Products are suggested "
-        "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).")
-
-
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 

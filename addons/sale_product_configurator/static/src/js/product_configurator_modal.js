@@ -1,4 +1,4 @@
-odoo.define('sale.OptionalProductsModal', function (require) {
+odoo.define('sale_product_configurator.OptionalProductsModal', function (require) {
     "use strict";
 
 var ajax = require('web.ajax');
@@ -79,7 +79,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
     willStart: function () {
         var self = this;
 
-        var uri = this._getUri("/product_configurator/show_optional_products");
+        var uri = this._getUri("/sale_product_configurator/show_optional_products");
         var getModalContent = ajax.jsonRpc(uri, 'call', {
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
@@ -361,7 +361,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
-            ajax.jsonRpc(self._getUri("/product_configurator/optional_product_items"), 'call', {
+            ajax.jsonRpc(self._getUri("/sale_product_configurator/optional_product_items"), 'call', {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {
