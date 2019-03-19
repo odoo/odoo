@@ -5,71 +5,112 @@
     <record id="fiscal_position_template_ab_en" model="account.fiscal.position.template">
         <field name="name">Alberta (AB)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_ab')])]"/>
     </record>
 
     <record id="fiscal_position_template_bc_en" model="account.fiscal.position.template">
         <field name="name">British Columbia (BC)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_bc')])]"/>
     </record>
 
     <record id="fiscal_position_template_mb_en" model="account.fiscal.position.template">
         <field name="name">Manitoba (MB)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_mb')])]"/>
     </record>
 
     <record id="fiscal_position_template_nb_en" model="account.fiscal.position.template">
         <field name="name">New Brunswick (NB)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nb')])]"/>
     </record>
 
     <record id="fiscal_position_template_nl_en" model="account.fiscal.position.template">
         <field name="name">Newfoundland and Labrador (NL)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nl')])]"/>
     </record>
 
     <record id="fiscal_position_template_ns_en" model="account.fiscal.position.template">
         <field name="name">Nova Scotia (NS)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_ns')])]"/>
     </record>
 
     <record id="fiscal_position_template_nt_en" model="account.fiscal.position.template">
         <field name="name">Northwest Territories (NT)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nt')])]"/>
     </record>
 
     <record id="fiscal_position_template_nu_en" model="account.fiscal.position.template">
         <field name="name">Nunavut (NU)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nu')])]"/>
     </record>
 
     <record id="fiscal_position_template_on_en" model="account.fiscal.position.template">
         <field name="name">Ontario (ON)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_on')])]"/>
     </record>
 
     <record id="fiscal_position_template_pe_en" model="account.fiscal.position.template">
         <field name="name">Prince Edward Islands (PE)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_pe')])]"/>
     </record>
 
     <record id="fiscal_position_template_qc_en" model="account.fiscal.position.template">
         <field name="name">Quebec (QC)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_qc')])]"/>
     </record>
 
     <record id="fiscal_position_template_sk_en" model="account.fiscal.position.template">
         <field name="name">Saskatchewan (SK)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_sk')])]"/>
     </record>
 
     <record id="fiscal_position_template_yt_en" model="account.fiscal.position.template">
         <field name="name">Yukon (YT)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_yt')])]"/>
     </record>
 
     <record id="fiscal_position_template_intl_en" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
         <field name="name">International (INTL)</field>
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
     </record>
 
     <!--  Company is in Alberta (default is gst) -->
