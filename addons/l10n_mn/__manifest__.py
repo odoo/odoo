@@ -21,6 +21,7 @@ This is the module to manage the accounting chart for Mongolia.
         'data/account.tax.group.csv',
         'data/account.tax.template.csv',
         'data/account.chart.template.csv',
-        'data/account_chart_template_data.xml'
+        'data/account_chart_template_data.xml',
+        'data/fiscal_templates_data.xml',
     ],
 }
