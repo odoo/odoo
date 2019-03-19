@@ -2,10 +2,18 @@
 <odoo>
     <data noupdate="1">
         <!-- Fiscal Position Templates -->
+        <record id="fiscal_position_template_1" model="account.fiscal.position.template">
+            <field name="name">Schweiz National</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.ch"/>
+        </record>
 
         <record id="fiscal_position_template_import" model="account.fiscal.position.template">
+            <field name="sequence">1</field>
             <field name="name">Import/Export</field>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="auto_apply" eval="True"/>
         </record>
 
         <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
