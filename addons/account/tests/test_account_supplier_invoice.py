@@ -126,7 +126,6 @@ class TestAccountSupplierInvoice(AccountingTestCase):
 
         invoice_id = self.env['account.invoice'].create({
             'name': 'invoice test refund',
-            'reference_type': 'none',
             'partner_id': self.env.ref("base.res_partner_2").id,
             'account_id': invoice_account.id,
             'currency_id': self.env.ref('base.USD').id,
