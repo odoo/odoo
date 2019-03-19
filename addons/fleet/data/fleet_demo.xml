@@ -399,12 +399,12 @@
        <record id="type_contract_repairing" model="fleet.service.type">
           <field name="name">Repairing</field>
           <field name="category">service</field>
-      </record>  
+      </record>
 
       <record id="type_service_refueling" model="fleet.service.type">
           <field name="name">Refueling</field>
           <field name="category">service</field>
-      </record> 
+      </record>
 
       <record id="vehicle_tag_junior" model="fleet.vehicle.tag" >
         <field name="name">Junior</field>
@@ -444,6 +444,26 @@
       <record id="vehicle_tag_break" model="fleet.vehicle.tag" >
         <field name="name">Break</field>
         <field name="color" eval="8"/>
+      </record>
+
+      <record id="model_astra" model="fleet.vehicle.model">
+          <field name="manager_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="model_corsa" model="fleet.vehicle.model">
+          <field name="manager_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="model_serie1" model="fleet.vehicle.model">
+          <field name="manager_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="model_a1" model="fleet.vehicle.model">
+          <field name="manager_id" ref="base.user_admin"/>
+      </record>
+
+      <record id="model_classa" model="fleet.vehicle.model">
+          <field name="manager_id" ref="base.user_admin"/>
       </record>
 
       <record id="vehicle_1" model="fleet.vehicle">

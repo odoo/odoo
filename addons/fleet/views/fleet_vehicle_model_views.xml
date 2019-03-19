@@ -17,6 +17,11 @@
                             <field name="brand_id" placeholder="e.g. Tesla"/>
                         </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="manager_id" groups="fleet.fleet_group_manager"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page string="Vendors" name="vendors">
                             <field name="vendors">
@@ -143,13 +148,13 @@
     </record>
 
     <record id='fleet_vehicle_model_brand_action' model='ir.actions.act_window'>
-        <field name="name">Model make of Vehicle</field>
+        <field name="name">Car Manufacturers</field>
         <field name="res_model">fleet.vehicle.model.brand</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a new make
+            Create a new manufacturer
           </p>
         </field>
     </record>

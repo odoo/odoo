@@ -32,6 +32,8 @@ class FleetVehicleCost(models.Model):
     contract_id = fields.Many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost')
     auto_generated = fields.Boolean('Automatically Generated', readonly=True)
     description = fields.Char("Cost Description")
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get())
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     def _get_odometer(self):
         for record in self:
@@ -135,7 +137,7 @@ class FleetVehicleLogContract(models.Model):
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
-    odometer = fields.Float(string='Odometer at creation', 
+    odometer = fields.Float(string='Creation Contract Odometer',
         help='Odometer measure of the vehicle at the moment of the contract creation')
 
     @api.depends('vehicle_id', 'cost_subtype_id', 'date')

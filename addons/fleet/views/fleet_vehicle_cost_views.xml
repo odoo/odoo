@@ -6,10 +6,12 @@
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
                 <tree string="Vehicle Costs">
+                    <field name="currency_id" invisible="1"/>
                     <field name="vehicle_id"/>
                     <field name="description"/>
                     <field name="cost_subtype_id"/>
                     <field name="date"/>
+                    <field name="amount" sum="Cost" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -19,6 +21,7 @@
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -30,7 +33,7 @@
                                 </div>
                                 <div>
                                     <field name="cost_subtype_id"/>
-                                    <span class="float-right"><field name="amount"/></span>
+                                    <span class="float-right"><field name="amount" widget="monetary"/></span>
                                 </div>
                             </div>
                         </t>
@@ -117,11 +120,12 @@
             <field name="arch" type="xml">
                 <form string="Vehicle costs">
                     <sheet>
+                        <field name="currency_id" invisible="1"/>
                         <group col="2" string="Cost Details">
                             <group>
                                 <field name="vehicle_id" />
                                 <field name="cost_subtype_id"/>
-                                <field name="amount"/>
+                                <field name="amount" widget="monetary"/>
                                 <field name="description"/>
                             </group>
                             <group>
@@ -177,24 +181,22 @@
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
+                    <field name="currency_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <group col="2">
-                        <group string="Contract details">
-                            <field name="vehicle_id"/>
+                        <group string="Contract Informations">
+                            <field name="ins_ref"/>
                             <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                            <field name="insurer_id" context="{'default_supplier': True}"/>
                             <field name="user_id"/>
-                            <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
-                            <label for="cost_generated"/>
-                            <div>
-                                <field name="cost_generated" class="oe_inline" attrs="{'invisible': [('cost_frequency','=','no')]}" />
-                                <field name="cost_frequency" class="oe_inline"  />
-                            </div>
                         </group>
-                        <group string="Odometer details">
+                        <group string="Vehicle Informations">
+                            <field name="vehicle_id"/>
+                            <field name="purchaser_id"/>
                             <label for="odometer"/>
                             <div class="o_row">
                                 <field name="odometer"/>
@@ -204,14 +206,17 @@
                     </group>
                     <group col="2">
                         <group>
-                            <field name="date" string="Invoice Date"/>
-                            <field name="start_date"/>
-                            <field name="expiration_date" />
+                            <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract" widget="monetary"/>
+                            <label for="cost_generated"/>
+                            <div class="o_row">
+                                <field name="cost_generated" attrs="{'invisible': [('cost_frequency','=','no')]}" widget="monetary"/>
+                                <field name="cost_frequency"/>
+                            </div>
                         </group>
                         <group>
-                            <field name="insurer_id" context="{'default_supplier': True}"/>
-                            <field name="purchaser_id" />
-                            <field name="ins_ref" />
+                            <field name="date" string="Invoice Date"/>
+                            <field name="start_date"/>
+                            <field name="expiration_date"/>
                         </group>
                     </group>
                     <notebook>
@@ -219,25 +224,22 @@
                             <group>
                                 <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                     <tree editable="bottom">
+                                        <field name="currency_id" invisible="1"/>
                                         <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
                                         <field name="description"/>
-                                        <field name="amount" sum="Price" string="Indicative Cost" />
+                                        <field name="amount" sum="Price" string="Indicative Cost" widget="monetary"/>
                                     </tree>
                                 </field>
 
                             </group>
-                            <div class="oe_right">
-                                <group>
-                                    <field name="sum_cost" string="Indicative Costs Total"/>
-                                </group>
-                            </div>
                         </page>
                         <page string="Generated Recurring Costs">
                             <group>
                                 <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" sum="amount">
                                     <tree editable="bottom" >
+                                        <field name="currency_id" invisible="1"/>
                                         <field name="date" />
-                                        <field name="amount" sum="amount"/>
+                                        <field name="amount" sum="amount" widget="monetary"/>
                                     </tree>
 
                                 </field>
