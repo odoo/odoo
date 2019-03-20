@@ -33,6 +33,52 @@ odoo.define('web.ListModel', function (require) {
             }
             return result;
         },
+        /**
+         * For a list of records, performs a write with all changes and fetches
+         * all data.
+         *
+         * @param {string} referenceRecordId the record datapoint used to
+         *  generate the changes to apply to recordIds
+         * @param {string[]} recordIds a list of record datapoint ids
+         */
+        saveRecords: function (referenceRecordId, recordIds) {
+            var self = this;
+            var referenceRecord = this.localData[referenceRecordId];
+            var list = this.localData[referenceRecord.parentID];
+            var changes = this._generateChanges(referenceRecord, {});
+            var records = recordIds.map(function (recordId) {
+                return self.localData[recordId];
+            });
+            var model = records[0].model;
+            var recordResIds = _.pluck(records, 'res_id');
+            var fieldNames = records[0].getFieldNames();
+
+            return this._rpc({
+                model: model,
+                method: 'write',
+                args: [recordResIds, changes],
+                context: records[0].getContext(),
+            }).then(function () {
+                return self._rpc({
+                    model: model,
+                    method: 'read',
+                    args: [recordResIds, fieldNames],
+                });
+            }).then(function (results) {
+                results.forEach(function (data) {
+                    var record = _.findWhere(records, {res_id: data.id});
+                    record.data = _.extend({}, record.data, data);
+                    record._changes = {};
+                    record._isDirty = false;
+                    self._parseServerData(fieldNames, record, record.data);
+                });
+            }).then(function () {
+                return Promise.all([
+                    self._fetchX2ManysBatched(list),
+                    self._fetchReferencesBatched(list)
+                ]);
+            });
+        },
 
         //--------------------------------------------------------------------------
         // Private
