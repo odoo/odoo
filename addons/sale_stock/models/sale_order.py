@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -301,7 +301,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
         # in database. Hence, we need to explicitly read them from there.
         if self._origin:
             product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]

@@ -289,7 +289,7 @@
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>
+                            <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])], 'required': [('state', 'in', ['sale', 'done'])]}"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_create': True}"/>
