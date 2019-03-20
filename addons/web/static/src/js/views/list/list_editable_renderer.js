@@ -119,6 +119,10 @@ ListRenderer.include({
      * - There is no line in edition (all lines are saved so they are all valid)
      * - The line in edition can be saved
      *
+     * If the given recordID is a record in the list, toggle a className on its
+     * row's cells for invalid fields, so that we can style those cells
+     * differently.
+     *
      * @override
      * @param {string} [recordID]
      * @returns {string[]}
@@ -130,7 +134,10 @@ ListRenderer.include({
                 return [];
             }
         }
-        return this._super(recordID);
+        var fieldNames = this._super(recordID);
+        this.$('.o_selected_row .o_data_cell').removeClass('o_invalid_cell');
+        this.$('.o_selected_row .o_data_cell:has(> .o_field_invalid)').addClass('o_invalid_cell');
+        return fieldNames;
     },
     /**
      * We need to override the confirmChange method from BasicRenderer to

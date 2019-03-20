@@ -9,7 +9,7 @@ odoo.define('account.section_and_note_backend', function (require) {
 var FieldChar = require('web.basic_fields').FieldChar;
 var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var fieldRegistry = require('web.field_registry');
-var FieldText = require('web.basic_fields').FieldText;
+var ListFieldText = require('web.basic_fields').ListFieldText;
 var ListRenderer = require('web.ListRenderer');
 
 var SectionAndNoteListRenderer = ListRenderer.extend({
@@ -94,7 +94,7 @@ var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
 // and a FieldText for the rest (product and note).
 var SectionAndNoteFieldText = function (parent, name, record, options) {
     var isSection = record.data.display_type === 'line_section';
-    var Constructor = isSection ? FieldChar : FieldText;
+    var Constructor = isSection ? FieldChar : ListFieldText;
     return new Constructor(parent, name, record, options);
 };
 

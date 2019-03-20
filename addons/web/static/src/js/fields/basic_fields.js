@@ -1112,6 +1112,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         if (this.mode === 'edit') {
             this.tagName = 'textarea';
         }
+        this.autoResizeOptions = {parent: this};
     },
     /**
      * As it it done in the start function, the autoresize is done only once.
@@ -1120,7 +1121,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     start: function () {
         if (this.mode === 'edit') {
-            dom.autoresize(this.$el, {parent: this});
+            dom.autoresize(this.$el, this.autoResizeOptions);
 
             this.$el = this.$el.add(this._renderTranslateButton());
         }
@@ -1154,6 +1155,16 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
             return;
         }
         this._super.apply(this, arguments);
+    },
+});
+
+var ListFieldText = FieldText.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.autoResizeOptions.min_height = 0;
     },
 });
 
@@ -2995,6 +3006,7 @@ return {
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
     FieldText: FieldText,
+    ListFieldText: ListFieldText,
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,
