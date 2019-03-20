@@ -343,6 +343,15 @@ var ListController = BasicController.extend({
         return _.extend(env, {domain: record.getDomain()});
     },
     /**
+     * @private
+     * @returns {boolean}
+     */
+    _inMultipleRecordEdition: function (recordId) {
+        var record = this.model.get(recordId, { raw: true });
+        var recordIds = _.union([recordId], this.selectedRecords);
+        return recordIds.length > 1 && record.res_id;
+    },
+    /**
      * Only display the pager when there are data to display.
      *
      * @override
@@ -351,6 +360,57 @@ var ListController = BasicController.extend({
     _isPagerVisible: function () {
         var state = this.model.get(this.handle, {raw: true});
         return !!state.count;
+    },
+    /**
+     * @private
+     * @param {string} recordId
+     * @param {Object} node
+     * @param {Object} changes
+     */
+    _saveMultipleRecords: function (recordId, node, changes) {
+        var self = this;
+        var value = Object.values(changes)[0];
+        var recordIds = _.union([recordId], this.selectedRecords);
+        var validRecordIds = recordIds.reduce(function (result, recordId) {
+            var record = self.model.get(recordId);
+            var modifiers = self.renderer._registerModifiers(node, record);
+            if (!modifiers.readonly && (!modifiers.required || value)) {
+                result.push(recordId);
+            }
+            return result;
+        }, []);
+        var message = _.str.sprintf(
+            _t('Do you want to set the value on the %d valid selected records?'),
+            validRecordIds.length);
+        if (recordIds.length !== validRecordIds.length) {
+            var nbInvalid = recordIds.length - validRecordIds.length;
+            message += ' ' + _.str.sprintf(_t('(%d invalid)'), nbInvalid);
+        }
+        Dialog.confirm(this, message, {
+            confirm_callback: function () {
+                self.model.saveRecords(recordId, validRecordIds)
+                    .then(function () {
+                        self._updateButtons('readonly');
+                        var state = self.model.get(self.handle);
+                        self.renderer.updateState(state, {});
+                    });
+            },
+        });
+    },
+    /**
+     * Overridden to deal with edition of multiple line.
+     *
+     * @override
+     * @param {string} recordId
+     */
+    _saveRecord: function (recordId) {
+        var record = this.model.get(recordId, { raw: true });
+        if (record.isDirty() && this._inMultipleRecordEdition(recordId)) {
+            // do not save the record (see _saveMultipleRecords)
+            return Promise.resolve();
+
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Allows to change the mode of a single row.
@@ -546,6 +606,30 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * Overridden to deal with the edition of multiple records.
+     *
+     * Note that we don't manage saving multiple records on saveLine
+     * because we don't want the onchanges to be applied.
+     *
+     * @private
+     * @override
+     */
+    _onFieldChanged: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+
+        if (this._inMultipleRecordEdition(ev.data.dataPointID)) {
+            // deal with edition of multiple lines
+            var _onSuccess = ev.data.onSuccess;
+            ev.data.onSuccess = function () {
+                Promise.resolve(_onSuccess()).then(function () {
+                    self._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                });
+            };
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
      * Force a resequence of the records curently on this page.
      *
      * @private
@@ -579,8 +663,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
-        var recordID = ev.data.recordID;
-        this.saveRecord(recordID)
+        this.saveRecord(ev.data.recordID)
             .then(ev.data.onSuccess)
             .guardedCatch(ev.data.onFailure);
     },

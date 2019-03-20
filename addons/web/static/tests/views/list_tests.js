@@ -3833,6 +3833,112 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition', async function (assert) {
+        assert.expect(19);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1, 2], { int_field: 666 }],
+                        "should write on multi records");
+                } else if (args.method === 'read') {
+                    if (args.args[0].length !== 1) {
+                        assert.deepEqual(args.args, [[1, 2], ['foo', 'int_field']],
+                            "should batch the read");
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.verifySteps(['/web/dataset/search_read']);
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit a line witout modifying a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        assert.hasClass(list.$('.o_data_row:eq(0)'), 'o_selected_row',
+            "the first row should be selected");
+        await testUtils.dom.click('body');
+        assert.containsNone(list, '.o_selected_row', "no row should be selected");
+
+        // create a record and edit its value
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.verifySteps(['default_get']);
+
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), 123);
+        assert.containsNone($, '.modal', "the multi edition should not be triggered during creation");
+
+        await testUtils.dom.click($('.o_list_button_save'));
+        assert.verifySteps(['create', 'read']);
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        assert.containsOnce($, '.modal', "there should be an opened modal");
+        assert.ok($('.modal').text().includes('2 valid'), "the number of records should be correctly displayed");
+
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.verifySteps(['write', 'read']);
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
+            "the first row should be updated");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
+            "the second row should be updated");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="id"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field" attrs=\'{"readonly": [("id", ">" , 2)]}\'/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1, 2], { int_field: 666 }],
+                        "should only write on the valid records");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // select all records
+        await testUtils.dom.click(list.$('th.o_list_record_selector input'));
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        assert.ok($('.modal').text().includes('2 valid'),
+            "the number of records should be correctly displayed (only 2 not readonly)");
+        assert.ok($('.modal').text().includes('2 invalid'),
+            "should display the number of invalid records");
+
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "1yop666",
+            "the first row should be updated");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "2blip666",
+            "the second row should be updated");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
