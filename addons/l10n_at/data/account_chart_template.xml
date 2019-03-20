@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_finance_austria" name="Austria" parent="account.menu_finance_reports" sequence="-1" groups="account.group_account_user"/>
+
+    <data>
+        <!-- Vorlagen: Kontenplan -->
+        <record id="l10n_at_chart_template" model="account.chart.template">
+            <field name="name">Einheitskontenrahmen Österreich 2010</field>
+            <field name="complete_tax_set" eval="True" />
+            <field name="visible" eval="True" />
+
+            <field name="property_account_receivable_id" ref="chart_at_template_2000" />
+            <field name="property_account_payable_id" ref="chart_at_template_3300" />
+
+            <field name="default_pos_receivable_account_id" ref="chart_at_template_2099" />
+
+            <field name="property_account_income_categ_id" ref="chart_at_template_4000" />
+            <field name="property_account_expense_categ_id" ref="chart_at_template_5000" />
+
+            <!--<field name="property_account_income_id" ref="chart_at_template_4000" />
+            <field name="property_account_expense_id" ref="chart_at_template_5000" />-->
+
+            <field name="property_stock_account_input_categ_id" ref="chart_at_template_3740" />
+            <field name="property_stock_account_output_categ_id" ref="chart_at_template_5000" />
+
+            <field name="property_stock_valuation_account_id" ref="chart_at_template_1600" />
+
+            <field name="income_currency_exchange_account_id" ref="chart_at_template_4860" />
+            <field name="expense_currency_exchange_account_id" ref="chart_at_template_7860" />
+
+        </record>
+    </data>
+</odoo>
