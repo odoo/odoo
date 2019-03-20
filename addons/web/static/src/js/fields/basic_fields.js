@@ -404,9 +404,26 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        var datePickerDefaultValue = this.value;
+
+        // displaying a datetime with a Date widget
+        if (this.formatType === 'date' && this.field.type === 'datetime') {
+            // With a datetime field we know that:
+            // 1. We receive UTC value from the server: this.formatOptions.timezone = true
+            // 2. We display a date to the user: this.formatType = 'date'
+            // 3. The date that is displayed is expressed according to the user's timezone
+            datePickerDefaultValue = datePickerDefaultValue && datePickerDefaultValue
+                .clone()
+                .add(session.getTZOffset(datePickerDefaultValue), 'minutes');
+            // 4. We send full datetime value to the server
+            this.parseType = 'datetime';
+            // 5. We send UTC value to the server
+            this.parseOptions.timezone = true;
+        };
+
         this.datepickerOptions = _.defaults(
             this.nodeOptions.datepicker || {},
-            {defaultDate: this.value}
+            {defaultDate: datePickerDefaultValue}
         );
     },
     /**

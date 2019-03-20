@@ -2266,6 +2266,58 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('change datetime field handled by date widget with timezone', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].datetime = '2019-03-25 01:00:00';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime" widget="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            res_id: 1,
+            session: {
+                getTZOffset: function () {
+                    return -180;
+                },
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {datetime: '2017-02-09 03:00:00'},
+                        'The right UTC value should have been sent to the server');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_date').text(), '03/24/2019',
+            'Read mode: The display of the date should be in user TZ');
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '03/24/2019',
+            'Edit mode: The display of the date should be in user TZ');
+
+        form.$('input[name="datetime"]').val('02/09/2017').trigger('input').trigger('change');
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/09/2017',
+            'Edit mode: The display of the new date should be in user TZ');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_field_date').text(), '02/09/2017',
+            'Read mode: The display of the new date should be in user TZ');
+
+        assert.verifySteps(['read', 'write', 'read']);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', function (assert) {

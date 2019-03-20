@@ -158,7 +158,7 @@ var AbstractField = Widget.extend({
         // used to avoid setting the value twice in a row with the exact value.
         this.lastSetValue = undefined;
 
-        // formatType is used to determine which format (and parse) functions
+        // formatType is used to determine which format functions
         // to call to format the field's value to insert into the DOM (typically
         // put into a span or an input), and to parse the value from the input
         // to send it to the server. These functions are chosen according to
@@ -168,6 +168,8 @@ var AbstractField = Widget.extend({
         this.formatType = this.attrs.widget in field_utils.format ?
                             this.attrs.widget :
                             this.field.type;
+        // Same as formatType; but for parse method
+        this.parseType = this.formatType;
         // formatOptions (resp. parseOptions) is a dict of options passed to
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
@@ -336,7 +338,7 @@ var AbstractField = Widget.extend({
      * @returns {any}
      */
     _parseValue: function (value) {
-        return field_utils.parse[this.formatType](value, this.field, this.parseOptions);
+        return field_utils.parse[this.parseType](value, this.field, this.parseOptions);
     },
     /**
      * main rendering function.  Override this if your widget has the same render
