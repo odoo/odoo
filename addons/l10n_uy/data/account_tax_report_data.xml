@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tax_report_base_impb" model="account.tax.report.line">
+        <field name="name">Base Imponible</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_cmprs" model="account.tax.report.line">
+        <field name="name">Base Imponible Compras</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_cmprs_22" model="account.tax.report.line">
+        <field name="name">Base Compras 22%</field>
+        <field name="tag_name">Base Compras 22%</field>
+        <field name="code">UYTAX_010101</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_cmprs"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_cmprs_10" model="account.tax.report.line">
+        <field name="name">Base Compras 10%</field>
+        <field name="tag_name">Base Compras 10%</field>
+        <field name="code">UYTAX_020101</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_cmprs"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_cmprs_0" model="account.tax.report.line">
+        <field name="name">Base Compras 0%</field>
+        <field name="tag_name">Base Compras 0%</field>
+        <field name="code">UYTAX_030101</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_cmprs"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_impb_cmprs" model="account.tax.report.line">
+        <field name="name">Base Imponible Compras</field>
+        <field name="tag_name">Base Imponible Compras</field>
+        <field name="code">UYTAX_040101</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_cmprs"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_vnts" model="account.tax.report.line">
+        <field name="name">Base Imponible Ventas</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_vnts_22" model="account.tax.report.line">
+        <field name="name">Base Ventas 22%</field>
+        <field name="tag_name">Base Ventas 22%</field>
+        <field name="code">UYTAX_010201</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_vnts"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_vnts_10" model="account.tax.report.line">
+        <field name="name">Base Ventas 10%</field>
+        <field name="tag_name">Base Ventas 10%</field>
+        <field name="code">UYTAX_020201</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_vnts"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_base_impb_vnts_0" model="account.tax.report.line">
+        <field name="name">Base Ventas 0%</field>
+        <field name="tag_name">Base Ventas 0%</field>
+        <field name="code">UYTAX_030201</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_vnts"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_impb_vnts" model="account.tax.report.line">
+        <field name="name">Base Imponible Ventas</field>
+        <field name="tag_name">Base Imponible Ventas</field>
+        <field name="code">UYTAX_040201</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_base_impb_vnts"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_sldo_iva" model="account.tax.report.line">
+        <field name="name">Saldo de IVA</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_cmprs_pagdo" model="account.tax.report.line">
+        <field name="name">IVA Compras - pagado</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_sldo_iva"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_cmprs_22" model="account.tax.report.line">
+        <field name="name">IVA Compras 22%</field>
+        <field name="tag_name">IVA Compras 22%</field>
+        <field name="code">UYTAX_010102</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_cmprs_pagdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_cmprs_10" model="account.tax.report.line">
+        <field name="name">IVA Compras 10%</field>
+        <field name="tag_name">IVA Compras 10%</field>
+        <field name="code">UYTAX_020102</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_cmprs_pagdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_cmprs_exnto_iva" model="account.tax.report.line">
+        <field name="name">Compras Exento IVA</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_cmprs_pagdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_cmprs_pagdo" model="account.tax.report.line">
+        <field name="name">IVA Compras - pagado</field>
+        <field name="tag_name">IVA Compras - pagado</field>
+        <field name="code">UYTAX_040102</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_sldo_iva"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_vnts_prcbdo" model="account.tax.report.line">
+        <field name="name">IVA Ventas - percibido</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_sldo_iva"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_vnts_22" model="account.tax.report.line">
+        <field name="name">IVA Ventas 22%</field>
+        <field name="tag_name">IVA Ventas 22%</field>
+        <field name="code">UYTAX_010202</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_vnts_prcbdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_iva_vnts_10" model="account.tax.report.line">
+        <field name="name">IVA Ventas 10%</field>
+        <field name="tag_name">IVA Ventas 10%</field>
+        <field name="code">UYTAX_020202</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_vnts_prcbdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_vnts_iva" model="account.tax.report.line">
+        <field name="name">Ventas Exento IVA</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_vnts_prcbdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+    <record id="account_tax_report_vnts_prcbdo" model="account.tax.report.line">
+        <field name="name">IVA Ventas - percibido</field>
+        <field name="tag_name">IVA Ventas - percibido</field>
+        <field name="code">UYTAX_040202</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="account_tax_report_iva_vnts_prcbdo"/>
+        <field name="country_id" ref="base.uy"/>
+    </record>
+
+</odoo>
