@@ -186,7 +186,7 @@
             }
 
             &.o_mail_discuss_title_main {
-                font-size: $font-size-base;
+                @include font-size($font-size-base);
 
                 &.o_mail_mailbox_title_starred > .badge {
                     background-color: gray('600');
@@ -212,7 +212,7 @@
         .o_mail_sidebar_title {
             h4 {
                 margin: 0;
-                font-size: $font-size-sm;
+                @include font-size($font-size-sm);
                 text-transform: uppercase;
                 color: gray('600');
                 &.o_mail_open_channels:hover {
@@ -244,7 +244,7 @@
 }
 
 .o_mail_user_status {
-    font-size: 1em;
+    @include font-size(1em);
     position: relative;
     &.o_user_online {
         color: $o-enterprise-primary-color;
@@ -432,11 +432,11 @@
         }
 
         .o_preview_name {
-            font-size: 1.1em;
+            @include font-size(1.1em);
         }
 
         .o_last_message_date {
-            font-size: 0.9em;
+            @include font-size(0.9em);
         }
 
         .o_last_message_preview {
@@ -461,11 +461,11 @@
             > span {
                display: block;
                font-weight: 500;
-               font-size: 10px;
+               @include font-size(10px);
 
                &.fa {
                    padding-bottom: $o-mail-chatter-mobile-gap*2;
-                   font-size: 1.3em;
+                   @include font-size(1.3em);
                }
             }
 

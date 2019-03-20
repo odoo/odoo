@@ -7,7 +7,7 @@
     white-space: nowrap;
     background-color: rgba(60, 60, 60, 0.6);
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
-    font-size: 14px;
+    @include font-size(14px);
     font-weight: bold;
     padding: 10px;
     color: white;
@@ -30,7 +30,7 @@
         flex: 1 1 auto;
         overflow: auto;
         padding: 15px;
-        font-size: 14px;
+        @include font-size(14px);
 
         .o_livechat_no_feedback {
             text-decoration: underline;

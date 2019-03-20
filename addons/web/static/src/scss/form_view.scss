@@ -172,7 +172,7 @@
 
             > .o_arrow_button {
                 min-height: $o-statusbar-height;
-                font-size: 11px;
+                @include font-size(11px);
                 font-weight: bold;
                 position: relative;
                 padding-left: $o-statusbar-arrow-width*2;
@@ -232,7 +232,7 @@
 
                 &.btn-primary.disabled {
                     color: $o-brand-odoo;
-                    font-size: 11px;
+                    @include font-size(11px);
                     background-color: gray('200');
                     cursor: default;
 
@@ -286,7 +286,7 @@
             line-height: inherit;
         }
         .o_priority > .o_priority_star {
-            font-size: inherit;
+            @include font-size(inherit);
         }
     }
 
@@ -360,7 +360,7 @@
 
     // Separators
     .o_horizontal_separator {
-        font-size: $h2-font-size;
+        @include font-size($h2-font-size);
         margin: $o-form-spacing-unit 0;
         &:empty {
             height: $o-form-spacing-unit * 2;
@@ -380,7 +380,7 @@
     // Labels
     .o_form_label {
         margin: 0 $o-form-spacing-unit 0 0;
-        font-size: $font-size-base; // The label muse have the same size whatever their position
+        @include font-size($font-size-base);// The label muse have the same size whatever their position
         line-height: $line-height-base;
         font-weight: bold;
     }
@@ -461,7 +461,7 @@
             text-align: right;
             border-top: 1px solid gray('300');
             font-weight: bold;
-            font-size: 1.3em;
+            @include font-size(1.3em);
         }
     }
 
@@ -747,7 +747,7 @@
                 padding-left: 0;
             }
             a.oe-link {
-                font-size: 12px;
+                @include font-size(12px);
             }
         }
     }

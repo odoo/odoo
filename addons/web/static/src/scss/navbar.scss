@@ -35,7 +35,7 @@ body.o_is_superuser .o_menu_systray {
         text-align: center;
         color: inherit;
 
-        font-size: 18px;
+        @include font-size(18px);
         user-select: none;
 
         &:hover, &:focus {
@@ -57,7 +57,7 @@ body.o_is_superuser .o_menu_systray {
         margin-right: 35px;
         user-select: none;
         color: white;
-        font-size: 22px;
+        @include font-size(22px);
         font-weight: 500;
         line-height: $o-navbar-height;
         cursor: pointer;

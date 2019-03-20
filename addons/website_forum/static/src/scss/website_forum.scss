@@ -30,11 +30,11 @@ $bronze: #eea91e;
         .vote_count {
             font-weight: bold;
             line-height: 12px;
-            font-size: 160%;
+            @include font-size(160%);
         }
         .vote_down,
         .vote_up {
-            font-size: 130%;
+            @include font-size(130%);
         }
     }
 
@@ -55,7 +55,7 @@ $bronze: #eea91e;
         }
         span {
             @include o-position-absolute(10px,0,0,-9px);
-            font-size: 20px;
+            @include font-size(20px);
             i {
                 padding: 2px 3px;
                 border-radius: 100%;
@@ -97,7 +97,7 @@ $bronze: #eea91e;
     }
 
     .close.comment_delete {
-        font-size: 0.875rem;
+        @include font-size(0.875rem);
         float: none;
         opacity: 1;
         font-weight: 300;
@@ -198,7 +198,7 @@ img.o_forum_avatar_big {
 .o_forum_tooltip_heading {
     padding: 0;
     margin: 0;
-    font-size: 18px;
+    @include font-size(18px);
 }
 
 .o_forum_user_bio {
@@ -209,7 +209,7 @@ img.o_forum_avatar_big {
     border: 1px solid darkgray;
     background-color: whitesmoke;
     line-height: 13px;
-    font-size: 11px;
+    @include font-size(11px);
     word-wrap: break-word;
     .o_forum_tooltip_line {
         min-height: 13px;

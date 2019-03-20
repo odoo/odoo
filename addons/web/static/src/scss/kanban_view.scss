@@ -113,7 +113,7 @@
 
                 .o_priority_star {
                     margin-top: 1px;
-                    font-size: 18px;
+                    @include font-size(18px);
                 }
             }
             .oe_kanban_bottom_right{
@@ -232,7 +232,7 @@
             .o_tag {
                 display: inline-block;
                 margin-right: 4px;
-                font-size: 11px;
+                @include font-size(11px);
                 font-weight: 500;
                 background-color: transparent;
                 color: inherit;
@@ -327,7 +327,7 @@
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;
                 list-style: none;
-                font-size: $font-size-sm;
+                @include font-size($font-size-sm);
 
                 li {
                     margin-bottom: 2px;
@@ -386,7 +386,7 @@
             .o_column_title {
                 flex: 1 1 auto;
                 @include o-text-overflow;
-                font-size: 16px;
+                @include font-size(16px);
                 font-weight: 500;
             }
 
@@ -511,7 +511,7 @@
                 }
 
                 input, input:focus, input:hover {
-                    font-size: 16px;
+                    @include font-size(16px);
                     background: transparent;
                 }
             }

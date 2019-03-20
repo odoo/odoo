@@ -24,7 +24,7 @@
                     span {
                         padding: 0 5px;
                         border-radius: 100%;
-                        font-size: 11px;
+                        @include font-size(11px);
                     }
                 }
 
@@ -187,7 +187,7 @@
                     }
 
                     .o_activity_link_kanban {
-                        font-size: 1.5em;
+                        @include font-size(1.5em);
                         @include o-hover-text-color($text-muted, theme-color('success'));
                         @include o-hover-opacity(0.5, 1);
                     }

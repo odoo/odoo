@@ -56,7 +56,7 @@
                 color: gray;
             }
             .fa {
-                font-size: 0.8em;
+                @include font-size(0.8em);
             }
         }
         textarea {
@@ -193,7 +193,7 @@
             }
 
             .o_composer_thread_typing {
-                font-size: 0.9em;
+                @include font-size(0.9em);
                 color: gray('600');
             }
 
@@ -273,11 +273,11 @@
 .o_mail_emoji {
     display: inline-block;
     padding: 0;
-    font-size: 1.3rem;
+    @include font-size(1.3rem);
     font-family: emojifont;
 }
 .o_mail_preview .o_mail_emoji {
-    font-size: 100%;
+    @include font-size(100%);
 }
 
 // Attachment Icons (common for chat thread and chat composer)
@@ -358,7 +358,7 @@ $o-mail-attachment-margin: 5px;
         background: desaturate(theme-color('primary'), 50%);
         color: white;
         cursor: pointer;
-        font-size: 20px;
+        @include font-size(20px);
         transform: translateX(100%);
         transition: all 0.3s ease 0s;
 
@@ -375,7 +375,7 @@ $o-mail-attachment-margin: 5px;
             vertical-align: bottom;
 
             > div {
-                font-size: 11px;
+                @include font-size(11px);
                 padding: 0 7px;
             }
         }
@@ -439,7 +439,7 @@ $o-mail-attachment-margin: 5px;
                 @include o-position-absolute($bottom: 7px);
                 width: 80%;
                 @include o-text-overflow(inline-block);
-                font-size: $font-size-sm;
+                @include font-size($font-size-sm);
             }
 
             .o_attachment_delete_cross {
@@ -490,7 +490,7 @@ $o-mail-attachment-margin: 5px;
 
             .o_close_btn {
                 @include o-position-absolute(-1px, $grid-gutter-width*0.5);
-                font-size: $h1-font-size;
+                @include font-size($h1-font-size);
                 font-weight: 300;
             }
 

@@ -98,7 +98,7 @@
         .badge {
             flex: 0 0 auto;
             border: 0;
-            font-size: 12px;
+            @include font-size(12px);
             cursor: pointer;
             user-select: none;
 
@@ -196,7 +196,7 @@
         vertical-align: baseline;
         > .o_priority_star {
             display: inline-block;
-            font-size: 1.35em;
+            @include font-size(1.35em);
             &:hover, &:focus {
                 text-decoration: none;
                 outline: none;
@@ -218,7 +218,7 @@
     // Favorite
     &.o_favorite {
         i.fa {
-            font-size: 16px;
+            @include font-size(16px);
         }
         i.fa-star-o {
             color: $o-main-color-muted;
@@ -425,7 +425,7 @@
         width: 100% !important;
         border-radius: 5px;
         border: 1px solid $primary;
-        font-size: $font-size-sm;
+        @include font-size($font-size-sm);
         color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;

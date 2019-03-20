@@ -90,7 +90,7 @@ body {
 
     .pos-customer_facing_display {
         background-color: $color-gray-lighter;
-        font-size: 2vw;
+        @include font-size(2vw);
         font-family: Futura, HelveticaNeue, Helvetica, Arial, "Lucida Grande", sans-serif;
         font-weight: 300;
         width: 100%;
@@ -141,7 +141,7 @@ body {
                     > div, > div:last-child {
                         border-left-width: 0;
                         text-align: center;
-                        font-size: 70%;
+                        @include font-size(70%);
                         font-weight: normal;
                     }
 
@@ -154,7 +154,7 @@ body {
                     width: 5%;
                     text-align: left;
                     margin-right: 4%;
-                    font-size: 80%;
+                    @include font-size(80%);
                     @include flex-grow(1);
 
                     &:first-child {
@@ -222,19 +222,19 @@ body {
                         @include flex(1 0 48%);
                         &:nth-child(even) {
                             font-weight: bold;
-                            font-size: 120%;
+                            @include font-size(120%);
                             margin-right: 0
                         }
                     }
                 }
 
                 .pos-total {
-                    font-size: 2vw;
+                    @include font-size(2vw);
                 }
 
                 .pos-paymentlines {
                     margin-top: 2%;
-                    font-size: 1.5vw;
+                    @include font-size(1.5vw);
                     line-height: 1.3;
                 }
 
@@ -254,7 +254,7 @@ body {
     // =========== PORTRAIT LAYOUT ===========
     @media all and (orientation: portrait) {
         .pos-customer_facing_display {
-            font-size: 2vh;
+            @include font-size(2vh);
             height: 100%;
             @include flex-direction(column);
 
@@ -301,7 +301,7 @@ body {
                             width: 30%;
                         }
                         &.pos_orderlines_header div{
-                            font-size: 90%;
+                            @include font-size(90%);
                         }
                     }
 
@@ -312,7 +312,7 @@ body {
                             box-shadow: 0 .1vh .1vh darken($color-gray-lighter, 10%);
                             margin-bottom: 1vh;
                             > div {
-                                font-size: 100%;
+                                @include font-size(100%);
                             }
                         }
                     }
@@ -344,15 +344,15 @@ body {
                     min-width: 170px;
 
                     .pos-total {
-                        font-size: 3vw;
+                        @include font-size(3vw);
                         .pos_total-amount {
-                            font-size: 3.5vw;
+                            @include font-size(3.5vw);
                         }
                     }
 
                     .pos-paymentlines {
                         margin-top: 2%;
-                        font-size: 80%;
+                        @include font-size(80%);
                         line-height: 1.2;
                     }
                     .pos-odoo_logo_container {
@@ -371,11 +371,11 @@ body {
                 .pos_orderlines_list{
                     padding-right: 0;
                     .pos_orderlines_item > div{
-                        font-size: 70%;
+                        @include font-size(70%);
                     }
                 }
                 .pos_orderlines_header > div {
-                    font-size: 60%;
+                    @include font-size(60%);
                     &:last-child {
                         text-align: center;
                     }
@@ -390,9 +390,9 @@ body {
                     @include flex(1 0 100%);
 
                     .pos-total {
-                        font-size: 6vw;
+                        @include font-size(6vw);
                         .pos_total-amount {
-                            font-size: 6.5vw;
+                            @include font-size(6.5vw);
                         }
                     }
                 }

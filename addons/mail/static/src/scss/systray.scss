@@ -3,7 +3,7 @@
     > a {
         opacity: 1;
         > i {
-            font-size: larger;
+            @include font-size(larger);
         }
     }
     &.o_no_notification > a {
@@ -26,7 +26,7 @@
         background: #00A09D;
         color: white;
         vertical-align: super;
-        font-size: 0.7em;
+        @include font-size(0.7em);
     }
     .o_mail_systray_dropdown {
         direction: ltr;
@@ -81,7 +81,7 @@
                         .o_preview_title {
                             .o_last_message_date {
                                 padding-top: 2px;
-                                font-size: x-small;
+                                @include font-size(x-small);
                                 margin-left: 10px;
                             }
                         }

@@ -22,7 +22,7 @@
                 border: 1px solid #ccc;
                 max-width: 500px;
                 width: 500px;
-                font-size: 0.8em;
+                @include font-size(0.8em);
                 padding-top: 12px;
                 padding-right: 10px;
                 padding-bottom: 12px;
@@ -58,7 +58,7 @@
                     }
                 }
                 h4 {
-                    font-size: 14px;
+                    @include font-size(14px);
                     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
                     font-weight: bold;
                     color: #000;
@@ -70,7 +70,7 @@
                     span {
                         color: #ccc;
                         font-weight: bold;
-                        font-size: 14px;
+                        @include font-size(14px);
                     }
                 }
                 p {
@@ -88,7 +88,7 @@
                 .right .bottom p {
                     margin-top: -65px;
                     margin-left: 70px;
-                    font-size: 12px;
+                    @include font-size(12px);
                     word-break: break-word;
                 }
                 &:hover {

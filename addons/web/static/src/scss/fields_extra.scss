@@ -24,7 +24,7 @@
     &.o_field_many2one .o_external_button {
         padding: 0;
         margin-left: 2px;
-        font-size: 19px;
+        @include font-size(19px);
         color: #7C7BAD;
         border: none;
         &:hover {
@@ -52,7 +52,7 @@
                 height: $pie-dimension - 2 * $pie-ring-width;
                 border: 1px solid white;
                 background-color: white;
-                font-size: 10px;
+                @include font-size(10px);
             }
         }
     }

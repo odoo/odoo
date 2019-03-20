@@ -202,7 +202,7 @@
     display: block;
     text-align: center;
     color: $o-main-text-color;
-    font-size: $font-size-sm;
+    @include font-size($font-size-sm);
     cursor: pointer;
     @include o-hover-opacity($base-opacity);
 }
@@ -243,13 +243,13 @@
     transform: rotate(90deg);
     overflow: visible;
     white-space: nowrap;
-    font-size: 15px;
+    @include font-size(15px);
 }
 
 // ------- Kanban records mixins -------
 @mixin o-kanban-record-title($font-size) {
     color: $headings-color;
-    font-size: $font-size;
+    @include font-size($font-size);
     font-weight: 500;
     margin-bottom: 0;
     margin-top: 0;

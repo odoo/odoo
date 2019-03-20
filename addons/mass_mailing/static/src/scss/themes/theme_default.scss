@@ -56,7 +56,7 @@ td:not([align]) {
     // Forces on <p/> and <hx/> elements as several mail clients does not
     // correctly inherit font properties
     &, p, ol {
-        font-size: 14px; // force bootstrap default
+        @include font-size(14px);// force bootstrap default
     }
     &, p, h1, h2, h3, h4, h5, h6, ol {
         font-family: $o-mm-def-font;
@@ -171,7 +171,7 @@ td:not([align]) {
     // Forces on <p/> elements as several mail clients does not correctly
     // inherit font properties
     &, p {
-        font-size: small;
+        @include font-size(small);
     }
 
     .o_mail_col_container {
@@ -187,7 +187,7 @@ td:not([align]) {
     // Forces on <p/> elements as several mail clients does not correctly
     // inherit font properties
     &, p {
-        font-size: small;
+        @include font-size(small);
     }
 }
 
@@ -245,12 +245,12 @@ td:not([align]) {
 
         .btn-link{
             padding: 0;
-            font-size: 12px;
+            @include font-size(12px);
         }
     }
 
     .o_mail_footer_copy {
-        font-size: 9px;
+        @include font-size(9px);
         font-weight: bold;
         color: lighten($o-mm-def-text-color, 30%);
     }
@@ -272,7 +272,7 @@ td:not([align]) {
 
             .btn-link{
                 padding: 0;
-                font-size: 12px;
+                @include font-size(12px);
             }
         }
     }
@@ -282,7 +282,7 @@ td:not([align]) {
 }
 
 .o_mail_display_coupon {
-    font-size: 50px;
+    @include font-size(50px);
     line-height: 1;
 }
 

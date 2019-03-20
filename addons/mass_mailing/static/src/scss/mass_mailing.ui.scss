@@ -45,7 +45,7 @@
         background-color: $o-wysiwyg-bg-color;
         z-index: 1050;
 
-        .dropdown-item { 
+        .dropdown-item {
             padding: 10px 10px;
             &:first-child {
                 display: none;
@@ -145,7 +145,7 @@ body.o_force_mail_theme_choice {
                         > .fa {
                             @include o-position-absolute(0, 0, 0, 0);
                             text-align: center;
-                            font-size: 50px;
+                            @include font-size(50px);
                             color: white;
 
                             &::before {
@@ -187,5 +187,5 @@ body.o_force_mail_theme_choice {
 }
 
 :root {
-    font-size: 14px;
+    @include font-size(14px);
 }

@@ -15,7 +15,7 @@ $o-enterprise-radient-color: #62495B !default;
         top: -40px;
 
         @include media-breakpoint-up(md) {
-            font-size: 1rem;
+            @include font-size(1rem);
 
             .o_wslides_nav_navbar_right {
                 padding-left: $spacer;
@@ -38,7 +38,7 @@ $o-enterprise-radient-color: #62495B !default;
 
     .o_wslides_js_lesson_quiz_question {
         li {
-            font-size: 1.2rem;
+            @include font-size(1.2rem);
         }
 
         .o_wslides_quiz_answer {
@@ -48,7 +48,7 @@ $o-enterprise-radient-color: #62495B !default;
             }
 
             label {
-                font-size: 1.4rem;
+                @include font-size(1.4rem);
 
                 i.fa-circle {
                 }
@@ -87,7 +87,7 @@ $o-enterprise-radient-color: #62495B !default;
                 background-color: $primary;
                 position: absolute;
                 bottom: -20px;
-                font-size: 10px;
+                @include font-size(10px);
                 line-height: 10px;
                 padding: 2px 3px 2px 4px;
                 right: -1.4em;
@@ -189,7 +189,7 @@ $o-enterprise-radient-color: #62495B !default;
         }
 
         .o_wslides_course_header_content {
-            font-size: 16px;
+            @include font-size(16px);
             color: #FFFFFF;
 
             .o_wslides_course_header_nav {
@@ -276,7 +276,7 @@ $o-enterprise-radient-color: #62495B !default;
         }
 
         .fa-trophy {
-            font-size: 2em;
+            @include font-size(2em);
         }
     }
 }

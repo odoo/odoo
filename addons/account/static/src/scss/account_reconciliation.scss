@@ -2,7 +2,7 @@
     h1 {
         margin: 0 0 25px 0;
         float: left;
-        font-size: 2em;
+        @include font-size(2em);
         height: 1.5em;
         line-height: 1.5em;
         &.statement_name {
@@ -34,7 +34,7 @@
             border-bottom: 1px black solid;
         }
     }
-    
+
     .progress {
         width: 100%;
         margin: 10px 0 2px 0;
@@ -52,7 +52,7 @@
     }
 
     h1, .progress {
-        @media screen and (min-width: 480px) { // FIXME 
+        @media screen and (min-width: 480px) { // FIXME
             width: 48%;
         }
     }
@@ -65,7 +65,7 @@
         max-width: none;
         padding: 0 10%;
         color: $o-main-color-muted;
-        font-size: 125%;
+        @include font-size(125%);
     }
 
     .accounting_view {
@@ -228,7 +228,7 @@
             transform: rotate(90deg);
         }
         .toggle_create {
-            font-size: 10px;
+            @include font-size(10px);
         }
 
         /* Match view & Create view */

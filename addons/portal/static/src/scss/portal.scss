@@ -234,13 +234,13 @@ img.o_we_custom_image {
 
 // Kept for (up to) saas-12 compatibility
 .para_large {
-    font-size: 120%;
+    @include font-size(120%);
 }
 .jumbotron .para_large p {
-    font-size: 150%;
+    @include font-size(150%);
 }
 .readable {
-    font-size: 120%;
+    @include font-size(120%);
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
@@ -440,7 +440,7 @@ img.o_we_custom_image {
 
         .o_portal_chatter_message_title {
             p {
-                font-size:85%;
+                @include font-size(85%);
                 color:$o-main-color-muted;
                 margin: 0px;
             }

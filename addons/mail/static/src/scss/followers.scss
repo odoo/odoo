@@ -18,7 +18,7 @@
             }
 
             > .fa {
-                font-size: inherit;
+                @include font-size(inherit);
             }
 
             &.o_followers_following {
@@ -83,7 +83,7 @@
         }
 
         .o_followers_list {
-            font-size: small;
+            @include font-size(small);
             max-height: 50vh; // ancestor has size 33px
             overflow: auto;
 

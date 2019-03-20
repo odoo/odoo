@@ -70,7 +70,7 @@
                 text-align: center;
                 vertical-align: middle;
                 color: #7C7BAD;
-                font-size: 24px;
+                @include font-size(24px);
             }
 
             // Some buttons only display text without using StatInfo template
@@ -89,11 +89,11 @@
                     color: $o-brand-odoo;
                 }
                 .o_stat_text {
-                    font-size: small;
+                    @include font-size(small);
                 }
             }
             > span {
-                font-size: small;
+                @include font-size(small);
                 white-space: normal; // text on several lines if needed
             }
 

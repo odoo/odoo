@@ -37,7 +37,7 @@
                 background-color: #1F242C;
                 color: inherit;
                 display: flex;
-                font-size: 0.8rem;
+                @include font-size(0.8rem);
                 font-weight: bold;
                 height: 100%;
                 justify-content: center;
@@ -106,7 +106,7 @@
             .o_wslides_slide_fs_progress_box{
                 display: flex;
                 align-items: center;
-                font-size: .9rem;
+                @include font-size(.9rem);
                 .o_wslides_fs_sidebar_progressbar{
                     height: 5px;
                     border-radius: 10px;
@@ -126,7 +126,7 @@
                 }
             }
             a {
-                font-size: 1.5rem;
+                @include font-size(1.5rem);
                 font-weight: bold;
             }
         }
@@ -136,7 +136,7 @@
             padding: 10px 0;
             > a > li {
                 color: #656B72;
-                font-size: .8rem;
+                @include font-size(.8rem);
                 text-transform: uppercase;
                 font-weight: bold;
                 padding: 5px 0 5px 15px;
@@ -206,7 +206,7 @@
             }
             .o_wslides_fs_sidebar_slide_tab {
                 padding:5px 0 5px 15px;
-                font-size: .8rem;
+                @include font-size(.8rem);
                 color: #8A8F93;
                 font-weight: bold;
                 flex: 1;
@@ -216,7 +216,7 @@
             }
             .o_wslides_fs_slide_link {
                 color: #098586;
-                font-size: .8rem;
+                @include font-size(.8rem);
                 margin-left: 15px;
                 flex: 1;
                 i {
@@ -224,7 +224,7 @@
                 }
             }
             .o_wslides_fs_slide_quiz {
-                font-size: .8rem;
+                @include font-size(.8rem);
                 margin-left: 15px;
                 color: #8A8F93;
                 flex: 1;
@@ -280,7 +280,7 @@
 
         .o_wslides_js_lesson_quiz_question {
             li {
-                font-size: 1.2rem;
+                @include font-size(1.2rem);
             }
 
             .o_wslides_quiz_answer {
@@ -290,7 +290,7 @@
                 }
 
                 label {
-                    font-size: 1.4rem;
+                    @include font-size(1.4rem);
 
                     i.fa-circle {
                     }

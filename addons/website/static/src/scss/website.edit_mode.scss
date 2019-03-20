@@ -75,7 +75,7 @@
             border: 2px solid transparent;
             background-color: $o-brand-lightsecondary;
             text-align: center;
-            font-size: 14px;
+            @include font-size(14px);
             line-height: 1;
             cursor: pointer;
 
@@ -168,7 +168,7 @@
             &.form-control, .btn {
                 padding: 2px 8px !important;
                 text-align: right !important;
-                font-size: $font-size-sm !important;
+                @include font-size($font-size-sm, $important: true);
             }
         }
     }
@@ -238,7 +238,7 @@
             text-align: center;
             &:before {
                 content: attr(data-editor-message);
-                font-size: 20px;
+                @include font-size(20px);
                 color: gray('400');
             }
         }

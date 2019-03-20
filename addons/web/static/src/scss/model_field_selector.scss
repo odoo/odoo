@@ -21,7 +21,7 @@
         > i {
             align-self: center;
             margin: 0 2px;
-            font-size: 10px;
+            @include font-size(10px);
         }
     }
     > .o_field_selector_controls {
@@ -101,14 +101,14 @@
                         padding: 5px 0 5px 0.4em;
                         cursor: pointer;
                         font-family: Arial;
-                        font-size: 13px;
+                        @include font-size(13px);
                         color: #444;
                         border-bottom: 1px solid #eee;
                         &.active {
                             background: #f5f5f5;
                         }
                         .o_field_selector_item_title {
-                            font-size: 12px;
+                            @include font-size(12px);
                         }
                         .o_field_selector_relation_icon {
                             @include o-position-absolute($top: 0, $right: 0, $bottom: 0);

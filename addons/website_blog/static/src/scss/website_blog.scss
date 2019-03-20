@@ -96,10 +96,10 @@
         .o_blog_cover_container {
             > .blog_title {
                 > h1 {
-                    font-size: 26px;
+                    @include font-size(26px);
                 }
                 > h2 {
-                    font-size: 20px;
+                    @include font-size(20px);
                 }
             }
             &.cover > .blog_title {
@@ -135,7 +135,7 @@
     }
 
     .o_blog_post_title {
-        font-size: 24px;
+        @include font-size(24px);
     }
 
     .o_blog_post_teaser {
@@ -168,7 +168,7 @@
         margin-top: 20px;
         > p {
             display: inline;
-            font-size: 12px;
+            @include font-size(12px);
         }
         > a {
             color: #b3b3b3;
@@ -202,7 +202,7 @@
         text-align: center;
 
         > p {
-            font-size: 16px;
+            @include font-size(16px);
             font-weight: 600;
         }
         > a {
@@ -212,7 +212,7 @@
 
     div[name="blog_post_data"] {
         margin-top: 20px !important;
-        font-size: 13px;
+        @include font-size(13px);
     }
     div[name="blog_post"] {
         position: relative;
@@ -298,7 +298,7 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
             padding: 2em;
             color: $white;
             text-transform: uppercase;
-            font-size: 1.25em;
+            @include font-size(1.25em);
             backface-visibility: hidden;
             &::after, &::before {
                 pointer-events: none;
@@ -308,12 +308,12 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
                 z-index: 1000;
                 text-indent: 200%;
                 white-space: nowrap;
-                font-size: 0;
+                @include font-size(0);
                 opacity: 0;
             }
             h2 {
                 margin: 0;
-                font-size: 1.5em;
+                @include font-size(1.5em);
                 font-weight: 300;
                 span {
                     font-weight: 800;
@@ -322,7 +322,7 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
             p {
                 margin: 1em 0 0;
                 letter-spacing: 1px;
-                font-size: 68.5%;
+                @include font-size(68.5%);
             }
         }
         @include s-latest-posts-figure-hook;

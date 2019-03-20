@@ -111,7 +111,7 @@
                 padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
                 height: 40px;
                 color: gray('400');
-                font-size: 13px;
+                @include font-size(13px);
                 line-height: 40px;
                 cursor: pointer;
                 white-space: nowrap;
@@ -129,7 +129,7 @@
                     @include size(auto, $o-base-settings-mobile-tabs-height);
                     padding: $o-base-settings-mobile-tabs-height*0.25 $o-base-settings-mobile-tabs-height*0.4;
                     text-align: center;
-                    font-size: 14px;
+                    @include font-size(14px);
                     font-weight: 500;
                     line-height: inherit;
                     transition: 0.2s all ease 0s;
@@ -184,7 +184,7 @@
                     margin-bottom: 0;
                     @include o-base-settings-horizontal-padding;
                     background-color: gray('200');
-                    font-size: 15px;
+                    @include font-size(15px);
                     font-weight: bold;
 
                     &:first-of-type {
@@ -213,14 +213,14 @@
 
                 .appName {
                     color: $headings-color;
-                    font-size: 17px;
+                    @include font-size(17px);
                 }
             }
 
             .notFound {
                 color : $text-muted;
                 text-align: center;
-                font-size: 25px;
+                @include font-size(25px);
                 padding-top: 50px;
             }
 

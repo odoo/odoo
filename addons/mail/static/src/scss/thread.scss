@@ -48,7 +48,7 @@
             padding: 0 10px;
             background: white;
             color: lighten($o-brand-odoo, 15%);
-            font-size: smaller;
+            @include font-size(smaller);
         }
     }
 
@@ -67,7 +67,7 @@
             margin-right: 10px;
             margin-top: 2px;
             text-align: center;
-            font-size: smaller;
+            @include font-size(smaller);
             .o_thread_message_sidebar_image {
                 position: relative;
                 height: $o-mail-thread-avatar-size;
@@ -84,7 +84,7 @@
 
             @include media-breakpoint-down(sm) {
                 margin-top: 4px;
-                font-size: x-small;
+                @include font-size(x-small);
             }
 
             .o_thread_message_avatar {
@@ -224,13 +224,13 @@
         margin-top: 20px;
         margin-bottom: 20px;
         font-weight: bold;
-        font-size: 125%;
+        @include font-size(125%);
     }
 
     .o_mail_no_content {
         @include o-position-absolute(30%, 0, 0, 0);
         text-align: center;
-        font-size: 115%;
+        @include font-size(115%);
     }
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {

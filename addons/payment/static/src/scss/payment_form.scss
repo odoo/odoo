@@ -5,7 +5,7 @@
     }
 
     .payment_option_name {
-        font-size: 14px;
+        @include font-size(14px);
         font-weight: normal !important;
         font-family: Helvetica Neue, sans-serif;
         line-height: 1.3em;
@@ -47,7 +47,7 @@
 
         .more_option {
             @include o-position-absolute($right: 10px);
-            font-size:10px;
+            @include font-size(10px);
         }
 
         margin-top: 0px !important;

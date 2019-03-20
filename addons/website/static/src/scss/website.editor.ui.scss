@@ -78,7 +78,7 @@
             &.o_include_option {
                 display: flex;
                 align-items: center;
-                font-size: 11px;
+                @include font-size(11px);
 
                 >.custom-control {
                     margin-right: $grid-gutter-width/4;
@@ -154,7 +154,7 @@
 
             >.o_ace_select2_result {
                 padding: 0;
-                font-size: 12px;
+                @include font-size(12px);
                 white-space: nowrap;
             }
         }

@@ -9,7 +9,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     max-width: 100%;
     height: 400px;
     max-height: 100%;
-    font-size: 12px;
+    @include font-size(12px);
     background-color: $o-mail-thread-window-bg;
     border-radius: 6px 6px 0 0;
     z-index: $o-mail-thread-window-zindex;
@@ -43,12 +43,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             padding-top: 12px;
             border-radius: 0px;
             .o_thread_window_title {
-                font-size: 16px;
+                @include font-size(16px);
                 margin-left: 10px;
             }
 
             .o_thread_window_close {
-                font-size: 17px;
+                @include font-size(17px);
                 color: white;
             }
         }
@@ -151,7 +151,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             @include o-position-absolute(-10px, 0, auto, auto);
             background-color: $o-brand-primary;
             padding: 0 2px;
-            font-size: smaller;
+            @include font-size(smaller);
         }
     }
     &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
@@ -163,7 +163,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         padding: 0;
 
         > li.o_thread_window_header {
-            font-size: 12px;
+            @include font-size(12px);
             padding: 3px 5px;
             &~li.o_thread_window_header {
                 border-top: 1px solid white;

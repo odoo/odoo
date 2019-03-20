@@ -34,7 +34,7 @@
                 width: 80%;
                 > textarea {
                     padding: 10px;
-                    font-size: 13px;
+                    @include font-size(13px);
                 }
                 @include media-breakpoint-down(sm) {
                     width: 70%;
@@ -51,7 +51,7 @@
                         padding: 13px;
                     }
                     &.btn.fa {
-                        font-size: 1.3em;
+                        @include font-size(1.3em);
                     }
                 }
             }

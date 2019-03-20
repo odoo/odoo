@@ -59,7 +59,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
         background: $o-wysiwyg-bg-color;
         text-align: center;
         font-weight: normal;
-        font-size: 17px;
+        @include font-size(17px);
         color: $o-wysiwyg-color;
         font-family: $o-wysiwyg-font-family;
     }
@@ -187,7 +187,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
             display: block;
             border: 1px solid $o-wysiwyg-bg-color;
             padding: 5px;
-            font-size: 12px;
+            @include font-size(12px);
             font-weight: 300;
             text-shadow: none;
             color: $o-wysiwyg-color;
@@ -202,7 +202,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 // SNIPPET OPTIONS
 .colorpicker {
     .o_colorpicker_sections {
-        font-size: 14px;
+        @include font-size(14px);
 
         .o_colorpicker_section_tabs {
             width: 225px;
@@ -273,7 +273,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
         padding: 5px 10px 0;
 
         .note-color-reset {
-            font-size: 20px !important;
+            @include font-size(20px, $important: true);
             color: desaturate(rgba($o-wysiwyg-color-danger, 0.6), 40%);
             margin: 1px 0 0;
             padding: 0;
@@ -378,7 +378,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
                     padding: 0;
                     border: 1px solid $o-wysiwyg-bg-color;
                     line-height: $o-wysiwyg-overlay-option-size;
-                    font-size: 11px;
+                    @include font-size(11px);
                     border-radius: 0;
                     font-weight: normal;
 
@@ -407,7 +407,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
                     &.oe_snippet_parent>i {
                         transform: scaleX(-1);
-                        font-size: 12px;
+                        @include font-size(12px);
                     }
 
                     >.fa {
@@ -489,7 +489,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
                             position: relative;
                             color: $o-wysiwyg-color-light;
                             font-weight: normal;
-                            font-size: 12px;
+                            @include font-size(12px);
                             padding: 5px 40px 5px 10px;
 
                             &:hover {
@@ -543,7 +543,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
                         .dropdown-header {
                             color: $o-wysiwyg-color-light;
-                            font-size: 11px;
+                            @include font-size(11px);
                             margin-top: 2px;
                             text-transform: uppercase;
 
@@ -559,7 +559,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
                                 position: relative;
                                 color: $o-wysiwyg-color-light;
                                 font-weight: 400;
-                                font-size: 10px;
+                                @include font-size(10px);
                                 margin: 10px 0 0 10px;
                                 text-transform: uppercase;
                                 padding-bottom: .25em;
@@ -573,7 +573,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
 
                                 ~.dropdown-submenu .dropdown-item,
                                 ~.dropdown-item {
-                                    font-size: 11px;
+                                    @include font-size(11px);
                                     opacity: 0.7;
 
                                     &:hover {
@@ -643,7 +643,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
                     height: $o-wysiwyg-handles-btn-size;
                     border: solid 1px darken($o-wysiwyg-handles-accent-color, 10%);
                     line-height: $o-wysiwyg-handles-btn-size - 2;
-                    font-size: 14px;
+                    @include font-size(14px);
                     font-family: FontAwesome;
                     background-color: darken($o-wysiwyg-handles-accent-color, 20%);
                     color: white;
@@ -788,7 +788,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
     margin-bottom: 45px;
 
     input {
-        font-size: 18px;
+        @include font-size(18px);
         padding: 10px 10px 10px 5px;
         display: block;
         width: 300px;
@@ -803,7 +803,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
     /* LABEL ======================================= */
     label {
         color: #999;
-        font-size: 18px;
+        @include font-size(18px);
         font-weight: normal;
         @include o-position-absolute($top: 10px, $left: 5px);
         pointer-events: none;
@@ -814,7 +814,7 @@ $o-wysiwyg-handles-offset-to-hide: 10000px !default;
     input:focus~label,
     input:valid~label {
         top: -20px;
-        font-size: 14px;
+        @include font-size(14px);
         color: #5264AE;
     }
 

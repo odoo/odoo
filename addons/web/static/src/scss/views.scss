@@ -30,7 +30,7 @@
 
 .o_btn-link-as-button {
     padding: 2px;
-    font-size:12px;
+    @include font-size(12px);
 
     & > a {
         margin-bottom: -4px !important;
@@ -52,13 +52,13 @@
         z-index: 1000;
         text-align: center;
         color: $o-tooltip-text-color;
-        font-size: 115%;
+        @include font-size(115%);
 
         > p:first-of-type {
             margin-top: 0;
             color: $o-tooltip-title-text-color;
             font-weight: bold;
-            font-size: 125%;
+            @include font-size(125%);
         }
 
         a {

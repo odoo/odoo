@@ -20,12 +20,12 @@ body.o_connected_user {
     z-index: $zindex-modal - 10;
 
     font-family: $o-we-font-family;
-    font-size: 14px;
+    @include font-size(14px);
     a:hover, a:focus {
         text-decoration: none;
     }
     .dropdown-menu {
-        font-size: inherit;
+        @include font-size(inherit);
         border-radius: 0;
         color: $dropdown-link-active-color;
     }
@@ -39,7 +39,7 @@ body.o_connected_user {
 
         .o_mobile_preview a {
             text-align: center;
-            font-size: 20px;
+            @include font-size(20px);
         }
     }
     .o_menu_systray {
@@ -61,7 +61,7 @@ body.o_connected_user {
 
         .o_mobile_preview a {
             text-align: center;
-            font-size: 20px;
+            @include font-size(20px);
         }
     }
     @include media-breakpoint-down(sm) {
@@ -240,13 +240,13 @@ body .modal {
                         content: "\f00c";
                         font-family: FontAwesome;
                         color: white;
-                        font-size: 12px;
+                        @include font-size(12px);
                     }
                 }
                 .o-custom-label {
                     @include o-position-absolute($bottom: 0px);
                     background: rgba(gray('800'), 0.6);
-                    font-size: 12px;
+                    @include font-size(12px);
                 }
             }
             .o_meta_img_upload {
@@ -276,7 +276,7 @@ body .modal {
             .r {
                 cursor: pointer;
                 color:#1a0dab;
-                font-size: 18px;
+                @include font-size(18px);
                 overflow: hidden;
                 text-overflow: ellipsis;
                 -webkit-text-overflow: ellipsis;
@@ -284,12 +284,12 @@ body .modal {
             }
 
             .s {
-                font-size: 13px;
+                @include font-size(13px);
                 line-height: 18px;
                 color: #545454;
                 .kv {
                     color: #006621;
-                    font-size: 14px;
+                    @include font-size(14px);
                     line-height: 18px;
                 }
             }
@@ -331,7 +331,7 @@ body .modal {
 
         a {
             display: block;
-            font-size: 34px;
+            @include font-size(34px);
             text-align: center;
 
             i {
@@ -348,7 +348,7 @@ body .modal {
             p {
                 color: white;
                 margin-top: 0.7em;
-                font-size: 0.5em;
+                @include font-size(0.5em);
             }
 
             &:hover, &:focus {

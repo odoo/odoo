@@ -15,7 +15,7 @@
     }
     h2 {
         margin-top: 0;
-        font-size: large; // override h2 font-size which is too large
+        @include font-size(large);// override h2 font-size which is too large
     }
     .oe_padding {
         padding: 13px 0;
@@ -121,7 +121,7 @@
 
 /* Field dropdown */
 .oe_import_selector {
-    font-size: $font-size-sm;
+    @include font-size($font-size-sm);
     ul, li {
         margin: 0; padding: 0;
     }

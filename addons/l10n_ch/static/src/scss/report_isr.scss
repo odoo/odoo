@@ -45,7 +45,7 @@ body.l10n_ch_isr #isr {
     overflow: hidden;
     font-family: OCRB, Courier, monospace;
     line-height: 0.16in;
-    font-size: 10pt;
+    @include font-size(10pt);
 
     p {
         margin-bottom: 0;
@@ -89,7 +89,7 @@ body.l10n_ch_isr #isr {
             top: 1.87in;
 
             text-align: right;
-            font-size: 14px;
+            @include font-size(14px);
             letter-spacing: 0.095in;
         }
 
@@ -98,17 +98,17 @@ body.l10n_ch_isr #isr {
             top: 1.87in;
             left: 1.96in;
 
-            font-size: 14px;
+            @include font-size(14px);
             letter-spacing: 0.095in;
         }
 
         &#voucher-by {
             top: 2.22in;
-            font-size: 9pt;
+            @include font-size(9pt);
             max-width: 2in;
 
             #voucher-by_reference_number {
-                font-size: 7.5pt;
+                @include font-size(7.5pt);
                 margin-bottom: 0.05in;
             }
         }
@@ -156,7 +156,7 @@ body.l10n_ch_isr #isr {
             top: 1.87in;
 
             text-align: right;
-            font-size: 14px;
+            @include font-size(14px);
             letter-spacing: 0.095in;
         }
 
@@ -165,7 +165,7 @@ body.l10n_ch_isr #isr {
             top: 1.87in;
             left: 1.96in;
 
-            font-size: 14px;
+            @include font-size(14px);
             letter-spacing: 0.095in;
         }
 
@@ -187,7 +187,7 @@ body.l10n_ch_isr #isr {
 
             /* Positioning is set for OCRB of Tsukurimashou Font Family */
             font-family: OCRB, Courier, monospace;
-            font-size: 10pt;
+            @include font-size(10pt);
             line-height: 0.1in;
 
             > div {
