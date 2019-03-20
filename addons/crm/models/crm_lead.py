@@ -277,6 +277,12 @@ class Lead(models.Model):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        res = {'domain': {'state_id': []}}
+        if self.country_id:
+            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
+
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
     # ----------------------------------------
