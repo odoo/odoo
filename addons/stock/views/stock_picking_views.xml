@@ -354,7 +354,7 @@
                     <filter name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
+                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False)]" help="Remaining parts of picking partially processed"/>
                     <separator/>
