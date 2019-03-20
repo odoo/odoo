@@ -12,6 +12,7 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
+var framework = require('web.framework');
 
 var _t = core._t;
 var QWeb = core.qweb;
