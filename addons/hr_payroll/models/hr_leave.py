@@ -66,6 +66,11 @@ class HrLeave(models.Model):
 
     @api.multi
     def action_validate(self):
+        benefits = self.env['hr.benefit'].search([
+            ('employee_id', 'in', self.mapped('employee_id').ids),
+            ('date_start', '<=', max(self.mapped('date_to'))),
+            ('date_stop', '>=', min(self.mapped('date_from'))),
+        ])._compute_conflicts_leaves_to_approve()
         super(HrLeave, self).action_validate()
         self.sudo()._cancel_benefit_conflict()
         calendar_leaves = self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)])
