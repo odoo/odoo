@@ -579,10 +579,14 @@ $o-searchpanel-filter-default-color: #D59244;
 
 .o_kanban_with_searchpanel {
     display: flex;
+    flex-flow: row wrap;
     align-items: flex-start;
 
-    .o_kanban_view {
+    .o_onboarding_container {
         flex: 1 1 100%;
+    }
+    .o_kanban_view {
+        flex: 1 1 calc(100% - 220px);
         overflow: auto; // make the kanban renderer and search panel scroll individually
         max-height: 100%;
     }
