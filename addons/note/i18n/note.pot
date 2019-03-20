@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 07:59+0000\n"
-"PO-Revision-Date: 2019-01-16 07:59+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2019-03-20 13:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,7 +97,7 @@ msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
+msgid "Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
 msgstr ""
 
 #. module: note
@@ -366,11 +366,6 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr ""
-
-#. module: note
 #: selection:note.note,activity_state:0
 msgid "Overdue"
 msgstr ""
@@ -473,6 +468,11 @@ msgid "Stages of Users"
 msgstr ""
 
 #. module: note
+#: selection:mail.activity.type,category:0
+msgid "Standard"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
 msgid "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -526,6 +526,11 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
 msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
 msgstr ""
 
 #. module: note

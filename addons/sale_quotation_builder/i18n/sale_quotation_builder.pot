@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-24 10:58+0000\n"
-"PO-Revision-Date: 2018-12-24 10:58+0000\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2019-03-20 13:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "&amp;times;"
 msgstr ""
@@ -38,6 +39,13 @@ msgstr ""
 msgid ":\n"
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
+msgstr ""
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+msgid ":\n"
+"                        this content will appear on the quotation only if this\n"
+"                        product is not removed."
 msgstr ""
 
 #. module: sale_quotation_builder
@@ -65,6 +73,7 @@ msgid "Back"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Close"
 msgstr ""
@@ -149,16 +158,19 @@ msgid "Product quality is the foundation we\n"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
 msgstr ""
@@ -199,12 +211,14 @@ msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
 msgid "This field uses the Quotation Only Description if it is defined, otherwise it will try to read the eCommerce Description."
 msgstr ""
