@@ -18,8 +18,8 @@ var QuickEdit = Widget.extend({
     template: 'website.theme_customize_active_input',
     events: {
         'keydown input': '_onInputKeydown',
-        'click .btn-primary': '_onSaveClick',
         'click .btn-secondary': '_onResetClick',
+        'focusout': '_onFocusOut',
     },
 
     /**
@@ -29,6 +29,7 @@ var QuickEdit = Widget.extend({
         this._super.apply(this, arguments);
         this.value = value;
         this.unit = unit;
+        this._onFocusOut = _.debounce(this._onFocusOut, 100);
     },
     /**
      * @override
@@ -92,8 +93,10 @@ var QuickEdit = Widget.extend({
     /**
      * @private
      */
-    _onSaveClick: function () {
-        this._save();
+    _onFocusOut: function () {
+        if (!this.$el.has(document.activeElement).length) {
+            this._save();
+        }
     },
     /**
      * @private
