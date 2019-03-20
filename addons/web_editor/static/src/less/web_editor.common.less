@@ -164,7 +164,7 @@ ul.oe_menu_editor {
     // Generate vertical margin/padding classes used by the editor
     .o-generate-spacings(256/8);
     .o-generate-spacings(@n, @i: 0) when (@i =< @n) {
-        .o-vspacing(@i * 8);
+        .o-vspacing(@i * 8, @factor);
         .o-generate-spacings(@n, @i + 1);
     }
     .o-vspacing(4, @factor);
