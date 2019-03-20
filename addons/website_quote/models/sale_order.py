@@ -271,7 +271,7 @@ class SaleOrderOption(models.Model):
         order_line = order.order_line.filtered(lambda line: line.product_id == self.product_id)
         if order_line:
             order_line = order_line[0]
-            order_line.product_uom_qty += 1
+            order_line.product_uom_qty += self.quantity
         else:
             vals = {
                 'price_unit': self.price_unit,
