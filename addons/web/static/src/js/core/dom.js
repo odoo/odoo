@@ -102,7 +102,7 @@ var dom = {
         }
 
         options = options || {};
-        minHeight = (options && options.min_height) || 50;
+        minHeight = 'min_height' in options ? options.min_height : 50;
 
         $fixedTextarea = $('<textarea disabled>', {
             class: $textarea[0].className,
