@@ -23,6 +23,18 @@ class TestTermCount(common.TransactionCase):
         ])
         self.assertEqual(len(ids), 2)
 
+    def test_count_term_module(self):
+        """
+        Just make sure we have as many translation entries as we wanted and module deducted from file content
+        """
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        translations = self.env['ir.translation'].search([
+            ('lang', '=', 'fr_FR'),
+            ('src', '=', 'Ijkl'),
+            ('module', '=', 'test_translation_import'),
+        ])
+        self.assertEqual(len(translations), 1)
+
     def test_noupdate(self):
         """
         Make sure no update do not overwrite translations
