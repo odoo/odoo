@@ -203,7 +203,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         sale_order = self.sale_id
         # if there isn't a delivery line on the SO yet
-        if sale_order.invoice_shipping_on_delivery:
+        if not any([line.is_delivery for line in sale_order.order_line]):
             self._get_new_delivery_price()  # fill `self.carrier_price` if needed
             sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
         else:
