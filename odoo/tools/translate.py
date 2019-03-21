@@ -257,7 +257,7 @@ def translate_xml_node(node, callback, parse, serialize):
             result.tail = node.tail
             has_text = (
                 todo_has_text or nonspace(result.text) or nonspace(result.tail)
-                or any(name in TRANSLATED_ATTRS for name in result.attrib)
+                or any((key in TRANSLATED_ATTRS and val) for key, val in result.attrib.items())
             )
             return (has_text, result)
 
