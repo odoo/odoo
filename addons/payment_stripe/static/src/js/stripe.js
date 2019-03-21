@@ -32,7 +32,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             image: $("input[name='stripe_image']").val(),
             locale: 'auto',
             token: function(token, args) {
-                handler.isTokenGenerate = true;
+                stripeHandler.isTokenGenerate = true;
                 if ($.blockUI) {
                     var msg = _t("Just one more second, confirming your payment...");
                     $.blockUI({
@@ -56,7 +56,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                         $.unblockUI();
                     }
                 }).done(function(data){
-                    handler.isTokenGenerate = false;
+                    stripeHandler.isTokenGenerate = false;
                     window.location.href = data;
                 }).fail(function(){
                     var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.arguments && arguments[1].data.arguments[0];
