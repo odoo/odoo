@@ -203,8 +203,8 @@ class TestWarehouse(common.TestMrpCommon):
             'active_id': mo_laptop.id,
             'active_ids': [mo_laptop.id],
         }).create({
-            'product_qty': 1.0,
-            'lot_id': serial.id,
+            "qty_producing": 1.0,
+            "final_lot_id": serial.id,
         })
         product_produce.do_produce()
         mo_laptop.button_mark_done()
