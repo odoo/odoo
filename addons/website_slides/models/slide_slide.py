@@ -451,34 +451,26 @@ class Slide(models.Model):
             'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0} for new_slide in new_slides])
 
-    def action_set_completed(self, quiz_attempts_inc=False):
+    def action_set_completed(self):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
-        return self._action_set_completed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc)
+        return self._action_set_completed(self.env.user.partner_id)
 
-    def _action_set_completed(self, target_partner, quiz_attempts_inc=False):
+    def _action_set_completed(self, target_partner):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        if quiz_attempts_inc:
-            for existing_slide in existing_sudo:
-                existing_slide.write({
-                    'completed': True,
-                    'quiz_attempts_count': existing_slide.quiz_attempts_count + 1
-                })
-        else:
-            existing_sudo.write({'completed': True})
+        existing_sudo.write({'completed': True})
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
-            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0,
             'completed': True} for new_slide in new_slides])
 

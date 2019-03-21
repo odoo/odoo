@@ -6,9 +6,9 @@
     <div class="o_wslides_course_nav">
         <div class="container">
             <div class="row align-items-center justify-content-between">
-                <!-- nav -->
-                <nav aria-label="breadcrumb" class="col-md-6 col-xs-12">
-                    <ol class="breadcrumb">
+                <!-- Desktop Mode -->
+                <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                    <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
                         <li class="breadcrumb-item">
                             <a href="/slides">Home</a>
                         </li>
@@ -29,42 +29,63 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="col-md-6 col-xs-12 d-flex flex-row align-items-center justify-content-end">
-                    <!-- karma / profile -->
-                    <a t-if="not is_public_user" t-att-href="'/profile/user/%s?channel_id=%s' % (user.id, channel.id)" class="font-weight-bold mr-3">
-                        <i class="fa fa-diamond" /> <t t-esc="user_id.karma"/>
-                    </a>
+
+                <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
                     <!-- search -->
-                    <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
-                            <span class="input-group-append">
-                                <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                    <form t-attf-action="/slides/all" role="search" method="get">
+                        <div class="input-group o_wslides_course_nav_search ml-1 position-relative">
+                            <span class="input-group-prepend">
+                                <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
+                            <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search courses"/>
                         </div>
                     </form>
-                    <!-- sort / filter -->
-                    <small class="dropdown float-right ml-3">
-                        <h6 class="m-0">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="slidesChannelDropdownSort"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <t t-if="sorting == 'most_voted'">Most Voted</t>
-                                <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
-                                <t t-else="">Newest</t>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
-                                <div role="separator" class="dropdown-header">Sort by</div>
-                                <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='latest'))"
-                                    t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
-                                <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_voted'))"
-                                    t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
-                                <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_viewed'))"
-                                    t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
+                </div>
+
+                <!-- Mobile Mode -->
+                <div class="col d-md-none py-1">
+                    <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
+                        <div class="btn-group w-100">
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/slides">Home</a>
+                                <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_type else '')" t-att-href="'/slides/%s' % slug(channel)">
+                                    &#9492;<span class="ml-1" t-esc="channel.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
+                                    &#9492;<span class="ml-1" t-esc="search_category.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
+                                    &#9492;<span class="ml-1" t-esc="search_tag.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
+                                    &#9492;<span class="ml-1">Uncategorized</span>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type" t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)">
+                                    &#9492;<span class="ml-1" t-esc="slide_types[search_slide_type]"/>
+                                </a>
                             </div>
-                        </h6>
-                    </small>
+                        </div>
+
+                        <div class="btn-group ml-1 position-static">
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
+                                <form class="px-3" t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search" placeholder="Search courses"/>
+                                        <span class="input-group-append">
+                                            <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                                <i class="fa fa-search"/>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,61 +102,118 @@
     <t t-call="website.layout">
         <div class="wrap o_wslides_wrap">
             <t t-set="main_object" t-value="channel"/>
-            <t t-call="website_slides.course_nav"/>
 
-            <div class="o_wslides_course_header">
-                <div class="container o_wslides_course_header_container">
-                    <div class="row align-items-end d-flex">
-                        <div class="col-md-4 d-none d-sm-block o_wslides_course_header_aside">
-                            <div t-field="channel.image" widget="image" t-options="{'widget': 'image'}"/>
+            <div t-attf-class="o_wslides_course_header o_wslides_gradient position-relative text-white pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
+                <t t-call="website_slides.course_nav"/>
+
+                <div class="container mt-5 mt-md-3 mt-xl-4">
+                    <div class="row align-items-end align-items-md-stretch">
+                        <!-- ==== Header Left ==== -->
+                        <div class="col-12 col-md-4 col-lg-3">
+                            <div class="d-flex align-items-start justify-content-around h-100">
+                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image:url(/web/image/slide.channel/#{channel.id}/image)"/>
+                            </div>
                         </div>
-                        <div class="col-md-8 col-xs-12 align-self-stretch d-flex flex-column o_wslides_course_header_content">
-                            <div class="row">
-                                <h3 class="col-12"><span class="font-weight-bold" t-field="channel.name"/></h3>
-                                <div class="col-12" t-field="channel.description"/>
-                                <div class="col-xs-12 col-md-6 mt8" t-if="channel.allow_comment">
-                                    <t t-call="website_rating.rating_stars_static_popup_composer">
-                                        <t t-set="rating_avg" t-value="rating_avg"/>
-                                        <t t-set="rating_total" t-value="rating_count"/>
-                                        <t t-set="object" t-value="channel"/>
-                                        <t t-set="hash" t-value="message_post_hash"/>
-                                        <t t-set="pid" t-value="message_post_pid"/>
-                                        <t t-set="default_message_id" t-value="last_message_id"/>
-                                        <t t-set="default_message" t-value="last_message"/>
-                                        <t t-set="default_rating_value" t-value="last_rating_value"/>
-                                        <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
-                                        <t t-set="disable_composer" t-value="not channel.can_review"/>
-                                    </t>
+
+                        <!-- ==== Header Right ==== -->
+                        <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+                            <div class="d-flex flex-column">
+                                <h1 t-field="channel.name"/>
+                                <p class="mb-0 mb-xl-3" t-field="channel.description"/>
+
+                                <div t-if="channel.channel_type == 'documentation'" class="my-1">
+                                    <button role="button" class="btn text-white pl-0" title="Share Channel"
+                                        aria-label="Share Channel"
+                                        data-toggle="modal" data-target="#slideChannelShareModal">
+                                        <i class="fa fa-share-square"></i> Share
+                                    </button>
                                 </div>
                             </div>
-                            <div class="row mt-auto o_wslides_course_header_nav">
-                                <div class="col-xs-12 col-md-8">
-                                    <ul class="nav nav-tabs o_wslides_nav_tabs" id="profile_extra_info_tablist" role="tablist">
-                                        <li class="nav-item o_wlides_course_header_nav_home">
-                                            <a t-att-class="'nav-link %s' % ('' if search_slide_type else 'active')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                                                <i class="fa fa-home"/> Course
-                                            </a>
-                                        </li>
-                                        <li class="nav-item" t-if="channel.allow_comment">
-                                            <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5" t-if="channel.allow_comment">
+                                <t t-call="website_rating.rating_stars_static_popup_composer">
+                                    <t t-set="btn_classes" t-value="'btn-warning'"/>
+                                    <t t-set="rating_avg" t-value="rating_avg"/>
+                                    <t t-set="rating_total" t-value="rating_count"/>
+                                    <t t-set="object" t-value="channel"/>
+                                    <t t-set="hash" t-value="message_post_hash"/>
+                                    <t t-set="pid" t-value="message_post_pid"/>
+                                    <t t-set="default_message_id" t-value="last_message_id"/>
+                                    <t t-set="default_message" t-value="last_message"/>
+                                    <t t-set="default_rating_value" t-value="last_rating_value"/>
+                                    <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                                    <t t-set="disable_composer" t-value="not channel.can_review"/>
+                                </t>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="container o_wslides_course_main">
-                <div class="tab-content" id="courseMainTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
-                        <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_slides_cards"/>
-                    </div>
-                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                        <div class="row">
+
+            <div class="o_wslides_course_main">
+                <!-- ========== TRAINING COURSE ========== -->
+                <div t-if="channel.channel_type == 'training'" class="container">
+                    <div class="row">
+                        <!-- Training Sidebar -->
+                        <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                             <t t-call="website_slides.course_sidebar"/>
-                            <div class="col-lg-8">
+                        </div>
+
+                        <!-- Training Content -->
+                        <div class="col-12 col-md-8 col-lg-9">
+                            <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
+                                <li class="nav-item o_wslides_course_header_nav_home">
+                                    <a t-att-class="'nav-link %s' % ('' if search_slide_type else 'active')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                        <i class="fa fa-home"/> Course
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
+                                </div>
+                                <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                    <t t-call="portal.message_thread">
+                                        <t t-set="object" t-value="channel"/>
+                                        <t t-set="hash" t-value="message_post_hash"/>
+                                        <t t-set="pid" t-value="message_post_pid"/>
+                                        <t t-set="display_rating" t-value="True"/>
+                                        <t t-set="disable_composer" t-value="True"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DOCUMENTATION COURSE ========== -->
+                <t t-if="channel.channel_type == 'documentation'">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-8 offset-md-4 col-lg-9 offset-lg-3">
+                                <ul class="nav nav-tabs o_wslides_nav_tabs o_wslides_doc_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
+                                    <li class="nav-item o_wslides_course_header_nav_home">
+                                        <a class="nav-link active" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                            <i class="fa fa-home"/> Course
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content pb-5" id="courseMainTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_slides_cards"/>
+                        </div>
+                        <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                            <div class="container pt-4">
                                 <t t-call="portal.message_thread">
                                     <t t-set="object" t-value="channel"/>
                                     <t t-set="hash" t-value="message_post_hash"/>
@@ -146,19 +224,20 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </div>
         </div>
     </t>
 </template>
 
 <template id="course_sidebar" name="Course Sidebar (infos, CTA)">
-    <!-- Channel presentation, aka general information + CTAs -->
-    <div class="col-lg-4 col-xs-12 o_wslides_course_content_aside">
-        <div class="bg-white">
-            <div class="row justify-content-center o_wslides_js_course_join">
+    <!-- Training-only: Channel sidebar (aka general information + CTAs) -->
+    <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+
+        <div class="o_wslides_sidebar_top d-flex justify-content-between">
+            <div class="o_wslides_js_course_join flex-grow-1">
                 <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
-                    class="col-10 mt8 btn btn-primary o_wslides_js_course_join_link"
+                    class="btn btn-primary btn-block o_wslides_js_course_join_link"
                     title="Start Course" aria-label="Start Course Channel"
                     t-att-href="'#'"
                     t-att-data-channel-id="channel.id">
@@ -167,62 +246,40 @@
                         <t t-else="">Join Course</t>
                     </span>
                 </a>
-                <t t-if="not channel.is_member and channel.enroll == 'invite'">
-                    <a role="button" class="col-10 mt8 btn btn-light" t-att-href="'#'">
-                        <span class="cta-title text_small_caps">Private Course</span>
-                    </a>
+                <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
+                    <div class="alert my-0 bg-100 p-2">Private Course</div>
                     <div t-if="channel.enroll_msg" t-field="channel.enroll_msg"/>
-                    <span t-if="not channel.enroll_msg">Contact website administrator.</span>
-                </t>
-                <span t-if="channel.is_member" class="col-10 mt8 btn btn-primary">
-                    <i class="fa fa-chevron-right"></i>
-                    <span class="cta-title text_small_caps">Already member</span>
-                </span>
+                    <small t-if="not channel.enroll_msg">Contact website administrator.</small>
+                </div>
+                <div t-if="channel.is_member" class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100">
+                    <t t-call="website_slides.slides_misc_user_image">
+                        <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
+                        <t t-set="img_style" t-value="'height: 1.4em'"/>
+                    </t>
+                    <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
+                    <i class="fa fa-check"/>
+                </div>
             </div>
-            <div class="row mt8">
-                <span class="col-5">Last Update</span>
-                <span class="col"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></span>
-            </div>
-            <div class="row mt8">
-                <span class="col-5">Members</span>
-                <span class="col" t-esc="channel.members_count"/>
-            </div>
-            <t t-if="channel.channel_type == 'documentation'">
-                <div class="row mt8"><div class="col"><hr/></div></div>
-                <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
-                <t t-foreach="slide_type_keys" t-as="slide_type_key">
-                    <div class="row mt8 align-items-center">
-                        <span class="col-5">
-                            <t t-if="search_category">
-                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query('debug', slide_type=slide_type_key))"
-                                    t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
-                                    <t t-esc="slide_types[slide_type_key]"/>
-                                </a>
-                            </t>
-                            <t t-else="">
-                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', slide_type=slide_type_key))"
-                                    t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
-                                    <t t-esc="slide_types[slide_type_key]"/>
-                                </a>
-                            </t>
-                        </span>
-                        <span class="col">
-                            <t t-if="search_category">
-                                <span class="badge badge-pill badge-info" t-esc="search_category['nbr_%s' % slide_type_key]"/>
-                            </t>
-                            <t t-else="">
-                                <span class="badge badge-pill badge-info" t-esc="channel['nbr_%s' % slide_type_key]"/>
-                            </t>
-                        </span>
-                    </div>
-                </t>
-            </t>
-            <div class="row mt8"><div class="col"><hr/></div></div>
-            <div class="row justify-content-center mt8">
-                <button role="button" class="btn btn-primary col-10" title="Share Channel"
+            <button class="btn btn-sm d-md-none bg-white ml-1 border" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
+        </div>
+
+        <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
+            <table class="table table-sm mt-3">
+                <tr>
+                    <th class="border-top-0">Last Update</th>
+                    <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
+                </tr>
+                <tr>
+                    <th>Members</th>
+                    <td><t t-esc="channel.members_count"/></td>
+                </tr>
+            </table>
+
+            <div class="mt-3">
+                <button role="button" class="btn btn-link btn-block" title="Share Channel"
                     aria-label="Share Channel"
                     data-toggle="modal" data-target="#slideChannelShareModal">
-                    <i class="fa fa-share-square"></i> Share
+                    <i class="fa fa-share-square fa-fw"/> Share
                 </button>
                 <div class="modal fade" id="slideChannelShareModal" tabindex="-1" role="dialog" aria-labelledby="slideChannelShareModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -248,13 +305,14 @@
                     </div>
                 </div>
             </div>
-            <div t-if="channel.can_upload" class="row justify-content-center mt8">
-                <a role="button" class="btn btn-primary o_wslides_js_slide_upload col-10" title="Upload Presentation"
+
+            <div t-if="channel.can_upload" class="justify-content-center mt-1">
+                <a role="button" class="btn btn-link btn-block o_wslides_js_slide_upload" title="Upload Presentation"
                     aria-label="Upload Presentation" href="#"
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">
-                    <i class="fa fa-cloud-upload"></i> Upload
+                    <i class="fa fa-cloud-upload fa-fw"/> Upload
                 </a>
             </div>
         </div>
@@ -262,168 +320,273 @@
 </template>
 
 <template id="course_slides_list" name="Training Course content: list">
-    <div class="row">
-        <t t-call="website_slides.course_sidebar"/>
-        <div class="col-lg-8 mt-3 mb-5 o_wslides_slides_list" t-att-data-channel-id="channel.id">
-            <ul class="o_wslides_js_slides_list_container border-bottom list-unstyled">
-                <t t-set="j" t-value="0"/>
-                <t t-foreach="category_data" t-as="category">
-                    <t t-set="category_record" t-value="category['category'] if category['id'] else None"/>
-                    <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
-                    <li t-if="category['total_slides'] or channel.can_publish" class="o_wslides_slide_list_category"
-                        t-att-data-category-id="category_id">
-                        <div t-att-data-category-id="category_id"
-                            t-att-class="'text-muted bg-white border-bottom font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center %s' % ('o_wslides_js_category' if category_id else '')">
-                            <div class="pt-2 pb-2 d-flex align-items-center">
-                                <i t-if="channel.can_publish and category_id" class="fa fa-arrows mr-3"></i>
-                                <t t-if="category_record">
-                                    <span t-field="category_record.name"/>
-                                </t>
-                                <t t-else="">
-                                    <span>Uncategorized</span>
-                                </t>
+    <div class="mb-5 o_wslides_slides_list" t-att-data-channel-id="channel.id">
+
+        <ul class="o_wslides_js_slides_list_container list-unstyled">
+            <t t-set="j" t-value="0"/>
+            <t t-foreach="category_data" t-as="category">
+                <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
+
+                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category mb-2' if category_id else 'mb-3'" t-att-data-category-id="category_id">
+                    <div t-att-data-category-id="category_id"
+                         t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center %s' % ('o_wslides_js_category bg-white shadow-sm border-bottom-0' if category_id and channel.can_upload  else 'border-0 py-1')">
+                        <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">
+                            <div t-if="channel.can_publish and category_id" class="o_wslides_slides_list_drag py-2 pr-3">
+                                <i class="fa fa-bars"/>
                             </div>
+                            <span t-if="category_id" t-att-class="'text-muted' if not channel.can_upload else ''" t-esc="category['name']"/>
+                            <em t-elif="channel.can_publish" class="text-muted mb-1">Uncategorized</em>
+                            <small t-if="not category['total_slides']" class="ml-1 text-muted"><b>(empty)</b></small>
+                        </div>
+                        <div t-if="category_id" class="o_text_link d-flex border-left">
                             <a  t-if="channel.can_upload"
-                                class="mr-2 pt-2 pb-2 border-left o_wslides_js_slide_upload"
+                                class="o_wslides_js_slide_upload px-3 py-2"
                                 role="button"
                                 aria-label="Upload Presentation"
                                 href="#"
-                                style="text-decoration: none;"
                                 t-att-data-channel-id="channel.id"
                                 t-att-data-category-id="category_id"
                                 t-att-data-can-upload="channel.can_upload"
                                 t-att-data-can-publish="channel.can_publish">
-                                <i class="fa fa-plus ml-2"></i> Add content
+                                <i class="fa fa-plus mr-1"/> <span class="d-none d-md-inline-block">Add content</span>
                             </a>
                         </div>
-                        <ul t-att-data-category-id="category_id" class="list-unstyled">
-                            <li t-att-class="('text-muted font-italic o_wslides_slides_list_slide o_wslides_js_slides_list_empty justify-content-between align-items-center p-2 %s') % ('d-none' if category['total_slides'] else 'd-flex')">
-                                <div class="ml-2">
-                                    <span>Empty category</span>
-                                </div>
-                            </li>
-                            <li class="o_wslides_slides_list_slide o_not_editable"></li>
-                            <t t-foreach="category['slides']" t-as="slide">
-                                <t t-call="website_slides.course_slides_list_slide" />
-                                <t t-set="j" t-value="j+1"/>
-                            </t>
-                        </ul>
-                    </li>
-                </t>
-            </ul>
-            <div t-if="channel.can_upload" class="o_wslides_content_actions">
-                <a  class="o_wslides_js_slide_upload mr-2 border btn btn-light text-muted font-weight-bold"
-                    role="button"
-                    aria-label="Upload Presentation"
-                    href="#"
-                    t-att-data-channel-id="channel.id"
-                    t-att-data-can-upload="channel.can_upload"
-                    t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus"></i> Add Content</a>
-                <a class="o_wslides_js_slide_section_add border btn btn-light text-muted font-weight-bold" t-attf-channel_id="#{channel.id}"
-                    href="#" role="button"
-                    groups="website.group_website_publisher"><i class="fa fa-folder-o"></i> Add Section</a>
-            </div>
+                    </div>
+                    <ul t-att-data-category-id="category_id" class="list-unstyled pb-1 border-top">
+                        <li class="o_wslides_slides_list_slide o_not_editable border-0"/>
+                        <li class="o_wslides_js_slides_list_empty border-0"/>
+
+                        <t t-foreach="category['slides']" t-as="slide">
+                            <t t-call="website_slides.course_slides_list_slide" />
+                            <t t-set="j" t-value="j+1"/>
+                        </t>
+                    </ul>
+                </li>
+            </t>
+        </ul>
+        <div t-if="channel.can_upload" class="o_wslides_content_actions">
+            <a  class="o_wslides_js_slide_upload mr-1 border btn btn-light text-muted"
+                role="button"
+                aria-label="Upload Presentation"
+                href="#"
+                t-att-data-channel-id="channel.id"
+                t-att-data-can-upload="channel.can_upload"
+                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1"/>Add Content</a>
+            <a class="o_wslides_js_slide_section_add border btn btn-light text-muted" t-attf-channel_id="#{channel.id}"
+                href="#" role="button"
+                groups="website.group_website_publisher"><i class="fa fa-folder-o mr-1"/>Add Section</a>
         </div>
-        <div t-field="channel.description_html"/>
     </div>
+    <div t-field="channel.description_html"/>
 </template>
 
 <template id="course_slides_list_slide" name="Slide template for a training channel">
-    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id"
-        class="o_wslides_slides_list_slide d-flex align-items-center px-2 py-0">
-        <div t-if="channel.can_publish" class="border-right pt-2 pb-2">
-            <i class="fa fa-arrows mr-2 text-muted"></i>
+    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
+        <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag border-right p-2">
+            <i class="fa fa-bars mr-2"></i>
         </div>
-        <a t-if="slide.is_preview or channel.is_member or channel.can_publish" class="o_wslides_js_slides_list_slide_link font-weight-bold mr-auto"
-            t-attf-href="/slides/slide/#{slug(slide)}">
-            <t t-call="website_slides.slide_icon">
-                <t t-set="icon_class" t-value="'pt-2 pb-2 ml-2 mr-2'"/>
-            </t>
+        <t t-call="website_slides.slide_icon">
+            <t t-set="icon_class" t-value="'py-2 mx-2'"/>
+        </t>
+        <a t-if="slide.is_preview or channel.is_member or channel.can_publish" class="o_wslides_js_slides_list_slide_link mr-auto" t-attf-href="/slides/slide/#{slug(slide)}">
             <span t-field="slide.name"/>
         </a>
-        <span t-else="" class="text-muted mr-auto">
-            <t t-call="website_slides.slide_icon">
-                <t t-set="icon_class" t-value="'pt-2 pb-2 ml-2 mr-2'"/>
-            </t>
+        <span t-else="" class="mr-auto">
             <span t-esc="slide.name"/>
         </span>
-        <t t-if="slide.question_ids">
-            <span t-att-class="'badge text-white font-weight-bold %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-warning')">
-                <i class="fa fa-flag mr-2"></i>
+
+        <div class="d-flex flex-wrap">
+            <span t-if="slide.question_ids" t-att-class="'badge font-weight-bold px-2 py-1 m-1 %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-warning')">
+                <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
-        </t>
-        <span class="badge badge-danger ml-2" t-if="not slide.website_published">Unpublished</span>
-        <span class="badge badge-info ml-2" t-if="slide.is_preview">Free preview</span>
+            <span class="badge badge-danger font-weight-normal px-2 py-1 m-1" t-if="not slide.website_published">Unpublished</span>
+            <span class="badge badge-success font-weight-normal px-2 py-1 m-1" t-if="slide.is_preview and not channel.is_member">Free preview</span>
+        </div>
+
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex align-items-center o_wslides_slides_list_slide_controls">
             <t t-if="channel.is_member">
-                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done fa fa-check-circle text-muted mr-2"></i>
-                <i t-if="channel_progress[slide.id].get('completed')" class="check-done text-primary fa fa-check-circle mr-2"></i>
+                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done fa fa-circle-o text-500 px-2"></i>
+                <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
             </t>
-            <a t-if="channel.can_publish and not slide.slide_type == 'webpage'" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form">
-                <i class="fa fa-pencil text-muted mr-2"></i>
-            </a>
-            <a t-if="channel.can_publish and slide.slide_type == 'webpage'" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1">
-                <i class="fa fa-pencil text-muted mr-2"></i>
-            </a>
-            <i t-if="channel.can_publish" t-att-data-slide-id="slide.id" class="fa fa-trash text-muted o_wslides_js_slide_archive"></i>
+            <span t-if="channel.can_publish" class="d-none d-md-inline-block">
+                <a t-if="slide.slide_type == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
+                <a t-else="" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form"><span class="fa fa-pencil"/></a>
+                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive"><span class="fa fa-trash"/></a>
+            </span>
         </div>
     </li>
 </template>
 
+<!-- ======= Documentation Course content: cards / categories=======  -->
 <template id="course_slides_cards" name="Documentation Course content: cards / categories">
-    <div t-if="not search" class="row mb-5">
-        <t t-call="website_slides.course_sidebar"/>
-        <div class="col-lg-8">
-            <div class="mt-3 w-100">
-                <h5 class="m-0"> Featured lesson</h5>
-                <hr class="mt-2"/>
+    <nav class="navbar navbar-expand-lg navbar-light mb-4 border-bottom">
+        <div class="container">
+            <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
+
+            <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
+                <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info mr-3">
+                    <i class="fa fa-eraser mr-1"/>Clear filters
+                </a>
             </div>
-            <div class="row" t-if="slide_promoted">
-                <div class="col-4">
-                    <img class="img img-fluid" style=""
-                        t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
-                        t-att-alt="slide_promoted.name"/>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-lg-auto align-items-lg-center">
+
+                    <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
+                    <t t-foreach="slide_type_keys" t-as="slide_type_key">
+                        <t t-if="search_category">
+                            <li t-if="search_category['nbr_%s' % slide_type_key] > 0" class="nav-item">
+                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query('debug', slide_type=slide_type_key))"
+                                   t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
+                                   <t t-esc="slide_types[slide_type_key]"/>
+                                   <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_type_key]"/>
+                                </a>
+                            </li>
+                        </t>
+                        <t t-else="">
+                            <li t-if="channel['nbr_%s' % slide_type_key] > 0" class="nav-item">
+                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', slide_type=slide_type_key))"
+                                   t-att-class="'nav-link d-flex align-items-center justify-content-between pl-0 mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
+                                   <t t-esc="slide_types[slide_type_key]"/>
+                                   <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_type_key]"/>
+                                </a>
+                            </li>
+                        </t>
+                    </t>
+                </ul>
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown ml-lg-auto">
+                        <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                            <b>Order by</b>
+                            <span class="d-none d-xl-inline">:
+                                <t t-if="sorting == 'most_voted'">Most Voted</t>
+                                <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
+                                <t t-else="">Newest</t>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
+                            <h6 class="dropdown-header">Sort by</h6>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='latest'))"
+                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_voted'))"
+                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_viewed'))"
+                               t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="form-inline mr-3">
+                    <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
+                        <i class="fa fa-eraser mr-1"/>Clear filters
+                    </a>
                 </div>
-                <div class="col-8">
-                    <h3 class="w-100" t-att-title="slide_promoted.name">
-                        <a t-if="slide_promoted.is_preview or channel.is_member or channel.can_publish"
-                           t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                        <span t-else="" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                    </h3>
-                    <div t-field="slide_promoted.description"/>
-                </div>
+
+                <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get" class="form-inline my-2 my-lg-0">
+                    <div class="input-group position-relative">
+                        <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
+                        <div class="input-group-append">
+                            <button class="btn border" type="submit" aria-label="Search" title="Search">
+                                <i class="fa fa-search"/>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
+    </nav>
+
+    <div t-if="channel.can_upload" class="text-right container pb-2">
+        <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
+            title="Upload Presentation" role="button"
+            aria-label="Upload Presentation" href="#"
+            t-att-data-channel-id="channel.id"
+            t-att-data-can-upload="channel.can_upload"
+            t-att-data-can-publish="channel.can_publish">
+            <i class="fa fa-cloud-upload mr-1"/>Upload new content
+        </a>
     </div>
-    <div t-if="search and not category_data" class="row mt16 justify-content-end">
-        <div class="col-12">
-            <p class="text-center">No content was found using your search <span class="font-weight-bold" t-esc="search"/>.</p>
-        </div>
-    </div>
-    <t t-foreach="category_data" t-as="category">
-        <div class="mb-5" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
-            <div class="row align-items-center">
-                <div class="col">
-                    <t t-if="category['id']">
-                        <a t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])" class="float-right">View all</a>
-                    </t>
-                    <t t-else="">
-                        <a t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))" class="float-right">View all</a>
-                    </t>
-                    <h5 class="m-0"><t t-esc="category['name']"/></h5>
-                    <hr class="mt-2"/>
-                </div>
-            </div>
-            <div class="row mx-n2 mt8">
-                <t t-foreach="category['slides']" t-as="slide">
-                    <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+    <!-- Featured lesson  -->
+    <div t-if="not search and not search_slide_type and slide_promoted" class="container mb-3">
+        <div class="card">
+            <div class="card-body d-flex flex-column flex-lg-row">
+                <t t-set="image_url" t-value="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
+
+                <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
+                    <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="w-100 w-lg-50 mr-0 mr-lg-4 mb-3 mb-lg-0 flex-shrink-0 rounded border">
+                        <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+                    </a>
                 </t>
+                <t t-else="">
+                    <div class="w-100 w-lg-50 mr-0 mr-lg-4 mb-3 mb-lg-0 flex-shrink-0 rounded border">
+                        <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+                    </div>
+                </t>
+
+                <div>
+                    <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
+                       t-attf-href="/slides/slide/#{slug(slide_promoted)}"
+                       class="h4 d-block" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
+                    <h4 t-else="" class="text-muted" t-field="slide_promoted.name"/>
+
+                    <div t-if="slide_promoted.tag_ids" class="border-top mt-2 pt-1">
+                        <t t-foreach="slide_promoted.tag_ids" t-as="tag">
+                            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide_promoted.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
+                        </t>
+                    </div>
+                    <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
+                </div>
             </div>
         </div>
-    </t>
-    <div class="row">
-        <div class="col" t-field="channel.description_html"/>
+    </div>
+
+    <div class="container py-2">
+        <t t-if="search">
+            <t t-set="search_results_number" t-value="0"/>
+            <t t-foreach="category_data" t-as="category">
+                <t t-set="search_results_number" t-value="search_results_number + category['total_slides']"/>
+            </t>
+            <div t-if="search_results_number == 0" class="alert alert-info mt-4 mb-5 text-center">
+                No content was found using your search <span class="font-weight-bold" t-esc="search"/>.
+            </div>
+        </t>
+
+        <t t-foreach="category_data" t-as="category">
+            <div class="mb-2" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
+                <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['name'] != 'Uncategorized'">
+                    <h5 class="m-0"><t t-esc="category['name']"/></h5>
+                    <a t-if="category['id']" t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])">View all</a>
+                    <a t-else="" t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
+                </div>
+                <div class="row mx-n2">
+                    <t t-foreach="category['slides']" t-as="slide">
+                        <t t-if="(slide.id != slide_promoted.id) and (slide_promoted and not search) ">
+                            <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+                        </t>
+                        <t t-elif="search_slide_type or search">
+                            <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </t>
+
+        <div class="row">
+            <div class="col" t-field="channel.description_html"/>
+        </div>
+
+        <t t-if="search_category">
+            <div class="form-inline justify-content-center">
+                <t t-call="website_profile.pager_nobox"></t>
+            </div>
+        </t>
     </div>
     <t t-if="search_category">
         <div class="form-inline justify-content-center pb-5">
@@ -434,18 +597,26 @@
 
 <template id='lesson_card' name="Lesson Card">
     <div class="card w-100 o_wslides_lesson_card mb-4">
-        <t t-set="lesson_image" t-value="'/slides/slide/%s/get_image?field=image_large' % slide.id"/>
         <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
-        <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
-            <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
-        </a>
-        <t t-else="">
-            <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
+
+        <t t-if="slide.image">
+            <t t-set="lesson_image" t-value="'/web/image/slide.slide/%s/image' % slide.id"/>
+            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
+                <div class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
+            </a>
+            <div t-else="" class="card-img-top border-bottom" t-attf-style="padding-top: 50%; background-image: url(#{lesson_image}); background-size: cover; background-position:center"/>
         </t>
+        <t t-else="">
+            <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}" t-title="slide.name">
+                <div class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
+            </a>
+            <div t-else="" class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
+        </t>
+
         <div class="card-body">
             <a t-if="can_access" class="card-title h5" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
             <span t-else="" class="card-title h5 text-muted" t-esc="slide.name"/>
-            <div class="card-subtitle mb-2 text-muted">
+            <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website.group_website_publisher'))">
                 <t t-if="slide.is_preview">
                     <span class="badge badge-info">Free preview</span>
                 </t>
@@ -453,8 +624,8 @@
                     <span class="badge badge-danger">Unpublished</span>
                 </t>
             </div>
-            <div class="card-text mt-1">
-                <div class="font-weight-light oe_no_empty" t-field="slide.description"/>
+            <div class="card-text pt-2">
+                <div class="o_wslides_desc_truncate_3 font-weight-light oe_no_empty" t-field="slide.description"/>
                 <div t-if="slide.tag_ids" class="border-top mt-2 pt-1">
                     <t t-foreach="slide.tag_ids" t-as="tag">
                         <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>

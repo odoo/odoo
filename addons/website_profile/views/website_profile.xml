@@ -9,6 +9,74 @@
         </xpath>
     </template>
 
+    <!-- Sub nav -->
+    <template id="user_profile_sub_nav" name="User profile subnav">
+        <div class="o_wprofile_all_users_nav">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <!-- Desktop Mode -->
+                    <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                        <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
+                            <li class="breadcrumb-item">
+                                <a t-att-href="home_url or '/'">Home</a>
+                            </li>
+                            <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
+                                <a href="/profile/users">Users</a>
+                            </li>
+                            <li t-if="view_user" class="breadcrumb-item active">
+                                <a><t t-esc="view_user"/></a>
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
+                        <!-- search -->
+                        <form t-attf-action="/profile/users" role="search" method="get">
+                            <div class="input-group o_wprofile_course_nav_search ml-1 position-relative">
+                                <span class="input-group-prepend">
+                                    <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                                <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search users"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Mobile Mode -->
+                    <div class="col d-md-none py-1">
+                        <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
+                            <div class="btn-group w-100 ml-2">
+                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
+                                    <a class="dropdown-item" href="/profile/users">&#9492; Users</a>
+                                    <a t-if="view_user" class="dropdown-item">&#9492; <t t-esc="view_user"/></a>
+                                </ul>
+                            </div>
+
+                            <div class="btn-group ml-1 position-static mr-2">
+                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
+                                    <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="search" placeholder="Search courses"/>
+                                            <span class="input-group-append">
+                                                <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                                    <i class="fa fa-search"/>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!--
     Single User Profile Page
@@ -126,8 +194,12 @@
     </template>
 
     <template id="user_profile_header" name="Profile Page Header">
-        <div class="o_wprofile_header o_wprofile_gradient position-relative text-white pb-3 pb-md-0 pt-2 pt-md-5">
-            <div class="container">
+        <div class="o_wprofile_header o_wprofile_gradient position-relative text-white">
+            <t t-call="website_profile.user_profile_sub_nav">
+                <t t-set="view_user"><t t-esc="user.name"/></t>
+            </t>
+
+            <div class="container pb-3 pb-md-0 pt-2 pt-md-5">
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
@@ -169,13 +241,13 @@
     </template>
 
     <template id="user_profile_content" name="Profile Page Content">
-        <div class="o_wprofile_content container">
+        <div class="container">
             <div class="row">
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                     <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
-                        <div class="o_wprofile_sidebar_top d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="font-weight-bold mr-2">Rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
@@ -383,43 +455,10 @@
     </template>
 
     <template id="users_page_header" name="Users Page Header">
-        <div class="o_wprofile_all_users_nav">
+        <div class="o_wprofile_all_users_header o_wprofile_gradient mb-n5 pb-5">
+            <t t-call="website_profile.user_profile_sub_nav"/>
             <div class="container">
-                <div class="row align-items-center justify-content-between">
-                    <!-- nav -->
-                    <nav aria-label="breadcrumb" class="col-md-8 col-xs-12">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a t-att-href="home_url or '/'">Home</a>
-                            </li>
-                            <li t-att-class="'breadcrumb-item active'">
-                                <a href="#">Users</a>
-                            </li>
-                        </ol>
-                    </nav>
-                    <div class="col-md-4 col-xs-12 d-flex flex-row align-items-center">
-                        <!-- karma / profile -->
-                        <a t-if="not is_public_user" t-att-href="'/profile/user/%s' % user_id.id" class="font-weight-bold mr-3">
-                            <i class="fa fa-diamond" /> <t t-esc="user_id.karma"/>
-                        </a>
-                        <!-- search -->
-                        <form t-attf-action="/profile/users" role="search" method="get">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search in Users" t-att-value="search"/>
-                                <span class="input-group-append">
-                                    <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="o_wprofile_all_users_header o_wprofile_gradient text-white">
-            <div class="container">
-                <h1 class="py-5">All Users</h1>
+                <h1 class="py-4 text-white">All Users</h1>
             </div>
         </div>
     </template>
@@ -500,24 +539,20 @@
     </template>
 
     <template id="email_validation_banner">
-        <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable" role="alert">
+        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissable'"/>
+        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
+
+        <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
             <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <div>
-                <p>
-                    It appears your email has not been verified.
-                    <a class="send_validation_email" href="#" t-att-data-redirect_url="redirect_url">
-                    <span t-esc="send_validation_email_message"/></a>
-                </p>
-            </div>
+            It appears your email has not been verified.<br/>
+            <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url">
+                <span t-esc="send_validation_email_message"/>
+            </a>
         </div>
-        <div t-if="validation_email_done" class="alert alert-success alert-dismissable" role="status">
+        <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
             <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <div>
-                <p>
-                    <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
-                    <span t-esc="additional_validated_email_message"/>
-                </p>
-            </div>
+            <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
+            <span t-esc="additional_validated_email_message"/>
         </div>
     </template>
 
