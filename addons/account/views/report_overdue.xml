@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="account.report_overdue_document">
+    <t t-if="user.company_id and not user.id == 1">
+        <t t-set="company" t-value="user.company_id"/>"
+    </t>
     <t t-call="web.external_layout">
         <div class="page">
             <div class="row">
