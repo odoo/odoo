@@ -887,7 +887,8 @@ class AccountMoveLine(models.Model):
 
             for after_rec_dict in cash_basis_subjected:
                 new_rec = part_rec.create(after_rec_dict)
-                if cash_basis:
+                # if the pair belongs to move being reverted, do not create CABA entry
+                if cash_basis and not (new_rec.debit_move_id + new_rec.credit_move_id).mapped('move_id').mapped('reverse_entry_id'):
                     new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec)
         self.recompute()
 
