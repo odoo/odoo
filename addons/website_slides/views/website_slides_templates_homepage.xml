@@ -255,7 +255,10 @@
     <div class="card w-100 o_wslides_course_card mb-4">
         <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image_large' % channel.id"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
-            <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
+            <div t-if="channel.image_large" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
+            <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
+                <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
+            </div>
         </a>
         <div class="card-body">
             <a class="card-title h5" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>

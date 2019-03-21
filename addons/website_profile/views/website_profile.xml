@@ -241,13 +241,13 @@
     </template>
 
     <template id="user_profile_content" name="Profile Page Content">
-        <div class="o_wprofile_content container">
+        <div class="container">
             <div class="row">
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                     <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
-                        <div class="o_wprofile_sidebar_top d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="font-weight-bold mr-2">Rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
