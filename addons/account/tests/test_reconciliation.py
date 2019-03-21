@@ -1876,3 +1876,66 @@ class TestReconciliation(AccountingTestCase):
             (move_lines - base_amount_tax_lines)
             .filtered(lambda l: l.account_id == self.tax_final_account)
             .debit, 17094.66)
+
+    def test_reconciliation_cash_basis_revert(self):
+        company = self.env.ref('base.main_company')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+        tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
+        self.tax_waiting_account.reconcile = True
+        tax_waiting_account10 = self.tax_waiting_account.copy({
+            'name': 'TAX WAIT 10',
+            'code': 'TWAIT1',
+        })
+
+        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+
+        # Purchase
+        purchase_move = self.env['account.move'].create({
+            'name': 'invoice',
+            'journal_id': self.purchase_journal.id,
+        })
+
+        purchase_payable_line0 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'credit': 175,
+            'move_id': purchase_move.id,
+        })
+
+        AccountMoveLine.create({
+            'name': 'expenseTaxed 10%',
+            'account_id': self.expense_account.id,
+            'debit': 50,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
+        })
+        tax_line0 = AccountMoveLine.create({
+            'name': 'TaxLine0',
+            'account_id': tax_waiting_account10.id,
+            'debit': 5,
+            'move_id': purchase_move.id,
+            'tax_line_id': tax_cash_basis10percent.id,
+        })
+        AccountMoveLine.create({
+            'name': 'expenseTaxed 20%',
+            'account_id': self.expense_account.id,
+            'debit': 100,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, self.tax_cash_basis.id, False)],
+        })
+        tax_line1 = AccountMoveLine.create({
+            'name': 'TaxLine1',
+            'account_id': self.tax_waiting_account.id,
+            'debit': 20,
+            'move_id': purchase_move.id,
+            'tax_line_id': self.tax_cash_basis.id,
+        })
+        purchase_move.post()
+
+        reverted = self.env['account.move'].browse(purchase_move.reverse_moves())
+        self.assertTrue(reverted.exists())
+
+        for inv_line in [purchase_payable_line0, tax_line0, tax_line1]:
+            self.assertTrue(inv_line.full_reconcile_id.exists())
+            reverted_expected = reverted.line_ids.filtered(lambda l: l.account_id == inv_line.account_id)
+            self.assertEqual(len(reverted_expected), 1)
+            self.assertEqual(reverted_expected.full_reconcile_id, inv_line.full_reconcile_id)
