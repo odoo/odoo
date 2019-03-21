@@ -7,7 +7,7 @@
             <field name="amount">15</field>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_15"/>
-            <field name="invoice_repartition_line_ids" eval="[
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -19,7 +19,7 @@
                     'account_id': ref('conf_iva'),
                 }),
             ]"/>
-            <field name="refund_repartition_line_ids" eval="[
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -39,7 +39,7 @@
             <field name="amount">15</field>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_15"/>
-            <field name="invoice_repartition_line_ids" eval="[
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
@@ -51,7 +51,7 @@
                     'account_id': ref('conf_ova'),
                 }),
             ]"/>
-            <field name="refund_repartition_line_ids" eval="[
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
