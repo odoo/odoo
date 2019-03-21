@@ -414,6 +414,9 @@ class MrpWorkorder(models.Model):
             if record.next_work_order_id.state == 'pending':
                 record.next_work_order_id.state = 'ready'
 
+    def _init_nextworkorder_states(self):
+        return 'pending'
+
     @api.multi
     def button_start(self):
         self.ensure_one()
