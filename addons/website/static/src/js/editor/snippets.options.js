@@ -642,11 +642,11 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      */
     _renderPreview: function () {
         var self = this;
-        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(\w+)/);
+        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[\/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
             $.ajax({
-                url: 'https://graph.facebook.com/' + match[1] + '/picture',
+                url: 'https://graph.facebook.com/' + (match[2] || match[1]) + '/picture',
                 statusCode: {
                     200: function () {
                         self._toggleWarning(true);

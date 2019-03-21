@@ -197,6 +197,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 move_line.product_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
+                location_dest_id = production_move.location_dest_id.get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
                 move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
@@ -205,7 +206,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': self.qty_producing,
                     'location_id': production_move.location_id.id,
-                    'location_dest_id': production_move.location_dest_id.id,
+                    'location_dest_id': location_dest_id,
                 })
         else:
             rounding = production_move.product_uom.rounding
