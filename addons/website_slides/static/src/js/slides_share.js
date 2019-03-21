@@ -60,7 +60,6 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
                 linkedin: 'https://www.linkedin.com/countserv/count/share?url=',
                 twitter: 'https://cdn.api.twitter.com/1/urls/count.json?url=',
                 facebook: 'https://graph.facebook.com/?id=',
-                gplus: 'https://clients6.google.com/rpc',
             };
         }
 
@@ -82,42 +81,15 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      */
     _updateStatistics: function (socialSite, slideURL) {
         var self = this;
-        if (socialSite === 'gplus') {
-            $.ajax({
-                url: self.socialURLs['gplus'],
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify([{
-                    method: 'pos.plusones.get',
-                    id: 'p',
-                    params: {
-                        nolog: true,
-                        id: slideURL,
-                        source: 'widget',
-                        userId: '@viewer',
-                        groupId: '@self'
-                    },
-                    // TDE NOTE: should there be a key here ?
-                    jsonrpc: '2.0',
-                    apiVersion: 'v1'
-                }]),
-                success: function (data) {
-                    $('#google-badge').text(data[0].result.metadata.globalCounts.count || 0);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
-                },
-            });
-        } else {
-            $.ajax({
-                url: self.socialURLs[socialSite] + slideURL,
-                dataType: 'jsonp',
-                success: function (data) {
-                    var shareCount = (socialSite === 'facebook' ? data.shares : data.count) || 0;
-                    $('#' + socialSite + '-badge').text(shareCount);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + socialSite + '-badge').text()));
-                },
-            });
-        }
+        $.ajax({
+            url: self.socialURLs[socialSite] + slideURL,
+            dataType: 'jsonp',
+            success: function (data) {
+                var shareCount = (socialSite === 'facebook' ? data.shares : data.count) || 0;
+                $('#' + socialSite + '-badge').text(shareCount);
+                $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + socialSite + '-badge').text()));
+            },
+        });
     },
 
     //--------------------------------------------------------------------------
