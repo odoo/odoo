@@ -4,7 +4,7 @@
 from odoo import models, api, fields, _
 
 
-class res_company(models.Model):
+class ResCompany(models.Model):
     _inherit = 'res.company'
     _description = 'Company'
 

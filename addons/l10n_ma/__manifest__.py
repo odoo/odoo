@@ -20,7 +20,6 @@ il permet également d'ajouter l'ICE sur les factures conformément à la nouvel
     'website': 'http://www.karizma.ma',
     'depends': ['account', 'web'],
     'data': [
-        'data/account_group.xml',
         'data/l10n_ma_chart_data.xml',
         'data/account_chart_template_data.xml',
         'data/account_tax_data.xml',
