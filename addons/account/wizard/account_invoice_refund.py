@@ -22,7 +22,7 @@ class AccountInvoiceRefund(models.TransientModel):
 
     date_invoice = fields.Date(string='Credit Note Date', default=fields.Date.context_today, required=True)
     date = fields.Date(string='Accounting Date')
-    description = fields.Char(string='Reason', required=True, default=_get_reason)
+    description = fields.Char(string='Reason', required=True, default=lambda self: self._get_reason())
     refund_only = fields.Boolean(string='Technical field to hide filter_refund in case invoice is partially paid', compute='_get_refund_only')
     filter_refund = fields.Selection([('refund', 'Create a draft credit note'), ('cancel', 'Cancel: create credit note and reconcile'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice')],
         default='refund', string='Credit Method', required=True, help='Choose how you want to credit this invoice. You cannot Modify and Cancel if the invoice is already reconciled')
