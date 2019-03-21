@@ -27,7 +27,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         if (stripeHandler) {
             return stripeHandler;
         }
-        stripeHandler = StripeCheckout.configure({
+        var handler = stripeHandler = StripeCheckout.configure({
             key: $("input[name='stripe_key']").val(),
             image: $("input[name='stripe_image']").val(),
             locale: 'auto',
@@ -65,7 +65,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                 });
             },
         });
-        return stripeHandler;
+        return handler;
     }
 
     require('web.dom_ready');
