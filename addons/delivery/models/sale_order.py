@@ -12,7 +12,6 @@ class SaleOrder(models.Model):
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
-    invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery", copy=False)
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
 
@@ -32,13 +31,6 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.recompute_delivery_price = True
-
-    @api.multi
-    def _action_confirm(self):
-        res = super(SaleOrder, self)._action_confirm()
-        for so in self:
-            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
-        return res
 
     @api.multi
     def _remove_delivery_line(self):
