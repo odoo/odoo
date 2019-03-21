@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
     website_domain = fields.Char('Website Domain', related='website_id.domain', readonly=False)
     website_country_group_ids = fields.Many2many(related='website_id.country_group_ids', readonly=False)
     website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company', readonly=False)
-    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', readonly=False)
+    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', readonly=False, required=True)
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
         string='Default language', related='website_id.default_lang_id', readonly=False,
@@ -106,7 +106,9 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_language_ids(self):
         # If current default language is removed from language_ids
         # update the website_default_lang_id
-        if self.language_ids and self.website_default_lang_id not in self.language_ids:
+        if not self.language_ids:
+            self.website_default_lang_id = False
+        elif self.website_default_lang_id not in self.language_ids:
             self.website_default_lang_id = self.language_ids[0]
 
     @api.depends('language_ids')

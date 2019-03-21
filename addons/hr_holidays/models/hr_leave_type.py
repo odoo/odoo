@@ -70,9 +70,9 @@ class HolidaysType(models.Model):
                                      "This is only used when validation is 'hr' or 'both'",)
     validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
-        ('hr', 'Payroll Officer'),
+        ('hr', 'Time Off Officer'),
         ('manager', 'Team Leader'),
-        ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation')
+        ('both', 'Team Leader and Time Off Officer')], default='hr', string='Validation')
     allocation_type = fields.Selection([
         ('no', 'No Allocation Needed'),
         ('fixed_allocation', 'Free Allocation Request'),
