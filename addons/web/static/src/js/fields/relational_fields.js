@@ -484,74 +484,129 @@ var FieldMany2One = AbstractField.extend({
                 context: context,
             }})
             .then(function (result) {
-                // possible selections for the m2o
-                var values = _.map(result, function (x) {
-                    x[1] = self._getDisplayName(x[1]);
-                    return {
-                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                        value: x[1],
-                        name: x[1],
-                        id: x[0],
-                    };
-                });
-
-                // search more... if more results than limit
-                if (values.length > self.limit) {
-                    values = values.slice(0, self.limit);
-                    values.push({
-                        label: _t("Search More..."),
-                        action: function () {
-                            self._rpc({
-                                    model: self.field.relation,
-                                    method: 'name_search',
-                                    kwargs: {
-                                        name: search_val,
-                                        args: domain,
-                                        operator: "ilike",
-                                        limit: 160,
-                                        context: context,
-                                    },
-                                })
-                                .then(self._searchCreatePopup.bind(self, "search"));
-                        },
-                        classname: 'o_m2o_dropdown_option',
-                    });
-                }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
-                // quick create
-                var raw_result = _.map(result, function (x) { return x[1]; });
-                if (create_enabled && !self.nodeOptions.no_quick_create &&
-                    search_val.length > 0 && !_.contains(raw_result, search_val)) {
-                    values.push({
-                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                            $('<span />').text(search_val).html()),
-                        action: self._quickCreate.bind(self, search_val),
-                        classname: 'o_m2o_dropdown_option'
-                    });
-                }
-                // create and edit ...
-                if (create_enabled && !self.nodeOptions.no_create_edit) {
-                    var createAndEditAction = function () {
-                        // Clear the value in case the user clicks on discard
-                        self.$('input').val('');
-                        return self._searchCreatePopup("form", false, self._createContext(search_val));
-                    };
-                    values.push({
-                        label: _t("Create and Edit..."),
-                        action: createAndEditAction,
-                        classname: 'o_m2o_dropdown_option',
-                    });
-                } else if (values.length === 0) {
-                    values.push({
-                        label: _t("No results to show..."),
-                    });
-                }
-
-                def.resolve(values);
-            });
+                def.resolve(self._droplist_m2o(result, search_val, domain, context));
+            })
 
         return def;
     },
+    
+    /**
+     * droplist m2o
+     *
+     * @private
+     *
+     */
+    _droplist_m2o: function(result, search_val, domain, context) {
+        var self = this
+        // possible selections for the m2o
+        var values = _.map(result, function(x) {
+            x[1] = self._getDisplayName(x[1]);
+            return {
+                label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                value: x[1],
+                name: x[1],
+                id: x[0],
+            };
+        });
+
+        // search more... if more results than limit
+        values = self._droplist_m2o_search_more(result, values, search_val, domain, context);
+
+        // quick create
+        values = self._droplist_m2o_quick_create(result, values, search_val, domain, context);
+
+        // create and edit ...
+        values = self._droplist_m2o_create_edit(result, values, search_val, domain, context);
+
+        return values
+
+    },
+
+    /**
+     * droplist m2o: search more
+     *
+     * @private
+     *
+     */
+    _droplist_m2o_search_more: function(result, values, search_val, domain, context) {
+        var self = this
+        if (values.length > self.limit) {
+            values = values.slice(0, self.limit);
+            values.push({
+                label: _t("Search More..."),
+                action: function() {
+                    self._rpc({
+                            model: self.field.relation,
+                            method: 'name_search',
+                            kwargs: {
+                                name: search_val,
+                                args: domain,
+                                operator: "ilike",
+                                limit: 160,
+                                context: context,
+                            },
+                        })
+                        .then(self._searchCreatePopup.bind(self, "search"));
+                },
+                classname: 'o_m2o_dropdown_option',
+            });
+        }
+        return values
+    },
+
+    /**
+     * droplist m2o: quick create
+     *
+     * @private
+     *
+     */
+    _droplist_m2o_quick_create: function(result, values, search_val, domain, context) {
+        var self = this
+        var create_enabled = self.can_create && !self.nodeOptions.no_create;
+        // quick create
+        var raw_result = _.map(result, function(x) {
+            return x[1];
+        });
+        if (create_enabled && !self.nodeOptions.no_quick_create &&
+            search_val.length > 0 && !_.contains(raw_result, search_val)) {
+            values.push({
+                label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                    $('<span />').text(search_val).html()),
+                action: self._quickCreate.bind(self, search_val),
+                classname: 'o_m2o_dropdown_option'
+            });
+        }
+        return values
+    },
+
+    /**
+     * droplist m2o: create and edit
+     *
+     * @private
+     *
+     */
+    _droplist_m2o_create_edit: function(result, values, search_val, domain, context) {
+        var self = this
+        var create_enabled = self.can_create && !self.nodeOptions.no_create;
+        if (create_enabled && !self.nodeOptions.no_create_edit) {
+            var createAndEditAction = function() {
+                // Clear the value in case the user clicks on discard
+                self.$('input').val('');
+                return self._searchCreatePopup("form", false, self._createContext(search_val));
+            };
+            values.push({
+                label: _t("Create and Edit..."),
+                action: createAndEditAction,
+                classname: 'o_m2o_dropdown_option',
+            });
+        } else if (values.length === 0) {
+            values.push({
+                label: _t("No results to show..."),
+            });
+        }
+        return values
+    },
+    
     /**
      * all search/create popup handling
      *
