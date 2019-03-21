@@ -63,12 +63,12 @@ class WebsiteSlides(WebsiteProfile):
             slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
         return True
 
-    def _set_completed_slide(self, slide, quiz_attempts_inc=False):
+    def _set_completed_slide(self, slide):
         # quiz use their specific mechanism to be marked as done
         if slide.slide_type == 'quiz' or slide.question_ids:
             raise werkzeug.exceptions.Forbidden(_("Slide with questions must be marked as done when submitting all good answers "))
         if slide.website_published and slide.channel_id.is_member:
-            slide.action_set_completed(quiz_attempts_inc=quiz_attempts_inc)
+            slide.action_set_completed()
         return True
 
     def _get_slide_detail(self, slide):
@@ -624,6 +624,7 @@ class WebsiteSlides(WebsiteProfile):
             return fetch_res
         slide = fetch_res['slide']
         quiz_info = self._get_slide_quiz_info(slide)
+        slide_completed = slide.user_membership_id.sudo().completed
         return {
             'questions': [{
                 'id': question.id,
@@ -631,7 +632,7 @@ class WebsiteSlides(WebsiteProfile):
                 'answers': [{
                     'id': answer.id,
                     'text_value': answer.text_value,
-                    'is_correct': answer.is_correct,
+                    'is_correct': answer.is_correct if slide_completed else None
                 } for answer in question.answer_ids],
             } for question in slide.question_ids],
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
@@ -666,7 +667,7 @@ class WebsiteSlides(WebsiteProfile):
         rank_progress = {}
         if not user_bad_answers:
             slide._action_set_quiz_done()
-            slide.action_set_completed(quiz_attempts_inc=True)
+            slide.action_set_completed()
             lower_bound = request.env.user.rank_id.karma_min
             upper_bound = request.env.user.next_rank_id.karma_min
             rank_progress = {

@@ -32,7 +32,6 @@ $(document).ready(function () {
                 this.$('canvas').show();
                 this.$('#page_count').text(this.pdf_viewer.pdf_page_total);
                 this.$('#PDFViewerLoader').hide();
-                this.$('#PDFViewerLoader').toggleClass('d-flex');
                 if (this.pdf_viewer.pdf_page_total > 1) {
                     this.$('.o_slide_navigation_buttons').removeClass('hide');
                 }
@@ -44,16 +43,19 @@ $(document).ready(function () {
             on_rendered_page: function (pageNumber) {
                 if (pageNumber) {
                     this.$('#page_number').val(pageNumber);
+                    this.navUpdate(pageNumber);
                 }
             },
             // page switching
             render_page: function (pageNumber) {
                 this.pdf_viewer.renderPage(pageNumber).then(this.on_rendered_page.bind(this));
+                this.navUpdate(pageNumber);
             },
             change_page: function () {
                 var pageAsked = parseInt(this.$('#page_number').val(), 10);
                 if (1 <= pageAsked && pageAsked <= this.pdf_viewer.pdf_page_total) {
                     this.pdf_viewer.changePage(pageAsked).then(this.on_rendered_page.bind(this));
+                    this.navUpdate(pageAsked);
                 } else {
                     // if page number out of range, reset the page_counter to the actual page
                     this.$('#page_number').val(this.pdf_viewer.pdf_page_current);
@@ -77,22 +79,27 @@ $(document).ready(function () {
                     if (pageNum) {
                         self.on_rendered_page(pageNum);
                     }
-                    self.$("#slide_suggest").hide();
+                    self.$("#slide_suggest").addClass('d-none');
                 });
             },
             first: function () {
                 var self = this;
                 this.pdf_viewer.firstPage().then(function (pageNum) {
                     self.on_rendered_page(pageNum);
-                    self.$("#slide_suggest").hide();
+                    self.$("#slide_suggest").addClass('d-none');
                 });
             },
             last: function () {
                 var self = this;
                 this.pdf_viewer.lastPage().then(function (pageNum) {
                     self.on_rendered_page(pageNum);
-                    self.$("#slide_suggest").hide();
+                    self.$("#slide_suggest").addClass('d-none');
                 });
+            },
+            navUpdate: function (pageNum) {
+                this.$('#first').toggleClass('disabled', pageNum < 3 );
+                this.$('#previous').toggleClass('disabled', pageNum < 2 );
+                this.$('#next, #last').removeClass('disabled');
             },
             // full screen mode
             fullscreen: function () {
@@ -105,7 +112,8 @@ $(document).ready(function () {
             },
             // display suggestion displayed after last slide
             display_suggested_slides: function () {
-                this.$("#slide_suggest").show();
+                this.$("#slide_suggest").removeClass('d-none');
+                this.$('#next, #last').addClass('disabled');
             },
         };
 
