@@ -177,6 +177,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
+        var iPhone = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
         return {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
@@ -195,6 +197,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     'SHIFT+TAB': null,
                 },
                 mac: {
+                    'ENTER': iPhone ? null : 'insertParagraph',
                     'TAB': null,
                     'SHIFT+TAB': null,
                 },

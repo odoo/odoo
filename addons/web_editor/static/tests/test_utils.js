@@ -494,9 +494,10 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         keypress.keyCode = keypress.keyCode;
         var event = $.Event("keydown", keypress);
         $target.trigger(event);
+
         if (!event.isDefaultPrevented()) {
             if (keypress.key.length === 1) {
-                document.execCommand("insertText", 0, keypress.key);
+                textInput($target[0], keypress.key);
             } else {
                 console.warn('Native "' + keypress.key + '" is not supported in test');
             }
@@ -759,7 +760,39 @@ var keydown = function (key, $editable, options) {
     var $target = $(target.tagName ? target : target.parentNode);
     var event = $.Event("keydown", keyPress);
     $target.trigger(event);
+
+    if (!event.isDefaultPrevented()) {
+        if (keyPress.key.length === 1) {
+            textInput($target[0], keyPress.key);
+        } else {
+            console.warn('Native "' + keyPress.key + '" is not supported in test');
+        }
+    }
 };
+
+var textInput = function (target, char) {
+    var ev = new CustomEvent('textInput', {
+        bubbles: true,
+        cancelBubble: false,
+        cancelable: true,
+        composed: true,
+        data: char,
+        defaultPrevented: false,
+        detail: 0,
+        eventPhase: 3,
+        isTrusted: true,
+        returnValue: true,
+        sourceCapabilities: null,
+        type: "textInput",
+        which: 0,
+    });
+    ev.data = char;
+    target.dispatchEvent(ev);
+
+    if (!ev.defaultPrevented) {
+        document.execCommand("insertText", 0, ev.data);
+    }
+}
 
 return {
     wysiwygData: wysiwygData,
