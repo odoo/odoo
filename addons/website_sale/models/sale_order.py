@@ -312,7 +312,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_recovery_email_send(self):
-        self._portal_ensure_token()
+        for order in self:
+            order._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
