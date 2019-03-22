@@ -164,7 +164,7 @@ def is_multilang_url(local_url, langs=None):
         local_url = '/'.join(spath)
     try:
         # Try to match an endpoint in werkzeug's routing table
-        url = local_url.split('?')
+        url = local_url.partition('#')[0].split('?')
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
