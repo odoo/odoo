@@ -1531,10 +1531,20 @@ var FieldOne2Many = FieldX2Many.extend({
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
                 this.trigger_up('edited_list', { id: this.value.id });
+                //fill context with values of the required fields of previous record if arrow down was pressed on last line
+                var context = data.context || {};
+                if (data.fillRequiredWithRecord) {
+                    var context_default_values = {}
+                    var previousRecord = data.fillRequiredWithRecord;
+                    for (var field in previousRecord) {
+                        context_default_values['default_' + field] = previousRecord[field];
+                    }
+                    context['context_default_values'] = context_default_values;
+                }
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable || data.forceEditable,
-                    context: data.context,
+                    context: context,
                 }, {
                     allowWarning: data.allowWarning
                 }).then(function () {
@@ -1542,10 +1552,6 @@ var FieldOne2Many = FieldX2Many.extend({
                 }).then(function (){
                     if (data.onSuccess){
                         data.onSuccess();
-                    }
-                }).then(function() {
-                    if (data.fillRequiredWithRecord) {
-                        return self.renderer.fillRequiredFields(data.fillRequiredWithRecord, data.currentFieldIndex);
                     }
                 }).guardedCatch(function() {
                     self.creatingRecord = false;

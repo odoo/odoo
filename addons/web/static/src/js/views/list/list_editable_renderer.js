@@ -258,61 +258,6 @@ ListRenderer.include({
         return this._selectCell(rowIndex, 0);
     },
     /**
-     * Fill the required fields of an empty row with the values of lastRecord; then assure the field of 
-     * index currentFieldIndex is focused;
-     * @param {*} lastRecord 
-     * @param {*} currentFieldIndex 
-     * @returns {Promise}
-     */
-    fillRequiredFields: function (lastRecord, currentFieldIndex) {
-        var currentRecord = this.state.data[this.currentRow];
-        var currentRowID = currentRecord.id;
-        var requiredWidgets = [];
-        this.allFieldWidgets[currentRowID].forEach(function(currentWidget, index, list){
-            if (currentWidget.attrs.modifiers.required) {
-                var name = currentWidget.name;
-                currentRecord.data[name] = lastRecord.data[name];
-                requiredWidgets.push(currentWidget);
-            }
-        });
-        requiredWidgets.forEach(function (widget) {
-            var changes = {};
-            var name = widget.name;
-            var widget_changes = lastRecord.data[name];
-            if (widget_changes.data) {
-                if (Array.isArray(widget_changes.data)) { //many2many fields
-                    var first_array = widget_changes.data;
-                    var final_array = []; 
-                    for (var elem in first_array) {
-                        final_array.push(first_array[elem].data)
-                    }
-                    changes[name] = final_array; 
-                }
-                else { //other relational fields
-                    changes[name] = widget_changes.data; 
-                    if (widget.field.type === "reference") {
-                       changes[name]['model'] = widget_changes.model;
-                    }
-                }
-            } else {
-                changes[name] = widget_changes;
-            }
-            widget.reset(currentRecord);
-            widget.trigger_up('field_changed', {
-                dataPointID: widget.dataPointID,
-                changes: changes,
-                viewType: widget.viewType,
-                fillRequiredNewLine: true,
-                fillRequiredFirstTrigger: true,
-            });
-        })
-        var self = this;
-        if (currentFieldIndex !== undefined) {
-            return self._selectCell(self.currentRow, currentFieldIndex, {force: true});
-        } 
-        return Promise.resolve();
-    },
-    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *
@@ -951,11 +896,33 @@ ListRenderer.include({
                     if (this.currentRow < this.state.data.length - 1) {
                         this._selectCell(this.currentRow + 1, this.currentFieldIndex);
                     } else if (this.editable === "bottom") {
+                        var currentRowID = currentRecord.id;
+                        var recordDefault = {};
+                        this.allFieldWidgets[currentRowID].forEach(function(currentWidget, index, list){
+                            if (currentWidget.attrs.modifiers.required) {
+                                var name = currentWidget.name;
+                                var previousField = currentRecord.data[name];
+                                var fieldType = currentWidget.field.type;
+                                if (fieldType === "many2one") {
+                                    recordDefault['default_' + name] = previousField.res_id;
+                                } else if (fieldType === "reference") {
+                                    recordDefault['default_' + name] = previousField.model + "," + previousField.res_id;
+                                } else if (fieldType === "one2many" || fieldType === "many2many") {
+                                    var listRecords = [];
+                                    previousField.data.forEach(function (element) {
+                                        listRecords.push(element.res_id)
+                                    })
+                                    recordDefault['default_' + name] = listRecords;
+                                } else {
+                                    recordDefault['default_' + name] = previousField;
+                                }
+                            }
+                        });
                         var currentFieldIndex = this.currentFieldIndex;
                         this.unselectRow().then(function() {
                             self.trigger_up("add_record", {
-                            fillRequiredWithRecord: currentRecord,
-                            currentFieldIndex: currentFieldIndex
+                                fillRequiredWithRecord: recordDefault,
+                                currentFieldIndex: currentFieldIndex
                             }); 
                         });
                     }

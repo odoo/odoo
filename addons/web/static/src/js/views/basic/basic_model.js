@@ -179,6 +179,9 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var list = this.localData[listID];
         var context = this._getContext(list);
+        if (options.context) {
+            context = _.extend(context, options.context)
+        }
 
         var position = (options && options.position) || 'top';
         var params = {

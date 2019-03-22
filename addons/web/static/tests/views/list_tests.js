@@ -2998,7 +2998,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: moving down with keydown (editable list bottom not one2many)', async function (assert) {
+    QUnit.only('navigation: moving down with keydown (editable list bottom not one2many)', async function (assert) {
         assert.expect(24);
 
         this.data.foo.records.pop(); //4th record has no reference field set and we want to make the reference field required
@@ -3023,6 +3023,7 @@ QUnit.module('Views', {
                         '<field name="int_field"/>'+
                         '<field name="reference" required="True"/>'+
                     '</tree>',
+            debug: true,
         });
 
         await testUtils.dom.click(list.$('td:contains(9)')); 
@@ -3081,7 +3082,7 @@ QUnit.module('Views', {
             "previous line should have reference = USD");
         assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),
             "blip", "new line should have foo = blip");
-        list.destroy();
+        //list.destroy();
     });
 
     QUnit.test('navigation: moving down with keydown (editable list top not one2many)', async function (assert) {

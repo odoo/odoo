@@ -237,12 +237,13 @@ var ListController = BasicController.extend({
      * @private
      * @returns {Promise}
      */
-    _addRecord: function () {
+    _addRecord: function (options) {
         var self = this;
         this._disableButtons();
         return this.renderer.unselectRow().then(function () {
             return self.model.addDefaultRecord(self.handle, {
                 position: self.editable,
+                context: options && options.context,
             });
         }).then(function (recordID) {
             var state = self.model.get(self.handle);
@@ -411,11 +412,11 @@ var ListController = BasicController.extend({
         var self = this;
         ev.stopPropagation();
         if (this.activeActions.create) {
-            this._addRecord().then(function() {
-                if (ev.data.fillRequiredWithRecord) {
-                    self.renderer.fillRequiredFields(ev.data.fillRequiredWithRecord, ev.data.currentFieldIndex);
-                }
-            })        
+            var options = undefined;
+            if (ev.data.fillRequiredWithRecord) {
+                options = {context: ev.data.fillRequiredWithRecord, currentFieldIndex: ev.data.currrentFieldIndex}; 
+            }
+            this._addRecord(options);
         } else if (ev.data.onFail) {
             ev.data.onFail();
         }
