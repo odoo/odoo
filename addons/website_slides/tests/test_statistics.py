@@ -91,6 +91,27 @@ class TestStatistics(common.SlidesCase):
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
 
+    def test_slide_user_statistics(self):
+        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher._action_add_members(self.user_emp.partner_id)
+
+        slide_emp = self.slide.sudo(self.user_emp)
+        self.assertEqual(slide_emp.likes, 0)
+        self.assertEqual(slide_emp.dislikes, 0)
+        self.assertEqual(slide_emp.user_vote, 0)
+        slide_emp.action_like()
+        self.assertEqual(slide_emp.likes, 1)
+        self.assertEqual(slide_emp.dislikes, 0)
+        self.assertEqual(slide_emp.user_vote, 1)
+        slide_emp.action_dislike()
+        self.assertEqual(slide_emp.likes, 0)
+        self.assertEqual(slide_emp.dislikes, 0)
+        self.assertEqual(slide_emp.user_vote, 0)
+        slide_emp.action_dislike()
+        self.assertEqual(slide_emp.likes, 0)
+        self.assertEqual(slide_emp.dislikes, 1)
+        self.assertEqual(slide_emp.user_vote, -1)
+
     def test_slide_statistics(self):
         channel_publisher = self.channel.sudo(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
@@ -106,7 +127,6 @@ class TestStatistics(common.SlidesCase):
 
         slide_emp = self.slide.sudo(self.user_emp)
         slide_emp.action_set_viewed()
-        # slide_emp.invalidate_cache()
 
         self.assertEqual(slide_emp.slide_views, 1)
         self.assertEqual(slide_emp.public_views, 4)

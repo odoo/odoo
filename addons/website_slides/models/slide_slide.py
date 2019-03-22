@@ -181,8 +181,8 @@ class Slide(models.Model):
                 slide_data[slide_partner.slide_id.id]['dislikes'] += 1
                 if slide_partner.partner_id == self.env.user.partner_id:
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
-        for slide_sudo in self.sudo():
-            slide_sudo.update(slide_data[slide_sudo.id])
+        for slide in self:
+            slide.update(slide_data[slide.id])
 
     @api.depends('slide_partner_ids.slide_id')
     def _compute_slide_views(self):
