@@ -213,20 +213,18 @@
     <!-- The survey header -->
     <template id="survey_header" name="Header">
         <div class="o_page_header o_survey_header">
-            <div class="container">
-                <div class="row m-0 text-secondary">
-                    <div class="col-lg-8 p-0"><h1 t-esc="survey.title"></h1></div>
-                    <div
-                        t-if="survey.is_time_limited"
-                        class="js_survey_timer col-lg-4 p-0 text-right"
-                        t-att-data-timer="answer.start_datetime.isoformat()"
-                        t-att-data-time_limit_minutes="survey.time_limit">
-                        <h1 class="timer mb0">00 : 00</h1>
-                        <span class="text-dark d-none d-md-block">
-                            <small class="mr8"><b>Minutes</b></small>
-                            <small><b>Seconds</b></small>
-                        </span>
-                    </div>
+            <div class="row m-0 text-secondary">
+                <div class="col-lg-8 p-0"><h1 t-esc="survey.title"></h1></div>
+                <div
+                    t-if="survey.is_time_limited"
+                    class="js_survey_timer col-lg-4 p-0 text-right"
+                    t-att-data-timer="answer.start_datetime.isoformat()"
+                    t-att-data-time_limit_minutes="survey.time_limit">
+                    <h1 class="timer mb0">00 : 00</h1>
+                    <span class="text-dark d-none d-md-block">
+                        <small class="mr8"><b>Minutes</b></small>
+                        <small><b>Seconds</b></small>
+                    </span>
                 </div>
             </div>
             <ol t-if="survey.questions_layout == 'page_per_section'" class="breadcrumb mt8 justify-content-end">

@@ -1,18 +1,5 @@
 .js_question-wrapper {
 
-    .js_errzone {
-        background: transparent;
-        border-top: 3px solid $danger;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-
-        p {
-            color: $danger;
-        }
-    }
-
     .form-control {
         background-color: transparent;
         border:none;
@@ -91,7 +78,7 @@
     .o_simple_choice input:checked, .o_multiple_choice input:checked {
         opacity: 1;
         &:before {
-            background-color: #00A09D;
+            background-color: $o-enterprise-primary-color;
             color: #fff;
             position: absolute;
             font-weight: 800;
@@ -127,5 +114,23 @@
             top: 7px;
             left: 7px;
         }
-    } 
+
+        input:checked:before {
+            top: 1px;
+            left: 2px;
+        }
+    }
+
+    .js_errzone {
+        background: transparent;
+        border-top: 3px solid $danger;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+
+        p {
+            color: $danger;
+        }
+    }
 }
