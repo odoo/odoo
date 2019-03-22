@@ -1039,7 +1039,7 @@ class AccountMoveLine(models.Model):
             writeoff_moves += writeoff_move
             # writeoff_move.post()
 
-            line_to_reconcile += writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
+            line_to_reconcile += writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id).sorted(key='id')[-1:]
         if writeoff_moves:
             writeoff_moves.post()
         # Return the writeoff move.line which is to be reconciled
