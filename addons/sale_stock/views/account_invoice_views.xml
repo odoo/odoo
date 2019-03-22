@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//page[@name='other_info']//field[@name='origin']" position="after">
-                <field name="incoterms_id" widget="selection" groups="sale_stock.group_display_incoterm"/>
+                <field name="incoterms_id" widget="selection" groups="sale_stock.group_display_incoterm" invisible="1"/>
                 </xpath>
             </data>
         </field>
@@ -16,9 +16,9 @@
     <template id="report_invoice_document_inherit_sale_stock" inherit_id="account.report_invoice_document">
         <!-- HTML Preview for mobile responsive -->
         <xpath expr="//div[@name='reference']" position="after">
-            <div t-att-class="o_grid_layout" t-if="o.incoterms_id" groups="sale_stock.group_display_incoterm">
+            <div t-att-class="o_grid_layout" t-if="o.incoterm_id" groups="sale_stock.group_display_incoterm">
                 <strong>Incoterms:</strong>
-                <p t-field="o.incoterms_id.code"/>
+                <p t-field="o.incoterm_id.code"/>
             </div>
         </xpath>
     </template>
