@@ -136,6 +136,7 @@ class MailController(http.Controller):
                 'res_id': follower.partner_id.id or follower.channel_id.id,
                 'is_editable': is_editable,
                 'is_uid': is_uid,
+                'active': follower.partner_id.active or bool(follower.channel_id),
             })
         return {
             'followers': followers,
