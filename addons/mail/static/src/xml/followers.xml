@@ -35,10 +35,10 @@
         Partner or channel following the record
     -->
     <t t-name="mail.Followers.partner">
-        <div role="menuitem" class="o_partner">
+        <div role="menuitem" t-attf-class="o_partner {{ !record.active ? 'o_inactive': '' }}">
             <a class="dropdown-item o_mail_redirect"
                href="#"
-               t-att-title="record.name"
+               t-att-title="record.title"
                t-att-data-oe-model="record.res_model"
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
             <img t-att-src="record.avatar_url" alt="Avatar"/>
