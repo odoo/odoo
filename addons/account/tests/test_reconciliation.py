@@ -470,6 +470,67 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
 
+    def test_manual_reconcile_wizard_same_account(self):
+        move_ids = self.env['account.move']
+        debit_line_vals = {
+                'name': '1',
+                'debit': 728.35,
+                'credit': 0.0,
+                'account_id': self.account_rcv.id,
+                'amount_currency': 795.05,
+                'currency_id': self.currency_swiss_id,
+            }
+        credit_line_vals = {
+                'name': '1',
+                'debit': 0.0,
+                'credit': 728.35,
+                'account_id': self.account_rsa.id,
+                'amount_currency': -795.05,
+                'currency_id': self.currency_swiss_id,
+            }
+        vals = {
+                'journal_id': self.bank_journal_euro.id,
+                'date': time.strftime('%Y') + '-02-15',
+                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+            }
+        move_ids += self.env['account.move'].create(vals)
+        debit_line_vals = {
+                'name': '2',
+                'debit': 0.0,
+                'credit': 737.10,
+                'account_id': self.account_rcv.id,
+                'amount_currency': -811.25,
+                'currency_id': self.currency_swiss_id,
+            }
+        credit_line_vals = {
+                'name': '2',
+                'debit': 737.10,
+                'credit': 0.0,
+                'account_id': self.account_rsa.id,
+                'amount_currency': 811.25,
+                'currency_id': self.currency_swiss_id,
+            }
+        vals = {
+                'journal_id': self.bank_journal_euro.id,
+                'date': time.strftime('%Y') + '-07-15',
+                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+            }
+        move_ids += self.env['account.move'].create(vals)
+
+        account_move_line = move_ids.mapped('line_ids').filtered(lambda l: l.account_id == self.account_rcv)
+        writeoff_vals = [{
+                'account_id': self.account_rcv.id,
+                'journal_id': self.bank_journal_euro.id,
+                'date': time.strftime('%Y') + '-04-15',
+                'debit': 8.75,
+                'credit': 0.0
+            }]
+        writeoff_line = account_move_line._create_writeoff(writeoff_vals)
+        (account_move_line + writeoff_line).reconcile()
+        self.assertEquals(len(writeoff_line), 1, "The writeoff_line (balance_line) should have only one moves line")
+        self.assertTrue(all(l.reconciled for l in writeoff_line), 'The balance lines should be totally reconciled')
+        self.assertTrue(all(l.reconciled for l in account_move_line), 'The move lines should be totally reconciled')
+
     def test_reconcile_bank_statement_with_payment_and_writeoff(self):
         # Use case:
         # Company is in EUR, create a bill for 80 USD and register payment of 80 USD.
