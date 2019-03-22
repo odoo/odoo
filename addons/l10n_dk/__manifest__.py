@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Author: Odoo House ApS <info@odoohouse.dk> 
+# Author: Odoo House ApS <info@odoohouse.dk>
 
 # Copyright (c) 2018 - Present | Odoo House ApS - https://odoohouse.dk
 # All rights reserved.
@@ -70,6 +70,7 @@ Copyright 2018 Odoo House ApS
     'depends': ['account', 'base_iban', 'base_vat'],
     'data': [
         'data/account_type_data.xml',
+        'data/account_tag_data.xml',
         'data/l10n_dk_chart_data.xml',
         'data/account.account.template.csv',
         'data/l10n_dk_chart_post_data.xml',
