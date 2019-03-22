@@ -110,6 +110,16 @@
                     @include o-position-absolute(6px, 18px);
                     cursor: pointer;
                 }
+
+                &.o_inactive {
+                    > a {
+                        color: $gray-500;
+                        font-style: italic;
+                    }
+                    > img {
+                        opacity: 0.25;
+                    }
+                }
             }
 
         }

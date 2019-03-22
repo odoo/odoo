@@ -2264,6 +2264,67 @@ QUnit.test('followers widget: do not display follower duplications', async funct
     form.destroy();
 });
 
+QUnit.test('followers widget: display inactive followers with a different style', async function (assert) {
+    assert.expect(6);
+
+    this.data.partner.records[0].message_follower_ids = [1,2,3];
+
+    var followers = [{
+        id: 1,
+        name: "Admin",
+        email: "admin@example.com",
+        res_id: 101,
+        res_model: 'partner',
+        active: true,
+    },{
+        id: 2,
+        name: "Active_partner",
+        email: "active_partner@example.com",
+        res_id: 102,
+        res_model: 'partner',
+        active: true,
+    },{
+        id: 3,
+        name: "Inactive_partner",
+        email: "inactive_partner@example.com",
+        res_id: 103,
+        res_model: 'partner',
+        active: false,
+    }];
+
+    var form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                '</div>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (route === '/mail/read_followers') {
+                return Promise.resolve({
+                    followers: _.filter(followers, function (follower) {
+                        return _.contains(args.follower_ids, follower.id);
+                    }),
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        res_id: 2,
+    });
+
+    assert.doesNotHaveClass(form.$(".o_partner:has(a[data-oe-id='101'])"), 'o_inactive', 'Partner should be active');
+    assert.hasAttrValue(form.$(".o_partner:has(a[data-oe-id='101']) > a"),'title','Admin');
+    assert.doesNotHaveClass(form.$(".o_partner:has(a[data-oe-id='102'])"), 'o_inactive', 'Partner should be active');
+    assert.hasAttrValue(form.$(".o_partner:has(a[data-oe-id='102']) > a"),'title','Active_partner');
+    assert.hasClass(form.$(".o_partner:has(a[data-oe-id='103'])"), 'o_inactive', 'Partner should be inactive');
+    assert.hasAttrValue(form.$(".o_partner:has(a[data-oe-id='103']) > a"),'title','Inactive_partner \n(inactive)');
+
+    form.destroy();
+});
+
 QUnit.test('does not render and crash when destroyed before chat system is ready', async function (assert) {
     assert.expect(0);
 
