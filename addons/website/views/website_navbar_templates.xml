@@ -3,7 +3,7 @@
     <!-- Front-end/Back-end integration -->
     <template id="user_navbar" inherit_id="website.layout">
         <xpath expr="//t[@t-set='html_data']" position="after">
-            <t t-set="body_classname" t-value="'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None"/>
+            <t t-set="body_classname" t-value="(body_classname if body_classname else '') + (' o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else '')"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
             <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
