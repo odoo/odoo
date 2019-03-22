@@ -1101,44 +1101,6 @@ class Form(object):
         fvg['tree'] = etree.fromstring(fvg['arch'])
 
         object.__setattr__(self, '_view', fvg)
-        # TODO: make this less crappy?
-        # look up edition view for the O2M
-        for f, descr in fvg['fields'].items():
-            if descr['type'] != 'one2many':
-                continue
-
-            node = self._get_node(f)
-            default_view = next(
-                (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
-                'tree'
-            )
-
-            refs = {
-                m.group('view_type'): m.group('view_id')
-                for m in ref_re.finditer(node.get('context', ''))
-            }
-            # always fetch for simplicity, ensure we always have a tree and
-            # a form view
-            submodel = env[descr['relation']]
-            views = submodel.with_context(**refs) \
-                .load_views([(False, 'tree'), (False, 'form')])['fields_views']
-            # embedded views should take the priority on externals
-            views.update(descr['views'])
-            # re-set all resolved views on the descriptor
-            descr['views'] = views
-
-            # if the default view is a kanban or a non-editable list, the
-            # "edition controller" is the form view
-            edition = views['form']
-            edition['tree'] = etree.fromstring(edition['arch'])
-            if default_view == 'tree':
-                subarch = etree.fromstring(views['tree']['arch'])
-                if subarch.get('editable'):
-                    edition = views['tree']
-                    edition['tree'] = subarch
-
-            self._process_fvg(submodel, edition)
-            descr['views']['edition'] = edition
 
         self._process_fvg(recordp, fvg)
 
@@ -1154,6 +1116,37 @@ class Form(object):
             self._init_from_values(recordp)
         else:
             self._init_from_defaults(self._model)
+
+    def _o2m_set_edition_view(self, descr, node):
+        default_view = next(
+            (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
+            'tree'
+        )
+        refs = {
+            m.group('view_type'): m.group('view_id')
+            for m in ref_re.finditer(node.get('context', ''))
+        }
+        # always fetch for simplicity, ensure we always have a tree and
+        # a form view
+        submodel = self._env[descr['relation']]
+        views = submodel.with_context(**refs) \
+            .load_views([(False, 'tree'), (False, 'form')])['fields_views']
+        # embedded views should take the priority on externals
+        views.update(descr['views'])
+        # re-set all resolved views on the descriptor
+        descr['views'] = views
+        # if the default view is a kanban or a non-editable list, the
+        # "edition controller" is the form view
+        edition = views['form']
+        edition['tree'] = etree.fromstring(edition['arch'])
+        if default_view == 'tree':
+            subarch = etree.fromstring(views['tree']['arch'])
+            if subarch.get('editable'):
+                edition = views['tree']
+                edition['tree'] = subarch
+
+        self._process_fvg(submodel, edition)
+        descr['views']['edition'] = edition
 
     def _get_node(self, f):
         """ Find etree node for the field ``f`` in the current arch
@@ -1181,8 +1174,11 @@ class Form(object):
         # pre-resolve modifiers & bind to arch toplevel
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
-        for f in fvg['tree'].iter('field'):
+        order = fvg['fields_ordered'] = []
+        for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
+            order.append(fname)
+
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
@@ -1190,6 +1186,11 @@ class Form(object):
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
+
+            descr = fvg['fields'].get(fname) or {'type': None}
+            if descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f)
+
         fvg['modifiers']['id'] = {'required': False, 'readonly': True}
         fvg['onchange'] = model._onchange_spec(fvg)
 
@@ -1225,7 +1226,8 @@ class Form(object):
 
         # on creation, every field is considered changed by the client
         # apparently
-        self._perform_onchange(list(vals.keys() - {'id'}))
+        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
+        self._perform_onchange(self._view['fields_ordered'])
 
     def _init_from_values(self, values):
         self._values.update(
