@@ -175,14 +175,33 @@
             </section>
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
-                <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: white!important">
-                    <div class="navbar-nav border-right pr-3">
-                        <a class="nav-link nav-item" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
+                <nav class="navbar navbar-expand-md navbar-light shadow-sm pl-0" style="background: white!important">
+                    <div class="navbar-nav border-right">
+                        <a class="nav-link nav-item px-3" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
                     </div>
-                    <button class="navbar-toggler" type="button"
+                    <!-- Clear filtering (mobile)-->
+                    <div class="form-inline text-nowrap ml-auto d-md-none" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                        <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="btn btn-info mr-2" role="button" title="Clear filters">
+                            <i class="fa fa-eraser"/> Clear filters
+                        </a>
+                    </div>
+                    <form t-else="" method="GET" class="form-inline o_wslides_nav_navbar_right d-md-none">
+                        <!-- Search box (mobile)-->
+                        <div class="input-group">
+                            <input type="search" name="search" class="form-control"
+                                placeholder="Search courses" aria-label="Search"
+                                t-att-value="search_term"/>
+                            <div class="input-group-append">
+                                <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="navbar-toggler px-1" type="button"
                         data-toggle="collapse" data-target="#navbarTagGroups"
                         aria-controls="navbarTagGroups" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon small"/>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTagGroups">
                         <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
@@ -204,16 +223,15 @@
                                     </div>
                                 </li>
                             </t>
-                            <!-- clear filtering -->
-                            <li class="nav-item ml-auto" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
-                                <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="nav-link mr-2"
-                                    role="button" title="Clear filters">
-                                    <i class="fa fa-eraser"/> Clear filters
-                                </a>
-                            </li>
                         </ul>
-                        <!-- search box -->
-                        <form method="GET" class="form-inline o_wslides_nav_navbar_right">
+                        <!-- Clear filtering (desktop)-->
+                        <div class="form-inline ml-auto d-none d-md-flex" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                            <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="btn btn-info text-nowrap mr-2" role="button" title="Clear filters">
+                                <i class="fa fa-eraser"/> Clear filters
+                            </a>
+                        </div>
+                        <!-- Search box (desktop) -->
+                        <form method="GET" class="form-inline o_wslides_nav_navbar_right d-none d-md-flex">
                             <div class="input-group">
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search courses" aria-label="Search"
