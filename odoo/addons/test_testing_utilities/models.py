@@ -188,6 +188,13 @@ class O2MSub3(models.Model):
             r.name = str(r.v)
 
 
+class O2MRecursive(models.Model):
+    _name = _description = 'test_testing_utilities.recursive'
+
+    one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
+    many_to_one_ids = fields.One2many('test_testing_utilities.recursive', 'one_to_many_id', readonly=True)
+
+
 class O2MOnchangeParent(models.Model):
     _name = 'test_testing_utilities.onchange_parent'
     _description = 'Testing Utilities Onchange Parent'

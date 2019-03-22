@@ -467,6 +467,9 @@ class TestO2M(TransactionCase):
             self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
         self.assertEqual(len(r.line_ids), 1)
 
+    def test_o2m_self_recursive(self):
+        Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
+
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on
