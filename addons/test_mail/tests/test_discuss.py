@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
+from odoo.addons.mail.tests.common import MockEmail
+from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients
 from odoo.tools import mute_logger
 
 
@@ -100,13 +101,13 @@ class TestNotifications(BaseFunctionalTest, TestRecipients, MockEmails):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', '')):
+        with self.mockGateway(), self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', '')):
             self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
 
         self.test_record.message_subscribe([self.partner_1.id])
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', ''), partner_1=(1, 'email', 'read')):
+        with self.mockGateway(), self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', ''), partner_1=(1, 'email', 'read')):
             self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
@@ -131,7 +132,7 @@ class TestNotifications(BaseFunctionalTest, TestRecipients, MockEmails):
                 body='Test', message_type='comment', subtype='mail.mt_comment')
 
     def test_set_message_done_user(self):
-        with self.assertNotifications(partner_employee=(0, '', '')):
+        with self.mockGateway(), self.assertNotifications(partner_employee=(0, '', '')):
             message = self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])

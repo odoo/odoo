@@ -35,7 +35,7 @@ class MockEmail(common.BaseCase):
         try:
             with patch.object(IrMailServer, 'connect', return_value=True), \
                     patch.object(IrMailServer, 'build_email', side_effect=_build_email) as build_email_method_mock, \
-                    patch.object(IrMailServer, 'send_email', side_effect=_send_email):
+                    patch.object(IrMailServer, 'send_email', side_effect=_send_email) as send_email_method_mock:
                 yield
         finally:
             pass
@@ -58,8 +58,16 @@ class MailCase(common.BaseCase):
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
+<<<<<<< HEAD
     @contextmanager
     def assertMailNotifications(self, **counters):
+=======
+
+class MailCase(common.BaseCase):
+
+    @contextmanager
+    def assertNotifications(self, **counters):
+>>>>>>> b4fb012c41d... tmp brol prout
         """ Counters: 'partner_attribute': 'inbox' or 'email' """
         try:
             init = {}
@@ -104,7 +112,10 @@ class MailCase(common.BaseCase):
             if hasattr(self, 'assertEmails') and len(new_messages) == 1:
                 self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.is_email).mapped('res_partner_id'))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b4fb012c41d... tmp brol prout
     def assertBusNotification(self, channels, message_dicts=None, init=True):
         """ Check for bus notifications. Basic check is about used channels.
         Verifying content is optional.
@@ -136,4 +147,8 @@ class MailCase(common.BaseCase):
                     if found:
                         break
                 if not found:
+<<<<<<< HEAD
                     raise AssertionError("Bus notification content %s not found" % (repr(expected)))
+=======
+                    raise AssertionError("Bus notification content %s not found" % (repr(expected)))
+>>>>>>> b4fb012c41d... tmp brol prout

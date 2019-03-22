@@ -92,6 +92,11 @@ class TestActivityRights(TestActivityCommon):
 @tests.tagged('mail_activity')
 class TestActivityFlow(TestActivityCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestActivityFlow, cls).setUpClass()
+        cls._create_portal_user()
+
     def test_activity_flow_employee(self):
         with self.sudoAs('employee'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)

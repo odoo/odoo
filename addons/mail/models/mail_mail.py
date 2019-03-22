@@ -258,6 +258,7 @@ class MailMail(models.Model):
                     batch.write({'state': 'exception', 'failure_reason': exc})
                     batch._postprocess_sent_message(success_pids=[], failure_type="SMTP")
             else:
+                print('cacaprout', batch_ids)
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
