@@ -18,11 +18,12 @@ class ChannelUsersRelation(models.Model):
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True)
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
-    completion = fields.Integer('Completion', compute='_compute_completion', store=True)
+    # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
+    completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'channel_id.total_slides', 'partner_id')
+    @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id')
     def _compute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
@@ -35,29 +36,32 @@ class ChannelUsersRelation(models.Model):
             mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
-        channel_data = {}
-        channel_ids = mapped_data.keys()
-        if channel_ids:
-            channel_read_res = self.env['slide.channel'].sudo().browse(channel_ids).read(['total_slides'])
-            channel_data = dict((channel['id'], channel['total_slides']) for channel in channel_read_res)
-
         for record in self:
             slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            slide_total = channel_data.get(record.channel_id.id) or 1
-            record.completion = math.ceil(100.0 * slide_done / slide_total)
+            record.completion = slide_done
 
     def _write(self, values):
         partner_karma = False
-        if 'completion' in values and values['completion'] >= 100:
-            values['completed'] = True
-            incomplete_channel_partners = self.filtered(lambda cp: not cp.completed)
-            partner_karma = dict.fromkeys(incomplete_channel_partners.mapped('partner_id').ids, 0)
-            for channel_partner in incomplete_channel_partners:
+        to_complete = self.env['slide.channel.partner']
+        if values.get('completion'):
+            incomplete_self = self.filtered(lambda cp: not cp.completed)
+            channels_data = {result['id']: result['total_slides'] for result in incomplete_self.mapped('channel_id').read(['total_slides'])}
+            for cp in incomplete_self:
+                if values.get('completion') >= channels_data[cp.channel_id.id]:
+                    to_complete |= cp
+
+            partner_karma = dict.fromkeys(to_complete.mapped('partner_id').ids, 0)
+            for channel_partner in to_complete:
                 partner_karma[channel_partner.partner_id.id] += channel_partner.channel_id.karma_gen_channel_finish
             partner_karma = {partner_id: karma_to_add
                              for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
 
-        result = super(ChannelUsersRelation, self)._write(values)
+        if to_complete:
+            result = super(ChannelUsersRelation, (self - to_complete))._write(values)
+            completion_values = dict(values, completed=True)
+            super(ChannelUsersRelation, to_complete)._write(completion_values)
+        else:
+            result = super(ChannelUsersRelation, self)._write(values)
 
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
@@ -224,14 +228,16 @@ class Channel(models.Model):
                 result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
         return result
 
-    @api.depends('slide_partner_ids')
+    @api.depends('slide_partner_ids', 'total_slides')
     def _compute_user_statistics(self):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
         )
         mapped_data = dict((info.channel_id.id, (info.completed, info.completion)) for info in current_user_info)
         for record in self:
-            record.completed, record.completion = mapped_data.get(record.id, (False, 0))
+            completed, completion = mapped_data.get(record.id, (False, 0))
+            record.completed = completed
+            record.completion = math.ceil(100.0 * completion / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
     def _compute_can_upload(self):
