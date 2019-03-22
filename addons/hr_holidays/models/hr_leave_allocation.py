@@ -397,7 +397,7 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def copy_data(self, default=None):
-        raise UserError(_('A time off cannot be duplicated.'))
+        raise UserError(_('A time off allocation cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
@@ -430,7 +430,7 @@ class HolidaysAllocation(models.Model):
     def action_draft(self):
         for holiday in self:
             if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+                raise UserError(_('Time off allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
             holiday.write({
                 'state': 'draft',
                 'first_approver_id': False,
@@ -446,7 +446,7 @@ class HolidaysAllocation(models.Model):
     @api.multi
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
-            raise UserError(_('Time off request must be in Draft state ("To Submit") in order to confirm it.'))
+            raise UserError(_('Time off allocation request must be in Draft state ("To Submit") in order to confirm it.'))
         res = self.write({'state': 'confirm'})
         self.activity_update()
         return res
@@ -456,7 +456,7 @@ class HolidaysAllocation(models.Model):
         # if validation_type == 'both': this method is the first approval approval
         # if validation_type != 'both': this method calls action_validate() below
         if any(holiday.state != 'confirm' for holiday in self):
-            raise UserError(_('Time off request must be confirmed ("To Approve") in order to approve it.'))
+            raise UserError(_('Time off allocation request must be confirmed ("To Approve") in order to approve it.'))
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
@@ -470,7 +470,7 @@ class HolidaysAllocation(models.Model):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
-                raise UserError(_('Time off request must be confirmed in order to approve it.'))
+                raise UserError(_('Time off allocation request must be confirmed in order to approve it.'))
 
             holiday.write({'state': 'validate'})
             if holiday.validation_type == 'both':
@@ -508,7 +508,7 @@ class HolidaysAllocation(models.Model):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
+                raise UserError(_('Time off allocation request must be confirmed or validated in order to refuse it.'))
 
             if holiday.state == 'validate1':
                 holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})
@@ -549,11 +549,11 @@ class HolidaysAllocation(models.Model):
             if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
                 manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
                 if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('You must be either %s\'s manager or time off manager to approve this time off') % (holiday.employee_id.name))
+                    raise UserError(_('You must be either %s\'s manager or time off manager to approve this time off.') % (holiday.employee_id.name))
 
             if state == 'validate' and val_type == 'both':
                 if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('Only an time off Manager can apply the second approval on time off requests.'))
+                    raise UserError(_('Only a time off Manager can apply the second approval on time off requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
