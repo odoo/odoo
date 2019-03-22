@@ -211,24 +211,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         }
         return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
     },
-    /**
-     * Write the properties of the form elements in the DOM to prevent the
-     * current selection from being lost when activating the web editor.
-     *
-     * @override
-     */
-    onChangeVariant: function (ev) {
-        var $component = $(ev.currentTarget).closest('.js_product');
-        $component.find('input').each(function () {
-            var $el = $(this);
-            $el.attr('checked', $el.is(':checked'));
-        });
-        $component.find('select option').each(function () {
-            var $el = $(this);
-            $el.attr('selected', $el.is(':selected'));
-        });
-        return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -601,9 +583,11 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
     /**
-     * @override
-     *
      * Dirty fix: prevent options modal events to be triggered and bubbled
+     * Also write the properties of the form elements in the DOM to prevent the
+     * current selection from being lost when activating the web editor.
+     *
+     * @override
      */
     onChangeVariant: function (ev, data) {
         var $originPath = ev.originalEvent && Array.isArray(ev.originalEvent.path) ? $(ev.originalEvent.path) : $();
@@ -612,6 +596,17 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             ev.stopPropagation();
             return;
         }
+
+        var $component = $(ev.currentTarget).closest('.js_product');
+        $component.find('input').each(function () {
+            var $el = $(this);
+            $el.attr('checked', $el.is(':checked'));
+        });
+        $component.find('select option').each(function () {
+            var $el = $(this);
+            $el.attr('selected', $el.is(':selected'));
+        });
+
         return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
     },
     /**
