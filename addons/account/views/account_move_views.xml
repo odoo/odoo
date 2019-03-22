@@ -131,7 +131,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false">
+                <tree string="Journal Items" create="false" editable="bottom">
                     <field name="date"/>
                     <field name="move_id" required="0" groups="account.group_account_user"/>
                     <field name="journal_id" options='{"no_open":True}'/>
@@ -152,6 +152,13 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <groupby name="move_id">
+                        <field name="state" invisible="1"/>
+                        <button name="edit" type="edit" string="Edit"/>
+                        <button name="action_post" states="draft" string="Post" type="object" groups="account.group_account_invoice"/>
+                        <button name="%(action_view_account_move_reversal)d" states="posted" string="Reverse Entry" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"/>
+                    </groupby>
                 </tree>
             </field>
         </record>
@@ -216,6 +223,7 @@
                     <field name="tax_ids" />
                     <field name="reconcile_model_id"/>
                     <group expand="0" string="Group By">
+                        <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by':'move_id'}"/>
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Account" name="account" context="{'group_by':'account_id'}"/>
@@ -449,7 +457,7 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general'}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree"/>
