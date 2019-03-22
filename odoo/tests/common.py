@@ -1145,7 +1145,8 @@ class Form(object):
                 edition = views['tree']
                 edition['tree'] = subarch
 
-        self._process_fvg(submodel, edition)
+        # don't recursively process o2ms in o2ms
+        self._process_fvg(submodel, edition, o2m=False)
         descr['views']['edition'] = edition
 
     def _get_node(self, f):
@@ -1163,7 +1164,7 @@ class Form(object):
             self._values.get('id', False),
         )
 
-    def _process_fvg(self, model, fvg):
+    def _process_fvg(self, model, fvg, o2m=True):
         """ Post-processes to augment the fields_view_get with:
 
         * an id field (may not be present if not in the view but needed)
@@ -1188,7 +1189,7 @@ class Form(object):
                 contexts[fname] = ctx
 
             descr = fvg['fields'].get(fname) or {'type': None}
-            if descr['type'] == 'one2many':
+            if o2m and descr['type'] == 'one2many':
                 self._o2m_set_edition_view(descr, f)
 
         fvg['modifiers']['id'] = {'required': False, 'readonly': True}
