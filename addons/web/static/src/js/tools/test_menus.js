@@ -131,6 +131,7 @@
             if ($modal.length > 0) {
                 var $closeButton = $('header > button.close');
                 if ($closeButton.length > 0) {
+                  $closeButton.focus();
                   _click($closeButton);
                 } else { $modal.modal('hide'); }
                 isModal = true;
@@ -285,11 +286,11 @@
      * @param {jQueryElement} $element the element on which to perform the click
      */
     function _click($element) {
+        if ($element.length == 0) return;
         triggerMouseEvent($element, "mouseover");
         triggerMouseEvent($element, "mouseenter");
         triggerMouseEvent($element, "mousedown");
         triggerMouseEvent($element, "mouseup");
-        triggerMouseEvent($element, "focus");
         triggerMouseEvent($element, "click");
 
         function triggerMouseEvent($el, type, count) {
