@@ -26,7 +26,7 @@ class AccountRegisterPayments(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
             super(AccountRegisterPayments, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else ''
 
     def _prepare_payment_vals(self, invoices):
         res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
