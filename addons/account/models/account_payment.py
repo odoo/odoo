@@ -486,6 +486,7 @@ class account_payment(models.Model):
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
         self.ensure_one()
+        self.partner_id = False
         # Set partner_id domain
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
