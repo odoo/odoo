@@ -793,7 +793,15 @@ var SearchView = Widget.extend({
             };
         }
 
-        if (this.dataset.context.search_default_limit_160 === 1) {
+        if (this.dataset.context.search_default_limit_160) {
+            var msg
+            if (this.dataset.context.search_default_limit_160 === 'no_name_search_set_by_user'){
+              msg = _("Remove this Filter to see all result");
+              }
+            else{
+              msg = this.dataset.context.search_default_limit_160 + _t(" (First result only)");
+
+            }
             filters.push({
                 "category": "filters",
                 "item": {
@@ -801,8 +809,7 @@ var SearchView = Widget.extend({
                         "domain": [],
                         "isPeriod": false,
                         "name": "limit_160",
-                        "string": _t("Remove this filter to see all result."),
-
+                        "string": msg,
                     },
                     "children:": [],
                     "tag": "filter"
