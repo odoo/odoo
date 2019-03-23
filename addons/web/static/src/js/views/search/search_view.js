@@ -792,6 +792,24 @@ var SearchView = Widget.extend({
                 category: category,
             };
         }
+
+        if (this.dataset.context.search_default_limit_160 === 1) {
+            filters.push({
+                "category": "filters",
+                "item": {
+                    "attrs": {
+                        "domain": [],
+                        "isPeriod": false,
+                        "name": "limit_160",
+                        "string": _t("Remove this filter to see all result."),
+
+                    },
+                    "children:": [],
+                    "tag": "filter"
+                }
+            });
+        }
+
         var current_group = [],
             current_category = 'filters',
             categories = {filters: this.filters, group_by: this.groupbys, timeRanges: this.timeRanges};

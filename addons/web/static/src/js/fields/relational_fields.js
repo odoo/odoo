@@ -565,7 +565,7 @@ var FieldMany2One = AbstractField.extend({
         return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
-            context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            context: _.extend({}, this.record.getContext(this.recordParams), context || {}, {'search_default_limit_160':1}),
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,
