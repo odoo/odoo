@@ -58,7 +58,7 @@ msgstr "%s %% chiếu khấu %s phụ phí"
 #: code:addons/product/models/product_template.py:357
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (bản sao)"
+msgstr "%s (sao chép)"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -135,7 +135,7 @@ msgstr "<strong>Tên bảng giá</strong>:<br/>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>Giá:</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
@@ -497,7 +497,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình thiết lập"
+msgstr "Thiết lập cấu hình"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -562,8 +562,8 @@ msgstr ""
 "Giá vốn được sử dụng cho mục đích định giá tồn kho theo phương thức giá vốn "
 "'Giá tiêu chuẩn' và được coi như là số liệu đầu tiên để thiết lập giá vốn "
 "trong phương pháp Trung bình hoặc FIFO. Nó cũng được sử dụng như là giá cơ "
-"bản cho các bảng giá. Giá vốn này là đơn giá theo đơn vị đo lường mặc định "
-"của sản phẩm."
+"bản cho các bảng giá. Giá vốn này là đơn giá theo Đơn vị tính mặc định của "
+"sản phẩm."
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -684,7 +684,7 @@ msgstr "Mặc định bảng giá %(currency)s cho %(company)s"
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Đơn vị đo mặc định dùng cho tất cả hoạt động kho."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -852,7 +852,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr "Người dõi theo"
+msgstr "Theo dõi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
@@ -959,13 +959,13 @@ msgstr "ID"
 #: model:ir.model.fields,help:product.field_product_product__message_unread
 #: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu đánh dấu chọn, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu đánh dấu chọn, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
@@ -1066,7 +1066,7 @@ msgstr "Ghi chú nội bộ"
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
 #: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
-msgstr "Tham chiếu nội bộ"
+msgstr "Mã nội bộ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
@@ -1093,7 +1093,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Là biến thể sản phẩm"
 
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
@@ -1202,7 +1202,7 @@ msgstr "Chi tiết"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Logistics"
-msgstr "Tuyến hậu cần"
+msgstr "Kho vận"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
@@ -1284,7 +1284,7 @@ msgstr "Biên độ Giá Tối thiểu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
 msgid "Min. Quantity"
-msgstr "Số lượng Tối thiểu"
+msgstr "Số lượng tối thiểu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
@@ -1649,7 +1649,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Nhóm Sản phẩm"
+msgstr "Nhóm sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1819,7 +1819,7 @@ msgstr "Mô tả mua hàng"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr "Đơn vị Đo lường mua hàng"
+msgstr "Đơn vị tính mua hàng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list__qty1
@@ -1901,7 +1901,7 @@ msgstr "Giá bán"
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
-msgstr "Bảng giá Bán"
+msgstr "Bảng giá bán"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__categ_id
@@ -1919,7 +1919,7 @@ msgstr "Chọn nhóm cho sản phẩm hiện tại"
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__sequence
 msgid "Sequence"
-msgstr "Trình tự"
+msgstr "Thứ tự"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2258,7 +2258,7 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
-"Mã sản phẩm của nhà cung cấp này sẽ được sử dụng khi in một yêu cầu báo giá."
+"Mã sản phẩm của nhà cung cấp này sẽ được sử dụng khi in một Yêu cầu báo giá."
 " Để trống để sử dụng mã sản phẩm nội bộ của bạn."
 
 #. module: product
@@ -2360,7 +2360,7 @@ msgstr "Đơn vị"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure"
-msgstr "Đơn vị Đo lường"
+msgstr "Đơn vị tính"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread
@@ -2420,7 +2420,7 @@ msgstr "Thông tin Biến thể"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr "Giá Cộng thêm cho Biến thể"
+msgstr "Giá cộng thêm cho biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
@@ -2432,7 +2432,7 @@ msgstr "Người bán biến thể"
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr "Giá trị Biến thể"
+msgstr "Giá trị biến thể"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
@@ -2443,7 +2443,7 @@ msgstr "Biến thể"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Biến thể và tùy chọn"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name

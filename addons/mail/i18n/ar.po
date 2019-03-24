@@ -359,6 +359,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"قاموس بايثون سيتم تقديره لتوفير قيم افتراضية عند إنشاء سجلات جديدة لهذا "
+"اللقب."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:69
@@ -490,7 +492,7 @@ msgstr "حالة النشاط"
 #: model:ir.model,name:mail.model_mail_activity_type
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -502,14 +504,14 @@ msgstr "أنواع النشاطات"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "نوع مستخدم النشاط"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:37
 #, python-format
 msgid "Activity type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: mail
 #. openerp-web
@@ -930,7 +932,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "تفريغ تلقائي"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
@@ -1088,7 +1090,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
+msgstr "قد يؤدي التصنيف لتفعيل أفعال معينة مثل فتح واجهة التقويم"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -1799,7 +1801,7 @@ msgstr "تاريخ الاستحقاق"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "تاريخ الاستحقاق"
 
 #. module: mail
 #. openerp-web
@@ -1811,7 +1813,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "نوع الاستحقاق"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2446,6 +2448,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"مُعرف السجل الأصلي الذي يحتوي اللقب (مثال: 'المشروع' يحمل لقب إنشاء المهمة)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
@@ -2606,7 +2609,7 @@ msgstr "الرسالة الأولى"
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "ربط"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__internal
@@ -2979,7 +2982,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr ""
+msgstr "تسجيل ملاحظة..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3372,7 +3375,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_model
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "كائن المورد المُتابع"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__res_model
@@ -3954,6 +3957,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"معرف اختياري لمناقشة (سجل) سيتم إرفاق كافة الرسائل الواردة به، حتى لو لم "
+"يردوا عليه. إذا تم تعيين قيمة له، سيعطل هذا إنشاء السجلات الجديدة بالكامل."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__mail_server_id
@@ -4068,7 +4073,7 @@ msgstr "موديل الشريك"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل الأصلي"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -4079,6 +4084,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"كائن السجل الأصلي الذي يحتوي اللقب. الكائن الذي يحتوي رقم إشارة اللقب ليس "
+"بالضرورة هو نفسه الكائن المخزن في القيمة alias_model_id (مثال: مشروع "
+"(parent_model) والمهمة (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -4299,7 +4307,7 @@ msgstr "معاينة "
 #: code:addons/mail/static/src/xml/thread.xml:92
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "السابق"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -4407,7 +4415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -4490,7 +4498,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.activity.type,category:0
 msgid "Reminder"
-msgstr ""
+msgstr "تذكير"
 
 #. module: mail
 #. openerp-web
@@ -5075,7 +5083,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "اسم تقني للمستخدم في السجلات"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
@@ -5131,6 +5139,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"الكائن (من نوع مستندات أودو) الذي يتجاوب معه هذا اللقب. أي رسالة واردة لا "
+"ترد على سجل موجود ستسبب إنشاء سجل جديد من نفس نوع هذا الكائن (مثلًا: مهمة "
+"مشروع)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -5140,6 +5151,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"اسم لقب البريد الإلكتروني، مثلًا: 'وظائف' إذا كنت جمع الرسائل المرسلة "
+"لـ<jobs@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_user_id
@@ -5151,6 +5164,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"مالك السجلات المنشأة عند استلام رسائل بريد إلكتروني على هذا اللقب. إذا لم "
+"يتم تعيين قيمة لهذا الحقل، سيحاول النظام معرفة المالك الصحيح حسب عنوان "
+"البريد الإلكتروني للمرسل، أو سيستخدم حساب المشرف إذا لم يجد حسابًا مرتبطًا "
+"بعنوان البريد الإلكتروني."
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:243
@@ -5356,6 +5373,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"نوع إجراء السيرفر. القيم التالية متاحة:\n"
+"- 'تنفيذ كود بايثون': فقرة كود بايثون سيتم تنفيذها\n"
+"- 'إنشاء أو نسخ سجل جديد': ينشئ سجل جديد بقيم جديدة، أو ينسخ سجل موجود في قاعدة بياناتك\n"
+"- 'الكتابة في سجل': يحدث قيم سجل\n"
+"- 'تنفيذ عدة إجراءات': يحدد إجراء سيفعل عدة إجراءات سيرفر أخرى\n"
+"- 'إضافة تابعين': يضيف تابعين لسجل (متاح في المناقشة)\n"
+"- 'إرسال بريد إلكتروني': يرسل رسالة بريد إلكتروني تلقائيًا (متاح في email_template)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5529,6 +5553,8 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"استخدم القيمة 'مستخدم محدد' لتعيين نفس المستخدم على النشاط التالي. واستخدم "
+"'مستخدم عام من السجل' لتحديد اسم حقل المستخدم المراد من السجل."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -5563,7 +5589,7 @@ msgstr "المستخدم"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "اسم حقل المستخدم"
 
 #. module: mail
 #. openerp-web
@@ -6004,7 +6030,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "مثلًا: مناقشة العرض"
 
 #. module: mail
 #. openerp-web
@@ -6018,7 +6044,7 @@ msgstr "متابعين"
 #: code:addons/mail/static/src/xml/activity.xml:30
 #, python-format
 msgid "for"
-msgstr ""
+msgstr "من أجل"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link

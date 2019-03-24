@@ -3,27 +3,28 @@
 # * calendar
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2018
 # Sadig Adam <sadig41@gmail.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# Martin Trigaux, 2018
-# hoxhe Aits <hoxhe0@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
+# hoxhe Aits <hoxhe0@gmail.com>, 2018
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "${object.event_id.name} - تذكير"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr "${object.event_id.name}: تم تحديث الموعد"
+msgstr "${object.event_id.name}: تم تحديث التاريخ"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:741
@@ -72,37 +73,37 @@ msgstr "%s رفض الدعوة"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "1 Day(s)"
-msgstr ""
+msgstr "يوم واحد"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "1 Hour(s)"
-msgstr ""
+msgstr "ساعة واحدة"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "15 Minute(s)"
-msgstr ""
+msgstr "15 دقيقة"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "2 Hour(s)"
-msgstr ""
+msgstr "ساعتان"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "3 Hour(s), by e-mail"
-msgstr ""
+msgstr "3 ساعات، بالبريد الإلكتروني"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr ""
+msgstr "30 دقيقة"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "6 Hour(s), by e-mail"
-msgstr ""
+msgstr "6 ساعات، بالبريد الإلكتروني"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -176,6 +177,74 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <p>\n"
+"        مرحبًا ${object.common_name}،<br/><br/>\n"
+"        ${object.event_id.user_id.partner_id.name} يدعوك لحضور اجتماع ${object.event_id.name} الذي تقيمه مؤسسة ${object.event_id.user_id.company_id.name}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            قبول</a>\n"
+"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            رفض</a>\n"
+"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            عرض</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>تفاصيل الفعالية</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>المكان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>الوصف: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>المدة: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>الحضور\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    شكرًا لك،\n"
+"    <br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -249,6 +318,74 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <p>\n"
+"        مرحبًا ${object.common_name}،<br/><br/>\n"
+"        تم تحديث تاريخ الاجتماع ${object.event_id.name} الذي تقيمه مؤسسة ${object.event_id.user_id.partner_id.name} أصبح موعده ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            قبول</a>\n"
+"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            رفض</a>\n"
+"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            عرض</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>تفاصيل الفعالية</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>المكان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>الوصف: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>المدة: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>الحضور\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    شكرًا لك،\n"
+"    <br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -322,6 +459,74 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <p>\n"
+"        مرحبًا ${object.common_name}،<br/><br/>\n"
+"        هذا تذكير منا بالفعالية التالية:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            قبول</a>\n"
+"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            رفض</a>\n"
+"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            عرض</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>تفاصيل الفعالية</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>المكان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>الوصف: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>المدة: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>الحضور\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    شكرًا لك،\n"
+"    <br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -343,7 +548,7 @@ msgstr "مقبول"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "الإجراء المطلوب"
+msgstr "إجراء مطلوب"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
@@ -364,7 +569,7 @@ msgstr "النشاط"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: calendar
 #. openerp-web
@@ -383,7 +588,7 @@ msgstr "طوال اليوم، %s"
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
-msgstr ""
+msgstr "لا يمكن لمستخدم امتلاك نفس جهة الاتصال مرتين."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
@@ -448,12 +653,12 @@ msgstr "تنبيه التقويم"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "بيانات حضور التقويم"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
-msgstr ""
+msgstr "جهات اتصال التقويم"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -463,19 +668,19 @@ msgstr "دعوات التقويم"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "اجتماع التقويم"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "التقويم: التذكير بالفعالية"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
 msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
+msgstr "قد يؤدي التصنيف لتفعيل أفعال معينة مثل فتح واجهة التقويم"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -490,7 +695,7 @@ msgstr "انقر هنا لتعديل هذه المرة فقط، وليس كل ا
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
 msgid "Common name"
-msgstr "الإسم الشائع"
+msgstr "الاسم الشائع"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -595,12 +800,12 @@ msgstr "معرف المستند"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "نموذج وثيقة "
+msgstr "كائن المستند"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "اسم كائن المستند"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -623,7 +828,7 @@ msgstr "البريد الإلكتروني"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr "البريد الإلكتروني للمشارك"
+msgstr "البريد الإلكتروني للمدعو"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
@@ -659,17 +864,17 @@ msgstr "الحدث"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr ""
+msgstr "التنبيه للفعالية"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "إدارة التنبيه للفعالية"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "نوع اجتماع الفعالية"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -680,7 +885,7 @@ msgstr "وقت الحدث"
 #: code:addons/calendar/models/calendar.py:1234
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr "المدة بين كل تكرارين لا يمكن أن تكون سالبة."
+msgstr "الفترة بين كل تكرارين لا يمكن أن تكون سالبة."
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
@@ -691,7 +896,7 @@ msgstr "الجميع"
 #: code:addons/calendar/models/mail_activity.py:38
 #, python-format
 msgid "Feedback: "
-msgstr ""
+msgstr "تغذية رجعية: "
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -707,7 +912,7 @@ msgstr "الأول"
 #: code:addons/calendar/models/calendar.py:998
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "يجب أن تحدد تاريخ الدعوة أولا"
+msgstr "عليك تحديد تاريخ الدعوة أولًا."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -727,18 +932,18 @@ msgstr "المتابعون (الشركاء)"
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr "رابعاً"
+msgstr "رابعًا"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr "حرّ"
+msgstr "حر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Free/Busy"
-msgstr "متفرّغ/مشغول"
+msgstr "متفرغ/مشغول"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
@@ -760,12 +965,12 @@ msgstr "تجميع حسب"
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
-"التجميع باستخدام التاريخ غير مدعوم، استخدم واجهة التقويم بدلاً من ذلك."
+"التجميع باستخدام التاريخ غير مدعوم، استخدم واجهة التقويم بدلًا من ذلك."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "مسار HTTP"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -785,17 +990,17 @@ msgstr "المعرف"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked new messages require your attention."
-msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديدة."
+msgstr "إذا حددت هذا الاختيار، فهناك رسائل جديدة تحتاج لرؤيتها."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديدة."
+msgstr "إذا حددت هذا الاختيار، فهناك رسائل جديدة تحتاج لرؤيتها."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
+msgstr "إذا حددت هذا الاختيار، فقد حدث خطأ في تسليم بعض الرسائل."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -803,8 +1008,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"إذا أزلت تحديد حقل نشط، سيمكنك إخفاء الحدث ومعلومات التنبيه دون أن تحذفه "
-"تماماً."
+"إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمكنك إخفاء معلومات التنبيه للفعالية "
+"دون إزالتها."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -829,7 +1034,7 @@ msgstr "الدعوة الى"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to ${object.event_id.name}"
-msgstr ""
+msgstr "دعوة إلى ${object.event_id.name}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -849,7 +1054,7 @@ msgstr "متابع"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr ""
+msgstr "هل الفعالية مميزة"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -888,12 +1093,12 @@ msgstr "آخر تحديث في"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "تم تحديد آخر رسالة كمقروءة من التقويم الأساسي."
+msgstr "تم تحديد آخر رسالة كمقروءة من التقويم الأساسي"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr "تكرار الحدث تلقائياً حسب تلك الفترة"
+msgstr "تكرار الحدث تلقائيًا عند مرور هذه الفترة"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -932,7 +1137,7 @@ msgstr "الاجتماع"
 #: code:addons/calendar/models/calendar.py:947
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
-msgstr ""
+msgstr "الاجتماع '%s' يبدأ '%s' وينتهي '%s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -984,7 +1189,7 @@ msgstr "الرسائل"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr "دقائق(دقيقة)"
+msgstr "دقائق"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -994,17 +1199,17 @@ msgstr "متفرقات"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
 msgid "Mon"
-msgstr "اثن"
+msgstr "الاثنين"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr "الأثنين"
+msgstr "الاثنين"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr "شهر(شهور)"
+msgstr "شهر (شهور)"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1021,12 +1226,12 @@ msgstr "الاسم"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr "يتطلّب إجراء"
+msgstr "يتطلب إجراء"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr "كلا، لن أشارك."
+msgstr "لا، لن أشارك."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1041,17 +1246,17 @@ msgstr "عدد الإجراءات"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of error"
-msgstr "عدد الاخطاء"
+msgstr "عدد الأخطاء"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اجراء"
+msgstr "عدد الرسائل التي تتطلب إجراء"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "عدد الرسائل مع خطأ في التسليم"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -1083,7 +1288,7 @@ msgstr "أنا فقط"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr ""
+msgstr "فتح التقويم"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1104,7 +1309,7 @@ msgstr "غير ذلك"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
-msgstr "المالِك"
+msgstr "المالك"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -1114,13 +1319,13 @@ msgstr "مشاركة"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Partner-related data of the user"
+msgstr "بيانات المستخدم المرتبطة بالشريك"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1247
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr "الرجاء اختيار أحد أيام الشهر الصحيحة."
+msgstr "برجاء اختيار أحد أيام الشهر الصحيحة."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -1131,7 +1336,7 @@ msgstr "الخصوصية"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr ""
+msgstr "تكرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -1166,12 +1371,12 @@ msgstr "قاعدة التكرار"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
-msgstr ""
+msgstr "تذكير قبل"
 
 #. module: calendar
 #: selection:mail.activity.type,category:0
 msgid "Reminder"
-msgstr ""
+msgstr "تذكير"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1196,12 +1401,12 @@ msgstr "تكرار حتى"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "تكرر كل (يوم / أسبوع / شهر / سنة)"
+msgstr "تكرر كل (يوم/أسبوع/شهر/سنة)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr "تكرار س مرات"
+msgstr "تكرار مرات س"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
@@ -1212,12 +1417,12 @@ msgstr "المسؤول"
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "SMS Text Message"
-msgstr ""
+msgstr "رسالة نصية قصيرة"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
 msgid "Sat"
-msgstr "سبت"
+msgstr "السبت"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1227,7 +1432,7 @@ msgstr "السبت"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Schedule a new meeting"
-msgstr ""
+msgstr "جدولة اجتماع جديد"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1280,7 +1485,7 @@ msgstr "تاريخ ووقت البداية"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "تاريخ بداية الحدث بدون ساعة معينة للأحداث التي تستغرق يوماً كاملاً."
+msgstr "تاريخ بداية الحدث، بدون ساعة معينة للأحداث التي تستغرق أيامًا كاملة"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1307,7 +1512,7 @@ msgstr "إيقاف"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "تاريخ انتهاء الحدث بدون ساعة معينة للأحداث التي تستغرق يوماً كاملاً."
+msgstr "تاريخ انتهاء الحدث، بدون ساعة معينة للأحداث التي تستغرق أيامًا كاملة"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1317,7 +1522,7 @@ msgstr "الموضوع"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__su
 msgid "Sun"
-msgstr "أحد"
+msgstr "الأحد"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1347,6 +1552,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
+"هذا النشاط مرتبط باجتماع. سيؤدي حذفه لحذف الاجتماع أيضًا. هل ترغب في "
+"الاستمرار؟"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1355,24 +1562,27 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"يشترك الموظفون في استخدام التقويم وهو مترابط تمامًا\n"
+"            مع التطبيقات الأخرى مثل إجازات الموظفين\n"
+"            وفرص العمل."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:941
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
-msgstr ""
+msgstr "لا يمكن أن يكون تاريخ ووقت الإنتهاء سابقين لتاريخ ووقت البدء."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:946
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr ""
+msgstr "لا يمكن أن يكون تاريخ الإنتهاء سابقًا لتاريخ البدء."
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr "ثالثاً"
+msgstr "ثالثًا"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1382,7 +1592,7 @@ msgstr "هذا الحدث مرتبط بتكرار..<br/>"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr "خمس"
+msgstr "الخميس"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1393,12 +1603,12 @@ msgstr "الخميس"
 #: code:addons/calendar/models/res_users.py:41
 #, python-format
 msgid "Today's Meetings"
-msgstr ""
+msgstr "اجتماعات اليوم"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
 msgid "Tue"
-msgstr "ثلا"
+msgstr "الثلاثاء"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1445,7 +1655,7 @@ msgstr "حتى"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr "تحديث هذه المرة فقط "
+msgstr "تحديث هذه المرة فقط"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -1455,7 +1665,7 @@ msgstr "المستخدمون"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
 msgid "Wed"
-msgstr "أرب"
+msgstr "الأربعاء"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1475,7 +1685,7 @@ msgstr "يوم العمل"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr "سنه (ي)"
+msgstr "سنه (سنين)"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1497,4 +1707,4 @@ msgstr "مثال: غداء عمل"
 #: code:addons/calendar/models/calendar.py:1232
 #, python-format
 msgid "interval cannot be negative."
-msgstr "لا يمكن أن يكون الفاصل سالباً."
+msgstr "لا يمكن أن تكون الفترة سالبة."

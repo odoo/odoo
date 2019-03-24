@@ -12,8 +12,8 @@
 # Tri Bui <tribd@trobz.com>, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
 # Nguyen Quang Toan <nqtoan@dqn.vn>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
@@ -481,7 +481,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr ""
+msgstr "Thêm một ghi chú nội bộ sẽ được in trên bảng Hoạt động lấy hàng"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -1517,7 +1517,7 @@ msgstr "Tuyến hàng ra mặc định để theo dõi"
 #: model:ir.model.fields,help:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Đơn vị đo mặc định dùng cho tất cả hoạt động kho."
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -5666,6 +5666,8 @@ msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
 msgstr ""
+"Trường kỹ thuật được sử dụng để tính toán xem có nên hiển thị nút kiểm tra "
+"không."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_mark_as_todo
@@ -5673,11 +5675,15 @@ msgid ""
 "Technical field used to compute whether the mark as todo button should be "
 "shown."
 msgstr ""
+"Trường kỹ thuật được sử dụng để tính toán xem có nên hiển thị nút đánh dấu "
+"là việc cần làm hay không."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_validate
 msgid "Technical field used to compute whether the validate should be shown."
 msgstr ""
+"Trường kỹ thuật được sử dụng để tính toán liệu có nên hiển thị Xác nhận hay "
+"không."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__restrict_partner_id
@@ -5685,6 +5691,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Trường kỹ thuật được sử dụng để mô tả một hạn chế về quyền sở hữu của người "
+"thuê để xem xét khi đánh dấu bước đi này là 'hoàn tất'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -5971,6 +5979,12 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
+"Đây là số lượng của sản phẩm từ một điểm kho của view. Dùng chuyển đến trạng"
+" thái 'Hoàn tất', đây là số lượng của sản phẩm mà đã được chuyển thực tế. "
+"Với những dịch chuyển khác, đây là số lượng kế hoạch cần chuyển. Giảm số "
+"lượng này không tạo ra một giao dịch trả hàng. Thay đổi số lượng này trên "
+"các di chuyển được chỉ định ảnh hưởng đến việc đặt sản phẩm và nên được thực"
+" hiện cẩn thận."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -6146,6 +6160,9 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
+"Theo dõi ngày trên Lô hàng & số sê-ri: tốt nhất trước, loại bỏ, hết vòng "
+"đời, cảnh báo. Những ngày như vậy được đặt tự động khi tạo số lô / số sê-ri "
+"dựa trên các giá trị được đặt trên sản phẩm (tính theo ngày)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
