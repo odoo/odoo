@@ -3,21 +3,22 @@
 # * utm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# zbik2607 <darek@krokus.com.pl>, 2018
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
-# Mariusz, 2018
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
 # Maja Stawicka <mjstwck@wp.pl>, 2018
+# Martin Trigaux, 2019
+# zbik2607 <darek@krokus.com.pl>, 2019
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
+# Mariusz, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Maja Stawicka <mjstwck@wp.pl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Andrzej Donczew <a.donczew@hadron.eu.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,8 +33,8 @@ msgstr "Aktywne"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Campaign"
 msgstr "Kampania"
 
@@ -43,16 +44,10 @@ msgid "Campaign Name"
 msgstr "Nazwa kampanii"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_campaign_act
+#: model:ir.actions.act_window,name:utm.utm_campaign_action
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
 msgstr "Kampanie"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
-msgid "Channel"
-msgstr "Kanał"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -79,13 +74,18 @@ msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Define a new UTM campaign"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "Define a new medium"
+msgid "Define a new UTM medium"
 msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "Define a new source"
+msgid "Define a new UTM source"
 msgstr ""
 
 #. module: utm
@@ -143,7 +143,7 @@ msgstr "Data ostatniej aktualizacji"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
-msgid "Lead Newsletter"
+msgid "Lead Recall"
 msgstr ""
 
 #. module: utm
@@ -152,13 +152,17 @@ msgid "Link Tracker"
 msgstr "Śledzenie źródeł"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
-#: model:ir.ui.menu,name:utm.menu_utm_medium
-#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
 msgstr "Medium"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.ui.menu,name:utm.menu_utm_medium
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "Mediums"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -178,6 +182,8 @@ msgstr "Wyszukiwarka"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
 msgstr "Źródło"
 
@@ -198,7 +204,7 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"To nazwa, która pomaga ci w śledzeniu swoich różnych działań promocyjnych, "
+"To nazwa, która pomaga ci w śledzeniu swoich róznych działań promocyjnych, "
 "np. Fall_Drive, Christmas_Special"
 
 #. module: utm

@@ -3,16 +3,31 @@
 # * base_setup
 # 
 # Translators:
-# Martin Trigaux, 2018
-# AleEscandon <alejandra.escandon@jarsa.com.mx>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Diego de la Torre <diego.delatorreh@gmail.com>, 2016
+# Antonio Trueba, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
+# Ruben Dario Machado <ruben@vauxoo.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Gustavo Valverde, 2017
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
+# Pierre-Antoine Magnet <pma@odoo.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2018
+# AleEscandon <alejandra.escandon@jarsa.com.mx>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +56,13 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Format</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Geo "
+"Provider."
 msgstr ""
 
 #. module: base_setup
@@ -88,13 +110,8 @@ msgid "Attach Google documents to any record"
 msgstr "Adjuntar documentos de Google a cualquier registro"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
-msgid "Auto-populate company data"
-msgstr ""
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Autocomplete company data (name, logo, address, etc.)"
+msgid "Automatically enrich your contact base with company data"
 msgstr ""
 
 #. module: base_setup
@@ -116,7 +133,7 @@ msgid "Change Document Template"
 msgstr "Cambie el modelo del documento"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:100
+#: code:addons/base_setup/models/res_config_settings.py:102
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Elija el diseño de tu documento"
@@ -160,6 +177,11 @@ msgstr ""
 "Configure las reglas de la compañía para crear pedidos de venta o de compra "
 "automáticamente cuando una de sus empresas vende / compra a otra de sus "
 "empresas."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Contacts"
+msgstr "Contactos"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -222,6 +244,21 @@ msgstr "Opciones Generales"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
 msgstr "Traduciones Gengo"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Geo Localization"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
+msgid "GeoLocalize"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "GeoLocalize your partners"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -300,9 +337,24 @@ msgid "Paper format"
 msgstr "Formato de papel"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Partner Autocomplete"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
 msgstr "Visualizar el documento"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+msgid "Send SMS"
+msgstr "Enviar SMS"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Send texts to your contacts"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form

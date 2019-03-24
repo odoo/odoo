@@ -3,17 +3,18 @@
 # * digest
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Antonio Trueba, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Martin Trigaux, 2019
+# Antonio Trueba, 2019
+# Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
+"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,8 @@ msgid ""
 "<table style=\"width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;\">\n"
 "    <tr>\n"
 "        <td align=\"center\" valign=\"top\" style=\"border-collapse: collapse; padding: 0\">\n"
-"            % set company, user = ctx['company'], ctx['user']\n"
+"            % set user = ctx.get('user', user)\n"
+"            % set company = user.company_id\n"
 "            % set data = object.compute_kpis(company, user)\n"
 "            % set tips = object.compute_tips(company, user)\n"
 "            % set kpi_actions = object.compute_kpis_actions(company, user)\n"
@@ -141,7 +143,7 @@ msgid ""
 "            <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
 "                <tr>\n"
 "                    <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;\"><br/>\n"
-"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Run your bussiness from anywhere with Odoo Mobile.</div>\n"
+"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Run your business from anywhere with Odoo Mobile.</div>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -154,7 +156,7 @@ msgid ""
 "            <table style=\"margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;\">\n"
 "                <tr>\n"
 "                    <td style=\"border-collapse: collapse; margin: 0; padding: 10px 20px;\">\n"
-"                        % if ctx['user'].has_group('base.group_system'): \n"
+"                        % if user.has_group('base.group_system'):\n"
 "                            <div style=\"margin-top: 20px;\"> \n"
 "                                Want to customize the email?\n"
 "                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Choose the metrics you care about</a>\n"
@@ -163,7 +165,7 @@ msgid ""
 "                        % endif\n"
 "                        <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "                            <strong>\n"
-"                                Send by\n"
+"                                Sent by\n"
 "                                <a href=\"https://www.odoo.com\" style=\"text-decoration: none; color: #875A7B;\">Odoo</a> - <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #888888;\">Unsubscribe</a>\n"
 "                            </strong>\n"
 "                        </p>\n"
@@ -277,7 +279,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
 msgid "Digest"
-msgstr "Digerir"
+msgstr "Resumen"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id

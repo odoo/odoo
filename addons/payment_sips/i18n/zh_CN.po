@@ -3,16 +3,21 @@
 # * payment_sips
 # 
 # Translators:
+# fausthuang, 2017
+# e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# Eddie Lim <bhweelim@yahoo.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -22,13 +27,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:163
 #, python-format
 msgid "; multiple order found"
 msgstr "; 找到多个订单"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
+#: code:addons/payment_sips/models/payment.py:161
 #, python-format
 msgid "; no order found"
 msgstr "; 没有订单"
@@ -49,16 +54,16 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
+#: code:addons/payment_sips/models/payment.py:76
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Wordline不支持此货币"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:57
 #, python-format
 msgid "Incorrect payment acquirer provider"
-msgstr "付款收单方服务商不存在"
+msgstr "不正确的付款收单方服务商"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
@@ -79,6 +84,11 @@ msgstr "商家ID"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
@@ -108,7 +118,7 @@ msgstr "生产 url"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "供应商"
+msgstr "服务商"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
@@ -121,7 +131,7 @@ msgid "Sips"
 msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:159
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: 供参照的接收数据 %s"

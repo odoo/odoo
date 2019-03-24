@@ -3,16 +3,18 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# Michael Yeung, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
+# Michael Yeung, 2019
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Michael Yeung, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:42
+#: code:addons/hr_payroll/models/hr_salary_rule.py:49
 #, python-format
 msgid "%s (copy)"
 msgstr "%s(副本)"
@@ -46,9 +48,33 @@ msgstr ""
 " * 當使用者取消薪資單時狀態為「已拒絕」。"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+msgid ""
+"<span class=\"fa fa-check-circle-o mr-2\" aria-label=\"Validated\" "
+"title=\"validated\"/>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+msgid ""
+"<span class=\"fa fa-exclamation-triangle mr-2\" aria-label=\"Conflict\" "
+"title=\"error\"/>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "<span class=\"ml8\">Hours</span>"
+msgstr "<span class=\"ml8\"> 小時 </span>"
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
 msgstr "<span class=\"o_form_label\">薪資規則</span>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "<span class=\"o_stat_text\">Payslips</span>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -59,22 +85,39 @@ msgid ""
 msgstr "<span colspan=\"4\" nolabel=\"1\">嚮導將根據薪資單生成器上輸入的日期和付款單號生成所選員工的薪資單.</span>"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "<span> hours/week</span>"
+msgstr ""
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
 msgstr "<strong>地址</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
 msgstr "<strong>授權簽名</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
 msgstr "<strong>銀行帳號</strong>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Basic Salary</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Company Information</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Computed On</strong>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -83,7 +126,6 @@ msgstr "<strong>開始日期:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
 msgstr "<strong>開始日期</strong>"
 
@@ -94,37 +136,31 @@ msgstr "<strong>結束日期:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
 msgstr "<strong>結束日期</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
 msgstr "<strong>職務</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
 msgstr "<strong>電子郵箱</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Identification No</strong>"
 msgstr "<strong>身份證號碼</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
 msgstr "<strong>姓名</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
 msgstr "<strong>參考</strong>"
 
@@ -132,6 +168,11 @@ msgstr "<strong>參考</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
 msgstr "<strong>登記名稱 :</strong>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Registration Number</strong>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -150,9 +191,10 @@ msgstr ""
 " 國家或在薪資單中收取或注入資金的任何人。"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "主辦會計"
+#: code:addons/hr_payroll/models/hr_leave.py:90
+#, python-format
+msgid "A leave cannot be set across multiple contracts."
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -166,8 +208,10 @@ msgid "Accounting Information"
 msgstr "會計信息"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__active
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__active
 msgid "Active"
 msgstr "有效"
 
@@ -182,14 +226,14 @@ msgid "Add an internal note..."
 msgstr "添加內部備註..."
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
-msgid "Advantage Name"
-msgstr "福利名稱"
-
-#. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
 msgstr "所有下級規則"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employee_all_payslips
+msgid "All Payslips"
+msgstr ""
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
@@ -197,7 +241,6 @@ msgid "Allowance"
 msgstr "補助"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
 msgstr "總為真"
@@ -207,7 +250,6 @@ msgstr "總為真"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
 msgstr "金額"
 
@@ -230,7 +272,6 @@ msgid "Appears on Payslip"
 msgstr "顯示在薪資單"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_python
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
@@ -248,9 +289,84 @@ msgid "Basic Salary"
 msgstr "基本薪金"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__basic_wage
+msgid "Basic Wage"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
+msgid "Batche Name"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+msgid "Batches"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_tree
+msgid "Beginning"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
 msgstr "比利時薪資表"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.hr_benefit_action
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_gantt
+msgid "Benefit"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "Benefit Name"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_leave_type__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar_attendance__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar_leaves__benefit_type_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_type_form
+msgid "Benefit Type"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_type_form
+msgid "Benefit Type Name"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_benefit_type
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_benefit_type_view
+msgid "Benefit Types"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Benefit already exists for this attendance"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Benefit must end. Please define an end date or a duration."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.hr_menu_benefit_menu
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_benefit_confirguration
+#: model_terms:ir.ui.view,arch_db:hr_payroll.benefit_type_leave_form_inherit
+msgid "Benefits"
+msgstr "福利"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_user_benefit_employee
+msgid "Benefits Employees"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -268,6 +384,7 @@ msgid "Calculations"
 msgstr "計算"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
 msgstr "取消"
@@ -278,7 +395,12 @@ msgid "Cancel Payslip"
 msgstr "取消薪資單"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:96
+#: selection:hr.benefit,state:0
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:97
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr "無法取消已完成的薪資單。"
@@ -296,7 +418,6 @@ msgid "Child Rules"
 msgstr "下級規則"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__child_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__child_ids
 msgid "Child Salary Rule"
 msgstr "下級薪資規則"
@@ -318,22 +439,14 @@ msgid "Choose a Payroll Localization"
 msgstr "選擇薪資本地化"
 
 #. module: hr_payroll
-#: selection:hr.payslip.run,state:0
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-msgid "Close"
-msgstr "關閉"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__code
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
 msgstr "代碼"
 
@@ -344,17 +457,20 @@ msgid "Code:"
 msgstr "代碼："
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__color
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__color
+msgid "Color"
+msgstr "顏色"
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Companies"
 msgstr "公司"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__company_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__company_id
 msgid "Company"
 msgstr "公司"
 
@@ -375,7 +491,11 @@ msgid "Compute Sheet"
 msgstr "計算表"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__compute_date
+msgid "Computed On"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_select
 msgid "Condition Based on"
 msgstr "條件根據"
@@ -396,11 +516,18 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: hr_payroll
+#: model:ir.actions.server,name:hr_payroll.action_hr_payroll_confirm_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
 msgstr "確認"
 
 #. module: hr_payroll
+#: selection:hr.benefit,state:0
+msgid "Confirmed"
+msgstr "已確認"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__contract_id
@@ -409,10 +536,10 @@ msgid "Contract"
 msgstr "合同"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
-#: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
-msgid "Contract Advantage Templates"
-msgstr "合同福利模板"
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_contract_repository
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_contracts_configuration
+msgid "Contracts"
+msgstr "合同"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -451,7 +578,18 @@ msgid "Conveyance Allowance For Gravie"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__country_id
+msgid "Country"
+msgstr "國家"
+
+#. module: hr_payroll
+#: model_terms:ir.actions.act_window,help:hr_payroll.action_hr_contract_repository
+msgid "Create a new contract"
+msgstr "創建一個新的合同"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_uid
@@ -460,15 +598,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_uid
 msgid "Created by"
 msgstr "創建者"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_date
@@ -477,9 +616,9 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_date
 msgid "Created on"
 msgstr "創建時間"
@@ -491,14 +630,28 @@ msgid "Credit Note"
 msgstr "退款備註"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Credit Notes"
+msgstr "折讓單"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__currency_id
+msgid "Currency"
+msgstr "幣別"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Date"
+msgstr "日期"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_start
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_from
 msgid "Date From"
 msgstr "起始日期"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_to
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_to
 msgid "Date To"
@@ -508,11 +661,6 @@ msgstr "結束日期"
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
 msgstr "扣除"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
-msgid "Default value for this advantage"
-msgstr "該福利的預設值"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__schedule_pay
@@ -534,7 +682,6 @@ msgstr "依據所選合同，在這個薪資單上設定適用的規則。如果
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__note
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -543,18 +690,8 @@ msgid "Description"
 msgstr "描述"
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
-msgid "Details By Salary Rule Category"
-msgstr "詳情按薪資規則類別"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__details_by_salary_rule_category
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-msgid "Details by Salary Rule Category"
-msgstr "詳情按薪資規則類別"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__display_name
@@ -563,17 +700,16 @@ msgstr "詳情按薪資規則類別"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: hr_payroll
-#: selection:hr.payslip,state:0
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
@@ -590,9 +726,9 @@ msgid "Done Slip"
 msgstr "已付款的薪資條"
 
 #. module: hr_payroll
-#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: selection:hr.benefit,state:0 selection:hr.payslip,state:0
+#: selection:hr.payslip.run,state:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft"
 msgstr "草稿"
 
@@ -608,8 +744,12 @@ msgstr "薪資條草稿"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__employee_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__employee_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Employee"
 msgstr "員工"
@@ -627,14 +767,10 @@ msgstr "員工職能"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
-#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_month_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_payslips
 msgid "Employee Payslips"
 msgstr "員工薪資單"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
-msgid "Employee's Advantage on Contract"
-msgstr "員工在合同中的福利"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
@@ -643,6 +779,7 @@ msgstr "員工的工作時間表"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_configuration
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
@@ -650,7 +787,22 @@ msgid "Employees"
 msgstr "員工"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:92
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Employees Working Hours"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__extra_attendance_ids
+msgid "Employees working Time"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__display_warning
+msgid "Error"
+msgstr "錯誤"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:95
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr "錯誤！您無法創建薪資規則類別的遞歸層次結構。"
@@ -668,7 +820,13 @@ msgid "Eventual third party involved in the salary payment of the employees."
 msgstr "員工薪資支付中涉及的最終第三方。"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:126
+#, python-format
+msgid "Everybody's benefits"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_fix
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_fix
@@ -693,6 +851,23 @@ msgid "French Payroll"
 msgstr "法國薪資表"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
+msgid "From"
+msgstr "來自"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Full Time"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__full_time_required_hours
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__full_time_required_hours
+msgid "Fulltime Hours"
+msgstr ""
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "General"
 msgstr "常規"
@@ -703,10 +878,25 @@ msgid "Generate"
 msgstr "生成"
 
 #. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:44
+#, python-format
+msgid "Generate Benefits"
+msgstr ""
+
+#. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:47
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#, python-format
 msgid "Generate Payslips"
 msgstr "生成薪資單"
+
+#. module: hr_payroll
+#: model:ir.actions.server,name:hr_payroll.action_generate_payslips_from_benefits
+msgid "Generate payslips"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -714,9 +904,14 @@ msgid "Generate payslips for all selected employees"
 msgstr "為已選的所有員工生成薪資單"
 
 #. module: hr_payroll
-#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
-msgid "Get 1% of sales"
-msgstr "獲得銷售額的1%"
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generated Payslips"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "Go To Conflicting Leave"
+msgstr ""
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -732,12 +927,19 @@ msgid "Group By"
 msgstr "分組"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__hours_per_week
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__hours_per_week
+msgid "Hours per Week"
+msgstr ""
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
 msgstr "住屋津貼"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__id
@@ -746,12 +948,11 @@ msgstr "住屋津貼"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__id
 msgid "ID"
 msgstr "ID"
 
@@ -763,7 +964,13 @@ msgid ""
 msgstr "如果勾選它，表示這裡生成的所有薪資條都是退款薪資單。"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,help:hr_payroll.field_hr_benefit_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the benefit "
+"type without removing it."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
@@ -781,22 +988,20 @@ msgid "Indicates this payslip has a refund of another"
 msgstr "表示這張薪資單有另一個退款"
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Input Data"
 msgstr "輸入數據"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__input_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__input_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
-msgid "Inputs"
-msgstr "輸入"
-
-#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__note
 msgid "Internal Note"
 msgstr "內部備註"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__is_fulltime
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
@@ -822,7 +1027,8 @@ msgstr ""
 "contract.wage*0.01."
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip____last_update
@@ -831,17 +1037,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days____last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister____last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails____last_update
 msgid "Last Modified on"
 msgstr "最後修改時間"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_uid
@@ -850,15 +1056,16 @@ msgstr "最後修改時間"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_uid
 msgid "Last Updated by"
 msgstr "最後更新人"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_date
@@ -867,12 +1074,18 @@ msgstr "最後更新人"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_date
 msgid "Last Updated on"
 msgstr "最後更新時間"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__leave_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__is_leave
+msgid "Leave"
+msgstr "退出"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category__parent_id
@@ -880,16 +1093,6 @@ msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
 msgstr "連接薪資類別至其上級類別只用於報告的目的。"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__lower_bound
-msgid "Lower Bound"
-msgstr "下限"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__lower_bound
-msgid "Lower bound authorized by the employer for this advantage"
-msgstr "僱主針對該福利授權的下限"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__paid
@@ -902,10 +1105,14 @@ msgid "Manager"
 msgstr "經理"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "Maximum Range"
 msgstr "最大範圍"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__user_id
+msgid "Me"
+msgstr "我"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
@@ -913,7 +1120,6 @@ msgid "Meal Voucher"
 msgstr "膳食津貼"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
 msgstr "最小範圍"
@@ -929,7 +1135,13 @@ msgid "Monthly"
 msgstr "每月"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__name
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "My Benefits"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__name
@@ -938,9 +1150,15 @@ msgstr "每月"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__name
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Name"
 msgstr "名稱"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_structure__payslip_name
+msgid ""
+"Name to be set on a payslip. Example: 'End of the year bonus'. If not set, "
+"the default value is 'Salary Slip'"
+msgstr ""
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.NET
@@ -953,10 +1171,19 @@ msgid "Net Salary"
 msgstr "淨薪金"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:201
-#, python-format
-msgid "Normal Working Days paid at 100%"
-msgstr "正常工作日100%付薪"
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__net_wage
+msgid "Net Wage"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.employee:0
+msgid "No duplication of registration numbers is allowed"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__normal_attendance_ids
+msgid "Normal working Time"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -965,13 +1192,21 @@ msgstr "便簽"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_days
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "Number of Days"
 msgstr "天數"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_hours
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "Number of Hours"
 msgstr "工時數"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__full_time_required_hours
+#: model:ir.model.fields,help:hr_payroll.field_resource_calendar__full_time_required_hours
+msgid "Number of hours to work to be considered as fulltime."
+msgstr ""
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_user
@@ -990,7 +1225,6 @@ msgid "Parent"
 msgstr "上級"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__parent_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__parent_rule_id
 msgid "Parent Salary Rule"
 msgstr "上級薪資規則"
@@ -1005,8 +1239,6 @@ msgstr "業務夥伴"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__slip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__payslip_id
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Pay Slip"
 msgstr "薪資單"
 
@@ -1014,11 +1246,6 @@ msgstr "薪資單"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
 msgstr "薪資單批處理"
-
-#. module: hr_payroll
-#: model:ir.actions.report,name:hr_payroll.payslip_details_report
-msgid "PaySlip Details"
-msgstr "薪資單詳情"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -1068,40 +1295,38 @@ msgid "Payroll rules that apply to your country"
 msgstr "適用於貴國的薪資規則"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_hr_payroll_account
+msgid "Payroll with Accounting"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
 msgstr "薪資單"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:82
+#: code:addons/hr_payroll/models/hr_payslip.py:83
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
 msgstr "薪資單的'開始日期'必須早於『結束日期'。"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
 msgstr "薪資單批處理"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_count
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip Computation Details"
 msgstr "薪資單計算詳情"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__payslip_count
 msgid "Payslip Count"
 msgstr "薪資統計"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "Payslip Details Report"
-msgstr "薪資單明細"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1123,15 +1348,9 @@ msgstr "薪資單明細"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__line_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Payslip Lines"
 msgstr "薪資單明細"
-
-#. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-msgid "Payslip Lines by Contribution Register"
-msgstr "薪資單明細行，按繳納登記冊"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
@@ -1139,6 +1358,7 @@ msgid "Payslip Lines by Contribution Registers"
 msgstr "薪資單明細行，按繳納登記冊"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__payslip_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
 msgid "Payslip Name"
 msgstr "薪資單名稱"
@@ -1153,7 +1373,7 @@ msgstr "薪資單的工作天數"
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__slip_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__slip_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employee_payslips
 #: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
@@ -1162,7 +1382,6 @@ msgstr "薪資單"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
 msgid "Payslips Batches"
@@ -1174,7 +1393,6 @@ msgid "Payslips by Employees"
 msgstr "按員工分組的薪資條"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage
@@ -1182,12 +1400,13 @@ msgid "Percentage (%)"
 msgstr "百分比(%)"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage_base
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "Percentage based on"
 msgstr "百分比根據"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__duration
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
@@ -1199,7 +1418,11 @@ msgid "Post payroll slips in accounting"
 msgstr "在會計帳簿中發佈薪資單"
 
 #. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/xml/payslip_tree_views.xml:5
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+#, python-format
 msgid "Print"
 msgstr "列印"
 
@@ -1214,21 +1437,17 @@ msgid "Provident Fund"
 msgstr "公積金"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_python_compute
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_python_compute
 msgid "Python Code"
 msgstr "Python 代碼"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_python
 msgid "Python Condition"
 msgstr "Python 條件"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
 msgstr "Python表達式"
@@ -1246,7 +1465,6 @@ msgstr "數量 / 費率"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
 msgstr "數量 / 費率"
 
@@ -1256,13 +1474,11 @@ msgid "Quarterly"
 msgstr "每季度"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
 msgstr "範圍"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range
 msgid "Range Based on"
 msgstr "範圍依據"
@@ -1284,7 +1500,7 @@ msgid "Refund"
 msgstr "退款"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:102
+#: code:addons/hr_payroll/models/hr_payslip.py:103
 #, python-format
 msgid "Refund: "
 msgstr "退款："
@@ -1295,9 +1511,39 @@ msgid "Register Line"
 msgstr "記錄明細"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__registration_number
+msgid "Registration Number of the Employee"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
 msgstr "已拒絕"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__report_id
+msgid "Report"
+msgstr "報表"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_repository_confirguration
+msgid "Repository"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_mixin
+msgid "Resource Mixin"
+msgstr "資源裝飾"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "資源工作時間"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__salary_rule_id
@@ -1305,11 +1551,27 @@ msgid "Rule"
 msgstr "規則"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+msgid "Rule Categories"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+msgid "Rules"
+msgstr "規則"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_configuration
+msgid "Salary"
+msgstr ""
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
 msgstr "薪資類別"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_salary_computation
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "薪資計算"
@@ -1321,7 +1583,6 @@ msgstr "薪酬制度"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
@@ -1329,21 +1590,13 @@ msgstr "薪資規則類別"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
 msgstr "薪資規則類別"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_rule_input
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__input_id
-msgid "Salary Rule Input"
-msgstr "薪資規則輸入項"
-
-#. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__rule_ids
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
@@ -1353,11 +1606,10 @@ msgid "Salary Rules"
 msgstr "薪資規則"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:403
-#: code:addons/hr_payroll/models/hr_payslip.py:453
+#: code:addons/hr_payroll/models/hr_payslip.py:296
 #, python-format
-msgid "Salary Slip of %s for %s"
-msgstr "薪資條為%s為 %s"
+msgid "Salary Slip"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
@@ -1370,7 +1622,6 @@ msgstr "薪資結構"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
 msgstr "薪資結構"
 
@@ -1378,6 +1629,11 @@ msgstr "薪資結構"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__schedule_pay
 msgid "Scheduled Pay"
 msgstr "已安排的付款"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "Search Benefit"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1405,6 +1661,7 @@ msgid "Semi-annually"
 msgstr "半年"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__sequence
@@ -1426,6 +1683,21 @@ msgstr "設定"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Slips to Confirm"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Starting time should be before end time."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__state
+msgid "State"
+msgstr "省份"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "States"
 msgstr "狀態"
 
@@ -1441,6 +1713,11 @@ msgid "Structure"
 msgstr "薪資結構"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Structures"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__code
 msgid ""
@@ -1451,7 +1728,6 @@ msgstr "薪資規則的代碼可以被其他規則的計算公式使用。這樣
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__code
-#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input__code
 msgid "The code that can be used in the salary rules"
 msgstr "可以在薪資規則中使用的代碼"
 
@@ -1463,24 +1739,44 @@ msgstr "規則金額的計算方法。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__contract_id
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "The contract for which applied this input"
 msgstr "適用此輸入的合同"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "The contract for which applied this worked days"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "The maximum amount, applied for this rule."
 msgstr "適用這個規則的最大金額。"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "The minimum amount, applied for this rule."
 msgstr "這條規則適用最小金額。"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "This benefit cannot be validated.  The benefit type is undefined."
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid ""
+"This benefit cannot be validated.  There is a leave to approve (or refuse) "
+"at the same time."
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid ""
+"This benefit cannot be validated. It is conflicting with at least one benefit. <br/>\n"
+"                                Two benefits of the same employee cannot overlap at the same time."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range
 msgid ""
 "This will be used to compute the % fields values; in general it is on basic,"
@@ -1489,10 +1785,36 @@ msgid ""
 msgstr "這將用於計算%字段的值；一般來說是基數，但您也可以用小寫的類別代碼作為一個變量名（hra，ma，lta等）和可變的基數。"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__date_stop
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_to
+msgid "To"
+msgstr "至"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "To Compute"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "To Confirm"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
 msgstr "合計"
 
@@ -1502,14 +1824,9 @@ msgid "Total Working Days"
 msgstr "工作天數總計"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__upper_bound
-msgid "Upper Bound"
-msgstr "上限"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__upper_bound
-msgid "Upper bound authorized by the employer for this advantage"
-msgstr "僱主針對該福利授權的上限"
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "Type"
+msgstr "類型"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__sequence
@@ -1524,6 +1841,28 @@ msgid "Used to display the salary rule on payslip."
 msgstr "用於薪資單顯示薪資規則."
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Validate"
+msgstr "驗證"
+
+#. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:50
+#, python-format
+msgid "Validate Benefits"
+msgstr ""
+
+#. module: hr_payroll
+#: selection:hr.benefit,state:0
+msgid "Validated"
+msgstr "已驗證"
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+msgid "Verify"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
 msgstr "正在等待"
@@ -1532,6 +1871,16 @@ msgstr "正在等待"
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
 msgstr "每週"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "With error"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "工作詳情"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1554,16 +1903,25 @@ msgid "Working Schedule"
 msgstr "工作安排"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Working Time"
+msgstr "工作時間"
+
+#. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
-msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr "薪資規則 %s (%s)百分比基數或者數量定義錯誤。"
+msgid ""
+"Wrong percentage base or quantity defined for salary rule %s (%s).\n"
+"Error: %s"
+msgstr ""
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
-msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "薪資規則 %s (%s) Python代碼定義錯誤。"
+msgid ""
+"Wrong python code defined for salary rule %s (%s).\n"
+"Error: %s"
+msgstr ""
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:240
@@ -1574,8 +1932,10 @@ msgstr "薪資規則 %s (%s) Python條件定義錯誤。"
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
-msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr "為薪資規則  %s (%s) 定義的數量錯誤。"
+msgid ""
+"Wrong quantity defined for salary rule %s (%s).\n"
+"Error: %s"
+msgstr ""
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:234
@@ -1584,31 +1944,51 @@ msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "薪資規則%s (%s) 範圍條件定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#: code:addons/hr_payroll/models/hr_benefit.py:258
+#, python-format
+msgid "You can't validate a benefit that covers several days."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:43
 #, python-format
 msgid "You cannot create a recursive salary structure."
 msgstr "您不能創建遞歸的薪資結構。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:127
+#: code:addons/hr_payroll/models/hr_payslip.py:137
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr "您不能刪除非草稿或者取消狀態的薪資單！"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#: sql_constraint:hr.user.benefit.employee:0
+msgid "You cannot have twice the same employee."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:37
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr "您必須選擇員工以生成薪資單。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:525
+#: code:addons/hr_payroll/models/hr_payslip.py:357
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "您必須設定一份合同以創建薪資單。"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model,name:hr_payroll.model_hr_benefit
+msgid "hr.benefit"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_benefit_type
+msgid "hr.benefit.type"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "result will be affected to a variable"
 msgstr "結果將影響一個變量"

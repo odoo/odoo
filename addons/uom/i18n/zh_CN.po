@@ -5,22 +5,25 @@
 # Translators:
 # Martin Trigaux, 2018
 # Maie <m@maie.name>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # liyes <bodetools@gmail.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Ted Wang <feiyuwang2012@gmail.com>, 2018
-# zhining wu <wzn63@21cn.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# zhining wu <wzn63@21cn.com>, 2019
+# snow wang <147156565@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +39,12 @@ msgstr "有效"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "计量单位"
+msgstr "添加一个新的计量单位"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "计量单位类别"
+msgstr "添加一个新的度量单位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -69,7 +72,7 @@ msgstr "计量单位转换只能在同一个类型之间进行。转换基于比
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
@@ -91,7 +94,7 @@ msgstr "显示名称"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozen(s)"
-msgstr "打(s)"
+msgstr "打"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -103,7 +106,7 @@ msgstr "小时"
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
+msgstr "这个度量单位的数量大于此类别中的参考度量单位：1 *（本单位）=比率*（参考单位）"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -122,13 +125,13 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
@@ -159,12 +162,12 @@ msgstr "管理多个计量单位"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "产品计量单位"
+msgstr "产品测量单位"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "产品计量单位 类别"
+msgstr "产品计量单位类别"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -179,7 +182,7 @@ msgstr "这个类别的参考计量单位"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
-msgstr "舍入精度"
+msgstr "舍入精确度"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
@@ -231,12 +234,12 @@ msgstr "类型"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr "计量类型"
+msgstr "测量类型"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr "计量单位的类别"
+msgstr "测量类别的类型"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -252,7 +255,7 @@ msgstr "单位"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr "单位"
+msgstr "量度单位"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
@@ -279,7 +282,7 @@ msgstr "单位"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "计量单位"
+msgstr "测量单位"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
@@ -332,7 +335,7 @@ msgstr "工作时间"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr "每个计量类型只能有一个类别。"
+msgstr "每个测量类型只能有一个类别。"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
@@ -360,7 +363,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
 msgid "cm"
-msgstr "厘米"
+msgstr "cm"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -395,12 +398,12 @@ msgstr "英寸"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
 msgid "kg"
-msgstr "公斤"
+msgstr "kg"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_km
 msgid "km"
-msgstr "千米"
+msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb

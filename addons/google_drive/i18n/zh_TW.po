@@ -3,17 +3,17 @@
 # * google_drive
 # 
 # Translators:
-# Martin Trigaux, 2018
-# nle_odoo, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# nle_odoo, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,11 +32,38 @@ msgid ""
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>創建一個新的篩選:</b><br/>\n"
-"                                - 去到您要過濾的Odoo文件. 比如, 比如在銷售部門搜尋商機.<br/>\n"
+"                                - 去到您要過濾的Odoo文檔. 比如, 比如在銷售部門搜尋商機.<br/>\n"
 "                                -在」搜尋「視圖, 選擇 \"保存現有篩選\", 輸入名字 (比如: 銷售部門)<br/>\n"
-"                                - 如果您在 \"更多\" 選項中選擇 \"和所有使用者共享\", Google文件鏈接就會顯示給所有銷售部門的使用者.<br/>\n"
-"                                - 如果您沒有在 \"更多\" 選項中選擇 \"和所有使用者共享\", Google文件鏈接則不會顯示給所有銷售部門的使用者.<br/>\n"
-"                                -如果篩選沒有被指定, Google文件的鏈接就會顯示在 \"更多\" 選項中為所有的使用者和商機."
+"                                - 如果您在 \"更多\" 選項中選擇 \"和所有使用者共享\", Google文檔鏈接就會顯示給所有銷售部門的使用者.<br/>\n"
+"                                - 如果您沒有在 \"更多\" 選項中選擇 \"和所有使用者共享\", Google文檔鏈接則不會顯示給所有銷售部門的使用者.<br/>\n"
+"                                -如果篩選沒有被指定, Google文檔的鏈接就會顯示在 \"更多\" 選項中為所有的使用者和商機."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -64,7 +91,7 @@ msgid "Add a new template"
 msgstr "添加新範本"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:42
+#: code:addons/google_drive/models/google_drive.py:41
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr "在您的 Google 磁碟機名稱模式中找不到至少一個金鑰。"
@@ -73,6 +100,11 @@ msgstr "在您的 Google 磁碟機名稱模式中找不到至少一個金鑰。"
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
 msgstr "授權碼"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "取消"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -87,6 +119,11 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "確認"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
 msgstr "創建者"
@@ -97,7 +134,7 @@ msgid "Created on"
 msgstr "創建時間"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:161
+#: code:addons/google_drive/models/google_drive.py:160
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "創建Google驅動器只能一次完成。"
@@ -118,8 +155,8 @@ msgid "Filter"
 msgstr "篩選"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:61
-#: code:addons/google_drive/models/google_drive.py:82
+#: code:addons/google_drive/models/google_drive.py:60
+#: code:addons/google_drive/models/google_drive.py:81
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "前往配置面板"
@@ -146,8 +183,8 @@ msgid "Google Drive Templates"
 msgstr "Google Drive 模板"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:63
-#: code:addons/google_drive/models/google_drive.py:84
+#: code:addons/google_drive/models/google_drive.py:62
+#: code:addons/google_drive/models/google_drive.py:83
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr "Google網路硬碟還沒有被配置成功,請與管理員聯繫。"
@@ -186,8 +223,8 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
-"鏈接您的Google驅動模板到任何Odoo的記錄。如果您有很特定的文件需要您的合作者填寫, "
-"比如：使用電子試算表來控制您的產品的品質或者檢查每個外國訂單的發貨清單, ...這很容易管理他們, 把它們鏈接到Odoo並且和您的員工一起使用它們。"
+"鏈接您的Google驅動模板到任何Odoo的記錄。如果您有很特定的文檔需要您的合作者填寫, "
+"比如：使用電子錶格來控制您的產品的品質或者檢查每個外國訂單的發貨清單, ...這很容易管理他們, 把它們鏈接到Odoo並且和您的員工一起使用它們。"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
@@ -195,10 +232,15 @@ msgid "Model"
 msgstr "模型"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:203
+#: code:addons/google_drive/models/google_drive.py:202
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr "請輸入一個有效的Google文件網址。"
+msgstr "請輸入一個有效的Google文檔網址。"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -211,7 +253,13 @@ msgid "Resource Id"
 msgstr "資源標識"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:81
+#: code:addons/google_drive/models/res_config_settings.py:41
+#, python-format
+msgid "Set up refresh token"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -234,7 +282,7 @@ msgid "Templates"
 msgstr "模板"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:99
+#: code:addons/google_drive/models/google_drive.py:98
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "沒有找到Google模板。也許它已被刪除。"
@@ -257,7 +305,7 @@ msgstr ""
 "則 google 磁碟機和 Odoo 附件中的文檔將被命名為 \"Deco_Addict_SO0001_Sales\"。"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:135
+#: code:addons/google_drive/models/google_drive.py:134
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -265,17 +313,17 @@ msgid ""
 msgstr "'任何人的聯繫'的'讀取'許可尚未寫入文件"
 
 #. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:59
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URI"
-
-#. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#, python-format
-msgid ""
-"You haven't configured 'Authorization Code' generated from google, Please "
-"generate and configure it ."
-msgstr "您還沒有配置從Google產生的「授權碼」，請生成並配置它。"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

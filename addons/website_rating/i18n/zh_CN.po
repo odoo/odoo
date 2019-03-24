@@ -3,27 +3,52 @@
 # * website_rating
 # 
 # Translators:
+# v2exerer <9010446@qq.com>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# 菜小蛇 <lttlsnk@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# 菜小蛇 <lttlsnk@gmail.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2017-12-13 15:01+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:10
+#, python-format
+msgid ""
+"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
+"'/mail/chatter_post'}"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:82
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:62
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:77
+#, python-format
+msgid "Add a review"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web
@@ -41,56 +66,43 @@ msgstr "细节"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:69
-#, python-format
-msgid "Five stars on five"
-msgstr "全五星好评"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:68
-#, python-format
-msgid "Four stars on five"
-msgstr "四颗星"
-
-#. module: website_rating
-#. openerp-web
 #: code:addons/website_rating/static/src/xml/website_mail.xml:13
+#: code:addons/website_rating/static/src/xml/website_mail.xml:73
 #, python-format
 msgid "Half a star"
 msgstr "半颗星"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:43
+#: code:addons/website_rating/static/src/js/website_mail.js:52
 #, python-format
 msgid "I don't like it"
-msgstr "我不喜欢的"
+msgstr "我不喜欢它"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:42
+#: code:addons/website_rating/static/src/js/website_mail.js:51
 #, python-format
 msgid "I hate it"
 msgstr "我讨厌它"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:45
+#: code:addons/website_rating/static/src/js/website_mail.js:54
 #, python-format
 msgid "I like it"
 msgstr "我喜欢它"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:46
+#: code:addons/website_rating/static/src/js/website_mail.js:55
 #, python-format
 msgid "I love it"
 msgstr "我爱它"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:44
+#: code:addons/website_rating/static/src/js/website_mail.js:53
 #, python-format
 msgid "It's okay"
 msgstr "没有问题"
@@ -102,17 +114,19 @@ msgstr "消息"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:59
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:74
 #, python-format
-msgid "One star"
-msgstr "一星"
+msgid "Modify your review"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:65
+#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/website_rating/static/src/xml/website_mail.xml:70
 #, python-format
-msgid "One star on five"
-msgstr "一颗星"
+msgid "One star"
+msgstr "一星"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
@@ -132,23 +146,16 @@ msgid "Remove selection"
 msgstr "删除选择"
 
 #. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:67
-#, python-format
-msgid "Three stars on five"
-msgstr "三颗星"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:66
-#, python-format
-msgid "Two stars on five"
-msgstr "二颗星"
-
-#. module: website_rating
 #: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
 msgid "Visible on the website as a comment"
-msgstr "作为评论在网站可见"
+msgstr "作为可见于网站的评论"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:54
+#, python-format
+msgid "ratings)"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web

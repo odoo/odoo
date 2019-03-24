@@ -3,17 +3,24 @@
 # * utm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Fabien Pinckaers <fp@openerp.com>, 2018
-# missjuliette333 <missjuliette333@hotmail.fr>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# missjuliette333 <missjuliette333@hotmail.fr>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
+# Martin Trigaux, 2019
+# William Olhasque <william.olhasque@scopea.fr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: William Olhasque <william.olhasque@scopea.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +35,8 @@ msgstr "Actif"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Campaign"
 msgstr "Campagne"
 
@@ -39,16 +46,10 @@ msgid "Campaign Name"
 msgstr "Nom de la campagne"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_campaign_act
+#: model:ir.actions.act_window,name:utm.utm_campaign_action
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
 msgstr "Campagnes"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
-msgid "Channel"
-msgstr "Canal"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -75,14 +76,19 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Define a new UTM campaign"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "Define a new medium"
-msgstr "Définir un nouveau média"
+msgid "Define a new UTM medium"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "Define a new source"
-msgstr "Définir une nouvelle source"
+msgid "Define a new UTM source"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
@@ -95,7 +101,7 @@ msgstr "Nom affiché"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Campagne d'email - services"
+msgstr "Campagne de courriel - services"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
@@ -105,7 +111,7 @@ msgstr "Facebook"
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Routage HTTP"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__id
@@ -121,7 +127,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_source____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -139,7 +145,7 @@ msgstr "Dernière mise à jour le"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
-msgid "Lead Newsletter"
+msgid "Lead Recall"
 msgstr ""
 
 #. module: utm
@@ -148,13 +154,17 @@ msgid "Link Tracker"
 msgstr "Surveillance de liens"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
-#: model:ir.ui.menu,name:utm.menu_utm_medium
-#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
 msgstr "Moyen"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.ui.menu,name:utm.menu_utm_medium
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "Mediums"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -174,13 +184,15 @@ msgstr "Moteur de Recherche"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Source"
+msgstr "Origine"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
-msgstr "Nom de la source"
+msgstr "Nom de l'origine"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
@@ -194,8 +206,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Ce nom vous aidera à suivre vos différentes campagnes marketing, p. ex. "
-"Campagne_automnale ou Spécial_Noël"
+"Ce nom pour vous aidera à suivre vos différentes campagnes marketing, p. ex."
+" Campagne_automnale ou Spécial_Noël"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id

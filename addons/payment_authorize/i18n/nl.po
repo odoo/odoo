@@ -3,16 +3,20 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# Martin Trigaux, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,14 +50,14 @@ msgid "Authorize.net Profile ID"
 msgstr "Authorize.net Profiel ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:177
+#: code:addons/payment_authorize/models/payment.py:186
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
-"Authorize: data ontvangen met ontbrekende referentie (%s) of trans_id (%s) "
-"of vingerafdruk (%s)"
+"Authorize: data ontvangen met missende referentie (%s) of trans_id (%s) of "
+"fingerprint (%s)"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -95,14 +99,14 @@ msgstr ""
 "Vraag uw verkoper om uw profiel bij te werken als u geen account heeft."
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:270
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
-"Ongeldige token gevonden: Het Authorize profiel ontbreekt. Zorg ervoor dat "
-"het token een geldige acquirer  referentie heeft."
+"Ongeldige token gevonden: Het Authorize profiel ontbreekt. Zorg ervoor dat "
+"het token een geldige acquirer referentie heeft."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -116,13 +120,18 @@ msgstr "Ogone"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr "PayUlatam"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
 msgstr "PayUmoney"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaling verwerver"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -143,13 +152,13 @@ msgstr "Paypal"
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr "U dient uw profiel te voltooien."
+msgstr "Gelieve uw profiel te voltooien."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete your profile."
-msgstr "U dient aan te melden om uw profiel te voltooien."
+msgstr "Gelieve aan te melden om uw profiel te voltooien."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -173,7 +182,7 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:365
+#: code:addons/payment_authorize/models/payment.py:374
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Aanmaken van klant profiel op Authorize.NET mislukt."

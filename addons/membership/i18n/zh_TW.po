@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-01-16 07:59+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +24,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr "# 已開立應收憑單"
+msgstr "# 已開立發票"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
@@ -45,6 +47,11 @@ msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
 msgstr "<strong>到：</strong>"
 
@@ -59,7 +66,7 @@ msgstr "您將作為哪個客戶的附屬會籍。您的會員資格會隨著主
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr "會計應收憑單明細"
+msgstr "會計發票明細"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -300,30 +307,30 @@ msgstr "無效"
 #: model:ir.model,name:membership.model_account_invoice
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_id
 msgid "Invoice"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "應收憑單行"
+msgstr "發票行"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr "應收憑單會籍"
+msgstr "發票會籍"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
-msgstr "已開應收憑單的會員"
+msgstr "已開發票的會員"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "已開立應收憑單/已支付/免費"
+msgstr "已開立發票/已支付/免費"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -341,8 +348,8 @@ msgstr ""
 "                    -非會員：業務夥伴沒有申請任何會籍。\n"
 "                    -已經被取消的會員：會員已取消其會員資格。\n"
 "                    -舊會員:其成員日期已經到期。\n"
-"                    -未審核會員：已申請成為成員的人，他們的應收憑單即將被創建。\n"
-"                    -已開具應收憑單的會員：會員的應收憑單已創建。\n"
+"                    -未審核會員：已申請成為成員的人，他們的發票即將被創建。\n"
+"                    -已開具發票的會員：會員的發票已創建。\n"
 "                    -付費會員：已支付會員費的會員。"
 
 #. module: membership
@@ -360,8 +367,8 @@ msgstr ""
 "-非會員：未申請任何會員資格的會員。\n"
 "-已註銷會員：已註銷會員資格的會員。\n"
 "-過期會員：超出會員資格有效期的會員。\n"
-"-待定會員：已申請會員資格，應收憑單處於待創建狀態的會員。\n"
-"-已開立應收憑單會員：已創建應收憑單的會員。\n"
+"-待定會員：已申請會員資格，發票處於待創建狀態的會員。\n"
+"-已開立發票會員：已創建發票的會員。\n"
 "-已付款會員： 已支付會員資格金額的會員。"
 
 #. module: membership
@@ -460,7 +467,7 @@ msgstr "會費"
 #: model:ir.model,name:membership.model_membership_invoice
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr "會籍應收憑單"
+msgstr "會籍發票"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -570,7 +577,7 @@ msgstr "業務夥伴"
 #: code:addons/membership/models/partner.py:186
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr "業務夥伴沒有地址來開具應收憑單。"
+msgstr "業務夥伴沒有地址來開具發票。"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:184
@@ -652,7 +659,7 @@ msgstr "這將顯示已支付、舊的、實現收入總計列"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "將顯示等待、已開立應收憑單、應付總額列"
+msgstr "將顯示等待、已開立發票、應付總額列"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to

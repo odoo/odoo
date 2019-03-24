@@ -3,18 +3,19 @@
 # * payment_sips
 # 
 # Translators:
-# Martin Trigaux, 2018
-# zbik2607 <darek@krokus.com.pl>, 2018
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
-# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
-# Maja Stawicka <mjstwck@wp.pl>, 2018
+# Martin Trigaux, 2019
+# zbik2607 <darek@krokus.com.pl>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019
+# Maja Stawicka <mjstwck@wp.pl>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Maja Stawicka <mjstwck@wp.pl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Maja Stawicka <mjstwck@wp.pl>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:163
 #, python-format
 msgid "; multiple order found"
 msgstr "; znaleziono wielokrotne zamówienie"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
+#: code:addons/payment_sips/models/payment.py:161
 #, python-format
 msgid "; no order found"
 msgstr "; nie znaleziono zamówienia"
@@ -50,13 +51,13 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
+#: code:addons/payment_sips/models/payment.py:76
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Waluta nieobsługiwana przez Wordline"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:57
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr ""
@@ -80,6 +81,11 @@ msgstr "Merchant ID"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
@@ -122,7 +128,7 @@ msgid "Sips"
 msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:159
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: otrzymane dane dla odniesienia %s"

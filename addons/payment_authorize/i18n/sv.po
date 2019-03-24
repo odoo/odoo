@@ -3,15 +3,16 @@
 # * payment_authorize
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Daniel Forslund <daniel.forslund@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +47,7 @@ msgid "Authorize.net Profile ID"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:177
+#: code:addons/payment_authorize/models/payment.py:186
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -84,7 +85,7 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:61
+#: code:addons/payment_authorize/controllers/main.py:64
 #, python-format
 msgid ""
 "If you don't have any account, please ask your salesperson to update your "
@@ -92,7 +93,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:270
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
@@ -111,6 +112,11 @@ msgstr ""
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
 msgstr ""
 
@@ -118,6 +124,11 @@ msgstr ""
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Betalväxel"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
@@ -130,13 +141,13 @@ msgid "Paypal"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:63
+#: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:58
+#: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete your profile."
 msgstr ""
@@ -163,13 +174,13 @@ msgid "Stripe"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:365
+#: code:addons/payment_authorize/models/payment.py:374
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:55
+#: code:addons/payment_authorize/controllers/main.py:58
 #, python-format
 msgid ""
 "The transaction cannot be processed because some contact details are missing"
@@ -195,9 +206,4 @@ msgstr ""
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_authorize
-#: model:ir.model,name:payment_authorize.model_payment_token
-msgid "payment.token"
 msgstr ""

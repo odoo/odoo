@@ -3,16 +3,20 @@
 # * membership
 # 
 # Translators:
+# Yaroslav Molochko <onorua@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-16 07:59+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +37,7 @@ msgstr "# Оплачено"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr "# Очікування"
+msgstr "# В черзі"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -43,6 +47,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> Від: </strong>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -77,12 +86,12 @@ msgstr "Додати нового члена"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All Members"
-msgstr "Усі учасники"
+msgstr "Всі учасники"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All non Members"
-msgstr "Усі не учасники"
+msgstr "Всі не учасники"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
@@ -100,7 +109,7 @@ msgstr "Доданий учасник"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "Доданий партнер"
+msgstr "Асоційований партнер"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -256,7 +265,7 @@ msgstr "Кінцева дата членства"
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
-"Помилка! Дата завершення не може бути призначеною перед датою початку."
+"Помилка ! Дата завершення не може бути призначеною перед Датою початку."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -363,9 +372,9 @@ msgstr ""
 "Це вказує на статус членства.\n"
 "-Учасник: Учасник, який не подав заявку на членство.\n"
 "-Скасований учасник: Учасник, який скасував своє членство.\n"
-"-Старий учасник: Учасник, чиє членство закінчилося.\n"
-"-Учасник в очікування: Учасник, який подав заявку на членство, а рахунок-фактуру буде створено.\n"
-"-Рахунок-фактура учасника: Учасник, чий рахунок було створено.\n"
+"-Старий учасник: Учасник чиє членство закінчилося.\n"
+"-Учасник в очікування: Учасник, який подав заявку на членство, а рахунок-фактура буде створена.\n"
+"-Учасник з рахунок: Учасник, чий рахунок було створено.\n"
 "-Учасник, що оплатив: Учасник, який оплатив своє членство."
 
 #. module: membership
@@ -580,7 +589,7 @@ msgstr "У партнера немає адреси, щоби виставити
 #: code:addons/membership/models/partner.py:184
 #, python-format
 msgid "Partner is a free Member."
-msgstr "Партнер - безкоштовний учасник."
+msgstr "Партнер - вільний учасник."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
@@ -657,7 +666,7 @@ msgstr "Відображатимуться сплачені, старі та з�
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
 msgstr ""
-"Будуть відображатися стовпці очікування, рахунка-фактури та очікуваної суми"
+"Будуть відображатися стовпці очікування, рахунки-фактури та очікувана сума"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to

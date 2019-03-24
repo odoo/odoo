@@ -3,27 +3,38 @@
 # * base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# Emily JIA <eji@odoo.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# fausthuang, 2017
+# Si Ling Lau <happy8645@hotmail.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -54,7 +65,7 @@ msgstr "有效"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
 msgid "Activity"
-msgstr "活动"
+msgstr "有效"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
@@ -113,7 +124,7 @@ msgstr "自动化"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr "基本动作规则:检查并执行"
+msgstr "Base Action Rule: check and execute"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
@@ -150,6 +161,12 @@ msgstr "基础自动化：写入测试规则"
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr "基础自动化：写入检查上下文的测试规则"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -213,7 +230,7 @@ msgstr "以逗号分隔的字段名称列表触发变化"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr "创建或写入目标模型"
+msgstr "创建/写目标模型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -261,6 +278,11 @@ msgid "Delay type"
 msgstr "延迟类型"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "演示"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -275,7 +297,7 @@ msgstr "截止日期至"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr "截止类型"
+msgstr "到期类型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -377,12 +399,7 @@ msgstr "分钟"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "模型"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "模型说明"
+msgstr "型号"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -451,7 +468,7 @@ msgstr "更新时"
 msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
-msgstr "可选的帮助文本为用户提供目标视图的说明，例如它的用法和用途。"
+msgstr "可选的帮助文本，目标视图的说明，比如用途和目的。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
@@ -479,16 +496,6 @@ msgstr "提供用于将新创建的记录链接到服务器操作所使用的记
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
 msgid "Python Code"
 msgstr "Python 代码"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "移除动作"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "移除与此服务器动作相关的上下文动作"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
@@ -545,6 +552,11 @@ msgid "Summary"
 msgstr "摘要"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "目标模型"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr "记录上用户的技术名称"
@@ -555,7 +567,7 @@ msgstr "记录上用户的技术名称"
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
-msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型一起使用"
+msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -579,12 +591,12 @@ msgid ""
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
 "服务器操作的类型。 以下值可用：\n"
-"-“执行Python代码”：将被执行的一段python代码\n"
-"- “创建或复制新记录”：用新值创建一个新记录，或复制现有数据库中的记录\n"
-"-  “在记录上写”：更新记录的值\n"
-"- “执行几个动作”：定义触发其他服务器的动作\n"
-"-“添加关注者”：将关注者添加到记录中（在论坛中可用）\n"
-"- “发送电子邮件”：自动发送电子邮件（在email_template中可用）"
+"- “执行Python代码”：将被执行的一段python代码\n"
+"- “创建或复制新记录”：用新值创建新记录，或复制数据库中的现有记录\n"
+"- '在记录上写'：更新记录的值\n"
+"- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
+"- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
+"- “发送电子邮件”：自动发送电子邮件（在email_template中提供）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -646,7 +658,7 @@ msgstr "警告"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr "当需要基于时间条件做计算时，可以使用日历根据工作日计算日期。"
+msgstr "当需要基于时间条件做计算时，可能使用一个基于工作日的日历去计算是比较合适的."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -661,8 +673,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"何时触发该条件。\n"
-"                                  如果存在,将由调度程序检查。如果为空，将在创建和更新时检查。"
+"当条件被触发。\n"
+"如果存在，将由调度器检查。如果为空，将检查创建并更新。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -674,4 +686,4 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
-msgstr "编写动作将执行的Python代码。一些变量可供使用;有关python表达式的帮助在帮助选项卡中给出。"
+msgstr "编写动作将执行的Python代码。一些变量可供使用;有关python表达式的帮助在帮助选项页签中给出。"

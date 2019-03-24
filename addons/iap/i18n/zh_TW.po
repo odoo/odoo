@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2017-12-13 14:54+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,13 @@ msgstr "帳戶指示物"
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:39
+#, python-format
+msgid "Buy credits"
+msgstr "購買信用"
+
+#. module: iap
+#. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Buy credits at Odoo"
@@ -38,24 +46,10 @@ msgstr "在odoo中購買信用"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:41
-#, python-format
-msgid "Buy more credits"
-msgstr "購買更多信用"
-
-#. module: iap
-#. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:61
 #, python-format
 msgid "Cancel"
 msgstr "取消"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:28
-#, python-format
-msgid "Checking remaining credit ..."
-msgstr "正在檢查剩餘信用..."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_id
@@ -76,6 +70,13 @@ msgstr "創建時間"
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:32
+#, python-format
+msgid "Go to My Portal"
+msgstr ""
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -102,7 +103,7 @@ msgstr "ID"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:21
+#: code:addons/iap/static/src/xml/iap_templates.xml:28
 #, python-format
 msgid "In-App Purchases"
 msgstr "應用內購買"
@@ -113,13 +114,6 @@ msgstr "應用內購買"
 #, python-format
 msgid "Insufficient Balance"
 msgstr "餘額不足"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:31
-#, python-format
-msgid "Insufficient credit"
-msgstr "點數不足"
 
 #. module: iap
 #. openerp-web
@@ -144,13 +138,6 @@ msgid "Last Updated on"
 msgstr "最後更新時間"
 
 #. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:34
-#, python-format
-msgid "Remaining :"
-msgstr "剩餘："
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 msgid "Service Name"
 msgstr "服務名稱"
@@ -161,17 +148,3 @@ msgstr "服務名稱"
 #, python-format
 msgid "Start a Trial at Odoo"
 msgstr "在odoo中開始試用"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:37
-#, python-format
-msgid "Temporarily unavailable"
-msgstr "暫時不可用"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:34
-#, python-format
-msgid "credits"
-msgstr "點數"

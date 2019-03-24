@@ -3,23 +3,51 @@
 # * note
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Henri Cornuau <hcornuau@gmail.com>, 2016
+# Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Lucas Deliege <lud@openerp.com>, 2017
+# 31c77b784710e4a287a92d851a40e039, 2017
+# bb76cd9ac0cb7e20167a14728edb858b, 2017
+# 6534c450c77b2549e41c52e2051f5839, 2018
+# Olivier Dony <odo@odoo.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Hubert TETARD <htetard@apik-conseils.com>, 2018
+# Lucas Deliege <lud@odoo.com>, 2018
+# Nancy Bolognesi <nb@microcom.ca>, 2018
+# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
+# Arthur Latour <arl@odoo.com>, 2018
+# LEONARD Jean-Christophe <jeanchristophe.leonard@gmail.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Laura Piraux <lap@odoo.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -84,7 +112,7 @@ msgstr "Archiver"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nombre de pièces jointes"
+msgstr "Compte des pièces jointes"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -93,10 +121,10 @@ msgstr "Par catégorie de note collante"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
+msgid ""
+"Categories may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
 msgstr ""
-"Les catégories peuvent déclencher un comportement spécifique, tel que "
-"l'ouverture d'une vue calendrier"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
@@ -367,11 +395,6 @@ msgid "Number of unread messages"
 msgstr "Nombre de messages non lus"
 
 #. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Autre"
-
-#. module: note
 #: selection:note.note,activity_state:0
 msgid "Overdue"
 msgstr "Retard"
@@ -476,6 +499,11 @@ msgid "Stages of Users"
 msgstr "Étapes des utilisateurs"
 
 #. module: note
+#: selection:mail.activity.type,category:0
+msgid "Standard"
+msgstr "Standard"
+
+#. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
 msgid ""
 "Status based on activities\n"
@@ -537,6 +565,11 @@ msgid "Unread Messages Counter"
 msgstr "Compteur de messages non lus"
 
 #. module: note
+#: selection:mail.activity.type,category:0
+msgid "Upload Document"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Utilisé pour trier les étapes de la notes"
@@ -545,13 +578,3 @@ msgstr "Utilisé pour trier les étapes de la notes"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Utilisateurs"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
