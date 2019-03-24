@@ -3,19 +3,21 @@
 # * website_links
 # 
 # Translators:
-# Martin Trigaux, 2018
-# zbik2607 <darek@krokus.com.pl>, 2018
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
-# Tomasz Leppich <t.leppich@gmail.com>, 2018
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
+# Maja Stawicka <mjstwck@wp.pl>, 2019
+# Martin Trigaux, 2019
+# zbik2607 <darek@krokus.com.pl>, 2019
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
+# Tomasz Leppich <t.leppich@gmail.com>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
+"POT-Creation-Date: 2018-12-24 10:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,21 +27,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#: code:addons/website_links/static/src/js/website_links_charts.js:62
 #, python-format
 msgid " clicks"
 msgstr "kliknięć"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#: code:addons/website_links/static/src/js/website_links_charts.js:129
 #, python-format
 msgid " countries"
 msgstr "kraje"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#: code:addons/website_links/static/src/js/website_links_charts.js:66
 #, python-format
 msgid "# of clicks"
 msgstr "# kliknięć"
@@ -95,6 +97,14 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:412
+#, python-format
+msgid "Copied"
+msgstr "Skopiowano"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:414
 #: code:addons/website_links/static/src/xml/recent_link.xml:37
 #, python-format
 msgid "Copy"
@@ -110,7 +120,7 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:356
+#: code:addons/website_links/static/src/js/website_links.js:488
 #, python-format
 msgid "Generating link..."
 msgstr "Generowanie linku..."
@@ -199,12 +209,28 @@ msgstr "Statystyki"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:229
-#: code:addons/website_links/static/src/js/website_links_charts.js:230
-#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#: code:addons/website_links/static/src/js/website_links.js:209
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:54
+#, python-format
+msgid "The code cannot be left empty"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:183
+#: code:addons/website_links/static/src/js/website_links_charts.js:184
+#: code:addons/website_links/static/src/js/website_links_charts.js:185
 #, python-format
 msgid "There is no data to show"
 msgstr "Brak danych do pokazania"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:246
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:74
+#, python-format
+msgid "This code is already taken"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -223,21 +249,21 @@ msgstr "URL"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:225
+#: code:addons/website_links/static/src/js/website_links.js:304
 #, python-format
 msgid "Unable to get recent links"
 msgstr "niemożliwe aby dostać niedawne linki"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#: code:addons/website_links/static/src/js/website_links_charts.js:124
 #, python-format
 msgid "Undefined"
 msgstr "Niezdefiniowane"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:248
+#: code:addons/website_links/static/src/js/website_links.js:332
 #, python-format
 msgid "You don't have any recent links."
 msgstr "Nie masz żadnych najnowszych linków."
@@ -269,21 +295,21 @@ msgstr "kopia"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:266
+#: code:addons/website_links/static/src/js/website_links.js:362
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "e.g. Newsletter, Social Network, .."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:263
+#: code:addons/website_links/static/src/js/website_links.js:359
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "np. Promocja czerwcowa, zimowa Newslettera, ..."
+msgstr "np. Promocja czerwcowa, zimowa Newslettera, .."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:269
+#: code:addons/website_links/static/src/js/website_links.js:365
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr "np. Wyszukiwarka, strona internetowa, ..."

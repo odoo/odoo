@@ -3,14 +3,25 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Niki Waibel, 2017
+# e2f <projects@e2f.com>, 2018
+# Ralf Hilgenstock <rh@dialoge.info>, 2018
+# Wolfgang Taferner, 2018
+# Tina Rittmüller <tr@ife.de>, 2018
+# Fabian Liesch <fabian.liesch@gmail.com>, 2018
+# Andi, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +55,7 @@ msgid "Authorize.net Profile ID"
 msgstr "Authorize.net Profil-ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:177
+#: code:addons/payment_authorize/models/payment.py:186
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -94,7 +105,7 @@ msgstr ""
 "Profil zu aktualisieren."
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:270
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
@@ -110,6 +121,11 @@ msgstr "Manuelle Konfiguration"
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -170,7 +186,7 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:365
+#: code:addons/payment_authorize/models/payment.py:374
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Die Erstellung des Kundenprofils bei Autorize.NET ist fehlgeschlagen."

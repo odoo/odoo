@@ -3,19 +3,27 @@
 # * utm
 # 
 # Translators:
-# Ralf Hilgenstock <rh@dialoge.info>, 2018
-# Martin Trigaux, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# jonas <jonas.hillebrecht@bklynsoap.com>, 2018
-# Jan Meyer, 2018
-# Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Niki Waibel, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# jonas <jonas.hillebrecht@bklynsoap.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner, 2017
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Martin Trigaux, 2019
+# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +38,8 @@ msgstr "Aktiv"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Campaign"
 msgstr "Kampagne"
 
@@ -41,16 +49,10 @@ msgid "Campaign Name"
 msgstr "Kampagnen-Bezeichnung"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_campaign_act
+#: model:ir.actions.act_window,name:utm.utm_campaign_action
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
 msgstr "Kampagnen"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
-msgid "Channel"
-msgstr "Kanal"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -77,13 +79,18 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Define a new UTM campaign"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "Define a new medium"
+msgid "Define a new UTM medium"
 msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "Define a new source"
+msgid "Define a new UTM source"
 msgstr ""
 
 #. module: utm
@@ -141,7 +148,7 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
-msgid "Lead Newsletter"
+msgid "Lead Recall"
 msgstr ""
 
 #. module: utm
@@ -150,13 +157,17 @@ msgid "Link Tracker"
 msgstr "Link Tracker"
 
 #. module: utm
-#: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
+msgid "Medium"
+msgstr "Medium"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
-#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
-msgid "Medium"
-msgstr "Mittel"
+msgid "Mediums"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -176,13 +187,15 @@ msgstr "Suchmaschine"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Referenz"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
-msgstr "Herkunftsbezeichnung"
+msgstr "Herkunftbezeichnung"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action

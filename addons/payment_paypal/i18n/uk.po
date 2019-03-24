@@ -3,15 +3,17 @@
 # * payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# LoganDowns <k0mna80@gmail.com>, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +25,12 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
 msgid "Access Token"
-msgstr "Токен доступу"
+msgstr "Доступ Токена"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
 msgid "Access Token Validity"
-msgstr "Термін дії токена доступу"
+msgstr "Символічні доступ до дії"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
@@ -48,7 +50,7 @@ msgstr "Buckaroo"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Фіксована внутрішня комісія"
+msgstr "Фіксована домашня комісія"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
@@ -58,7 +60,7 @@ msgstr "Фіксована міжнародна комісія"
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr "Як налаштувати ваш обліковий запис у Paypal?"
+msgstr "Як налаштувати ваш обліковий запис в Paypal?"
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
@@ -68,7 +70,12 @@ msgstr "Ручне налаштування"
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr "Ogone"
+msgstr "Огон"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
 
 #. module: payment_paypal
 #: selection:payment.acquirer,provider:0
@@ -87,7 +94,7 @@ msgid ""
 "payments as they are made."
 msgstr ""
 "Передача платіжних даних дозволяє отримувати сповіщення про успішні платежі,"
-" після того, як вони будуть виконані."
+" як це робиться."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -102,7 +109,7 @@ msgstr "Paypal"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Paypal Email ID"
-msgstr "ID електронної пошти Paypal"
+msgstr "ідентифікатор повідомлення електронної пошти"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -156,7 +163,7 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
-"Merchant ID використовується для забезпечення того, щоби повідомлення, що "
+"Merchant ID використовується для забезпечення того, щоб повідомлення, що "
 "надходять від Paypal, були дійсними та захищеними."
 
 #. module: payment_paypal

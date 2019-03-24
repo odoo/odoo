@@ -3,25 +3,46 @@
 # * base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Nathan Noël <nathan070@me.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# Olivier Dony <odo@odoo.com>, 2017
+# Lionel Sausin <ls@numerigraphe.com>, 2017
+# Agathe Mollé <molleagathe@gmail.com>, 2017
+# Florian Hatat, 2017
+# Benjamin Delagoutte <ben@ampletus.fr>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Xavier Symons <xsy@openerp.com>, 2017
+# Quentin THEURET <odoo@kerpeo.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
+# Denis Leemann <denis.leemann@camptocamp.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Xavier Belmere <Info@cartmeleon.com>, 2018
+# e2f <projects@e2f.com>, 2019
+# bb76cd9ac0cb7e20167a14728edb858b, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Nathan Noël <nathan070@me.com>, 2019
+# Nathan Grognet <ngr@odoo.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -152,6 +173,12 @@ msgstr ""
 " enregistrement de base selon le contexte d'exécution"
 
 #. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr ""
+
+#. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "Basé sur un changement dans le formulaire"
@@ -263,6 +290,11 @@ msgstr "Délai après la date de déclenchement"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay type"
 msgstr "Type de délai"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "Démo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -388,11 +420,6 @@ msgid "Model"
 msgstr "Modèle"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "Description du Modèle"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
 msgid "Model Name"
 msgstr "Nom de Modèle"
@@ -494,16 +521,6 @@ msgid "Python Code"
 msgstr "Code Python"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "Supprimer une action"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "Retirer l'action contextuelle relative à cette action du serveur"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -560,9 +577,14 @@ msgid "Summary"
 msgstr "Résumé"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "Modèle cible"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr "Nom technique de l'utilisateur "
+msgstr "Nom technique de l'utilisateur sur l'enregistrement"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87

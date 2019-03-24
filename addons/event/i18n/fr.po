@@ -3,30 +3,42 @@
 # * event
 # 
 # Translators:
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
-# Quentin THEURET <odoo@kerpeo.com>, 2018
-# fr trans <e2ftrans1@yahoo.com>, 2018
-# Martin Trigaux, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Fabien Pinckaers <fp@openerp.com>, 2018
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
-# Richard Mathot <rim@odoo.com>, 2018
-# Loic <loic.richard2@gmail.com>, 2018
-# nle_odoo, 2018
-# Clo <clo@odoo.com>, 2018
-# Xavier Symons <xsy@openerp.com>, 2018
-# Melanie Bernard <mbe@odoo.com>, 2018
+# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# mathieu betton <mathieu.betton@gmail.com>, 2017
+# Florian Hatat, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
+# Olivier Dony <odo@odoo.com>, 2018
+# Nancy Bolognesi <nb@microcom.ca>, 2018
+# Quentin THEURET <odoo@kerpeo.com>, 2019
+# 6534c450c77b2549e41c52e2051f5839, 2019
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
+# Fabien Pinckaers <fp@openerp.com>, 2019
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2019
+# Richard Mathot <rim@odoo.com>, 2019
+# nle_odoo, 2019
+# Clo <clo@odoo.com>, 2019
+# Xavier Symons <xsy@openerp.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Laura Piraux <lap@odoo.com>, 2019
+# Nathan Grognet <ngr@odoo.com>, 2019
+# Marie Willemyns <mwi@odoo.com>, 2019
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,10 +52,16 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
-#: code:addons/event/models/event.py:303
+#: code:addons/event/models/event.py:312
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
+msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -101,6 +119,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">pour apprendre "
+"<i>la Programmation Odoo</i></font>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -150,6 +170,13 @@ msgstr ""
 "                                    </span>"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
@@ -170,7 +197,7 @@ msgstr ""
 "développeurs qui ont besoin d'apprendre les processus de "
 "<strong>développement des applications métiers</strong>. Cette formation "
 "s'adresse aux nouveaux développeurs et professionnels de l'informatique qui "
-"veulent en apprendre plus à propos des aspects techniques.</span> "
+"veulent en apprendre plus à propos des aspects techniques.</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -357,7 +384,7 @@ msgid ""
 "                            <td style=\"padding:25px 0px;\">\n"
 "                                <strong>Add this event to your calendar</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Outlook</a>\n"
+"                                <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
 "                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
@@ -385,19 +412,19 @@ msgid ""
 "</table>\n"
 "</td></tr>\n"
 "<!-- FOOTER BY -->\n"
+"% if object.company_id\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        % if object.company_id\n"
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
 "        % endif\n"
-"        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
+"% endif\n"
 "</table>\n"
 "            "
 msgstr ""
@@ -547,6 +574,7 @@ msgid ""
 "                            <td style=\"padding:25px 0px;\">\n"
 "                                <strong>Add this event to your calendar</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                                <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
 "                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
@@ -574,19 +602,19 @@ msgid ""
 "</table>\n"
 "</td></tr>\n"
 "<!-- FOOTER BY -->\n"
+"% if object.company_id\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        % if object.company_id:\n"
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
 "        % endif\n"
-"        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
+"% endif\n"
 "</table>\n"
 "            "
 msgstr ""
@@ -601,6 +629,18 @@ msgstr "Nécessite une action"
 #: model:ir.model.fields,field_description:event.field_event_event__active
 msgid "Active"
 msgstr "Actif"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_ids
+msgid "Activities"
+msgstr "Activités"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_state
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_state
+msgid "Activity State"
+msgstr "Statut de l'activité"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -624,7 +664,7 @@ msgstr "Ajouter un nouvel évènement"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Advanced JQuery"
-msgstr "JQuery avancée"
+msgstr "JQuery avancé"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -661,7 +701,7 @@ msgstr "Tableaux"
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
 #: model:ir.model.fields,field_description:event.field_event_registration__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nombre de pièces jointes"
+msgstr "Compte des pièces jointes"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -777,7 +817,7 @@ msgstr "Amenez votre propre ordinateur portable."
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Building a Full Application"
-msgstr "Construire une application complète."
+msgstr "Construire une application complète"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -828,7 +868,7 @@ msgid "Company"
 msgstr "Société"
 
 #. module: event
-#: code:addons/event/models/event.py:504
+#: code:addons/event/models/event.py:536
 #, python-format
 msgid "Compose Email"
 msgstr "Rédiger un courriel"
@@ -934,13 +974,13 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: event
-#: code:addons/event/models/event.py:455
+#: code:addons/event/models/event.py:487
 #, python-format
 msgid "Customer"
 msgstr "Client"
 
 #. module: event
-#: code:addons/event/models/event.py:457
+#: code:addons/event/models/event.py:489
 #, python-format
 msgid "Customer Email"
 msgstr "Courriel client"
@@ -1168,7 +1208,7 @@ msgstr ""
 "                            Vous recevez ce mail parce que vous êtes:\n"
 "                              - l'organisateur de l'évènement,\n"
 "                              - le responsable de l'évènement,\n"
-"                              - ou le dernier à avoir modifié le modèle."
+"                              - ou le dernier a avoir modifié le modèle."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1191,6 +1231,7 @@ msgstr "Événement : planificateur d'e-mail"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
+#: model:ir.model.fields,field_description:event.field_res_users__event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -1303,12 +1344,18 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "Organigramme fonctionnel des principales applications"
+msgstr "Organigramme fonctionnel des principales applications ;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Functions"
 msgstr "Fonctions"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Future Activities"
+msgstr "Activités futures"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1398,7 +1445,7 @@ msgstr "Immédiatement"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Install and administer your own server;"
-msgstr "Installer et administrer votre propre serveur;"
+msgstr "Installer et administrer votre propre serveur ;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1488,6 +1535,12 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Late Activities"
+msgstr "Activités en retard"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1589,7 +1642,7 @@ msgid "Maximum Registrations"
 msgstr "Nombre maximal d'inscriptions"
 
 #. module: event
-#: code:addons/event/models/event.py:258
+#: code:addons/event/models/event.py:267
 #, python-format
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
@@ -1636,13 +1689,31 @@ msgid "My Events"
 msgstr "Mes évènements"
 
 #. module: event
-#: code:addons/event/models/event.py:263
+#: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Date limite de la prochaine activité"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_summary
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_summary
+msgid "Next Activity Summary"
+msgstr "Résumé d'activité suivant"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type d'Activités à Venir"
+
+#. module: event
+#: code:addons/event/models/event.py:272
 #, python-format
 msgid "No more available seats."
 msgstr "Plus de places disponibles."
 
 #. module: event
-#: code:addons/event/models/event.py:369
+#: code:addons/event/models/event.py:401
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Plus de places disponibles pour cet événement."
@@ -1671,6 +1742,7 @@ msgstr "Nombre d'erreurs"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
+#: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "Le nombre d'évènements auxquels le partenaire a participé."
 
@@ -1749,6 +1821,12 @@ msgid "Organizer"
 msgstr "Agenda"
 
 #. module: event
+#: selection:event.event,activity_state:0
+#: selection:event.registration,activity_state:0
+msgid "Overdue"
+msgstr "Retard"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
 msgstr "Participant(e)"
@@ -1760,7 +1838,7 @@ msgid ""
 "knowledge of the Python programming is recommended."
 msgstr ""
 "Les participants sont priés d'avoir une minimum de connaissances dans la "
-"programmation. Une connaissance de base du code Python est recommandée. "
+"programmation. Une connaissance de base du code Python est recommandée."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1785,6 +1863,12 @@ msgstr "Téléphone"
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
 msgstr "Evènement physique"
+
+#. module: event
+#: selection:event.event,activity_state:0
+#: selection:event.registration,activity_state:0
+msgid "Planned"
+msgstr "Planifié"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1877,7 +1961,7 @@ msgstr "Moteur de rapport"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
-msgstr "Analyse"
+msgstr "Rapport"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1893,6 +1977,12 @@ msgstr "Places réservées"
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
+msgstr "Responsable"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_user_id
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_user_id
+msgid "Responsible User"
 msgstr "Responsable"
 
 #. module: event
@@ -1971,6 +2061,14 @@ msgid "Show"
 msgstr "Montrer"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
+"actions est pour aujourd'hui ou avant"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
 msgstr "Document d'origine"
@@ -1995,13 +2093,27 @@ msgid "Status"
 msgstr "Statut"
 
 #. module: event
-#: code:addons/event/models/event.py:269
+#: model:ir.model.fields,help:event.field_event_event__activity_state
+#: model:ir.model.fields,help:event.field_event_registration__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Statut basé sur les activités\n"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date d'activité est aujourd'hui\n"
+"Planifiée : activités futures"
+
+#. module: event
+#: code:addons/event/models/event.py:278
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
 msgstr "La date de fin ne peut pas être antérieure à la date de début."
 
 #. module: event
-#: code:addons/event/models/event.py:313
+#: code:addons/event/models/event.py:322
 #, python-format
 msgid ""
 "There are already attendees who attended this event. Please reset it to "
@@ -2041,6 +2153,18 @@ msgstr "Fuseau horaire"
 #: model_terms:event.event,description:event.event_0
 msgid "To get more information, visit the"
 msgstr "Pour plus d'information, visitez le"
+
+#. module: event
+#: selection:event.event,activity_state:0
+#: selection:event.registration,activity_state:0
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Today Activities"
+msgstr "Activités du jour"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -2093,7 +2217,7 @@ msgstr "Underscore"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Understand the development concepts and architecture;"
-msgstr "Comprendre les concepts de développement et d'architecture;"
+msgstr "Comprendre les concepts de développement et d'architecture ;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2172,6 +2296,18 @@ msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr "Gestion de stock, Fabrication (MRP) &amp; Ventes, Import/Export."
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__website_message_ids
+#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
@@ -2185,7 +2321,7 @@ msgstr "Que disent les gens à propose de ce cours?"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What you will learn?"
-msgstr "Qu'allez-vous apprendre?"
+msgstr "Qu'allez-vous apprendre ?"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2193,7 +2329,7 @@ msgid "Workflows"
 msgstr "Flux de travail"
 
 #. module: event
-#: code:addons/event/models/event.py:426
+#: code:addons/event/models/event.py:458
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
@@ -2201,7 +2337,7 @@ msgstr ""
 "cette action."
 
 #. module: event
-#: code:addons/event/models/event.py:428
+#: code:addons/event/models/event.py:460
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr ""
@@ -2226,7 +2362,7 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "drinks and lunch;"
-msgstr "boissons et repas;"
+msgstr "boissons et repas ;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2234,37 +2370,37 @@ msgid "events@odoo.com"
 msgstr "events@odoo.com"
 
 #. module: event
-#: code:addons/event/models/event.py:526
+#: code:addons/event/models/event.py:558
 #, python-format
 msgid "in %d days"
 msgstr "dans %d jours"
 
 #. module: event
-#: code:addons/event/models/event.py:530
+#: code:addons/event/models/event.py:562
 #, python-format
 msgid "next month"
 msgstr "le mois prochain"
 
 #. module: event
-#: code:addons/event/models/event.py:528
+#: code:addons/event/models/event.py:560
 #, python-format
 msgid "next week"
 msgstr "semaine prochaine"
 
 #. module: event
-#: code:addons/event/models/event.py:532
+#: code:addons/event/models/event.py:564
 #, python-format
 msgid "on "
 msgstr "sur"
 
 #. module: event
-#: code:addons/event/models/event.py:522
+#: code:addons/event/models/event.py:554
 #, python-format
 msgid "today"
 msgstr "aujourd'hui"
 
 #. module: event
-#: code:addons/event/models/event.py:524
+#: code:addons/event/models/event.py:556
 #, python-format
 msgid "tomorrow"
 msgstr "demain"

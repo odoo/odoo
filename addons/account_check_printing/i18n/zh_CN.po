@@ -6,20 +6,20 @@
 # 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # waveyeung <waveyeung@qq.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:61
 #, python-format
 msgid " : Check Number Sequence"
 msgstr " : 支票编号序列"
@@ -43,6 +43,11 @@ msgstr "支票备注不能超过60个字符。"
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "科目表模版"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "会计核销挂账"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -139,7 +144,7 @@ msgid "Checks numbering sequence."
 msgstr "支票编号序列。"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:100
 #, python-format
 msgid "Checks to Print"
 msgstr "待打印支票"
@@ -232,6 +237,13 @@ msgid "Next Check Number"
 msgstr "下一个支票号码"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_journal.py:27
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:19
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr ""
+
+#. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
 msgstr "无"
@@ -286,7 +298,7 @@ msgid "Print Date Label"
 msgstr "打印数据标签"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:95
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -335,7 +347,7 @@ msgstr ""
 " 您可以使用此字段进行快速搜索。"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:29
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -378,7 +390,7 @@ msgid "Unmark Sent"
 msgstr "无标记送出"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/models/account_payment.py:117
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "

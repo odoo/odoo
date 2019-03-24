@@ -3,22 +3,23 @@
 # * sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
-# Fabri Yohann <psn@fabri.pw>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
-# Fabien Bourgeois <fabien@yaltik.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2019
+# Martin Trigaux, 2019
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2019
+# Fabri Yohann <psn@fabri.pw>, 2019
+# Fred Gilson <fgi@odoo.com>, 2019
+# f5f0a0dac17dde787a1d812a6989680e, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Marie Willemyns <mwi@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,9 +28,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid ""
+",\n"
+"                an awesome"
+msgstr "un magnifique"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -54,6 +63,14 @@ msgstr ""
 "                                        article est présent dans le devis."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+msgid ""
+":\n"
+"                        this content will appear on the quotation only if this\n"
+"                        product is not removed."
+msgstr ""
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 "<strong>Template Header:</strong> this content\n"
@@ -67,7 +84,7 @@ msgstr ""
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "About us"
-msgstr "À propos de nous"
+msgstr "À propos"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -83,6 +100,7 @@ msgid "Back"
 msgstr "Retour"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Close"
 msgstr "Fermer"
@@ -126,6 +144,16 @@ msgstr ""
 "                        ce modèle modifié."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr "CRM Open Source"
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
 msgstr "Produit optionnel:"
@@ -146,6 +174,11 @@ msgid "Our Service"
 msgstr "Notre Service"
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Powered by"
+msgstr "Fourni par"
+
+#. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Price"
 msgstr "Prix"
@@ -164,6 +197,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
 msgstr "Article :"
@@ -202,7 +236,7 @@ msgstr "Options de vente"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "Bon de commande"
 
 #. module: sale_quotation_builder

@@ -3,27 +3,34 @@
 # * website_blog
 # 
 # Translators:
-# Jan Meyer, 2018
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Martin K <martinkuenz@gmail.com>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
+# Torsten Wichmann <t.wichmann@intero-technologies.de>, 2017
+# Niki Waibel, 2017
+# Mathias Neef <mn@copado.de>, 2017
+# Renzo Meister, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Andi, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2018
 # Wolfgang Taferner, 2018
-# Mathias Neef <mn@copado.de>, 2018
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Henry Mineehen <info@mineehen.de>, 2018
-# Martin K <martinkuenz@gmail.com>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
-# Andi, 2018
-# Torsten Wichmann <t.wichmann@intero-technologies.de>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
+# Jan Meyer, 2018
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Ermin Trevisan <trevi@twanda.com>, 2019
+# Katharina Moritz <kmo@e2f.com>, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:51+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Johannes Croe <jcr@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +98,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "&amp;mdash;"
-msgstr "&amp;mdash;"
+msgstr "&mdash;"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -109,9 +116,8 @@ msgid ""
 "(Un)archiving a blog automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
-"Das Archivieren bzw. Aufheben einer Archivierung eines Blogs archiviert "
-"automatisch auch dessen Einträge bzw. hebt deren Archivierung auf. Möchten "
-"Sie fortfahren?"
+"Das (Un-)Archivieren eines Blogs (un-)archiviert automatisch auch dessen "
+"Beiträge. Möchten Sie fortfahren?"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
@@ -188,7 +194,7 @@ msgid ""
 "through the <i>Customize</i> menu."
 msgstr ""
 "<b>Das ist alles, Ihr Blog-Beitrag ist veröffentlicht!</b> Entdecken Sie "
-"mehr Funktionen im Menü <i>Anpassen</i>."
+"mehr Funktionen im <i>Menü „Anpassen“.</i>"
 
 #. module: website_blog
 #. openerp-web
@@ -199,14 +205,46 @@ msgid ""
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
 "more graphical blogs."
 msgstr ""
-"<b>Schreiben Sie hier Ihre Geschichte.</b> Mit der Werkzeugleiste oben "
+"<b>Schreiben Sie hier Ihre Geschichte.</b> Mit der Werkzeugleiste, oben "
 "gestalten Sie Ihren Text stilvoll: Fügen Sie ein Bild oder eine Tabelle "
 "hinzu, aktivieren Sie Fett- oder Kursivschreibung und mehr. Ziehen Sie "
-"Bausteine nach Wunsch, damit Sie grafischere Blogeinträge erhalten."
+"Bausteine nach Wunsch, damit Sie grafischere Blog-Beiträge erhälten."
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Post date\" title=\"Post date\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.tag_category
+msgid ""
+"<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Tag category\" title=\"Tag "
+"category\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid ""
+"<span class=\"fa fa-calendar mr8\" role=\"img\" aria-label=\"Post date\" "
+"title=\"Post date\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid ""
+"<span class=\"fa fa-exclamation-triangle ml8\" title=\"Unpublished\" "
+"role=\"img\" aria-label=\"Unpublished\"/>"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "<span class=\"fa fa-folder-open\"/> In"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "<span class=\"fa fa-tags\" role=\"img\" aria-label=\"Tags\" title=\"Tags\"/>"
 msgstr ""
 
 #. module: website_blog
@@ -274,7 +312,7 @@ msgstr "Archiviert"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
 msgid "Archives"
-msgstr "Archive"
+msgstr "Archiv"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -424,6 +462,11 @@ msgstr ""
 "Erstellen Sie eine Website und verkaufen Sie dort einfach Ihre Produkte."
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__can_publish
+msgid "Can publish"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
 msgid "Category"
 msgstr "Kategorie"
@@ -453,7 +496,7 @@ msgstr "Wählen Sie ein Bild aus der Bibliothek."
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:30
 #, python-format
 msgid "Click here to change your post cover."
-msgstr "Klicken Sie hier, um das Titelbild Ihres Beitrags zu ändern."
+msgstr "Klicken Sie hier, um den Titel Ihres Beitrags zu ändern."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -469,7 +512,7 @@ msgstr ""
 #, python-format
 msgid "Click on <b>Save</b> to set the picture as cover."
 msgstr ""
-"Klicken Sie auf <b>Speichern</b>, um das Bild als Titelbild festzulegen."
+"Klicken Sie auf <b>„Speichern“,</b> um das Bild als Titelbild festzulegen."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -804,7 +847,7 @@ msgstr "Hauptanhänge"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Medium"
-msgstr "Mittel"
+msgstr "Medium"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error
@@ -848,7 +891,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Mid screen"
-msgstr "Mittlere Größe"
+msgstr "Mid-Screen"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
@@ -1058,7 +1101,7 @@ msgstr "Mehr lesen"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_read_next
 msgid "Read Next <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Nächsten lesen<span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Nächste<span class=\"fa fa-long-arrow-right\"/> lesen"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
@@ -1117,7 +1160,7 @@ msgstr "Wählen Sie dieses Menü zur Erstellung einer neuen Blognachricht"
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, python-format
 msgid "Set a blog post <b>cover</b>."
-msgstr "Wählen Sie ein <b>Titelbild</b> für den Blog-Beitrag."
+msgstr "Ein <b>Titelbild für den Blog-Beitrag festlegen.</b>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -1198,7 +1241,7 @@ msgstr ""
 #. module: website_blog
 #: sql_constraint:blog.tag:0
 msgid "Tag name already exists !"
-msgstr "Stichwort existiert bereits!"
+msgstr "Schlagwort existiert bereits!"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
@@ -1255,8 +1298,8 @@ msgid ""
 "This page is great to improve your <strong>Search Engine Optimization</strong>;\n"
 "                   You can review titles, keywords and descriptions of all blogs at once."
 msgstr ""
-"Diese Seite ist großartig, um Ihre <strong>Suchmaschinenoptimierung</strong> zu verbessern.\n"
-"Sie können Titel, Schlüsselwörter und die Beschreibungen aller Blogs auf einmal überprüfen."
+"Diese Seite ist großartig, um Ihre <strong>Suchmaschinenoptimierung zu verbessern.\n"
+"</strong> Sie können Titel, Schlüsselwörter und die Beschreibungen aller Blogs auf einmal überprüfen."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1320,12 +1363,12 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_unread_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Anzahl der ungelesenen Nachrichten"
+msgstr "Zähler der ungelesenen Nachrichten"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Untitled Post"
-msgstr "Beitrag ohne Titel"
+msgstr "Unbenannter Beitrag"
 
 #. module: website_blog
 #. openerp-web
@@ -1333,8 +1376,8 @@ msgstr "Beitrag ohne Titel"
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
-"Mit diesem Symbol können Sie eine Vorschau Ihres Blog-Beitrags auf "
-"<b>Mobilgeräten</b> anzeigen."
+"Mit diesem Symbol können Sie eine Vorschau Ihres <b>Blog-Beitrags auf "
+"Mobilgeräten anzeigen.</b>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
@@ -1356,7 +1399,7 @@ msgstr "Website"
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website
 msgid "Website Blogs"
-msgstr "Website Blogs"
+msgstr "Website-Blogs"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_message_ids
@@ -1414,9 +1457,8 @@ msgid ""
 "Write a small text here for when <b>new visitors</b> find your website\n"
 "            through your <b>blog entries</b>, referenced in Google."
 msgstr ""
-"Schreiben Sie hier einen knappen Text für den Fall, dass <b>neue "
-"Besucher</b> Ihre Website über Ihre <b>Blogeinträge</b> finden, die von "
-"Google referenziert sind."
+"Schreiben <b>Sie hier einen knappen Text für den Fall, dass neue Besucher</b> Ihre Website\n"
+" über Ihre <b>Blog-Einträge finden,</b> die in Google angegeben sind."
 
 #. module: website_blog
 #. openerp-web
@@ -1436,9 +1478,8 @@ msgid ""
 "You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.\n"
 "                   <span class=\"text-muted\">This box will not be visible to your visitors.</span>"
 msgstr ""
-"<strong>Fügen Sie oben ein Banner hinzu,</strong> da es sich um eine häufige"
-" Zielseite für neue Besucher handelt. <span class=\"text-muted\">Dieses Feld"
-" ist für Ihre Besucher nicht sichtbar.</span>"
+"<strong>Fügen Sie oben ein Banner hinzu,</strong> da es sich um eine häufige Landeseite für neue Besucher handelt.\n"
+" <span class=\"text-muted\">Dieses Feld ist für Ihre Besucher nicht sichtbar.</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
@@ -1448,7 +1489,7 @@ msgstr "YouTube"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "blog. Click here to access the blog :"
-msgstr "-Blog. Klicken Sie hier, um auf den Blog zuzugreifen:"
+msgstr "Blog. Klicken Sie hier, um auf den Blog zuzugreifen:"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1486,7 +1527,7 @@ msgstr "unveröffentlicht"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "view"
-msgstr "Aufruf"
+msgstr "Ansicht"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short

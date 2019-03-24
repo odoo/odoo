@@ -3,27 +3,90 @@
 # * website_mail_channel
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# v2exerer <9010446@qq.com>, 2018
-# 苏州远鼎 <tiexinliu@126.com>, 2018
+# Martin Trigaux, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Bo Cao, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-01-16 08:00+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: v2exerer <9010446@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Attachments\" "
+"title=\"Attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -36,6 +99,13 @@ msgstr "<i class=\"fa fa-envelope-o\"/> 发送邮件"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<i class=\"fa fa-file-o\"/> archives"
 msgstr "<i class=\"fa fa-file-o\"/> 归档"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -408,7 +478,7 @@ msgstr "日期"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By thread"
-msgstr "按线索"
+msgstr "线程"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -488,12 +558,12 @@ msgstr "寄到"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
-msgstr "编号"
+msgstr "参考"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Stay in touch with our Community"
-msgstr "与我们的社区保持联系"
+msgstr "请通过我们的社区和我们保持联系"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -524,12 +594,12 @@ msgstr "退订"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr "您已正确订阅/取消订阅邮件列表"
+msgstr "您已正确操作"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "a confirmation email has been sent."
-msgstr "已发送确认电子邮件。"
+msgstr "已发送确认电子邮件"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -540,7 +610,7 @@ msgstr "附件"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
-msgstr "作者"
+msgstr "by"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.not_subscribed
@@ -609,4 +679,4 @@ msgstr "退订"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
-msgstr "您的电子邮件..."
+msgstr "你的电子邮件..."

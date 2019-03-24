@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
+# Quim - eccit <quim@eccit.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:58
+#: code:addons/account_check_printing/models/account_journal.py:61
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Seqüència de numeració de xecs"
@@ -37,6 +37,11 @@ msgstr "El memoràndum del xec no pot excedir els 60 caràcters."
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
 msgstr ""
 
 #. module: account_check_printing
@@ -134,7 +139,7 @@ msgid "Checks numbering sequence."
 msgstr "Seqüència de numeració dels xecs."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:97
+#: code:addons/account_check_printing/models/account_journal.py:100
 #, python-format
 msgid "Checks to Print"
 msgstr "Xec a imprimir"
@@ -229,6 +234,13 @@ msgid "Next Check Number"
 msgstr "Núm. del pròxim xec"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_journal.py:27
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:19
+#, python-format
+msgid "Next Check Number should only contains numbers."
+msgstr ""
+
+#. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
 msgstr "Cap"
@@ -288,7 +300,7 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:94
+#: code:addons/account_check_printing/models/account_payment.py:95
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -337,7 +349,7 @@ msgstr ""
 "Podeu utilitzar aquest camp per la cerca ràpida."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/models/account_journal.py:29
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -386,7 +398,7 @@ msgid "Unmark Sent"
 msgstr "Desmarcar enviats"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/models/account_payment.py:117
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "

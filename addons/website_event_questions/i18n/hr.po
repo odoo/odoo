@@ -3,18 +3,19 @@
 # * website_event_questions
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux, 2017
 # Tina Milas, 2017
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: Tina Milas, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +49,6 @@ msgid "Ask each attendee"
 msgstr "Pitaj svakog sudionika"
 
 #. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration
-msgid "Attendee"
-msgstr "Sudionik"
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_uid
@@ -83,6 +79,7 @@ msgid "Event"
 msgstr "Događaj"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_answer
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
 msgid "Event Answer"
 msgstr ""
@@ -93,9 +90,25 @@ msgid "Event Category"
 msgstr "Kategorija događaja"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question_report
+msgid "Event Question Report"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
 msgstr "Organizacija događaja"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration_answer
+msgid "Event Registration Answer"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -159,7 +172,7 @@ msgid "Question"
 msgstr "Pitanje"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:78
+#: code:addons/website_event_questions/models/event.py:80
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -206,23 +219,3 @@ msgstr "Specifična pitanja"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
 msgstr "Naslov"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-msgid "event.answer"
-msgstr "event.answer"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question
-msgid "event.question"
-msgstr "event.question"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "event.question.report"
-msgstr "event.question.report"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration_answer
-msgid "event.registration.answer"
-msgstr "event.registration.answer"

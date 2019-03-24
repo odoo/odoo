@@ -3,18 +3,17 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# gezza <geza.nagy@oregional.hu>, 2017
+# Martin Trigaux, 2019
+# krnkris, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: krnkris, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,8 +43,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Egy oszlop található a fájlban. Ez többnyire azt jelenti, hogy az adatok "
-"közti elválasztó karakter hibás a fájlban."
+"Egy önálló oszlop található a fájlban, Ez sokszor azt jelenti, hogy a fájl "
+"elválasztó hibás"
 
 #. module: base_import
 #. openerp-web
@@ -78,7 +77,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:102
 #, python-format
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:693
@@ -139,7 +138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -160,7 +159,7 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: base_import
 #. openerp-web
@@ -183,7 +182,7 @@ msgstr "Pénznem"
 #: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
-msgstr "Adatbázis azonosító"
+msgstr "Adatbázis ID azonosító"
 
 #. module: base_import
 #. openerp-web
@@ -277,14 +276,14 @@ msgstr "Hiba dátum feldolgozásakor [%s:L%d]: %s"
 #: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "Hibás cella az XLS/XLSX fájl olvasása közben: %s"
+msgstr "Hibás cellákat talált az XLS/XLSX fájlok olvasás közben: %s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:624
 #, python-format
 msgid "Everything seems valid."
-msgstr "Minden megfelelőnek tűnik."
+msgstr "Úgy néz ki mindegyik érvényes."
 
 #. module: base_import
 #. openerp-web
@@ -298,7 +297,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
-msgstr "Külső azonosító"
+msgstr "Külső ID azonosító"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -352,7 +351,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:671
 #, python-format
 msgid "Get all possible values"
-msgstr "Összes lehetséges érték lekérdezése."
+msgstr "Kapja meg az összes lehetséges értéket"
 
 #. module: base_import
 #. openerp-web
@@ -366,7 +365,7 @@ msgstr "Ezek a lehetséges értékek:"
 #: code:addons/base_import/static/src/xml/base_import.xml:138
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Itt van a fájlnak az eleje, melyiket nem tudtunk importálni:"
+msgstr "Itt van a fájlnak az eleje, melyiket nem tudtuk importálni:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -387,7 +386,7 @@ msgstr "Itt van a fájlnak az eleje, melyiket nem tudtunk importálni:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: base_import
 #. openerp-web
@@ -400,8 +399,8 @@ msgid ""
 "                simpler especially when the file has many columns."
 msgstr ""
 "Ha a fájl tartalmazza\n"
-"                az oszlop neveket, az Odoo rendszer megpróbálhatja automatikusan észlelni a \n"
-"                oszlophoz tartozó mezőket. Ez megkönnyíti az importálást,\n"
+"                az oszlop neveket, Odoo rendszer megpróbálhatja automatikusan észlelni a \n"
+"                oszlophoz tartozó mezőket. Ez megkönnyíti az importálásokat\n"
 "                főként ha a fájl sok oszloppal rendelkezik."
 
 #. module: base_import
@@ -434,7 +433,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:169
 #, python-format
 msgid "Import"
-msgstr "Importálás"
+msgstr "Import"
 
 #. module: base_import
 #. openerp-web
@@ -448,7 +447,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:140
 #, python-format
 msgid "Import a File"
-msgstr "Fájl importálása"
+msgstr "Egy fájl importálása"
 
 #. module: base_import
 #. openerp-web
@@ -493,7 +492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -514,7 +513,7 @@ msgstr "Legutóbb frissítve"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -535,14 +534,14 @@ msgstr "Legutóbb frissítette"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Utoljára frissítve "
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr "Fájl betöltése"
+msgstr "Fájl betöltés"
 
 #. module: base_import
 #. openerp-web
@@ -556,7 +555,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr "Oszlopok összerendelése importáláshoz"
+msgstr "Képezze le az oszlopokat importáláshoz"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -611,7 +610,7 @@ msgstr "Relációs mezők"
 #: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Reload File"
-msgstr "Fájl újratöltése"
+msgstr "Fájl újratöltés"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -623,7 +622,7 @@ msgstr "Fogl. Modell"
 #: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr "Válasszon ki egy CSV vagy Excell fájlt az importáláshoz"
+msgstr "Válasszon egy CSV vagy Excell fájlt az importáláshoz"
 
 #. module: base_import
 #. openerp-web
@@ -777,7 +776,7 @@ msgstr "Ezres elválasztó:"
 #: code:addons/base_import/static/src/xml/base_import.xml:47
 #, python-format
 msgid "Track history during import"
-msgstr "Történet nyomonkövetése az importálás során"
+msgstr "Nyomonkövetés történet az importálás alatt"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:254
@@ -793,8 +792,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Nem támogatott fájlformátum \"{}\". Az importálás csak a következőket "
-"támogatja: CSV, ODS, XLS és XLSX."
+"Nem támogatott fűjlforműtum \"{}\", import csak a következőket támogatja "
+"CSV, ODS, XLS and XLSX"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -849,4 +848,4 @@ msgstr "Ebben a sorban %d"
 #: code:addons/base_import/static/src/js/import_action.js:643
 #, python-format
 msgid "between rows %d and %d"
-msgstr "%d és %d sorok között"
+msgstr "oszlopok közt %d és %d"

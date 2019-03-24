@@ -3,16 +3,16 @@
 # * website_rating
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2017-12-13 15:01+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,10 +22,34 @@ msgstr ""
 
 #. module: website_rating
 #. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:10
+#, python-format
+msgid ""
+"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
+"'/mail/chatter_post'}"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:82
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:62
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:77
+#, python-format
+msgid "Add a review"
+msgstr ""
+
+#. module: website_rating
+#. openerp-web
 #: code:addons/website_rating/static/src/xml/website_mail.xml:24
 #, python-format
 msgid "Average"
-msgstr "Gemiddelde"
+msgstr "Gemiddeld"
 
 #. module: website_rating
 #. openerp-web
@@ -36,56 +60,43 @@ msgstr "Details"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:69
-#, python-format
-msgid "Five stars on five"
-msgstr "Vijf sterren van de vijf"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:68
-#, python-format
-msgid "Four stars on five"
-msgstr "Vier sterren van de vijf"
-
-#. module: website_rating
-#. openerp-web
 #: code:addons/website_rating/static/src/xml/website_mail.xml:13
+#: code:addons/website_rating/static/src/xml/website_mail.xml:73
 #, python-format
 msgid "Half a star"
 msgstr "Halve ster"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:43
+#: code:addons/website_rating/static/src/js/website_mail.js:52
 #, python-format
 msgid "I don't like it"
 msgstr "Ik vind het niet leuk"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:42
+#: code:addons/website_rating/static/src/js/website_mail.js:51
 #, python-format
 msgid "I hate it"
 msgstr "Ik haat het"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:45
+#: code:addons/website_rating/static/src/js/website_mail.js:54
 #, python-format
 msgid "I like it"
 msgstr "Ik vind het leuk"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:46
+#: code:addons/website_rating/static/src/js/website_mail.js:55
 #, python-format
 msgid "I love it"
 msgstr "Ik hou er van"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/website_mail.js:44
+#: code:addons/website_rating/static/src/js/website_mail.js:53
 #, python-format
 msgid "It's okay"
 msgstr "Het is ok"
@@ -97,17 +108,19 @@ msgstr "Bericht"
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:59
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:74
 #, python-format
-msgid "One star"
-msgstr "Een ster"
+msgid "Modify your review"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:65
+#: code:addons/website_rating/static/src/xml/website_mail.xml:10
+#: code:addons/website_rating/static/src/xml/website_mail.xml:70
 #, python-format
-msgid "One star on five"
-msgstr "Een ster van de vijf"
+msgid "One star"
+msgstr "Een ster"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
@@ -127,23 +140,16 @@ msgid "Remove selection"
 msgstr "Selectie verwijderen"
 
 #. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:67
-#, python-format
-msgid "Three stars on five"
-msgstr "Drie sterren van de vijf"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/website_mail.xml:66
-#, python-format
-msgid "Two stars on five"
-msgstr "Twee sterren van de vijf"
-
-#. module: website_rating
 #: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
 msgid "Visible on the website as a comment"
 msgstr "Zichtbaar op de website als commentaar"
+
+#. module: website_rating
+#. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_chatter.xml:54
+#, python-format
+msgid "ratings)"
+msgstr ""
 
 #. module: website_rating
 #. openerp-web

@@ -3,16 +3,18 @@
 # * sale_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Martin Trigaux, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,14 +29,13 @@ msgstr "<span class=\"o_stat_text\"> Beställningar</span>"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
+msgid "<span class=\"o_stat_text\"> Quotations </span>"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
-msgid "Campaign"
-msgstr "Kampanj"
+#: model_terms:ir.actions.act_window,help:sale_crm.sale_action_quotations
+msgid "Create a new quotation"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -62,10 +63,9 @@ msgid "Marketing"
 msgstr "Marknadsföring"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
-msgid "Medium"
-msgstr "Medel"
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr ""
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -73,8 +73,13 @@ msgid "New Quotation"
 msgstr "Ny offert"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
+msgid "Number of Sale Orders"
 msgstr ""
 
 #. module: sale_crm
@@ -88,20 +93,12 @@ msgid "Orders"
 msgstr "Ordrar"
 
 #. module: sale_crm
-#: code:addons/sale_crm/models/crm_team.py:12
-#, python-format
-msgid "Pipeline"
-msgstr "Kanal"
-
-#. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
-#: model:ir.model,name:sale_crm.model_sale_order
 msgid "Quotation"
 msgstr "Offert"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
-#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "Quotations"
 msgstr "Offerter"
 
@@ -111,15 +108,26 @@ msgid "Sale orders"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Channel"
-msgstr ""
+#: code:addons/sale_crm/models/crm_team.py:14
+#, python-format
+msgid "Sales Analysis"
+msgstr "Försäljningsanalys"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
-msgid "Source"
-msgstr "Källa"
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channels"
+msgstr "Försäljnings Kanal"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
+msgstr "Kundorder"
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:38
+#, python-format
+msgid "Sales: Untaxed Total"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
@@ -130,28 +138,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "Taggar"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
-msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
-msgid ""
-"This is the source of the link, e.g. Search Engine, another domain, or name "
-"of email list"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total

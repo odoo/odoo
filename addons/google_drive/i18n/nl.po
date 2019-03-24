@@ -3,19 +3,19 @@
 # * google_drive
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
-# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Thomas Pot <thomas@open2bizz.nl>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +34,38 @@ msgid ""
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>Om een nieuwe filter aan te maken:</b><br/>\n"
-"                                - Ga naar het Odoo document waarop u een filter wil toepassen. Bijvoorbeeld, ga naar Prospects en zoek op Verkoopafdeling.<br/>\n"
+"                                - Ga naar het Odoo document waarop u een filter wil toepassen. Bijvoorbeeld, ga naar Opportuniteiten en zoek op Verkoopafdeling.<br/>\n"
 "                                - Klik in het uitgebreide zoekscherm op \"Favorieten\", kies de optie \"Huidige filter opslaan\", en voer een naam in (b.v.: Verkoopafdeling)<br/>\n"
 "                                - Vinkt u \"Delen met alle gebruikers\" aan, dan zal in de \"Meer\" optie bij de prospects van de verkoopafdeling een link naar het Google document verschijnen.<br/>\n"
-"                                - Vinkt u \"Delen met alle gebruikers\" niet aan, dan zal in de \"Meer\" optie bij de prospects van de verkoopafdeling geen link naar het Google document verschijnen.<br/>\n"
-"                                - Indien er geen filter werd gedefinieerd, dan zal in de \"Meer\" optie de link naar het Google document zichtbaar zijn voor alle gebruikers voor alle prospects."
+"                                - Vinkt u \"Delen met alle gebruikers\" niet aan, dan zal in de \"Meer\" optie bij de opportuniteiten van de verkoopafdeling geen link naar het Google document verschijnen.<br/>\n"
+"                                - Indien er geen filter werd gedefinieerd, dan zal in de \"Meer\" optie de link naar het Google document zichtbaar zijn voor alle gebruikers voor alle opportuniteiten."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -66,7 +93,7 @@ msgid "Add a new template"
 msgstr "Voeg een nieuw sjabloon toe"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:42
+#: code:addons/google_drive/models/google_drive.py:41
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr ""
@@ -77,6 +104,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
 msgstr "autorisatie code"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -93,6 +125,11 @@ msgid "Config Settings"
 msgstr "Configuratie instellingen"
 
 #. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -103,7 +140,7 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:161
+#: code:addons/google_drive/models/google_drive.py:160
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Google Drive aanmaken mag maar door één persoon per keer gebeuren."
@@ -124,11 +161,11 @@ msgid "Filter"
 msgstr "Filter"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:61
-#: code:addons/google_drive/models/google_drive.py:82
+#: code:addons/google_drive/models/google_drive.py:60
+#: code:addons/google_drive/models/google_drive.py:81
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Ga naar het configuratiepaneel"
+msgstr "Ga naar het configuratie paneel"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
@@ -152,8 +189,8 @@ msgid "Google Drive Templates"
 msgstr "Google Drive sjablonen"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:63
-#: code:addons/google_drive/models/google_drive.py:84
+#: code:addons/google_drive/models/google_drive.py:62
+#: code:addons/google_drive/models/google_drive.py:83
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -207,10 +244,15 @@ msgid "Model"
 msgstr "Model"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:203
+#: code:addons/google_drive/models/google_drive.py:202
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "Vul alsjeblieft een geldige Google Document URL in."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -223,7 +265,13 @@ msgid "Resource Id"
 msgstr "Bron Id"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:81
+#: code:addons/google_drive/models/res_config_settings.py:41
+#, python-format
+msgid "Set up refresh token"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -248,7 +296,7 @@ msgid "Templates"
 msgstr "Sjablonen"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:99
+#: code:addons/google_drive/models/google_drive.py:98
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr ""
@@ -269,11 +317,11 @@ msgid ""
 msgstr ""
 "De naam van het bijgevoegde document kan vaste of variabele gegevens bevatten. Om een onderscheid te maken tussen documenten in\n"
 "                                Google Drive, gebruik vaste woorden en velden. Bijvoorbeeld, in het bovenstaande voorbeeld, als je Deco_Addict_ %(name)s_Sales hebt geschreven\n"
-"                                in het Google Drive name field, krijgt uw document in Google Drive en in Odoo-bijlage de naam\n"
+"                                in het Google Drive naam veld, krijgt uw document in Google Drive en in Odoo de naam\n"
 "                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:135
+#: code:addons/google_drive/models/google_drive.py:134
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -283,19 +331,17 @@ msgstr ""
 "document"
 
 #. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:59
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URL"
-
-#. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#, python-format
-msgid ""
-"You haven't configured 'Authorization Code' generated from google, Please "
-"generate and configure it ."
-msgstr ""
-"Er is geen 'Autorisatie Code' gegenereerd vanuit Google, deze graag "
-"genereren en configureren."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

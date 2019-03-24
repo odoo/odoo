@@ -3,21 +3,23 @@
 # * website_form
 # 
 # Translators:
+# waveyeung <waveyeung@qq.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# Liping Wang <lynn.config@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# Liping Wang <lynn.config@gmail.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# Martin Trigaux, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-01-16 08:00+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +32,7 @@ msgstr ""
 #: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' 不是正确的日期"
+msgstr "'%s' 格式错，不是正确的日期"
 
 #. module: website_form
 #. openerp-web
@@ -43,7 +45,14 @@ msgstr "'%s' 不是正确的日期时间"
 #: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
-msgstr "<p>附加的文件 : </p>"
+msgstr "<p>附件 : </p>"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
@@ -55,28 +64,28 @@ msgstr "允许使用表单"
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr "出现错误，表单未被发送。"
+msgstr "错误，表单未被发送。"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "在网上表单中为此字段设置黑名单"
+msgstr "在表单中为这个字段设置黑名单"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr "已经在网站表单的黑名单中"
+msgstr "已经在网站的表单黑名单中"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
-msgstr "自订信息"
+msgstr "自定义信息"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -94,7 +103,7 @@ msgstr "错误"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "表单数据的自定义字段"
+msgstr "表单自定义字段"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -106,7 +115,7 @@ msgstr "字段"
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
-msgstr "来自动作标注。提示：crm.lead 可以是 ‘发送一封邮件’，project.issue 可以是 ‘创建一个问题’。"
+msgstr "表单动作标注。提示：crm.lead 可以是 ‘发送一封邮件’，project.issue 可以是 ‘创建一个问题’。"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label

@@ -3,16 +3,17 @@
 # * website_links
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# sejun huang <sejun.huang@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-12-24 10:58+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,21 +23,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#: code:addons/website_links/static/src/js/website_links_charts.js:62
 #, python-format
 msgid " clicks"
 msgstr "點選"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#: code:addons/website_links/static/src/js/website_links_charts.js:129
 #, python-format
 msgid " countries"
 msgstr "國家"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#: code:addons/website_links/static/src/js/website_links_charts.js:66
 #, python-format
 msgid "# of clicks"
 msgstr "# 點選"
@@ -92,6 +93,14 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:412
+#, python-format
+msgid "Copied"
+msgstr "複製"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:414
 #: code:addons/website_links/static/src/xml/recent_link.xml:37
 #, python-format
 msgid "Copy"
@@ -107,7 +116,7 @@ msgstr "編輯代碼"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:356
+#: code:addons/website_links/static/src/js/website_links.js:488
 #, python-format
 msgid "Generating link..."
 msgstr "生成鏈接..."
@@ -122,7 +131,7 @@ msgstr "獲取追蹤鏈接"
 #: code:addons/website_links/static/src/xml/recent_link.xml:13
 #, python-format
 msgid "Icon"
-msgstr "圖標"
+msgstr "圖示"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -194,12 +203,28 @@ msgstr "統計數據"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:229
-#: code:addons/website_links/static/src/js/website_links_charts.js:230
-#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#: code:addons/website_links/static/src/js/website_links.js:209
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:54
+#, python-format
+msgid "The code cannot be left empty"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:183
+#: code:addons/website_links/static/src/js/website_links_charts.js:184
+#: code:addons/website_links/static/src/js/website_links_charts.js:185
 #, python-format
 msgid "There is no data to show"
 msgstr "沒有顯示的數據"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:246
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:74
+#, python-format
+msgid "This code is already taken"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -215,21 +240,21 @@ msgstr "網址"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:225
+#: code:addons/website_links/static/src/js/website_links.js:304
 #, python-format
 msgid "Unable to get recent links"
 msgstr "無法獲取最近鏈接"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#: code:addons/website_links/static/src/js/website_links_charts.js:124
 #, python-format
 msgid "Undefined"
 msgstr "未定義的"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:248
+#: code:addons/website_links/static/src/js/website_links.js:332
 #, python-format
 msgid "You don't have any recent links."
 msgstr "您沒有任何最近的鏈接。"
@@ -261,21 +286,21 @@ msgstr "複製"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:266
+#: code:addons/website_links/static/src/js/website_links.js:362
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "例如：快訊、社交網路、..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:263
+#: code:addons/website_links/static/src/js/website_links.js:359
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "例如：六月促銷，冬季通訊，..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:269
+#: code:addons/website_links/static/src/js/website_links.js:365
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr "例如：搜尋引擎，網站頁面，..."

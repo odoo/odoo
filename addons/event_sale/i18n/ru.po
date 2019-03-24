@@ -3,15 +3,26 @@
 # * event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Dmitry sky <d.v.selitsky@gmail.com>, 2018
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Artur Komishenko <Archi1792@gmail.com>, 2017
+# Collex100, 2017
+# Sergey Vilizhanin, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Leonid Froenchenko <lfroen@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Martin Trigaux, 2019
+# Dmitry sky <d.v.selitsky@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,6 +188,7 @@ msgid "ID"
 msgstr "Номер"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
 msgid ""
@@ -195,6 +207,7 @@ msgid "Is Expired"
 msgstr "Истекает"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
@@ -341,16 +354,12 @@ msgid "Reserved Seats"
 msgstr "Забронированные посадочные места"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Sale Order"
-msgstr "Заказ"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr "Конец продажи"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
 msgstr "Заказ продаж"
@@ -451,12 +460,6 @@ msgstr "Неограничено"
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
 msgid "VIP"
 msgstr "VIP"
-
-#. module: event_sale
-#: model:product.product,weight_uom_name:event_sale.product_product_event
-#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
-msgid "kg"
-msgstr "кг"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

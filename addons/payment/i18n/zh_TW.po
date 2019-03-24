@@ -3,15 +3,17 @@
 # * payment
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +24,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
-msgstr "# 應收憑單"
+msgstr "# 發票"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -32,7 +34,7 @@ msgstr "&amp;times;"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
 msgid "3D Secure HTML"
-msgstr "3D Secure HTML"
+msgstr "3D 安全HTML"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -50,9 +52,36 @@ msgid "<b>Reference:</b>"
 msgstr "<b>參考</b>"
 
 #. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
+#, python-format
+msgid ""
+"<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
+"%s</li><li>Account Holder: %s</li></ul>"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> 返回我的帳戶"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+msgid ""
+"<i class=\"fa fa-check text-success\" title=\"This payment method is "
+"verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+msgid ""
+"<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
+"been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay_methods
+msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -62,7 +91,7 @@ msgstr "<i class=\"fa fa-lock\">付款</i>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr "<i class=\"fa fa-plus-circle\"> 添加新卡</i>"
+msgstr "<i class=\"fa fa-plus-circle\">添加新卡</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -70,13 +99,13 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/>刪除"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:124
+#: code:addons/payment/models/payment_acquirer.py:125
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
 msgstr "<i>取消,</i> 您的付款已被取消。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:120
+#: code:addons/payment/models/payment_acquirer.py:121
 #, python-format
 msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
@@ -84,7 +113,7 @@ msgid ""
 msgstr "<i>完成，</i> 您的訂單已經線上支付成功。 感謝您。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:128
+#: code:addons/payment/models/payment_acquirer.py:129
 #, python-format
 msgid ""
 "<i>Error,</i> Please be aware that an error occurred during the transaction."
@@ -93,7 +122,7 @@ msgid ""
 msgstr "<i>錯誤,</i> 請注意交易中會發生的錯誤.。訂單已確認但未支付。如您有任何關於訂單狀態的問題, 請及時聯繫我們。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:116
+#: code:addons/payment/models/payment_acquirer.py:117
 #, python-format
 msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
@@ -102,10 +131,10 @@ msgstr "<i>待定,</i> 您的線上付款已完成. 但是您的訂單還驗證�
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:352
+#: code:addons/payment/static/src/js/payment_form.js:360
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr "<p>此卡目前連接以下記錄:<p/>"
+msgstr "<p>此卡目前與以下記錄鏈接：<p/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -148,11 +177,12 @@ msgstr ""
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_payu
+#: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_payulatam
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_sips
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 您的付款已被取消.</span>"
+msgstr "<span><i>取消,</i> 您的付款已被取消。</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -162,13 +192,14 @@ msgstr "<span><i>取消,</i> 您的付款已被取消.</span>"
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_payu
+#: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_payulatam
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_sips
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_stripe
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 您的線上支付已成功完成. 感謝您的訂單.</span>"
+msgstr "<span><i>完成，</i> 您的線上付款已成功完成。感謝您的訂單。</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -178,6 +209,7 @@ msgstr "<span><i>完成,</i> 您的線上支付已成功完成. 感謝您的訂�
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_payu
+#: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_payulatam
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_sips
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_stripe
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_transfer
@@ -187,7 +219,7 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
-"<span><i>錯誤，</i>請注意，事務期間發生錯誤。訂單已經確認，但不會支付。如果您對訂單狀態有任何疑問，請隨時與我們聯繫.</span>"
+"<span><i>出錯了。</i>請注意，在交易過程中出現錯誤。訂單已確認，但未支付。如果您對訂單狀態有任何疑問，請隨時聯繫我們。</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -197,19 +229,20 @@ msgstr ""
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_payu
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_payulatam
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_sips
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_stripe
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 您的線上支付已完成. 但是您的訂單還未確認.</span>"
+msgstr "<span><i>待定,</i> 您的線上付款已完成。但是您的訂單尚未被驗證。</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr "<span><i>待定</i>... 訂單將在付款後被驗證.</span>"
+msgstr "<span><i>待定</i>... 訂單將在付款後被驗證。</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:72
@@ -236,13 +269,13 @@ msgid "A token is required to create a new payment transaction."
 msgstr "創建新的支付事務需要一個指示物。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:657
+#: code:addons/payment/models/payment_acquirer.py:649
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
 msgstr "使用%s信用卡啟動了%s的交易%s。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:663
+#: code:addons/payment/models/payment_acquirer.py:655
 #, python-format
 msgid "A transaction %s with %s initiated."
 msgstr "已啟動%s的事務%s。"
@@ -263,7 +296,7 @@ msgstr "一條事務不能鏈接到具有不同合作夥伴的應收憑單。"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
 #, python-format
 msgid "Account"
-msgstr "科目"
+msgstr "帳戶"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_chart_template
@@ -279,37 +312,37 @@ msgstr "帳戶號碼"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr "收單方"
+msgstr "收單"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr "收單方帳號"
+msgstr "收單帳號"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr "收單方參照"
+msgstr "收單參照"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr "收單方參考"
+msgstr "收單參考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr "支付方式"
+msgstr "受讓人"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "支付方式列表"
+msgstr "收單方列表"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr "啟動"
+msgstr "激活"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -319,7 +352,7 @@ msgstr "有效"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "添加額外的費用"
+msgstr "添加額外費用"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -378,7 +411,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr "授權"
+msgstr "已授權"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
@@ -430,7 +463,7 @@ msgstr "回調方法"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:360
+#: code:addons/payment/static/src/js/payment_form.js:368
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 #, python-format
 msgid "Cancel"
@@ -455,13 +488,13 @@ msgstr "取消付款"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:190
+#: code:addons/payment/static/src/js/payment_form.js:197
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr "無法設定付款"
+msgstr "無法設定支付方式"
 
 #. module: payment
-#: code:addons/payment/controllers/portal.py:225
+#: code:addons/payment/controllers/portal.py:233
 #, python-format
 msgid "Cannot setup the payment."
 msgstr "不能設定付款"
@@ -515,7 +548,7 @@ msgstr "關閉"
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr "附言"
+msgstr "溝通"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -535,7 +568,7 @@ msgstr "配置"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr "設定"
+msgstr "配置"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -544,7 +577,7 @@ msgstr "配置您的支付方法。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:359
+#: code:addons/payment/static/src/js/payment_form.js:367
 #, python-format
 msgid "Confirm Deletion"
 msgstr "確認刪除"
@@ -552,7 +585,7 @@ msgstr "確認刪除"
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
@@ -563,7 +596,7 @@ msgstr "對應模組"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr "付款指示物計數"
+msgstr "付款指示物個數"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -603,7 +636,7 @@ msgstr "創建保存的付款數據"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
-msgstr "創建人"
+msgstr "創建者"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_date
@@ -617,12 +650,12 @@ msgstr "創建時間"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr "授權認證"
+msgstr "證明"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
-msgstr "幣別"
+msgstr "貨幣"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
@@ -642,7 +675,7 @@ msgstr "客戶"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
 msgid "Description"
-msgstr "說明"
+msgstr "描述"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
@@ -652,7 +685,7 @@ msgstr "決定顯示順序"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr "拒絕受理"
+msgstr "關閉"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -692,7 +725,7 @@ msgstr "電子"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 msgid "Email"
-msgstr "Email"
+msgstr "電子郵箱"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__environment
@@ -712,7 +745,7 @@ msgstr "錯誤消息"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:430
+#: code:addons/payment/static/src/js/payment_form.js:441
 #, python-format
 msgid "Error: "
 msgstr "出錯了："
@@ -730,22 +763,22 @@ msgstr "支援費用計算"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "費用金額; 由系統設定，因為它依賴於收單方"
+msgstr "費用金額; 由系統設定因為它依賴於收單方"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "用來存儲錯誤或信息的驗證信息領域"
+msgstr "用來存儲錯誤或信息的驗證信息字段"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "國內固定費用"
+msgstr "固定國內費用"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr "固定的手續費"
+msgstr "固定國際費用"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -760,12 +793,12 @@ msgstr "表單"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr "Form按鈕模板"
+msgstr "表單按鈕模板"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr "使用標記化技術的表單"
+msgstr "使用指示物化技術的表單"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -801,7 +834,7 @@ msgstr "ID"
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr "如果您將其留空，該付款收購方將適用於所有國家/地區。"
+msgstr "如果您將其留空，該付款受讓人將適用於所有國家/地區。"
 
 #. module: payment
 #. openerp-web
@@ -819,7 +852,7 @@ msgstr "圖像"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr "在付款表單上顯示的圖像"
+msgstr "在支付表單上顯示的圖像"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -840,7 +873,7 @@ msgstr "安裝狀態"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr "該TX內部參考"
+msgstr "TX內部參考"
 
 #. module: payment
 #. openerp-web
@@ -864,7 +897,7 @@ msgstr "Token錯誤！合作夥伴 Token %s!=%s"
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
 msgid "Invoice"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -872,11 +905,11 @@ msgid "Invoice(s)"
 msgstr "應收憑單"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:851
+#: code:addons/payment/models/payment_acquirer.py:853
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
 #, python-format
 msgid "Invoices"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
@@ -895,7 +928,7 @@ msgstr "語言"
 #: model:ir.model.fields,field_description:payment.field_payment_token____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
-msgstr "最後修改日"
+msgstr "最後修改時間"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -923,12 +956,12 @@ msgstr "讓客戶決定"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr "支援此付款圖標的收購方列表。"
+msgstr "支援此支付圖標的受讓人列表。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "使此付款收單方可用(客戶應收憑單等)"
+msgstr "使此付款收單可用(客戶發票等)"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -959,12 +992,12 @@ msgid ""
 msgstr ""
 "手動：通過現金、支票或除 Odoo 以外的任何其他方法獲取報酬。\n"
 "電子方式：線上購買或訂閱時（支付指示物），通過請求客戶保存的卡上的交易，通過付款受讓人自動獲得付款。\n"
-"批量存款：通過生成批量存款立即兌現幾個客戶的支票，以便提交給銀行。在 Odoo 中編碼銀行對帳單時，建議您將交易與批量存款進行核對。從設定中啟用此選項。 "
+"批量存款：通過生成批量存款立即兌現幾個客戶的支票，以便提交給銀行。在 Odoo 中編碼銀行對帳單時，建議您將交易與批量存款進行核對。從設定中啟用此選項。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
 msgid "Medium-sized image"
-msgstr "中等尺寸圖像"
+msgstr "中等尺寸圖片"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image_medium
@@ -972,7 +1005,7 @@ msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "這個供應方的中等大小的圖像。它被自動調整為128*128圖像縱橫比保存起來。通常在表單視圖或者看板視圖中用這個字段"
+msgstr "此供應方的中等大小圖像。它被自動調整為128*128的圖像，縱橫比保存起來。通常在表單視圖或者看板視圖中用這個字段。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -983,41 +1016,41 @@ msgstr "消息"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
 msgid "Message displayed after having done the payment process."
-msgstr "在付款完成後顯示完成消息通知"
+msgstr "在付款完成後顯示完成消息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr "在支付過程中顯示說明及幫助信息."
+msgstr "在支付過程中顯示說明及幫助信息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr "如果在付款過程中發生錯誤，會有消息提示"
+msgstr "如果在付款過程中發生錯誤，會有消息提示。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr "如果在付款的時候訂單被取消，會有消息提示"
+msgstr "如果在付款的時候訂單被取消，會有消息提示。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "如果付款後訂單被順利完成，會有消息提示"
+msgstr "如果付款後訂單被順利完成，會顯示消息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr "如果在付款後訂單還是打開的狀態，會有消息提示"
+msgstr "如果在付款後訂單還是打開的狀態，會顯示消息"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr "信息"
+msgstr "消息"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_name
@@ -1028,7 +1061,7 @@ msgstr "方法"
 #: code:addons/payment/models/payment_acquirer.py:469
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr "嘗試創建新的付款標記時缺少合作夥伴參考"
+msgstr "嘗試創建新的支付指示物時缺少合作夥伴參考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1051,6 +1084,14 @@ msgid "Never"
 msgstr "從不"
 
 #. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:129
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Acquirer menu."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
 msgstr "未找到付款收單方."
@@ -1064,8 +1105,8 @@ msgstr "未處理任何付款。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:201
-#: code:addons/payment/static/src/js/payment_form.js:310
+#: code:addons/payment/static/src/js/payment_form.js:209
+#: code:addons/payment/static/src/js/payment_form.js:318
 #, python-format
 msgid "No payment method selected"
 msgstr "未選擇付款方式"
@@ -1080,14 +1121,14 @@ msgstr "尚未完成"
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr "請注意，來自設定為僅授權交易（而非獲取金額）的收購方的標記不可用。"
+msgstr "請注意，來自設定為僅授權交易（而非獲取金額）的受讓人的指示物不可用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
 msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
-msgstr "注意：訂閱不考慮此字段，"
+msgstr "注意：訂閱不考慮此字段，預設情況下使用伺服器。"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -1096,7 +1137,7 @@ msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:434
+#: code:addons/payment/static/src/js/payment_form.js:445
 #, python-format
 msgid "Ok"
 msgstr "確定"
@@ -1108,38 +1149,38 @@ msgid "Only administrators can access this data."
 msgstr "只有系統管理員可以訪問此數據。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:723
+#: code:addons/payment/models/payment_acquirer.py:718
 #, python-format
 msgid "Only draft transaction can be authorized."
 msgstr "只能授權草稿交易。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:714
-#: code:addons/payment/models/payment_acquirer.py:775
+#: code:addons/payment/models/payment_acquirer.py:709
+#: code:addons/payment/models/payment_acquirer.py:770
 #, python-format
 msgid "Only draft transaction can be processed."
 msgstr "只能處理草稿交易。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:763
+#: code:addons/payment/models/payment_acquirer.py:758
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
 msgstr "只有草稿/授權交易才能被取消。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:732
+#: code:addons/payment/models/payment_acquirer.py:727
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
 msgstr "只有草稿/授權交易才能被提交。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:1018
+#: code:addons/payment/models/payment_acquirer.py:1021
 #, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr "只有捕獲狀態的事務才能被捕獲."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:1025
+#: code:addons/payment/models/payment_acquirer.py:1028
 #, python-format
 msgid "Only transactions having the capture status can be voided."
 msgstr "只有捕獲狀態的事務才能被捕獲."
@@ -1168,7 +1209,7 @@ msgstr "合作夥伴名稱"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr "使用PayPal支付"
+msgstr "PayPal支付"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1191,6 +1232,12 @@ msgid "PayPal Email ID"
 msgstr "PayPal 電子信件ID"
 
 #. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_payulatam
+#: selection:payment.acquirer,provider:0
+msgid "PayUlatam"
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
@@ -1207,14 +1254,14 @@ msgstr "付款"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "付款收單方"
+msgstr "收單"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "支付方式"
+msgstr "收單"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
@@ -1301,7 +1348,7 @@ msgid "Payment method set!"
 msgstr "付款方式已設定！"
 
 #. module: payment
-#: code:addons/payment/controllers/portal.py:252
+#: code:addons/payment/controllers/portal.py:260
 #, python-format
 msgid "Payment transaction failed."
 msgstr "付款交易已失敗。"
@@ -1311,7 +1358,7 @@ msgstr "付款交易已失敗。"
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr "付款"
+msgstr "收付款"
 
 #. module: payment
 #. openerp-web
@@ -1338,16 +1385,19 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
-"支付將被登記到此日記帳。如果您在銀行帳戶上直接支付，\n"
-" 請選擇您的銀行帳戶。如果您分批支付多筆交易，則為此支付收購方創建特定\n"
-" 支付日記帳，以便輕鬆管理銀行對帳單。持有帳簿的臨時轉帳帳戶中的金額使用對帳\n"
-" 模板一鍵完成。"
+"付款將被登記到此日記帳中。如果您直接通過銀行帳戶收取付款，\n"
+"                請選擇您的銀行帳戶。如果您分批收取多筆交易的付款，則為此付款受讓人創建特定\n"
+"                付款日記帳，以便輕鬆管理銀行對帳單。您持有\n"
+"                帳簿的臨時轉帳帳戶中的金額（創建\n"
+"                付款日記帳時自動創建）。然後，當您收到付款受讓人通過銀行帳戶支付的款項後，\n"
+"                使用此臨時轉帳帳戶核對銀行對帳單。使用對帳\n"
+"                模板一鍵完成。"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "貝寶"
+msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1362,7 +1412,7 @@ msgstr "Paypal 付款數據傳輸標記"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "暫停"
+msgstr "待定"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
@@ -1380,23 +1430,15 @@ msgid "Please configure a payment acquirer."
 msgstr "請配置付款收單方"
 
 #. module: payment
-#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
-#, python-format
-msgid ""
-"Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
-"%s</li><li>Account Holder: %s</li></ul>"
-msgstr "請付款給<ul><li>銀行:%s</li><li>帳號:%s</li><li>開戶人:%s</li></ul>"
-
-#. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:202
+#: code:addons/payment/static/src/js/payment_form.js:210
 #, python-format
 msgid "Please select a payment method."
 msgstr "請選擇付款方式"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:311
+#: code:addons/payment/static/src/js/payment_form.js:319
 #, python-format
 msgid "Please select the option to add a new payment method."
 msgstr "請選擇選項以添加新的付款方式。"
@@ -1460,7 +1502,7 @@ msgstr "重導向跳轉至所請求的網站"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Reference"
-msgstr "參考"
+msgstr "參照"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
@@ -1511,7 +1553,7 @@ msgstr "保存的付款指示物"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
-msgstr "支援保存卡片資料"
+msgstr "支援保存卡片數據"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1521,17 +1563,17 @@ msgstr "選擇付款方式"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:120
-#: code:addons/payment/static/src/js/payment_form.js:135
-#: code:addons/payment/static/src/js/payment_form.js:175
-#: code:addons/payment/static/src/js/payment_form.js:181
-#: code:addons/payment/static/src/js/payment_form.js:287
-#: code:addons/payment/static/src/js/payment_form.js:334
-#: code:addons/payment/static/src/js/payment_form.js:369
+#: code:addons/payment/static/src/js/payment_form.js:126
+#: code:addons/payment/static/src/js/payment_form.js:141
+#: code:addons/payment/static/src/js/payment_form.js:182
+#: code:addons/payment/static/src/js/payment_form.js:188
+#: code:addons/payment/static/src/js/payment_form.js:295
+#: code:addons/payment/static/src/js/payment_form.js:342
+#: code:addons/payment/static/src/js/payment_form.js:377
 #, python-format
 msgid "Server Error"
 msgstr "伺服器錯誤"
@@ -1543,7 +1585,7 @@ msgstr "伺服器到伺服器"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:302
+#: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "Server error"
 msgstr "伺服器錯誤"
@@ -1582,7 +1624,7 @@ msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr "這個供應方的小尺寸圖像。他會被自動調整為６４＊６４大小的圖像被保存起來，任何地方用這個小圖像字段是必要的"
+msgstr "此供應商的小尺寸圖像。保持縱橫比，自動縮放為64x64px的圖像。用於任何需要小圖像的字段。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
@@ -1637,10 +1679,10 @@ msgid "Thanks Message"
 msgstr "感謝留言"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:871
+#: code:addons/payment/models/payment_acquirer.py:873
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr "允許 %s 支付受讓人使用手動捕獲模式！"
+msgstr "付款受讓人 %s 無法使用手動捕獲模式！"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1649,13 +1691,13 @@ msgid "The SEPA QR Code informations are not set correctly."
 msgstr " SEPA 二維碼信息沒有被正確設定."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:660
+#: code:addons/payment/models/payment_acquirer.py:652
 #, python-format
 msgid "The customer has selected %s to pay this document."
 msgstr "客戶已選擇%s支付此文件。"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:677
+#: code:addons/payment/models/payment_acquirer.py:669
 #, python-format
 msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
@@ -1663,7 +1705,7 @@ msgid ""
 msgstr "%s的%s交易%s已獲得授權。等待獲取狀態......"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:682
+#: code:addons/payment/models/payment_acquirer.py:674
 #, python-format
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
@@ -1671,13 +1713,13 @@ msgid ""
 msgstr "%s的%s的交易%s已被取消，並顯示以下消息：%s"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:685
+#: code:addons/payment/models/payment_acquirer.py:680
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
 msgstr "%s的%s交易%s已取消."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:679
+#: code:addons/payment/models/payment_acquirer.py:671
 #, python-format
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
@@ -1685,7 +1727,15 @@ msgid ""
 msgstr "%s的%s交易%s已獲得確認。等待獲取發送付款狀態......"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:675
+#: code:addons/payment/models/payment_acquirer.py:677
+#, python-format
+msgid ""
+"The transaction %s with %s for %s has return failed with the following error"
+" message: %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:667
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "%s的%s的交易%s正在等待處理。"
@@ -1710,8 +1760,7 @@ msgid ""
 "and to reuse it for a later purchase. If you manage subscriptions (recurring"
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
-msgstr ""
-"該選項允許將客戶信用卡的支付授權信令用於後續支付來調用。如果您管一下您的訂閱信息（循環應收憑單），則需要在發出應收憑單時自動向客戶收取費用。"
+msgstr "該選項允許將客戶信用卡的支付授權信令用於後續支付來調用。如果您管一下您的訂閱信息（循環發票），則需要在發出發票時自動向客戶收取費用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1727,7 +1776,7 @@ msgid ""
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
 "此模板提供具有所有必要值的受讓人按鈕。\n"
-" 它使用以下評估上下文與qWeb呈現"
+"                                            它使用以下評估上下文，通過 qWeb 進行轉譯："
 
 #. module: payment
 #. openerp-web
@@ -1745,7 +1794,7 @@ msgstr "交易"
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr "在選擇支付受讓人後提供轉帳信息。"
+msgstr "在選擇付款收單方後提供轉帳信息。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1777,12 +1826,12 @@ msgstr "銀行卡驗證"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr "動態內部費用(百分比)"
+msgstr "可變國內費用(百分比)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr "可變的交易費用（百分比）"
+msgstr "可變國際費用（百分比）"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -1792,7 +1841,7 @@ msgstr "已驗證"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
 msgid "Visible in Portal / Website"
-msgstr "在網站入口/網站可見"
+msgstr "在門戶/網站可見"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -1808,36 +1857,36 @@ msgid "Waiting for payment"
 msgstr "等待付款"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:666
+#: code:addons/payment/models/payment_acquirer.py:658
 #, python-format
 msgid "Waiting for payment confirmation..."
 msgstr "等待付款確認…"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:355
+#: code:addons/payment/static/src/js/payment_form.js:363
 #, python-format
 msgid "Warning!"
-msgstr "警告！"
+msgstr "警告!"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:136
+#: code:addons/payment/static/src/js/payment_form.js:142
 #, python-format
 msgid "We are not able to add your payment method at the moment."
 msgstr "目前我們無法添加您的付款方式。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:303
+#: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
 msgstr "目前我們無法添加您的付款方式。</p>"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:335
-#: code:addons/payment/static/src/js/payment_form.js:370
+#: code:addons/payment/static/src/js/payment_form.js:343
+#: code:addons/payment/static/src/js/payment_form.js:378
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
 msgstr "我們此時無法刪除您的支付方式。"
@@ -1851,21 +1900,21 @@ msgstr "我們找不到您的付款，但別擔心。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:176
+#: code:addons/payment/static/src/js/payment_form.js:183
 #, python-format
 msgid "We are not able to redirect you to the payment form."
 msgstr "我們無法為您重新提交付款表。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:182
+#: code:addons/payment/static/src/js/payment_form.js:189
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
 msgstr "我們無法為您重新遞交付款表單。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_processing.js:117
+#: code:addons/payment/static/src/js/payment_processing.js:121
 #, python-format
 msgid "We are processing your payments, please wait ..."
 msgstr "我們正在處理您的付款，請稍候…"
@@ -1879,7 +1928,7 @@ msgstr "我們正在等待付款收單方確認付款。"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:191
+#: code:addons/payment/static/src/js/payment_form.js:198
 #, python-format
 msgid "We're unable to process your payment."
 msgstr "我們無法處理您的付款。"
@@ -1896,6 +1945,12 @@ msgstr "電匯"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr "您可以點選這裡然後被重導向到確認頁面。"
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:143
+#, python-format
+msgid "You have to set a journal for your payment acquirer %s."
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -1935,14 +1990,14 @@ msgstr "點選支付按鈕後您將被重導向到 Adyen 網站。"
 msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
-msgstr "點選付款按鈕後您將會被重導向到授權的網站"
+msgstr "點選付款按鈕後您將會被重導向到授權網站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
-msgstr "在點選支付按鈕後您將會被重導向到Buckaroo網站"
+msgstr "在點選支付按鈕後您將會被重新定向到Buckaroo網站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -1950,6 +2005,13 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr "點選支付按鈕後您將被重導向到 Ingenico 網站。"
+
+#. module: payment
+#: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_payulatam
+msgid ""
+"You will be redirected to the PayUlatam website after clicking on the "
+"payment button."
+msgstr ""
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -2022,7 +2084,7 @@ msgstr "acquirer: payment.acquirer 瀏覽記錄"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr "amount:交易金額,浮點數"
+msgstr "金額：交易金額、浮點數"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -2032,17 +2094,17 @@ msgstr "更多"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr "context:目前上下相關字典"
+msgstr "上下文：目前上下相關字典"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "currency: 交易幣別瀏覽記錄"
+msgstr "貨幣：交易幣別瀏覽記錄"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:121
-#: code:addons/payment/static/src/js/payment_form.js:288
+#: code:addons/payment/static/src/js/payment_form.js:127
+#: code:addons/payment/static/src/js/payment_form.js:296
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr "例如，您的信用卡卡號有誤。請核實。"
@@ -2050,19 +2112,19 @@ msgstr "例如，您的信用卡卡號有誤。請核實。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "partner:客戶瀏覽歷史(不完全)"
+msgstr "合作夥伴：客戶瀏覽歷史，不一定完全"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: 關於購買的運費需要參考具體的貨運方法,如航空等"
+msgstr "合作夥伴_值：有關買家的特定值，例如來自貨運單"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "reference:  交易參考號碼"
+msgstr "參考：交易參考號碼"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -2072,14 +2134,14 @@ msgstr "選擇另一種付款方式。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr "tx_url:交易後的形式的URL"
+msgstr "tx_url：交易後在表單上顯示的網址"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr "tx_values:交易價值"
+msgstr "tx_values：交易價值"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "user: 目前使用者瀏覽記錄"
+msgstr "使用者：目前使用者瀏覽記錄"

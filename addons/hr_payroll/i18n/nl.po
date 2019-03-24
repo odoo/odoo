@@ -3,18 +3,22 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Cas Vissers <c.vissers@brahoo.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:42
+#: code:addons/hr_payroll/models/hr_salary_rule.py:49
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -48,9 +52,35 @@ msgstr ""
 "* Wanneer een loonafschrift is geannuleerd, is de status 'Afgewezen'."
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+msgid ""
+"<span class=\"fa fa-check-circle-o mr-2\" aria-label=\"Validated\" "
+"title=\"validated\"/>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+msgid ""
+"<span class=\"fa fa-exclamation-triangle mr-2\" aria-label=\"Conflict\" "
+"title=\"error\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle mr-2\" aria-label=\"Conflict\" "
+"title=\"fout\"/>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "<span class=\"ml8\">Hours</span>"
+msgstr "<span class=\"ml8\">Uren</span>"
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
 msgstr "<span class=\"o_form_label\">Loonstrook regels</span>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "<span class=\"o_stat_text\">Payslips</span>"
+msgstr "<span class=\"o_stat_text\">Loonafschriften</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -59,27 +89,44 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
-"<span colspan=\"4\" nolabel=\"1\">Deze wizzard zal loonafschriften "
-"genereren,  voor alle geselecteerde medewerkers, gebaseerd op datum en "
-"creditfactuur gespecificeerd op de loonafschrift run</span>"
+"<span colspan=\"4\" nolabel=\"1\">Deze wizard zal loonafschriften genereren,"
+"  voor alle geselecteerde medewerkers, gebaseerd op datum en creditfactuur "
+"gespecificeerd op de loonafschrift run</span>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "<span> hours/week</span>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
 msgstr "<strong>Adres</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
 msgstr "<strong>Gemachtigde handtekening</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
 msgstr "<strong>Rekeningnummer</strong>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Basic Salary</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Company Information</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Computed On</strong>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -88,48 +135,41 @@ msgstr "<strong>Vanaf:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
 msgstr "<strong>Vanaf</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr "<strong>T/m:</strong>"
+msgstr "<strong>Tot:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
-msgstr "<strong>T/m</strong>"
+msgstr "<strong>Tot</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
 msgstr "<strong>Ontwer</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
 msgstr "<strong>E-mail</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Identification No</strong>"
 msgstr "<strong>Identificatie Nr</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
 msgstr "<strong>Naam</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
 msgstr "<strong>Referentie</strong>"
 
@@ -137,6 +177,11 @@ msgstr "<strong>Referentie</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
 msgstr "<strong>Naam looninstelling:</strong>"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+msgid "<strong>Registration Number</strong>"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -155,9 +200,10 @@ msgstr ""
 "staat of eender wie zijn die geld verzamelt of invoert op loonstroken."
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "Grootboek boekhouder"
+#: code:addons/hr_payroll/models/hr_leave.py:90
+#, python-format
+msgid "A leave cannot be set across multiple contracts."
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -171,8 +217,10 @@ msgid "Accounting Information"
 msgstr "Boekhoudinformatie"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__active
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__active
 msgid "Active"
 msgstr "Actief"
 
@@ -187,14 +235,14 @@ msgid "Add an internal note..."
 msgstr "Voeg interne notitie toe..."
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
-msgid "Advantage Name"
-msgstr "Beloning naam"
-
-#. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
 msgstr "Alle onderliggende definities"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employee_all_payslips
+msgid "All Payslips"
+msgstr ""
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
@@ -202,7 +250,6 @@ msgid "Allowance"
 msgstr "Toelage"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
 msgstr "Altijd waar"
@@ -212,7 +259,6 @@ msgstr "Altijd waar"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
 msgstr "Bedrag"
 
@@ -235,7 +281,6 @@ msgid "Appears on Payslip"
 msgstr "Verschijnt op salarisstrook"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_python
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
@@ -255,9 +300,86 @@ msgid "Basic Salary"
 msgstr "Basis salaris"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__basic_wage
+msgid "Basic Wage"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
+msgid "Batche Name"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+msgid "Batches"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_tree
+msgid "Beginning"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
 msgstr "Belgische loonadministratie"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.hr_benefit_action
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_calendar
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_gantt
+msgid "Benefit"
+msgstr "Voordeel"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "Benefit Name"
+msgstr "Naam voordeel"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_leave_type__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar_attendance__benefit_type_id
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar_leaves__benefit_type_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_type_form
+msgid "Benefit Type"
+msgstr "Soort secundaire waarde"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_type_form
+msgid "Benefit Type Name"
+msgstr "Naam soort voordeel"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_benefit_type
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_benefit_type_view
+msgid "Benefit Types"
+msgstr "Soorten secundaire waardes"
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Benefit already exists for this attendance"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Benefit must end. Please define an end date or a duration."
+msgstr ""
+"Voordeel moet eindigen. Gelieve een startdatum en einddatum op te geven voor"
+" de duur."
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.hr_menu_benefit_menu
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_benefit_confirguration
+#: model_terms:ir.ui.view,arch_db:hr_payroll.benefit_type_leave_form_inherit
+msgid "Benefits"
+msgstr "Secundaire voorwaarden"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_user_benefit_employee
+msgid "Benefits Employees"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -275,6 +397,7 @@ msgid "Calculations"
 msgstr "Berekeningen"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
 msgstr "Annuleer"
@@ -285,7 +408,12 @@ msgid "Cancel Payslip"
 msgstr "Loonafschrift annuleren"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:96
+#: selection:hr.benefit,state:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:97
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr "Kan niet een loonstrook annuleren die voltooid is."
@@ -303,7 +431,6 @@ msgid "Child Rules"
 msgstr "Onderliggende definitities"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__child_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__child_ids
 msgid "Child Salary Rule"
 msgstr "Onderliggende salaris regel"
@@ -325,22 +452,14 @@ msgid "Choose a Payroll Localization"
 msgstr "Kies een loonadministratie lokalisatie"
 
 #. module: hr_payroll
-#: selection:hr.payslip.run,state:0
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-msgid "Close"
-msgstr "Sluiten"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__code
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
 msgstr "Code"
 
@@ -351,17 +470,20 @@ msgid "Code:"
 msgstr "Code:"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__color
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__company_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__company_id
 msgid "Company"
 msgstr "Bedijf"
 
@@ -382,7 +504,11 @@ msgid "Compute Sheet"
 msgstr "Bereken strook"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__compute_date
+msgid "Computed On"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_select
 msgid "Condition Based on"
 msgstr "Voorwaarde gebaseerd op"
@@ -403,11 +529,18 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: hr_payroll
+#: model:ir.actions.server,name:hr_payroll.action_hr_payroll_confirm_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
 msgstr "Bevestigen"
 
 #. module: hr_payroll
+#: selection:hr.benefit,state:0
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__contract_id
@@ -416,10 +549,10 @@ msgid "Contract"
 msgstr "Contract"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
-#: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
-msgid "Contract Advantage Templates"
-msgstr "Contractvoordelen sjabloon"
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_contract_repository
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_contracts_configuration
+msgid "Contracts"
+msgstr "Contracten"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -458,7 +591,18 @@ msgid "Conveyance Allowance For Gravie"
 msgstr "Transporttoelage voor Gravie"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__country_id
+msgid "Country"
+msgstr "Land"
+
+#. module: hr_payroll
+#: model_terms:ir.actions.act_window,help:hr_payroll.action_hr_contract_repository
+msgid "Create a new contract"
+msgstr "Maak een nieuw contract aan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_uid
@@ -467,15 +611,16 @@ msgstr "Transporttoelage voor Gravie"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_date
@@ -484,9 +629,9 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
@@ -498,14 +643,28 @@ msgid "Credit Note"
 msgstr "Creditfactuur"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Credit Notes"
+msgstr "Creditfacturen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_start
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_from
 msgid "Date From"
 msgstr "Datum vanaf"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_to
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_to
 msgid "Date To"
@@ -515,11 +674,6 @@ msgstr "Datum tot"
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
 msgstr "Aftrek"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
-msgid "Default value for this advantage"
-msgstr "Standaard waarde voor dit voordeel"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__schedule_pay
@@ -546,7 +700,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__note
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -555,18 +708,8 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
-msgid "Details By Salary Rule Category"
-msgstr "Details per salarisregel categorie"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__details_by_salary_rule_category
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-msgid "Details by Salary Rule Category"
-msgstr "Details per salarisregel categorie"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__display_name
@@ -575,17 +718,16 @@ msgstr "Details per salarisregel categorie"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: hr_payroll
-#: selection:hr.payslip,state:0
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
@@ -602,9 +744,9 @@ msgid "Done Slip"
 msgstr "Salarisstrook verwerkt"
 
 #. module: hr_payroll
-#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: selection:hr.benefit,state:0 selection:hr.payslip,state:0
+#: selection:hr.payslip.run,state:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft"
 msgstr "Concept"
 
@@ -620,8 +762,12 @@ msgstr "Concept salarisstrook"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__employee_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__employee_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Employee"
 msgstr "Werknemer"
@@ -639,14 +785,10 @@ msgstr "Functie werknemer"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
-#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_month_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_payslips
 msgid "Employee Payslips"
 msgstr "Werknemer loonafschrift"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
-msgid "Employee's Advantage on Contract"
-msgstr "Werknemer zijn voordeel op contract"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
@@ -655,6 +797,7 @@ msgstr "Werknemers werkschema."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_configuration
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
@@ -662,7 +805,22 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:92
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Employees Working Hours"
+msgstr "Werknemers werktijden"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__extra_attendance_ids
+msgid "Employees working Time"
+msgstr "Werknemers werktijden"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__display_warning
+msgid "Error"
+msgstr "Fout"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:95
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
@@ -686,7 +844,13 @@ msgstr ""
 "betrokken"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:126
+#, python-format
+msgid "Everybody's benefits"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_fix
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_fix
@@ -711,6 +875,23 @@ msgid "French Payroll"
 msgstr "Franse loonadministratie"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
+msgid "From"
+msgstr "Van"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Full Time"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__full_time_required_hours
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__full_time_required_hours
+msgid "Fulltime Hours"
+msgstr ""
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "General"
 msgstr "Algemeen"
@@ -721,10 +902,25 @@ msgid "Generate"
 msgstr "Genereren"
 
 #. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:44
+#, python-format
+msgid "Generate Benefits"
+msgstr "Genereer secundaire voorwaarden"
+
+#. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:47
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#, python-format
 msgid "Generate Payslips"
 msgstr "Genereer loonafschriften"
+
+#. module: hr_payroll
+#: model:ir.actions.server,name:hr_payroll.action_generate_payslips_from_benefits
+msgid "Generate payslips"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -732,9 +928,14 @@ msgid "Generate payslips for all selected employees"
 msgstr "Genereer loonafschriften voor alle geselecteerde werknemers"
 
 #. module: hr_payroll
-#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
-msgid "Get 1% of sales"
-msgstr "Krijg 1% van verkopen"
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generated Payslips"
+msgstr "Genereer loonafschriften"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "Go To Conflicting Leave"
+msgstr "Ga naar conflicterende verlof"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -750,12 +951,19 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__hours_per_week
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__hours_per_week
+msgid "Hours per Week"
+msgstr ""
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
 msgstr "Huis huuruitkering"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__id
@@ -764,12 +972,11 @@ msgstr "Huis huuruitkering"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__id
 msgid "ID"
 msgstr "ID"
 
@@ -783,7 +990,15 @@ msgstr ""
 " hier, credits zijn."
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,help:hr_payroll.field_hr_benefit_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the benefit "
+"type without removing it."
+msgstr ""
+"Indien het actief veld is uitgezet staat het u toe om het soort voordeel te "
+"verbergen zonder het te verwijderen."
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
@@ -803,22 +1018,20 @@ msgid "Indicates this payslip has a refund of another"
 msgstr "Geeft aan dat dit loonafschrift een credit heeft van een andere"
 
 #. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Input Data"
 msgstr "Invoergegevens"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__input_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__input_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
-msgid "Inputs"
-msgstr "Invoer"
-
-#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__note
 msgid "Internal Note"
 msgstr "Interne notitie"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__is_fulltime
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
@@ -849,7 +1062,8 @@ msgstr ""
 " gedefinieerd als result = inputs.SALEURO.amount * contract.wage*0.01"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip____last_update
@@ -858,17 +1072,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days____last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register____last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister____last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_uid
@@ -877,15 +1091,16 @@ msgstr "Laatst gewijzigd op"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_date
@@ -894,12 +1109,18 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__leave_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__is_leave
+msgid "Leave"
+msgstr "Verlof"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category__parent_id
@@ -909,16 +1130,6 @@ msgid ""
 msgstr ""
 "Alleen voor rapportage doeleinden wordt een salariscategorie aan een "
 "bovenliggende categorie gekoppeld."
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__lower_bound
-msgid "Lower Bound"
-msgstr "Ondergrens"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__lower_bound
-msgid "Lower bound authorized by the employer for this advantage"
-msgstr "Ondergrens toegestaan door de werkgever voor dit voordeel"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__paid
@@ -931,10 +1142,14 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "Maximum Range"
 msgstr "Maximum bereik"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_user_benefit_employee__user_id
+msgid "Me"
+msgstr "Ik"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
@@ -942,10 +1157,9 @@ msgid "Meal Voucher"
 msgstr "Maaltijdcheque"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
-msgstr "Minimum bereik"
+msgstr "Minimum Bereik"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -958,7 +1172,13 @@ msgid "Monthly"
 msgstr "Maandelijks"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__name
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "My Benefits"
+msgstr "Mijn voordelen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__name
@@ -967,9 +1187,15 @@ msgstr "Maandelijks"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__name
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Name"
 msgstr "Naam"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_structure__payslip_name
+msgid ""
+"Name to be set on a payslip. Example: 'End of the year bonus'. If not set, "
+"the default value is 'Salary Slip'"
+msgstr ""
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.NET
@@ -982,10 +1208,19 @@ msgid "Net Salary"
 msgstr "Netto salaris"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:201
-#, python-format
-msgid "Normal Working Days paid at 100%"
-msgstr "Standaard werkdagen 100% betaald"
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__net_wage
+msgid "Net Wage"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.employee:0
+msgid "No duplication of registration numbers is allowed"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_resource_calendar__normal_attendance_ids
+msgid "Normal working Time"
+msgstr "Normale werktijd"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -994,13 +1229,21 @@ msgstr "Opmerkingen"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_days
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "Number of Days"
 msgstr "Aantal dagen"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_hours
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 msgid "Number of Hours"
 msgstr "Aantal uren"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__full_time_required_hours
+#: model:ir.model.fields,help:hr_payroll.field_resource_calendar__full_time_required_hours
+msgid "Number of hours to work to be considered as fulltime."
+msgstr ""
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_user
@@ -1019,7 +1262,6 @@ msgid "Parent"
 msgstr "Bovenliggend"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__parent_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__parent_rule_id
 msgid "Parent Salary Rule"
 msgstr "Bovenliggende salarisdefinitie"
@@ -1034,8 +1276,6 @@ msgstr "Relatie"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__slip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__payslip_id
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Pay Slip"
 msgstr "Loonstrook"
 
@@ -1043,11 +1283,6 @@ msgstr "Loonstrook"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
 msgstr "Salarisstrook batch"
-
-#. module: hr_payroll
-#: model:ir.actions.report,name:hr_payroll.payslip_details_report
-msgid "PaySlip Details"
-msgstr "Salarisstrook details"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -1097,40 +1332,38 @@ msgid "Payroll rules that apply to your country"
 msgstr "Payroll regel dat van toepassing zijn op uw land"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_hr_payroll_account
+msgid "Payroll with Accounting"
+msgstr "Loonadministratie met boekhouding"
+
+#. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
 msgstr "Loonafschrift"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:82
+#: code:addons/hr_payroll/models/hr_payslip.py:83
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
 msgstr "Loonstrook \"Datum van' moet voor 'Datum t/m' liggen."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
 msgstr "Loonafschrift batches"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_count
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip Computation Details"
 msgstr "Details salarisstrookberekening"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__payslip_count
 msgid "Payslip Count"
 msgstr "Loonstrook teller"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "Payslip Details Report"
-msgstr "Salarisstrook detailsrapport"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1152,15 +1385,9 @@ msgstr "Loonstrook regel"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__line_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Payslip Lines"
 msgstr "Salarisstrook-regels"
-
-#. module: hr_payroll
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-msgid "Payslip Lines by Contribution Register"
-msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
@@ -1168,6 +1395,7 @@ msgid "Payslip Lines by Contribution Registers"
 msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__payslip_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
 msgid "Payslip Name"
 msgstr "Loonafschrift naam"
@@ -1182,7 +1410,7 @@ msgstr "Loonstrook gewerkte dagen"
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__slip_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__slip_ids
-#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employee_payslips
 #: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
@@ -1191,7 +1419,6 @@ msgstr "Loonstroken"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
 msgid "Payslips Batches"
@@ -1203,7 +1430,6 @@ msgid "Payslips by Employees"
 msgstr "Loonafschrift per werknemer"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage
@@ -1211,12 +1437,13 @@ msgid "Percentage (%)"
 msgstr "Percentage (%)"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage_base
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "Percentage based on"
 msgstr "Percentage gebaseerd op"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__duration
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
@@ -1228,7 +1455,11 @@ msgid "Post payroll slips in accounting"
 msgstr "Boek loonstroken in boekhouding"
 
 #. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/xml/payslip_tree_views.xml:5
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+#, python-format
 msgid "Print"
 msgstr "Afdrukken"
 
@@ -1243,21 +1474,17 @@ msgid "Provident Fund"
 msgstr "Voorzieningsfondsen"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_python_compute
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_python_compute
 msgid "Python Code"
 msgstr "Python Code"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_python
 msgid "Python Condition"
 msgstr "Python voorwaarde"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
 msgstr "Python expressie"
@@ -1275,7 +1502,6 @@ msgstr "Hoeveelheid/Tarief"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
 msgstr "Hoeveelheid/ratio"
 
@@ -1285,13 +1511,11 @@ msgid "Quarterly"
 msgstr "Per kwartaal"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
 msgstr "Bereik"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range
 msgid "Range Based on"
 msgstr "Bereik gebaseerd op"
@@ -1310,10 +1534,10 @@ msgstr "Referentie"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Creditfacturen"
+msgstr "Creditering"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:102
+#: code:addons/hr_payroll/models/hr_payslip.py:103
 #, python-format
 msgid "Refund: "
 msgstr "Credit: "
@@ -1324,9 +1548,39 @@ msgid "Register Line"
 msgstr "Register regel"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__registration_number
+msgid "Registration Number of the Employee"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
 msgstr "Afgewezen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__report_id
+msgid "Report"
+msgstr "Rapport"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_repository_confirguration
+msgid "Repository"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_mixin
+msgid "Resource Mixin"
+msgstr "Resource Mixin"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Resourse werktijd"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__salary_rule_id
@@ -1334,11 +1588,27 @@ msgid "Rule"
 msgstr "Regel"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+msgid "Rule Categories"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+msgid "Rules"
+msgstr "Regels"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_configuration
+msgid "Salary"
+msgstr ""
+
+#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
 msgstr "Salaris categorie"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_salary_computation
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "Salarisberekening"
@@ -1350,7 +1620,6 @@ msgstr "Salarisregel"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
@@ -1358,21 +1627,13 @@ msgstr "Salarisregel categorieën"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
 msgstr "Salarisregel categorie"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_rule_input
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__input_id
-msgid "Salary Rule Input"
-msgstr "Salaris regelinvoer"
-
-#. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__rule_ids
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
@@ -1382,11 +1643,10 @@ msgid "Salary Rules"
 msgstr "Salaris definities"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:403
-#: code:addons/hr_payroll/models/hr_payslip.py:453
+#: code:addons/hr_payroll/models/hr_payslip.py:296
 #, python-format
-msgid "Salary Slip of %s for %s"
-msgstr "Loonafschrift van %s voor %s"
+msgid "Salary Slip"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
@@ -1399,7 +1659,6 @@ msgstr "Salarisstructuur"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
 msgstr "Salarisstructuur"
 
@@ -1407,6 +1666,11 @@ msgstr "Salarisstructuur"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__schedule_pay
 msgid "Scheduled Pay"
 msgstr "Geplande betaling"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "Search Benefit"
+msgstr "Zoek voordeel"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1434,6 +1698,7 @@ msgid "Semi-annually"
 msgstr "Halfjaarlijks"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit_type__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__sequence
@@ -1455,6 +1720,21 @@ msgstr "Instellingen"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Slips to Confirm"
+msgstr ""
+
+#. module: hr_payroll
+#: sql_constraint:hr.benefit:0
+msgid "Starting time should be before end time."
+msgstr "Starttijd moet voor eindtijd liggen."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__state
+msgid "State"
+msgstr "Provincie / Staat"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "States"
 msgstr "Provincie/Staat"
 
@@ -1470,6 +1750,11 @@ msgid "Structure"
 msgstr "Structuur"
 
 #. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Structures"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__code
 msgid ""
@@ -1482,7 +1767,6 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__code
-#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input__code
 msgid "The code that can be used in the salary rules"
 msgstr "De code die gebruikt kan worden in de salarisregels"
 
@@ -1494,24 +1778,50 @@ msgstr "De berekeningsmethode voor de regel bedrag."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__contract_id
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "The contract for which applied this input"
 msgstr "Het contract waarvoor de input geldt"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "The contract for which applied this worked days"
+msgstr "Het contract waarvoor deze werkdagen van toepassing zijn"
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "The maximum amount, applied for this rule."
 msgstr "Het maximum bedrag, van toepassing voor deze regel."
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "The minimum amount, applied for this rule."
 msgstr "Het minimale bedrag, toegewezen voor deze regel"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid "This benefit cannot be validated.  The benefit type is undefined."
+msgstr ""
+"Dit voordeel kan niet gevalideerd worden. Het soort voordeel is niet "
+"gedefinieerd."
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid ""
+"This benefit cannot be validated.  There is a leave to approve (or refuse) "
+"at the same time."
+msgstr ""
+"Dit voordeel kan niet gevalideerd worden. Er is tegelijkertijd een "
+"verlofaanvraag om goed te keuren (of te weigeren)."
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_benefit_form
+msgid ""
+"This benefit cannot be validated. It is conflicting with at least one benefit. <br/>\n"
+"                                Two benefits of the same employee cannot overlap at the same time."
+msgstr ""
+"Dit voordeel kan niet gevalideerd worden. Het conflicteert met een ander voordeel.<br/>\n"
+"Twee voordelen voor dezelfde werknemer kunnen niet overlappen op dezelfde tijd."
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range
 msgid ""
 "This will be used to compute the % fields values; in general it is on basic,"
@@ -1523,10 +1833,36 @@ msgstr ""
 "gebruiken als variabele naam (hra, ma, lta, etc.) en de variabele basic"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_leave
+msgid "Time Off"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_leave_type
+msgid "Time Off Type"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_benefit__date_stop
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_to
+msgid "To"
+msgstr "T/m"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "To Compute"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "To Confirm"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
 msgstr "Totaal"
 
@@ -1536,14 +1872,9 @@ msgid "Total Working Days"
 msgstr "Totaal aantal werkdagen"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__upper_bound
-msgid "Upper Bound"
-msgstr "Bovengrens"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__upper_bound
-msgid "Upper bound authorized by the employer for this advantage"
-msgstr "Bovengrens toegestaan door de werkgever voor dit voordeel"
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "Type"
+msgstr "Soort"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__sequence
@@ -1558,6 +1889,28 @@ msgid "Used to display the salary rule on payslip."
 msgstr "Wordt gebruikt om de salarisregel weer te geven op het loonafschrift."
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Validate"
+msgstr "Bevestig"
+
+#. module: hr_payroll
+#. openerp-web
+#: code:addons/hr_payroll/static/src/js/benefit.js:50
+#, python-format
+msgid "Validate Benefits"
+msgstr "Valideer secundaire voorwaarden"
+
+#. module: hr_payroll
+#: selection:hr.benefit,state:0
+msgid "Validated"
+msgstr "Goedgekeurd"
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+msgid "Verify"
+msgstr "Verifieer"
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
 msgstr "Wachten"
@@ -1566,6 +1919,16 @@ msgstr "Wachten"
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
 msgstr "Wekelijks"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_benefit_filter
+msgid "With error"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Werk detail"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1588,18 +1951,29 @@ msgid "Working Schedule"
 msgstr "Werktijden"
 
 #. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_resource_calendar_view_form
+msgid "Working Time"
+msgstr "Werktijd"
+
+#. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
-msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgid ""
+"Wrong percentage base or quantity defined for salary rule %s (%s).\n"
+"Error: %s"
 msgstr ""
-"Verkeerd basispercentage of hoeveelheid gedefinieerd voor salarisregel %s "
-"(%s)."
+"Foutieve basispercentage of hoeveelheid opgegeven voor salarisregel %s (%s)\n"
+"Fout: %s"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
-msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "Foutieve python code gedefinieerd voor salarisregel %s (%s)."
+msgid ""
+"Wrong python code defined for salary rule %s (%s).\n"
+"Error: %s"
+msgstr ""
+"Foutieve Python code voor salarisregel %s (%s).\n"
+"Fout: %s"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:240
@@ -1610,8 +1984,12 @@ msgstr "Foutieve python voorwaarde gedefinieerd voor salarisregel %s (%s)."
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
-msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr "Verkeerd aantal gedefinieerd voor salarisregel %s (%s)."
+msgid ""
+"Wrong quantity defined for salary rule %s (%s).\n"
+"Error: %s"
+msgstr ""
+"Foutieve hoeveelheid ingesteld voor salarisregel %s (%s).\n"
+"Fout: %s"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:234
@@ -1620,33 +1998,53 @@ msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Verkeerde bereikvoorwaarde gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#: code:addons/hr_payroll/models/hr_benefit.py:258
+#, python-format
+msgid "You can't validate a benefit that covers several days."
+msgstr "U kan geen voordeel valideren dat over meerdere dagen gaat."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:43
 #, python-format
 msgid "You cannot create a recursive salary structure."
 msgstr "U kan geen recursieve salarisstructuur aanmaken."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:127
+#: code:addons/hr_payroll/models/hr_payslip.py:137
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
 "U kunt geen loonstrook verwijderen dat niet een concept of geannuleerd is!"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#: sql_constraint:hr.user.benefit.employee:0
+msgid "You cannot have twice the same employee."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:37
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr "U dient werknemer(s) te selecteren om loonafschrift(en) te genereren."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:525
+#: code:addons/hr_payroll/models/hr_payslip.py:357
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
-"U dient een contract in te stellen om een loonafschriftregel te maken."
+"U dient een contract in te stellen om een loonafschrift lijn te maken."
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model,name:hr_payroll.model_hr_benefit
+msgid "hr.benefit"
+msgstr "hr.benefit"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_benefit_type
+msgid "hr.benefit.type"
+msgstr "hr.benefit.type"
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "result will be affected to a variable"
 msgstr "resultaat wordt beïnvloed door een variabele"
