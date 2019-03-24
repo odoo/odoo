@@ -38,12 +38,12 @@ msgstr "# Feladatok"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Munkanapok a hozzárendelésig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Munkanapok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
@@ -53,7 +53,7 @@ msgstr "# Feladatok száma"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "Elégedettségi felmérés"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -73,6 +73,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
+"Egy projekt (in)aktiválása automatikusan (in)aktiválja a projekt feladatait."
+" Folytatja?"
 
 #. module: project
 #. openerp-web
@@ -101,7 +103,7 @@ msgstr ""
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
 "<b>Jelölje meg csillaggal a feladatokat</b> a csapat prioritásainak "
-"meghatározása érdekében."
+"meghatározásához."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -177,6 +179,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Kedves ${object.partner_id.name or 'ügyfelünk'},<br/>\n"
+"    Köszönjük érdeklődését.<br/>\n"
+"    Bármilyen kérés esetén kérjük, keressen minket.\n"
+"    <br/><br/>\n"
+"    Köszönjük,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -191,7 +202,7 @@ msgstr "<i class=\"fa fa-calendar\"/> Befejezés dátuma :"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -204,11 +215,13 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-envelope\"/> Email :"
-msgstr "<i class=\"fa fa-envelope\"/> Email :"
+msgstr "<i class=\"fa fa-envelope\"/> E-mail :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -216,11 +229,13 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Még nincs értékelés"
 
 #. module: project
 #: code:addons/project/models/project.py:121
@@ -240,13 +255,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Új projekt létrehozása</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Amint a feladata készen van, menteni tudja azt.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project

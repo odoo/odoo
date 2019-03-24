@@ -168,7 +168,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -399,6 +399,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"المنتج القابل للتخزين هو المنتج الممكن إدارة مخزونه. يجب تثبيت تطبيق المخزون.\n"
+"المنتج الاستهلاكي هو المنتج الذي لا يتم إدارة مخزونه.\n"
+"الخدمة هي منتج غير مادي تقوم بتوفيره."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1585,7 +1588,7 @@ msgstr "أوامر التوصيل"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "باقات التسليم"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -1866,7 +1869,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s):"
-msgstr ""
+msgstr "الأخطاء:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date_expected
@@ -4175,7 +4178,7 @@ msgstr "حركات المنتج"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "تحركات المنتج (بنود حركة المخزون)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -5449,7 +5452,7 @@ msgstr "مخفوظات الكميات المخزنة"
 #: model:ir.model,name:stock.model_stock_rule
 #: model:ir.model.fields,field_description:stock.field_stock_move__rule_id
 msgid "Stock Rule"
-msgstr ""
+msgstr "قاعدة المخزون"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_rules_report
@@ -5459,7 +5462,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "تقرير قواعد المخزون"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -5494,7 +5497,7 @@ msgstr "تحركات المخزون التي تم معالجتها "
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "تقرير قاعدة المخزون"
 
 #. module: stock
 #: selection:product.template,type:0
@@ -6135,7 +6138,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:36
 #, python-format
 msgid "Unfold"
-msgstr ""
+msgstr "كشف"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -6155,7 +6158,7 @@ msgstr "سعر الوحدة"
 #. module: stock
 #: selection:barcode.rule,type:0
 msgid "Unit Product"
-msgstr ""
+msgstr "وحدة المنتج"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -6966,7 +6969,7 @@ msgstr "مثال.PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr ""
+msgstr "في"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -6994,7 +6997,7 @@ msgstr "من"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "تمت معالجته بدلًا من"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form

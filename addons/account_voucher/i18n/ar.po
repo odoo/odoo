@@ -15,7 +15,6 @@
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # amal ahmed <amalalhashemy88@hotmail.com>, 2018
-# Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Ahmed Yousif <ahmed.yousif@outlook.com>, 2018
 # Husam Migdadi <samwatson18@gmail.com>, 2018
@@ -44,10 +43,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-"* تستخدم الحالة `مسودة` عندما يشفر المستخدم قسيمة جديدة.\n"
-"*  تستخدم الحالة Pro-forma عندما لاتحوي القسيمة رقما\n"
-"* تستخدم الحالة `مرسل` عند انشاء المستخدم لقسيمة، ويولد رقم للقسيمة ويتم انشاء مدخلات القسيمة في حساب\n"
-"* تستخدم الحالة `ملغاة عندما يلغي المستخدم القسيمة"
+" * تُستخدم الحالة 'مسودة' عندما يدخل المستخدم إيصالًا جديدًا غير مؤكد.\n"
+" * تُستخدم الحالة 'Pro-forma' عندما لا يحوي الإيصال رقمًا.\n"
+" * تُستخدم الحالة 'مُرحل' عندما ينشئ المستخدم إيصالًا، وينتج له رقم، قيود الإيصالات توضع في حساب.\n"
+" * تُستخدم الحالة 'ملغاة' عندما يلغي المستخدم الإيصال."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
@@ -73,7 +72,7 @@ msgstr "السند المحاسبي"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Accounting Voucher Line"
-msgstr ""
+msgstr "بند الإيصال المحاسبي"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
@@ -99,7 +98,7 @@ msgstr "الوسوم التحليلية"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr "هل ترغب حقاً في إلغاء هذا الإيصال؟"
+msgstr "هل ترغب حقًا في إلغاء هذا الإيصال؟"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
@@ -142,7 +141,7 @@ msgstr "ملغي"
 #: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "لا يمكن حذف قسيمة (s) التي تم فتحها بالفعل أو المدفوعة."
+msgstr "لا يمكن حذف القسائم المفتوحة أو المدفوعة."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
@@ -154,12 +153,12 @@ msgstr "المؤسسة"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
-msgstr "الشركات المرتبطة بهذه اليومية"
+msgstr "المؤسسة المرتبطة بدفتر اليومية هذا"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Create a new sale receipt"
-msgstr ""
+msgstr "إنشاء إيصال بيع جديد"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
@@ -200,7 +199,7 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -215,7 +214,7 @@ msgstr "مسودة"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr "القسائم الإفتراضية"
+msgstr "مسودة قسائم"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
@@ -225,7 +224,7 @@ msgstr "تاريخ الاستحقاق"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
-msgstr "تاريخ فعال للمدخلات المحاسبية"
+msgstr "تاريخ صلاحية القيود المحاسبية"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
@@ -245,7 +244,7 @@ msgstr "المتابعون (الشركاء)"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr "يعطي تسلسل لهذا السطر عندما يتم عرض الايصال"
+msgstr "يعرض تسلسل هذا البند عند عرض الإيصال."
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -348,13 +347,13 @@ msgstr "الرسائل"
 #: code:addons/account_voucher/models/account_voucher.py:109
 #, python-format
 msgid "Missing Company"
-msgstr ""
+msgstr "خانة المؤسسة فارغة"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:111
 #, python-format
 msgid "Missing Currency"
-msgstr ""
+msgstr "خانة العملة فارغة"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
@@ -415,7 +414,7 @@ msgstr "الدفع مباشرة"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr "الدفع لاحقاً"
+msgstr "الدفع لاحقًا"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
@@ -425,7 +424,7 @@ msgstr "دفع"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
 msgid "Payment Memo"
-msgstr ""
+msgstr "بيان عملية السداد"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
@@ -500,7 +499,7 @@ msgstr "الإيصالات"
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "تسجيل إيصال شراء جديد"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -571,7 +570,7 @@ msgstr "تصحيح الضريبة"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
-msgstr "لقد تم دفع القسيمة بالكامل"
+msgstr "تم دفع قيمة القسيمة بالكامل."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
@@ -581,7 +580,7 @@ msgstr "حساب الايراد أو حساب المصروف مرتبط بالم
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
-msgstr "مرجع الشريك لهذا المستند"
+msgstr "مرجع الشريك لهذا المستند."
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -630,12 +629,12 @@ msgstr "اعتماد"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr "المورّد"
+msgstr "المورد"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "ايصال المجهز"
+msgstr "إيصال المورد"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:116
@@ -645,7 +644,7 @@ msgstr "ايصال المجهز"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr "قيد"
+msgstr "إيصال"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
@@ -661,12 +660,12 @@ msgstr "قيود الإيصال"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr "خطوط القسيمة"
+msgstr "بنود الإيصال"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "احصائيات القسيمة"
+msgstr "إحصائيات الإيصال"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -689,8 +688,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
-"عند تاكييد وصل الشراء يمكنك تسجيل\n"
-"دفعة المجهز المتعلقة بوصل الشراء هذا."
+"عند تأكيد إيصال الشراء يمكنك تسجيل\n"
+"                دفعة المورد المرتبطة المرتبطة بهذا الإيصال."
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -698,8 +697,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
-"عند تأكييد وصل البيع يمكنك تسجيل دفعة العميل \n"
-"المتعلقة بوصل البيع هذا."
+"عند تأكيد إيصال البيع يمكنك تسجيل\n"
+"                دفعة العميل المرتبطة بهذا الإيصال."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:457

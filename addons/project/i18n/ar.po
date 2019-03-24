@@ -196,12 +196,12 @@ msgstr "<i class=\"fa fa-calendar\"/> تاريخ الأنتهاء:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"الرسائل الجديدة\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -261,7 +261,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">الحالة:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -281,7 +281,7 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">جرب بوابة البريد الإلكتروني</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -324,6 +324,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"قاموس بايثون سيتم تقديره لتوفير قيم افتراضية عند إنشاء سجلات جديدة لهذا "
+"اللقب."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1196,17 +1198,17 @@ msgstr "أخضر"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "مربع عرض كانبان أخضر"
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "رمادي"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "مربع عرض كانبان رمادي"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1288,6 +1290,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"مُعرف السجل الأصلي الذي يحتوي اللقب (مثال: 'المشروع' يحمل لقب إنشاء المهمة)"
 
 #. module: project
 #. openerp-web
@@ -1559,7 +1562,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "حي"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1864,6 +1867,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"معرف اختياري لمناقشة (سجل) سيتم إرفاق كافة الرسائل الواردة به، حتى لو لم "
+"يردوا عليه. إذا تم تعيين قيمة له، سيعطل هذا إنشاء السجلات الجديدة بالكامل."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1881,7 +1886,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:129
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "آخرون"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -1937,7 +1942,7 @@ msgstr "موديل الشريك"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل الأصلي"
 
 #. module: project
 #: code:addons/project/models/project.py:919
@@ -1954,6 +1959,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"كائن السجل الأصلي الذي يحتوي اللقب. الكائن الذي يحتوي رقم إشارة اللقب ليس "
+"بالضرورة هو نفسه الكائن المخزن في القيمة alias_model_id (مثال: مشروع "
+"(parent_model) والمهمة (model))"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1971,7 +1979,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Placeholder"
-msgstr ""
+msgstr "النائب"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -2058,7 +2066,7 @@ msgstr "كمية الرضا من المشروع"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "وسوم المشروع"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2138,17 +2146,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "آخر ملاحظات التقييم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "آخر صورة للتقييم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "آخر قيمة للتقييم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2158,7 +2166,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "عدد التقييمات"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
@@ -2211,7 +2219,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "جاهز للمرحلة المقبلة"
 
 #. module: project
 #: selection:report.project.task.user,state:0
@@ -2237,7 +2245,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2247,7 +2255,7 @@ msgstr "أحمر"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "مربع عرض كانبان أحمر"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2322,7 +2330,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:114
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "البحث <span class=\"nolabel\"> (في المحتوى)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2333,19 +2341,19 @@ msgstr "ابحث عن المشروع"
 #: code:addons/project/controllers/portal.py:118
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "البحث في الكل"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:116
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "البحث في العملاء"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:115
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "البحث في الرسائل"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:117
@@ -2381,7 +2389,7 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "ضبط ألقاب البريد الإلكتروني"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2720,6 +2728,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"الكائن (من نوع مستندات أودو) الذي يتجاوب معه هذا اللقب. أي رسالة واردة لا "
+"ترد على سجل موجود ستسبب إنشاء سجل جديد من نفس نوع هذا الكائن (مثلًا: مهمة "
+"مشروع)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -2727,6 +2738,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"اسم لقب البريد الإلكتروني، مثلًا: 'وظائف' إذا كنت جمع الرسائل المرسلة "
+"لـ<jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -2736,6 +2749,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"مالك السجلات المنشأة عند استلام رسائل بريد إلكتروني على هذا اللقب. إذا لم "
+"يتم تعيين قيمة لهذا الحقل، سيحاول النظام معرفة المالك الصحيح حسب عنوان "
+"البريد الإلكتروني للمرسل، أو سيستخدم حساب المشرف إذا لم يجد حسابًا مرتبطًا "
+"بعنوان البريد الإلكتروني."
 
 #. module: project
 #: code:addons/project/models/project.py:253
@@ -2820,6 +2837,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"يتم طي هذه المرحلة عند استخدام طريقة كانبان للعرض عندما لا توجد سجلات يمكن "
+"عرضها في هذه المرحلة."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit

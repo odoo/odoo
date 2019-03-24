@@ -3,17 +3,16 @@
 # * delivery
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # hoxhe Aits <hoxhe0@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Martin Trigaux, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,13 +31,13 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} أمر التسليم (رقم ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -67,16 +66,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        مرحبًا ${object.partner_id.name}،<br/><br/>\n"
+"        يسعدنا إخباركم أن طلبكم تم شحنه.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            مرجع تتبع الشحنة هو\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        مُرفق أمر التسليم الخاص بكم لتفاصيل أكثر.<br/><br/>\n"
+"        شكرًا لك،<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> إضافته للطلب"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> حساب المعدل"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -86,6 +108,10 @@ msgid ""
 "attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
 "in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -95,6 +121,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    اشترِ نسخة أودو المدفوعة الآن لتحصل على مزودي خدمة أكثر.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -105,17 +134,17 @@ msgstr "<span>كجم</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr "<strong>الناقل</strong>"
+msgstr "<strong>شركة الشحن</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong>الوزن عند الشحن</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>رقم التتبع</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -125,7 +154,7 @@ msgstr "<strong>وزن</strong>"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "الإجراء المتبع عند اعتماد أوامر التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -142,7 +171,9 @@ msgstr "القيمة"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "مبلغ الأمر ليتأهل لاستخدام الشحن المجاني، معبراً عنه بعملة الشركة."
+msgstr ""
+"إجمالي قيمة الطلب التي تؤهله للحصول على الشحن المجاني، معبرًا عنها بعملة "
+"المؤسسة"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -152,7 +183,7 @@ msgstr "مؤرشف"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "شركات الشحن المتاحة"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -162,7 +193,7 @@ msgstr "بناء على تعليمات"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "الوزن السائب"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -221,12 +252,12 @@ msgstr "أنشئ في"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "تصحيح التسجيل"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "تحديد طريقة تسليم جديدة"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -236,34 +267,34 @@ msgstr "مستلمات"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "التوصيل"
+msgstr "التسليم"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "شركة التسليم"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "تكلفة التسليم"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "معلومات التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "رسالة التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
-msgstr "طريقة الشحن"
+msgstr "طريقة التسليم"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -272,50 +303,50 @@ msgstr "طريقة الشحن"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
-msgstr "طرق الشحن"
+msgstr "طرق التسليم"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "معالج تحديد باقة التسليم"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "باقات التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr ""
+msgstr "التعبئة للتسليم"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "قواعد سعر التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr "منتج الشحن"
+msgstr "منتج التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "معدلات نجاح التسليم"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "إمكانية التسليم للوجهة"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
-msgstr "حدد ترتيب العرض"
+msgstr "تحديد ترتيب العرض"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -327,12 +358,12 @@ msgstr "تجاهل"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "عرض روابط التتبع"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -341,6 +372,8 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"يمكن لكل شركة شحن (مثل UPS) التعامل بطرق تسليم متعددة\n"
+"                (مثلًا: UPS إكسبريس، وUPS عادي)، ولكل منها قواعد أسعار مختلفة."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -352,17 +385,17 @@ msgstr "البيئة"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "خطأ: طريقة التسليم هذه ليست متاحة لهذا العنوان."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
 msgid "Estimated Delivery Price"
-msgstr ""
+msgstr "سعر التسليم التقديري"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "املأ هذا الحقل إن كنت تخطط لفوترة الشحن حسب الاستلام."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -370,34 +403,35 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"يسمح لك ملأ هذا النموذج بتصفية شركات التسليم حسب عنوان التسليم للعميل."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
 msgid "Fixed Price"
-msgstr "الاسعار الثابته"
+msgstr "سعر ثابت"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
-msgstr "رسوم التوصيل المجاني"
+msgstr "التسليم مجاني"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "مجانًا إذا كانت إجمالي قيمة الطلب تتجاوز"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "حساب المعدل"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "حساب المعدل وإنشاء الشحنة"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -407,19 +441,19 @@ msgstr "تجميع حسب"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
 msgid "Height"
-msgstr "الإرتفاع"
+msgstr "الارتفاع"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "يجب أن يكون الارتفاع رقمًا موجبًا"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
@@ -427,6 +461,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"إذا كانت إجمالي قيمة الطلب (بدون مصاريف الشحن) مساوية لهذه القيمة أو "
+"تتجاوزها، ينال العميل شحنًا مجانيًا"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:126
@@ -436,26 +472,29 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"معلومات:\n"
+"الشحن مجاني لأن إجمالي قيمة الطلب تتجاوز %.2f.\n"
+"(تكلفة الشحن الفعلية هي: %.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "تثبيت مزودين أكثر"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "مستوى الربط"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "شحن الفاتورة عند التسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
-msgstr "توصيل وشحن"
+msgstr "هي تسليم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package____last_update
@@ -486,12 +525,12 @@ msgstr "الطول"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "يجب أن يكون الارتفاع رقمًا موجبًا"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "طلبات التسجيل لتسهيل عملية التصحيح"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -501,22 +540,22 @@ msgstr "الهامش"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "لا يمكن أن يقل الهامش عن -100%"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "الهامش في المعدل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "الوزن الأقصى"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "يجب أن يكون الوزن الأقصى رقمًا موجبًا"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
@@ -526,7 +565,7 @@ msgstr "أقصى قيمة"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "أقصى وزن يمكن شحنه في هذه الباقة"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -537,26 +576,27 @@ msgstr "الاسم"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "لم يتم اختيار شركة شحن"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:80
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "لم يتم اختيار شركة شحن لهذا الطلب."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:102
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"لا يوجد قاعدة تسعير مطابقة لهذا الطلب؛ لذا لا يمكن حساب تكلفة التسليم."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
-msgstr ""
+msgstr "رسوم التسليم العادي"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -571,36 +611,36 @@ msgstr "المعامل"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "طرد"
+msgstr "حزمة"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "كود الحزمة"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:122
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "تفاصيل الحزمة"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:52
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "الحزمة ثقيلة جدًا!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "الطرود"
+msgstr "الحزم"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "الحزمة المادية"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:82
@@ -608,7 +648,7 @@ msgstr ""
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
-msgstr ""
+msgstr "برجاء استخدام خيار \"التحقق من السعر\" لحساب سعر شحن لعرض السعر المختار."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -620,7 +660,7 @@ msgstr "سعر"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "قواعد السعر"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -630,17 +670,17 @@ msgstr "التسعير"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "قواعد التسعير"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "تحركات المنتج (بنود حركة المخزون)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
 msgid "Product Packaging"
-msgstr ""
+msgstr "تعبئة المنتج"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
@@ -659,12 +699,12 @@ msgstr "الكمية"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "ترجيع الشحنة"
+msgstr "إعادة الشحنة"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "سعر البيع الأساسي"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
@@ -679,7 +719,7 @@ msgstr "سعر البيع"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
+msgstr "بند أمر المبيعات"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -689,12 +729,12 @@ msgstr "حفظ"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "إرسالة رسالة بريد إلكتروني للتأكيد"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "ارسل الى الشاحن"
+msgstr "أرسل الى الشاحن"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -705,7 +745,7 @@ msgstr "التسلسل"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
+msgstr "تعيين القيمة إلى صحيح إذا كانت بيانات اعتمادك معتمدة للإنتاج."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:171
@@ -714,6 +754,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"تم إرسال الشحنة لشركة الشحن %s ليتم شحنها برقم التتبع %s<br/>التكلفة: %.2f "
+"%s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -724,13 +766,13 @@ msgstr "تكلفة الشحن"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "الوزن عند الشحن"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "الوزن عند الشحن:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -747,7 +789,7 @@ msgstr "حركة المخزون"
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr ""
+msgstr "البريد الفرنسي La Poste"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:53
@@ -756,12 +798,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"وزن حزمتك يتجاوز الحد الأقصى للوزن المسموح به لنوع الحزم المختار. برجاء "
+"اختيار نوع جزم آخر."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "لا يوجد قاعدة تسليم مطابقة."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -770,6 +814,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"تسمح هذه الطرق باحتساب سعر التسليم تلقائيًا\n"
+"                حسب إعداداتك؛ على أمر البيع (حسب عرض السعر)\n"
+"                أو على الفاتورة (حسب أوامر التسليم)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -779,12 +826,12 @@ msgstr "سيتم استخدام طريقة الشحن هذه عند إصدار �
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "سيتم إضافة هذه النسبة لسعر الشحن."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "رابط التتبع"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -794,12 +841,12 @@ msgstr "التتبع"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "رقم إشارة التتبع"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "رابط التتبع"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -809,7 +856,7 @@ msgstr "نقل"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of Measure"
-msgstr "وحده القياس "
+msgstr "وحده القياس"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_uom_id
@@ -824,7 +871,7 @@ msgstr "وحدة قياس الوزن"
 #: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
-msgstr "وحدة(ات)"
+msgstr "وحدة"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -862,23 +909,23 @@ msgstr "الوزن × الحجم"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
-msgstr ""
+msgstr "الوزن المحتسب بناءً على مجموع أوزان المنتجات."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "الوزن عند الشحن"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
+msgstr "الوزن المستخدم لحساب سعر التسليم (إذا كان قابلًا للتطبيق)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "الوزن:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__width
@@ -888,7 +935,7 @@ msgstr "العرض"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "يجب أن يكون العرض رقمًا موجبًا"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:222
@@ -897,17 +944,19 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"أنت تشحن حزم بأنواع تعبئة متعددة في نفس الشحنة.\n"
+"أنواع التعبئة: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:78
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
-msgstr ""
+msgstr "يمكنك إضافة سعر التسليم على عروض السعر غير المؤكدة فقط."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "لديك عدة روابط تتبع، يمكنك الوصول إليهم من خلال تطبيق المحادثة."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:185
@@ -916,23 +965,23 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"طريقة التسليم لا يوجد لديه إعادة توجيه على موقع مزود البريد السريع لتتبع هذا"
-" النظام."
+"طريقة تسليمك ليس بها وسيلة إعادة توجيه على موقع مزود البريد السريع لتتبع هذا"
+" الطلب."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "نطاق الرمز البريدي من"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
-msgstr ""
+msgstr "نطاق الرمز البريدي إلى"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr ""
+msgstr "مثلًا: UPS إكسبريس"
 
 #. module: delivery
 #: model:product.product,weight_uom_name:delivery.product_product_delivery

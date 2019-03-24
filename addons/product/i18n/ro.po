@@ -77,7 +77,7 @@ msgstr "2 ani"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Moneda\" title=\"Moneda\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -110,7 +110,7 @@ msgstr "<span>kg</span>"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
-msgstr ""
+msgstr "<span>m³</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
@@ -130,7 +130,7 @@ msgstr "<strong>Nume listă prețuri</strong>:<br/>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>Preț:</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
@@ -140,7 +140,7 @@ msgstr "<strong>Dată tipărire</strong>:<br/>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>Cant: </strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -166,6 +166,8 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"O descriere a produsului, accesibilă clienţilor. Această descriere va fi "
+"copiată în fiecare comandă de vânzare sau factură emisă"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -182,6 +184,11 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"62%\n"
+"match\n"
+"Un produs stocabil este un produs pentru care gestionați stocul. Aplicația \"Inventar\" trebuie instalată.\n"
+"Un produs consumabil, pe de altă parte, este un produs pentru care nu este gestionat stocul.\n"
+"Un serviciu este un produs nematerial pe care îl oferiți."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -243,7 +250,7 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_template_attribute_value_1
 #: model:product.template.attribute.value,name:product.product_template_attribute_value_2
 msgid "Aluminium"
-msgstr ""
+msgstr "Aluminiu"
 
 #. module: product
 #: selection:product.attribute,create_variant:0
@@ -277,7 +284,7 @@ msgstr "Alocă prioritatea listei de furnizori de produse."
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Număr atașamente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -303,7 +310,7 @@ msgstr "Prețul extra al atributului"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Valoare atribut"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -417,7 +424,7 @@ msgstr "Categorie: %s"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
-msgstr ""
+msgstr "Bifați dacă doriți să creați mai multe variante pentru acest atribut."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
@@ -427,7 +434,7 @@ msgstr "Categorii secundare"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Choose the unit to measure weight"
-msgstr ""
+msgstr "Alegeți unitatea pentru măsurarea masei"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -481,17 +488,17 @@ msgstr "Calcul Preț"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Scaun conferință"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Configurați variantele"
 
 #. module: product
 #: model:product.category,name:product.product_category_consumable
@@ -507,12 +514,12 @@ msgstr "Contact"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Cantitate cuprinsă"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr ""
+msgstr "Cantitate cuprinsă"
 
 #. module: product
 #: model:product.product,name:product.product_product_13
@@ -548,6 +555,9 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Costul utilizat pentru evaluarea stocului în prețul standard și ca primul "
+"preț stabilit în medie / FIFO. De asemenea, folosit ca preț de bază pentru "
+"lista de prețuri. Exprimat în unitatea de măsură implicită a produsului."
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -567,7 +577,7 @@ msgstr "Generare variante"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "Creați o nouă listă de prețuri"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -841,13 +851,13 @@ msgstr "Persoane interesate"
 #: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Urmăritori (Canale)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Urmăritori (Parteneri)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -954,13 +964,15 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
+"Dacă nu este setat, prețul vânzătorului se va aplica tuturor variantelor "
+"acestui produs."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1078,7 +1090,7 @@ msgstr "Este o variantă de produs"
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Kilogram"
-msgstr ""
+msgstr "Kilogram"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
@@ -1196,6 +1208,9 @@ msgid ""
 "Make this attribute value not compatible with\n"
 "        other values of the product or some attribute values of optional and accessory products."
 msgstr ""
+"Efectuați această valoare a atributului să nu fie compatibilă cu alte valori"
+" ale produsului sau cu unele valori de atribut ale produselor opționale și "
+"accesorii."
 
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
@@ -1330,7 +1345,7 @@ msgstr "Număr de mesaje ce necesită intervenție"
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Numărul de mesaje cu eroare de livrare"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -1491,7 +1506,7 @@ msgstr "Suprataxare preț"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "Prețul la care produsul este vândut clienților."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1949,7 +1964,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Afișați listele de prețuri în produse"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_pricelist_item
@@ -2059,7 +2074,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Storable Product"
-msgstr ""
+msgstr "Produs stocabil"
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -2078,6 +2093,8 @@ msgstr "Lista de preturi Furnizor"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Domeniul tehnic. Folosit pentru căutarea în lista de prețuri, care nu este "
+"stocată în baza de date."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -2111,12 +2128,15 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"Cantitatea minimă de cumpărare de la acest vânzător, exprimată în unitatea "
+"de produs a furnizorului de măsurare dacă nu există sau în unitatea de "
+"măsură implicită a produsului. "
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:443
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Limita minimă ar trebui sa fie mai mica decât limita maximă."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -2162,7 +2182,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "Numarul total de produse care pot fi puse in palet sau in cutie."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__volume
@@ -2211,7 +2231,7 @@ msgstr "Suma prețurilor extra pentru toate atributele"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Această notă este numai pentru scopuri interne."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2270,7 +2290,7 @@ msgstr "Unitatea de măsură"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Nume unitate de măsură"
 
 #. module: product
 #: model:product.product,uom_name:product.consu_delivery_01
@@ -2353,7 +2373,7 @@ msgstr "Folosiți listele de prețuri pentru a vă ajusta prețul pentru clienț
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2386,7 +2406,7 @@ msgstr "Imagine variantă"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informații variantă"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
@@ -2414,7 +2434,7 @@ msgstr "Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Variante și opțiuni"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2514,11 +2534,13 @@ msgid ""
 "Weight of the product, packaging not included. The unit of measure can be "
 "changed in the general settings"
 msgstr ""
+"Masa produsului, ambalajul nu este inclus. Unitatea de măsură poate fi "
+"modificată în setările generale  "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Unitate de măsură pentru masă"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
@@ -2529,7 +2551,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Weights"
-msgstr "Mase"
+msgstr "Dimensiuni"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -2562,7 +2584,7 @@ msgstr ""
 #: code:addons/product/models/product.py:57
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr ""
+msgstr "Nu puteți crea categorii recursive."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -2584,13 +2606,13 @@ msgstr ""
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "Trebuie să setați o siglă sau un aspect pentru compania dvs."
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:28
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
+msgstr "Trebuie să setați aspectul antetului și subsolului din rapoarte."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -2609,6 +2631,8 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Trebuie să definiți un produs pentru tot ceea ce vindeți, indiferent dacă este vorba despre un produs fizic, un consumabil sau un serviciu pe care îl oferiți clienților.\n"
+"Formularul de produs conține informații pentru a simplifica procesul de vânzare: prețul, notele în cotație, datele contabile, metodele de achiziție etc."
 
 #. module: product
 #: code:addons/product/models/product_template.py:31

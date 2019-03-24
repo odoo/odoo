@@ -3,16 +3,14 @@
 # * auth_ldap
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
 # hoxhe Aits <hoxhe0@gmail.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,22 +31,23 @@ msgstr ""
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
-msgstr "قم بإنشاء مستخدم محلي للمستخدمين الجدد الذين يسجلون الدخول عبر LDAP"
+msgstr ""
+"إنشاء مستخدم محلي تلقائيًا للمستخدمين الجدد الذين يسجلون الدخول عبر LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
 msgid "Companies"
-msgstr "المؤسسات"
+msgstr "الشركات"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "الشركة"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "إعدادات LDAP للشركة"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -73,12 +72,12 @@ msgstr "أنشئ في"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
@@ -95,7 +94,7 @@ msgstr "باراميترات LDAP"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "سيرفر LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -115,7 +114,7 @@ msgstr "أساس LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP binddn"
+msgstr "LDAP bindDN"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
@@ -152,6 +151,8 @@ msgstr "معلومات تسجيل الدخول"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"لم نستطع إيجاد مستخدم محلي لتسجيل الدخول LDAP ولم يتم ضبط النظام لإنشاء "
+"مستخدم"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -176,24 +177,24 @@ msgstr "التسلسل"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "معلومات الخادم"
+msgstr "معلومات السيرفر"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "اضبط سيرفر LDAP الخاص بك"
+msgstr "ضبط سيرفر LDAP الخاص بك"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "المستخدم القالب"
+msgstr "مستخدم القالب"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr "كلمة مرور حساب المستخدم على سيرفر LDAP تستخدم للاستعلام من الدليل."
+msgstr "كلمة مرور حساب المستخدم على سيرفر LDAP المستخدمة للاستعلام من الدليل."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -201,13 +202,13 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"حساب المستخدم على سيرفر LDAP والذي سيتم استخدامه للاتصال بالدليل والاستعلام "
-"منه. اتركه فارغاً ليتم الاتصال بدون مستخدم وبلا هوية."
+"حساب المستخدم على سيرفر LDAP المُستخدم للاستعلام من الدليل. اتركه فارغًا "
+"ليتم الاتصال كمجهول."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
-msgstr "استخدم TLS"
+msgstr "استخدام TLS"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

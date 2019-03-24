@@ -6746,6 +6746,10 @@ msgid ""
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6768,7 +6772,7 @@ msgstr "<code>dateutil</code> (Python module)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: Odoo Environment on which the action is triggered"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6776,6 +6780,8 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>:logging function to record debug "
+"information in <code>ir.logging</code> table"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11609,6 +11615,8 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr ""
+"Xác định vị trí nên đặt tên khách hàng / công ty, tức là sau hoặc trước địa "
+"chỉ."
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -11763,7 +11771,7 @@ msgstr "Tên hiển thị"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
 msgid "Display Website Elements in Studio"
-msgstr ""
+msgstr "Hiển thị thành phần website trong Studio"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
@@ -11774,6 +11782,7 @@ msgstr "Hiển thị dòng tiêu đề"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Display an option in the 'More' top-menu in order to run this action."
 msgstr ""
+"Hiển thị phần tùy chọn 'Thêm' ở phía trên để có thể chạy các thao tác."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -11817,6 +11826,13 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"Định dạng hiển thị để sử dụng cho các địa chỉ thuộc quốc gia này.\n"
+"\n"
+"Bạn có thể sử dụng mẫu chuỗi kiểu python với tất cả các trường của địa chỉ (ví dụ, dùng '%(street)s' để hiển thị trường 'street') thêm\n"
+"%(state_name)s: tên của tỉnh thành phố\n"
+"%(state_code)s: mã của tỉnh thành phố\n"
+"%(country_name)s: tên quốc gia\n"
+"%(country_code)s: mã quốc gia"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:225
@@ -11998,6 +12014,7 @@ msgstr "Dropdown menu"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Không được phép sao chép công ty. Thay vì vậy vui lòng tạo một công ty mới."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -12404,7 +12421,7 @@ msgstr "Loại trừ liên hệ đã có"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__exclusion_id
 msgid "Exclusion Module"
-msgstr ""
+msgstr "Module duy nhất"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__exclusion_ids
@@ -12415,7 +12432,7 @@ msgstr "Loại trừ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__exclusive
 msgid "Exclusive"
-msgstr ""
+msgstr "Duy nhất"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -13102,7 +13119,7 @@ msgstr "Bộ lọc hiện với chỉ một người dùng"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_K
 msgid "Finance/Insurance"
-msgstr ""
+msgstr "Tài chính/Bảo hiểm"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -13147,7 +13164,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
 msgid "Food"
-msgstr ""
+msgstr "Thức ăn"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
@@ -13253,7 +13270,7 @@ msgstr "Dựng trang"
 #: selection:ir.actions.report,binding_type:0
 #: selection:ir.actions.server,binding_type:0
 msgid "Form-only"
-msgstr ""
+msgstr "Form-only"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
@@ -13320,7 +13337,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gf
 msgid "French Guiana"
-msgstr ""
+msgstr "French Guiana"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
@@ -13330,7 +13347,7 @@ msgstr "French Payroll"
 #. module: base
 #: model:res.country,name:base.pf
 msgid "French Polynesia"
-msgstr ""
+msgstr "French Polynesia"
 
 #. module: base
 #: model:res.country,name:base.tf
@@ -13422,17 +13439,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase
 msgid "GST Purchase Report"
-msgstr ""
+msgstr "GST Báo cáo mua hàng"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale
 msgid "GST Sale Report"
-msgstr ""
+msgstr "GST Báo cáo bán hàng"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_stock
 msgid "GST Stock Report"
-msgstr ""
+msgstr "GST Báo cáo tồn hàng"
 
 #. module: base
 #: model:res.country,vat_label:base.in
@@ -13831,7 +13848,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gu
 msgid "Guam"
-msgstr ""
+msgstr "Quần đảo Gu-am"
 
 #. module: base
 #: model:res.country,name:base.gt
@@ -13886,7 +13903,7 @@ msgstr "Sơ đồ tổ chức"
 #. module: base
 #: model:res.country,vat_label:base.ca
 msgid "HST"
-msgstr ""
+msgstr "HST"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -16940,12 +16957,12 @@ msgstr "Mô đun"
 #: code:addons/base/models/ir_module.py:404
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
-msgstr ""
+msgstr "Modules \"%s\" và \"%s\" không tương thích."
 
 #. module: base
 #: model:res.country,name:base.md
 msgid "Moldova"
-msgstr ""
+msgstr "Moldova"
 
 #. module: base
 #: model:res.country,name:base.mc
@@ -17119,7 +17136,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nc
 msgid "New Caledonia"
-msgstr ""
+msgstr "New Caledonia"
 
 #. module: base
 #: code:addons/base/wizard/base_export_language.py:19
@@ -18707,7 +18724,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency.rate:0
 msgid "Only one currency rate per day allowed!"
-msgstr ""
+msgstr "Chỉ cho phép cập nhật tỉ giá một lần mỗi ngày!"
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:293
@@ -19099,7 +19116,7 @@ msgstr "Chủ sở hữu"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
 msgid "P EDUCATION"
-msgstr ""
+msgstr "P EDUCATION"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -19469,7 +19486,7 @@ msgstr "Điện thoại:"
 #. module: base
 #: model:res.country,name:base.pn
 msgid "Pitcairn Islands"
-msgstr ""
+msgstr "Pitcairn Island"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -19690,7 +19707,7 @@ msgstr "Địa chỉ Cá nhân"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Mẫu địa chỉ riêng"
 
 #. module: base
 #: code:addons/models.py:114
@@ -23166,7 +23183,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The rounding factor must be greater than 0!"
-msgstr ""
+msgstr "Tỷ lệ làm tròn phải lớn hơn số 0!"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:170
