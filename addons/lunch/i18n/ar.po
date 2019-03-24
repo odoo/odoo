@@ -3,28 +3,29 @@
 # * lunch
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# Martin Trigaux, 2017
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2017
-# Akram Alfusayal <akram_ma@hotmail.com>, 2017
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2017
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Islam Eldeeb <islameldeb@gmail.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# Zuhair Hammadi <zuhair12@gmail.com>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Ali zuaby <ali@zuaby.net>, 2017
+# Zuhair Hammadi <zuhair12@gmail.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "<span class=\"o_stat_text\">Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">الرصيد</span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -65,11 +66,14 @@ msgid ""
 "                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
+"يمكن أن تكون الحركة النقدية مصروفات أو مدفوعات.<br>\n"
+"                يتم إنشاء المصروفات تلقائيًا عند استلام طلب.\n"
+"                المدفوعات تمثل تعويضًا من الموظف للمؤسسة."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
-msgstr ""
+msgstr "يتم تعريف المنتج باسمه، وفئته، وسعره، ومورده."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
@@ -103,6 +107,8 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"تستخدم التنبيهات لتحذير الموظف من المشكلات المحتملة المتعلقة بأوامر الغداء.\n"
+"                لإنشاء تنبيه غداء يجب عليك تحديد مدي تكراره، والفترة الزمنية الذي يجب تنفيذ التنبيه خلالها والرسالة التي سيتم عرضها."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -166,6 +172,8 @@ msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
 msgstr ""
+"يمكن أن تكون موجبة (مدفوعات) أو سالبة (طلب أو دفعة إذا كان المستخدم يريد "
+"استعادة أمواله)"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -236,12 +244,12 @@ msgstr "الإعدادات"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_control_accounts
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_control_accounts
 msgid "Control Accounts"
-msgstr ""
+msgstr "التحكم في الحسابات"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "التحكم في الموردين"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_uid
@@ -311,17 +319,17 @@ msgstr "الاسم المعروض"
 #: code:addons/lunch/static/src/xml/lunch.xml:7
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
-msgstr ""
+msgstr "لا تنسى تفقد التنبيهات المعروضة في المنطقة الحمراء"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
 msgid "Employee Payments"
-msgstr ""
+msgstr "مدفوعات الموظف"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
-msgstr ""
+msgstr "فعل هذا الاختيار لتحديد حد أقصى لميزانية الطلب المحظوظ."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -345,7 +353,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Feeling Lucky"
-msgstr ""
+msgstr "تشعر أنك محظوظ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_friday
@@ -365,11 +373,13 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+"يساعدك على التعامل مع احتياجاتك للغداء، إذا كنت مديرًا ستتمكن من إنشاء "
+"منتجات أو حركات نقدية جديدة، وكذلك تأكيد أو إلغاء الطلبات."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "من هنا يمكنك الوصول لكل فئات منتجات الغداء."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -381,7 +391,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "من هنا يمكنك رؤية طلبات اليوم مرتبة حسب الموردين."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -393,18 +403,18 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky"
-msgstr ""
+msgstr "أشعر أنني محظوظ"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky today !"
-msgstr ""
+msgstr "أشعر أنني محظوظ اليوم!"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "I'm not feeling rich"
-msgstr ""
+msgstr "لا أشعر أنني غني"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
@@ -420,7 +430,7 @@ msgstr "المعرف"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
 msgid "Is an order or a payment"
-msgstr ""
+msgstr "هو طلب أو دفعة"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
@@ -475,7 +485,7 @@ msgstr "تنبيه غداء"
 #: code:addons/lunch/models/lunch.py:265
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "حركات الغداء النقدية"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:66
@@ -489,22 +499,22 @@ msgstr "طلب غداء"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "الغداء: أرشفة/استعادة المنتجات"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "الغداء: إلغاء وجبات"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Lunch: Order meals"
-msgstr ""
+msgstr "الغداء: طلب وجبات"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "الغداء: استلام وجبات"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -515,7 +525,7 @@ msgstr "المدير"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "الموازنة القصوى"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
@@ -531,12 +541,12 @@ msgstr "الأثنين"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "حسابي مجمعًا"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "غدائي"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -563,7 +573,7 @@ msgstr "طلب جديد"
 #: code:addons/lunch/wizard/lucky_order.py:39
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr ""
+msgstr "لم نجد منتجًا يطابق طلبك. ستتضور جوعًا حتى الموت."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -579,19 +589,19 @@ msgstr "ملاحظة"
 #: code:addons/lunch/models/lunch.py:225
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "يمكن لمدير عمليات الغداء فقط إلغاء الطلبات."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "يمكن لمدير عمليات الغداء فقط معالجة الطلبات."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:214
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+msgstr "يمكن لمدير عمليات الغداء فقط تحديد الطلبات بأنها مستلمة."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -611,7 +621,7 @@ msgstr "شهر الأمر"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "شجرة بنود الطلب"
 
 #. module: lunch
 #: selection:lunch.order.line,state:0
@@ -632,7 +642,7 @@ msgstr "لائحة الطلبات"
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
 msgid "Orders by Vendor"
-msgstr ""
+msgstr "طلبات المورد"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -643,12 +653,12 @@ msgstr "السداد"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
 msgid "Previous Order"
-msgstr ""
+msgstr "الطلب السابق"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "أداة الطلب السابق"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -699,7 +709,7 @@ msgstr "اسم المنتج"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
-msgstr ""
+msgstr "البحث عن منتج"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -734,12 +744,12 @@ msgstr "استلمت"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
 msgid "Recurrence"
-msgstr ""
+msgstr "تكرار"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "تسجيل الحركات النقدية"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
@@ -767,17 +777,17 @@ msgstr "بحث"
 #: code:addons/lunch/static/src/xml/lunch.xml:5
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
+msgstr "اختر منتجًا وسجل تعليقاتك على الطلب في الملحوظات."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Select your order"
-msgstr ""
+msgstr "اختر طلبك"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Select your vendor"
-msgstr ""
+msgstr "اختر موردك"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -793,7 +803,7 @@ msgstr "الحالة "
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "ملخص لجميع طلبات الغداء، مجمعة حسب المورد وحسب التاريخ."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
@@ -809,7 +819,7 @@ msgstr "الشركة التي يعمل فيها هذا المستخدم"
 #: code:addons/lunch/models/lunch.py:129
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "لقد مضى تاريخ طلبك."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action
@@ -817,6 +827,7 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"لا يوجد أي طلبات سابقة مسجلة. انقر علي \"غدائي\" ثم قم بإنشاء أمر غداء جديد."
 
 #. module: lunch
 #. openerp-web
@@ -838,7 +849,7 @@ msgstr "اليوم"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "طلبات اليوم"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_total
@@ -888,7 +899,7 @@ msgstr "الأربعاء"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Write the message you want to display during the defined period..."
-msgstr ""
+msgstr "اكتب الرسالة التي تريد عرضها خلال الفترة المحددة..."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
@@ -910,29 +921,29 @@ msgstr "طلباتك"
 #: code:addons/lunch/static/src/xml/lunch.xml:6
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
+msgstr "سيتم اختيار وجباتك المفضلة حسب طلباتك السابقة."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "نموذج الحركة النقدية"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
-msgstr ""
+msgstr "شجرة الحركات النقدية"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "حركات الغداء النقدية"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "مدفوعات غداء الموظف"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
