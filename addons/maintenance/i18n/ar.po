@@ -3,31 +3,32 @@
 # * maintenance
 # 
 # Translators:
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
 # Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Ali zuaby <ali@zuaby.net>, 2017
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
 # mohammed rabea <moh.rabea@gmail.com>, 2017
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Zuhair Hammadi <zuhair12@gmail.com>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # Hossam Esam <hossamesam17@gmail.com>, 2017
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# Martin Trigaux, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
 # abdullah alsabi <alsabi.abdullah@gmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 13:41+0000\n"
-"PO-Revision-Date: 2018-01-30 13:41+0000\n"
-"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,12 +74,12 @@ msgstr "<span>عرض</span>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
-msgstr ""
+msgstr "<strong>المعدات:</strong>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance:</strong>"
-msgstr ""
+msgstr "<strong>الصيانة:</strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -86,12 +87,14 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"قاموس بايثون سيتم تقديره لتوفير قيم افتراضية عند إنشاء سجلات جديدة لهذا "
+"اللقب."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
 #: model:maintenance.equipment,name:maintenance.equipment_computer5
 msgid "Acer Laptop"
-msgstr ""
+msgstr "كمبيوتر محمول Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -131,7 +134,7 @@ msgstr "الكل"
 #. module: maintenance
 #: sql_constraint:maintenance.equipment:0
 msgid "Another asset already exists with this serial number!"
-msgstr ""
+msgstr "هناك أصل آخر موجود بهذا الرقم المسلسل!"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_archive
@@ -152,7 +155,7 @@ msgstr "فئة الأصل"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Assign To User"
-msgstr ""
+msgstr "إسناد لمستخدم"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -163,7 +166,7 @@ msgstr "Assigned"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_assign_date
 msgid "Assigned Date"
-msgstr ""
+msgstr "تاريخ الإسناد"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -293,7 +296,7 @@ msgstr "أنشئ في"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_open_count
 msgid "Current Maintenance"
-msgstr ""
+msgstr "الصيانة الحالية"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
@@ -303,12 +306,12 @@ msgstr "لوحات المعلومات"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
 msgid "Date of the next preventive maintenance"
-msgstr ""
+msgstr "تاريخ الصيانة الوقائية التالية"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
 msgid "Date requested for the maintenance to happen"
-msgstr ""
+msgstr "تاريخ إجراء الصيانة المطلوب"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
@@ -316,16 +319,18 @@ msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
 "from the Request Date. "
 msgstr ""
+"تاريخ إجراء الصيانة المخطط له من قبل فريق الصيانة. ينبغي ألا يختلف كثيرًا عن"
+" التاريخ المطلوب. "
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
 msgid "Date the maintenance was finished. "
-msgstr ""
+msgstr "تاريخ انتهاء الصيانة. "
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
 msgid "Days between each preventive maintenance"
-msgstr ""
+msgstr "أيام بين مرتي إجراء صيانة وقائية"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -386,6 +391,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
 msgstr ""
+"لقب البريد الإلكتروني لفئة المعدات هذه. الرسائل الجديدة ستنشئ تلقائيًا طلبات"
+" صيانة جديدة لهذه الفئة."
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
@@ -400,24 +407,24 @@ msgstr "الالة"
 #: model:mail.message.subtype,name:maintenance.mt_cat_mat_assign
 #: model:mail.message.subtype,name:maintenance.mt_mat_assign
 msgid "Equipment Assigned"
-msgstr ""
+msgstr "تم إسناد المعدات"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_category_action
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr ""
+msgstr "فئات المعدات"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3470
 msgid "Equipment Category"
-msgstr ""
+msgstr "فئة المعدات"
 
 #. module: maintenance
 #: model:res.groups,name:maintenance.group_equipment_manager
 msgid "Equipment Manager"
-msgstr ""
+msgstr "مدير المعدات"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_name
@@ -439,14 +446,14 @@ msgstr "المعدات"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_fold
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_fold
 msgid "Folded in Maintenance Pipe"
-msgstr ""
+msgstr "مطوي في مراحل الصيانة"
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
 msgid ""
 "Follow the process of the request and communicate with the collaborator."
-msgstr ""
+msgstr "تتبع إجراءات الطلب وتواصل مع المتعاونين."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -463,13 +470,13 @@ msgstr "تجميع حسب..."
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_printer1
 msgid "HP Inkjet printer"
-msgstr ""
+msgstr "طابعة HP النافثة للحبر"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer11
 #: model:maintenance.equipment,name:maintenance.equipment_computer9
 msgid "HP Laptop"
-msgstr ""
+msgstr "كمبيوتر محمول HP"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -491,6 +498,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"مُعرف السجل الأصلي الذي يحتوي اللقب (مثال: 'المشروع' يحمل لقب إنشاء المهمة)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -503,12 +511,12 @@ msgstr "في تَقَدم "
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
 msgid "Internal Maintenance"
-msgstr ""
+msgstr "صيانة داخلية"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Internal Note ......."
-msgstr ""
+msgstr "ملاحظة داخلية......."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_kanban_state
@@ -555,7 +563,7 @@ msgstr "المكان"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
 msgid "Losses Analysis"
-msgstr ""
+msgstr "تحليل الخسائر"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -577,18 +585,18 @@ msgstr "صيانة"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_request_calendar
 msgid "Maintenance Calendar"
-msgstr ""
+msgstr "تقويم الصيانة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_duration
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Maintenance Duration"
-msgstr ""
+msgstr "مدة الصيانة"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_maintenance_duration
 msgid "Maintenance Duration in hours."
-msgstr ""
+msgstr "مدة الصيانة بالساعات."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -598,22 +606,22 @@ msgstr "طلب الصيانة"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
-msgstr ""
+msgstr "تم إنشاء طلب الصيانة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
 msgid "Maintenance Request Stage"
-msgstr ""
+msgstr "مرحلة طلب الصيانة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_search
 msgid "Maintenance Request Stages"
-msgstr ""
+msgstr "مراحل طلب الصيانة"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_created
 msgid "Maintenance Request created"
-msgstr ""
+msgstr "تم إنشاء طلب الصيانة"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action
@@ -632,43 +640,43 @@ msgstr "طلبات الصيانة"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
 msgid "Maintenance Stage"
-msgstr ""
+msgstr "مرحلة الصيانة"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_stage_configuration
 msgid "Maintenance Stages"
-msgstr ""
+msgstr "مراحل الصيانة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_team_id
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Maintenance Team"
-msgstr ""
+msgstr "فريق الصيانة"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_dashboard_action
 #: model:ir.model,name:maintenance.model_maintenance_team
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_teams
 msgid "Maintenance Teams"
-msgstr ""
+msgstr "فرق الصيانة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_type
 msgid "Maintenance Type"
-msgstr ""
+msgstr "نوع الصيانة"
 
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr ""
+msgstr "الصيانة: إنشاء طلبات صيانة وقائية"
 
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_metrology
 msgid "Metrology"
-msgstr ""
+msgstr "علم القياس"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
@@ -678,7 +686,7 @@ msgstr "النموذج"
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_monitor
 msgid "Monitors"
-msgstr ""
+msgstr "شاشات"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -689,7 +697,7 @@ msgstr "أنشطتي"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Equipments"
-msgstr ""
+msgstr "معداتي"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -713,7 +721,7 @@ msgstr "طلب جديد"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Next Preventive Maintenance"
-msgstr ""
+msgstr "الصيانة الوقائية التالية"
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
@@ -733,27 +741,27 @@ msgstr "ملاحظة"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
 msgid "Number of Requests"
-msgstr ""
+msgstr "عدد الطلبات"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
 msgid "Number of Requests Blocked"
-msgstr ""
+msgstr "عدد الطلبات المحجوبة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
 msgid "Number of Requests Scheduled"
-msgstr ""
+msgstr "عدد الطلبات المقررة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
 msgid "Number of Requests Unscheduled"
-msgstr ""
+msgstr "عدد الطلبات غير المقررة"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
 msgid "Number of Requests in High Priority"
-msgstr ""
+msgstr "عدد الطلبات ذات الأولوية القصوى"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_force_thread_id
@@ -762,11 +770,13 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"معرف اختياري لمناقشة (سجل) سيتم إرفاق كافة الرسائل الواردة به، حتى لو لم "
+"يردوا عليه. إذا تم تعيين قيمة له، سيعطل هذا إنشاء السجلات الجديدة بالكامل."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
 msgid "Overall Equipment Effectiveness (OEE)"
-msgstr ""
+msgstr "الكفاءة الإجمالية للمُعدة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -791,7 +801,7 @@ msgstr "موديل الشريك"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل الأصلي"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
@@ -800,11 +810,14 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"كائن السجل الأصلي الذي يحتوي اللقب. الكائن الذي يحتوي رقم إشارة اللقب ليس "
+"بالضرورة هو نفسه الكائن المخزن في القيمة alias_model_id (مثال: مشروع "
+"(parent_model) والمهمة (model))"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
 msgid "Phones"
-msgstr ""
+msgstr "هواتف"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_contact
@@ -828,17 +841,17 @@ msgstr "وقائية"
 #: code:addons/maintenance/models/maintenance.py:227
 #, python-format
 msgid "Preventive Maintenance - %s"
-msgstr ""
+msgstr "الصيانة الوقائية - %s"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
-msgstr ""
+msgstr "معدل تطبيق الصيانة الوقائية"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_printer
 msgid "Printers"
-msgstr ""
+msgstr "طابعات"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_priority
@@ -858,17 +871,17 @@ msgstr "جاهز للمرحلة المقبلة"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr ""
+msgstr "لون السجل"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "معرف مناقشة السجل"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Reopen Request"
-msgstr ""
+msgstr "إعادة فتح الطلب"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_3
@@ -890,7 +903,7 @@ msgstr "اطلب"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
-msgstr ""
+msgstr "تم إنشاء الطلب"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_request_date
@@ -900,22 +913,22 @@ msgstr "تاريخ الطلب"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_done
 msgid "Request Done"
-msgstr ""
+msgstr "تم إنشاء الطلب"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Requested By"
-msgstr ""
+msgstr "مقدم الطلب"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by :"
-msgstr ""
+msgstr "مقدم الطلب:"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
 msgid "Requests"
-msgstr ""
+msgstr "طلبات"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id
@@ -934,7 +947,7 @@ msgstr ""
 #: model:maintenance.equipment,name:maintenance.equipment_monitor4
 #: model:maintenance.equipment,name:maintenance.equipment_monitor6
 msgid "Samsung Monitor 15\""
-msgstr ""
+msgstr "شاشة سامسونج 15 إنش"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -954,7 +967,7 @@ msgstr "البقايا"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_scrap_date
 msgid "Scrap Date"
-msgstr ""
+msgstr "تاريخ التخريد"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
@@ -976,7 +989,7 @@ msgstr "الرقم المسلسل"
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_archive
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
-msgstr ""
+msgstr "قم بتغيير قيمة الاختيار مؤرشف لصحيح لإخفاء طلب الصيانة دون إزالته."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1009,7 +1022,7 @@ msgstr "مراحل"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
 msgid "Status Changed"
-msgstr ""
+msgstr "تم تغيير الحالة"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
@@ -1019,7 +1032,7 @@ msgstr "الحالة تغيرت"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_subcontractor
 msgid "Subcontractor"
-msgstr ""
+msgstr "المقاول الفرعي"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_name
@@ -1039,7 +1052,7 @@ msgstr "اعضاء الفريق"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
-msgstr ""
+msgstr "اسم الفريق"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -1049,12 +1062,12 @@ msgstr "المجموعات"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_technician_user_id
 msgid "Technician"
-msgstr ""
+msgstr "الفني"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technicians"
-msgstr ""
+msgstr "الفنيين"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
@@ -1063,6 +1076,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"الكائن (من نوع مستندات أودو) الذي يتجاوب معه هذا اللقب. أي رسالة واردة لا "
+"ترد على سجل موجود ستسبب إنشاء سجل جديد من نفس نوع هذا الكائن (مثلًا: مهمة "
+"مشروع)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
@@ -1070,6 +1086,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"اسم لقب البريد الإلكتروني، مثلًا: 'وظائف' إذا كنت جمع الرسائل المرسلة "
+"لـ<jobs@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -1079,6 +1097,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"مالك السجلات المنشأة عند استلام رسائل بريد إلكتروني على هذا اللقب. إذا لم "
+"يتم تعيين قيمة لهذا الحقل، سيحاول النظام معرفة المالك الصحيح حسب عنوان "
+"البريد الإلكتروني للمرسل، أو سيستخدم حساب المشرف إذا لم يجد حسابًا مرتبطًا "
+"بعنوان البريد الإلكتروني."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1122,7 +1144,7 @@ msgstr "نشاطات اليوم"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
-msgstr ""
+msgstr "الأولويات القصوى"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1132,7 +1154,7 @@ msgstr "غير مسند"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Under Maintenance"
-msgstr ""
+msgstr "تحت الصيانة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -1144,12 +1166,12 @@ msgstr "الرسائل الجديدة"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr ""
+msgstr "غير مقرر"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Unscheduled Maintenance"
-msgstr ""
+msgstr "صيانة غير مقررة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1164,7 +1186,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Used in location"
-msgstr ""
+msgstr "مستخدمة في الموقع"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_partner_id
@@ -1193,7 +1215,7 @@ msgstr "الضمان"
 msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
 " requests."
-msgstr ""
+msgstr "لا يمكنك حذف فئة معدات تحتوى طلبات معدات أو طلبات صيانة."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1203,7 +1225,7 @@ msgstr "أيام"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "for"
-msgstr ""
+msgstr "من أجل"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1216,9 +1238,9 @@ msgstr "ساعات"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
-msgstr ""
+msgstr "طلب صيانة"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "maintenance Request Search"
-msgstr ""
+msgstr "البحث عن طلب صيانة"
