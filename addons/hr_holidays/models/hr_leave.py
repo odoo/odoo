@@ -470,7 +470,7 @@ class HolidaysRequest(models.Model):
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
 
     @api.multi
-    @api.constrains('holiday_status_id')
+    @api.constrains('holiday_status_id', 'date_to', 'date_from')
     def _check_leave_type_validity(self):
         for leave in self:
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
