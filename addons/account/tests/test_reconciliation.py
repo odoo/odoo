@@ -1944,3 +1944,58 @@ class TestReconciliationExec(TestReconciliation):
             reverted_expected = reverted.line_ids.filtered(lambda l: l.account_id == inv_line.account_id)
             self.assertEqual(len(reverted_expected), 1)
             self.assertEqual(reverted_expected.full_reconcile_id, inv_line.full_reconcile_id)
+
+    def test_reconciliation_cash_basis_foreign_currency_low_values(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Bank', 'type': 'bank', 'code': 'THE',
+            'currency_id': self.currency_usd_id,
+        })
+        usd = self.env['res.currency'].browse(self.currency_usd_id)
+        usd.rate_ids.unlink()
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-01-01'),
+            'rate': 1/17.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        invoice = self.create_invoice(
+            type='out_invoice', invoice_amount=50,
+            currency_id=self.currency_usd_id)
+        invoice.journal_id.update_posted = True
+        invoice.action_cancel()
+        invoice.state = 'draft'
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, 0, [self.tax_cash_basis.id])]})
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+
+        self.assertTrue(invoice.currency_id != self.env.user.company_id.currency_id)
+
+        # First Payment
+        payment0 = self.make_payment(invoice, journal, invoice.amount_total - 0.01)
+        self.assertEqual(invoice.residual, 0.01)
+
+        tax_waiting_line = invoice.move_id.line_ids.filtered(lambda l: l.account_id == self.tax_waiting_account)
+        self.assertFalse(tax_waiting_line.reconciled)
+
+        move_caba0 = tax_waiting_line.matched_debit_ids.debit_move_id.move_id
+        self.assertTrue(move_caba0.exists())
+        self.assertEqual(move_caba0.journal_id, self.env.user.company_id.tax_cash_basis_journal_id)
+
+        pay_receivable_line0 = payment0.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
+        self.assertTrue(pay_receivable_line0.reconciled)
+        self.assertEqual(pay_receivable_line0.matched_debit_ids, move_caba0.tax_cash_basis_rec_id)
+
+        # Second Payment
+        payment1 = self.make_payment(invoice, journal, 0.01)
+        self.assertEqual(invoice.residual, 0)
+        self.assertEqual(invoice.state, 'paid')
+
+        self.assertTrue(tax_waiting_line.reconciled)
+        move_caba1 = tax_waiting_line.matched_debit_ids.mapped('debit_move_id').mapped('move_id').filtered(lambda m: m != move_caba0)
+        self.assertEqual(len(move_caba1.exists()), 1)
+        self.assertEqual(move_caba1.journal_id, self.env.user.company_id.tax_cash_basis_journal_id)
+
+        pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
+        self.assertTrue(pay_receivable_line1.reconciled)
+        self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
