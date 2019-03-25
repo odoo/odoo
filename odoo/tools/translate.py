@@ -7,6 +7,7 @@ import io
 import locale
 import logging
 import os
+import polib
 import re
 import tarfile
 import tempfile
@@ -15,6 +16,7 @@ from collections import defaultdict
 from datetime import datetime
 from os.path import join
 
+from pathlib import Path
 from babel.messages import extract
 from lxml import etree, html
 
@@ -476,137 +478,146 @@ def unquote(str):
     """Returns unquoted PO term string, with special PO characters unescaped"""
     return re_escaped_char.sub(_sub_replacement, str[1:-1])
 
+def TranslationFileReader(source, fileformat='po'):
+    """ Iterate over translation file to return Odoo translation entries """
+    if fileformat == 'csv':
+        return CSVFileReader(source)
+    if fileformat == 'po':
+        return PoFileReader(source)
+    _logger.info('Bad file format: %s', fileformat)
+    raise Exception(_('Bad file format: %s') % fileformat)
+
+class CSVFileReader:
+    def __init__(self, source):
+        self.source = pycompat.csv_reader(source, quotechar='"', delimiter=',')
+        # read the first line of the file (it contains columns titles)
+        self.fields = next(self.source)
+
+    def __iter__(self):
+        for entry in self.source:
+            yield zip(self.fields, entry)
+
+class PoFileReader:
+    """ Iterate over po file to return Odoo translation entries """
+    def __init__(self, source):
+
+        def get_pot_path(source_name):
+            # when fileobj is a TemporaryFile, its name is an inter in P3, a string in P2
+            if isinstance(source_name, str) and source_name.endswith('.po'):
+                # Normally the path looks like /path/to/xxx/i18n/lang.po
+                # and we try to find the corresponding
+                # /path/to/xxx/i18n/xxx.pot file.
+                # (Sometimes we have 'i18n_extra' instead of just 'i18n')
+                path = Path(source_name)
+                filename = path.parent.parent.name + '.pot'
+                pot_path = path.with_name(filename)
+                return pot_path.exists() and str(pot_path) or False
+            return False
+
+        # polib accepts a path or the file content as a string, not a fileobj
+        if isinstance(source, str):
+            self.pofile = polib.pofile(source)
+            pot_path = get_pot_path(source)
+        else:
+            # either a BufferedIOBase or result from NamedTemporaryFile
+            self.pofile = polib.pofile(source.read().decode())
+            pot_path = get_pot_path(source.name)
+
+        if pot_path:
+            # Make a reader for the POT file
+            # (Because the POT comments are correct on GitHub but the
+            # PO comments tends to be outdated. See LP bug 933496.)
+            self.pofile.merge(polib.pofile(pot_path))
+
+    def __iter__(self):
+        for entry in self.pofile:
+            if entry.obsolete:
+                continue
+
+            # in case of moduleS keep only the first
+            match = re.match(r"(module[s]?): (\w+)", entry.comment)
+            _, module = match.groups()
+            comments = "\n".join([c for c in entry.comment.split('\n') if not c.startswith('module:')])
+            source = entry.msgid
+            translation = entry.msgstr
+            found_code_occurrence = False
+            for occurrence, line_number in entry.occurrences:
+                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.(\w+)', occurrence)
+                if match:
+                    type, model_name, field_name, module, xmlid = match.groups()
+                    yield {
+                        'type': type,
+                        'imd_model': model_name,
+                        'name': model_name+','+field_name,
+                        'imd_name': xmlid,
+                        'res_id': None,
+                        'src': source,
+                        'value': translation,
+                        'comments': comments,
+                        'module': module,
+                    }
+                    continue
+
+                match = re.match(r'(code):([\w/.]+)', occurrence)
+                if match:
+                    type, name = match.groups()
+                    if found_code_occurrence:
+                        # unicity constrain on code translation
+                        continue
+                    found_code_occurrence = True
+                    yield {
+                        'type': type,
+                        'name': name,
+                        'src': source,
+                        'value': translation,
+                        'comments': comments,
+                        'res_id': line_number,
+                        'module': module,
+                    }
+                    continue
+
+                match = re.match(r'(selection):([\w.]+),([\w]+)', occurrence)
+                if match:
+                    type, model_name, field_name = match.groups()
+                    yield {
+                        'type': type,
+                        'model': model_name,
+                        'name': model_name+','+field_name,
+                        'src': source,
+                        'value': translation,
+                        'comments': comments,
+                        'res_id': line_number,
+                        'module': module,
+                    }
+                    continue
+
+                match = re.match(r'(sql_constraint|constraint):([\w.]+)', occurrence)
+                if match:
+                    type, model = match.groups()
+                    yield {
+                        'type': type,
+                        'name': model,
+                        'src': source,
+                        'value': translation,
+                        'comments': comments,
+                        'res_id': line_number,
+                        'module': module,
+                    }
+                    continue
+
+                _logger.error("malformed po file: unknown occurrence: %s", occurrence)
+
+
 # class to handle po files
 class PoFile(object):
+
     def __init__(self, buffer):
         # TextIOWrapper closes its underlying buffer on close *and* can't
-        # handle actual file objects (on python 2)
         self.buffer = codecs.StreamReaderWriter(
             stream=buffer,
             Reader=codecs.getreader('utf-8'),
             Writer=codecs.getwriter('utf-8')
         )
-
-    def __iter__(self):
-        self.buffer.seek(0)
-        self.lines = self._get_lines()
-        self.lines_count = len(self.lines)
-
-        self.first = True
-        self.extra_lines= []
-        return self
-
-    def _get_lines(self):
-        lines = self.buffer.readlines()
-        # remove the BOM (Byte Order Mark):
-        if len(lines):
-            lines[0] = lines[0].lstrip(u"\ufeff")
-
-        lines.append('') # ensure that the file ends with at least an empty line
-        return lines
-
-    def cur_line(self):
-        return self.lines_count - len(self.lines)
-
-    def next(self):
-        trans_type = name = res_id = source = trad = module = None
-        if self.extra_lines:
-            trans_type, name, res_id, source, trad, comments = self.extra_lines.pop(0)
-            if not res_id:
-                res_id = '0'
-        else:
-            comments = []
-            targets = []
-            line = None
-            fuzzy = False
-            while not line:
-                if 0 == len(self.lines):
-                    raise StopIteration()
-                line = self.lines.pop(0).strip()
-            while line.startswith('#'):
-                if line.startswith('#~ '):
-                    break
-                if line.startswith('#.'):
-                    line = line[2:].strip()
-                    if not line.startswith('module:'):
-                        comments.append(line)
-                    else:
-                        module = line[7:].strip()
-                elif line.startswith('#:'):
-                    # Process the `reference` comments. Each line can specify
-                    # multiple targets (e.g. model, view, code, selection,
-                    # ...). For each target, we will return an additional
-                    # entry.
-                    for lpart in line[2:].strip().split(' '):
-                        trans_info = lpart.strip().split(':',2)
-                        if trans_info and len(trans_info) == 2:
-                            # looks like the translation trans_type is missing, which is not
-                            # unexpected because it is not a GetText standard. Default: 'code'
-                            trans_info[:0] = ['code']
-                        if trans_info and len(trans_info) == 3:
-                            # this is a ref line holding the destination info (model, field, record)
-                            targets.append(trans_info)
-                elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
-                    fuzzy = True
-                line = self.lines.pop(0).strip()
-            if not self.lines:
-                raise StopIteration()
-            while not line:
-                # allow empty lines between comments and msgid
-                line = self.lines.pop(0).strip()
-            if line.startswith('#~ '):
-                while line.startswith('#~ ') or not line.strip():
-                    if 0 == len(self.lines):
-                        raise StopIteration()
-                    line = self.lines.pop(0)
-                # This has been a deprecated entry, don't return anything
-                return next(self)
-
-            if not line.startswith('msgid'):
-                raise Exception("malformed file: bad line: %s" % line)
-            source = unquote(line[6:])
-            line = self.lines.pop(0).strip()
-            if not source and self.first:
-                self.first = False
-                # if the source is "" and it's the first msgid, it's the special
-                # msgstr with the information about the translate and the
-                # translator; we skip it
-                self.extra_lines = []
-                while line:
-                    line = self.lines.pop(0).strip()
-                return next(self)
-
-            while not line.startswith('msgstr'):
-                if not line:
-                    raise Exception('malformed file at %d'% self.cur_line())
-                source += unquote(line)
-                line = self.lines.pop(0).strip()
-
-            trad = unquote(line[7:])
-            line = self.lines.pop(0).strip()
-            while line:
-                trad += unquote(line)
-                line = self.lines.pop(0).strip()
-
-            if targets and not fuzzy:
-                # Use the first target for the current entry (returned at the
-                # end of this next() call), and keep the others to generate
-                # additional entries (returned the next next() calls).
-                trans_type, name, res_id = targets.pop(0)
-                code = trans_type == 'code'
-                for t, n, r in targets:
-                    if t == 'code' and code: continue
-                    if t == 'code':
-                        code = True
-                    self.extra_lines.append((t, n, r, source, trad, comments))
-
-        if name is None:
-            if not fuzzy:
-                _logger.warning('Missing "#:" formatted comment at line %d for the following source:\n\t%s',
-                                self.cur_line(), source[:30])
-            return next(self)
-        return trans_type, name, res_id, source, trad, '\n'.join(comments), module
-    __next__ = next
 
     def write_infos(self, modules):
         import odoo.release as release
@@ -1032,60 +1043,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             # lets create the language with locale information
             Lang.load_lang(lang=lang, lang_name=lang_name)
 
-        # Parse also the POT: it will possibly provide additional targets.
-        # (Because the POT comments are correct on Launchpad but not the
-        # PO comments due to a Launchpad limitation. See LP bug 933496.)
-        pot_reader = []
-        use_pot_reference = False
-
         # now, the serious things: we read the language file
         fileobj.seek(0)
-        if fileformat == 'csv':
-            reader = pycompat.csv_reader(fileobj, quotechar='"', delimiter=',')
-            # read the first line of the file (it contains columns titles)
-            fields = next(reader)
-
-        elif fileformat == 'po':
-            reader = PoFile(fileobj)
-            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments', 'module']
-
-            # Make a reader for the POT file and be somewhat defensive for the
-            # stable branch.
-
-            # when fileobj is a TemporaryFile, its name is an interget in P3, a string in P2
-            if isinstance(fileobj.name, str) and fileobj.name.endswith('.po'):
-                try:
-                    # Normally the path looks like /path/to/xxx/i18n/lang.po
-                    # and we try to find the corresponding
-                    # /path/to/xxx/i18n/xxx.pot file.
-                    # (Sometimes we have 'i18n_extra' instead of just 'i18n')
-                    addons_module_i18n, _ignored = os.path.split(fileobj.name)
-                    addons_module, i18n_dir = os.path.split(addons_module_i18n)
-                    addons, module = os.path.split(addons_module)
-                    pot_handle = file_open(os.path.join(
-                        addons, module, i18n_dir, module + '.pot'), mode='rb')
-                    pot_reader = PoFile(pot_handle)
-                    use_pot_reference = True
-                except:
-                    pass
-
-        else:
-            _logger.info('Bad file format: %s', fileformat)
-            raise Exception(_('Bad file format: %s') % fileformat)
-
-        # Read the POT references, and keep them indexed by source string.
-        class Target(object):
-            def __init__(self):
-                self.value = None
-                self.targets = set()            # set of (type, name, res_id)
-                self.comments = None
-
-        pot_targets = defaultdict(Target)
-        for type, name, res_id, src, _ignored, comments, module in pot_reader:
-            if type is not None:
-                target = pot_targets[src]
-                target.targets.add((type, name, type != 'code' and res_id or 0))
-                target.comments = comments
+        reader = TranslationFileReader(fileobj, fileformat=fileformat)
 
         # read the rest of the file
         irt_cursor = Translation._get_import_cursor()
@@ -1098,43 +1058,14 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            dic.update(zip(fields, row))
+            dic.update(row)
 
             # do not import empty values
             if not env.context.get('create_empty_translation', False) and not dic['value']:
                 return
 
-            if use_pot_reference:
-                # discard the target from the POT targets.
-                src = dic['src']
-                target_key = (dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0)
-                target = pot_targets.get(src)
-                if not target or target_key not in target.targets:
-                    _logger.info("Translation '%s' (%s, %s, %s) not found in reference pot, skipping",
-                        src[:60], dic['type'], dic['name'], dic['res_id'])
-                    return
-
-                target.value = dic['value']
-                target.targets.discard(target_key)
-
-            # This would skip terms that fail to specify a res_id
-            res_id = dic['res_id']
-            if not res_id and dic['type'] != 'code':
-                return
-
-            if isinstance(res_id, int) or \
-                    (isinstance(res_id, str) and res_id.isdigit()):
-                dic['res_id'] = int(res_id)
-                if module_name:
-                    dic['module'] = module_name
-            else:
-                # res_id is an xml id
-                dic['res_id'] = None
-                dic['imd_model'] = dic['name'].split(',')[0]
-                if '.' in res_id:
-                    dic['module'], dic['imd_name'] = res_id.split('.', 1)
-                else:
-                    dic['module'], dic['imd_name'] = module_name, res_id
+            if dic['type'] == 'code' and module_name:
+                dic['module'] = module_name
 
             irt_cursor.push(dic)
 
@@ -1142,17 +1073,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # the entries from the POT file).
         for row in reader:
             process_row(row)
-
-        if use_pot_reference:
-            # Then process the entries implied by the POT file (which is more
-            # correct w.r.t. the targets) if some of them remain.
-            pot_rows = []
-            for src, target in pot_targets.items():
-                if target.value:
-                    for type, name, res_id in target.targets:
-                        pot_rows.append((type, name, res_id, src, target.value, target.comments))
-            for row in pot_rows:
-                process_row(row)
 
         irt_cursor.finish()
         Translation.clear_caches()
