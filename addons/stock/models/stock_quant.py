@@ -214,6 +214,7 @@ class StockQuant(models.Model):
             try:
                 with self._cr.savepoint():
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
+                    quant.invalidate_cache(ids=[quant.id])
                     quant.write({
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
