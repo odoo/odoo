@@ -181,10 +181,7 @@ class WebsiteEventController(http.Controller):
     def event_register(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
-        if not request.context.get('pricelist'):
-            pricelist = request.website.get_current_pricelist()
-            if pricelist:
-                event = event.with_context(pricelist=pricelist.id)
+
         values = {
             'event': event,
             'main_object': event,
