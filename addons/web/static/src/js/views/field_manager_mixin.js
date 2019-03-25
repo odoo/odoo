@@ -52,6 +52,8 @@ var FieldManagerMixin = {
                 if (event.data.force_save) {
                     return self.model.save(dataPointID).then(function () {
                         return self._confirmSave(dataPointID);
+                    }, function /* on_failure */ () {
+                        return self._rejectSave(dataPointID);
                     });
                 } else if (options.notifyChange !== false) {
                     return self._confirmChange(dataPointID, result, event);
@@ -82,6 +84,19 @@ var FieldManagerMixin = {
      * @returns {Promise}
      */
     _confirmSave: function (id) {
+        return Promise.resolve();
+    },
+    /**
+     * This method will be called whenever a save has been triggered by a change
+     * and has failed. For example, when a statusbar button is clicked in a
+     * readonly form view.
+     *
+     * @abstract
+     * @private
+     * @param {string} id The basicModel ID for the saved record
+     * @returns {Deferred}
+     */
+    _rejectSave: function (id) {
         return Promise.resolve();
     },
 

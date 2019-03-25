@@ -7,7 +7,6 @@ var publicWidget = require('web.public.widget');
 var _t = core._t;
 
 var SelectBox = publicWidget.Widget.extend({
-    xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
     events: {
         'change': '_onChange',
     },
@@ -106,6 +105,7 @@ var SelectBox = publicWidget.Widget.extend({
 
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
+    xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
     events: {
         'click .btn_shorten_url_clipboard': '_toggleCopyButton',
         'click .o_website_links_edit_code': '_editCode',
@@ -459,6 +459,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFormSubmit: function (ev) {
+        var self = this;
         ev.preventDefault();
 
         if ($('#btn_shorten_url').hasClass('btn-copy')) {
@@ -510,7 +511,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                 $('#generated_tracked_link').html(link.short_url);
                 $('#generated_tracked_link').css('display', 'inline');
 
-                this.recentLinks._addLink(link);
+                self.recentLinks._addLink(link);
 
                 // Clean URL and UTM selects
                 $('#campaign-select').select2('val', '');

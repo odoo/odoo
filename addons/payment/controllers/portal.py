@@ -66,6 +66,10 @@ class PaymentProcessing(http.Controller):
                 'success': False,
                 'error': 'no_tx_found',
             }
+
+        processed_tx = payment_transaction_ids.filtered('is_processed')
+        self.remove_payment_transaction(processed_tx)
+
         # create the returned dictionnary
         result = {
             'success': True,

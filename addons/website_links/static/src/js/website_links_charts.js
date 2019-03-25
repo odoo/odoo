@@ -188,6 +188,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
                 $('#all_time_charts').prepend(_t("There is no data to show"));
                 $('#last_month_charts').prepend(_t("There is no data to show"));
                 $('#last_week_charts').prepend(_t("There is no data to show"));
+                return;
             }
 
             var formattedClicksByDay = {};
@@ -202,27 +203,27 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
 
             // Process all time line chart data
             var now = moment();
-            self.charts.all_time_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.all_time_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
 
             // Process month line chart data
             beginDate = moment().subtract(30, 'days');
-            self.charts.last_month_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.last_month_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
 
             // Process week line chart data
             beginDate = moment().subtract(7, 'days');
-            self.charts.last_week_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.last_week_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
 
             // Process pie charts
-            self.charts.all_time_pie = new PieChart(_clicksByCountry);
+            self.charts.all_time_pie = new PieChart(this, _clicksByCountry);
             self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
 
-            self.charts.last_month_pie = new PieChart(_lastMonthClicksByCountry);
+            self.charts.last_month_pie = new PieChart(this, _lastMonthClicksByCountry);
             self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
 
-            self.charts.last_week_pie = new PieChart(_lastWeekClicksByCountry);
+            self.charts.last_week_pie = new PieChart(this, _lastWeekClicksByCountry);
             self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
 
             var rowWidth = $('#all_time_countries_charts').parent().width();
@@ -310,7 +311,11 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     _onGraphTabClick: function (ev) {
         ev.preventDefault();
         $('.graph-tabs li a').tab('show');
-        _.chain(this.charts).pluck('chart').invoke('update'); // Force NVD3 to redraw the chart
+
+        setTimeout(function () {
+            // Force NVD3 to redraw the chart
+            window.dispatchEvent(new Event('resize'));
+        }, 0);
     },
     /**
      * @private

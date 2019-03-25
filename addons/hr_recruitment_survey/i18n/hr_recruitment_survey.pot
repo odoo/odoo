@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-24 10:58+0000\n"
-"PO-Revision-Date: 2018-12-24 10:58+0000\n"
+"POT-Creation-Date: 2019-03-20 13:49+0000\n"
+"PO-Revision-Date: 2019-03-20 13:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,12 +28,14 @@ msgid "<span class=\"o_stat_text\">Start</span>\n"
 msgstr ""
 
 #. module: hr_recruitment_survey
-#: model:survey.page,title:hr_recruitment_survey.survey_recruitment_form_p1
+#: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q7
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid "Activities"
 msgstr ""
 
@@ -48,6 +50,16 @@ msgid "Applicant"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__category
+msgid "Category"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,help:hr_recruitment_survey.field_survey_survey__category
+msgid "Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys."
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
@@ -55,6 +67,7 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q3
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Did you apply from an employee ?"
 msgstr ""
 
@@ -66,12 +79,19 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
 msgid "Education"
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q2
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate ?"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: selection:survey.survey,category:0
+msgid "Generic Survey"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -100,6 +120,7 @@ msgid "Having freebies such as tea, coffee and stationery"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:survey.question,comments_message:hr_recruitment_survey.survey_recruitment_form_p1
 #: model:survey.question,comments_message:hr_recruitment_survey.survey_recruitment_form_p1_q1
 #: model:survey.question,comments_message:hr_recruitment_survey.survey_recruitment_form_p1_q2
 #: model:survey.question,comments_message:hr_recruitment_survey.survey_recruitment_form_p1_q3
@@ -134,6 +155,7 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q6
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "Knowledge"
 msgstr ""
 
@@ -159,6 +181,7 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q5
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Past work experiences"
 msgstr ""
 
@@ -168,7 +191,7 @@ msgid "Please answer those questions to help recruitment officers to preprocess 
 msgstr ""
 
 #. module: hr_recruitment_survey
-#: model_terms:survey.page,description:hr_recruitment_survey.survey_recruitment_form_p1
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
@@ -190,6 +213,11 @@ msgid "Print interview report"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: selection:survey.survey,category:0
+msgid "Recruitment"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
 msgstr ""
@@ -200,6 +228,7 @@ msgid "Response"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr ""
@@ -210,6 +239,7 @@ msgid "Thanks you for answering this survey. We will come back to you soon."
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q1
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q2
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q3
@@ -218,10 +248,11 @@ msgstr ""
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q6
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q7
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q8
-msgid "The answer you entered has an invalid format."
+msgid "The answer you entered is not valid."
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:survey.question,constr_error_msg:hr_recruitment_survey.survey_recruitment_form_p1
 #: model:survey.question,constr_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q1
 #: model:survey.question,constr_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q2
 #: model:survey.question,constr_error_msg:hr_recruitment_survey.survey_recruitment_form_p1_q3
@@ -245,11 +276,13 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q8
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you ?"
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.survey_recruitment_form_p1_q1
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from ?"
 msgstr ""
 

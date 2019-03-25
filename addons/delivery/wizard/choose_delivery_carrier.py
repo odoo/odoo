@@ -18,23 +18,27 @@ class ChooseDeliveryCarrier(models.TransientModel):
         required=True,
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
-    delivery_price = fields.Float(string='Cost', readonly=True)
+    delivery_price = fields.Float()
+    display_price = fields.Float(string='Cost', readonly=True)
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     available_carrier_ids = fields.Many2many("delivery.carrier", compute='_compute_available_carrier', string="Available Carriers")
     invoicing_message = fields.Text(compute='_compute_invoicing_message')
+    delivery_message = fields.Text(readonly=True)
 
     @api.onchange('carrier_id')
     def _onchange_carrier_id(self):
+        self.delivery_message = False
         if self.delivery_type in ('fixed', 'base_on_rule'):
             vals = self.carrier_id.rate_shipment(self.order_id)
             if vals.get('success'):
-                if vals['warning_message']:
-                    self.order_id.delivery_message = vals['warning_message']
-                else:
-                    self.delivery_price = vals['price']
+                if vals.get('warning_message'):
+                    self.delivery_message = vals['warning_message']
+                self.delivery_price = vals['price']
+                self.display_price = vals['carrier_price']
             else:
                 return {'error': vals['error_message']}
         else:
+            self.display_price = 0
             self.delivery_price = 0
 
     @api.depends('carrier_id')
@@ -55,8 +59,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
         vals = self.carrier_id.rate_shipment(self.order_id)
         if vals.get('success'):
             if vals['warning_message']:
-                self.order_id.delivery_message = vals['warning_message']
+                self.delivery_message = vals['warning_message']
             self.delivery_price = vals['price']
+            self.display_price = vals['carrier_price']
         else:
             raise UserError(vals['error_message'])
         return {
@@ -70,4 +75,5 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     def button_confirm(self):
         self.order_id.carrier_id = self.carrier_id
+        self.order_id.delivery_message = self.delivery_message
         self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)

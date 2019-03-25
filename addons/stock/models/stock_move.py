@@ -1025,10 +1025,12 @@ class StockMove(models.Model):
     def _action_cancel(self):
         if any(move.state == 'done' for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
-        for move in self:
-            if move.state == 'cancel':
-                continue
-            move._do_unreserve()
+        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
+        # self cannot contain moves that are either cancelled or done, therefore we can safely
+        # unlink all associated move_line_ids
+        moves_to_cancel._do_unreserve()
+
+        for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate:
                 # only cancel the next move if all my siblings are also cancelled
@@ -1261,8 +1263,10 @@ class StockMove(models.Model):
         @param qty: quantity in the UoM of move.product_uom
         """
         for ml in self.move_line_ids:
-            # Convert move line qty into move uom
             ml_qty = ml.product_uom_qty - ml.qty_done
+            if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) <= 0:
+                continue
+            # Convert move line qty into move uom
             if ml.product_uom_id != self.product_uom:
                 ml_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
 
@@ -1279,9 +1283,9 @@ class StockMove(models.Model):
                 taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
             qty -= taken_qty
 
-            if float_compare(qty, 0.0,  precision_rounding=self.product_uom.rounding) <= 0:
+            if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
                 break
-        if float_compare(qty, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
+        if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             vals = self._prepare_move_line_vals(quantity=0)
             vals['qty_done'] = qty
             ml = self.env['stock.move.line'].create(vals)

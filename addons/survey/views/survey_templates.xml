@@ -29,6 +29,15 @@
                             <div>You scored <t t-esc="answer.quizz_score" />%</div>
                             <t t-if="answer.quizz_passed">
                                 <div>Congratulations, you have passed the test!</div>
+
+                                <div t-if="survey.certificate" class="mt16 mb16">
+                                    <a role="button"
+                                        class="btn btn-primary btn-lg"
+                                        t-att-href="'/survey/%s/get_certification' % survey.id">
+                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        Download certification
+                                    </a>
+                                </div>
                             </t>
                             <t t-else="">
                                 <div>Unfortunately, you have failed the test.</div>
@@ -586,7 +595,7 @@
                             <t t-if="question.description">
                                 <div class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
-                            <t t-if="question.question_type in ['textbox', 'free_text', 'date']">
+                            <t t-if="question.question_type in ['textbox', 'free_text', 'date', 'datetime']">
                                 <t t-call="survey.result_text"></t>
                             </t>
                             <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
@@ -635,6 +644,11 @@
                     <t t-if="question.question_type == 'date'">
                         <td>
                             <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
+                        </td>
+                    </t>
+                    <t t-if="question.question_type == 'datetime'">
+                        <td>
+                            <a t-att-href="'/survey/print/%s?answer_token=%s' % (user_input.survey_id.access_token, user_input.user_input_id.token)" t-field="user_input.value_datetime"></a><br/>
                         </td>
                     </t>
                 </tr>

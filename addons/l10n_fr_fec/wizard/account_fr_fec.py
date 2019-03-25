@@ -8,7 +8,7 @@ import io
 
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
-from odoo.tools import pycompat
+from odoo.tools import float_is_zero, pycompat
 
 
 class AccountFrFec(models.TransientModel):
@@ -182,14 +182,16 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type
-        HAVING sum(aml.balance) != 0
+        HAVING round(sum(aml.balance), %s) != 0
         AND aat.type not in ('receivable', 'payable')
         '''
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
+        currency_digits = 2
+
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -202,6 +204,8 @@ class AccountFrFec(models.TransientModel):
                     current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
                     unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
                     listrow_amount = current_amount + unaffected_earnings_amount
+                    if float_is_zero(listrow_amount, precision_digits=currency_digits):
+                        continue
                     if listrow_amount > 0:
                         listrow[11] = str(listrow_amount).replace('.', ',')
                         listrow[12] = '0,00'
@@ -269,11 +273,11 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type, rp.ref, rp.id
-        HAVING sum(aml.balance) != 0
+        HAVING round(sum(aml.balance), %s) != 0
         AND aat.type in ('receivable', 'payable')
         '''
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
 
         for row in self._cr.fetchall():
             listrow = list(row)

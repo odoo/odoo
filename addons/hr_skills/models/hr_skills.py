@@ -16,6 +16,7 @@ class Skill(models.Model):
 class EmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
     _description = "Skill level for an employee"
+    _rec_name = 'skill_id'
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
     skill_id = fields.Many2one('hr.skill', required=True)

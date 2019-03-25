@@ -1,5 +1,5 @@
 $owprofile-color-bg: desaturate(map-get($grays, "200"), 80%);
-$owprofile-tabs-height: 37px;
+$owprofile-tabs-height: 36px;
 
 .o_wprofile_wrap {
     background-color: $owprofile-color-bg;
@@ -118,10 +118,25 @@ $owprofile-tabs-height: 37px;
 }
 
 // All Users Page
-.o_wprofile_all_users_header {
-    @include media-breakpoint-up(sm)  {
-        min-height: 200px;
-        margin-bottom: -60px;
+.o_wprofile_all_users_nav {
+    border-width: 1px 0;
+
+    &, .o_wprofile_course_nav_search {
+        background-color: rgba(white, 0.05);
+        border-color: rgba(white, 0.1);
+        border-style: solid;
+    }
+
+    .o_wprofile_course_nav_search {
+        border-width: 0 1px;
+    }
+
+    .breadcrumb-item.active a, .breadcrumb-item a:hover {
+        color: white;
+    }
+
+    .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before, .o_wprofile_course_nav_search input::placeholder {
+        color: rgba(white, 0.8);
     }
 }
 

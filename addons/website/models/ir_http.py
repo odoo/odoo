@@ -42,6 +42,23 @@ def sitemap_qs2dom(qs, route, field='name'):
     return dom
 
 
+def get_request_website():
+    """ Return the website set on `request` if called in a frontend context
+    (website=True on route).
+    This method can typically be used to check if we are in the frontend.
+
+    This method is easy to mock during python tests to simulate frontend
+    context, rather than mocking every method accessing request.website.
+
+    Don't import directly the method or it won't be mocked during tests, do:
+    ```
+    from odoo.addons.website.models import ir_http
+    my_var = ir_http.get_request_website()
+    ```
+    """
+    return request and getattr(request, 'website', False) or False
+
+
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
@@ -233,6 +250,7 @@ class Http(models.AbstractModel):
                 if code == 500:
                     logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                     View = env["ir.ui.view"]
+                    values['views'] = View
                     if 'qweb_exception' in values:
                         if 'load could not load template' in exception.args:
                             # When t-calling an inexisting template, we don't have reference to
@@ -250,22 +268,25 @@ class Http(models.AbstractModel):
                             except:
                                 exception_template = exception.name
                             view = View._view_obj(exception_template)
-                            et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
-                            node = et.xpath(exception.path)
-                            line = node is not None and etree.tostring(node[0], encoding='unicode')
-                            # line = exception.html  # FALSE -> contains branding <div t-att-data="request.browse('ok')"/>
-                            if line:
-                                # If QWebException occurs in a child view, the parent view is raised
-                                values['editable'] = request.uid and request.website.is_publisher()
-                                values['views'] = View._views_get(exception_template).filtered(
-                                    lambda v: line in v.arch
-                                )
-                            else:
+                            if exception.html in view.arch:
                                 values['views'] = view
+                            else:
+                                # There might be 2 cases where the exception code can't be found
+                                # in the view, either the error is in a child view or the code
+                                # contains branding (<div t-att-data="request.browse('ok')"/>).
+                                et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
+                                node = et.xpath(exception.path)
+                                line = node is not None and etree.tostring(node[0], encoding='unicode')
+                                if line:
+                                    values['views'] = View._views_get(exception_template).filtered(
+                                        lambda v: line in v.arch
+                                    )
                         # Keep only views that we can reset
                         values['views'] = values['views'].filtered(
                             lambda view: view._get_original_view().arch_fs or 'oe_structure' in view.key
                         )
+                        # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
+                        values['editable'] = request.uid and request.website.is_publisher()
                 elif code == 403:
                     logger.warn("403 Forbidden:\n\n%s", values['traceback'])
                 try:

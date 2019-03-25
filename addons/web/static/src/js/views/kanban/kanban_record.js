@@ -182,24 +182,30 @@ var KanbanRecord = Widget.extend({
      */
     _getImageURL: function (model, field, id, cache, options) {
         options = options || {};
+        id = (_.isArray(id) ? id[0] : id) || false;
+        field = options.preview_image || field;
+        var isCurrentRecord = this.modelName === model && this.recordData.id === id;
         var url;
-        if (this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
+        if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
             // Use magic-word technique for detecting image type
             url = 'data:image/' + this.file_type_magic_word[this.record[field].raw_value[0]] + ';base64,' + this.record[field].raw_value;
-        } else if (this.record[field] && ! this.record[field].raw_value) {
+        } else if (!model || !field || !id || (isCurrentRecord && this.record[field] && !this.record[field].raw_value)) {
             url = "/web/static/src/img/placeholder.png";
         } else {
-            if (_.isArray(id)) { id = id[0]; }
-            if (!id) { id = undefined; }
-            if (options.preview_image)
-                field = options.preview_image;
-            var unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
             var session = this.getSession();
-            url = session.url('/web/image', { model: model, field: field, id: id, unique: unique });
+            var params = {
+                model: model,
+                field: field,
+                id: id
+            };
+            if (isCurrentRecord) {
+                params.unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+            }
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
-                url += '&cache=' + parseInt(cache, 10);
+                params.cache = parseInt(cache, 10);
             }
+            url = session.url('/web/image', params);
         }
         return url;
     },

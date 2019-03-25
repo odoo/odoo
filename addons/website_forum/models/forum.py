@@ -4,7 +4,6 @@
 import logging
 import math
 import re
-import uuid
 
 from datetime import datetime
 from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
@@ -20,15 +19,6 @@ class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
-
-    @api.model_cr
-    def init(self):
-        """ Add forum uuid for user email validation.
-
-        TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
-        if not forum_uuids:
-            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()))
 
     @api.model
     def _get_default_faq(self):
@@ -590,7 +580,7 @@ class Post(models.Model):
     @api.one
     def refuse(self):
         if not self.can_moderate:
-            raise KarmaError('Not enough karma to refuse a post')
+            raise KarmaError(_('Not enough karma to refuse a post'))
 
         self.moderator_id = self.env.user
         return True
@@ -809,7 +799,7 @@ class Post(models.Model):
 
             self.ensure_one()
             if not self.can_comment:
-                raise KarmaError('Not enough karma to comment')
+                raise KarmaError(_('Not enough karma to comment'))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)

@@ -4,7 +4,9 @@ odoo.define('web.field_one_to_many_tests', function (require) {
 var AbstractField = require('web.AbstractField');
 var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
+var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
+var NotificationService = require('web.NotificationService');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
@@ -5409,6 +5411,145 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
                 'My little Foo Value', "should still have a value for the foo field");
 
+            form.destroy();
+        });
+
+        QUnit.test('one2many field with virtual ids with kanban button', async function (assert) {
+            assert.expect(25);
+
+            testUtils.mock.patch(KanbanRecord, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this._onKanbanActionClicked = this.__proto__._onKanbanActionClicked;
+                },
+            });
+
+            this.data.partner.records[0].p = [4];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="p" mode="kanban">' +
+                    '<kanban>' +
+                        '<templates>' +
+                        '<field name="foo"/>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<span><t t-esc="record.foo.value"/></span>' +
+                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />' +
+                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />' +
+                            '</div>' +
+                        '</t>' +
+                        '</templates>' +
+                    '</kanban>' +
+                    '</field>' +
+                '</form>',
+                archs: {
+                    'partner,false,form': '<form><field name="foo"/></form>',
+                },
+                res_id: 1,
+                services: {
+                    notification: NotificationService.extend({
+                        notify: function (params) {
+                            assert.step(params.type);
+                        }
+                    }),
+                },
+                intercepts: {
+                    execute_action: function (event) {
+                        assert.step(event.data.action_data.name + '_' + event.data.env.model + '_' + event.data.env.currentID);
+                        event.data.on_success();
+                    },
+                },
+            });
+
+            // 1. Define all css selector
+            var oKanbanView = '.o_field_widget .o_kanban_view';
+            var oKanbanRecordActive = oKanbanView + ' .o_kanban_record:not(.o_kanban_ghost)';
+            var oAllKanbanButton = oKanbanRecordActive + ' button[data-type="object"]';
+            var btn1 = oKanbanRecordActive + ':nth-child(1) button[data-type="object"]';
+            var btn2 = oKanbanRecordActive + ':nth-child(2) button[data-type="object"]';
+            var btn1Warn = btn1 + '[data-name="button_warn"]';
+            var btn1Disabled = btn1 + '[data-name="button_disabled"]';
+            var btn2Warn = btn2 + '[data-name="button_warn"]';
+            var btn2Disabled = btn2 + '[data-name="button_disabled"]';
+
+            // check if we already have one kanban card
+            assert.containsOnce(form, oKanbanView, "should have one inner kanban view for the one2many field");
+            assert.containsOnce(form, oKanbanRecordActive, "should have one kanban records yet");
+
+            // we have 2 buttons
+            assert.containsN(form, oAllKanbanButton, 2, "should have 2 buttons type object");
+
+            // disabled ?
+            assert.containsNone(form, oAllKanbanButton + '[disabled]', "should not have button type object disabled");
+
+            // click on the button
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+
+            // switch to edit mode
+            await testUtils.form.clickEdit(form);
+
+            // click on existing buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+
+            // create new kanban
+            await testUtils.dom.click(form.$('.o_field_widget .o-kanban-button-new'));
+
+            // save & close the modal
+            assert.strictEqual($('.modal-content input.o_field_widget').val(), 'My little Foo Value',
+                "should already have the default value for field foo");
+            await testUtils.dom.click($('.modal-content .btn-primary').first());
+
+            // check new item
+            assert.containsN(form, oAllKanbanButton, 4, "should have 4 buttons type object");
+            assert.containsN(form, btn1, 2, "should have 2 buttons type object in area 1");
+            assert.containsN(form, btn2, 2, "should have 2 buttons type object in area 2");
+            assert.containsOnce(form, oAllKanbanButton + '[disabled]',  "should have 1 button type object disabled");
+
+            assert.strictEqual(form.$(btn2Disabled).attr('disabled'), 'disabled', 'Should have a button type object disabled in area 2');
+            assert.strictEqual(form.$(btn2Warn).attr('disabled'), undefined, 'Should have a button type object not disabled in area 2');
+            assert.strictEqual(form.$(btn2Warn).attr('warn'), 'warn', 'Should have a button type object with warn attr in area 2');
+
+            // click all buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+            await testUtils.dom.click(form.$(btn2Disabled));
+            await testUtils.dom.click(form.$(btn2Warn));
+
+            // save the form
+            await testUtils.form.clickSave(form);
+
+            assert.containsNone(form, oAllKanbanButton + '[disabled]', "should not have button type object disabled after save");
+
+            // click all buttons
+            await testUtils.dom.click(form.$(btn1Disabled));
+            await testUtils.dom.click(form.$(btn1Warn));
+            await testUtils.dom.click(form.$(btn2Disabled));
+            await testUtils.dom.click(form.$(btn2Warn));
+
+            assert.verifySteps([
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+                "warning", // warn btn8
+
+                "button_disabled_partner_4",
+                "button_warn_partner_4",
+                "button_disabled_partner_8",
+                "button_warn_partner_8"
+            ], "should have triggered theses 11 clicks event");
+
+            testUtils.mock.unpatch(KanbanRecord);
             form.destroy();
         });
 
