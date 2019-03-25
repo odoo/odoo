@@ -416,6 +416,12 @@
             }
         }
     }
+    &.o_systray_activity {
+        background-color: transparent;
+        &:hover {
+            background-color: theme-color('light');
+        }
+    }
 }
 
 @include media-breakpoint-down(sm) {
