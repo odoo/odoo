@@ -147,6 +147,13 @@ class SaleOrderLine(models.Model):
                 return 0.0
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
+    @api.multi
+    def unlink(self):
+        for line in self:
+            if line.is_delivery:
+                line.order_id.carrier_id = False
+        super(SaleOrderLine, self).unlink()
+
     def _is_delivery(self):
         self.ensure_one()
         return self.is_delivery
