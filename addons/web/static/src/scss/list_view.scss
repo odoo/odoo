@@ -136,10 +136,14 @@
         border-top: none;  // Override bootstrap for grouped list views
     }
 
-    tbody {
+    &, &.table-striped {
         tr:focus-within {
-            background-color: $o-form-lightsecondary;
+            background-color: lighten($o-form-lightsecondary, 10%);
         }
+    }
+    thead th:focus-within, tbody td:focus-within {
+        background-color: $o-form-lightsecondary;
+        outline: none;
     }
 
     .o_data_cell.o_text_overflow,
