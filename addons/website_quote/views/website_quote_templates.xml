@@ -243,7 +243,7 @@
                               </div>
 
 
-                              <div class="text-center mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_untaxed">
+                              <div class="text-center mb16" t-if="quotation.amount_undiscounted - quotation.amount_untaxed &gt; 0.01">
                                   <p class="text-muted mb8">Your advantage:</p>
                                   <t t-if="quotation.amount_untaxed == quotation.amount_total">
                                       <strong t-field="quotation.amount_total"
