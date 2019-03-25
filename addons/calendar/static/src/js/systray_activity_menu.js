@@ -5,9 +5,6 @@ var ActivityMenu = require('mail.systray.ActivityMenu');
 var fieldUtils = require('web.field_utils');
 
 ActivityMenu.include({
-    events: _.extend({}, ActivityMenu.prototype.events, {
-        'click .o_meeting_filter': '_onMeetingFilterClick'
-    }),
 
     //-----------------------------------------
     // Private
@@ -51,27 +48,6 @@ ActivityMenu.include({
             });
         } else {
             this._super.apply(this, arguments);
-        }
-    },
-
-    /**
-     * When particular meeting clicked, open particular meeting in form view
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMeetingFilterClick: function (ev) {
-        ev.stopPropagation();
-        var $el = $(ev.currentTarget);
-        var data = _.extend({}, $el.data());
-        if (data.res_model === "calendar.event") {
-            this.do_action({
-                type: 'ir.actions.act_window',
-                name: data.model_name,
-                res_model:  data.res_model,
-                res_id: data.res_id,
-                views: [[false, 'form'], [false, 'calendar'], [false, 'list']],
-            });
         }
     },
 });
