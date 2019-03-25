@@ -645,7 +645,7 @@ ListRenderer.include({
                     // row of the group)
                     if (options.forceCreate || record.isDirty()) {
                         // if we modified the current record, add a row to create a new record
-                        groupId = $nextRow.data('groupID');
+                        groupId = $nextRow.data('group-id');
                     } else {
                         // if we didn't change anything to the current line (e.g. we pressed TAB on
                         // each cell without modifying/entering any data), we discard that line (if
@@ -742,13 +742,14 @@ ListRenderer.include({
             var $groupBody = result[0];
             var $a = $('<a href="#" role="button">')
                 .text(_t("Add a line"))
-                .data('groupID', group.id);
+                .attr('data-group-id', group.id);
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_group_field_row_add')
+                        .attr('tabindex', -1)
                         .append($a);
             var $tr = $('<tr>', {class: 'o_add_record_row'})
-                        .data('groupID', group.id)
+                        .attr('data-group-id', group.id)
                         .append($td);
             $groupBody.append($tr.prepend($('<td>').html('&nbsp;')));
         }
@@ -1037,7 +1038,8 @@ ListRenderer.include({
         ev.stopPropagation();
 
         var self = this;
-        var groupId = $(ev.target).data('groupID');
+        var groupId = $(ev.target).data('group-id');
+        this.currentGroupId = groupId;
         this.unselectRow().then(function () {
             self.trigger_up('add_record', {
                 groupId: groupId,
@@ -1096,6 +1098,35 @@ ListRenderer.include({
      */
     _onFooterClick: function () {
         this.unselectRow();
+    },
+    /**
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
+     * a cell using the keyboard, if he presses enter, enter the model represented by the line
+     *
+     * @private
+     * @param {KeyboardEvent} ev
+     * @override
+     */
+    _onKeyDown: function (ev) {
+        var $target = $(ev.currentTarget);
+        var $tr = $target.closest('tr');
+
+        if (this.editable && ev.keyCode === $.ui.keyCode.ENTER && $tr.hasClass('o_selected_row')) {
+            // enter on a textarea for example, let it bubble
+            return;
+        }
+
+        if (this.editable && ev.keyCode === $.ui.keyCode.ENTER && !$tr.hasClass('o_selected_row') && !$tr.hasClass('o_group_header')) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            if ($target.closest('td').hasClass('o_group_field_row_add')) {
+                this._onAddRecordToGroup(ev);
+            } else {
+                this._onCellClick(ev);
+            }
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
     /**
      * @private
@@ -1180,10 +1211,20 @@ ListRenderer.include({
                 // prevent from closing the potential dialog containing this list
                 // also auto-focus the 1st control, if any.
                 ev.data.originalEvent.stopPropagation();
+                var rowIndex = this.currentRow;
+                var cellIndex = this.currentFieldIndex + 1;
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                     onSuccess: function () {
-                        self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
+                        var recordId = self._getRecordID(rowIndex);
+                        if (recordId) {
+                            var correspondingRow = self._getRow(recordId);
+                            correspondingRow.children().eq(cellIndex).focus();
+                        } else if (self.currentGroupId) {
+                                self.$('a[data-group-id=' + self.currentGroupId + ']').focus();
+                        } else {
+                            self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
+                        }
                     }
                 });
                 break;
