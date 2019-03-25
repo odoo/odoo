@@ -706,9 +706,16 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onToggleGroup: function (ev) {
+        var self = this;
         this.model
             .toggleGroup(ev.data.group.id)
-            .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));
+            .then(function () {
+                self.update({}, {keepSelection: true, reload: false}).then(function () {
+                    if (ev.data.onSuccess) {
+                        ev.data.onSuccess();
+                    }
+                });
+            });
     },
 });
 
