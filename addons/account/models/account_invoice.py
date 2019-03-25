@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import OrderedDict
 import json
 import re
 import uuid
@@ -517,10 +518,7 @@ class AccountInvoice(models.Model):
         if not vals.get('journal_id') and vals.get('type'):
             vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
 
-        onchanges = {
-            '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
-            '_onchange_journal_id': ['currency_id'],
-        }
+        onchanges = self._get_onchange_create()
         for onchange_method, changed_fields in onchanges.items():
             if any(f not in vals for f in changed_fields):
                 invoice = self.new(vals)
@@ -1590,6 +1588,13 @@ class AccountInvoice(models.Model):
 
     def _get_intrastat_country_id(self):
         return self.partner_id.country_id.id
+
+    def _get_onchange_create(self):
+        return OrderedDict([
+            ('_onchange_partner_id', ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id']),
+            ('_onchange_journal_id', ['currency_id']),
+        ])
+
 
 class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
