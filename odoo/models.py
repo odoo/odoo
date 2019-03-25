@@ -4264,25 +4264,31 @@ class BaseModel(object):
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str = 'SELECT count(1) FROM ' + from_clause + where_str
+            query_str = 'SELECT count(DISTINCT "%s".id) FROM ' % self._table + from_clause + where_str
             self._cr.execute(query_str, where_clause_params)
             res = self._cr.fetchone()
             return res[0]
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
+        # first select the ids we need, possibly with a row number if we order
+        query_str = 'SELECT "%s".id%s FROM %s%s' % (
+            self._table,
+            order_by and ', ROW_NUMBER() OVER (%s)' % order_by or '',
+            from_clause,
+            where_str,
+        )
+        # and then group by id, keeping ordering if existing
+        query_str = 'SELECT id FROM (%s) r GROUP BY id %s%s%s' % (
+            query_str,
+            order_by and 'ORDER BY min(row_number) ' or '',
+            limit_str,
+            offset_str,
+        )
         self._cr.execute(query_str, where_clause_params)
         res = self._cr.fetchall()
 
-        # TDE note: with auto_join, we could have several lines about the same result
-        # i.e. a lead with several unread messages; we uniquify the result using
-        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
-        def _uniquify_list(seq):
-            seen = set()
-            return [x for x in seq if x not in seen and not seen.add(x)]
-
-        return _uniquify_list([x[0] for x in res])
+        return [x for x, in res]
 
     @api.multi
     @api.returns(None, lambda value: value[0])
