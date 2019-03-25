@@ -5,7 +5,8 @@ import time
 import unittest
 
 
-@tagged('post_install', '-at_install')
+# TODO in master
+# The name of this class should be TestReconciliationHelpers
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)
@@ -165,6 +166,10 @@ class TestReconciliation(AccountingTestCase):
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id)
         supplier_move_lines = bank_stmt.move_line_ids
         return customer_move_lines, supplier_move_lines
+
+
+@tagged('post_install', '-at_install')
+class TestReconciliationExec(TestReconciliation):
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, 30, self.bank_journal_usd, 42, 30, self.currency_euro_id)
