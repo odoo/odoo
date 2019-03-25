@@ -23,7 +23,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
             for var in product.product_tmpl_id._get_valid_product_template_attribute_lines():
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
-                if not product.attribute_value_ids: # create_variant = False
+                if not var.attribute_id.create_variant:
                     continue
                 res.setdefault(cat_name, OrderedDict()).setdefault(att_name, [' - '] * len(products))
                 val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)

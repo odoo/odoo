@@ -2472,7 +2472,7 @@ class One2many(_RelationalMulti):
         to_relink = {}                  # lines to relink {line_id: record_id}
 
         def unlink(line_ids):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 to_delete.extend(line_ids)
             else:
                 to_relink.update(dict.fromkeys(line_ids, False))

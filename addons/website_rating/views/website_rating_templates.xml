@@ -30,7 +30,7 @@
                 <i class="fa fa-star-half-o" role="img"></i>
             </t>
             <t t-foreach="range(0, empty_star)" t-as="num" role="img">
-                <i class="fa fa-star-o"></i>
+                <i class="fa fa-star text-black-25"></i>
             </t>
             <t t-if="rating_count">
                 (<t t-esc="rating_count"/>)
@@ -61,7 +61,8 @@
             t-att-data-default_message="default_message"
             t-att-data-default_message_id="default_message_id"
             t-att-data-default_rating_value="default_rating_value"
-            t-att-data-force_submit_url="force_submit_url">
+            t-att-data-force_submit_url="force_submit_url"
+            t-att-data-disable_composer="disable_composer">
         </div>
     </template>
 

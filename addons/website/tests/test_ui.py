@@ -46,3 +46,15 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_02_admin_tour_banner(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('banner')", "odoo.__DEBUG__.services['web_tour.tour'].tours.banner.ready", login='admin')
+
+    def test_03_restricted_editor(self):
+        self.restricted_editor = self.env['res.users'].create({
+            'name': 'Restricted Editor',
+            'login': 'restricted',
+            'password': 'restricted',
+            'groups_id': [(6, 0, [
+                    self.ref('base.group_user'),
+                    self.ref('website.group_website_publisher')
+                ])]
+        })
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('restricted_editor')", "odoo.__DEBUG__.services['web_tour.tour'].tours.restricted_editor.ready", login='restricted')

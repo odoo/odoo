@@ -9,7 +9,7 @@ import math
 from datetime import datetime, time
 from pytz import timezone, UTC
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
@@ -745,6 +745,9 @@ class HolidaysRequest(models.Model):
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
+        if self.env.user.id == SUPERUSER_ID:
+            return
+
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')

@@ -13,6 +13,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import Warning, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
@@ -314,6 +315,14 @@ class Slide(models.Model):
     # ---------------------------------------------------------
 
     @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, message_type='notification', **kwargs):
+        self.ensure_one()
+        if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
+            raise KarmaError(_('Not enough karma to comment'))
+        return super(Slide, self).message_post(message_type=message_type, **kwargs)
+
+    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
@@ -395,7 +404,9 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id)
         ])
-        new_slides = self_sudo - slide_partners.mapped('slide_id')
+        slide_id = slide_partners.mapped('slide_id')
+        new_slides = self_sudo - slide_id
+        channel = slide_id.channel_id
 
         for slide_partner in slide_partners:
             if upvote:
@@ -403,13 +414,15 @@ class Slide(models.Model):
             else:
                 new_vote = 0 if slide_partner.vote == 1 else -1
             slide_partner.vote = new_vote
+            self.env.user.add_karma(-channel.karma_gen_slide_vote if new_vote == 0 else channel.karma_gen_slide_vote)
 
         for new_slide in new_slides:
             new_vote = 1 if upvote else -1
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
-            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
+            channel = new_slides.channel_id
+            self.env.user.add_karma(-channel.karma_gen_slide_vote if new_vote == 0 else channel.karma_gen_slide_vote)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):
@@ -438,34 +451,26 @@ class Slide(models.Model):
             'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0} for new_slide in new_slides])
 
-    def action_set_completed(self, quiz_attempts_inc=False):
+    def action_set_completed(self):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
-        return self._action_set_completed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc)
+        return self._action_set_completed(self.env.user.partner_id)
 
-    def _action_set_completed(self, target_partner, quiz_attempts_inc=False):
+    def _action_set_completed(self, target_partner):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        if quiz_attempts_inc:
-            for existing_slide in existing_sudo:
-                existing_slide.write({
-                    'completed': True,
-                    'quiz_attempts_count': existing_slide.quiz_attempts_count + 1
-                })
-        else:
-            existing_sudo.write({'completed': True})
+        existing_sudo.write({'completed': True})
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
-            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0,
             'completed': True} for new_slide in new_slides])
 
@@ -477,14 +482,15 @@ class Slide(models.Model):
 
         points = 0
         for slide in self:
-            if not slide.user_membership_id or slide.user_membership_id.completed or not slide.user_membership_id.quiz_attempts_count:
+            user_membership_sudo = slide.user_membership_id.sudo()
+            if not user_membership_sudo or user_membership_sudo.completed or not user_membership_sudo.quiz_attempts_count:
                 continue
 
             gains = [slide.quiz_first_attempt_reward,
                      slide.quiz_second_attempt_reward,
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
-            points += gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
+            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
 
         return self.env.user.sudo().add_karma(points)
 
@@ -512,7 +518,7 @@ class Slide(models.Model):
             slide_partner = slide_partners_map.get(slide.id)
             if slide.question_ids and slide_partner:
                 if slide_partner.quiz_attempts_count:
-                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count <= len(gains) else gains[-1]
+                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
                     result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
                 if quiz_done or slide_partner.completed:
                     result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]

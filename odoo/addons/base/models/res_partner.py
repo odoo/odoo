@@ -440,7 +440,7 @@ class Partner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner.with_prefetch()._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
     @api.multi
@@ -725,7 +725,7 @@ class Partner(models.Model):
             partner_ids = [row[0] for row in self.env.cr.fetchall()]
 
             if partner_ids:
-                return self.browse(partner_ids).name_get()
+                return models.lazy_name_get(self.browse(partner_ids))
             else:
                 return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)

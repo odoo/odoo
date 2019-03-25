@@ -6,6 +6,7 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -46,15 +47,22 @@ class ChannelUsersRelation(models.Model):
             record.completion = math.ceil(100.0 * slide_done / slide_total)
 
     def _write(self, values):
+        partner_karma = False
         if 'completion' in values and values['completion'] >= 100:
             values['completed'] = True
-            result = super(ChannelUsersRelation, self)._write(values)
-            partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_has_completed.keys()))])
+            incomplete_channel_partners = self.filtered(lambda cp: not cp.completed)
+            partner_karma = dict.fromkeys(incomplete_channel_partners.mapped('partner_id').ids, 0)
+            for channel_partner in incomplete_channel_partners:
+                partner_karma[channel_partner.partner_id.id] += channel_partner.channel_id.karma_gen_channel_finish
+            partner_karma = {partner_id: karma_to_add
+                             for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
+
+        result = super(ChannelUsersRelation, self)._write(values)
+
+        if partner_karma:
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
-                users.add_karma(partner_has_completed[user.partner_id.id].karma_gen_channel_finish)
-        else:
-            result = super(ChannelUsersRelation, self)._write(values)
+                users.add_karma(partner_karma[user.partner_id.id])
         return result
 
 
@@ -107,7 +115,7 @@ class Channel(models.Model):
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow comment on Content", default=False,
+        "Allow rating on Course", default=False,
         help="If checked it allows members to either:\n"
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
@@ -146,10 +154,15 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
-    karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
-    # TODO DBE : Add karma based action rules (like in forum)
+    # Karma based actions
+    karma_review = fields.Integer('Add a review', default=10, help="Karma needed to add a review on the course")
+    karma_slide_comment = fields.Integer('Add a comment', default=3, help="Karma needed to add a comment on a slide of this course")
+    karma_slide_vote = fields.Integer('Vote on slide', default=3, help="Karma needed to like/dislike a slide of this course.")
+    can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
+    can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
+    can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -173,8 +186,7 @@ class Channel(models.Model):
         for cp in channel_partners:
             result.setdefault(cp.channel_id.id, []).append(cp.partner_id.id)
         for channel in self:
-            channel.valid_channel_partner_ids = result.get(channel.id, False)
-            channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
+            channel.is_member = channel.is_member = self.env.user.partner_id.id in result.get(channel.id, [])
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
@@ -257,6 +269,19 @@ class Channel(models.Model):
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
+    @api.multi
+    def _compute_action_rights(self):
+        user_karma = self.env.user.karma
+        for channel in self:
+            if channel.can_publish:
+                channel.can_vote = channel.can_comment = channel.can_review = True
+            elif not channel.is_member:
+                channel.can_vote = channel.can_comment = channel.can_review = False
+            else:
+                channel.can_review = user_karma >= channel.karma_review
+                channel.can_comment = user_karma >= channel.karma_slide_comment
+                channel.can_vote = user_karma >= channel.karma_slide_vote
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -312,6 +337,8 @@ class Channel(models.Model):
         through the 'Presentation Published' email, it should be considered as a
         note as we don't want all channel followers to be notified of this answer. """
         self.ensure_one()
+        if kwargs.get('message_type') == 'comment' and not self.can_review:
+            raise KarmaError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
@@ -408,6 +435,33 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
+    def _remove_membership(self, partner_ids):
+        """ Unlink (!!!) the relationships between the passed partner_ids
+        and the channels and their slides. """
+        if not partner_ids:
+            raise ValueError("Do not use this method with an empty partner_id recordset")
+
+        removed_slide_partner_domain = []
+        removed_channel_partner_domain = []
+        for channel in self:
+            removed_slide_partner_domain = expression.OR([
+                removed_slide_partner_domain,
+                [('partner_id', 'in', partner_ids.ids),
+                 ('slide_id', 'in', channel.slide_ids.ids)]
+            ])
+
+            removed_channel_partner_domain = expression.OR([
+                removed_channel_partner_domain,
+                [('partner_id', 'in', partner_ids.ids),
+                 ('channel_id', '=', channel.id)]
+            ])
+
+        if removed_slide_partner_domain:
+            self.env['slide.slide.partner'].sudo().search(removed_slide_partner_domain).unlink()
+
+        if removed_channel_partner_domain:
+            self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
@@ -435,9 +489,9 @@ class Channel(models.Model):
         if uncategorized_slides or force_void:
             category_data.append({
                 'category': False, 'id': False,
-                'name':  _('Uncategorized'), 'slug_name':  _('Uncategorized'),
+                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
                 'total_slides': len(uncategorized_slides),
-                'slides': uncategorized_slides[(offset or 0):(limit or len(uncategorized_slides))],
+                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
         # Then all categories by natural order
         for category in all_categories:
@@ -448,9 +502,8 @@ class Channel(models.Model):
                 'category': category, 'id': category.id,
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
-                'slides': category_slides[(offset or 0):(limit or len(category_slides))],
+                'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
             })
-
         return category_data
 
 
