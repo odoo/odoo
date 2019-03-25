@@ -722,11 +722,15 @@ class IrActionsReport(models.Model):
         return self.render_template(self.report_name, data), 'html'
 
     @api.model
+    def _get_rendering_context_model(self):
+        report_model_name = 'report.%s' % self.report_name
+        return self.env.get(report_model_name)
+
+    @api.model
     def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model_name = 'report.%s' % self.report_name
-        report_model = self.env.get(report_model_name)
+        report_model = self._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
