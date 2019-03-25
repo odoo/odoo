@@ -69,15 +69,15 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Byproducts" attrs="{'invisible': [('type','=','phantom')]}" groups="mrp.group_mrp_byproducts">
+                        <page string="By-products" attrs="{'invisible': [('type','=','phantom')]}" groups="mrp.group_mrp_byproducts">
                             <field name="sub_products">
-                                <tree string="Byproducts"  editable="top">
-                                    <field name="product_id"/>
+                                <tree string="By-products"  editable="top">
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
-                                <form string="Byproducts">
+                                <form string="By-products">
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
