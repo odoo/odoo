@@ -1134,7 +1134,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
         # Test: message-id
-        self.assertIn('openerp-private', msg.message_id, 'message_post: private discussion: message-id should contain the private keyword')
+        self.assertIn('openerp-private', msg.message_id.split('@')[0], 'message_post: private discussion: message-id should contain the private keyword')
 
         # Do: Bert replies through mailgateway (is a customer)
         self.format_and_process(
@@ -1162,9 +1162,9 @@ class TestMailgateway(TestMail):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_forward_parent_id(self):
         msg = self.test_pigs.sudo(self.user_employee).message_post(no_auto_thread=True, subtype='mail.mt_comment')
-        self.assertNotIn(msg.model, msg.message_id)
-        self.assertNotIn('-%d-' % msg.res_id, msg.message_id)
-        self.assertIn('reply_to', msg.message_id)
+        self.assertNotIn(msg.model, msg.message_id.split('@')[0])
+        self.assertNotIn('-%d-' % msg.res_id, msg.message_id.split('@')[0])
+        self.assertIn('reply_to', msg.message_id.split('@')[0])
 
         # forward it to a new thread AND an existing thread
         fw_msg_id = '<THIS.IS.A.FW.MESSAGE.1@bert.fr>'
