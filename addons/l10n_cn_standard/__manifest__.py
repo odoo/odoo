@@ -6,12 +6,15 @@
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 # Copyright (C) 2017-now  jeffery9@gmail.com
+# Copyright (C) 2018-now  浪潮PS Cloud pscloud@inspur.com    < PM and LTS >
+
 
 {
     'name': 'China - Standard CoA',
-    'version': '2.0',
+    'version': '12.0.1.0',
     'category': 'Localization',
-    'author': ['lvxin@gmail.co', 'oldrev@gmail.co', 'ccdos@intoerp.com', 'jeff@osbzr.com', 'jeffery9@gmail.com'],
+    'author': ['lvxin@gmail.co', 'oldrev@gmail.co', 'ccdos@intoerp.com', 'jeff@osbzr.com', 'jeffery9@gmail.com',
+               'pscloud@inspur.com'],
 
     'website': 'http://shine-it.net',
     'description': """
