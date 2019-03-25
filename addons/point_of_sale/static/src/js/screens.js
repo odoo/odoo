@@ -1156,6 +1156,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.display_client_details('edit',{
                 'country_id': self.pos.company.country_id,
                 'state_id': self.pos.company.state_id,
+                'lang': self.pos.lang,
             });
         });
 
@@ -1654,6 +1655,28 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             paymentlines: order.get_paymentlines(),
         };
     },
+    get_qweb_translation_env: function (xmlPath) {
+        xmlPath = _.str.sprintf('%s?unique=%s', xmlPath, _.uniqueId());
+        // changed qweb lang environment by client lang for print receipt
+        var client = this.pos.get_client();
+        var client_lang = client && client.lang;
+        if (!client_lang) {
+            return Promise.resolve(QWeb);
+        } else if (_t_qweb[client_lang]){
+            return Promise.resolve(_t_qweb[client_lang]);
+        } else {
+            var new_t = new translation.TranslationDataBase().build_translation_function();
+            return new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function () {
+                var newQweb = new webQWeb(false, {
+                    _t: new_t
+                });
+                return ajax.loadXML(xmlPath, newQweb).then(function () {
+                    _t_qweb[client_lang] = newQweb;
+                    return newQweb;
+                });
+            });
+        }
+    },
     print_web: function() {
         if ($.browser.safari) {
             document.execCommand('print', false, null);
@@ -1674,7 +1697,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
-        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+        var receipt = this.get_qweb_translation_env('/point_of_sale/static/src/xml/pos.xml').then(function (qweb) {
+            qweb.render('XmlReceipt', this.get_receipt_render_env());
+        });
 
         this.pos.proxy.print_receipt(receipt);
         this.pos.get_order()._printed = true;
@@ -1766,28 +1791,8 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     },
     render_receipt: function() {
         var self = this;
-        var client = this.pos.get_client();
-        var client_lang = client && client.lang;
-        if (!client_lang) {
-            var ticketQWeb = Promise.resolve(QWeb);
-            // self.$('.pos-receipt-container').html(Qweb.render('PosTicket', self.get_receipt_render_env()));
-        } else if (_t_qweb[client_lang]){
-            ticketQWeb = Promise.resolve(_t_qweb[client_lang]);
-        } else {
-            var new_t = new translation.TranslationDataBase().build_translation_function();
-            ticketQWeb = new_t.database.load_translations(session, ['point_of_sale'], client_lang, undefined).then(function() {
-                var newQweb = new webQWeb(false, {
-                    _t: new_t
-                });
-                return ajax.loadXML('/point_of_sale/static/src/xml/pos.xml', newQweb).then(function() {
-                    _t_qweb[client_lang] = newQweb;
-                    return newQweb;
-                });
-            });
-        }
-        ticketQWeb.then(function(qweb){
+        this.get_qweb_translation_env('/point_of_sale/static/src/xml/pos.xml').then(function (qweb) {
             self.$('.pos-receipt-container').html(qweb.render('PosTicket', self.get_receipt_render_env()));
-
         });
     },
 });

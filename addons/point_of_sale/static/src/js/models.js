@@ -180,6 +180,12 @@ exports.PosModel = Backbone.Model.extend({
             self.set_cashier(self.employee);
         },
     },{
+        model:  'res.lang',
+        fields: ['name', 'code'],
+        loaded: function (self, langs){
+            self.langs = langs;
+        },
+    },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
         ids:    function(self){ return [self.user.company_id[0]]; },
