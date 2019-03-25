@@ -116,7 +116,6 @@ class StockPicking(models.Model):
             if pick.carrier_id:
                 if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
                     pick.send_to_shipper()
-                pick._add_delivery_cost_to_so()
         return res
 
     @api.multi
@@ -184,14 +183,8 @@ class StockPicking(models.Model):
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
+        self._add_delivery_cost_to_so()
 
-    def _get_new_delivery_price(self):
-        if self.carrier_id.integration_level != 'rate_and_ship':
-            res = self.carrier_id.rate_shipment(self.sale_id)
-            if res['success']:
-                self.carrier_price = res['price']
-            else:
-                raise UserError(_("Unable to update the delivery price because of: ") + res['error_message'])
 
     @api.multi
     def print_return_label(self):
@@ -202,17 +195,13 @@ class StockPicking(models.Model):
     def _add_delivery_cost_to_so(self):
         self.ensure_one()
         sale_order = self.sale_id
-        # if there isn't a delivery line on the SO yet
-        if not any([line.is_delivery for line in sale_order.order_line]):
-            self._get_new_delivery_price()  # fill `self.carrier_price` if needed
-            sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
-        else:
-            # we only want to update the price of the delivery line if the invoice
-            # policy is 'Real' but we chose not to if the user updated it in the meantime
-            delivery_line = sale_order.order_line.filtered(lambda line: line.is_delivery)
-            if self.carrier_id.invoice_policy == 'real' and delivery_line.currency_id.is_zero(delivery_line.price_unit):
-                self._get_new_delivery_price()
-                delivery_line.write({
+        if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
+            delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
+            if not delivery_lines:
+                sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
+            else:
+                delivery_line = delivery_lines[0]
+                delivery_line[0].write({
                     'price_unit': self.carrier_price,
                     # remove the estimated price from the description
                     'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,

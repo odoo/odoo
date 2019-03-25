@@ -109,6 +109,11 @@ class DeliveryCarrier(models.Model):
             return False
         return True
 
+    @api.onchange('integration_level')
+    def _onchange_integration_level(self):
+        if self.integration_level == 'rate':
+            self.invoice_policy = 'estimated'
+
     @api.onchange('can_generate_return')
     def _onchange_can_generate_return(self):
         if not self.can_generate_return:
