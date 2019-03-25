@@ -6,6 +6,7 @@ var Wysiwyg = require('web_editor.wysiwyg.root');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
 var qweb = core.qweb;
+var WebsiteProfile = require('website_profile.website_profile');
 
 var _t = core._t;
 
@@ -29,8 +30,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .notification_close': '_onCloseNotificationClick',
-        'click .send_validation_email': '_onSendValidationEmailClick',
-        'click .validated_email_close': '_onCloseValidatedEmailClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -469,32 +468,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onSendValidationEmailClick: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        this._rpc({
-            route: '/forum/send_validation_email',
-            params: {
-                forum_id: $link.attr('forum-id'),
-            },
-        }).then(function (data) {
-            if (data) {
-                $('button.validation_email_close').click();
-            }
-        });
-    },
-    /**
-     * @private
-     */
-    _onCloseValidatedEmailClick: function () {
-        this._rpc({
-            route: '/forum/validate_email/close',
-        });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
         document.cookie = 'forum_welcome_message = false';
@@ -579,4 +552,5 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         });
     },
 });
+
 });

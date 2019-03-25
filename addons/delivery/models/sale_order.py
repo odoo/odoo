@@ -80,11 +80,13 @@ class SaleOrder(models.Model):
             self.delivery_message = res.get('warning_message', False)
         else:
             raise UserError(res['error_message'])
+        delivery_line.name = self.carrier_id.with_context(lang=self.partner_id.lang).name
         if self.carrier_id.invoice_policy == 'real':
-            delivery_line.name = self.carrier_id.with_context(lang=self.partner_id.lang).name
             delivery_line.name += _(' (Estimated Cost: %s )') % self._format_currency_amount(res['price'])
         else:
             delivery_line.price_unit = res['price']
+        if self.carrier_id.free_over and self._compute_amount_total_without_delivery() >= res['price']:
+            delivery_line.name += '\nFree Shipping'
         self.recompute_delivery_price = False
 
     def _create_delivery_line(self, carrier, price_unit, price_unit_in_description=False):
@@ -114,7 +116,8 @@ class SaleOrder(models.Model):
             values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
         else:
             values['price_unit'] = price_unit
-
+        if carrier.free_over and self._compute_amount_total_without_delivery() >= price_unit:
+            values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.sudo().create(values)

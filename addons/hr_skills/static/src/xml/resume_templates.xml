@@ -17,7 +17,7 @@
                 </div>
                 <div class="o_resume_line_desc col-lg-9">
                     <h3><t t-esc="data.name"/></h3>
-                    <t t-esc="data.description"/>
+                    <t t-if="data.description" t-esc="data.description"/>
                 </div>
             </div>
         </td>

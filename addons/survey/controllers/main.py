@@ -367,7 +367,7 @@ class Survey(http.Controller):
             return {}
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-        if not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
+        if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
@@ -509,7 +509,7 @@ class Survey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['POST'], website=True)
+    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['GET'], website=True)
     def survey_get_certification(self, survey_id, **kwargs):
         """ The certification document can be downloaded as long as the user has succeeded the certification """
         survey = request.env['survey.survey'].sudo().search([

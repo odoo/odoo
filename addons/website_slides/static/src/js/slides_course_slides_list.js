@@ -29,16 +29,18 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
      */
     _bindSortable: function () {
         this.$('ul.o_wslides_js_slides_list_container').sortable({
-            handle: '.fa-arrows',
+            handle: '.o_wslides_slides_list_drag',
             stop: this._reorderCategories.bind(this),
-            items: '.o_wslides_slide_list_category'
+            items: '.o_wslides_slide_list_category',
+            placeholder: 'o_wslides_slides_list_slide_hilight position-relative mb-1'
         });
 
         this.$('.o_wslides_js_slides_list_container ul').sortable({
-            handle: '.fa-arrows',
+            handle: '.o_wslides_slides_list_drag',
             connectWith: '.o_wslides_js_slides_list_container ul',
             stop: this._reorderSlides.bind(this),
-            items: '.o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty)'
+            items: '.o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty)',
+            placeholder: 'o_wslides_slides_list_slide_hilight position-relative mb-1'
         });
     },
 

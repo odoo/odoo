@@ -18,11 +18,9 @@ var LunchKanbanController = KanbanController.extend({
         add_product: '_onAddProduct',
         change_location: '_onLocationChanged',
         change_user: '_onUserChanged',
-        edit_order: '_onEditOrder',
         open_wizard: '_onOpenWizard',
         order_now: '_onOrderNow',
         remove_product: '_onRemoveProduct',
-        save_order: '_onSaveOrder',
         unlink_order: '_onUnlinkOrder',
     }),
 
@@ -69,7 +67,23 @@ var LunchKanbanController = KanbanController.extend({
             },
         }).then(function (data) {
             self.widgetData = data;
-            self.model._updateLocation(data.user_location[0]);
+            return self.model._updateLocation(data.user_location[0]);
+        });
+    },
+    /**
+     * Renders and appends the lunch banner widget.
+     *
+     * @private
+     */
+    _renderLunchKanbanWidget: function () {
+        var self = this;
+        if (this.widget) {
+            this.widget.destroy();
+        }
+        this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
+        this.widget = new LunchKanbanWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
+        return this.widget.appendTo(document.createDocumentFragment()).then(function () {
+            self.$('.o_lunch_kanban').prepend(self.widget.$el);
         });
     },
     _showPaymentDialog: function (title) {
@@ -91,19 +105,8 @@ var LunchKanbanController = KanbanController.extend({
      * @private
      */
     _update: function () {
-        var self = this;
-
-        var def = this._fetchWidgetData().then(function () {
-            if (self.widget) {
-                self.widget.destroy();
-            }
-            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
-            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
-            return self.widget.appendTo(document.createDocumentFragment()).then(function () {
-                self.$('.o_lunch_kanban').prepend(self.widget.$el);
-            });
-        });
-        return Promise.all([def, this._super.apply(self, arguments)]);
+        var def = this._fetchWidgetData().then(this._renderLunchKanbanWidget.bind(this));
+        return Promise.all([def, this._super.apply(this, arguments)]);
     },
     /**
      * Override to add the location domain (coming from the lunchKanbanWidget)
@@ -133,12 +136,6 @@ var LunchKanbanController = KanbanController.extend({
         }).then(function () {
             self.reload();
         });
-    },
-    _onEditOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = true;
-        this.reload();
     },
     _onLocationChanged: function (ev) {
         var self = this;
@@ -207,12 +204,6 @@ var LunchKanbanController = KanbanController.extend({
         }).then(function () {
             self.reload();
         });
-    },
-    _onSaveOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = false;
-        this.reload();
     },
     _onUserChanged: function (ev) {
         ev.stopPropagation();
