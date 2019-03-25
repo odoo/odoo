@@ -656,7 +656,7 @@ class AccountInvoice(models.Model):
         """
         # Split `From` and `CC` email address from received email to look for related partners to subscribe on the invoice
         subscribed_emails = email_split((msg_dict.get('from') or '') + ',' + (msg_dict.get('cc') or ''))
-        subscribed_partner_ids = [pid for pid in self._find_partner_from_emails(subscribed_emails) if pid]
+        seen_partner_ids = [pid for pid in self._find_partner_from_emails(subscribed_emails) if pid]
 
         # Detection of the partner_id of the invoice:
         # 1) check if the email_from correspond to a supplier
@@ -680,7 +680,7 @@ class AccountInvoice(models.Model):
 
         # If the partner_id can be found, subscribe it to the bill, otherwise it's left empty to be manually filled
         if partner_id:
-            subscribed_partner_ids.append(partner_id)
+            seen_partner_ids.append(partner_id)
 
         # Find the right purchase journal based on the "TO" email address
         destination_emails = email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or ''))
@@ -696,9 +696,13 @@ class AccountInvoice(models.Model):
         # Passing `type` in context so that _default_journal(...) can correctly set journal for new vendor bill
         invoice = super(AccountInvoice, self.with_context(type=values.get('type'))).message_new(msg_dict, values)
 
-        # Subscribe people on the newly created bill
-        if subscribed_partner_ids:
-            invoice.message_subscribe(subscribed_partner_ids)
+        # Subscribe internal users on the newly created bill
+        partners = self.env['res.partner'].browse(seen_partner_ids)
+        is_internal = lambda p: (p.user_ids and
+                                 all(p.user_ids.mapped(lambda u: u.user_has_groups('base.group_user'))))
+        partners_to_subscribe = partners.filtered(is_internal)
+        if partners_to_subscribe:
+            invoice.message_subscribe([p.id for p in partners_to_subscribe])
         return invoice
 
     @api.model
