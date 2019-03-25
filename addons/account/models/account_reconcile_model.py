@@ -393,6 +393,9 @@ class AccountReconcileModel(models.Model):
                 aml.date_maturity                   AS aml_date_maturity,
                 aml.amount_residual                 AS aml_amount_residual,
                 aml.amount_residual_currency        AS aml_amount_residual_currency,
+                aml.balance                         AS aml_balance,
+                aml.amount_currency                 AS aml_amount_currency,
+                account.internal_type               AS account_internal_type,
 
                 -- Determine a matching or not with the statement line communication using the move.name or move.ref.
                 regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
@@ -540,9 +543,12 @@ class AccountReconcileModel(models.Model):
             return True
 
         # Match total residual amount.
-        total_residual = sum(
-            aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual'] for aml in
-            candidates)
+        total_residual = 0.0
+        for aml in candidates:
+            if aml['account_internal_type'] == 'liquidity':
+                total_residual += aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
+            else:
+                total_residual += aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
         line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
         line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
 
