@@ -1327,7 +1327,7 @@ class AccountTax(models.Model):
                     'amount': line_amount,
                     'base': round(sign * base, prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
