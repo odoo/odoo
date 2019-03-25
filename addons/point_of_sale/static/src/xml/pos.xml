@@ -385,6 +385,17 @@
                             </t>
                         </select>
                     </div>
+                    <div class='client-detail'>
+                        <span class='label'>Language</span>
+                        <select class='detail client-lang needsclick' name='lang'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.langs' t-as='lang'>
+                                <option t-att-value='lang.code' t-att-selected="partner.lang ? ((lang.code === partner.lang) ? true : undefined) : undefined">
+                                    <t t-esc='lang.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
                 </div>
                 <div class='client-details-right'>
                     <div class='client-detail'>
@@ -455,6 +466,14 @@
                         <t t-if='!partner.phone'>
                             <span class='detail client-phone empty'>N/A</span>
                         </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Language</span>
+                        <span class='detail client-lang'>
+                            <t t-foreach='widget.pos.langs' t-as='lang'>
+                                <t t-if="lang.code == partner.lang" t-esc='lang.name'/>
+                            </t>
+                        </span>
                     </div>
                 </div>
                 <div class='client-details-right'>
@@ -935,7 +954,7 @@
 
             <br/>
             <div font='b'>
-                <div><t t-esc='receipt.name' /></div>
+                <div>Order <t t-esc='receipt.uid' /></div>
                 <div><t t-esc='receipt.date.localestring' /></div>
             </div>
 
@@ -1503,7 +1522,7 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
 
-            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
+            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> Order <t t-esc="order.uid"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             <div class="receipt-phone">
