@@ -806,7 +806,7 @@ class AccountTaxTemplate(models.Model):
     children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 4))
+    amount = fields.Float(required=True, digits=(16, 4), default=0)
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -984,6 +984,13 @@ class AccountTaxRepartitionLineTemplate(models.Model):
         for record in self:
             if record.invoice_tax_template_id and record.refund_tax_template_id:
                 raise ValidationError(_("Tax repartition line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_template_id and refund_tax_template_id should not be set together."))
+
+    @api.constrains('plus_tag_ids', 'minus_tag_ids')
+    def validate_tags(self):
+        all_tax_rep_lines = self.mapped('plus_tag_ids') + self.mapped('minus_tag_ids')
+        lines_without_tag = all_tax_rep_lines.filtered(lambda x: not x.tag_name)
+        if lines_without_tag:
+            raise ValidationError(_("The following tax report lines are used in some tax repartition template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.") % str(lines_without_tag.mapped('name')))
 
     def get_repartition_line_create_vals(self):
         rslt = [(5, 0, 0)]
