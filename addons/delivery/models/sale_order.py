@@ -43,10 +43,7 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
 
         for order in self:
-            if order.state not in ('draft', 'sent'):
-                raise UserError(_('You can add delivery price only on unconfirmed quotations.'))
-            else:
-                order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
+            order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
         return True
 
     def action_open_delivery_wizard(self):
@@ -66,7 +63,8 @@ class SaleOrder(models.Model):
         }
 
     def recompute_delivery_cost(self):
-        delivery_line = self.order_line.filtered('is_delivery')
+        self.ensure_one()
+        delivery_line = self.order_line.filtered('is_delivery')[:1]
         res = self.carrier_id.rate_shipment(self)
         if res.get('success'):
             self.delivery_message = res.get('warning_message', False)
