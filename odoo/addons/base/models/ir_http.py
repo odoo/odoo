@@ -260,11 +260,19 @@ class IrHttp(models.AbstractModel):
         if not record or not record.exists() or field not in record:
             return None, 404
 
-        # access token grant access
-        if model == 'ir.attachment' and access_token:
-            record = record.sudo()
-            if not consteq(record.access_token or '', access_token):
+        if model == 'ir.attachment':
+            record_sudo = record.sudo()
+            if access_token and not consteq(record_sudo.access_token or '', access_token):
                 return None, 403
+            elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                record = record_sudo
+            elif record_sudo.public:
+                record = record_sudo
+            elif self.env.user.has_group('base.group_portal'):
+                # Check the read access on the record linked to the attachment
+                # eg: Allow to download an attachment on a task from /my/task/task_id 
+                record.check('read')
+                record = record_sudo
 
         # check read access
         try:
@@ -316,7 +324,7 @@ class IrHttp(models.AbstractModel):
 
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment:
-            field_attachment = self.env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
+            field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
             if field_attachment:
                 mimetype = field_attachment[0]['mimetype']
                 content = field_attachment[0]['datas']

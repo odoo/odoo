@@ -330,8 +330,10 @@ class IrAttachment(models.Model):
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         require_employee = False
         if self:
-            self._cr.execute('SELECT res_model, res_id, create_uid, public FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
-            for res_model, res_id, create_uid, public in self._cr.fetchall():
+            self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
+            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
+                if self.env.user.id != SUPERUSER_ID and not self.env.user._is_system() and res_field:
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if public and mode == 'read':
                     continue
                 if not (res_model and res_id):
@@ -367,14 +369,24 @@ class IrAttachment(models.Model):
             if not (self.env.user._is_admin() or self.env.user.has_group('base.group_user')):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
+    def _read_group_allowed_fields(self):
+        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'datas_fname', 'res_field', 'res_model']
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Override read_group to add res_field=False in domain if not present."""
+        if not fields:
+            raise AccessError(_("Sorry, you must provide fields to read on attachments"))
+        if any('(' in field for field in fields + groupby):
+            raise AccessError(_("Sorry, the syntax 'name:agg(field)' is not available for attachments"))
         if not any(item[0] in ('id', 'res_field') for item in domain):
             domain.insert(0, ('res_field', '=', False))
-        return super(IrAttachment, self).read_group(domain, fields, groupby,
-                                                    offset=offset, limit=limit,
-                                                    orderby=orderby, lazy=lazy)
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        allowed_fields = self._read_group_allowed_fields()
+        fields_set = set(field.split(':')[0] for field in fields + groupby)
+        if not self.env.user._is_system() and (not fields or fields_set.difference(allowed_fields)):
+            raise AccessError(_("Sorry, you are not allowed to access these fields on attachments."))
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -386,7 +398,7 @@ class IrAttachment(models.Model):
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)
 
-        if self._uid == SUPERUSER_ID:
+        if self.env.user._is_system():
             # rules do not apply for the superuser
             return len(ids) if count else ids
 
@@ -404,12 +416,19 @@ class IrAttachment(models.Model):
         # Use pure SQL rather than read() as it is about 50% faster for large dbs (100k+ docs),
         # and the permissions are checked in super() and below anyway.
         model_attachments = defaultdict(lambda: defaultdict(set))   # {res_model: {res_id: set(ids)}}
-        self._cr.execute("""SELECT id, res_model, res_id, public FROM ir_attachment WHERE id IN %s""", [tuple(ids)])
+        binary_fields_attachments = set()
+        self._cr.execute("""SELECT id, res_model, res_id, public, res_field FROM ir_attachment WHERE id IN %s""", [tuple(ids)])
         for row in self._cr.dictfetchall():
             if not row['res_model'] or row['public']:
                 continue
             # model_attachments = {res_model: {res_id: set(ids)}}
             model_attachments[row['res_model']][row['res_id']].add(row['id'])
+            # Should not retrieve binary fields attachments
+            if row['res_field']:
+                binary_fields_attachments.add(row['id'])
+
+        if binary_fields_attachments:
+            ids.difference_update(binary_fields_attachments)
 
         # To avoid multiple queries for each attachment found, checks are
         # performed in batch as much as possible.
