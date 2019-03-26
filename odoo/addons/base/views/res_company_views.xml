@@ -36,10 +36,12 @@
                                     <field name="vat"/>
                                     <field name="company_registry"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
-                                    <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
                                 </group>
                                 <group name="social_media"/>
+                                <group groups="base.group_multi_company" class="mt-0">
+                                    <field name="parent_id" groups="base.group_no_one"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
