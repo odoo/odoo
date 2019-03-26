@@ -7,7 +7,7 @@
                     <strong>Delivery Orders</strong>
                 </div>
                 <div>
-                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
+                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing')" t-as="i">
                         <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
                         <div id='picking_info'>
                             <a t-att-href="delivery_report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
