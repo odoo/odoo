@@ -6205,6 +6205,49 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable listview, pressing ESCAPE in dialog should set focus back to last active widget in editable row', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "partner,false,form": '<form>' +
+                    '<field name="display_name"/>' +
+                '</form>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "there should be one data row");
+
+        var $dropdown = form.$('tr.o_selected_row .o_field_many2one input').autocomplete('widget');
+        form.$('tr.o_selected_row .o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Create and Edit)').mouseenter().click();  // Open Create and Edit
+
+        $('.modal').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE}); // escape on modal
+
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row .o_field_many2one input')[0],
+            "many2one should have focus");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange in a one2many', function (assert) {
         assert.expect(1);
 

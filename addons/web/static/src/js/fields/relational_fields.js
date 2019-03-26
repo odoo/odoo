@@ -780,6 +780,7 @@ var FieldX2Many = AbstractField.extend({
         discard_changes: '_onDiscardChanges',
         edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
+        form_dialog_discarded: '_onFormDialogDiscarded',
         open_record: '_onOpenRecord',
         kanban_record_delete: '_onRemoveRecord',
         list_record_remove: '_onRemoveRecord',
@@ -1241,6 +1242,10 @@ var FieldX2Many = AbstractField.extend({
                 }
             });
         }
+    },
+    _onFormDialogDiscarded: function (e) {
+        e.stopPropagation();
+        this.renderer.focusLastActivatedWidget();
     },
     /**
      * Override to handle the navigation inside editable list controls

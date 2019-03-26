@@ -250,6 +250,17 @@ ListRenderer.include({
         this._selectCell(rowIndex, 0);
     },
     /**
+     * Put the focus on the last activated widget.
+     * This function is used when closing a dialog to give the focus back to the
+     * last active field in editable listview that has opened it
+     * and ensures that the focus is in the correct field.
+     */
+    focusLastActivatedWidget: function () {
+        if (this.currentRow !== null) {
+            this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
+        }
+    },
+    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *
