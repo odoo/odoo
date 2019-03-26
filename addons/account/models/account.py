@@ -958,7 +958,8 @@ class AccountTax(models.Model):
     def name_get(self):
         if not self._context.get('append_type_to_tax_name'):
             return super(AccountTax, self).name_get()
-        return [(tax.id, '%s (%s)' % (tax.name, tax.type_tax_use)) for tax in self]
+        tax_type = dict(self._fields['type_tax_use']._description_selection(self.env))
+        return [(tax.id, '%s (%s)' % (tax.name, tax_type.get(tax.type_tax_use))) for tax in self]
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
