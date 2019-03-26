@@ -189,7 +189,7 @@ class HolidaysType(models.Model):
 
         return result
 
-    @api.multi
+    @api.model
     def get_days_all_request(self):
         employee_id = self._get_contextual_employee_id()
 
