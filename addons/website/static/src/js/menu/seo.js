@@ -497,9 +497,7 @@ var MetaKeywords = Widget.extend({
             },
         });
         this._rpc({
-            model: 'website',
-            method: 'get_languages',
-            args: [[context.website_id]],
+            route: '/website/get_languages',
         }).then(function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,

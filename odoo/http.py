@@ -84,7 +84,6 @@ ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 #----------------------------------------------------------
 # Thread local global request object
 _request_stack = werkzeug.local.LocalStack()
-
 request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
@@ -268,13 +267,6 @@ class WebRequest(object):
         if self._env is None:
             self._env = odoo.api.Environment(self.cr, self.uid, self.context)
         return self._env
-
-    @lazy_property
-    def lang(self):
-        context = dict(self.context)
-        self.session._fix_lang(context)
-        self.context = context
-        return context["lang"]
 
     @lazy_property
     def session(self):
