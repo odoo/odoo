@@ -19,6 +19,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
     final_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
     product_tracking = fields.Selection(related="product_id.tracking")
+    consumption = fields.Selection([
+        ('strict', 'Strict'),
+        ('flexible', 'Flexible')],
+        required=True,
+    )
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
@@ -217,6 +222,8 @@ class MrpAbstractWorkorder(models.AbstractModel):
     def _update_raw_moves(self):
         """ Once the production is done, the lots written on workorder lines
         are saved on stock move lines"""
+        # Before writting produce quantities, we ensure they respect the bom strictness
+        self._strict_consumption_check()
         vals_list = []
         workorder_lines_to_process = self.workorder_line_ids.filtered(lambda line: line.qty_done > 0)
         for line in workorder_lines_to_process:
@@ -226,6 +233,16 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
         self.workorder_line_ids.unlink()
         self.env['stock.move.line'].create(vals_list)
+
+    def _strict_consumption_check(self):
+        if self.consumption == 'strict':
+            for move in self.move_raw_ids:
+                lines = self.workorder_line_ids.filtered(lambda l: l.move_id == move)
+                qty_done = sum(lines.mapped('qty_done'))
+                qty_to_consume = sum(lines.mapped('qty_to_consume'))
+                rounding = self.product_uom_id.rounding
+                if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
+                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
 
 
 class MrpAbstractWorkorderLine(models.AbstractModel):

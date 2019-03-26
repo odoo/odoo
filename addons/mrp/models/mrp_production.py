@@ -177,10 +177,6 @@ class MrpProduction(models.Model):
     post_visible = fields.Boolean(
         'Allowed to Post Inventory', compute='_compute_post_visible',
         help='Technical field to check when we can post')
-    consumed_less_than_planned = fields.Boolean(
-        compute='_compute_consumed_less_than_planned',
-        help='Technical field used to see if we have to display a warning or not when confirming an order.')
-
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self._uid)
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -339,19 +335,6 @@ class MrpProduction(models.Model):
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids | order.move_finished_ids)
             else:
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
-
-    @api.multi
-    @api.depends('move_raw_ids.quantity_done', 'move_raw_ids.product_uom_qty')
-    def _compute_consumed_less_than_planned(self):
-        """ Display a warning to the user if a component of the BoM has less
-        quantity than planned.
-        """
-        for order in self:
-            order.consumed_less_than_planned = any(order.move_raw_ids.filtered(
-                lambda move: float_compare(move.quantity_done,
-                                           move.product_uom_qty,
-                                           precision_rounding=move.product_uom.rounding) == -1)
-            )
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
@@ -740,6 +723,7 @@ class MrpProduction(models.Model):
                 'state': len(workorders) == 0 and 'ready' or 'pending',
                 'qty_producing': quantity,
                 'capacity': operation.workcenter_id.capacity,
+                'consumption': self.bom_id.consumption,
             })
             if workorders:
                 workorders[-1].next_work_order_id = workorder.id
