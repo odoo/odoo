@@ -62,6 +62,8 @@ class TestEquipmentMulticompany(TransactionCase):
             'name': 'Metrology',
             'company_id': company_a.id,
         })
+        # Switch the company of manager to handle the another company team
+        equipment_manager.company_id = company_b.id
         # create a maintenance team for company B user
         teamb = MaintenanceTeam.sudo(equipment_manager).create({
             'name': 'Subcontractor',
@@ -90,6 +92,8 @@ class TestEquipmentMulticompany(TransactionCase):
             'technician_user_id': equipment_manager.id,
         })
 
+        # switch company
+        equipment_manager.company_id = company_a.id
         # create equipment category for equipment user
         Category.sudo(equipment_manager).create({
             'name': 'Phones',
@@ -98,7 +102,7 @@ class TestEquipmentMulticompany(TransactionCase):
         })
 
         # Check category for user equipment_manager and user
-        self.assertEquals(Category.sudo(equipment_manager).search_count([]), 3)
+        self.assertEquals(Category.sudo(equipment_manager).search_count([]), 1)
         self.assertEquals(Category.sudo(user).search_count([]), 2)
 
         # User should not able to create equipment.
@@ -111,6 +115,8 @@ class TestEquipmentMulticompany(TransactionCase):
                 'owner_user_id': user.id,
             })
 
+        # switch company
+        equipment_manager.company_id = company_b.id
         Equipment.sudo(equipment_manager).create({
                 'name': 'Acer Laptop',
                 'category_id': category_1.id,
@@ -162,6 +168,8 @@ class TestEquipmentMulticompany(TransactionCase):
             'owner_user_id': user.id,
         })
 
+        # switch company
+        equipment_manager.company_id = company_a.id
         # Create an maintenance request for equipment_manager (Admin Follower)
         MaintenanceRequest.sudo(equipment_manager).create({
             'name': 'Battery drains fast',
@@ -171,5 +179,5 @@ class TestEquipmentMulticompany(TransactionCase):
         })
 
         # Now here is total 1 maintenance request can be view by Normal User
-        self.assertEquals(MaintenanceRequest.sudo(equipment_manager).search_count([]), 2)
+        self.assertEquals(MaintenanceRequest.sudo(equipment_manager).search_count([]), 1)
         self.assertEquals(MaintenanceRequest.sudo(user).search_count([]), 1)
