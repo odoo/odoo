@@ -43,6 +43,23 @@ var FormRenderer = BasicRenderer.extend({
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        this._isInDom = true;
+        _.forEach(this.allFieldWidgets, function (widgets){
+            _.invoke(widgets, 'on_attach_callback');
+        });
+        this._super.apply(this, arguments);
+    },
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this._isInDom = false;
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -234,15 +251,6 @@ var FormRenderer = BasicRenderer.extend({
                 }
             }
         });
-    },
-    /**
-     * Called each time the form view is attached into the DOM
-     */
-    on_attach_callback: function () {
-        _.forEach(this.allFieldWidgets, function (widgets){
-            _.invoke(widgets, 'on_attach_callback');
-        });
-        this._super.apply(this, arguments);
     },
     /**
      * @override method from AbstractRenderer
@@ -939,6 +947,11 @@ var FormRenderer = BasicRenderer.extend({
         }).then(function(){
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
+            }
+            if (self._isInDom) {
+                _.forEach(self.allFieldWidgets, function (widgets){
+                    _.invoke(widgets, 'on_attach_callback');
+                });
             }
         }).guardedCatch(function () {
             $form.remove();
