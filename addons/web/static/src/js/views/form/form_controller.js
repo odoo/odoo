@@ -284,6 +284,7 @@ var FormController = BasicController.extend({
                     } else if (e.shiftKey && e.target.classList.contains("btn-primary")) {
                         // If shift + tab is pressed then set focus back to last active widget
                         // do not pass index, it will automatically consider last widget from allFieldWidgets
+                        $saveCancelButtonContainer.tooltip('hide');
                         self.renderer._activatePreviousFieldWidget(self.renderer.state);
                     }
                     break;
