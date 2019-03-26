@@ -463,13 +463,13 @@ class MrpProduction(models.Model):
         self.is_locked = not self.is_locked
         return True
 
-    def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, subproduct_id=False):
+    def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom,
             'operation_id': operation_id,
-            'subproduct_id': subproduct_id,
+            'byproduct_id': byproduct_id,
             'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
@@ -488,12 +488,12 @@ class MrpProduction(models.Model):
 
     def _generate_finished_moves(self):
         moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
-        for sub_product in self.bom_id.sub_products:
+        for byproduct in self.bom_id.byproduct_ids:
             product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
-            qty = sub_product.product_qty * (product_uom_factor / self.bom_id.product_qty)
-            move_values = self._get_finished_move_value(sub_product.product_id.id,
-                qty, sub_product.product_uom_id.id, sub_product.operation_id.id,
-                sub_product.id)
+            qty = byproduct.product_qty * (product_uom_factor / self.bom_id.product_qty)
+            move_values = self._get_finished_move_value(byproduct.product_id.id,
+                qty, byproduct.product_uom_id.id, byproduct.operation_id.id,
+                byproduct.id)
             moves_values.append(move_values)
         moves = self.env['stock.move'].create(moves_values)
         return moves

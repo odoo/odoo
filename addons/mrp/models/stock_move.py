@@ -70,9 +70,9 @@ class StockMove(models.Model):
         'mrp.workorder', 'Work Order To Consume')
     # Quantities to process, in normalized UoMs
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
-    subproduct_id = fields.Many2one(
-        'mrp.subproduct', 'Subproduct',
-        help="Subproduct line that generated the move in a manufacturing order")
+    byproduct_id = fields.Many2one(
+        'mrp.bom.byproduct', 'By-products',
+        help="By-product line that generated the move in a manufacturing order")
     unit_factor = fields.Float('Unit Factor', default=1)
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done',

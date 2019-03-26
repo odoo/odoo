@@ -150,7 +150,7 @@ class TestTraceability(TestMrpCommon):
                 (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
                 (0, 0, {'product_id': product_2.id, 'product_qty': 1})
             ],
-            'sub_products': [
+            'byproduct_ids': [
                 (0, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'product_uom_id': byproduct_1.uom_id.id}),
                 (0, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'product_uom_id': byproduct_2.uom_id.id})
             ]})
