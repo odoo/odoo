@@ -47,6 +47,11 @@ class Website(models.Model):
         def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return def_lang.id if def_lang else self._active_languages()[0]
 
+    @api.depends('default_lang_id.iso_code', 'default_lang_id.website_lang_code')
+    def _get_default_iso_code(self):
+        for lang in self:
+            lang.default_website_lang_code = lang.default_lang_id.website_lang_code or lang.default_lang_id.iso_code
+
     name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
@@ -55,6 +60,7 @@ class Website(models.Model):
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True, readonly=False)
+    default_website_lang_code = fields.Char("Default website language code", compute="_get_default_iso_code", store=True, readonly=False)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     def _default_social_facebook(self):
@@ -405,14 +411,14 @@ class Website(models.Model):
 
     @tools.cache('self.id')
     def _get_languages(self):
-        return [(lg.code, lg.name) for lg in self.language_ids]
+        return [(lg.code, lg.request_lang, lg.name) for lg in self.language_ids]
 
     @api.multi
     def get_alternate_languages(self, req=None):
         langs = []
         if req is None:
             req = request.httprequest
-        default = self.get_current_website().default_lang_code
+        default = self.get_current_website().default_website_lang_code
         shorts = []
 
         def get_url_localized(router, lang):
@@ -423,11 +429,11 @@ class Website(models.Model):
             return router.build(request.endpoint, arguments)
 
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        for code, dummy in self.get_languages():
-            lg_path = ('/' + code) if code != default else ''
+        for code, iso_code, dummy in self.get_languages():
+            lg_path = ('/' + iso_code) if iso_code != default else ''
             lg_codes = code.split('_')
             shorts.append(lg_codes[0])
-            uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
+            uri = get_url_localized(router, iso_code) if request.endpoint else request.httprequest.path
             if req.query_string:
                 uri += u'?' + req.query_string.decode('utf-8')
             lang = {

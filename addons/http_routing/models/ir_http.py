@@ -135,20 +135,23 @@ def url_for(path_or_uri, lang=None):
     if not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(current_path, location)
 
-        lang = pycompat.to_text(lang or request.context.get('lang') or 'en_US')
-        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
+        if not lang:
+            lang = pycompat.to_text(request.context.get('lang') or 'en_US')
+            lang = request.env['ir.http']._get_languages().filtered(lambda l: l.code == lang).request_lang
+        langs = [lg[1] for lg in request.env['ir.http']._get_language_codes()]
 
         if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
             ps = location.split(u'/')
+            def_request_lang = request.env['ir.http']._get_default_lang().request_lang
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
                     ps[1] = lang
                 # Remove the default language unless it's explicitly provided
-                elif ps[1] == request.env['ir.http']._get_default_lang().code:
+                elif ps[1] == def_request_lang:
                     ps.pop(1)
             # Insert the context language or the provided language
-            elif lang != request.env['ir.http']._get_default_lang().code or force_lang:
+            elif lang != def_request_lang or force_lang:
                 ps.insert(1, lang)
             location = u'/'.join(ps)
 
@@ -157,7 +160,7 @@ def url_for(path_or_uri, lang=None):
 
 def is_multilang_url(local_url, langs=None):
     if not langs:
-        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
+        langs = [lg[1] for lg in request.env['ir.http']._get_language_codes()]
     spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in langs:
@@ -227,7 +230,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_language_codes(cls):
         languages = cls._get_languages()
-        return [(lang.code, lang.name) for lang in languages]
+        return [(lang.code, lang.request_lang, lang.name) for lang in languages]
 
     @classmethod
     def _get_default_lang(cls):
@@ -260,11 +263,11 @@ class IrHttp(models.AbstractModel):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
         short = lang.partition('_')[0]
         short_match = False
-        for code, dummy in cls._get_language_codes():
-            if code == lang:
-                return lang
+        for code, iso_code, dummy in cls._get_language_codes():
+            if code == lang or iso_code == lang:
+                return iso_code
             if not short_match and code.startswith(short):
-                short_match = code
+                short_match = iso_code
         return short_match
 
     @classmethod
@@ -292,15 +295,18 @@ class IrHttp(models.AbstractModel):
         if request.routing_iteration == 1:
             context = dict(request.context)
             path = request.httprequest.path.split('/')
-            langs = [lg.code for lg in cls._get_languages()]
+            lang_ids = cls._get_languages()
+            langs = [lg.request_lang for lg in lang_ids]
             is_a_bot = cls.is_a_bot()
             cook_lang = request.httprequest.cookies.get('frontend_lang')
             nearest_lang = not func and cls.get_nearest_lang(path[1])
             preferred_lang = ((cook_lang if cook_lang in langs else False)
                               or (not is_a_bot and cls.get_nearest_lang(request.lang))
-                              or cls._get_default_lang().code)
+                              or cls._get_default_lang().request_lang)
 
-            request.lang = context['lang'] = nearest_lang or preferred_lang
+            lang = nearest_lang or preferred_lang
+            request.lang = lang
+            context['lang'] = lang_ids.filtered(lambda l: l.request_lang == lang).code
 
             # bind modified context
             request.context = context
@@ -358,6 +364,7 @@ class IrHttp(models.AbstractModel):
             cls._add_dispatch_parameters(func)
 
             path = request.httprequest.path.split('/')
+            def_lang_code = cls._get_default_lang().request_lang
             if request.routing_iteration == 1:
                 is_a_bot = cls.is_a_bot()
                 nearest_lang = not func and cls.get_nearest_lang(path[1])
@@ -367,13 +374,13 @@ class IrHttp(models.AbstractModel):
                 # or no lang in url, and lang to dispay not the default language --> add lang
                 # and not a POST request
                 # and not a bot or bot but default lang in url
-                if ((url_lang and (url_lang != request.lang or url_lang == cls._get_default_lang().code))
-                        or (not url_lang and request.is_frontend_multilang and request.lang != cls._get_default_lang().code)
+                if ((url_lang and (url_lang != request.lang or url_lang == def_lang_code))
+                        or (not url_lang and request.is_frontend_multilang and request.lang != def_lang_code)
                         and request.httprequest.method != 'POST') \
-                        and (not is_a_bot or (url_lang and url_lang == cls._get_default_lang().code)):
+                        and (not is_a_bot or (url_lang and url_lang == def_lang_code)):
                     if url_lang:
                         path.pop(1)
-                    if request.lang != cls._get_default_lang().code:
+                    if request.lang != def_lang_code:
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
                     routing_error = None
@@ -386,7 +393,7 @@ class IrHttp(models.AbstractModel):
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
 
-            if request.lang == cls._get_default_lang().code:
+            if request.lang == def_lang_code:
                 context = dict(request.context)
                 context['edit_translations'] = False
                 request.context = context
@@ -434,7 +441,7 @@ class IrHttp(models.AbstractModel):
             generated_path = werkzeug.url_unquote_plus(path)
             current_path = werkzeug.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
-                if request.lang != cls._get_default_lang().code:
+                if request.lang != cls._get_default_lang().request_lang:
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string.decode('utf-8')

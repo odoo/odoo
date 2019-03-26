@@ -110,7 +110,7 @@ class Website(Home):
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
         if lang == 'default':
-            lang = request.website.default_lang_code
+            lang = request.website.default_website_lang_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
         redirect.set_cookie('frontend_lang', lang)
