@@ -215,6 +215,20 @@ class TestPayment(AccountingTestCase):
         ])
         self.assertEqual(inv_4.state, 'paid')
 
+        invoices = self.invoice_model
+        for count in range(200):
+            invoices += self.create_invoice(amount=100, partner=self.partner_agrolait.id, type='in_invoice')
+
+        register_payments = self.register_payments_model.with_context(active_ids=invoices.ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
+        })
+        register_payments.create_payments()
+
+        self.assertAlmostEquals(register_payments.amount, 20000)
+
     def test_partial_payment(self):
         """ Create test to pay invoices (cust. inv + vendor bill) with partial payment """
         # Test Customer Invoice
