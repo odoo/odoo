@@ -3274,7 +3274,7 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
         });
 
-        list.$('tr.o_data_row:last td:eq(1)').click();
+        testUtils.dom.click(list.$('tr.o_data_row:last td:eq(1)'));
         assert.strictEqual(document.activeElement,
             list.$('tr.o_selected_row .o_field_widget')[0], "foo should have focus");
 

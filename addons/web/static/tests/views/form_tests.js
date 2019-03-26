@@ -4231,7 +4231,8 @@ QUnit.module('Views', {
             },
             res_id: 2,
         });
-        form.$buttons.find('.o_form_button_edit').click();
+
+        testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
 
         assert.strictEqual(document.activeElement, form.$('[name="product_id"] input')[0],
             "product_id should have focus by default");
@@ -4248,7 +4249,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.renderer.lastActivatedFieldIndex, 0, "lastActivatedFieldIndex should be 0");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
-        form.$('.o_field_many2one input').click();
+        testUtils.dom.click(form.$('.o_field_many2one input'));
 
         // Open Create Edit Dialog
         testUtils.dom.click($dropdown.find('.o_m2o_dropdown_option:contains(Create)').mouseenter());
@@ -4282,7 +4283,7 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
         assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
             "product_id should be focused");
 
