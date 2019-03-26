@@ -38,7 +38,7 @@ class PurchaseOrder(models.Model):
             else:
                 self.origin = requisition.name
         self.notes = requisition.description
-        self.date_order = requisition.date_end or fields.Datetime.now()
+        self.date_order = fields.Datetime.now()
 
         if requisition.type_id.line_copy != 'copy':
             return

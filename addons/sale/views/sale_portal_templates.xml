@@ -161,7 +161,7 @@
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
                                 </li>
-                                <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item flex-grow-1">
+                                <li t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
