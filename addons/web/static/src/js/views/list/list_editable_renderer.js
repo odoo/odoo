@@ -934,7 +934,16 @@ ListRenderer.include({
                     // focus 1st control in case of x2many list
                     this.$('.o_field_x2many_list_row_add a:first').focus();
                 } else {
-                    this.trigger_up('focus_searchview');
+                    // if existing record then select that row so that user can press ENTER again and edit it again
+                    var record = _.findWhere(this.state.data, {id: ev.target.dataPointID});
+                    if (record) {
+                        var row = _.find(this.$('tbody .o_data_row'), function (tr) {
+                            return $(tr).data('id') === record.id;
+                        });
+                        $(row).find('.o_list_record_selector input').focus();
+                    } else {
+                        this.trigger_up('focus_searchview');
+                    }
                 }
                 break;
         }

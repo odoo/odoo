@@ -3228,7 +3228,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable listview, pressing ESCAPE set focus on searchview', function (assert) {
+    QUnit.test('editable listview, pressing ESCAPE while creating record set focus on searchview', function (assert) {
         assert.expect(2);
 
         this.actions = [{
@@ -3262,6 +3262,30 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement, actionManager.controlPanel.$('.o_searchview_input')[0],
             "focus should be set on searchview input");
         actionManager.destroy();
+    });
+
+    QUnit.test('editable listview, pressing ESCAPE while editing record set focus on row itself', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        list.$('tr.o_data_row:last td:eq(1)').click();
+        assert.strictEqual(document.activeElement,
+            list.$('tr.o_selected_row .o_field_widget')[0], "foo should have focus");
+
+        // press Escape key to discard current line
+        list.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+        }));
+        assert.strictEqual(document.activeElement,
+            list.$('tr.o_data_row:last .o_list_record_selector input')[0], "last row should have focus");
+
+        list.destroy();
     });
 
     QUnit.test('editable listview, press ENTER on selected row should open edit mode', function (assert) {
