@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="Configurator.language_promote">
         <t t-foreach="language" t-as="lang">
-            <option t-att-value="lang[0]" t-att-selected="lang[0] == def_lang ? 'selected' : null"><t t-esc="lang[1]" /></option>
+            <option t-att-value="lang[0]" t-att-selected="lang[0] == def_lang ? 'selected' : null"><t t-esc="lang[2]" /></option>
         </t>
     </t>
 

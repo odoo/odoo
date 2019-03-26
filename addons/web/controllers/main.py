@@ -762,7 +762,9 @@ class WebClient(http.Controller):
         # For performance reasons we only load a single translation, so for
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
-        lang = request.lang.split('_')[0]
+        context = dict(request.context)
+        request.session._fix_lang(context)
+        lang = context['lang'].split('_')[0]
 
         translations_per_module = {}
         for addon_name in mods:

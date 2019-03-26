@@ -649,7 +649,7 @@ class WebsiteSale(http.Controller):
         if mode[0] == 'new':
             new_values['company_id'] = request.website.company_id.id
 
-        lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
+        lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
         if mode == ('edit', 'billing') and order.partner_id.type == 'contact':

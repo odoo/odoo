@@ -122,10 +122,9 @@ class WebsiteVisitor(models.Model):
     def _create_visitor(self, website_page_id=False):
         country_code = request.session.get('geoip', {}).get('country_code', False)
         country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id if country_code else False
-        lang_id = request.env['res.lang'].sudo().search([('code', '=', request.lang)], limit=1).id
         vals = {
             'last_connection_datetime': datetime.now(),
-            'lang_id': lang_id,
+            'lang_id': request.lang.id,
             'country_id': country_id,
             'website_id': request.website.id
         }
