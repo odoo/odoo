@@ -125,6 +125,8 @@ class MrpWorkorder(models.Model):
     @api.one
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
+        if not self.production_id:
+            return
         rounding = self.production_id.product_uom_id.rounding
         self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
 
