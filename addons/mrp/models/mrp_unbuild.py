@@ -179,9 +179,9 @@ class MrpUnbuild(models.Model):
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)
-                for byproduct in unbuild.bom_id.sub_products:
+                for byproduct in unbuild.bom_id.byproduct_ids:
                     quantity = byproduct.product_qty * factor
-                    moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, subproduct_id=byproduct.id)
+                    moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, byproduct_id=byproduct.id)
         return moves
 
     def _generate_produce_moves(self):
@@ -213,7 +213,7 @@ class MrpUnbuild(models.Model):
             'unbuild_id': self.id,
         })
 
-    def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, subproduct_id=False):
+    def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, byproduct_id=False):
         location_id = bom_line_id and product.property_stock_production or self.location_id
         location_dest_id = bom_line_id and self.location_dest_id or product.property_stock_production
         warehouse = location_dest_id.get_warehouse()
@@ -221,7 +221,7 @@ class MrpUnbuild(models.Model):
             'name': self.name,
             'date': self.create_date,
             'bom_line_id': bom_line_id,
-            'subproduct_id': subproduct_id,
+            'byproduct_id': byproduct_id,
             'product_id': product.id,
             'product_uom_qty': quantity,
             'product_uom': product_uom.id,
