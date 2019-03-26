@@ -302,7 +302,7 @@ class View(models.Model):
         if request and getattr(request, 'is_frontend', False):
 
             editable = request.website.is_publisher()
-            translatable = editable and self._context.get('lang') != request.website.default_lang_code
+            translatable = editable and self._context.get('lang') != request.website.default_lang_id.code
             editable = not translatable and editable
 
             # in edit mode ir.ui.view will tag nodes
@@ -355,7 +355,7 @@ class View(models.Model):
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),
                 default_lang_code=request.env['ir.http']._get_default_lang().code,
-                languages=request.env['ir.http']._get_language_codes(),
+                languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
                 menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
@@ -367,7 +367,7 @@ class View(models.Model):
     def get_default_lang_code(self):
         website_id = self.env.context.get('website_id')
         if website_id:
-            lang_code = self.env['website'].browse(website_id).default_lang_code
+            lang_code = self.env['website'].browse(website_id).default_lang_id.code
             return lang_code
         else:
             return super(View, self).get_default_lang_code()
