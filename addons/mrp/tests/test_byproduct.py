@@ -45,7 +45,7 @@ class TestMrpByProduct(common.TransactionCase):
             'type': 'normal',
             'product_uom_id': self.uom_unit_id,
             'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
-            'sub_products': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
+            'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
             })
 
         # Create production order for product A
