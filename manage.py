@@ -46,7 +46,7 @@ def start_bootstrap(dbname, config_path=None):
             logger.exception('Failed to load server-wide module `%s`.%s', mod)
 
     # Get the most important things: DB cursor and registry (pooler) !!
-    db, pool = openerp.pooler.get_db_and_pool(dbname)
+    db, pool = openerp.pooler.get_db_and_pool(dbname, pooljobs=False)
     cr = db.cursor()
     cr.autocommit(True)
 
