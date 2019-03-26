@@ -5,6 +5,7 @@ from odoo.tests import Form
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as Dt
+from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
@@ -504,6 +505,7 @@ class TestMrpOrder(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_base_1='serial', qty_base_1=1, qty_final=2)
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
+        bom.consumption = 'flexible'
         lot_p1_1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': p1.id,
@@ -549,6 +551,7 @@ class TestMrpOrder(TestMrpCommon):
         mo, _, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot', qty_base_1=10, qty_final=1)
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
+        mo.bom_id.consumption = 'flexible'
         first_lot_for_p1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': p1.id,
@@ -701,6 +704,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 4)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
 
+        mo.bom_id.consumption = 'flexible'
         mo.action_assign()
 
         produce_form = Form(self.env['mrp.product.produce'].with_context({
@@ -723,6 +727,7 @@ class TestMrpOrder(TestMrpCommon):
         # try adding another product that doesn't belong to the BoM
         with produce_form.workorder_line_ids.new() as line:
             line.product_id = self.product_4
+            line.qty_done = 1
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
@@ -840,6 +845,62 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._gather(p1, self.stock_location, strict=True).quantity, -7)
         self.assertEqual(self.env['stock.quant']._gather(p2, self.stock_location, strict=True).quantity, -1)
         self.assertEqual(self.env['stock.quant']._gather(p_final, self.stock_location, strict=True).quantity, 3)
+
+    def test_product_produce_9(self):
+        """ Check that no produce line are created when the consumed products are not tracked """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+
+        mo.action_assign()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+
+        with self.assertRaises(UserError):
+            # try adding another line for a bom product to increase the quantity
+            with produce_form.workorder_line_ids.new() as line:
+                line.product_id = p1
+                line.qty_done = 1
+            product_produce = produce_form.save()
+            product_produce.do_produce()
+
+        with self.assertRaises(UserError):
+            # Try updating qty_done
+            product_produce = produce_form.save()
+            product_produce.workorder_line_ids[0].qty_done += 1
+            product_produce.do_produce()
+
+        with self.assertRaises(UserError):
+            # try adding another product
+            produce_form = Form(self.env['mrp.product.produce'].with_context({
+                'active_id': mo.id,
+                'active_ids': [mo.id],
+            }))
+            with produce_form.workorder_line_ids.new() as line:
+                line.product_id = self.product_4
+                line.qty_done = 1
+            product_produce = produce_form.save()
+            product_produce.do_produce()
+
+        # try adding another line for a bom product but the total quantity is good
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+
+        with produce_form.workorder_line_ids.new() as line:
+            line.product_id = p1
+            line.qty_done = 1
+        product_produce = produce_form.save()
+        product_produce.workorder_line_ids[1].qty_done -= 1
+        product_produce.do_produce()
 
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')

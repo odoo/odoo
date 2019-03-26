@@ -73,6 +73,7 @@
                             <group>
                                 <group>
                                     <field name="sequence"/>
+                                    <field name="consumption" attrs="{'invisible': [('type','=','phantom')]}"/>
                                 </group>
                                 <group>
                                     <field name="ready_to_produce" attrs="{'invisible': [('type','=','phantom')]}" string="Manufacturing Readiness"/>

@@ -25,6 +25,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.env['stock.move'].search([('product_id', 'in', [product_bolt.id, product_screw.id])])._do_unreserve()
         (product_bolt + product_screw).write({'type': 'product'})
 
+        self.env.ref("mrp.mrp_bom_desk").consumption = 'flexible'
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = dining_table
         production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
@@ -128,6 +129,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
         bom.routing_id = self.ref('mrp.mrp_routing_1')
+        bom.consumption = 'flexible'
 
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.routing_id.operation_ids[1]
