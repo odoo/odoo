@@ -2053,6 +2053,60 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('timezone does not affect drag and drop', function (assert) {
+        assert.expect(6);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start" mode="month">'+
+                '<field name="name"/>'+
+                '<field name="start"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[0], [6], "event 6 is moved")
+                    assert.deepEqual(args.args[1].start, "2016-11-29 08:00:00",
+                        "event moved to 27th nov 16h00 +40 hours timezone")
+                }
+                return this._super(route, args);
+            },
+            session: {
+                getTZOffset: function () {
+                    return -2400; // 40 hours timezone
+                },
+            },
+        });
+
+        var events = calendar.$('.fc-event').map(function () {
+            return $(this).text().trim().replace(/\s+/g, '|');
+        });
+
+        assert.strictEqual(events[0], "event|1|12/09/2016|08:00:00");
+        assert.strictEqual(events[5], "event|6|12/16/2016|16:00:00");
+
+        // Move event 6 as on first day of month view (27th november 2016)
+        testUtils.dragAndDrop(
+            calendar.$('.fc-event').eq(5),
+            calendar.$('.fc-day-top').first()
+        );
+
+        var events = calendar.$('.fc-event').map(function () {
+            return $(this).text().trim().replace(/\s+/g, '|');
+        });
+
+        assert.strictEqual(events[0], "event|6|11/27/2016|16:00:00");
+        assert.strictEqual(events[1], "event|1|12/09/2016|08:00:00");
+
+        calendar.destroy();
+    });
+
     QUnit.test('form_view_id attribute works (for creating events)', function (assert) {
         assert.expect(1);
 
