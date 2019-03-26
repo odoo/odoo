@@ -67,13 +67,15 @@
                 <td class="text-center td-price" name="price">
                   <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(main_product_attr_ids)"></ul>
                   <div class="hidden oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
-                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
-                    t-field="product.lst_price"
-                    t-options='{
-                      "widget": "monetary",
-                      "from_currency": product.currency_id,
-                      "display_currency": website.currency_id
-                   }'/>
+                  <t t-if="website.get_current_pricelist().discount_policy=='without_discount'">
+                    <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
+                      t-field="product.lst_price"
+                      t-options='{
+                        "widget": "monetary",
+                        "from_currency": product.currency_id,
+                        "display_currency": website.currency_id
+                    }'/>
+                  </t>
                   <span class="oe_price product_id" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
                     t-esc="product.website_price / quantity"
