@@ -79,7 +79,7 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
-        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.code))
+        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
 
     def _get_website_pricelists_domain(self, website_id):
         ''' Check above `_is_available_on_website` for explanation.
