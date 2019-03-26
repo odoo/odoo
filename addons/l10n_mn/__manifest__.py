@@ -7,7 +7,7 @@
     'category': 'Localization',
     "description": """
 This is the module to manage the accounting chart for Mongolia.
-========================================================================
+===============================================================
 
     * the Mongolia Official Chart of Accounts,
     * the Tax Code Chart for Mongolia
@@ -15,13 +15,13 @@ This is the module to manage the accounting chart for Mongolia.
 """,
     "depends": ['account'],
     'data': [
-        'data/l10n_mn_chart_data.xml',
+        'data/account_chart_template_data.xml',
         'data/account.account.tag.csv',
         'data/account.account.template.csv',
         'data/account.tax.group.csv',
         'data/account.tax.template.csv',
+        'data/account_fiscal_position_template_data.xml',
         'data/account.chart.template.csv',
-        'data/account_chart_template_data.xml',
-        'data/fiscal_templates_data.xml',
+        'data/account_chart_template_configuration_data.xml',
     ],
 }

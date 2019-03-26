@@ -7,19 +7,17 @@
         <field name="name">Дотоодын борлуулалт - Худалдан авалт</field>
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="auto_apply" eval="True" />
-        <field name="country_id" ref="base.mn"></field>
+        <field name="country_id" ref="base.mn"/>
     </record>
 
     <record id="fiscal_position_vat2" model="account.fiscal.position.template">
         <field name="name">НӨАТ 0% (3000000)</field>
         <field name="chart_template_id" ref="mn_chart_1"/>
-        <field name="auto_apply" eval="False" />
     </record>
 
     <record id="fiscal_position_vat3" model="account.fiscal.position.template">
         <field name="name">НӨАТ-гүй (2000000)</field>
         <field name="chart_template_id" ref="mn_chart_1"/>
-        <field name="auto_apply" eval="False" />
     </record>
     
     <record id="fiscal_position_vat4" model="account.fiscal.position.template">
@@ -148,7 +146,7 @@
 
     <record id="fp_tax_template_vat2_sale_vat22" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="fiscal_position_vat2" />
-        <field name="tax_src_id" ref="account_tax_sale_va22" />
+        <field name="tax_src_id" ref="account_tax_sale_vat22" />
         <field name="tax_dest_id" ref="account_tax_sale_vat2" />
     </record>
 
