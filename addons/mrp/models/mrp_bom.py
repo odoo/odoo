@@ -36,7 +36,7 @@ class MrpBom(models.Model):
         domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
-    sub_products = fields.One2many('mrp.subproduct', 'bom_id', 'Byproducts', copy=True)
+    byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'Byproducts', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits=dp.get_precision('Unit of Measure'), required=True)
@@ -353,8 +353,8 @@ class MrpBomLine(models.Model):
         }
 
 
-class MrpSubProduct(models.Model):
-    _name = 'mrp.subproduct'
+class MrpByProduct(models.Model):
+    _name = 'mrp.bom.byproduct'
     _description = 'Byproduct'
 
     product_id = fields.Many2one('product.product', 'By-product', required=True)
