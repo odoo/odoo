@@ -3,18 +3,20 @@
 <template id="report_purchasequotation_document">
     <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-        <t t-set="address">
-            <div t-field="o.partner_id"
+        <t t-set="address" >
+            <div t-field="o.partner_id" 
             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
             <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></p>
         </t>
-        <t t-if="o.dest_address_id">
-            <t t-set="information_block">
-                <strong>Shipping address:</strong>
-                <div t-field="o.dest_address_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
-            </t>
-        </t>
+
+        <t t-set="information_block" name="purchase_shipping_address">
+                <div t-if="o.dest_address_id">
+                    <strong>Shipping address:</strong>
+                    <div t-field="o.dest_address_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                </div>
+         </t>
+
         <div class="page">
             <div class="oe_structure"/>
 
