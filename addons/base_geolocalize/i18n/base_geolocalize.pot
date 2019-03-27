@@ -31,7 +31,17 @@ msgid "<span> ;  Long:  </span>"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:17
+#: code:addons/base_geolocalize/models/res_partner.py:18
+#, python-format
+msgid "API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:29
 #, python-format
 msgid "Cannot contact geolocation servers. Please make sure that your Internet connection is up and running (%s)."
 msgstr ""
@@ -71,3 +81,15 @@ msgstr ""
 msgid "Partner Assignation"
 msgstr ""
 
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:34
+#, python-format
+msgid "Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+"error_message"
+msgstr ""
