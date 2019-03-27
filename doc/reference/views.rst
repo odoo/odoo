@@ -469,7 +469,10 @@ system. Available semantic components are:
 
 ``field``
   renders (and allow edition of, possibly) a single field of the current
-  record. Possible attributes are:
+  record. Using several times a field in a form view is supported and the fields 
+  can receive different values for modifiers 'invisible' and 'readonly'. However,
+  the behavior is not guaranteed when several fields exist with different values 
+  for modifier 'required'. Possible attributes of the field node are:
 
   ``name`` (mandatory)
     the name of the field to render

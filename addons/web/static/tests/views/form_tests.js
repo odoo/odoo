@@ -172,6 +172,95 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('duplicate fields rendered properly', async function (assert) {
+        assert.expect(6);
+        this.data.partner.records.push({
+            id: 6,
+            bar: true,
+            foo: "blip",
+            int_field: 9,
+        })
+        var form = await createView({
+            View: FormView,
+            viewOptions: { mode: 'edit' },
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' + 
+                        '<group>' + 
+                            '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',True)]}"/>' +
+                            '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',False)]}"/>' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',False)]}"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',True)]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' + 
+                    '</group>' + 
+                '</form>',
+            res_id: 6,
+        });
+
+        assert.hasClass(form.$('div.o_group input[name="foo"]:eq(0)'), 'o_invisible_modifier', 'first foo widget should be invisible');
+        assert.containsOnce(form, 'div.o_group input[name="foo"]:eq(1):not(.o_invisible_modifier)', "second foo widget should be visible");
+        assert.containsOnce(form, 'div.o_group input[name="foo"]:eq(2):not(.o_invisible_modifier)', "third foo widget should be visible");
+        await testUtils.fields.editInput(form.$('div.o_group input[name="foo"]:eq(2)'), "hello");
+        assert.strictEqual(form.$('div.o_group input[name="foo"]:eq(1)').val(), "hello", "second foo widget should be 'hello'");
+        assert.containsOnce(form, 'div.o_group input[name="int_field"]:eq(0):not(.o_readonly_modifier)', "first int_field widget should not be readonly");
+        assert.hasClass(form.$('div.o_group span[name="int_field"]:eq(0)'),'o_readonly_modifier', "second int_field widget should be readonly");
+        form.destroy();
+    });
+   
+    QUnit.test('duplicate fields rendered properly (one2many)', async function (assert) {
+        assert.expect(7);
+        this.data.partner.records.push({
+            id: 6,
+            p: [1],
+        })
+        var form = await createView({
+            View: FormView,
+            viewOptions: { mode: 'edit' },
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<notebook>' +
+                        '<page>' +
+                            '<field name="p">' +
+                                '<tree editable="True">' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                                '<form/>' +
+                            '</field>' +
+                        '</page>' +
+                        '<page>' +
+                            '<field name="p" readonly="True">' +
+                                '<tree editable="True">' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                                '<form/>' +
+                            '</field>' +
+                        '</page>' +
+                    '</notebook>' +
+                '</form>',
+            res_id: 6,
+        });
+        assert.containsOnce(form, 'div.o_field_one2many:eq(0):not(.o_readonly_modifier)', "first one2many widget should not be readonly");
+        assert.hasClass(form.$('div.o_field_one2many:eq(1)'),'o_readonly_modifier', "second one2many widget should be readonly");
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)')); 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop", 
+            "first line in one2many of first tab contains yop");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), 
+            "yop", "first line in one2many of second tab contains yop");
+        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]'), "hello");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello", 
+            "first line in one2many of second tab contains hello");
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)')); 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
+            "second line in one2many of first tab contains 'My little Foo Value'");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(), 
+            "My little Foo Value", "first line in one2many of second tab contains hello");
+        form.destroy();
+    });
+
     QUnit.test('attributes are transferred on async widgets', async function (assert) {
         assert.expect(1);
         var done  = assert.async();
