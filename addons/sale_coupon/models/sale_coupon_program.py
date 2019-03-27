@@ -101,7 +101,7 @@ class SaleCouponProgram(models.Model):
                 'sale_ok': False,
                 'purchase_ok': False,
                 'invoice_policy': 'order',
-                'lst_price': -1000000,  # Prevent pricelist strikethrough as negative value will always be lower then default 1$
+                'lst_price': 0, #Do not set a high value to avoid issue with coupon code
             })
             program.write({'discount_line_product_id': discount_line_product_id.id})
         return program
