@@ -188,9 +188,11 @@ class AccountInvoice(models.Model):
                             for val_stock_move in valuation_stock_move:
                                 # In case val_stock_move is a return move, its valuation entries have been made with the
                                 # currency rate corresponding to the original stock move
-                                valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date_expected
+                                valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
                                 valuation_price_unit_total += company_currency.with_context(date=valuation_date).compute(abs(val_stock_move.price_unit) * val_stock_move.product_qty, inv.currency_id, round=False)
                                 valuation_total_qty += val_stock_move.product_qty
+
+                            # in Stock Move, price unit is in company_currency
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
                             line_quantity = valuation_total_qty
@@ -203,7 +205,6 @@ class AccountInvoice(models.Model):
                     invoice_cur_prec = inv.currency_id.decimal_places
 
                     if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
-
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
