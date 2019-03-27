@@ -14710,6 +14710,82 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('when navigating through o2m and press Shift+Tab on first widget of row should navigate to previous widget in form', function (assert) {
+        assert.expect(8);
+
+        // this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            viewOptions: {
+                mode: 'edit',
+            },
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="display_name"]')[0],
+            "display_name should have focus");
+
+        // press tab to navigate to the o2m list
+        form.$('.o_field_widget[name="display_name"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+
+        assert.strictEqual(form.$('.o_field_one2many .o_data_row.o_selected_row').index(), 1,
+            "one2many editable row should open and second row should have focus");
+        assert.strictEqual(form.$('input[name="turtle_foo"]')[0], document.activeElement,
+            "after tab, the focus should be on the many2one inside o2m editable list");
+
+        // press shift + tab to navigate to previous row in editable list
+        form.$('.o_field_widget[name="turtle_foo"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+            shiftKey: true,
+        }));
+
+        assert.strictEqual(form.$('.o_field_one2many .o_data_row.o_selected_row').index(), 0,
+            "first row should have been activated");
+        assert.strictEqual(form.$('.o_field_many2one[name="turtle_trululu"] input')[0], document.activeElement,
+            "first row's last field(i.e. turtle_trululu) should have focus after shift + tab");
+
+        // press shift + tab to navigate to previous widget in editable row
+        form.$('.o_field_many2one[name="turtle_trululu"] input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+            shiftKey: true,
+        }));
+        assert.strictEqual(form.$('input[name="turtle_foo"]')[0], document.activeElement,
+            "after tab, the focus should be on the many2one");
+
+        // press shift + tab to get out of editable list and navigate to previous widget in form
+        form.$('.o_field_widget[name="turtle_foo"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+            shiftKey: true,
+        }));
+
+        assert.notOk(form.$('.o_field_one2many .o_data_row.o_selected_row').length,
+            "one2many editable row should have been closed");
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="display_name"]')[0],
+            "display_name should have focus");
+
+        form.destroy();
+    });
 });
 });
 });

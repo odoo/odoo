@@ -489,7 +489,7 @@ ListRenderer.include({
      */
     _moveToPreviousLine: function () {
         if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.columns.length - 1);
+            this._selectCell(this.currentRow - 1, this.columns.length - 1, {inc: -1});
         } else {
             this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
@@ -726,7 +726,7 @@ ListRenderer.include({
             var oldFieldIndex = self.currentFieldIndex;
             self.currentFieldIndex = fieldIndex;
             fieldIndex = self._activateFieldWidget(record, fieldIndex, {
-                inc: 1,
+                inc: options.inc || 1,
                 wrap: wrap,
                 event: options && options.event,
             });
@@ -845,15 +845,35 @@ ListRenderer.include({
         }
     },
     /**
+     * It will returns the first visible widget that is editable
+     *
+     * @private
+     * @returns {Class} Widget returns last widget
+     */
+    _getFirstWidget: function () {
+        var widgets = this._getVisibleWidgets();
+        return _.first(widgets);
+    },
+    /**
      * It will returns the last visible widget that is editable
      *
      * @private
      * @returns {Class} Widget returns last widget
      */
     _getLastWidget: function () {
+        var widgets = this._getVisibleWidgets();
+        return _.last(widgets);
+    },
+    /**
+     * It will return visible widgets that are editable
+     *
+     * @private
+     * @returns [{Class}, {Class}, ...] visible Widgets
+     */
+    _getVisibleWidgets: function () {
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
-        var lastWidget = _.chain(recordWidgets).filter(function (widget) {
+        var widgets = _.filter(recordWidgets, function (widget) {
             var isLast =
                 widget.$el.is(':visible') &&
                 (
@@ -862,8 +882,8 @@ ListRenderer.include({
                 ) &&
                 !widget.$el.hasClass('o_readonly_modifier');
             return isLast;
-        }).last().value();
-        return lastWidget;
+        });
+        return widgets;
     },
 
     /**
@@ -885,11 +905,24 @@ ListRenderer.include({
         ev.stopPropagation(); // stop the event, the action is done by this renderer
         switch (ev.data.direction) {
             case 'previous':
-                if (this.currentFieldIndex > 0) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
-                        .fail(this._moveToPreviousLine.bind(this));
+                // when navigating with keyboard, we want to get out of the list editable if focus
+                // is on first field of first row and SHIFT + TAB is pressed, try to focus on previous
+                // field in parent view, else if classic listview then call _moveToPreviousLine
+                var column = this.columns[this.currentFieldIndex];
+                var firstWidget = this._getFirstWidget();
+                if (this.currentRow === 0 && column.attrs.name === firstWidget.name) {
+                    var isPreviousWidgetActivated = false;
+                    this.trigger_up('activate_previous_widget', {
+                        successCallback: function () {isPreviousWidgetActivated = true;},
+                    });
+                    if (!isPreviousWidgetActivated) {this._moveToPreviousLine()}
                 } else {
-                    this._moveToPreviousLine();
+                    if (this.currentFieldIndex > 0) {
+                        this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false, inc: -1})
+                            .fail(this._moveToPreviousLine.bind(this));
+                    } else {
+                        this._moveToPreviousLine();
+                    }
                 }
                 break;
             case 'next':
