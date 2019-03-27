@@ -108,15 +108,16 @@ class MrpWorkorder(models.Model):
 
     @api.depends('production_id')
     def _compute_final_lot_domain(self):
-        # check if self is not the first workorder in the list
-        if self.env['mrp.workorder'].search([('next_work_order_id', '=', self.id)]):
-            self.final_lot_domain = self.env['stock.production.lot'].search([
-                ('use_next_on_work_order_id', '=', self.id),
-            ]).ids
-        else:
-            self.final_lot_domain = self.env['stock.production.lot'].search([
-                ('product_id', '=', self.product_id.id),
-            ]).ids
+        for wo in self:
+            # check if self is not the first workorder in the list
+            if self.env['mrp.workorder'].search([('next_work_order_id', '=', wo.id)]):
+                wo.final_lot_domain = self.env['stock.production.lot'].search([
+                    ('use_next_on_work_order_id', '=', wo.id),
+                ]).ids
+            else:
+                wo.final_lot_domain = self.env['stock.production.lot'].search([
+                    ('product_id', '=', wo.product_id.id),
+                ]).ids
 
     @api.multi
     def name_get(self):

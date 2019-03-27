@@ -26,7 +26,7 @@
                             </div>
                             <label for="quantity_done" attrs="{'invisible': [('parent.state', '=', 'draft')]}"/>
                             <div class="o_row" attrs="{'invisible': [('parent.state', '=', 'draft')]}">
-                                <span><field name="quantity_done" attrs="{'readonly': ['|', ('is_locked', '=', True), '|', ('finished_lots_exist', '=', True), ('has_tracking', '!=', 'none')]}" nolabel="1"/></span>
+                                <span><field name="quantity_done" attrs="{'readonly': ['|', '|', ('move_line_ids', '!=', False), ('is_locked', '=', True), '|', ('finished_lots_exist', '=', True), ('has_tracking', '!=', 'none')]}" nolabel="1"/></span>
                                 <span> / </span>
                                 <span><field name="reserved_availability" nolabel="1"/></span>
                             </div>
@@ -55,7 +55,6 @@
                             <field name="lot_produced_id" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.order_finished_lot_ids)]" invisible="not context.get('final_lots')"/>
                             <field name="product_uom_qty" string="Reserved" readonly="1"/>
                             <field name="qty_done"/>
-                            <field name="product_qty" invisible="1"/>
                             <field name="workorder_id" invisible="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="product_uom_id" invisible="1"/>

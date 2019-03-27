@@ -58,7 +58,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 self.production_id.product_uom_id,
                 round=False
             )
-            qty_todo = float_round(new_qty - sum(move_workorder_lines.mapped('qty_done')), precision_rounding=rounding)
+            qty_todo = float_round(new_qty - sum(move_workorder_lines.mapped('qty_to_consume')), precision_rounding=rounding)
 
             # Remove or lower quantity on exisiting workorder lines
             if float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
@@ -95,7 +95,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     if float_compare(qty_reserved_remaining, 0, precision_rounding=rounding) > 0:
                         qty_to_add = min(qty_reserved_remaining, qty_todo)
                         line_values['to_update'][workorder_line] = {
-                            'qty_done': workorder_line.qty_done + qty_to_add,
+                            'qty_done': workorder_line.qty_to_consume + qty_to_add,
                             'qty_to_consume': workorder_line.qty_to_consume + qty_to_add,
                             'qty_reserved': workorder_line.qty_reserved + qty_to_add,
                         }
@@ -104,7 +104,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
                     if not workorder_line.qty_reserved and not workorder_line.lot_id and workorder_line.product_tracking != 'serial':
                         line_values['to_update'][workorder_line] = {
-                            'qty_done': workorder_line.qty_done + qty_todo,
+                            'qty_done': workorder_line.qty_to_consume + qty_todo,
                             'qty_to_consume': workorder_line.qty_to_consume + qty_todo,
                         }
                         qty_todo = 0
