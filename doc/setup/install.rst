@@ -94,6 +94,18 @@ install it locally.
 Like demo_ instances, SaaS_ instances require no local installation, a web
 browser is sufficient.
 
+Odoo.sh
+-------
+
+A continuous integration hosting platform also managed by Odoo S.A.. In
+addition to the hosting service, `Odoo.sh <https://www.odoo.sh/>`_ offers
+a multitude of tools and utilities to help you develop and integrate code
+customizations. Built for a more advanced usage of the Odoo Enterprise
+Edition, it's tightly integrated with Github.
+
+Same as for demo_ and SaaS_ instances, `Odoo.sh <https://www.odoo.sh/>`_
+instances only require a web browser.
+
 .. _setup/install/packaged:
 
 Packaged installers
