@@ -225,15 +225,15 @@ var LivechatButton = Widget.extend({
                     parent: self,
                     data: livechatData
                 });
-                self._openChatWindow();
-                self._sendWelcomeMessage();
-                self._renderMessages();
+                return self._openChatWindow().then(function () {
+                    self._sendWelcomeMessage();
+                    self._renderMessages();
+                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
+                    self.call('bus_service', 'startPolling');
 
-                self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                self.call('bus_service', 'startPolling');
-
-                utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
-                utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                });
             }
         }).then(function () {
             self._openingChat = false;
@@ -243,6 +243,7 @@ var LivechatButton = Widget.extend({
     }, 200, true),
     /**
      * @private
+     * @return {Promise}
      */
     _openChatWindow: function () {
         var self = this;
@@ -251,7 +252,7 @@ var LivechatButton = Widget.extend({
             placeholder: this.options.input_placeholder || "",
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
-        this._chatWindow.appendTo($('body')).then(function () {
+        return this._chatWindow.appendTo($('body')).then(function () {
             var cssProps = {bottom: 0};
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
             self._chatWindow.$el.css(cssProps);
