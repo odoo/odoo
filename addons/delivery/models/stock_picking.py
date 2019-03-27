@@ -101,7 +101,7 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight_uom_id = weight_uom_id
 
-    @api.depends('move_lines')
+    @api.depends('move_lines', 'move_ids_without_package')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
