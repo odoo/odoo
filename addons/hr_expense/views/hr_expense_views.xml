@@ -89,7 +89,7 @@
                         </group><group>
                             <field name="reference"/>
                             <field name="date"/>
-                            <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
