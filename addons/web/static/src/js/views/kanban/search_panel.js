@@ -140,8 +140,11 @@ var SearchPanel = Widget.extend({
         });
         Object.keys(category.values).forEach(function (valueId) {
             var value = category.values[valueId];
-            if (value.parentId) {
+            if (value.parentId && category.values[value.parentId]) {
                 category.values[value.parentId].childrenIds.push(value.id);
+            } else {
+            	value.parentId = false;
+            	value[parentField] = false;
             }
         });
         category.rootIds = Object.keys(category.values).filter(function (valueId) {
