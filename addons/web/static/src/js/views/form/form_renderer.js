@@ -284,6 +284,16 @@ var FormRenderer = BasicRenderer.extend({
         return this.lastActivatedFieldIndex;
     },
     /**
+     * override this method to store last activated field index
+     * last activated field index will be useful when dialog is closed and give focus back to last active field
+     *
+     * @override
+     */
+    _activatePreviousFieldWidget: function (record, currentIndex) {
+        this.lastActivatedFieldIndex = this._super.apply(this, arguments);
+        return this.lastActivatedFieldIndex;
+    },
+    /**
      * Add a tooltip on a button
      *
      * @private

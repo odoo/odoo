@@ -4210,6 +4210,67 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('pressing ESCAPE on create and edit dialog should set focus back on the same field in form view', function (assert) {
+        assert.expect(7);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form>' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="name"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            res_id: 2,
+        });
+
+        testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+
+        assert.strictEqual(document.activeElement, form.$('[name="product_id"] input')[0],
+            "product_id should have focus by default");
+
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "product_id should have focus by default");
+        assert.strictEqual(form.renderer.lastActivatedFieldIndex, 1, "lastActivatedFieldIndex should be 1");
+
+        // going back using shift + tab should set lastActivatedFieldIndex of form renderer
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB, shiftKey: true});
+        assert.strictEqual(document.activeElement, form.$('[name="product_id"] input')[0],
+            "product_id should have focus by default");
+        assert.strictEqual(form.renderer.lastActivatedFieldIndex, 0, "lastActivatedFieldIndex should be 0");
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        testUtils.dom.click(form.$('.o_field_many2one input'));
+
+        // Open Create Edit Dialog
+        testUtils.dom.click($dropdown.find('.o_m2o_dropdown_option:contains(Create)').mouseenter());
+        assert.strictEqual($('.modal-dialog').length, 1, "create edit dialog should be opened");
+
+        // Press ESC to cancel create dialog
+        $('.modal-body input[name="name"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
+            "product_id field should be focused");
+
+        form.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
         assert.expect(1);
 
