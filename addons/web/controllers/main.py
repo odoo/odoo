@@ -878,8 +878,7 @@ class DataSet(http.Controller):
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         return self.do_search_read(model, fields, offset, limit, domain, sort)
 
-    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None
-                       , sort=None):
+    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -896,22 +895,7 @@ class DataSet(http.Controller):
         :rtype: list
         """
         Model = request.env[model]
-
-        records = Model.search_read(domain, fields,
-                                    offset=offset or 0, limit=limit or False, order=sort or False)
-        if not records:
-            return {
-                'length': 0,
-                'records': []
-            }
-        if limit and len(records) == limit:
-            length = Model.search_count(domain)
-        else:
-            length = len(records) + (offset or 0)
-        return {
-            'length': length,
-            'records': records
-        }
+        return Model.web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
 
     @http.route('/web/dataset/load', type='json', auth="user")
     def load(self, model, id, fields):

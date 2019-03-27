@@ -89,9 +89,11 @@ odoo.define('web.ListModel', function (require) {
          * @override
          * @private
          */
-        _readGroup: function (list) {
+        _readGroup: function (list, options) {
             var self = this;
-            return this._super.apply(this, arguments).then(function (result) {
+            options = options || {};
+            options.fetchRecordsWithGroups = true;
+            return this._super(list, options).then(function (result) {
                 var prom;
                 if (!list.parentID) {
                     // groupbys buttons are only displayed on the first level of

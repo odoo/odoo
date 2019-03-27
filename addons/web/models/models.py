@@ -18,11 +18,41 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
-                       lazy=True):
+    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         """
-        Returns the result of a read_group and the total number of groups matching the search
-        domain.
+        Performs a search_read and a search_count.
+
+        :param domain: search domain
+        :param fields: list of fields to read
+        :param limit: maximum number of records to read
+        :param offset: number of records to skip
+        :param order: columns to sort results
+        :return: {
+            'records': array of read records (result of a call to 'search_read')
+            'length': number of records matching the domain (result of a call to 'search_count')
+        }
+        """
+        records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
+        if not records:
+            return {
+                'length': 0,
+                'records': []
+            }
+        if limit and len(records) == limit:
+            length = self.search_count(domain)
+        else:
+            length = len(records) + offset
+        return {
+            'length': length,
+            'records': records
+        }
+
+    @api.model
+    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
+                       lazy=True, expand=False, expand_limit=None, expand_orderby=False):
+        """
+        Returns the result of a read_group (and optionally search for and read records inside each
+        group), and the total number of groups matching the search domain.
 
         :param domain: search domain
         :param fields: list of fields to read (see ``fields``` param of ``read_group``)
@@ -31,13 +61,16 @@ class Base(models.AbstractModel):
         :param offset: see ``offset`` param of ``read_group``
         :param orderby: see ``orderby`` param of ``read_group``
         :param lazy: see ``lazy`` param of ``read_group``
+        :param expand: if true, and groupby only contains one field, read records inside each group
+        :param expand_limit: maximum number of records to read in each group
+        :param expand_orderby: order to apply when reading records in each group
         :return: {
             'groups': array of read groups
             'length': total number of groups
         }
         """
-        groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
-                                 orderby=orderby, lazy=lazy)
+        groups = self._web_read_group(domain, fields, groupby, limit, offset, orderby, lazy, expand,
+                                      expand_limit, expand_orderby)
 
         if not groups:
             length = 0
@@ -50,6 +83,26 @@ class Base(models.AbstractModel):
             'groups': groups,
             'length': length
         }
+
+    @api.model
+    def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
+                        lazy=True, expand=False, expand_limit=None, expand_orderby=False):
+        """
+        Performs a read_group and optionally a web_search_read for each group.
+        See ``web_read_group`` for params description.
+
+        :returns: array of groups
+        """
+        groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
+                                 orderby=orderby, lazy=lazy)
+
+        if expand and len(groupby) == 1:
+            for group in groups:
+                group['__data'] = self.web_search_read(domain=group['__domain'], fields=fields,
+                                                       offset=0, limit=expand_limit,
+                                                       order=expand_orderby)
+
+        return groups
 
     @api.model
     def read_progress_bar(self, domain, group_by, progress_bar):
