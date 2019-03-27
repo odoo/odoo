@@ -4172,6 +4172,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with o2m form popup, closing o2m form popup should set focus back to o2m', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="name"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<group>' +
+                                    '<field name="name"/>' +
+                                '</group>' +
+                            '</form>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        // keep first field as char field to navigate to o2m to increase lastActivatedFieldIndex
+        // and when o2m is focused it will automatically open form dialog
+        form.$('[name="foo"]').trigger($.Event('keydown', { which: $.ui.keyCode.TAB }));
+
+        $('.modal-body .o_field_widget[name=name]').val('new name').trigger('input');
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        testUtils.dom.click($('.modal-footer button:first')); // save & close
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a')[0],
+            "add a line should be focused");
+
+        form.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
         assert.expect(1);
 
