@@ -4271,6 +4271,43 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('shift + tab on save button should set focus on last widget in form', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
+            "product_id should be focused");
+
+        form.$('.o_field_widget[name="product_id"] input').trigger($.Event('keydown',
+            {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo should be focused");
+
+        form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(document.activeElement, form.$buttons.find('.o_form_button_save')[0],
+            "Save button should have focus");
+
+        // Shift + Tab on save button should set focus back to last widget in form
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo(last element) should be focused");
+        form.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
         assert.expect(1);
 
