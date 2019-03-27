@@ -92,6 +92,7 @@ class account_payment(models.Model):
         default='Write-Off')
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]})
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
+    require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
     @api.model
     def default_get(self, fields):
@@ -131,12 +132,17 @@ class account_payment(models.Model):
     def _get_method_codes_using_bank_account(self):
         return []
 
+    @api.model
+    def _get_method_codes_needing_bank_account(self):
+        return []
+
     @api.depends('payment_method_code')
     def _compute_show_partner_bank(self):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
+            payment.require_partner_bank_account = payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
