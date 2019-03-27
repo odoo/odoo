@@ -82,26 +82,6 @@
         </div>
     </t>
 
-    <t t-name="website.SalesChartTooltip">
-        <table>
-            <thead>
-                <tr><td colspan="3"><strong><t t-esc="chartData.series[0].key"/></strong></td></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="legend-color-guide"><div class="o_legend0"/></td>
-                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value))"/></td>
-                    <td class="value"><t t-esc="format.float(chartData.series[0].data[1])"/></td>
-                </tr>
-                <tr>
-                    <td class="legend-color-guide"><div class="o_legend1"/></td>
-                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value).subtract(1, dateRange))"/></td>
-                    <td class="value"><t t-esc="format.float(chartData.series[1].data[1])"/></td>
-                </tr>
-            </tbody>
-        </table>
-    </t>
-
     <t t-name="website.GoToButtons">
         <a role="button" href="/" class="btn btn-primary" title="Go to Website">
             Go to Website
