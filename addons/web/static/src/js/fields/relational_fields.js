@@ -818,6 +818,7 @@ var FieldX2Many = AbstractField.extend({
         save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
         activate_next_widget: '_onActiveNextWidget',
+        activate_previous_widget: '_onActivePreviousWidget',
         navigation_move: '_onNavigationMove',
     }),
 
@@ -1411,6 +1412,19 @@ var FieldX2Many = AbstractField.extend({
         e.stopPropagation();
         this.renderer.unselectRow();
         this.trigger_up('navigation_move',{direction:'next'});
+    },
+    /**
+     * this method used to set focus back to previous widget
+     * most likely trigerred from list editable renderer
+     * to set focus back to previous widget in form
+     *
+     * @private
+     */
+    _onActivePreviousWidget: function (ev) {
+        ev.stopPropagation();
+        this.renderer.unselectRow();
+        this.trigger_up('navigation_move',{direction:'previous'});
+        ev.data.successCallback();
     },
 });
 
