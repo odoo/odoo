@@ -598,8 +598,9 @@ class RepairLine(models.Model):
                     'title': _('No pricelist found.'),
                     'message':
                         _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
-            if warning:
                 return {'warning': warning}
+            else:
+                self._onchange_product_uom()
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
@@ -665,6 +666,8 @@ class RepairFee(models.Model):
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
             return {'warning': warning}
+        else:
+            self._onchange_product_uom()
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
