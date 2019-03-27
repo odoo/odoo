@@ -810,6 +810,7 @@ var FieldX2Many = AbstractField.extend({
         discard_changes: '_onDiscardChanges',
         edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
+        form_dialog_discarded: '_onFormDialogDiscarded',
         open_record: '_onOpenRecord',
         kanban_record_delete: '_onRemoveRecord',
         list_record_remove: '_onRemoveRecord',
@@ -1270,6 +1271,21 @@ var FieldX2Many = AbstractField.extend({
                     ev.data.onFailure();
                 }
             });
+        }
+    },
+    /**
+     * this method is called to set focus back to last active widget when dialog is closed
+     * consider editable o2m opens m2o dialog, when m2o dialog is closed it should set focus
+     * back to m2o field in editable o2m list
+     *
+     * @private
+     */
+    _onFormDialogDiscarded: function (e) {
+        e.stopPropagation();
+        if (this.view.arch.tag === 'kanban') {
+            this.$buttons.find('button.o-kanban-button-new').focus();
+        } else {
+            this.renderer.focusLastActivatedWidget();
         }
     },
     /**
