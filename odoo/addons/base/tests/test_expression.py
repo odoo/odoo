@@ -988,3 +988,26 @@ class TestAutoJoin(TransactionCase):
         # Test produced queries
         self.assertEqual(len(self.query_list), 1,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
+
+    def test_auto_join_with_limit(self):
+        user1 = self.env['res.users'].create({
+            'login': 'user01',
+            'name': 'user01',
+        })
+        user2 = self.env['res.users'].create({
+            'login': 'user02',
+            'partner_id': user1.partner_id.id,
+        })
+        for i in range(3, 11):
+            self.env['res.users'].create({
+                'login': 'user%.2d' % i,
+                'name': 'user%.2d' % i,
+            })
+
+        domain = [
+            ('user_ids.login', 'like', 'user%'),
+        ]
+        partners = self.env['res.partner'].search(domain, limit=8)
+        self.assertEqual(len(partners), 8)
+        count = self.env['res.partner'].search(domain, count=True)
+        self.assertEqual(count, 9)
