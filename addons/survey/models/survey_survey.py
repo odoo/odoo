@@ -173,6 +173,14 @@ class Survey(models.Model):
         if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
             self.time_limit = 10
 
+    @api.onchange('questions_layout')
+    def _onchange_questions_layout(self):
+        if self.questions_layout == 'page_per_section' and not self.page_ids:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("You don't have a section for the questions. That will show void survey.")}
+            }
+
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         """ Read group customization in order to display all the stages in the
@@ -278,7 +286,9 @@ class Survey(models.Model):
         """
         survey = user_input.survey_id
 
-        if survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
+        if survey.questions_layout == 'one_page':
+            return (None, True)
+        elif survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
             pages_or_questions = list(enumerate(
                 user_input.question_ids
             ))
