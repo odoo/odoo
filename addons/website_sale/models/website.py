@@ -219,6 +219,7 @@ class Website(models.Model):
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
             'website_id': self._context.get('website_id'),
+            'require_payment_percentage': 100.0,
         }
         company = self.company_id or pricelist.company_id
         if company:
