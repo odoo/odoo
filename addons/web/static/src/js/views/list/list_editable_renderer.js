@@ -840,6 +840,19 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
+    /**
+     * override this method to handle ENTER key, edit record when ENTER key is pressed
+     *
+     * @override
+     * @private
+     */
+    _onKeyDown: function (e) {
+        if (this.editable && e.which === $.ui.keyCode.ENTER && $(e.currentTarget).closest('.o_data_row').length) {
+            $(e.currentTarget).next(".o_data_cell").trigger("click");
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
    /**
     * @param {KeyDownEvent} e
     * @private
