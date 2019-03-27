@@ -16,7 +16,7 @@ from odoo.osv import expression
 class WebsiteProfile(http.Controller):
     _users_per_page = 30
     _pager_max_pages = 5
-    
+
     # Profile
     # ---------------------------------------------------
 
@@ -189,16 +189,19 @@ class WebsiteProfile(http.Controller):
 
     # All Users Page
     # ---------------------------------------------------
-    def _prepare_all_users_values(self, user):
-        return {
-            'id': user.id,
-            'name': user.name,
-            'company_name': user.partner_id.company_name,
-            'rank': user.rank_id.name,
-            'karma': user.karma,
-            'badge_count': len(user.badge_ids),
-            'website_published': user.website_published
-        }
+    def _prepare_all_users_values(self, users):
+        user_values = []
+        for user in users:
+            user_values.append({
+                'id': user.id,
+                'name': user.name,
+                'company_name': user.company_id.name,
+                'rank': user.rank_id.name,
+                'karma': user.karma,
+                'badge_count': len(user.badge_ids),
+                'website_published': user.website_published
+            })
+        return user_values
 
     @http.route(['/profile/users',
                  '/profile/users/page/<int:page>'], type='http', auth="public", website=True)
@@ -219,7 +222,7 @@ class WebsiteProfile(http.Controller):
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
             users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = [self._prepare_all_users_values(user) for user in users]
+            user_values = self._prepare_all_users_values(users)
 
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
