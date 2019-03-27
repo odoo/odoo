@@ -14,6 +14,7 @@ var testUtilsDom = require('web.test_utils_dom');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -3433,6 +3434,66 @@ QUnit.module('Views', {
             "no rows should be selected");
         assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
             "should not have a visible save button");
+        list.destroy();
+    });
+
+    QUnit.test('editable listview, pressing ESCAPE while creating record set focus on searchview', function (assert) {
+        assert.expect(2);
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        }];
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            data: this.data,
+            archs: {
+                'foo,false,list': '<tree editable="bottom"><field name="foo"/></tree>',
+                'foo,false,search': '<search></search>',
+            },
+        });
+
+        actionManager.doAction(1);
+
+        var currentController = actionManager.getCurrentController().widget;
+        testUtils.dom.click(actionManager.controlPanel.$('.o_list_button_add'));
+        assert.strictEqual(document.activeElement,
+            currentController.$('tr.o_selected_row .o_field_widget')[0], "foo should have focus");
+
+        // press Escape key to discard current line
+        currentController.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+        }));
+        assert.strictEqual(document.activeElement, actionManager.controlPanel.$('.o_searchview_input')[0],
+            "focus should be set on searchview input");
+        actionManager.destroy();
+    });
+
+    QUnit.test('editable listview, pressing ESCAPE while editing record set focus on row itself', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        testUtils.dom.click(list.$('tr.o_data_row:last td:eq(1)'));
+        assert.strictEqual(document.activeElement,
+            list.$('tr.o_selected_row .o_field_widget')[0], "foo should have focus");
+
+        // press Escape key to discard current line
+        list.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+        }));
+        assert.strictEqual(document.activeElement,
+            list.$('tr.o_data_row:last .o_list_record_selector input')[0], "last row should have focus");
+
         list.destroy();
     });
 
