@@ -31,8 +31,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='localization']" position="after">
                     <group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
-                        <field name="valuation_in_account_id"/>
-                        <field name="valuation_out_account_id"/>
+                        <field name="valuation_in_account_id" options="{'no_create': True}"/>
+                        <field name="valuation_out_account_id" options="{'no_create': True}"/>
                     </group>
                 </xpath>
             </field>

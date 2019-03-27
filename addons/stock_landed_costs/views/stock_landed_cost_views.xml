@@ -45,7 +45,7 @@
                                     </group>
                                     <group>
                                         <field name="split_method"/>
-                                        <field name="account_id"/>
+                                        <field name="account_id" options="{'no_create': True}"/>
                                     </group>
                                 </group>
                                 <label for="name"/>
@@ -56,7 +56,7 @@
                                     domain="[('landed_cost_ok', '=', True)]"
                                     context="{'default_landed_cost_ok': True, 'default_type': 'service',  'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
                                 <field name="name"/>
-                                <field name="account_id"/>
+                                <field name="account_id" options="{'no_create': True}"/>
                                 <field name="split_method"/>
                                 <field name="price_unit"/>
                             </tree>
