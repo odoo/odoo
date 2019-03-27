@@ -164,14 +164,16 @@ class TestPayment(AccountingTestCase):
         # One payment for inv_4 (Vendor Bill)
         inv_4 = self.create_invoice(amount=50, partner=self.partner_agrolait.id, type='in_invoice')
 
-        ids = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
-        register_payments.create_payments()
-        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+        ids_out = [inv_1.id, inv_2.id, inv_3.id]
+        ids_in = [inv_4.id]
+        for ids in [ids_out, ids_in]:
+            register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+                'payment_date': time.strftime('%Y') + '-07-15',
+                'journal_id': self.bank_journal_euro.id,
+                'payment_method_id': self.payment_method_manual_in.id,
+            })
+            register_payments.create_payments()
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids_out + ids_in)], order="id desc")
 
         self.assertEqual(len(payment_ids), 4)
         self.assertAlmostEquals(sum(payment_ids.filtered(lambda r: r.payment_type == 'inbound').mapped('amount')) - sum(payment_ids.filtered(lambda r: r.payment_type == 'outbound').mapped('amount')), 750)
