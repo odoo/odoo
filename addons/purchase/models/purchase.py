@@ -705,7 +705,7 @@ class PurchaseOrderLine(models.Model):
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
-            price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+            price_unit = order.currency_id.with_context(date=order.date_approve).compute(price_unit, order.company_id.currency_id, round=False)
         return price_unit
 
     @api.multi
@@ -725,7 +725,7 @@ class PurchaseOrderLine(models.Model):
             'name': self.name or '',
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
-            'date': self.order_id.date_order,
+            'date': self.order_id.date_approve,
             'date_expected': self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': self.order_id._get_destination_location(),
