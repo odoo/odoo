@@ -241,7 +241,7 @@ class Picking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
-    move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package", domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
+    move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package", domain=['|',('package_level_id', '=', False), ('picking_type_id.show_entire_packs', '=', False)])
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
@@ -267,7 +267,7 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
-    move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
+    move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_id.picking_type_id.show_entire_packs', '=', False)])
 
     move_line_exist = fields.Boolean(
         'Has Pack Operations', compute='_compute_move_line_exist',
