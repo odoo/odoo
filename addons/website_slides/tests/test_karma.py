@@ -3,6 +3,7 @@
 
 from odoo.addons.website_slides.tests import common
 from odoo.tests import tagged
+from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
@@ -20,74 +21,78 @@ class TestKarmaGain(common.SlidesCase):
             'visibility': 'public',
             'website_published': True,
             'karma_gen_channel_finish': 100,
+            'karma_gen_slide_vote': 5,
+            'karma_gen_channel_rank': 10,
         })
 
-        self.slide_2 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_2_0 = self.env['slide.slide'].sudo(self.user_publisher).create({
             'name': 'How to travel through space and time',
             'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
             'website_published': True,
             'completion_time': 2.0,
         })
-
-        self.channel_3 = self.env['slide.channel'].sudo(self.user_publisher).create({
-            'name': 'Test Channel 3',
-            'channel_type': 'training',
-            'promote_strategy': 'most_voted',
-            'enroll': 'public',
-            'visibility': 'public',
-            'website_published': True,
-            'karma_gen_channel_finish': 50,
-        })
-
-        self.slide_3 = self.env['slide.slide'].sudo(self.user_publisher).create({
+        self.slide_2_1 = self.env['slide.slide'].sudo(self.user_publisher).create({
             'name': 'How to duplicate yourself',
-            'channel_id': self.channel_3.id,
+            'channel_id': self.channel_2.id,
             'slide_type': 'presentation',
             'website_published': True,
             'completion_time': 2.0,
         })
 
-    def karma_gain_test(self, user):
-        # Add the user to the course
-        self.channel.sudo()._action_add_members(user.partner_id)
+    @mute_logger('odoo.models')
+    @users('user_emp', 'user_portal', 'user_publisher')
+    def test_karma_gain(self):
+        user = self.env.user
+        user.write({'karma': 0})
+        computed_karma = 0
 
-        # Init user env
-        channel = self.channel.sudo(user)
-        slide = self.slide.sudo(user)
+        # Add the user to the course
+        (self.channel | self.channel_2)._action_add_members(user.partner_id)
         self.assertEqual(user.karma, 0)
 
         # Finish the Course
-        karma = channel.karma_gen_channel_finish
-        slide.action_set_completed()
-        self.assertEqual(user.karma, karma)
+        self.slide.sudo(user).action_set_completed()
+        self.assertTrue(self.channel.sudo(user).completed)
+        computed_karma += self.channel.karma_gen_channel_finish
+        self.assertEqual(user.karma, computed_karma)
+
+        # Begin then finish the second Course
+        self.slide_2_0.sudo(user).action_set_completed()
+        self.assertFalse(self.channel_2.sudo(user).completed)
+        self.assertEqual(user.karma, computed_karma)
+
+        self.slide_2_1.sudo(user).action_set_completed()
+        self.assertTrue(self.channel_2.sudo(user).completed)
+        computed_karma += self.channel_2.karma_gen_channel_finish
+        self.assertEqual(user.karma, computed_karma)
 
         # Vote for a slide
-        karma = karma + channel.karma_gen_slide_vote
-        slide.action_like()
-        self.assertEqual(user.karma, karma)
-        slide.action_dislike()
-        self.assertEqual(user.karma, karma - channel.karma_gen_slide_vote)
-        slide.action_dislike()
-        self.assertEqual(user.karma, karma)
+        slide_user = self.slide.sudo(user)
+        slide_user.action_like()
+        computed_karma += self.channel.karma_gen_slide_vote
+        self.assertEqual(user.karma, computed_karma)
+        slide_user.action_like()  # re-like something already liked should not add karma again
+        self.assertEqual(user.karma, computed_karma)
+        slide_user.action_dislike()
+        computed_karma -= self.channel.karma_gen_slide_vote
+        self.assertEqual(user.karma, computed_karma)
+        slide_user.action_dislike()
+        computed_karma -= self.channel.karma_gen_slide_vote
+        self.assertEqual(user.karma, computed_karma)
+        slide_user.action_dislike()  # dislike again something already disliked should not remove karma again
+        self.assertEqual(user.karma, computed_karma)
+
+    @mute_logger('odoo.models')
+    @users('user_emp', 'user_portal', 'user_publisher')
+    def test_karma_gain_multiple_course(self):
+        user = self.env.user
+        user.write({'karma': 0})
+        computed_karma = 0
 
         # Finish two course at the same time (should not ever happen but hey, we never know)
-        self.channel_2.sudo()._action_add_members(user.partner_id)
-        self.channel_3.sudo()._action_add_members(user.partner_id)
+        (self.channel | self.channel_2)._action_add_members(user.partner_id)
 
-        karma = karma + self.channel_2.karma_gen_channel_finish + self.channel_3.karma_gen_channel_finish
-        slides = self.slide_2.sudo(user) | self.slide_3.sudo(user)
-        slides.action_set_completed()
-        self.assertEqual(user.karma, karma)
-
-    @mute_logger('odoo.models')
-    def test_users_karma_gain(self):
-        self.karma_gain_test(self.user_emp)
-
-    @mute_logger('odoo.models')
-    def test_user_publisher_karma_gain(self):
-        self.karma_gain_test(self.user_publisher)
-
-    @mute_logger('odoo.models')
-    def test_user_portal_karma_gain(self):
-        self.karma_gain_test(self.user_portal)
+        (self.slide | self.slide_2_0 | self.slide_2_1).sudo(user).action_set_completed()
+        computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
+        self.assertEqual(user.karma, computed_karma)

@@ -148,7 +148,7 @@ class AccountAnalyticLine(models.Model):
             :return: a dictionary mapping each record id to its corresponding
                 dictionnary values to write (may be empty).
         """
-        result = dict.fromkeys(self.ids, dict())
+        result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
         if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']]):

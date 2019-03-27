@@ -21,9 +21,13 @@ odoo.define('payment_stripe.stripe', function(require) {
         $.blockUI.defaults.css["background-color"] = '';
         $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
     }
+    var stripeHandler;
     function getStripeHandler()
     {
-        var handler = StripeCheckout.configure({
+        if (stripeHandler) {
+            return stripeHandler;
+        }
+        var handler = stripeHandler = StripeCheckout.configure({
             key: $("input[name='stripe_key']").val(),
             image: $("input[name='stripe_image']").val(),
             locale: 'auto',

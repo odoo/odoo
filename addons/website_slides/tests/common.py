@@ -47,6 +47,9 @@ class SlidesCase(common.SavepointCase):
             'enroll': 'public',
             'visibility': 'public',
             'website_published': True,
+            'karma_gen_channel_finish': 100,
+            'karma_gen_slide_vote': 5,
+            'karma_gen_channel_rank': 10,
         })
         self.slide = self.env['slide.slide'].sudo(self.user_publisher).create({
             'name': 'How To Cook Humans',
