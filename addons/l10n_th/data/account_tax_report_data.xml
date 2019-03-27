@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_tp" model="account.tax.report.line">
+        <field name="name">Taxes to be paid</field>
+        <field name="sequence" eval="5"/>
+        <field name="formula">-tax_th_1_1</field>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht" model="account.tax.report.line">
+        <field name="name">Withholding Tax</field>
+        <field name="code">tax_th_1_1</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_tp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_per" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_per_service" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax (Service)</field>
+        <field name="tag_name">Personal Withholding Tax (Service)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht_per"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_per_other" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax (Other)</field>
+        <field name="tag_name">Personal Withholding Tax (Other)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht_per"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_cmp" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_cmp_service" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax (Service)</field>
+        <field name="tag_name">Company Withholding Tax (Service)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht_cmp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_wht_cmp_other" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax (Other)</field>
+        <field name="tag_name">Company Withholding Tax (Other)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_tp_wht_cmp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_vat" model="account.tax.report.line">
+        <field name="name">Value Added Tax</field>
+        <field name="sequence" eval="2"/>
+        <field name="formula">tax_th_PP30_5-tax_th_PP30_7</field>
+        <field name="parent_line_id" ref="tax_report_tp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_vat_out" model="account.tax.report.line">
+        <field name="name">Output VAT</field>
+        <field name="tag_name">Output VAT</field>
+        <field name="code">tax_th_PP30_5</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_line_id" ref="tax_report_tp_vat"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_tp_vat_in" model="account.tax.report.line">
+        <field name="name">Input VAT</field>
+        <field name="tag_name">Input VAT</field>
+        <field name="code">tax_th_PP30_7</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_line_id" ref="tax_report_tp_vat"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+
+    <record id="tax_report_ta" model="account.tax.report.line">
+        <field name="name">Taxable amounts</field>
+        <field name="sequence" eval="6"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht" model="account.tax.report.line">
+        <field name="name">Withholding Tax</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ta"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_per" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_per_service" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax (Service)</field>
+        <field name="tag_name">Personal Withholding Tax (Service)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht_per"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_per_other" model="account.tax.report.line">
+        <field name="name">Personal Withholding Tax (Other)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht_per"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_cmp" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_cmp_service" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax (Service)</field>
+        <field name="tag_name">Company Withholding Tax (Service)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht_cmp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_wht_cmp_other" model="account.tax.report.line">
+        <field name="name">Company Withholding Tax (Other)</field>
+        <field name="tag_name">Company Withholding Tax (Other)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ta_wht_cmp"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_vat" model="account.tax.report.line">
+        <field name="name">Value Added Tax</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ta"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_vat_out" model="account.tax.report.line">
+        <field name="name">Output VAT</field>
+        <field name="tag_name">Output VAT</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_line_id" ref="tax_report_ta_vat"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_ta_vat_in" model="account.tax.report.line">
+        <field name="name">Input VAT</field>
+        <field name="tag_name">Input VAT</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_line_id" ref="tax_report_ta_vat"/>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+</odoo>
