@@ -56,7 +56,6 @@ class TestPrintCheck(AccountingTestCase):
         payment_register.payment_method_id = self.payment_method_check
         payment = payment_register.save()
         payment.post()
-
         return payment
 
     def test_print_check(self):
@@ -80,11 +79,5 @@ class TestPrintCheck(AccountingTestCase):
         invoices = self.env['account.invoice']
         for i in range(0, 3):
             invoices |= self.create_invoice(is_refund=(i % 3 == 0))
-        payment_register = Form(self.env['account.payment.register'].with_context(active_model='account.invoice', active_ids=invoices.ids))
-        payment_register.payment_date = time.strftime('%Y') + '-07-15'
-        payment_register.journal_id = self.bank_journal
-        payment_register.payment_method_id = self.payment_method_check
-        domain = payment_register.save().create_payments()['domain']
-        payment = self.env['account.payment'].search(domain)
-
+        payment = self.create_payment(invoices)
         self.assertEqual(all(payment.mapped('check_amount_in_words')), True, 'The amount in words is not set on all the payments')

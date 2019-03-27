@@ -1034,7 +1034,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_register_payment(self):
-        return self.env['account.payment'].with_context(active_ids=self.ids, active_model='account.invoice').action_register_payment()
+        return self.env['account.payment'].with_context(active_ids=self.ids, active_model='account.invoice', active_id=self.id).action_register_payment()
 
     @api.multi
     def action_invoice_cancel(self):
