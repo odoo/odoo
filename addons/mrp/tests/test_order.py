@@ -479,6 +479,20 @@ class TestMrpOrder(TestMrpCommon):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
+        # change the quantity done in one line
+        produce_form.workorder_line_ids._records[0]['qty_done'] = 1
+
+        # change the quantity producing
+        produce_form.qty_producing = 3
+
+        # check than all quantities are update correctly
+        line1 = produce_form.workorder_line_ids._records[0]
+        line2 = produce_form.workorder_line_ids._records[1]
+        self.assertEqual(line1['qty_to_consume'], 3, "Wrong quantity to consume")
+        self.assertEqual(line1['qty_done'], 3, "Wrong quantity done")
+        self.assertEqual(line2['qty_to_consume'], 12, "Wrong quantity to consume")
+        self.assertEqual(line2['qty_done'], 12, "Wrong quantity done")
+        
         product_produce = produce_form.save()
         self.assertEqual(len(product_produce.workorder_line_ids), 2, 'You should have produce lines even the consumed products are not tracked.')
         product_produce.do_produce()
