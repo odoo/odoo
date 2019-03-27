@@ -607,137 +607,145 @@ class PoFileReader:
 
                 _logger.error("malformed po file: unknown occurrence: %s", occurrence)
 
+def TranslationFileWriter(target, fileformat='po', lang=None, modules=None):
+    """ Iterate over translation file to return Odoo translation entries """
+    if fileformat == 'csv':
+        return CSVFileWriter(target)
 
-# class to handle po files
-class PoFile(object):
+    if fileformat == 'po':
+        return PoFileWriter(target, modules=modules, lang=lang)
 
-    def __init__(self, buffer):
-        # TextIOWrapper closes its underlying buffer on close *and* can't
-        self.buffer = codecs.StreamReaderWriter(
-            stream=buffer,
-            Reader=codecs.getreader('utf-8'),
-            Writer=codecs.getwriter('utf-8')
-        )
+    if fileformat == 'tgz':
+        return TarFileWriter(target, lang=lang)
 
-    def write_infos(self, modules):
+    raise Exception(_('Unrecognized extension: must be one of '
+                      '.csv, .po, or .tgz (received .%s).') % fileformat)
+
+
+class CSVFileWriter:
+    def __init__(self, target):
+        self.writer = pycompat.csv_writer(target, dialect='UNIX')
+        # write header first
+        self.writer.writerow(("module","type","name","res_id","src","value","comments"))
+
+
+    def write_rows(self, rows):
+        for module, type, name, res_id, src, trad, comments in rows:
+            comments = '\n'.join(comments)
+            self.writer.writerow((module, type, name, res_id, src, trad, comments))
+
+
+class PoFileWriter:
+    """ Iterate over po file to return Odoo translation entries """
+    def __init__(self, target, modules, lang):
         import odoo.release as release
-        self.buffer.write(u"# Translation of %(project)s.\n" \
-                          "# This file contains the translation of the following modules:\n" \
-                          "%(modules)s" \
-                          "#\n" \
-                          "msgid \"\"\n" \
-                          "msgstr \"\"\n" \
-                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' \
-                          '''"Report-Msgid-Bugs-To: \\n"\n''' \
-                          '''"POT-Creation-Date: %(now)s\\n"\n'''        \
-                          '''"PO-Revision-Date: %(now)s\\n"\n'''         \
-                          '''"Last-Translator: <>\\n"\n''' \
-                          '''"Language-Team: \\n"\n'''   \
-                          '''"MIME-Version: 1.0\\n"\n''' \
-                          '''"Content-Type: text/plain; charset=UTF-8\\n"\n'''   \
-                          '''"Content-Transfer-Encoding: \\n"\n'''       \
-                          '''"Plural-Forms: \\n"\n'''    \
-                          "\n"
 
-                          % { 'project': release.description,
-                              'version': release.version,
-                              'modules': ''.join("#\t* %s\n" % m for m in modules),
-                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
-                            }
-                          )
+        self.buffer = target
+        self.lang = lang
+        self.po = polib.POFile()
 
-    def write(self, modules, tnrs, source, trad, comments=None):
+        self.po.header = "Translation of %s.\n" \
+                    "This file contains the translation of the following modules:\n" \
+                    "%s" % (release.description, ''.join("\t* %s\n" % m for m in modules))
+        now = datetime.utcnow().strftime('%Y-%m-%d %H:%M+0000')
+        self.po.metadata = {
+            'Project-Id-Version': "%s %s" % (release.description, release.version),
+            'Report-Msgid-Bugs-To': '',
+            'POT-Creation-Date': now,
+            'PO-Revision-Date': now,
+            'Last-Translator': '',
+            'Language-Team': '',
+            'MIME-Version': '1.0',
+            'Content-Type': 'text/plain; charset=UTF-8',
+            'Content-Transfer-Encoding': '',
+            'Plural-Forms': '',
+        }
 
-        plurial = len(modules) > 1 and 's' or ''
-        self.buffer.write(u"#. module%s: %s\n" % (plurial, ', '.join(modules)))
+    def write_rows(self, rows):
+        # we now group the translations by source. That means one translation per source.
+        grouped_rows = {}
+        for module, type, name, res_id, src, trad, comments in rows:
+            row = grouped_rows.setdefault(src, {})
+            row.setdefault('modules', set()).add(module)
+            if not row.get('translation') and trad != src:
+                row['translation'] = trad
+            row.setdefault('tnrs', []).append((type, name, res_id))
+            row.setdefault('comments', set()).update(comments)
 
+        for src, row in sorted(grouped_rows.items()):
+            if not self.lang:
+                # translation template, so no translation value
+                row['translation'] = ''
+            elif not row.get('translation'):
+                row['translation'] = ''
+            self.add_entry(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
+
+        # buffer expects bytes
+        self.buffer.write(str(self.po).encode())
+
+    def add_entry(self, modules, tnrs, source, trad, comments=None):
+        entry = polib.POEntry(
+            msgid=source,
+            msgstr=trad,
+        )
+        plural = len(modules) > 1 and 's' or ''
+        entry.comment = "module%s: %s" % (plural, ', '.join(modules))
         if comments:
-            self.buffer.write(u''.join(('#. %s\n' % c for c in comments)))
+            entry.comment += "\n" + "\n".join(comments)
 
         code = False
         for typy, name, res_id in tnrs:
-            self.buffer.write(u"#: %s:%s:%s\n" % (typy, name, res_id))
             if typy == 'code':
                 code = True
-
+            if isinstance(res_id, int):
+                # second term of occurrence must be a digit
+                entry.occurrences.append((u"%s:%s" % (typy, name), res_id))
+            else:
+                entry.occurrences.append((u"%s:%s:%s" % (typy, name, res_id), ''))
         if code:
-            # only strings in python code are python formatted
-            self.buffer.write(u"#, python-format\n")
+            entry.flags.append("python-format")
+        self.po.append(entry)
 
-        msg = (
-            u"msgid %s\n"
-            u"msgstr %s\n\n"
-        ) % (
-            quote(str(source)), 
-            quote(str(trad))
-        )
-        self.buffer.write(msg)
 
+class TarFileWriter:
+
+    def __init__(self, target, lang):
+        self.tar = tarfile.open(fileobj=target, mode='w|gz')
+        self.lang = lang
+
+    def write_rows(self, rows):
+        rows_by_module = defaultdict(list)
+        for row in rows:
+            module = row[0]
+            rows_by_module[module].append(row)
+
+        for mod, modrows in rows_by_module.items():
+            with io.BytesIO() as buf:
+                po = PoFileWriter(buf, modules=[mod], lang=self.lang)
+                po.write_rows(modrows)
+                buf.seek(0)
+
+                info = tarfile.TarInfo(
+                    join(mod, 'i18n', '{basename}.{ext}'.format(
+                        basename=self.lang or mod,
+                        ext='po' if self.lang else 'pot',
+                    )))
+                # addfile will read <size> bytes from the buffer so
+                # size *must* be set first
+                info.size = len(buf.getvalue())
+
+                self.tar.addfile(info, fileobj=buf)
+
+        self.tar.close()
 
 # Methods to export the translation file
 
 def trans_export(lang, modules, buffer, format, cr):
 
-    def _process(format, modules, rows, buffer, lang):
-        if format == 'csv':
-            writer = pycompat.csv_writer(buffer, dialect='UNIX')
-            # write header first
-            writer.writerow(("module","type","name","res_id","src","value","comments"))
-            for module, type, name, res_id, src, trad, comments in rows:
-                comments = '\n'.join(comments)
-                writer.writerow((module, type, name, res_id, src, trad, comments))
-
-        elif format == 'po':
-            writer = PoFile(buffer)
-            writer.write_infos(modules)
-
-            # we now group the translations by source. That means one translation per source.
-            grouped_rows = {}
-            for module, type, name, res_id, src, trad, comments in rows:
-                row = grouped_rows.setdefault(src, {})
-                row.setdefault('modules', set()).add(module)
-                if not row.get('translation') and trad != src:
-                    row['translation'] = trad
-                row.setdefault('tnrs', []).append((type, name, res_id))
-                row.setdefault('comments', set()).update(comments)
-
-            for src, row in sorted(grouped_rows.items()):
-                if not lang:
-                    # translation template, so no translation value
-                    row['translation'] = ''
-                elif not row.get('translation'):
-                    row['translation'] = ''
-                writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
-
-        elif format == 'tgz':
-            rows_by_module = defaultdict(list)
-            for row in rows:
-                module = row[0]
-                rows_by_module[module].append(row)
-
-            with tarfile.open(fileobj=buffer, mode='w|gz') as tar:
-                for mod, modrows in rows_by_module.items():
-                    with io.BytesIO() as buf:
-                        _process('po', [mod], modrows, buf, lang)
-                        buf.seek(0)
-
-                        info = tarfile.TarInfo(
-                            join(mod, 'i18n', '{basename}.{ext}'.format(
-                                basename=lang or mod,
-                                ext='po' if lang else 'pot',
-                            )))
-                        # addfile will read <size> bytes from the buffer so
-                        # size *must* be set first
-                        info.size = len(buf.getvalue())
-
-                        tar.addfile(info, fileobj=buf)
-        else:
-            raise Exception(_('Unrecognized extension: must be one of '
-                '.csv, .po, or .tgz (received .%s).') % format)
-
     translations = trans_generate(lang, modules, cr)
     modules = set(t[0] for t in translations)
-    _process(format, modules, translations, buffer, lang)
+    writer = TranslationFileWriter(buffer, fileformat=format, lang=lang, modules=modules)
+    writer.write_rows(translations)
     del translations
 
 
