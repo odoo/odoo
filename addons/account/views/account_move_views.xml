@@ -25,7 +25,7 @@
                             <page string="Information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="debit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="credit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="quantity"/>
@@ -337,7 +337,7 @@
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
                                     <field name="tax_line_id" invisible="1"/>
-                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                                    <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                     <field name="partner_id"
                                         domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                     <field name="name"/>
