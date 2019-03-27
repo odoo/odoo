@@ -29,7 +29,8 @@ class Survey(models.Model):
 
     # description
     title = fields.Char('Title', required=True, translate=True)
-    description = fields.Html("Description", translate=True, help="A long description of the purpose of the survey")
+    description = fields.Html("Description", translate=True,
+        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     color = fields.Integer('Color Index', default=0)
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
@@ -62,7 +63,7 @@ class Survey(models.Model):
         ('token', 'Invited people only')], string='Access Mode',
         default='public', required=True)
     access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token(), copy=False)
-    users_login_required = fields.Boolean('Login required', help="If checked, users have to login before answering even with a valid token.")
+    users_login_required = fields.Boolean('Login Required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
@@ -86,7 +87,7 @@ class Survey(models.Model):
     time_limit = fields.Float("Time limit (minutes)")
     certificate = fields.Boolean('Certificate')
     certification_mail_template_id = fields.Many2one(
-        'mail.template', 'Certification Email Template',
+        'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
 
@@ -155,7 +156,7 @@ class Survey(models.Model):
 
     @api.onchange('scoring_type')
     def _onchange_scoring_type(self):
-        if self.scoring_type != 'no_scoring':
+        if self.scoring_type == 'no_scoring':
             self.certificate = False
 
     @api.onchange('users_login_required', 'access_mode')

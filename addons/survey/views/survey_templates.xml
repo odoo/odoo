@@ -110,7 +110,7 @@
                     <t t-if="answer.test_entry" t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1><span t-field="survey.title"/> survey is void</h1>
-                        <p>This survey has no question defined currently.<br />
+                        <p>Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
                             <a t-att-href="'/web#view_type=form&amp;model=survey.survey&amp;id=%s&amp;action=survey.action_survey_form' % survey.id"
                                 class="btn btn-secondary"
                                 groups="survey.group_survey_manager">Edit in backend</a>
