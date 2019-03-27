@@ -68,6 +68,13 @@ return {
             orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
             params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : orderBy;
             params.kwargs.lazy = 'lazy' in options ? options.lazy : params.lazy;
+
+            if (options.method === 'web_read_group') {
+                params.kwargs.expand = options.expand || params.expand || params.kwargs.expand;
+                params.kwargs.expand_limit = options.expand_limit || params.expand_limit || params.kwargs.expand_limit;
+                var expandOrderBy = options.expand_orderby || params.expand_orderby || params.kwargs.expand_orderby;
+                params.kwargs.expand_orderby = expandOrderBy ? this._serializeSort(expandOrderBy) : expandOrderBy;
+            }
         }
 
         if (options.method === 'search_read') {

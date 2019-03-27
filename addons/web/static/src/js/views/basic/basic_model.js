@@ -4247,6 +4247,7 @@ var BasicModel = AbstractModel.extend({
      */
     _readGroup: function (list, options) {
         var self = this;
+        options = options || {};
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
@@ -4254,6 +4255,7 @@ var BasicModel = AbstractModel.extend({
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
         });
         var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
+        var expand = list.openGroupByDefault && options.fetchRecordsWithGroups;
         return this._rpc({
                 model: list.model,
                 method: 'web_read_group',
@@ -4265,6 +4267,9 @@ var BasicModel = AbstractModel.extend({
                 offset: list.groupsOffset,
                 orderBy: orderedBy,
                 lazy: true,
+                expand: expand,
+                expand_limit: expand ? list.limit : null,
+                expand_orderby: expand ? list.orderedBy : null,
             })
             .then(function (result) {
                 var groups = result.groups;
@@ -4318,7 +4323,7 @@ var BasicModel = AbstractModel.extend({
                         delete self.localData[newGroup.id];
                         // restore the internal state of the group
                         var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
-                        if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
+                        if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
                             // sub-groups
@@ -4343,11 +4348,16 @@ var BasicModel = AbstractModel.extend({
                     list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
                         openGroupCount++;
+                        if (group.__data) {
+                            // bypass the search_read when the group's records have been obtained
+                            // by the call to 'web_read_group' (see @_searchReadUngroupedList)
+                            newGroup.__data = group.__data;
+                        }
                         options = _.defaults({enableRelationalFetch: false}, options);
                         defs.push(self._load(newGroup, options));
                     }
                 });
-                if (options && options.keepEmptyGroups) {
+                if (options.keepEmptyGroups) {
                     // Find the groups that were available in a previous
                     // readGroup but are not there anymore.
                     // Note that these groups are put after existing groups so
@@ -4363,7 +4373,7 @@ var BasicModel = AbstractModel.extend({
                 }
 
                 return Promise.all(defs).then(function (groups) {
-                    if (!options || !options.onlyGroups) {
+                    if (!options.onlyGroups) {
                         // generate the res_ids of the main list, being the concatenation
                         // of the fetched res_ids in each group
                         list.res_ids = _.flatten(_.map(groups, function (group) {
@@ -4552,17 +4562,25 @@ var BasicModel = AbstractModel.extend({
     _searchReadUngroupedList: function (list) {
         var self = this;
         var fieldNames = list.getFieldNames();
-        return this._rpc({
-            route: '/web/dataset/search_read',
-            model: list.model,
-            fields: fieldNames,
-            context: list.getContext(),
-            domain: list.domain || [],
-            limit: list.limit,
-            offset: list.loadMoreOffset + list.offset,
-            orderBy: list.orderedBy,
-        })
-        .then(function (result) {
+        var prom;
+        if (list.__data) {
+            // the data have already been fetched (alonside the groups by the
+            // call to 'web_read_group'), so we can bypass the search_read
+            prom = Promise.resolve(list.__data);
+        } else {
+            prom = this._rpc({
+                route: '/web/dataset/search_read',
+                model: list.model,
+                fields: fieldNames,
+                context: list.getContext(),
+                domain: list.domain || [],
+                limit: list.limit,
+                offset: list.loadMoreOffset + list.offset,
+                orderBy: list.orderedBy,
+            });
+        }
+        return prom.then(function (result) {
+            delete list.__data;
             list.count = result.length;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
