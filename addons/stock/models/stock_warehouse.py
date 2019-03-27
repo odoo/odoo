@@ -149,7 +149,7 @@ class Warehouse(models.Model):
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
-            depends = [depend for depends in [value['depends'] for value in warehouse._get_routes_values().values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
             if any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
@@ -162,7 +162,7 @@ class Warehouse(models.Model):
             # _get_global_route_rules_values method under the key named
             # 'depends'.
             global_rules = warehouse._get_global_route_rules_values()
-            depends = [depend for depends in [value['depends'] for value in global_rules.values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in global_rules.values()] for depend in depends]
             if any(rule in vals for rule in global_rules) or\
                     any(depend in vals for depend in depends):
                 warehouse._create_or_update_global_routes_rules()
@@ -293,11 +293,14 @@ class Warehouse(models.Model):
         with the wanted reception, delivery,... steps.
         """
         for rule_field, rule_details in self._get_global_route_rules_values().items():
-            values = rule_details['update_values']
+            values = rule_details.get('update_values', {})
             if self[rule_field]:
                 self[rule_field].write(values)
             else:
-                values.update(rule_details['create_values'])
+                if values:
+                    values.update(rule_details['create_values'])
+                else:
+                    values = rule_details['create_values']
                 values.update({'warehouse_id': self.id})
                 self[rule_field] = self.env['stock.rule'].create(values)
         return True
@@ -377,11 +380,13 @@ class Warehouse(models.Model):
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
-                route.write(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route.write(route_data['route_update_values'])
                 route.rule_ids.write({'active': False})
             # Create the route
             else:
-                route_data['route_create_values'].update(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route_data['route_create_values'].update(route_data['route_update_values'])
                 route = self.env['stock.location.route'].create(route_data['route_create_values'])
                 self[route_field] = route
             # Get rules needed for the route
