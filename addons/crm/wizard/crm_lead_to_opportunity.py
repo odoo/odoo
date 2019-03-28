@@ -136,7 +136,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
             self._convert_opportunity(values)
 
-        return leads[0].redirect_opportunity_view()
+        return leads[0].redirect_lead_opportunity_view()
 
     def _create_partner(self, lead_id, action, partner_id):
         """ Create partner based on action.
