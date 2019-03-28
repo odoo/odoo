@@ -2,6 +2,9 @@
 
 """ ESC/POS Commands (Constants) """
 
+# Control characters
+ESC = '\x1b'
+
 # Feed control sequences
 CTL_LF    = '\x0a'             # Print and line feed
 CTL_FF    = '\x0c'             # Form feed
