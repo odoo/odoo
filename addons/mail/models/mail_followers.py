@@ -108,7 +108,7 @@ WITH sub_followers AS (
         ON subrel.mail_followers_id = fol.id
         RIGHT JOIN mail_message_subtype subtype
         ON subtype.id = subrel.mail_message_subtype_id
-    WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
+    WHERE subrel.mail_message_subtype_id = %s AND fol.res_model = %s AND fol.res_id IN %s
 )
 SELECT partner.id as pid, NULL AS cid,
         partner.active as active, partner.partner_share as pshare, NULL as ctype,
@@ -122,7 +122,7 @@ SELECT partner.id as pid, NULL AS cid,
         WHERE sub_followers.channel_id IS NULL
             AND sub_followers.partner_id = partner.id
             AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-    ) %s
+    ) OR partner.id IN %s
     GROUP BY partner.id, users.notification_type
 UNION
 SELECT NULL AS pid, channel.id AS cid,
@@ -131,34 +131,27 @@ SELECT NULL AS pid, channel.id AS cid,
     FROM mail_channel channel
     WHERE EXISTS (
         SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) %s
-""" % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
-            params = [subtype_id, records._name, tuple(records.ids)]
-            if pids:
-                params.append(tuple(pids))
-            if cids:
-                params.append(tuple(cids))
+    ) OR channel.id IN %s
+"""
+            params = [subtype_id, records._name, tuple(records.ids), tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         elif pids or cids:
-            params, query_pid, query_cid = [], '', ''
-            if pids:
-                query_pid = """
+            query = """
 SELECT partner.id as pid, NULL AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-WHERE partner.id IN %s"""
-                params.append(tuple(pids))
-            if cids:
-                query_cid = """
+WHERE partner.id IN %s
+UNION
 SELECT NULL AS pid, channel.id AS cid,
     TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-    CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
-FROM mail_channel channel WHERE channel.id IN %s """
-                params.append(tuple(cids))
-            query = ' UNION'.join(x for x in [query_pid, query_cid] if x)
+    CASE when channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+FROM mail_channel channel
+WHERE channel.id IN %s
+"""
+            params = [tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         else:
