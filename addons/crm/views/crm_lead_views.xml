@@ -270,65 +270,6 @@
             </field>
         </record>
 
-        <record id="view_create_opportunity_simplified" model="ir.ui.view">
-            <field name="name">crm.lead.form.simple</field>
-            <field name="model">crm.lead</field>
-            <field name="priority">1000</field>
-            <field name="arch" type="xml">
-                <form string="Create an Opportunity">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
-                                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
-                                <field name="partner_name" invisible="1"/>
-                                <field name="street" invisible="1"/>
-                                <field name="street2" invisible="1"/>
-                                <field name="city" invisible="1"/>
-                                <field name="state_id" invisible="1"/>
-                                <field name="zip" invisible="1"/>
-                                <field name="country_id" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
-                                <field name="company_currency" invisible="1"/>
-                                <label for="planned_revenue"/>
-                                <div class="o_row">
-                                    <field name="planned_revenue"/>
-                                </div>
-                                <field name="priority" widget="priority"/>
-                            </group>
-                        </group>
-                        <footer>
-                            <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                            <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
-                            <button string="Discard" class="btn-secondary" special="cancel"/>
-                        </footer>
-                        <field name="partner_name" invisible="1"/>
-                        <field name="contact_name" invisible="1"/>
-                        <field name="title" invisible="1"/>
-                        <field name="street" invisible="1"/>
-                        <field name="street2" invisible="1"/>
-                        <field name="city" invisible="1"/>
-                        <field name="state_id" invisible="1"/>
-                        <field name="country_id" invisible="1"/>
-                        <field name="email_from" invisible="1"/>
-                        <field name="phone" invisible="1"/>
-                        <field name="mobile" invisible="1"/>
-                        <field name="zip" invisible="1"/>
-                        <field name="function" invisible="1"/>
-                        <field name="website" invisible="1"/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="create_opportunity_simplified" model="ir.actions.act_window">
-            <field name="name">Create an Opportunity</field>
-            <field name="res_model">crm.lead</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_create_opportunity_simplified"/>
-            <field name="target">new</field>
-        </record>
-
         <record id="quick_create_opportunity_form" model="ir.ui.view">
             <field name="name">crm.lead.form.quick_create</field>
             <field name="model">crm.lead</field>
