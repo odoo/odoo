@@ -103,6 +103,7 @@
                             <field name="survey_id" invisible="1" readonly="1"/>
                             <field name="scoring_type" invisible="1"/>
                             <separator />
+                            <label for="labels_ids" string="Columns of the Matrix" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
                             <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
