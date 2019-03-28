@@ -166,7 +166,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         """
         On specific driver override this method to give type of device
         return string
-        possible value : printer - camera - device
+        possible value : printer - camera - keyboard - scanner - device
         """
         return self._device_type
 
