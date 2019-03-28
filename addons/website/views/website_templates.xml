@@ -249,9 +249,6 @@
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
     </xpath>
-    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
-        <attribute name="class" separator=" " add="o_menu_loading"/>
-    </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="attributes">
         <attribute name="t-if">website.user_id != user_id</attribute>
     </xpath>
