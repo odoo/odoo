@@ -175,7 +175,7 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence())
+                                      default=10)
     public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
@@ -357,11 +357,6 @@ class ProductTemplate(models.Model):
         website = self.website_id or kwargs.get('website')
         return website and website.company_id or res
 
-    def _default_website_sequence(self):
-        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
-        min_sequence = self._cr.fetchone()[0]
-        return min_sequence and min_sequence - 1 or 10
-
     def set_sequence_top(self):
         self.website_sequence = self.sudo().search([], order='website_sequence desc', limit=1).website_sequence + 1
 
@@ -383,6 +378,10 @@ class ProductTemplate(models.Model):
             next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
         else:
             return self.set_sequence_bottom()
+
+    def set_sequence_reset(self):
+        rec = self.default_get(['website_sequence'])
+        self.website_sequence = rec.get('website_sequence')
 
     def _default_website_meta(self):
         res = super(ProductTemplate, self)._default_website_meta()

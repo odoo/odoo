@@ -1063,6 +1063,8 @@ class WebsiteSale(ProductConfiguratorController):
             product_tmpl.set_sequence_up()
         elif sequence == "down":
             product_tmpl.set_sequence_down()
+        elif sequence == "reset":
+            product_tmpl.set_sequence_reset()
 
     @http.route(['/shop/change_size'], type='json', auth="public")
     def change_size(self, id, x, y):
