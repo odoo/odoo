@@ -19,9 +19,10 @@ DLE_EOT_PAPER     = '\x10\x04\x04'
 HW_INIT   = '\x1b\x40'         # Clear data in buffer and reset modes
 HW_SELECT = '\x1b\x3d\x01'     # Printer select
 HW_RESET  = '\x1b\x3f\x0a\x00' # Reset printer hardware
-# Cash Drawer
-CD_KICK_2 = '\x1b\x70\x00'     # Sends a pulse to pin 2 [] 
-CD_KICK_5 = '\x1b\x70\x01'     # Sends a pulse to pin 5 [] 
+# Cash Drawer (ESC p <pin> <on time: 2*ms> <off time: 2*ms>)
+_CASH_DRAWER = lambda m, t1='', t2='': ESC + 'p' + m + chr(t1) + chr(t2)
+CD_KICK_2 = _CASH_DRAWER('\x00', 50, 50)  # Sends a pulse to pin 2 []
+CD_KICK_5 = _CASH_DRAWER('\x01', 50, 50)  # Sends a pulse to pin 5 []
 # Paper
 PAPER_FULL_CUT  = '\x1d\x56\x00' # Full cut paper
 PAPER_PART_CUT  = '\x1d\x56\x01' # Partial cut paper
