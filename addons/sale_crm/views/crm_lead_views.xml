@@ -4,18 +4,18 @@
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.oppor.inherited.crm</field>
             <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
                     <button string="New Quotation" name="action_sale_quotations_new" type="object" class="oe_highlight"
-                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
+                        attrs="{'invisible': ['|', ('type', '=', 'lead'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                 </xpath>
                 <button name="action_schedule_meeting" position="after">
                     <button class="oe_stat_button" type="object"
-                        name="action_view_sale_quotation" icon="fa-pencil-square-o">
+                        name="action_view_sale_quotation" icon="fa-pencil-square-o" attrs="{'invisible': [('type', '=', 'lead')]}">
                         <field name="quotation_count" widget="statinfo" string="Quotations"/>
                     </button>
-                    <button class="oe_stat_button" type="object" attrs="{'invisible': [('sale_order_count', '=', 0)]}"
+                    <button class="oe_stat_button" type="object" attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('type', '=', 'lead')]}"
                         name="action_view_sale_order" icon="fa-usd">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
