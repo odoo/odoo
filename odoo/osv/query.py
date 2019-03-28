@@ -21,7 +21,7 @@ class Query(object):
       - etc.
     """
 
-    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None, extras=None):
+    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None, extras=None, has_auto_joins=False):
 
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
@@ -63,6 +63,10 @@ class Query(object):
         #   LEFT JOIN "table_b" ON ("table_a"."table_a_col1" = "table_b"."table_b_col" AND "table_b"."table_b_col3" = 42)
         #   ...
         self.extras = extras or {}
+
+        # flag to indicate if `tables` and `where_clause` includes joins from
+        # `auto_join`ed fields, which call for a slightly different handling
+        self.has_auto_joins = has_auto_joins
 
     def _get_table_aliases(self):
         from odoo.osv.expression import get_alias_from_query
