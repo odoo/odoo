@@ -493,9 +493,9 @@
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
                             <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
                             <hr t-if="product.description_sale" />
-                            <div class="o_not_editable">
-                                <p t-field="product.description_sale" class="text-muted" />
-                                <div id="product_attributes_simple">
+                            <div>
+                                <p t-field="product.description_sale" class="text-muted mt-3" placeholder="A short description that will also appear on documents." />
+                                <div class="o_not_editable" id="product_attributes_simple">
                                     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
                                     <p class="text-muted">
                                         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
