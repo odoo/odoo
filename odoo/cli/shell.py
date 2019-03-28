@@ -26,6 +26,7 @@ _logger = logging.getLogger(__name__)
 
    Shell  | ^D    | exit() | quit() | sys.exit() | raise SystemExit()
 ----------------------------------------------------------------------
+ ptipython| stop  | stop   | stop   | loop       | loop
  python   | stop  | raise  | raise  | raise      | raise
  ipython  | stop  | stop   | stop   | loop       | loop
  ptpython | stop  | raise  | raise  | raise      | raise
@@ -53,7 +54,7 @@ class Console(code.InteractiveConsole):
 
 class Shell(Command):
     """Start odoo in an interactive shell"""
-    supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
+    supported_shells = ['ptipython', 'ipython', 'ptpython', 'bpython', 'python']
 
     def init(self, args):
         config.parse_config(args)
@@ -85,6 +86,10 @@ class Shell(Command):
                 except Exception:
                     _logger.warning("Could not start '%s' shell." % shell)
                     _logger.debug("Shell error:", exc_info=True)
+
+    def ptipython(self, local_vars):
+        from ptpython.ipython import embed
+        embed(user_ns=local_vars)
 
     def ipython(self, local_vars):
         from IPython import start_ipython
