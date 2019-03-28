@@ -110,7 +110,7 @@ WITH sub_followers AS (
 )
 SELECT partner.id AS pid, NULL AS cid,
     partner.active AS active, partner.partner_share AS pshare, NULL AS ctype,
-    users.notification_type AS notif, array_agg(groups.id) AS groups
+    users.notification_type AS notif, array_agg(groups.id) AS groups {}
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
@@ -126,12 +126,12 @@ UNION
 SELECT NULL AS pid, channel.id AS cid,
     TRUE AS active, NULL AS pshare, channel.channel_type AS ctype,
     CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif,
-    NULL AS groups
+    NULL AS groups {}
 FROM mail_channel channel
 WHERE EXISTS (
     SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
 ) OR channel.id IN %s
-"""
+""".format(self._get_recipient_select_partner(), self._get_recipient_select_channel())
             params = [subtype_id, records._name, tuple(records.ids), tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
@@ -139,7 +139,7 @@ WHERE EXISTS (
             query = """
 SELECT partner.id AS pid, NULL AS cid,
     partner.active AS active, partner.partner_share AS pshare, NULL AS ctype,
-    users.notification_type AS notif, NULL AS groups
+    users.notification_type AS notif, NULL AS groups {}
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 WHERE partner.id IN %s
@@ -147,16 +147,24 @@ UNION
 SELECT NULL AS pid, channel.id AS cid,
     TRUE AS active, NULL AS pshare, channel.channel_type AS ctype,
     CASE when channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif,
-    NULL AS groups
+    NULL AS groups {}
 FROM mail_channel channel
 WHERE channel.id IN %s
-"""
+""".format(self._get_recipient_select_partner(), self._get_recipient_select_channel())
             params = [tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         else:
             res = []
         return res
+
+    def _get_recipient_select_partner(self):
+        """ Return extra terms for the SELECT clause for partners in _get_recipient_data(). """
+        return ""
+
+    def _get_recipient_select_channel(self):
+        """ Return extra terms for the SELECT clause for channels in _get_recipient_data(). """
+        return ""
 
     def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
