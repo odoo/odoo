@@ -73,6 +73,7 @@ class TestMrpAccount(common.TransactionCase):
         production_table_form.product_qty = 5.0
         production_table = production_table_form.save()
 
+        production_table.extra_cost = 20
         production_table.action_confirm()
 
         produce_form = Form(self.env['mrp.product.produce'].with_context({
@@ -85,8 +86,8 @@ class TestMrpAccount(common.TransactionCase):
         production_table.post_inventory()
         move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").value
 
-        # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10
-        self.assertEqual(move_value, 121, 'Thing should have the correct price')
+        # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
+        self.assertEqual(move_value, 141, 'Thing should have the correct price')
 
 #        produce_wizard = self.env['mrp.product.produce'].with_context({
 #            'active_id': production_table.id,
