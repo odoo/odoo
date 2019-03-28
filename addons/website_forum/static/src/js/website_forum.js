@@ -179,15 +179,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onKarmaRequiredClick: function (ev) {
         var $karma = $(ev.currentTarget);
         var karma = $karma.data('karma');
+        var forum_id = $('#wrapwrap').data('forum_id');
         if (!karma) {
             return;
         }
         ev.preventDefault();
-        var msg = karma + ' ' + _t("karma is required to perform this action. You can earn karma by having your answers upvoted by the community.");
+        var msg = karma + ' ' + _t("karma is required to perform this action. ");
+        if (forum_id) {
+            msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
+        }
         if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">' +
+        var $warning = $('<div class="alert alert-danger alert-dismissible oe_forum_alert" id="karma_alert">' +
             '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
             msg + '</div>');
         var $voteAlert = $('#karma_alert');
