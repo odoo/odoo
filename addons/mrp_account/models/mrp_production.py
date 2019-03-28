@@ -14,6 +14,8 @@ class MrpProductionWorkcenterLineTime(models.Model):
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
+
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
@@ -29,8 +31,9 @@ class MrpProduction(models.Model):
                 work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
-                finished_move.price_unit = (sum([-m.value for m in consumed_moves]) + work_center_cost) / qty_done
-                finished_move.value = sum([-m.value for m in consumed_moves]) + work_center_cost
+                extra_cost = self.extra_cost * qty_done
+                finished_move.price_unit = (sum([-m.value for m in consumed_moves]) + work_center_cost + extra_cost) / qty_done
+                finished_move.value = sum([-m.value for m in consumed_moves]) + work_center_cost + extra_cost
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
