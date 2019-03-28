@@ -91,20 +91,20 @@ var AbstractAction = Widget.extend(ActionMixin, {
      */
     willStart: function () {
         var self = this;
+        var defs = [this._super.apply(this, arguments)];
         if (this.hasControlPanel) {
             var params = this.controlPanelParams;
-            var def;
             if (this.loadControlPanel) {
-                def = this
+                defs.push(this
                     .loadFieldView(params.modelName, params.context || {}, params.viewId, 'search')
                     .then(function (fieldsView) {
                         params.viewInfo = {
                             arch: fieldsView.arch,
                             fields: fieldsView.fields,
                         };
-                    });
+                    }));
             }
-            return $.when(def).then(function () {
+            return $.when.apply(this, defs).then(function () {
                 var controlPanelView = new self.config.ControlPanelView(params);
                 return controlPanelView.getController(self).then(function (controlPanel) {
                     self._controlPanel = controlPanel;
@@ -112,7 +112,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                 });
             });
         }
-        return $.when();
+        return $.when.apply(this, defs);
     },
     /**
      * @override
