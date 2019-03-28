@@ -282,7 +282,7 @@ class PosSession(models.Model):
         # Close CashBox
         for session in self:
             company_id = session.config_id.company_id.id
-            ctx = dict(self.env.context, force_company=company_id, company_id=company_id)
+            ctx = dict(self.env.context, force_company=company_id, company_id=company_id, default_partner_type='customer')
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
