@@ -26,7 +26,7 @@ class TestTermCount(common.TransactionCase):
         self.assertEqual(translations[0].module, 'test_translation_import')
         self.assertEqual(translations[0].name, 'addons/test_translation_import/models.py')
         self.assertEqual(translations[0].comments, '')
-        self.assertEqual(translations[0].res_id, 21)
+        self.assertEqual(translations[0].res_id, 15)
         self.assertEqual(translations[1].type, 'model')
         self.assertEqual(translations[1].module, 'test_translation_import')
         self.assertEqual(translations[1].name, 'ir.model.fields,field_description')
