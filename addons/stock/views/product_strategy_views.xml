@@ -11,6 +11,7 @@
                        attrs="{'readonly': [('category_id', '!=', False)], 'required': [('category_id', '=', False)]}"
                        options="{'no_create': True, 'no_open': True}"
                        readonly="context.get('single_product', False)"
+                       domain="[('type', '!=', 'service')]"
                        force_save="1"/>
                 <field name="category_id"
                        attrs="{'readonly': [('product_id', '!=', False)], 'required': [('product_id', '=', False)]}"
