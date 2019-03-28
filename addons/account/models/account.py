@@ -88,7 +88,7 @@ class AccountAccount(models.Model):
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
-        'account_id', 'tax_id', string='Default Taxes')
+        'account_id', 'tax_id', string='Default Taxes', context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
@@ -962,7 +962,7 @@ class AccountTax(models.Model):
     def name_get(self):
         if not self._context.get('append_type_to_tax_name'):
             return super(AccountTax, self).name_get()
-        return [(tax.id, '%s (%s)' % (tax.name, tax.type_tax_use)) for tax in self]
+        return [(tax.id, '%s (%s)' % (tax.name, dict(self._fields['type_tax_use']._description_selection(self.env))[tax.type_tax_use])) for tax in self]
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
