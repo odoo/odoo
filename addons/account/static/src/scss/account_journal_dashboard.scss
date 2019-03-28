@@ -39,84 +39,19 @@
 
     .o_sample_data_label {
         @include o-position-absolute($bottom: 25%, $right: 0);
+        z-index: 1;
     }
 }
 
 // Style for the widget "dashboard_graph"
 .o_dashboard_graph {
-    &.o_graph_linechart {
-        > svg {
-            height: 75px;
-            // Display cut bullets to full bullets
-            g.nvd3.nv-wrap.nv-line clipPath {
-                display: none;
-            }
+    position: relative;
+    margin: 16px -16px;
 
-            // X axis
-            g.nv-x.nv-axis {
-                transform: translateY(50px);
-
-                // Remove max and min labels
-                g.nv-axisMaxMin {
-                    display: none;
-                }
-                g.tick.major {
-                    // Don't know why, but leads to strange bold text
-                    // stroke: $o-brand-odoo;
-
-                    line {
-                        display: none;
-                    }
-                }
-            }
-
-            // !important are needed because nvd3 uses inline style on elements
-
-            // Remove strokes
-            g.nv-linesWrap {
-                g.nv-group.nv-series-0 {
-                    fill-opacity: 0.3 !important;
-                    fill: $o-brand-odoo !important;
-                    stroke: $o-brand-odoo !important;
-
-                    .nv-point {
-                        visibility: hidden;
-                        r: 3;
-                        stroke: $o-brand-odoo !important;
-                        fill: white;
-                        stroke-width: 2;
-                    }
-                    .nv-point:nth-child(n+1) {
-                        visibility: visible;
-                        fill-opacity: .95 !important;
-                        stroke-opacity: .95 !important;
-                    }
-                }
-            }
-        }
+    canvas {
+        height: 75px;
     }
-    &.o_graph_barchart {
-        > svg {
-            height: 75px;
-            overflow: visible;
-            g.nv-barsWrap {
-                g.nv-group.nv-series-0 {
-                    g.past {
-                        opacity: 0.5;
-                        fill: $o-brand-odoo !important;
-                    }
-                    g.future {
-                        opacity: 0.5;
-                        fill: $o-brand-primary !important;
-                    }
-                    g.o_sample_data {
-                        opacity: 0.1;
-                        fill: gray !important;
-                    }
-                }
-            }
-        }
-    }
+
 }
 
 .o_sample_data .o_dashboard_graph.o_graph_linechart > svg g.nv-linesWrap g.nv-group.nv-series-0 {
