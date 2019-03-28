@@ -581,12 +581,7 @@
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
-                        <t t-if="(slide.id != slide_promoted.id) and (slide_promoted and not search) ">
-                            <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
-                        </t>
-                        <t t-elif="search_slide_type or search">
-                            <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
-                        </t>
+                        <div class="col-12 col-sm-6 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
                     </t>
                 </div>
             </div>
