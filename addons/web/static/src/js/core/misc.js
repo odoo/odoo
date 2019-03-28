@@ -8,17 +8,9 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 
-var messages_by_seconds = function() {
-    return [
-        [0, _t("Loading...")],
-        [20, _t("Still loading...")],
-        [60, _t("Still loading...<br />Please be patient.")],
-        [120, _t("Don't leave yet,<br />it's still loading...")],
-        [300, _t("You may not believe it,<br />but the application is actually loading...")],
-        [420, _t("Take a minute to get a coffee,<br />because it's loading...")],
-        [3600, _t("Maybe you should consider reloading the application by pressing F5...")]
-    ];
-};
+var message = _t("Loading");
+var mes = message;
+var dots = 0;
 
 var Throbber = Widget.extend({
     template: "Throbber",
@@ -31,13 +23,13 @@ var Throbber = Widget.extend({
         setTimeout(function() {
             if (self.isDestroyed())
                 return;
-            var seconds = (new Date().getTime() - self.start_time) / 1000;
-            var mes;
-            _.each(messages_by_seconds(), function(el) {
-                if (seconds >= el[0])
-                    mes = el[1];
-            });
+            mes = mes + '.';
+            if(dots == 8) {
+                mes = message;
+                dots = 0;
+            }   
             self.$(".oe_throbber_message").html(mes);
+            dots++;
             self.act_message();
         }, 1000);
     },
