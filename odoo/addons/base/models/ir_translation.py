@@ -644,7 +644,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
-                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
@@ -704,7 +704,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
@@ -714,6 +714,10 @@ class IrTranslation(models.Model):
             'domain': domain,
         }
         if field:
+            action['name'] = _('Translate Field')
+            action['view_id'] = self.env.ref('base.view_translation_field_tree').id
+            action['target'] = 'new'
+            action['domain'] += [('lang', '!=', self._context.get('lang'))]
             fld = record._fields[field]
             if not fld.related:
                 action['context'] = {
