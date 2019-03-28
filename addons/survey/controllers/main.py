@@ -69,7 +69,7 @@ class Survey(http.Controller):
         if survey_sudo.users_login_required and request.env.user._is_public():
             return 'survey_auth'
 
-        if (survey_sudo.is_closed or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
+        if (survey_sudo.state == 'closed' or survey_sudo.state == 'draft' or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:

@@ -7,13 +7,16 @@
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
                 <field name="id" invisible="1"/>
-                <field name="is_closed" invisible="1"/>
                 <header>
-                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_open" string="Start Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('id', '=', False)]}"/>
+                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight" states="open"/>
+                    <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
+                      attrs="{'invisible': ['|', ('state', '=', 'draft'), ('answer_done_count', '&lt;=', 0)]}"/>
+                    <button name="action_draft" string="Set to draft" type="object" states="closed"/>
+                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('state', '=', 'closed'), ('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    <button name="action_close" string="Close" type="object" states="open"/>
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -115,11 +118,14 @@
         <field name="arch" type="xml">
             <tree string="Survey">
                 <field name="active" invisible="1"/>
-                <field name="title" />
-                <field name="stage_id" />
+                <field name="certificate" invisible="1"/>
+                <field name="title"/>
+                <field name="state"/>
                 <field name="invite_count"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
+                <button name="certificate" icon="fa-trophy" title="Certificate" aria-label="Certificate" attrs="{'invisible': [('certificate', '=', False)]}"/>
+                <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
         </field>
     </record>
@@ -127,8 +133,8 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id">
-                <field name="stage_id" />
+            <kanban default_group_by="state">
+                <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />
                 <field name="certificate" />

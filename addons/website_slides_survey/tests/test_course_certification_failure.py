@@ -18,7 +18,7 @@ class TestCourseCertificationFailureFlow(SurveyCase):
                 'is_attempts_limited': True,
                 'passing_score': 100.0,
                 'attempts_limit': 2,
-                'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id
+                'state': 'open',
             })
 
             self._add_question(
