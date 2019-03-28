@@ -256,41 +256,50 @@ ListRenderer.include({
             if (!record) {
                 return;
             }
+            var $row = self.getRow(id);
+            $row.nextAll('.o_data_row').remove();
+            $row.prevAll().remove();
             _.each(oldData, function (rec) {
                 if (rec.id !== id) {
                     self._destroyFieldWidgets(rec.id);
                 }
             });
-            var $body = self._renderBody();
-            var $row = $body.find('.o_data_row').filter(function (index, el) {
-                return $(el).data('id') === id;
-            }); 
-
             var $editRow = self.getRow(id);
-            $row.replaceWith($editRow);
-            // change register modifiers to edit mode because
-            // call of _renderBody was set baseModeByRecord as readonly
-            _.each(self.columns, function (node, index) {
-                self._registerModifiers(node, record, null, {mode: 'edit'});
-            });
-            self.$('tbody').replaceWith($body);
             var newRowIndex = $editRow.prop('rowIndex') - 1;
-
-            if (self.currentRow !== null) {
-                self.currentRow = newRowIndex;
-                return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true}
-                    ).then(function () {
-                    // restore the cursor position
-                    currentRowID = self.getRecordID(newRowIndex);
-                    currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
-                    if (currentWidget) {
-                        focusedElement = currentWidget.getFocusableElement().get(0);
-                        if (selectionRange) {
-                            dom.setSelectionRange(focusedElement, selectionRange);
-                        }
+            var $lastRow = $row;
+            var defs = [];
+            self.defs = defs;
+            state.data.forEach(function (record, index) {
+                if (index === newRowIndex) {
+                    return;
+                }
+                // FIXME: as we are manipulating the DOM directly, it will
+                // flicker if there is an async widget in the row
+                var $newRow = self._renderRow(record);
+                if (index < newRowIndex) {
+                    $newRow.insertBefore($row);
+                } else {
+                    $newRow.insertAfter($lastRow);
+                    $lastRow = $newRow;
+                }
+            });
+            delete self.defs;
+            return Promise.all(defs).then(function () {
+                if (self.currentRow !== null) {
+                    self.currentRow = newRowIndex;
+                    return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true});
+                }
+            }).then(function () {
+                // restore the cursor position
+                currentRowID = self.getRecordID(newRowIndex);
+                currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
+                if (currentWidget) {
+                    focusedElement = currentWidget.getFocusableElement().get(0);
+                    if (selectionRange) {
+                        dom.setSelectionRange(focusedElement, selectionRange);
                     }
-                });
-            }
+                }
+            });
         });
     },
     /**
