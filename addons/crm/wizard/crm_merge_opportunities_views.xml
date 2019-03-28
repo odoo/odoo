@@ -33,15 +33,6 @@
             </field>
         </record>
 
-        <!--  Merge leads/opportunities action -->
-        <record id="merge_opportunity_act" model="ir.actions.act_window">
-            <field name="name">Merge leads/opportunities</field>
-            <field name="res_model">crm.merge.opportunity</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="merge_opportunity_form"/>
-            <field name="target">new</field>
-        </record>
-
         <act_window
             id="action_merge_opportunities"
             name="Merge"
