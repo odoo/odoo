@@ -496,14 +496,14 @@ class account_payment(models.Model):
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
-        if not self.invoice_ids:
+        if not self.invoice_ids and not self.partner_type:
             # Set default partner type for the payment type
             if self.payment_type == 'inbound':
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
-            else:
-                self.partner_type = False
+        elif self.payment_type not in ('inbound', 'outbound'):
+            self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):

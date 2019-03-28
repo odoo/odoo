@@ -517,6 +517,8 @@ class AccountBankStatementLine(models.Model):
                 partner_type = 'supplier'
             else:
                 partner_type = 'customer'
+        if not partner_type and self.env.context.get('default_partner_type'):
+            partner_type = self.env.context['default_partner_type']
         currency = self.journal_id.currency_id or self.company_id.currency_id
         payment_methods = (total > 0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
         return {

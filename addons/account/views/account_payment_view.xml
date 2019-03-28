@@ -92,8 +92,8 @@
                     <field name="partner_id" />
                     <field name="journal_id" />
                     <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Vendor Payments" domain="[('payment_type','=','outbound')]" name="outbound_filter"/>
-                    <filter string="Customer Payments" domain="[('payment_type','=','inbound')]" name="inbound_filter"/>
+                    <filter string="Vendor Payments" domain="[('partner_type','=','supplier')]" name="outbound_filter"/>
+                    <filter string="Customer Payments" domain="[('partner_type','=','customer')]" name="inbound_filter"/>
                     <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
