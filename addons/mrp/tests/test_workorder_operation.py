@@ -211,6 +211,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # ---------------------------------------------------------
         workorders[1].button_start()
         workorders[1].qty_producing = 1.0
+        workorders[1].final_lot_id = finished_lot
         workorders[1].workorder_line_ids[0].write({'lot_id': lot_leg.id, 'qty_done': 4})
         workorders[1].record_production()
         move_leg = production_table.move_raw_ids.filtered(lambda p: p.product_id == product_table_leg)
@@ -222,6 +223,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # ---------------------------------------------------------
         workorders[2].button_start()
         workorders[2].qty_producing = 1.0
+        workorders[2].final_lot_id = finished_lot
         move_lot = workorders[2].workorder_line_ids[0]
         move_lot.write({'lot_id': lot_bolt.id, 'qty_done': 4})
         move_table_bolt = production_table.move_raw_ids.filtered(lambda p: p.product_id.id == product_bolt.id)

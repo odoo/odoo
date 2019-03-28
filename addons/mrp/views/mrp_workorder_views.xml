@@ -166,6 +166,13 @@
                             <field name="move_id" invisible="1"/>
                         </tree>
                     </field>
+                    <field name="final_lot_line_ids" attrs="{'invisible': [('final_lot_line_ids', '=', [])]}" readonly="1">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="product_id"/>
+                            <field name="final_lot_id"/>
+                            <field name="qty_done" string="Done"/>
+                        </tree>
+                    </field>
                 </page>
                 <page string="Time Tracking" groups="mrp.group_mrp_manager">
                     <group>

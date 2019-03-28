@@ -103,21 +103,52 @@ class MrpWorkorder(models.Model):
     capacity = fields.Float(
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
-    workorder_line_ids = fields.One2many('mrp.workorder.line', 'workorder_id', string='Workorder lines')
+    workorder_line_ids = fields.One2many(
+        'mrp.workorder.line',
+        'workorder_id',
+        string='Workorder lines',
+        domain=[('finished_check', '=', False)]
+    )
+    final_lot_line_ids = fields.One2many(
+        'mrp.workorder.line',
+        'workorder_id',
+        string='Final Lot lines',
+        domain=[('finished_check', '=', True)]
+    )
     final_lot_domain = fields.One2many('stock.production.lot', compute="_compute_final_lot_domain")
 
-    @api.depends('production_id')
+    @api.onchange('final_lot_id')
+    def _onchange_final_lot_id(self):
+        previous_wo = self.env['mrp.workorder'].search([
+            ('next_work_order_id', '=', self.id)
+        ])
+        # update default quantity to produce depending on the previous qty_producing
+        # in the previous workorder for the current final lot
+        if previous_wo:
+            line = previous_wo.final_lot_line_ids.filtered(lambda line: line.final_lot_id == self.final_lot_id)
+            if line:
+                self.qty_producing = line.qty_done
+
     def _compute_final_lot_domain(self):
-        for wo in self:
-            # check if self is not the first workorder in the list
-            if self.env['mrp.workorder'].search([('next_work_order_id', '=', wo.id)]):
-                wo.final_lot_domain = self.env['stock.production.lot'].search([
-                    ('use_next_on_work_order_id', '=', wo.id),
-                ]).ids
-            else:
+        """ browse already created lot and respective quantities"""
+        for wo in self.filtered(lambda wo: wo.product_tracking != 'none'):
+            lots_stack = {}
+            for line in wo.production_id.workorder_ids.mapped('final_lot_line_ids').filtered(lambda line: line.final_lot_id):
+                # group qty_done by lot_id
+                if line.final_lot_id.id not in lots_stack or line.qty_done > lots_stack[line.final_lot_id.id]:
+                    lots_stack[line.final_lot_id.id] = line.qty_done
+            if sum(lots_stack.values()) < wo.qty_production:
+                # There are still quantities to produce without lot so propose all the
+                # exsisting lots
                 wo.final_lot_domain = self.env['stock.production.lot'].search([
                     ('product_id', '=', wo.product_id.id),
-                ]).ids
+                ])
+            else:
+                wo.final_lot_domain = self.env['stock.production.lot'].browse(lots_stack.keys())
+
+            # remove lots already produced in this wo
+            if wo.product_tracking == 'serial':
+                wo.final_lot_domain -= wo.final_lot_line_ids.filtered(lambda line: line.qty_done == 1).mapped('final_lot_id')
 
     @api.multi
     def name_get(self):
@@ -194,10 +225,39 @@ class MrpWorkorder(models.Model):
             )
             line_values = self._generate_lines_values(move, qty_to_consume)
             self.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+        # create the first final lot line id
+        if self.product_tracking != 'none':
+            self.env['mrp.workorder.line'].create({
+                'workorder_id': self.id,
+                'qty_done': self.qty_production,
+                'finished_check': True,
+                'product_id': self.product_id.id,
+            })
 
-    def _assign_default_final_lot_id(self):
-        self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
-                                                                    order='create_date, id', limit=1)
+    def _assign_default_final_lot_id(self, reference_lot_lines):
+        if not reference_lot_lines:
+            # self is the first workorder
+            self.qty_producing = self.qty_remaining
+            self.final_lot_id = False
+            if self.product_tracking == 'serial':
+                self.qty_producing = 1
+        for r_line in reference_lot_lines:
+            # see which lot we could suggest and its related qty_producing
+            if not r_line.final_lot_id:
+                continue
+            candidates = self.final_lot_line_ids.filtered(lambda line: line.final_lot_id == r_line.final_lot_id)
+            if not candidates:
+                self.write({
+                    'final_lot_id': r_line.final_lot_id.id,
+                    'qty_producing': r_line.qty_done,
+                })
+                break
+            elif candidates.qty_done < r_line.qty_done:
+                self.write({
+                    'final_lot_id': r_line.final_lot_id.id,
+                    'qty_producing': r_line.qty_done - candidates.qty_done,
+                })
+                break
 
     def _get_byproduct_move_line(self, by_product_move, quantity):
         return {
@@ -231,31 +291,73 @@ class MrpWorkorder(models.Model):
         # Transfer quantities from temporary to final move line or make them final
         self._update_raw_moves()
 
+        # Record the final lot and quantity produced to suggest on next workorders
+        if self.product_tracking != 'none' and self.final_lot_id:
+            self._update_lot_lines()
+
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
-        if self.final_lot_id:
-            self.final_lot_id.use_next_on_work_order_id = self.next_work_order_id
-            self.final_lot_id = False
+        if self.next_work_order_id and self.production_id.product_id.tracking != 'none' and not self.qty_remaining:
+            self.next_work_order_id._assign_default_final_lot_id(self.final_lot_line_ids)
 
         # Set a qty producing
         rounding = self.production_id.product_uom_id.rounding
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.qty_producing = 0
-        elif self.production_id.product_id.tracking == 'serial':
-            self._assign_default_final_lot_id()
-            self.qty_producing = 1.0
-            self.generate_wo_lines()
         else:
-            self.qty_producing = float_round(self.production_id.product_qty - self.qty_produced, precision_rounding=rounding)
-            self.generate_wo_lines()
-
-        if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
-            self.next_work_order_id._assign_default_final_lot_id()
+            if self.product_tracking != 'none':
+                previous_wo = self.env['mrp.workorder'].search([
+                    ('next_work_order_id', '=', self.id)
+                ])
+                self._assign_default_final_lot_id(previous_wo.final_lot_line_ids)
+            line_values = self._update_workorder_lines()
+            self.workorder_line_ids |= self.workorder_line_ids.create(line_values['to_create'])
+            if line_values['to_delete']:
+                line_values['to_delete'].unlink()
+            for line, vals in line_values['to_update'].items():
+                line.write(vals)
 
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    def _update_lot_lines(self):
+        """
+        1. Check that the final lot and the quantity producing is valid regarding
+            other workorders of this production
+        2. Save final lot and quantity producing to suggest on next workorder
+        """
+        message = False
+        final_lot_quantity = 0
+        # save only line with current lot and line without lot
+        for line in (self.production_id.workorder_ids - self).mapped('final_lot_line_ids'):
+            if line.final_lot_id == self.final_lot_id and line.qty_done > final_lot_quantity:
+                final_lot_quantity = line.qty_done
+
+        # final lot line for this lot on this wo
+        current_lot_lines = self.final_lot_line_ids.filtered(lambda line: line.final_lot_id == self.final_lot_id)
+        current_empty_line = self.final_lot_line_ids.filtered(lambda line: not line.final_lot_id)
+        if not current_lot_lines:
+            current_lot_lines = self.final_lot_line_ids[0].copy({
+                'final_lot_id': self.final_lot_id.id,
+                'qty_done': 0
+            })
+
+        if final_lot_quantity > 0:
+            # this lot has already been produced
+            if final_lot_quantity - current_lot_lines.qty_done - current_empty_line.qty_done <= self.qty_producing:
+                current_lot_lines.qty_done += self.qty_producing
+                current_empty_line.qty_done -= self.qty_producing
+            else:
+                message = _('You have produced %s %s of lot %s in the previous workorder. You are trying to produce %s in this one') % (final_lot_quantity, self.product_id.uom_id.name, self.final_lot_id.name, current_lot_lines.qty_done + self.qty_producing)
+        elif current_empty_line.qty_done >= self.qty_producing:
+            # This lot is a new one
+            current_lot_lines.qty_done += self.qty_producing
+            current_empty_line.qty_done -= self.qty_producing
+
+        if message:
+            raise UserError(message)
 
     @api.multi
     def button_start(self):
@@ -391,6 +493,7 @@ class MrpWorkorderLine(models.Model):
     _description = "Workorder move line"
 
     workorder_id = fields.Many2one('mrp.workorder', 'Workorder')
+    finished_check = fields.Boolean('Finished Lot Line', default=False)
 
     def _get_final_lot(self):
         return self.workorder_id.final_lot_id

@@ -232,7 +232,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
                 vals_list += line._create_extra_move_lines()
 
-        self.workorder_line_ids.unlink()
+        workorder_lines_to_process.unlink()
         self.env['stock.move.line'].create(vals_list)
 
     def _strict_consumption_check(self):
@@ -255,6 +255,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    final_lot_id = fields.Many2one('stock.production.lot', 'Finished Product Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     qty_done = fields.Float('Consumed', digits=dp.get_precision('Product Unit of Measure'))
@@ -380,6 +381,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 vals.update({'lot_id': self.lot_id.id})
 
             vals_list.append(vals)
+            self.qty_done -= vals['qty_done']
 
         return vals_list
 
