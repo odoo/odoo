@@ -655,7 +655,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
-                args: [record.model, record.res_id, ev.data.fieldName, record.getContext()],
+                args: [record.model, record.res_id, ev.data.fieldName],
+                kwargs: {context: record.getContext()},
             }
         }).then(function (result) {
             self.do_action(result, {

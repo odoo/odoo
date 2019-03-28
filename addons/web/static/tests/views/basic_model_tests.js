@@ -214,7 +214,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 data: this.data,
                 mockRPC: function (route, args) {
                     if (args.method === 'onchange') {
-                        var context = args.args[4];
+                        var context = args.kwargs.context;
                         assert.deepEqual(context, { hello: 'world' },
                             "context should be sent by the onchange");
                     }

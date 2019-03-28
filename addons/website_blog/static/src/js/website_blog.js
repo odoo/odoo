@@ -98,7 +98,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://plus.google.com/share?url=' + window.location.href;
             }
         } else {
-            var blogPost = $element.parents('[name="blogPost"]');
+            var blogPost = $element.parents('[name="blog_post"]');
             var blogPostTitle = blogPost.find('.o_blog_post_title').html() || '';
             var blogArticleLink = blogPost.find('.o_blog_post_title').parent('a').attr('href');
             if ($element.hasClass('o_twitter')) {

@@ -24,7 +24,7 @@
         AbstractController.include({
             start: function(){
                 this.$el.attr('data-view-type', this.viewType);
-                return this._super();
+                return this._super.apply(this, arguments);
             },
             update: function(params, options) {
                 return this._super(params, options).then(function (){
@@ -36,7 +36,7 @@
         if (Discuss) {
             Discuss.include({
                 _fetchAndRenderThread: function() {
-                    return this._super().then(function (){
+                    return this._super.apply(this, arguments).then(function (){
                         viewUpdateCount++;
                     });
                 },
@@ -56,8 +56,6 @@
         var $listOfAppMenuItems;
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise");
-            var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-            $homeMenu.click();
             $listOfAppMenuItems = $(".o_app, .o_menuitem");
         } else {
             console.log("Odoo flavor: Community");
@@ -74,6 +72,7 @@
             console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
         }).catch(function () {
             console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
+            console.error('test failed')
             console.error("Error !");
         });
     }
@@ -101,7 +100,12 @@
         }).then(function(){
                 // no effect in community
                 var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-                $homeMenu.click();
+                _click($homeMenu);
+                return new Promise(function(resolve){
+                    setTimeout(function(){
+                      resolve();
+                    }, 0);
+                });
         });
     }
 
@@ -119,13 +123,17 @@
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
         var startActionCount = clientActionCount;
-        element.click();
+        _click($(element));
         var isModal = false;
         return waitForCondition(function() {
             // sometimes, the app is just a modal that needs to be closed
             var $modal = $('.modal[role="dialog"][open="open"]');
             if ($modal.length > 0) {
-                $modal.modal('hide');
+                var $closeButton = $('header > button.close');
+                if ($closeButton.length > 0) {
+                  $closeButton.focus();
+                  _click($closeButton);
+                } else { $modal.modal('hide'); }
                 isModal = true;
                 return true;
             }
@@ -140,6 +148,7 @@
             }
         }).catch(function () {
             console.error("Error while testing", element);
+            return Promise.reject();
         });
     };
 
@@ -173,7 +182,7 @@
         setTimeout(function() {
             var $element = $("nav.o_cp_switch_buttons > button[data-view-type=" + viewType + "]");
             console.log('Clicking on: ', $element[0].dataset.viewType,  ' view switcher');
-            $element.click();
+            _click($element);
         },250);
         var waitViewSwitch = waitForCondition(function(){
             return $('.o_action_manager> .o_action.o_view_controller').data('view-type') === viewType;
@@ -193,7 +202,7 @@
         var $filters = $('.o_filters_menu > .o_menu_item');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
-        _.each(filter_ids, function(filter_id){
+        filter_ids.forEach(function(filter_id){
             filterProm = filterProm.then(function(){
                 var currentViewCount = viewUpdateCount;
                 var $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
@@ -203,16 +212,16 @@
                     return Promise.resolve();
                 }
                 console.log('Clicking on filter "', $filter.text().trim(), '"');
-                $filter[0].click();
+                _click($filter);
                 setTimeout(function() {
                     var $filterOption = $('.o_menu_item .o_item_option[data-item_id="' + filter_id + '"]:not(.selected) a');
                     // In case the filter is a date filter, we need to click on the first filter option (like 'today','This week' ...)
                     if ($filterOption.length > 0) {
                         console.log('Clicking on filter option "', $filterOption[0], '"');
-                        $filterOption[0].click();
+                        _click($filterOption);
                         console.log('And now on filter again');
                         $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
-                        $filter[0].click(); // To avoid that the next view fold the options
+                        _click($filter); // To avoid that the next view fold the options
                     }
                 }, 250);
                 return waitForCondition(function() {
@@ -232,7 +241,7 @@
     function waitForCondition(stopCondition) {
         var prom = new Promise(function (resolve, reject) {
             var interval = 250;
-            var timeLimit = 15000;
+            var timeLimit = 5000;
 
             function checkCondition() {
                 if (stopCondition()) {
@@ -271,6 +280,25 @@
         return promise;
     }
 
+
+    /*
+     * More realistic click action.
+     * @param {jQueryElement} $element the element on which to perform the click
+     */
+    function _click($element) {
+        if ($element.length == 0) return;
+        triggerMouseEvent($element, "mouseover");
+        triggerMouseEvent($element, "mouseenter");
+        triggerMouseEvent($element, "mousedown");
+        triggerMouseEvent($element, "mouseup");
+        triggerMouseEvent($element, "click");
+
+        function triggerMouseEvent($el, type, count) {
+            var e = document.createEvent("MouseEvents");
+            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $el[0]);
+            $el[0].dispatchEvent(e);
+        }
+    }
 
     exports.clickEverywhere = clickEverywhere;
 })(window);

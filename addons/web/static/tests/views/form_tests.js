@@ -172,6 +172,95 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('duplicate fields rendered properly', async function (assert) {
+        assert.expect(6);
+        this.data.partner.records.push({
+            id: 6,
+            bar: true,
+            foo: "blip",
+            int_field: 9,
+        })
+        var form = await createView({
+            View: FormView,
+            viewOptions: { mode: 'edit' },
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' + 
+                        '<group>' + 
+                            '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',True)]}"/>' +
+                            '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',False)]}"/>' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',False)]}"/>' +
+                            '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',True)]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' + 
+                    '</group>' + 
+                '</form>',
+            res_id: 6,
+        });
+
+        assert.hasClass(form.$('div.o_group input[name="foo"]:eq(0)'), 'o_invisible_modifier', 'first foo widget should be invisible');
+        assert.containsOnce(form, 'div.o_group input[name="foo"]:eq(1):not(.o_invisible_modifier)', "second foo widget should be visible");
+        assert.containsOnce(form, 'div.o_group input[name="foo"]:eq(2):not(.o_invisible_modifier)', "third foo widget should be visible");
+        await testUtils.fields.editInput(form.$('div.o_group input[name="foo"]:eq(2)'), "hello");
+        assert.strictEqual(form.$('div.o_group input[name="foo"]:eq(1)').val(), "hello", "second foo widget should be 'hello'");
+        assert.containsOnce(form, 'div.o_group input[name="int_field"]:eq(0):not(.o_readonly_modifier)', "first int_field widget should not be readonly");
+        assert.hasClass(form.$('div.o_group span[name="int_field"]:eq(0)'),'o_readonly_modifier', "second int_field widget should be readonly");
+        form.destroy();
+    });
+   
+    QUnit.test('duplicate fields rendered properly (one2many)', async function (assert) {
+        assert.expect(7);
+        this.data.partner.records.push({
+            id: 6,
+            p: [1],
+        })
+        var form = await createView({
+            View: FormView,
+            viewOptions: { mode: 'edit' },
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<notebook>' +
+                        '<page>' +
+                            '<field name="p">' +
+                                '<tree editable="True">' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                                '<form/>' +
+                            '</field>' +
+                        '</page>' +
+                        '<page>' +
+                            '<field name="p" readonly="True">' +
+                                '<tree editable="True">' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                                '<form/>' +
+                            '</field>' +
+                        '</page>' +
+                    '</notebook>' +
+                '</form>',
+            res_id: 6,
+        });
+        assert.containsOnce(form, 'div.o_field_one2many:eq(0):not(.o_readonly_modifier)', "first one2many widget should not be readonly");
+        assert.hasClass(form.$('div.o_field_one2many:eq(1)'),'o_readonly_modifier', "second one2many widget should be readonly");
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)')); 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop", 
+            "first line in one2many of first tab contains yop");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), 
+            "yop", "first line in one2many of second tab contains yop");
+        await testUtils.fields.editInput(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]'), "hello");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello", 
+            "first line in one2many of second tab contains hello");
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)')); 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
+            "second line in one2many of first tab contains 'My little Foo Value'");
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(), 
+            "My little Foo Value", "first line in one2many of second tab contains hello");
+        form.destroy();
+    });
+
     QUnit.test('attributes are transferred on async widgets', async function (assert) {
         assert.expect(1);
         var done  = assert.async();
@@ -3957,9 +4046,9 @@ QUnit.module('Views', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'onchange') {
-                    assert.strictEqual(args.args[4].test, 1,
+                    assert.strictEqual(args.kwargs.context.test, 1,
                         "the context of the field triggering the onchange should be given");
-                    assert.strictEqual(args.args[4].int_ctx, undefined,
+                    assert.strictEqual(args.kwargs.context.int_ctx, undefined,
                         "the context of other fields should not be given");
                 }
                 return this._super.apply(this, arguments);
@@ -5782,7 +5871,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return Promise.resolve(false);
                 } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["product",37,"name",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["product",37,"name"], 'should call "call_button" route');
                     nbTranslateCalls++;
                     return Promise.resolve();
                 }
@@ -6127,6 +6216,66 @@ QUnit.module('Views', {
             'write', // write on save (it fails, does not trigger a read)
             'write', // write on save (it works)
             'read' // read on reload
+        ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('form view is not broken if save failed in readonly mode on field changed', async function (assert) {
+        assert.expect(10);
+
+        var failFlag = false;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.step('write');
+                    if (failFlag) {
+                        return Promise.reject();
+                    }
+                } else if (args.method === 'read') {
+                    assert.step('read');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var $selectedState = form.$('.o_statusbar_status button[data-value="4"]');
+        assert.ok($selectedState.hasClass('btn-primary') && $selectedState.hasClass('disabled'),
+            "selected status should be btn-primary and disabled");
+
+        failFlag = true;
+        var $clickableState = form.$('.o_statusbar_status button[data-value="1"]');
+        await testUtils.dom.click($clickableState);
+
+        var $lastActiveState = form.$('.o_statusbar_status button[data-value="4"]');
+        $selectedState = form.$('.o_statusbar_status button.btn-primary');
+        assert.strictEqual($selectedState[0], $lastActiveState[0],
+            "selected status is AAA record after save fail");
+
+        failFlag = false;
+        $clickableState = form.$('.o_statusbar_status button[data-value="1"]');
+        await testUtils.dom.click($clickableState);
+
+        var $lastClickedState = form.$('.o_statusbar_status button[data-value="1"]');
+        $selectedState = form.$('.o_statusbar_status button.btn-primary');
+        assert.strictEqual($selectedState[0], $lastClickedState[0],
+            "last clicked status should be active");
+
+        assert.verifySteps([
+            'read',
+            'write', // fails
+            'read', // must reload when saving fails
+            'write', // works
+            'read', // must reload when saving works
+            'read', // fixme: this read should not be necessary
         ]);
 
         form.destroy();
@@ -6929,6 +7078,50 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.pager.$('.o_pager_counter').text().trim(), '2 / 2',
             'pager should not have changed');
+
+        form.destroy();
+    });
+
+    QUnit.test('Form view from ordered, grouped list view correct context', async function (assert) {
+        assert.expect(10);
+        this.data.partner.records[0].timmy = [12];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="timmy"/>' +
+                '</form>',
+            archs: {
+                'partner_type,false,list':
+                    '<tree>' +
+                        '<field name="name"/>' +
+                    '</tree>',
+            },
+            viewOptions: {
+                // Simulates coming from a list view with a groupby and filter
+                context: {
+                    orderedBy: [{name: 'foo', asc:true}],
+                    group_by: ['foo'],
+                }
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.model + ":" + args.method);
+                if (args.method === 'read') {
+                    assert.ok(args.kwargs.context, 'context is present');
+                    assert.notOk('orderedBy' in args.kwargs.context,
+                        'orderedBy not in context');
+                    assert.notOk('group_by' in args.kwargs.context,
+                        'group_by not in context');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.verifySteps(['partner_type:load_views', 'partner:read', 'partner_type:read']);
 
         form.destroy();
     });

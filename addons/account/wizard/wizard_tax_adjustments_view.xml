@@ -18,8 +18,8 @@
                     <field name="tax_id" widget="selection"/>
                 </group>
                 <group string="Accounts">
-                    <field name="debit_account_id"/>
-                    <field name="credit_account_id"/>
+                    <field name="debit_account_id" options="{'no_create': True}"/>
+                    <field name="credit_account_id" options="{'no_create': True}"/>
                 </group>
                 <group string="Options">
                     <field name="journal_id"/>

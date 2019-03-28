@@ -129,6 +129,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
+                    <field name="journal_group_ids" widget="many2many_tags"/>
                     <field name="belongs_to_company" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -173,6 +174,34 @@
                 </search>
             </field>
         </record>
+        <record id="view_account_journal_group_tree" model="ir.ui.view">
+            <field name="name">account.journal.group.tree</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence"  widget="handle"/>
+                    <field name="name"/>
+                    <field name="account_journal_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_journal_group_form" model="ir.ui.view">
+            <field name="name">account.journal.group.form</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Journal Groups">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
@@ -192,6 +221,7 @@
                         <group>
                             <group>
                                 <field name="type"/>
+                                <field name="journal_group_ids" widget="many2many_tags" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" options="{'no_create': True}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -221,8 +251,8 @@
                                         </div>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
-                                        <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
+                                        <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
+                                        <field name="default_credit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -251,8 +281,8 @@
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
                                     <group string="Accounting App Options">
-                                        <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="post_at_bank_rec" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     </group>
@@ -408,6 +438,19 @@
             </field>
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu" groups="account.group_account_manager"/>
+
+        <record id="action_account_journal_group_list" model="ir.actions.act_window">
+            <field name="name">Journal Groups</field>
+            <field name="res_model">account.journal.group</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a journal group
+              </p><p>
+                Journal group are used in reporting to display relevant data together.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_journal_group_list" id="menu_action_account_journal_group_list" parent="account_account_menu"/>
 
         <act_window
            id="act_account_journal_2_account_bank_statement"
@@ -762,7 +805,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_reconcile_stat"
                               class="oe_stat_button" icon="fa-book">
-                                <field name="number_entries" string="Journal Entries" widget="statinfo"/> 
+                                <field name="number_entries" string="Journal Entries" widget="statinfo"/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -839,17 +882,17 @@
                         <group string="Counterpart Values"
                                attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <group>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"
+                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]"
                                        attrs="{'required': ['|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id"
+                                <field name="tax_ids"
                                        domain="[('company_id', '=', company_id)]"
                                        options="{'no_create': True}"
-                                       context="{'append_type_to_tax_name': True}"/>
-                                <field name="is_tax_price_included" invisible="1"/>
-                                <field name="tax_amount_type" invisible="1"/>
+                                       context="{'append_type_to_tax_name': True}"
+                                       widget="many2many_tags"/>
+                                <field name="show_force_tax_included" invisible="1"/>
                                 <field name="force_tax_included"
-                                       attrs="{'invisible': ['|', ('tax_id', '=', False), ('tax_amount_type', '=', 'group')], 'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -872,18 +915,17 @@
                         </div>
                         <group name="second_line" attrs="{'invisible':['|', ('has_second_line', '=', False), '&amp;', ('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <group>
-                                <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"
+                                <field name="second_account_id" options="{'no_create': True}" string="Account" domain="[('company_id', '=', company_id)]"
                                        attrs="{'required': [('has_second_line', '=', True), '|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="second_amount_type" string="Amount type"/>
-                                <field name="second_tax_id"
-                                       string="Tax"
+                                <field name="second_tax_ids"
+                                       string="Taxes"
                                        domain="[('company_id', '=', company_id)]"
-                                       widget="selection"
+                                       widget="many2many_tags"
                                        context="{'append_type_to_tax_name': True}"/>
-                                <field name="is_second_tax_price_included" invisible="1"/>
-                                <field name="second_tax_amount_type" invisible="1"/>
+                                <field name="show_second_force_tax_included" invisible="1"/>
                                 <field name="force_second_tax_included"
-                                       attrs="{'invisible': ['|', ('second_tax_id', '=', False), ('second_tax_amount_type', '=', 'group')], 'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': [('show_second_force_tax_included', '=', False)]}" force_save="1"/>
                                 <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>
@@ -1122,8 +1164,8 @@
                                     </div>
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
-                                    <field name="account_id"/>
-                                    <field name="refund_account_id"/>
+                                    <field name="account_id" options="{'no_create': True}"/>
+                                    <field name="refund_account_id" options="{'no_create': True}"/>
                                 </group>
                             </group>
                             <field name="children_tax_ids"
@@ -1151,8 +1193,8 @@
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
                                 </group>
                             </group>
                         </page>
@@ -1476,8 +1518,8 @@
                                     </div>
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}">
-                                    <field name="account_id"/>
-                                    <field name="refund_account_id"/>
+                                    <field name="account_id" options="{'no_create': True}"/>
+                                    <field name="refund_account_id" options="{'no_create': True}"/>
                                 </group>
                             </group>
                             <field name="children_tax_ids"
@@ -1505,7 +1547,7 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="cash_basis_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                    <field name="cash_basis_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
                                 </group>
                             </group>
                         </page>

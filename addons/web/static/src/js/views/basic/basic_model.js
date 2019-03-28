@@ -3647,6 +3647,7 @@ var BasicModel = AbstractModel.extend({
         var res_id, value;
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
+        var context = params.context;
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id);
             if (res_id) {
@@ -3654,6 +3655,9 @@ var BasicModel = AbstractModel.extend({
             } else {
                 res_id = _.uniqueId('virtual_');
             }
+            // it doesn't make sense for a record datapoint to have those keys
+            // besides, it will mess up x2m and actions down the line
+            context = _.omit(context, ['orderedBy', 'group_by']);
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -3671,7 +3675,7 @@ var BasicModel = AbstractModel.extend({
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: params.context,
+            context: context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
@@ -3897,7 +3901,8 @@ var BasicModel = AbstractModel.extend({
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
-                args: [idList, currentData, fields, onchangeSpec, context],
+                args: [idList, currentData, fields, onchangeSpec],
+                context: context,
             })
             .then(function (result) {
                 if (!record._changes) {
@@ -4250,22 +4255,22 @@ var BasicModel = AbstractModel.extend({
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
-                        // restore the internal state of the group
                         delete self.localData[newGroup.id];
-                        var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
+                        // restore the internal state of the group
+                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
                         if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
                             // sub-groups
                             // Also keep data if we only reload groups' own data
-                            delete updatedProps.data;
+                            updatedProps.data = oldGroup.data;
                         }
+                        _.extend(newGroup, updatedProps);
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
-                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
-                        _.extend(oldGroup, updatedProps);
-                        newGroup = oldGroup;
+                        newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
+                        self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
                         newGroup.isOpen = false;
                     } else {

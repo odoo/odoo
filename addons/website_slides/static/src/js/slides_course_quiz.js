@@ -15,9 +15,8 @@ odoo.define('website_slides.quiz', function (require) {
      * used client side (Fullscreen).
      *
      * Triggered events are :
-     * - quiz_next_slide: need to go to the next slide, when quiz is done. Event data contains the current slide id.
-     * - quiz_completed: when the quiz is passed and completed by the user. Event data contains completion
-     *      percentage and current slide id.
+     * - slide_go_next: need to go to the next slide, when quiz is done. Event data contains the current slide id.
+     * - quiz_completed: when the quiz is passed and completed by the user. Event data contains current slide data.
      */
     var Quiz= publicWidget.Widget.extend({
         template: 'slide.slide.quiz',
@@ -88,6 +87,8 @@ odoo.define('website_slides.quiz', function (require) {
             }
             else if (alert_code === 'slide_quiz_done') {
                 message = _t('This quiz is already done. Retaking it is not possible.');
+            } else if (alert_code === 'public_user') {
+                message = _t("You must be logged to submit the quiz.");
             }
             this.$('.o_wslides_js_lesson_quiz_error span').html(message);
             this.$('.o_wslides_js_lesson_quiz_error').removeClass('d-none');
@@ -116,8 +117,7 @@ odoo.define('website_slides.quiz', function (require) {
         _renderAnswers: function () {
             var self = this;
             this.$('input[type=radio]').each(function () {
-                console.log($(this));
-                $(this).prop('disabled', self.slide.readonly);
+                $(this).prop('disabled', self.slide.readonly || self.slide.completed);
             });
         },
 
@@ -127,24 +127,26 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _renderAnswersHighlighting: function () {
             var self = this;
-            this.$('li.o_wslides_quiz_answer').each(function () {
+            this.$('a.o_wslides_quiz_answer').each(function () {
                 var $answer = $(this);
                 var answerId = $answer.data('answerId');
                 if (_.contains(self.quiz.goodAnswers, answerId)) {
-                    $answer.removeClass('border-danger').addClass('border border-success');
+                    $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-check-circle').removeClass('d-none');
                 }
                 else if (_.contains(self.quiz.badAnswers, answerId)) {
-                    $answer.removeClass('border-success').addClass('border border-danger');
+                    $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-times-circle').removeClass('d-none');
                     $answer.find('label input').prop('checked', false);
                 }
                 else {
-                    $answer.removeClass('border border-danger border-success');
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-circle').removeClass('d-none');
+                    if (!self.slide.completed) {
+                        $answer.removeClass('list-group-item-danger list-group-item-success');
+                        $answer.find('i.fa').addClass('d-none');
+                        $answer.find('i.fa-circle').removeClass('d-none');
+                    }
                 }
             });
         },
@@ -177,17 +179,6 @@ odoo.define('website_slides.quiz', function (require) {
                 QWeb.render('slide.slide.quiz.validation', {'widget': this})
             );
         },
-
-        /**
-         * Set the slide as completed and done. Trigger up the completion.
-         *
-         * @param {Integer} completion
-         */
-        _setCompleted: function () {
-            this.trigger_up('quiz_completed', {
-                'slideId': this.slide.id,
-            });
-        },
         /*
          * Submit the given answer, and display the result
          *
@@ -205,14 +196,14 @@ odoo.define('website_slides.quiz', function (require) {
                 if (data.error) {
                     self._alertShow(data.error);
                 } else {
-                    self.slide.completed = data.completed;
                     self.quiz = _.extend(self.quiz, data);
+                    if (data.completed) {
+                        self._renderSuccessModal(data);
+                        self.slide.completed = true;
+                        self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
+                    }
                     self._renderAnswersHighlighting();
                     self._renderValidationInfo();
-                    if (self.slide.completed) {
-                        self._renderSuccessModal(data);
-                        self._setCompleted();
-                    }
                 }
             });
         },
@@ -228,7 +219,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param OdooEvent ev
          */
         _onAnswerClick: function (ev) {
-            if (! this.slide.readonly) {
+            if (! this.slide.readonly && ! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }
             this._alertHide();
@@ -241,9 +232,7 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onClickNext: function (ev) {
             if (this.slide.hasNext) {
-                this.trigger_up('quiz_next_slide', {
-                    'slideId': this.slide.id,
-                });
+                this.trigger_up('slide_go_next');
             }
         },
         /**
@@ -270,10 +259,10 @@ odoo.define('website_slides.quiz', function (require) {
     });
 
     publicWidget.registry.websiteSlidesQuizNoFullscreen = publicWidget.Widget.extend({
-        selector: '.o_wslides_js_lesson_quiz',
+        selector: '.o_wslides_lesson_main', // selector of complete page, as we need slide content and aside content table
         custom_events: {
-            quiz_next_slide: '_onQuizNextSlide',
-            quiz_completed: '_onQuizCompleted',
+            slide_go_next: '_onQuizNextSlide',
+            slide_completed: '_onQuizCompleted',
         },
 
         //----------------------------------------------------------------------
@@ -286,8 +275,9 @@ odoo.define('website_slides.quiz', function (require) {
          */
         start: function () {
             var self = this;
+            this.quizWidgets = [];
             var defs = [this._super.apply(this, arguments)];
-            $('.o_wslides_js_lesson_quiz').each(function () {
+            this.$('.o_wslides_js_lesson_quiz').each(function () {
                 var slideData = $(this).data();
                 slideData.quizData = {
                     questions: self._extractQuestionsAndAnswers(),
@@ -304,13 +294,17 @@ odoo.define('website_slides.quiz', function (require) {
         //----------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
-
-        _onQuizCompleted: function (slideId) {
-            console.log('set completed', slideId);
+        _onQuizCompleted: function (ev) {
+            var self = this;
+            var slide = ev.data.slide;
+            var completion = ev.data.completion;
+            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check').removeClass('text-600 fa-circle-o');
+            // need to use global selector as progress bar is ouside this animation widget scope
+            $('.o_wslides_lesson_header .progress-bar').css('width', completion + "%");
+            $('.o_wslides_lesson_header .progress span').text(_.str.sprintf("%s %%", completion));
         },
-
         _onQuizNextSlide: function () {
-            var url = this.$el.data('next-slide-url');
+            var url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');
             window.location.replace(url);
         },
 

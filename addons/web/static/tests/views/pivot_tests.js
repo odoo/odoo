@@ -950,7 +950,7 @@ QUnit.module('Views', {
         var reloadParams = {
             context: {},
         };
-        pivot.reload(reloadParams);
+        await pivot.reload(reloadParams);
 
         assert.deepEqual(pivot.getOwnedQueryParams(), {
             context: {
@@ -1111,14 +1111,14 @@ QUnit.module('Views', {
         pivot.$('.o_field_selection .dropdown-item[data-field=customer]').click();
 
         // Set a domain
-        pivot.update({domain: [['product_id', '=', 41]]});
+        await pivot.update({domain: [['product_id', '=', 41]]});
 
         var expectedContext = {pivot_column_groupby: ['customer'],
                                pivot_measures: ['__count'],
                                pivot_row_groupby: []};
 
         // Check that column groupbys were not lost
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
             'Column groupby not lost after first reload');
 
         // Set a column groupby
@@ -1126,14 +1126,46 @@ QUnit.module('Views', {
         pivot.$('.o_field_selection .dropdown-item[data-field=product_id]').click();
 
         // Set a domain
-        pivot.update({domain: [['product_id', '=', 37]]});
+        await pivot.update({domain: [['product_id', '=', 37]]});
 
-        var expectedContext = {pivot_column_groupby: ['customer', 'product_id'],
+        expectedContext = {pivot_column_groupby: ['customer', 'product_id'],
+                           pivot_measures: ['__count'],
+                           pivot_row_groupby: []};
+
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
+            'Column groupby not lost after second reload');
+
+        pivot.destroy();
+    });
+
+    QUnit.skip('Empty results keep groupbys', async function (assert) {
+        assert.expect(2);
+
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection .dropdown-item[data-field=customer]').click();
+
+        // Set a domain for empty results
+        await pivot.update({domain: [['id', '=', false]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
                                pivot_measures: ['__count'],
                                pivot_row_groupby: []};
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
+            'Column groupby not lost after empty results');
 
-        assert.deepEqual(pivot.getContext(), expectedContext,
-            'Column groupby not lost after second reload');
+        // Set a domain for not empty results
+        await pivot.update({domain: [['product_id', '=', 37]]});
+
+        assert.deepEqual(pivot.getOwnedQueryParams(), {context: expectedContext},
+            'Column groupby not lost after reload after empty results');
 
         pivot.destroy();
     });

@@ -142,7 +142,7 @@ async function createView(params) {
             this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
         },
     });
-    if (params.hasSelectors) {
+    if ('hasSelectors' in params) {
         viewOptions.hasSelectors = params.hasSelectors;
     }
 

@@ -373,22 +373,6 @@ body .modal {
                             padding-bottom: 25px;
                             overflow-y: scroll;
                         }
-
-                        .o_validate_feedback {
-                            @include o-position-absolute(auto, 10px, 10px);
-
-                            >.fa {
-                                display: none;
-                            }
-                        }
-
-                        &.o_has_error .o_validate_feedback>.fa-exclamation-triangle {
-                            display: block;
-                        }
-
-                        &.o_has_success .o_validate_feedback>.fa-check {
-                            display: block;
-                        }
                     }
                 }
 

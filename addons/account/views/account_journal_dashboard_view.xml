@@ -16,7 +16,7 @@
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
-                            <div class="container o_kanban_card_content">
+                            <div t-att-class="'container o_kanban_card_content' + (dashboard.is_sample_data ? ' o_sample_data' : '')">
                                 <div class="row">
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
@@ -240,27 +240,37 @@
                         </div>
                         <!-- On the right, show other common informations/actions -->
                         <div class="col-7 o_kanban_primary_right">
-                            <div class="row">
-                                <div class="col-7">
-                                    <span title="Balance in Odoo">Balance in General Ledger</span>
-                                </div>
-                                <div class="col-5 text-right">
-                                    <span><t t-esc="dashboard.account_balance"/></span>
-                                </div>
-                            </div>
                             <t t-if="dashboard.last_balance != dashboard.account_balance">
+                                <div class="row">
+                                    <div class="col-7 text-left">
+                                        <span title="Balance in General Ledger">Balance in GL</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.account_balance"/></span>
+                                    </div>
+                                </div>
                                 <div class="row" name="latest_statement">
-                                  <div class="col-7">
-                                    <span title="Latest Statement">Latest Statement</span>
-                                  </div>
-                                  <div class="col-5 text-right">
-                                    <span><t t-esc="dashboard.last_balance"/></span>
-                                  </div>
+                                    <div class="col-7 text-left">
+                                        <span title="Latest Statement">Latest Statement</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.last_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="row">
+                                    <div class="col-7 text-left">
+                                        <span title="Balance in General Ledger">Balance in GL</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.account_balance"/></span>
+                                    </div>
                                 </div>
                             </t>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
-                                    <div class="col-7">
+                                    <div class="col-7 text-left">
                                         <a type="object" name="action_open_to_check"><t t-esc="dashboard.number_to_check"/> moves to check</a>
                                     </div>
                                     <div class="col-5 text-right">
@@ -268,6 +278,9 @@
                                     </div>
                                 </div>
                             </t>
+                        </div>
+                        <div t-if="dashboard.is_sample_data">
+                            <span class="badge badge-warning text-uppercase o_sample_data_label">Sample data</span>
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
@@ -282,13 +295,13 @@
                                     <span>New Bill</span>
                                 </button>
                                 <button type="action" name="%(account_invoice_import_wizard_action)d" class="btn btn-primary">
-                                    <span>Import Bills</span>
+                                    <span>Upload Bills</span>
                                 </button>
                             </t>
                         </div>
                         <div class="col-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-7 text-left">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
                                         <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
@@ -299,7 +312,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-7 text-left">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
                                         <t t-esc="dashboard.number_waiting"/> Unpaid Invoices
@@ -314,6 +327,9 @@
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
+                        </div>
+                        <div t-if="dashboard.is_sample_data">
+                            <span class="badge badge-warning text-uppercase o_sample_data_label">Sample data</span>
                         </div>
                     </t>
                     <t t-name="JournalBodyGraph">

@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Date, Datetime
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 
 
 class TestStockValuation(TransactionCase):
@@ -1206,9 +1206,10 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.standard_price, 16)
 
         # return
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=[out_pick.id], active_id=out_pick.id)\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=out_pick.ids, active_id=out_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -2660,6 +2661,57 @@ class TestStockValuation(TransactionCase):
         move1.move_line_ids.qty_done = 15
 
         self.assertAlmostEqual(self.product1.standard_price, 14.0)
+
+    def test_average_perpetual_8(self):
+        """ Receive 1@10, then dropship 1@20, finally return the dropship. Dropship should not
+            impact the price.
+        """
+        self.product1.product_tmpl_id.cost_method = 'average'
+
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 1@10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1.quantity_done = 1
+        move1._action_done()
+
+        self.assertAlmostEqual(self.product1.standard_price, 10)
+
+        move2 = self.env['stock.move'].create({
+            'name': 'IN 1@20',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'price_unit': 20,
+        })
+        move2._action_confirm()
+        move2.quantity_done = 1
+        move2._action_done()
+
+        self.assertAlmostEqual(self.product1.standard_price, 10.0)
+
+        move3 = self.env['stock.move'].create({
+            'name': 'IN 1@20',
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.supplier_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'price_unit': 20,
+        })
+        move3._action_confirm()
+        move3.quantity_done = 1
+        move3._action_done()
+
+        self.assertAlmostEqual(self.product1.standard_price, 10.0)
 
     def test_average_negative_1(self):
         """ Test edit in the past. Receive 10, send 20, edit the second move to only send 10.

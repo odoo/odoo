@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.tests.common import Form
+from odoo.exceptions import UserError
 
 
 class ImportInvoiceImportWizard(models.TransientModel):
@@ -28,7 +29,7 @@ class ImportInvoiceImportWizard(models.TransientModel):
          :return: A action redirecting to account.invoice tree/form view.
         '''
         if not self.attachment_ids:
-            return
+            raise UserError(_("No attachment was provided"))
 
         invoices = self.env['account.invoice']
         for attachment in self.attachment_ids:

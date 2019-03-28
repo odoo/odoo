@@ -411,9 +411,23 @@ class ProductTemplate(models.Model):
             if (not products) or (limit and (len(templates) > limit)):
                 break
 
+        searched_ids = set(templates.ids)
+        # some product.templates do not have product.products yet (dynamic variants configuration),
+        # we need to add the base _name_search to the results
+        # FIXME awa: this is really not performant at all but after discussing with the team
+        # we don't see another way to do it
+        if len(searched_ids) < limit:
+            searched_ids |= set([template_id[0] for template_id in
+                super(ProductTemplate, self)._name_search(
+                    name,
+                    args=args,
+                    operator=operator,
+                    limit=limit,
+                    name_get_uid=name_get_uid)])
+
         # re-apply product.template order + name_get
         return super(ProductTemplate, self)._name_search(
-            '', args=[('id', 'in', list(set(templates.ids)))],
+            '', args=[('id', 'in', list(searched_ids))],
             operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
@@ -736,6 +750,19 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         if not parent_combination:
             return []
+
+        # Search for exclusions without attribute value. This means that the template is not
+        # compatible with the parent combination. If such an exclusion is found, it means that all
+        # attribute values are excluded.
+        if parent_combination:
+            exclusions = self.env['product.template.attribute.exclusion'].search([
+                ('product_tmpl_id', '=', self.id),
+                ('value_ids', '=', False),
+                ('product_template_attribute_value_id', 'in', parent_combination.ids),
+            ], limit=1)
+            if exclusions:
+                return self.mapped('attribute_line_ids.product_template_value_ids').ids
+
         return [
             value_id
             for filter_line in parent_combination.mapped('exclude_for').filtered(

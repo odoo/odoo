@@ -4,10 +4,10 @@
 from datetime import datetime, timedelta
 import unittest
 from odoo.tests import Form
-from odoo.tests import common
+from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-class TestWorkOrderProcess(common.TransactionCase):
+class TestWorkOrderProcess(TestMrpCommon):
 
     def setUp(self):
         super(TestWorkOrderProcess, self).setUp()
@@ -25,6 +25,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.env['stock.move'].search([('product_id', 'in', [product_bolt.id, product_screw.id])])._do_unreserve()
         (product_bolt + product_screw).write({'type': 'product'})
 
+        self.env.ref("mrp.mrp_bom_desk").consumption = 'flexible'
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = dining_table
         production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
@@ -128,6 +129,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
         bom.routing_id = self.ref('mrp.mrp_routing_1')
+        bom.consumption = 'flexible'
 
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.routing_id.operation_ids[1]
@@ -237,6 +239,148 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.assertEqual(sum(move_table_sheet.mapped('quantity_done')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
         self.assertEqual(sum(move_leg.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
         self.assertEqual(sum(move_table_bolt.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
+
+    def test_explode_from_order(self):
+        # bom3 produces 2 Dozen of Doors (p6), aka 24
+        # To produce 24 Units of Doors (p6)
+        # - 2 Units of Tools (p5) -> need 4
+        # - 8 Dozen of Sticks (p4) -> need 16
+        # - 12 Units of Wood (p2) -> need 24
+        # bom2 produces 1 Unit of Sticks (p4)
+        # To produce 1 Unit of Sticks (p4)
+        # - 2 Dozen of Sticks (p4) -> need 8
+        # - 3 Dozen of Stones (p3) -> need 12
+
+        # Update capacity, start time, stop time, and time efficiency.
+        # ------------------------------------------------------------
+        self.workcenter_1.write({'capacity': 1, 'time_start': 0, 'time_stop': 0, 'time_efficiency': 100})
+
+        # Set manual time cycle 20 and 10.
+        # --------------------------------
+        self.operation_1.write({'time_cycle_manual': 20})
+        (self.operation_2 | self.operation_3).write({'time_cycle_manual': 10})
+
+        man_order_form = Form(self.env['mrp.production'])
+        man_order_form.product_id = self.product_6
+        man_order_form.bom_id = self.bom_3
+        man_order_form.product_qty = 48
+        man_order_form.product_uom_id = self.product_6.uom_id
+        man_order = man_order_form.save()
+        # reset quantities
+        self.product_1.type = "product"
+        self.env['stock.change.product.qty'].create({
+            'product_id': self.product_1.id,
+            'new_quantity': 0.0,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+        }).change_product_qty()
+
+        (self.product_2 | self.product_4).write({
+            'tracking': 'none',
+        })
+        # assign consume material
+        man_order.action_confirm()
+        man_order.action_assign()
+        self.assertEqual(man_order.reservation_state, 'confirmed', "Production order should be in waiting state.")
+
+        # check consume materials of manufacturing order
+        self.assertEqual(len(man_order.move_raw_ids), 4, "Consume material lines are not generated proper.")
+        product_2_consume_moves = man_order.move_raw_ids.filtered(lambda x: x.product_id == self.product_2)
+        product_3_consume_moves = man_order.move_raw_ids.filtered(lambda x: x.product_id == self.product_3)
+        product_4_consume_moves = man_order.move_raw_ids.filtered(lambda x: x.product_id == self.product_4)
+        product_5_consume_moves = man_order.move_raw_ids.filtered(lambda x: x.product_id == self.product_5)
+        consume_qty_2 = product_2_consume_moves.product_uom_qty
+        self.assertEqual(consume_qty_2, 24.0, "Consume material quantity of Wood should be 24 instead of %s" % str(consume_qty_2))
+        consume_qty_3 = product_3_consume_moves.product_uom_qty
+        self.assertEqual(consume_qty_3, 12.0, "Consume material quantity of Stone should be 12 instead of %s" % str(consume_qty_3))
+        self.assertEqual(len(product_4_consume_moves), 2, "Consume move are not generated proper.")
+        for consume_moves in product_4_consume_moves:
+            consume_qty_4 = consume_moves.product_uom_qty
+            self.assertIn(consume_qty_4, [8.0, 16.0], "Consume material quantity of Stick should be 8 or 16 instead of %s" % str(consume_qty_4))
+        self.assertFalse(product_5_consume_moves, "Move should not create for phantom bom")
+
+        # create required lots
+        lot_product_2 = self.env['stock.production.lot'].create({'product_id': self.product_2.id})
+        lot_product_4 = self.env['stock.production.lot'].create({'product_id': self.product_4.id})
+
+        # refuel stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory For Product C',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_uom_id': self.product_2.uom_id.id,
+                'product_qty': 30,
+                'prod_lot_id': lot_product_2.id,
+                'location_id': self.ref('stock.stock_location_14')
+            }), (0, 0, {
+                'product_id': self.product_3.id,
+                'product_uom_id': self.product_3.uom_id.id,
+                'product_qty': 60,
+                'location_id': self.ref('stock.stock_location_14')
+            }), (0, 0, {
+                'product_id': self.product_4.id,
+                'product_uom_id': self.product_4.uom_id.id,
+                'product_qty': 60,
+                'prod_lot_id': lot_product_4.id,
+                'location_id': self.ref('stock.stock_location_14')
+            })]
+        })
+        inventory.action_start()
+        inventory.action_validate()
+
+        # re-assign consume material
+        man_order.action_assign()
+
+        # Check production order status after assign.
+        self.assertEqual(man_order.reservation_state, 'assigned', "Production order should be in assigned state.")
+        # Plan production order.
+        man_order.button_plan()
+
+        # check workorders
+        # - main bom: Door: 2 operations
+        #   operation 1: Cutting
+        #   operation 2: Welding, waiting for the previous one
+        # - kit bom: Stone Tool: 1 operation
+        #   operation 1: Gift Wrapping
+        workorders = man_order.workorder_ids
+        kit_wo = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_1)
+        door_wo_1 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_2)
+        door_wo_2 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_3)
+        for workorder in workorders:
+            self.assertEqual(workorder.workcenter_id, self.workcenter_1, "Workcenter does not match.")
+        self.assertEqual(kit_wo.state, 'ready', "Workorder should be in ready state.")
+        self.assertEqual(door_wo_1.state, 'ready', "Workorder should be in ready state.")
+        self.assertEqual(door_wo_2.state, 'pending', "Workorder should be in pending state.")
+        self.assertEqual(kit_wo.duration_expected, 80, "Workorder duration should be 80 instead of %s." % str(kit_wo.duration_expected))
+        self.assertEqual(door_wo_1.duration_expected, 20, "Workorder duration should be 20 instead of %s." % str(door_wo_1.duration_expected))
+        self.assertEqual(door_wo_2.duration_expected, 20, "Workorder duration should be 20 instead of %s." % str(door_wo_2.duration_expected))
+
+        # subbom: kit for stone tools
+        kit_wo.button_start()
+        finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
+        kit_wo.write({
+            'final_lot_id': finished_lot.id,
+            'qty_producing': 48
+        })
+
+        kit_wo.record_production()
+
+        self.assertEqual(kit_wo.state, 'done', "Workorder should be in done state.")
+
+        # first operation of main bom
+        finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
+        door_wo_1.write({
+            'final_lot_id': finished_lot.id,
+            'qty_producing': 48
+        })
+        door_wo_1.record_production()
+        self.assertEqual(door_wo_1.state, 'done', "Workorder should be in done state.")
+
+        # second operation of main bom
+        self.assertEqual(door_wo_2.state, 'ready', "Workorder should be in ready state.")
+        door_wo_2.record_production()
+        self.assertEqual(door_wo_2.state, 'done', "Workorder should be in done state.")
+
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """

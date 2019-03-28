@@ -4,8 +4,79 @@
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/website_profile/static/src/scss/website_profile.scss"/>
         </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/website_profile/static/src/js/website_profile.js"/>
+        </xpath>
     </template>
 
+    <!-- Sub nav -->
+    <template id="user_profile_sub_nav" name="User profile subnav">
+        <div class="o_wprofile_all_users_nav">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <!-- Desktop Mode -->
+                    <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                        <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
+                            <li class="breadcrumb-item">
+                                <a t-att-href="home_url or '/'">Home</a>
+                            </li>
+                            <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
+                                <a href="/profile/users">Users</a>
+                            </li>
+                            <li t-if="view_user" class="breadcrumb-item active">
+                                <a><t t-esc="view_user"/></a>
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
+                        <!-- search -->
+                        <form t-attf-action="/profile/users" role="search" method="get">
+                            <div class="input-group o_wprofile_course_nav_search ml-1 position-relative">
+                                <span class="input-group-prepend">
+                                    <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                                <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search users"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Mobile Mode -->
+                    <div class="col d-md-none py-1">
+                        <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
+                            <div class="btn-group w-100 ml-2">
+                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
+                                    <a class="dropdown-item" href="/profile/users">&#9492; Users</a>
+                                    <a t-if="view_user" class="dropdown-item">&#9492; <t t-esc="view_user"/></a>
+                                </ul>
+                            </div>
+
+                            <div class="btn-group ml-1 position-static mr-2">
+                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
+                                    <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="search" placeholder="Search courses"/>
+                                            <span class="input-group-append">
+                                                <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                                    <i class="fa fa-search"/>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!--
     Single User Profile Page
@@ -123,14 +194,18 @@
     </template>
 
     <template id="user_profile_header" name="Profile Page Header">
-        <div class="o_wprofile_header o_wprofile_gradient position-relative text-white pb-3 pb-md-0 pt-2 pt-md-5">
-            <div class="container">
+        <div class="o_wprofile_header o_wprofile_gradient position-relative text-white">
+            <t t-call="website_profile.user_profile_sub_nav">
+                <t t-set="view_user"><t t-esc="user.name"/></t>
+            </t>
+
+            <div class="container pb-3 pb-md-0 pt-2 pt-md-5">
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
-                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
                         </div>
@@ -139,8 +214,10 @@
                     <!-- ==== Header Right ==== -->
                     <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h1 class="o_card_people_name" t-field="user.name"/>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <h1 class="o_card_people_name">
+                                <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
+                            </h1>
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
@@ -164,17 +241,17 @@
     </template>
 
     <template id="user_profile_content" name="Profile Page Content">
-        <div class="o_wprofile_content container">
+        <div class="container">
             <div class="row">
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                     <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
-                        <div class="o_wprofile_sidebar_top d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="font-weight-bold mr-2">Rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
-                                <a href="/profile/ranks" t-field="user.rank_id"/>
+                                <a href="/profile/ranks_badges" t-field="user.rank_id"/>
                             </div>
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-toggle="collapse" data-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
                         </div>
@@ -212,6 +289,12 @@
                     </ul>
                     <div class="tab-content py-4 o_wprofile_tabs_content mb-4" id="profile_extra_info_tabcontent">
                         <div role="tabpanel" class="tab-pane active" id="profile_tab_content_about">
+                            <div class="o_wprofile_email_validation_container mb16 mt16">
+                                <t t-call="website_profile.email_validation_banner">
+                                    <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
+                                    <t t-set="send_validation_email_message" t-value="'Click here to send a verification email.'"/>
+                                </t>
+                            </div>
                             <div id="profile_about_badge" class="mb32">
                                 <h5 class="border-bottom pb-1">Badges</h5>
                                 <t t-call="website_profile.user_badges"></t>
@@ -277,18 +360,18 @@
             <p class="text-muted">No badge yet</p>
         </div>
         <div class="text-right">
-            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/badge?category=#{badge_category}"><i class="fa fa-arrow-right"/> Check available badges</a>
-            <a t-else="" href="/profile/badge" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>Check all available badges</a>
+            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"><i class="fa fa-arrow-right"/> Check available badges</a>
+            <a t-else="" href="/profile/ranks_badges" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>Check all available badges</a>
         </div>
     </template>
 
-    <!-- About Rank Page -->
-    <template id="rank_main" name="Ranks Page">
+    <!-- About Ranks and badges Page -->
+    <template id="rank_badge_main" name="Ranks Page">
         <t t-call="website.layout">
             <div class="container mb32 mt48">
-                <div class="row justify-content-between">
-                    <div class="col-12 col-md-6">
-                        <h1>Ranks &amp; Badges</h1>
+                <div class="row justify-content-between" t-if="ranks">
+                    <div class="col-12 col-md-6 col-lg-5">
+                        <h1>Ranks</h1>
                         <p class="lead mb-4">Keep learning with <t t-esc="user.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
                         <h5>How do I earn badges?</h5>
                         <p>When you finish a course or reach milestones, you're awarded badges.</p>
@@ -296,64 +379,55 @@
                         <p>You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum.</p>
                     </div>
                     <div class="col-12 col-md-5 col-lg-4">
-                        <t t-call="website_profile.rank_content"/>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="rank_content" name="Rank Page content">
-        <h5 class="text-muted my-2">Ranks</h5>
-        <div class="row flex-column">
-            <t t-foreach="ranks" t-as="rank">
-                <t t-set="order_inverse" t-value="6 - rank.id"/>
-
-                <div t-attf-class="col order-#{order_inverse}">
-                    <div class="media align-items-center py-2 border-top">
-                        <img height="50" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image" class="mr-2" alt="Rank badge"/>
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-0" t-field="rank.name"/>
-                            <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
+                        <div class="card">
+                            <div class="card-header border-bottom-0">Ranks</div>
+                            <ul class="list-group list-group-flush">
+                                <t t-foreach="ranks" t-as="rank">
+                                    <li t-attf-class="list-group-item">
+                                        <div class="media align-items-center">
+                                            <img height="40" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image" class="mr-2" alt="Rank badge"/>
+                                            <div class="media-body">
+                                                <h5 class="mt-0 mb-0" t-field="rank.name"/>
+                                                <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </t>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </t>
-        </div>
-    </template>
-
-    <!-- About Badge Page -->
-    <template id="badge_main" name="Badges Page">
-        <t t-call="website.layout">
-            <div class="container mb32 mt48">
-                <t t-call="website_profile.badge_content">
-                </t>
+                <t t-call="website_profile.badge_content"/>
             </div>
         </t>
     </template>
 
     <template id="badge_content" name="Badges Page content">
-            <h1>Badges</h1>
-            <p class="lead">
-                Besides gaining reputation with your questions and answers,
-                you receive badges for being especially helpful.<br/>Badges
-                appear on your profile page, and your posts.
-            </p>
-            <table class="table table-sm mt32 mb64">
-                <tr t-foreach="badges" t-as="badge">
-                    <td class="align-middle">
-                        <img t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg" class="my-1" style="height:2.5em" alt=""/>
-                        <h6 t-field="badge.name" class="d-inline my-0"/>
-                    </td>
-                    <td class="align-middle d-none d-md-table-cell">
-                        <b t-esc="badge.stat_count_distinct"/>
-                        <i class="text-muted"> awarded users</i>
-                    </td>
-                    <td class="align-middle">
-                        <span t-field="badge.description"/>
-                    </td>
-                </tr>
-            </table>
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mt-4 mt-lg-2">Badges</h1>
+                <p class="lead">
+                    Besides gaining reputation with your questions and answers,
+                    you receive badges for being especially helpful.<br class="d-none d-lg-inline-block"/>Badges
+                    appear on your profile page, and your posts.
+                </p>
+            </div>
+        </div>
+        <table class="table table-sm mb64">
+            <tr t-foreach="badges" t-as="badge">
+                <td class="align-middle">
+                    <img t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg" class="my-1" style="height:2.5em" t-att-alt="badge.level"/>
+                    <h6 t-field="badge.name" class="d-inline my-0"/>
+                </td>
+                <td class="align-middle d-none d-md-table-cell">
+                    <b t-esc="badge.stat_count_distinct"/>
+                    <i class="text-muted"> awarded users</i>
+                </td>
+                <td class="align-middle">
+                    <span t-field="badge.description"/>
+                </td>
+            </tr>
+        </table>
     </template>
 
     <!--Private profile-->
@@ -381,9 +455,10 @@
     </template>
 
     <template id="users_page_header" name="Users Page Header">
-        <div class="o_wprofile_all_users_header o_wprofile_gradient text-white">
+        <div class="o_wprofile_all_users_header o_wprofile_gradient mb-n5 pb-5">
+            <t t-call="website_profile.user_profile_sub_nav"/>
             <div class="container">
-                <h1 class="py-5">All Users</h1>
+                <h1 class="py-4 text-white">All Users</h1>
             </div>
         </div>
     </template>
@@ -461,6 +536,24 @@
                 <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
             </li>
         </ul>
+    </template>
+
+    <template id="email_validation_banner">
+        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissable'"/>
+        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
+
+        <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
+            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            It appears your email has not been verified.<br/>
+            <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url">
+                <span t-esc="send_validation_email_message"/>
+            </a>
+        </div>
+        <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
+            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
+            <span t-esc="additional_validated_email_message"/>
+        </div>
     </template>
 
 </data></odoo>

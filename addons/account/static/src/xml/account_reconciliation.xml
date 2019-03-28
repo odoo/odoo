@@ -63,7 +63,7 @@
         </t>
     </p>
     <t t-if="context &amp;&amp; context.active_model">
-        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
+        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement' || context['active_model'] === 'account.bank.statement.import'" class="actions_buttons">
             <t t-if="context.journal_id">
                 <button class="button_back_to_statement btn btn-secondary" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
@@ -188,7 +188,7 @@
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_tax_id">
-            <td class="o_td_label">Tax</td>
+            <td class="o_td_label">Taxes</td>
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">

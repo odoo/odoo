@@ -29,7 +29,7 @@
                             <span
                                 attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline">%</span>
                         </div>
-                        <field name="deposit_account_id" class="oe_inline"
+                        <field name="deposit_account_id" options="{'no_create': True}" class="oe_inline"
                             attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
                         <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
                             domain="[('type_tax_use','=','sale')]"

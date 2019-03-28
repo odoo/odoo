@@ -346,9 +346,9 @@ QUnit.module('basic_fields', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
+        assert.containsOnce(form, ".o_stat_text.o_not_hover:contains(Production Environment)",
             "button should contain correct string");
-        assert.strictEqual(form.$('.o_stat_text.o_hover:contains(Switch to test environment)').length, 1,
+        assert.containsOnce(form, ".o_stat_text.o_hover:contains(Switch to test environment)",
             "button should display correct string when hovering");
         form.destroy();
     });
@@ -1031,7 +1031,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1666,7 +1666,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"txt",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["partner",1,"txt"], 'should call "call_button" route');
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);

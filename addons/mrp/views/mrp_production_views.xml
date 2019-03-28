@@ -35,9 +35,7 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="consumed_less_than_planned" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', True)]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight" confirm="You have consumed less material than what was planned. Are you sure you want to close this MO?"/>
+                    <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'planned')), '|', ('routing_id', '=', False), '|', ('date_planned_start_wo', '!=', False), ('date_planned_finished_wo', '!=', False)]}" type="object" string="Plan" class="oe_highlight"/>
@@ -237,7 +235,7 @@
             <field name="name">mrp.production.gantt</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id">
+                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id" create="0">
                 </gantt>
             </field>
         </record>
