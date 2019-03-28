@@ -56,28 +56,6 @@
             <field name="perm_create" eval="1"/>
         </record>
 
-        <record id="survey_stage_rule_survey_manager" model="ir.rule">
-            <field name="name">Survey stage: manager: all</field>
-            <field name="model_id" ref="survey.model_survey_stage"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
-            <field name="perm_unlink" eval="1"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="1"/>
-        </record>
-
-        <record id="survey_stage_rule_survey_user_read" model="ir.rule">
-            <field name="name">Survey stage: officer: read all</field>
-            <field name="model_id" ref="survey.model_survey_stage"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
-            <field name="perm_unlink" eval="0"/>
-            <field name="perm_write" eval="0"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
-        </record>
-
         <record id="survey_question_rule_survey_manager" model="ir.rule">
             <field name="name">Survey question: manager: all</field>
             <field name="model_id" ref="survey.model_survey_question"/>

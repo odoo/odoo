@@ -21,9 +21,6 @@ class Survey(models.Model):
     _rec_name = 'title'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    def _get_default_stage_id(self):
-        return self.env['survey.stage'].search([], limit=1).id
-
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
@@ -37,9 +34,15 @@ class Survey(models.Model):
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
-    stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
-                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
-    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
+    state = fields.Selection(
+        string="Survey Stage",
+        selection=[
+                ('draft', 'Draft'),
+                ('open', 'In Progress'),
+                ('closed', 'Closed'),
+        ], default='draft', required=True,
+        group_expand='_read_group_states'
+    )
     questions_layout = fields.Selection([
         ('one_page', 'One page with all the questions'),
         ('page_per_section', 'One page per section'),
@@ -174,13 +177,9 @@ class Survey(models.Model):
         if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
             self.time_limit = 10
 
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        """ Read group customization in order to display all the stages in the
-            kanban view, even if they are empty
-        """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
+    def _read_group_states(self, values, domain, order):
+        selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
+        return [s[0] for s in selection]
 
     # Public methods #
     def copy_data(self, default=None):
@@ -245,7 +244,7 @@ class Survey(models.Model):
         else:
             if not self.active:
                 raise UserError(_('Creating token for archived surveys is not allowed.'))
-            elif self.is_closed:
+            elif self.state == 'closed':
                 raise UserError(_('Creating token for closed surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
@@ -438,6 +437,18 @@ class Survey(models.Model):
     # Actions
 
     @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def action_open(self):
+        self.write({'state': 'open'})
+
+    @api.multi
+    def action_close(self):
+        self.write({'state': 'closed'})
+
+    @api.multi
     def action_start_survey(self):
         """ Open the website page with the survey form """
         self.ensure_one()
@@ -457,7 +468,7 @@ class Survey(models.Model):
         if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
-        if self.stage_id.closed:
+        if self.state == 'closed':
             raise UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)

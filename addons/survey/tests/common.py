@@ -68,7 +68,7 @@ class SurveyCase(common.SavepointCase):
             'access_mode': 'public',
             'users_login_required': True,
             'users_can_go_back': False,
-            'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id,
+            'state': 'open',
         })
         self.page_0 = self.env['survey.question'].sudo(self.survey_manager).create({
             'title': 'First page',

@@ -34,7 +34,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
                 'access_mode': 'public',
                 'users_login_required': False,
                 'questions_layout': 'page_per_section',
-                'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id
+                'state': 'open'
             })
 
             # First page is about customer data
