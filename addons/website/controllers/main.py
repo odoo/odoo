@@ -283,24 +283,17 @@ class Website(Home):
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
-    @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True, csrf=False)
-    def reset_template(self, templates, redirect='/', **kwargs):
-        """ This method will try to reset a list of broken views ids.
-        It will read the original `arch` from the view's XML file (arch_fs).
-        Views without an `arch_fs` can't be reset, except views created when
-        dropping a snippet in specific oe_structure that create an inherited
-        view doing an xpath.
-        Note: The `arch_fs` field is automatically erased when there is a
-              write on the `arch` field.
-
-        This method is typically useful to reset specific views. In that case we
-        read the XML file from the generic view.
+    @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
+    def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
+        """ This method will try to reset a broken view.
+        Given the mode, the view can either be:
+        - Soft reset: restore to previous architeture.
+        - Hard reset: it will read the original `arch` from the XML file if the
+        view comes from an XML file (arch_fs).
         """
-        mode = kwargs.get('mode', 'soft')
-        templates = request.httprequest.form.getlist('templates')
-        views = request.env['ir.ui.view'].browse([int(view_id) for view_id in templates])
+        view = request.env['ir.ui.view'].browse(int(view_id))
         # Deactivate COW to not fix a generic view by creating a specific
-        views.with_context(website_id=None).reset_arch(mode)
+        view.with_context(website_id=None).reset_arch(mode)
         return request.redirect(redirect)
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
