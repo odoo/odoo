@@ -104,50 +104,50 @@ class Followers(models.Model):
 WITH sub_followers AS (
     SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
     FROM mail_followers fol
-        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
-        ON subrel.mail_followers_id = fol.id
-        RIGHT JOIN mail_message_subtype subtype
-        ON subtype.id = subrel.mail_message_subtype_id
+    RIGHT JOIN mail_followers_mail_message_subtype_rel subrel ON subrel.mail_followers_id = fol.id
+    RIGHT JOIN mail_message_subtype subtype ON subtype.id = subrel.mail_message_subtype_id
     WHERE subrel.mail_message_subtype_id = %s AND fol.res_model = %s AND fol.res_id IN %s
 )
-SELECT partner.id as pid, NULL AS cid,
-        partner.active as active, partner.partner_share as pshare, NULL as ctype,
-        users.notification_type AS notif, array_agg(groups.id) AS groups
-    FROM res_partner partner
-    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-    LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-    LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
-    WHERE EXISTS (
-        SELECT partner_id FROM sub_followers
-        WHERE sub_followers.channel_id IS NULL
-            AND sub_followers.partner_id = partner.id
-            AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-    ) OR partner.id IN %s
-    GROUP BY partner.id, users.notification_type
+SELECT partner.id AS pid, NULL AS cid,
+    partner.active AS active, partner.partner_share AS pshare, NULL AS ctype,
+    users.notification_type AS notif, array_agg(groups.id) AS groups
+FROM res_partner partner
+LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+WHERE EXISTS (
+    SELECT partner_id FROM sub_followers
+    WHERE sub_followers.channel_id IS NULL
+        AND sub_followers.partner_id = partner.id
+        AND (coalesce(sub_followers.internal, false) != TRUE OR coalesce(partner.partner_share, false) != TRUE)
+) OR partner.id IN %s
+GROUP BY partner.id, users.notification_type
 UNION
 SELECT NULL AS pid, channel.id AS cid,
-        TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-        CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
-    FROM mail_channel channel
-    WHERE EXISTS (
-        SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) OR channel.id IN %s
+    TRUE AS active, NULL AS pshare, channel.channel_type AS ctype,
+    CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif,
+    NULL AS groups
+FROM mail_channel channel
+WHERE EXISTS (
+    SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
+) OR channel.id IN %s
 """
             params = [subtype_id, records._name, tuple(records.ids), tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         elif pids or cids:
             query = """
-SELECT partner.id as pid, NULL AS cid,
-    partner.active as active, partner.partner_share as pshare, NULL as ctype,
+SELECT partner.id AS pid, NULL AS cid,
+    partner.active AS active, partner.partner_share AS pshare, NULL AS ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 WHERE partner.id IN %s
 UNION
 SELECT NULL AS pid, channel.id AS cid,
-    TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-    CASE when channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+    TRUE AS active, NULL AS pshare, channel.channel_type AS ctype,
+    CASE when channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif,
+    NULL AS groups
 FROM mail_channel channel
 WHERE channel.id IN %s
 """
