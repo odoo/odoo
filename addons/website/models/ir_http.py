@@ -250,7 +250,7 @@ class Http(models.AbstractModel):
                 if code == 500:
                     logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                     View = env["ir.ui.view"]
-                    values['views'] = View
+                    values['view'] = View
                     if 'qweb_exception' in values:
                         try:
                             # exception.name might be int, string
@@ -259,7 +259,7 @@ class Http(models.AbstractModel):
                             exception_template = exception.name
                         view = View._view_obj(exception_template)
                         if exception.html and exception.html in view.arch:
-                            values['views'] = view
+                            values['view'] = view
                         else:
                             # There might be 2 cases where the exception code can't be found
                             # in the view, either the error is in a child view or the code
@@ -268,9 +268,10 @@ class Http(models.AbstractModel):
                             node = et.xpath(exception.path)
                             line = node is not None and etree.tostring(node[0], encoding='unicode')
                             if line:
-                                values['views'] = View._views_get(exception_template).filtered(
+                                values['view'] = View._views_get(exception_template).filtered(
                                     lambda v: line in v.arch
                                 )
+                                values['view'] = values['view'] and values['view'][0]
 
                         # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
                         values['editable'] = request.uid and request.website.is_publisher()
