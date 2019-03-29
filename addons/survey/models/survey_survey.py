@@ -88,6 +88,14 @@ class Survey(models.Model):
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
+    certification_report_layout = fields.Selection([
+        ('modern_purple', 'Modern Purple'),
+        ('modern_blue', 'Modern Blue'),
+        ('modern_gold', 'Modern Gold'),
+        ('classic_purple', 'Classic Purple'),
+        ('classic_blue', 'Classic Blue'),
+        ('classic_gold', 'Classic Gold')],
+        string='Certification template', default='modern_purple')
     # Certification badge
     #   certification_badge_id_dummy is used to have two different behaviours in the form view :
     #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
@@ -538,6 +546,14 @@ class Survey(models.Model):
                     'search_default_not_test': 1})
         action['context'] = ctx
         return action
+
+    def action_survey_preview_certification_template(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': '_blank',
+            'url': '/survey/%s/get_certification_preview' % (self.id)
+        }
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
