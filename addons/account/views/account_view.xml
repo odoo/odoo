@@ -962,7 +962,7 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
-                        <filter string="With tax" name="withtax" domain="[('tax_id','!=',False)]"/>
+                        <filter string="With tax" name="withtax" domain="[('tax_ids','!=',False)]"/>
                         <field name="amount_type"/>
                         <field name="journal_id"/>
                 </search>
