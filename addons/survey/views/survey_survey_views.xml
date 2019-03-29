@@ -7,13 +7,15 @@
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
                 <field name="id" invisible="1"/>
-                <field name="is_closed" invisible="1"/>
+                <field name="state" invisible="1"/>
                 <header>
-                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_send_survey" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                  <button name="action_confirm" string="Validate" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                  <button name="action_send_survey" string="Invite" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'open')]}"/>
+                  <button name="action_result_survey" string="See results" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '=', 'draft')]}"/>
+                  <button name="action_draft" string="Set to draft" type="object" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'closed')]}"/>
+                  <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('id', '=', False), ('state', '=', 'closed')]}"/>
+                  <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                  <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

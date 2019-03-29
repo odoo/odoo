@@ -5,19 +5,19 @@
         <record id="stage_draft" model="survey.stage">
             <field name="name">Draft</field>
             <field name="sequence" eval="1" />
-            <field name="closed" eval="True" />
+            <field name="state" eval="'draft'" />
             <field name="fold" eval="False" />
         </record>
         <record id="stage_in_progress" model="survey.stage">
             <field name="name">In progress</field>
             <field name="sequence" eval="2" />
-            <field name="closed" eval="False" />
+            <field name="state" eval="'open'" />
             <field name="fold" eval="False" />
         </record>
         <record id="stage_closed" model="survey.stage">
             <field name="name">Closed</field>
             <field name="sequence" eval="3" />
-            <field name="closed" eval="True" />
+            <field name="state" eval="'closed'" />
             <field name="fold" eval="True" />
         </record>
     </data>

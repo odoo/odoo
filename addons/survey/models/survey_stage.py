@@ -11,8 +11,16 @@ class SurveyStage(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=1)
-    closed = fields.Boolean(help="If closed, people won't be able to answer to surveys in this column.")
     fold = fields.Boolean(string="Folded in kanban view")
+
+    state = fields.Selection(
+        string="State",
+        selection=[
+                ('draft', 'Draft'),
+                ('open', 'In Progress'),
+                ('closed', 'Closed'),
+        ], default='draft',
+    )
 
     _sql_constraints = [
         ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
