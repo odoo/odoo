@@ -11,7 +11,6 @@
         width: 96%;
         max-width: 550px;
     }
-
     .modal-header {
         background-color: $o-brand-odoo;
         color: white;
@@ -25,7 +24,6 @@
     .close:hover, .close:focus {
         color: white;
     }
-
 
     .nav {
         padding: 0;
@@ -50,6 +48,12 @@
         }
     }
 
+    .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        width: 100%;
+    }
+
     .o_theme_customize_option {
         position: relative;
         width: 100%;
@@ -72,8 +76,6 @@
             min-height: 24px;
             margin: 0;
             padding: 8px;
-            border: 2px solid transparent;
-            background-color: $o-brand-lightsecondary;
             text-align: center;
             font-size: 14px;
             line-height: 1;
@@ -86,26 +88,18 @@
                 background-color: rgba(0, 32, 64, 0.03);
             }
 
-            &.checked {
-                border-color: $o-brand-odoo;
-                color: $o-brand-odoo;
-            }
-
             &.o_switch {
                 justify-content: flex-start;
             }
         }
+        &:not(.dropdown-item) label {
+            border: 2px solid transparent;
+            background-color: $o-brand-lightsecondary;
 
-        $i: 1;
-        @each $font in $o-theme-fonts {
-            &.o_theme_customize_option_font_#{$i} {
-                font-family: if($font, $font, $font-family-base);
-
-                > label > span::before {
-                    content: nth($o-theme-font-names, $i);
-                }
+            &.checked {
+                border-color: $o-brand-odoo;
+                color: $o-brand-odoo;
             }
-            $i: $i + 1;
         }
 
         &.o_theme_customize_with_widget {
@@ -181,6 +175,25 @@
 
     .o_theme_customize_option_list {
         box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .o_theme_customize_dropdown_btn {
+        background-color: $o-brand-lightsecondary;
+    }
+
+    $i: 1;
+    @each $font in $o-theme-fonts {
+        .o_theme_customize_option_font_#{$i} {
+            font-family: if($font, $font, $font-family-base);
+
+            &.o_theme_customize_option > label > span,
+            &.dropdown-toggle {
+                &::before {
+                    content: nth($o-theme-font-names, $i);
+                }
+            }
+        }
+        $i: $i + 1;
     }
 }
 
