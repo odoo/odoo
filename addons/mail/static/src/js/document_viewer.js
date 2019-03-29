@@ -200,7 +200,7 @@ var DocumentViewer = Widget.extend({
      */
     _onDownload: function (e) {
         e.preventDefault();
-        window.location = '/web/content/' + this.activeAttachment.id + '?download=true';
+        window.location = '/web/content/' + this.modelName + '/' + this.activeAttachment.id + '/' + 'datas' + '?download=true';
     },
     /**
      * @private
