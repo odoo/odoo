@@ -7,6 +7,11 @@ if(!$('.js_surveyresult').length) {
     return Promise.reject("DOM doesn't contain '.js_surveyresult'");
 }
 
+    // The given colors are the same as those used by D3
+    var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
+                        "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
+                        "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
+
     //Script For Pagination
     var survey_pagination = $('.pagination');
     $.each(survey_pagination, function(index, pagination){
@@ -30,98 +35,164 @@ if(!$('.js_surveyresult').length) {
         $('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
     });
 
-    //initialize MultiBar Chart
-    function init_multibar_chart(){
-        var chart = nv.models.multiBarChart()
-            .x(function(d) { return d.text; })
-            .y(function(d) { return d.count; })
-            .staggerLabels(true);
+    // Custom Tick fuction for replacing long text with '...'
+    var customtick_function = function (tick_limit) {
+        return function(label) {
+            if (label.length <= tick_limit) {
+                return label;
+            }
+            else {
+                return label.slice(0, tick_limit) + '...';
+            }
+        };
+    };
 
-        // Replacing Library's Default Tooltip with our Custom One
-        chart.tooltip(function(key, x, y, e) {
-            return '<h5 class="bg-primary text-white"><div class="card-header">' + x + '</div></h5>' +
-            '<p>' + '<b>Responses : </b>' + key + '</p>' +
-            '<p>' + "<b>Total Vote : </b>" + y + '</p>';
-        });
-        return chart;
+    //initialize MultiBar Chart
+    function init_multibar_chart (graph_data) {
+        var chartConfig = {
+            type: 'bar',
+            data: {
+                labels: graph_data[0].values.map(function (value) {
+                    return value.text;
+                }),
+                datasets: graph_data.map(function (group, index) {
+                    var data = group.values.map(function (value) {
+                        return value.count;
+                    });
+                    return {
+                        label: group.key,
+                        data: data,
+                        backgroundColor: D3_COLORS[index % 20],
+                    };
+                })
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            callback: customtick_function(25),
+                        },
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            precision: 0,
+                        },
+                    }],
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function (tooltipItem, data) {
+                            return data.labels[tooltipItem[0].index];
+                        }
+                    }
+                },
+            },
+        };
+        return chartConfig;
     }
 
     //initialize discreteBar Chart
-    function init_bar_chart(){
-        var chart = nv.models.discreteBarChart()
-            .x(function(d) { return d.text; })
-            .y(function(d) { return d.count; })
-            .staggerLabels(true)
-            .showValues(true);
-
-        chart.tooltip.enabled(false);
-        return chart;
+    function init_bar_chart(graph_data){
+        var chartConfig = {
+            type: 'bar',
+            data: {
+                labels: graph_data[0].values.map(function (value) {
+                    return value.text;
+                }),
+                datasets: graph_data.map(function (group) {
+                    var data = group.values.map(function (value) {
+                        return value.count;
+                    });
+                    return {
+                        label: group.key,
+                        data: data,
+                        backgroundColor: data.map(function (val, index) {
+                            return D3_COLORS[index % 20];
+                        }),
+                    };
+                })
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            callback: customtick_function(35),
+                        },
+                    }],
+                    yAxes: [{
+                        ticks: {
+                                precision: 0,
+                        },
+                    }],
+                },
+                tooltips: {
+                    enabled: false,
+                }
+            },
+        };
+        return chartConfig;
     }
 
     //initialize Pie Chart
-    function init_pie_chart(){
-        return nv.models.pieChart()
-            .x(function(d) { return d.text; })
-            .y(function(d) { return d.count; })
-            .showLabels(false);
+    function init_pie_chart(graph_data){
+        var data = graph_data.map(function (point) {
+            return point.count;
+        });
+        var chartConfig = {
+            type: 'pie',
+            data: {
+                labels: graph_data.map(function (point) {
+                    return point.text;
+                }),
+                datasets: [{
+                    label: '',
+                    data: data,
+                    backgroundColor: data.map(function (val, index) {
+                        return D3_COLORS[index % 20];
+                    }),
+                }]
+        }
+        };
+        return chartConfig;
     }
 
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    function load_chart(chart, response, svgSelector, tick_limit, graph_type){
-        // Custom Tick fuction for replacing long text with '...'
-        var customtick_function = function(d){
-            if(! this || d.length <= tick_limit){
-                return d;
-            }
-            else{
-                return d.slice(0,tick_limit) + '...';
-            }
-        };
-        if (graph_type != 'pie'){
-            chart.xAxis
-                .tickFormat(customtick_function);
-            chart.yAxis
-                .tickFormat(d3.format('d'));
-        }
-        d3.select(svgSelector)
-            .datum(response)
-            .transition().duration(500).call(chart);
-        nv.utils.windowResize(chart.update);
-        return chart;
+    function load_chart(chartConfig, containerSelector){
+        var $container = $(containerSelector).css({position: 'relative'});
+        var $canvas = $container.find('canvas');
+        var ctx = $canvas.get(0).getContext('2d');
+        return new Chart(ctx, chartConfig);
     }
+
     //Script For Graph
     var survey_graphs = $('.survey_graph');
     $.each(survey_graphs, function(index, graph){
         var question_id = $(graph).attr("data-question_id");
         var graph_type = $(graph).attr("data-graph_type");
         var graph_data = JSON.parse($(graph).attr("graph-data"));
-        var svgSelector = '#graph_question_' + question_id + ' svg';
+        var containerSelector = '#graph_question_' + question_id;
+        var chartConfig;
         if(graph_type == 'multi_bar'){
-            nv.addGraph(function(){
-                var chart = init_multibar_chart();
-                return load_chart(chart, graph_data, svgSelector, 25);
-            });
+            chartConfig = init_multibar_chart(graph_data);
+            return load_chart(chartConfig, containerSelector);
         }
         else if(graph_type == 'bar'){
-            nv.addGraph(function() {
-                var chart = init_bar_chart();
-                return load_chart(chart, graph_data, svgSelector, 35);
-            });
+            chartConfig = init_bar_chart(graph_data);
+            return load_chart(chartConfig, containerSelector);
         }
         else if(graph_type == 'pie'){
-            nv.addGraph(function() {
-                var chart = init_pie_chart();
-                return load_chart(chart, graph_data, svgSelector, 25, 'pie');
-            });
+            chartConfig = init_pie_chart(graph_data);
+            return load_chart(chartConfig, containerSelector);
         }
     });
 
     var $scoringResultsChart = $('#scoring_results_chart');
     if ($scoringResultsChart.length > 0) {
-        nv.addGraph(function () {
-            var chart = init_pie_chart();
-            return load_chart(chart, $scoringResultsChart.data('graph_data'), '#scoring_results_chart svg', 25, 'pie');
-        });
+        var chartConfig = init_pie_chart($scoringResultsChart.data('graph_data'));
+        return load_chart(chartConfig, '#scoring_results_chart');
     }
 
     // Script for filter
