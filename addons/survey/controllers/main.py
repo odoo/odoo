@@ -435,6 +435,16 @@ class Survey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
+    @http.route(['/survey/<model("survey.survey"):survey>/get_certification_preview'], type="http", auth="user", methods=['GET'], website=True)
+    def survey_get_certification_preview(self, survey, **kwargs):
+        if not request.env.user.has_group('survey.group_survey_user'):
+            raise werkzeug.exceptions.Forbidden()
+
+        fake_user_input = survey._create_answer(user=request.env.user, test_entry=True)
+        response = self._generate_report(fake_user_input, download=False)
+        fake_user_input.sudo().unlink()
+        return response
+
     @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['GET'], website=True)
     def survey_get_certification(self, survey_id, **kwargs):
         """ The certification document can be downloaded as long as the user has succeeded the certification """
@@ -456,21 +466,13 @@ class Survey(http.Controller):
         if not succeeded_attempt:
             raise UserError(_("The user has not succeeded the certification"))
 
-        report_sudo = request.env.ref('survey.certification_report').sudo()
-
-        report = report_sudo.render_qweb_pdf([succeeded_attempt.id], data={'report_type': 'pdf'})[0]
-        reporthttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(report)),
-        ]
-        reporthttpheaders.append(('Content-Disposition', content_disposition('Certification.pdf')))
-        return request.make_response(report, headers=reporthttpheaders)
+        return self._generate_report(succeeded_attempt, download=True)
 
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
         result = {'page_ids': []}
-        
+
         # First append questions without page
         questions_without_page = [self._prepare_question_values(question,current_filters) for question in survey.question_ids if not question.page_id]
         if questions_without_page:
@@ -621,3 +623,18 @@ class Survey(http.Controller):
                 if len(answers_no_comment) == 1:
                     answers_no_comment = answers_no_comment[0]
         return answers_no_comment, comment
+
+    def _generate_report(self, user_input, download=True):
+        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
+
+        report_content_disposition = content_disposition('Certification.pdf')
+        if not download:
+            content_split = report_content_disposition.split(';')
+            content_split[0] = 'inline'
+            report_content_disposition = ';'.join(content_split)
+
+        return request.make_response(report, headers=[
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+            ('Content-Disposition', report_content_disposition),
+        ])
