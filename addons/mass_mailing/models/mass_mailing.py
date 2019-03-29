@@ -317,9 +317,9 @@ class MassMailingCampaign(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
         required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source',
-            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter'))
+            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter', False))
     medium_id = fields.Many2one('utm.medium', string='Medium',
-            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
         'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
