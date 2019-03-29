@@ -75,7 +75,7 @@ label.css_attribute_color.css_not_available {
 
     .attribute_name {
         padding-bottom: 0.5rem;
-        display: inline-block;
+        display: block;
     }
 
     .radio_input {
@@ -91,14 +91,18 @@ label.css_attribute_color.css_not_available {
 
     .variant_custom_value {
         margin-bottom: 0.7rem;
+
+        &.custom_value_own_line {
+            display: inline-block;
+        }
     }
 
     .custom_value_radio {
         margin: 0.3rem 0rem 0.3rem 1.6rem;
     }
 
-    .variant_custom_value_label {
-        margin: 0.3rem 0rem;
+    select {
+        margin-bottom: 0.5rem;
     }
 }
 

@@ -223,6 +223,7 @@ class ProductTemplate(models.Model):
         # get the name before the change of context to benefit from prefetch
         display_name = self.name
 
+        display_image = True
         quantity = self.env.context.get('quantity', add_qty)
         context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
         product_template = self.with_context(context)
@@ -257,6 +258,7 @@ class ProductTemplate(models.Model):
                 )
             list_price = product.price_compute('list_price')[product.id]
             price = product.price if pricelist else list_price
+            display_image = bool(product.image)
         else:
             product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
             list_price = product_template.price_compute('list_price')[product_template.id]
@@ -279,6 +281,7 @@ class ProductTemplate(models.Model):
             'product_id': product.id,
             'product_template_id': product_template.id,
             'display_name': display_name,
+            'display_image': display_image,
             'price': price,
             'list_price': list_price,
             'has_discounted_price': has_discounted_price,
