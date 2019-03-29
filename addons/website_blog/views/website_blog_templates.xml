@@ -437,10 +437,10 @@
         <h4>Archives</h4>
         <ul class="nav nav-pills flex-column">
             <t t-foreach="nav_list" t-as="year">
-                <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="nav-item blog_post_year_collapse mt8">
+                <li data-toggle="collapse" t-att-data-target="'#b_' + year" aria-expanded="false" class="nav-item blog_post_year_collapse mt8">
                     <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4" role="img" aria-label="Next year" title="Next year"/><span t-esc="year"/>
                 </li>
-                <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
+                <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="'b_' + year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="nav-item">
                             <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
