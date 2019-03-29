@@ -30,7 +30,6 @@ class MailChannel(models.Model):
 
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
-    _description = 'Discussion channel'
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
