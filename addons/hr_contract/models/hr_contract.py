@@ -47,6 +47,12 @@ class Contract(models.Model):
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
+    calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
+
+    @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
+    def _compute_calendar_mismatch(self):
+        for contract in self:
+            contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
@@ -113,12 +119,28 @@ class Contract(models.Model):
         })
         return True
 
+    @api.model
+    def create(self, vals_list):
+        contracts = super().create(vals_list)
+        open_contracts = contracts.filtered(lambda c: c.state in ['open', 'pending'])
+        # sync contract -> employee
+        for contract in open_contracts:
+            contract.employee_id.contract_id = contract
+        # sync contract calendar -> calendar employee
+        for contract in open_contracts.filtered(lambda c: c.resource_calendar_id):
+            contract.employee_id.resource_calendar_id = contract.resource_calendar_id
+        return contracts
+
     @api.multi
     def write(self, vals):
+        res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
             for contract in self:
                 contract.employee_id.sudo().write({'contract_id': contract.id})
-        return super(Contract, self).write(vals)
+        calendar = vals.get('resource_calendar_id')
+        if calendar and self.state in ['open', 'pending']:
+            self.mapped('employee_id').write({'resource_calendar_id': calendar})
+        return res
 
     @api.multi
     def _track_subtype(self, init_values):
