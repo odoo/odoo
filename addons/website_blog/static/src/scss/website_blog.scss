@@ -75,7 +75,6 @@
         }
         &.o_list_cover {
             display: none;
-            width: auto!important;
             height: 250px!important;
 
             &.cover {
@@ -158,42 +157,6 @@
 
     .o_author_avatar_little {
         width: 40px;
-        display: inline;
-        margin-top: -5px;
-    }
-
-    /* Sharing links style */
-
-    .o_sharing_links {
-        margin-top: 20px;
-        > p {
-            display: inline;
-            font-size: 12px;
-        }
-        > a {
-            color: #b3b3b3;
-            font: normal normal normal 28px/1 FontAwesome;
-            margin: 0 4px 0 4px;
-            cursor: pointer;
-            &:hover {
-                text-decoration: none;
-            }
-            &.o_twitter_complete, &.o_twitter:hover {
-                color: #4099FF;
-            }
-            &.o_google_complete, &.o_google:hover {
-                color: #DD4B39;
-            }
-            &.o_facebook_complete, &.o_facebook:hover {
-                color: #3b5998;
-            }
-            &.o_linkedin_complete, &.o_linkedin:hover {
-                color: #0E76A8;
-            }
-            &.unhover {
-                color: #b3b3b3;
-            }
-        }
     }
 
     .o_blog_post_complete.o_sharing_links {
@@ -207,17 +170,6 @@
         }
         > a {
             font: normal normal normal 40px/1 FontAwesome;
-        }
-    }
-
-    div[name="blog_post_data"] {
-        margin-top: 20px !important;
-        font-size: 13px;
-    }
-    div[name="blog_post"] {
-        position: relative;
-        hr {
-            margin-top: 10px;
         }
     }
 
