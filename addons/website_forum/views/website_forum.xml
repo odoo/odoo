@@ -52,7 +52,7 @@
 
         <div id="wrap" t-attf-class="container #{website_forum_action}">
             <div class="row">
-                <div class="o_wprofile_email_validation_container mb16 mt16">
+                <div class="o_wprofile_email_validation_container flex-grow-1 mb16 mt16">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/forum/%s' % forum.id"/>
                         <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the forum.'"/>
