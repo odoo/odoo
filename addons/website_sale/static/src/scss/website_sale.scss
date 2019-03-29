@@ -613,6 +613,8 @@ a.no-decoration {
     }
 
     .carousel-control-prev, .carousel-control-next {
+        height: 70%;
+        top: 15%;
         opacity: 0.5;
         cursor: pointer;
         &:focus {
@@ -633,7 +635,13 @@ a.no-decoration {
             text-indent: unset;
             border: 1px solid gray('600');
             opacity: 0.5;
+            position: relative;
 
+            .o_product_video_thumb {
+                @include o-position-absolute($top: 50%, $left: 50%);
+                transform: translate(-50%, -50%);
+                color: gray('400');
+            }
             &.active {
                 opacity: 1;
                 border: 1px solid theme-color('primary');

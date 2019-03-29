@@ -102,7 +102,7 @@
                             <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <group name="product_template_images" string="Extra Product Images">
+                    <group name="product_template_images" string="Extra Product Images / Videos">
                         <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add an Image'}" nolabel="1"/>
                     </group>
                 </page>
@@ -116,7 +116,7 @@
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="product_variant_images" string="Extra Variant Images">
+                <group name="product_variant_images" string="Extra Variant Images / Videos">
                     <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add an Image'}" nolabel="1"/>
                 </group>
             </sheet>
@@ -208,10 +208,25 @@
                         <h2><field name="name" placeholder="Image Name"/></h2>
                         <!-- Unfortunately for now we can't drag and drop kanban o2m, so we have to let the user input the sequence manually.  -->
                         <label for="sequence" string="Sequence"/><br/>
-                        <field name="sequence"/>
+                        <field name="sequence"/><br/><br/>
+                        <label for="sequence" string="Video URL"/><br/>
+                        <field name="video_url"/><br/>
                     </div>
                     <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
-                        <field name="image_original" widget="image"/>
+                        <div class="row">
+                            <div class="col">
+                                <field name="image_original" widget="image"/>
+                            </div>
+                            <div class="col" attrs="{'invisible': [('video_url', 'in', ['', False])]}">
+                                <div class="o_video_container p-2">
+                                    <span>Video Preview</span>
+                                    <field name="embed_code" class="mt-2" widget="video_preview"/>
+                                    <h4 class="o_invalid_warning text-muted text-center" attrs="{'invisible': [('embed_code', '!=', False)]}">
+                                        Please enter a valid Video URL.
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
