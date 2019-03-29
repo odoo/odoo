@@ -66,9 +66,14 @@ class MailResendMessage(models.TransientModel):
                 record = self.env[message.model].browse(message.res_id) if message.model and message.res_id else None
 
                 rdata = []
-                for pid, cid, active, pshare, ctype, notif, groups in self.env['mail.followers']._get_recipient_data(None, False, pids=to_send.ids):
+                res = self.env['mail.followers']._get_recipient_data(None, False, pids=to_send.ids)
+                pdata_custom_fields = self.env['mail.followers']._get_partner_data_custom_fields()
+                list_to_be_mapped = ["pid", "cid", "active", "pshare", "ctype", "notif", "groups"]
+                for data in res:
+                    pid, cid, active, pshare, ctype, notif, groups = list(map(data.get, list_to_be_mapped))
                     if pid and notif == 'email' or not notif:
                         pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                        pdata.update({x: data[x] for x in pdata_custom_fields})
                         if not pshare and notif:  # has an user and is not shared, is therefore user
                             rdata.append(dict(pdata, type='user'))
                         elif pshare and notif:  # has an user and is shared, is therefore portal

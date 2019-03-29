@@ -134,7 +134,7 @@ WHERE EXISTS (
 """.format(self._get_recipient_select_partner(), self._get_recipient_select_channel())
             params = [subtype_id, records._name, tuple(records.ids), tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
+            res = self.env.cr.dictfetchall()
         elif pids or cids:
             query = """
 SELECT partner.id AS pid, NULL AS cid,
@@ -153,18 +153,31 @@ WHERE channel.id IN %s
 """.format(self._get_recipient_select_partner(), self._get_recipient_select_channel())
             params = [tuple(pids or [0]), tuple(cids or [0])]
             self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
+            res = self.env.cr.dictfetchall()
         else:
             res = []
         return res
 
     def _get_recipient_select_partner(self):
         """ Return extra terms for the SELECT clause for partners in _get_recipient_data(). """
-        return ""
+        extra_query = ""
+        for key, value in self._get_partner_data_custom_fields().items():
+            extra_query += ", " + value[0] + " AS " + key
+        return extra_query
 
     def _get_recipient_select_channel(self):
         """ Return extra terms for the SELECT clause for channels in _get_recipient_data(). """
-        return ""
+        extra_query = ""
+        for key, value in self._get_partner_data_custom_fields().items():
+            extra_query += ", " + value[1] + " AS " + key
+        return extra_query
+
+    def _get_partner_data_custom_fields(self):
+        """ If a other module want to add a custom field in pdata it must be in this list
+
+        :return: dict of custom field in a format like this {alias:(partner_field, channel_field)}
+        """
+        return {}
 
     def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False):
         """ Private method allowing to fetch follower data from several documents of a given model.

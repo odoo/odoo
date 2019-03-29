@@ -1080,8 +1080,11 @@ class Message(models.Model):
             'channels': [],
         }
         res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
+        pdata_custom_fields = self.env['mail.followers']._get_partner_data_custom_fields()
         author_id = msg_vals.get('author_id') or self.author_id.id if res else False
-        for pid, cid, active, pshare, ctype, notif, groups in res:
+        list_to_be_mapped = ["pid", "cid", "active", "pshare", "ctype", "notif", "groups"]
+        for data in res:
+            pid, cid, active, pshare, ctype, notif, groups = list(map(data.get, list_to_be_mapped))
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
@@ -1089,6 +1092,7 @@ class Message(models.Model):
                     # avoid to notify inactive partner by email (odoobot)
                     continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
+                pdata.update({x: data[x] for x in pdata_custom_fields})
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
                 else:
