@@ -41,7 +41,6 @@ class AccountInvoice(models.Model):
             reference = '+++%s/%s/%s%02d+++' % (doy, year, seq, mod)
         elif algorithm == 'partner_ref':
             partner_ref = self.partner_id.ref
-            print(partner_ref)
             partner_ref_nr = re.sub('\D', '', partner_ref or '')
             if (len(partner_ref_nr) < 3) or (len(partner_ref_nr) > 7):
                 raise UserError(_('The Customer should have an Internal Reference with min 3 and max 7 digits'
