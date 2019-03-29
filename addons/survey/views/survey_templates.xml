@@ -134,7 +134,7 @@
     <!-- new layout for survey -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
-            <t t-call-assets="survey.survey_assets"/>
+            <t t-call-assets="survey.survey_assets" lazy_load="True"/>
         </xpath>
         <xpath expr="//header" position="before">
             <t t-set="no_header" t-value="no_header or survey.certificate"/>

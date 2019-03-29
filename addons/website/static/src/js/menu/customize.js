@@ -199,8 +199,9 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 self.globalEditor = new WebsiteAceEditor(self, $(document.documentElement).data('view-xmlid'), {
                     initialResID: initialResID,
                     defaultBundlesRestriction: [
-                        "web.assets_frontend",
-                        "website.assets_frontend",
+                        'web.assets_frontend',
+                        'web.assets_frontend_minimal',
+                        'web.assets_frontend_lazy',
                     ],
                 });
                 return self.globalEditor.appendTo(document.body);

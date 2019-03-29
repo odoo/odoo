@@ -18,5 +18,11 @@
                 <script type="text/javascript" src="/web_tour/static/src/js/debug_manager.js"></script>
             </xpath>
         </template>
+
+        <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/web_tour/static/src/js/public/tour_manager.js"/>
+            </xpath>
+        </template>
     </data>
 </odoo>
