@@ -37,6 +37,19 @@
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
                     </xpath>
+                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                        <field name="calendar_mismatch" invisible="1"/>
+                        <label for="resource_calendar_id"/>
+                        <div>
+                            <field name="resource_calendar_id" required="1" nolabel="1"/>
+                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                            </span>
+                            <span class="o_calendar_warning_tooltip text-danger">
+                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.
+                            </span>
+                        </div>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -127,7 +140,17 @@
                                         <span class="text-muted">(If fixed-term contract)</span>
                                     </div>
                                     <field name="trial_date_end"/>
-                                    <field name="resource_calendar_id"/>
+                                    <field name="calendar_mismatch" invisible="1"/>
+                                    <label for="resource_calendar_id"/>
+                                    <div>
+                                        <field name="resource_calendar_id" required="1" nolabel="1"/>
+                                        <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', 'not in', ['open', 'pending'])]}"
+                                            class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                                        </span>
+                                        <span class="o_calendar_warning_tooltip text-danger">
+                                            Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.
+                                        </span>
+                                    </div>
                                     <field name="hr_responsible_id"/>
                                 </group>
                             </group>

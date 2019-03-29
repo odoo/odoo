@@ -12,6 +12,7 @@ class Employee(models.Model):
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
     contract_id = fields.Many2one('hr.contract', string='Current Contract',
         groups="hr.group_hr_user", help='Current contract of the employee')
+    calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
 
     def _compute_contracts_count(self):
@@ -39,3 +40,11 @@ class Employee(models.Model):
         Returns the contracts of all employees between date_from and date_to
         """
         return self.search([])._get_contracts(date_from, date_to, states=states)
+
+    def write(self, vals):
+        res = super(Employee, self).write(vals)
+        if vals.get('contract_id'):
+            for employee in self:
+                employee.resource_calendar_id.transfer_leaves_to(employee.contract_id.resource_calendar_id, employee.resource_id)
+                employee.resource_calendar_id = employee.contract_id.resource_calendar_id
+        return res
