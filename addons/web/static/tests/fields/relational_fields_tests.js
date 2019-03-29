@@ -2954,6 +2954,67 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('focus when closing many2one modal in many2one modal', function (assert) {
+        assert.expect(12);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="trululu"/>' +
+                  '</form>',
+            res_id: 2,
+            archs: {
+                'partner,false,form': '<form><field name="trululu"/></form>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Open many2one modal
+        form.$buttons.find('.btn.o_form_button_edit').click();
+        form.$('.o_external_button').click();
+        var $originalModal = $('.modal-dialog');
+        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($originalModal.length, 1, 'There should be one modal');
+        assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Open many2one modal of field in many2one modal
+        $originalModal.find('.o_external_button').click();
+        var $modals = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modals.length, 2, 'There should be two modals');
+        assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close second modal
+        $modals.last().find('button[class="close"]').click();
+        var $modal = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modal.length, 1, 'There should be one modal');
+        assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
+        assert.equal($modal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close first modal
+        $modal.find('button[class="close"]').click();
+        $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 0, 'There should be no modal');
+        assert.notOk($('body').hasClass('modal-open'), 'Modal is not said opened');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', function (assert) {
