@@ -571,7 +571,7 @@ class PoFileReader:
                         'src': source,
                         'value': translation,
                         'comments': comments,
-                        'res_id': line_number,
+                        'res_id': int(line_number),
                         'module': module,
                     }
                     continue
@@ -586,7 +586,7 @@ class PoFileReader:
                         'src': source,
                         'value': translation,
                         'comments': comments,
-                        'res_id': line_number,
+                        'res_id': int(line_number),
                         'module': module,
                     }
                     continue
@@ -600,7 +600,7 @@ class PoFileReader:
                         'src': source,
                         'value': translation,
                         'comments': comments,
-                        'res_id': line_number,
+                        'res_id': int(line_number),
                         'module': module,
                     }
                     continue
@@ -697,9 +697,10 @@ class PoFileWriter:
         for typy, name, res_id in tnrs:
             if typy == 'code':
                 code = True
-            if isinstance(res_id, int):
+            if isinstance(res_id, int) or res_id.isdigit():
                 # second term of occurrence must be a digit
-                entry.occurrences.append((u"%s:%s" % (typy, name), res_id))
+                # occurrence line at 0 are discarded when rendered to string
+                entry.occurrences.append((u"%s:%s" % (typy, name), str(res_id)))
             else:
                 entry.occurrences.append((u"%s:%s:%s" % (typy, name, res_id), ''))
         if code:
