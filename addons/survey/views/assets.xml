@@ -3,8 +3,7 @@
 <data>
     <!-- survey assets  -->
     <template id="survey_assets" name="Survey Results assets">
-        <script src="/web/static/lib/nvd3/d3.v3.js"></script>
-        <script src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script src="/web/static/lib/Chart/Chart.js"></script>
         <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
         <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
@@ -22,7 +21,6 @@
         <t t-call="web._assets_helpers">
             <t t-call="web._assets_frontend_helpers"/>
         </t>
-        <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
         <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
