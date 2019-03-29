@@ -32,12 +32,12 @@ class BuckarooForm(BuckarooCommon):
         # ----------------------------------------
 
         form_values = {
-            'add_returndata': '',
+            'add_returndata': '/payment/process',
             'Brq_websitekey': self.buckaroo.brq_websitekey,
             'Brq_amount': '2240.0',
             'Brq_currency': 'EUR',
             'Brq_invoicenumber': 'SO004',
-            'Brq_signature': 'aa6fe072afdd9d1b463d55f43e6df4b272d3529a',  # update me
+            'Brq_signature': 'f09bb79451a7ddef3178462ea52b07e55d34e99e',  # update me
             'brq_test': 'True',
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
