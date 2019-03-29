@@ -227,6 +227,7 @@ class MailMail(models.Model):
             for mail_batch in tools.split_every(batch_size, record_ids):
                 yield server_id, mail_batch
 
+    @api.run_after_commit
     @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current

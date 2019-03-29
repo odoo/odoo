@@ -177,22 +177,9 @@ class Partner(models.Model):
         test_mode = getattr(threading.currentThread(), 'testing', False)
         if force_send and len(emails) < recipients_max and \
                 (not self.pool._init or test_mode):
-            email_ids = emails.ids
-            dbname = self.env.cr.dbname
-            _context = self._context
-
-            def send_notifications():
-                db_registry = registry(dbname)
-                with api.Environment.manage(), db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, _context)
-                    env['mail.mail'].browse(email_ids).send()
-
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
-            if not test_mode and send_after_commit:
-                self._cr.after('commit', send_notifications)
-            else:
-                emails.send()
+            emails.with_context(run_after_commit=send_after_commit).send()
 
         return True
 

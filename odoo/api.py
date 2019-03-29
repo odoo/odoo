@@ -45,6 +45,7 @@ __all__ = [
     'call_kw',
 ]
 
+import threading
 import logging
 from collections import defaultdict, Mapping
 from contextlib import contextmanager
@@ -55,6 +56,7 @@ from weakref import WeakSet
 from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
+from odoo import registry
 from odoo.tools import frozendict, classproperty, StackMap
 from odoo.exceptions import CacheMiss
 
@@ -1176,6 +1178,45 @@ class SpecialValue(object):
 
     def __init__(self, getter):
         self.get = getter
+
+
+@decorator
+def run_after_commit(function, *args, **kwargs):
+    """Decorate a method so that it is run after successfully committing the
+    current cursor.
+
+    It is useful for cases where you can not rollback the process.
+    E.g. send email, sign invoice, web services methods for other systems...
+    Such a method::
+        @api.run_after_commit
+        @api.multi
+        def method(self):
+            ...
+    """
+    self, args = args[0], args[1:]
+
+    if (self.env.context.get('disable_after_commit', False) or
+            getattr(threading.currentThread(), 'testing', False)):
+        _logger.debug("Call immediately %s.%s(%s)", self, function.__name__,
+                      Params(args, kwargs))
+        return function(self, *args, **kwargs)
+
+    dbname = self.env.cr.dbname
+    uid = self.env.uid
+    context = self.env.context.copy()
+    model_name = self._name
+    ids = self.ids[:]
+
+    def callback():
+        db_registry = registry(dbname)
+        with Environment.manage(), db_registry.cursor() as new_cr:
+            env = Environment(new_cr, uid, context)
+            new_self = env[model_name].browse(ids)
+            _logger.debug("Call after commit %s.%s(%s)", new_self,
+                          function.__name__, Params(args, kwargs))
+            function(new_self, *args, **kwargs)
+
+    self.env.cr.after('commit', callback)
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
