@@ -961,7 +961,29 @@ class WebsiteSale(ProductConfiguratorController):
             tx = request.env['payment.transaction'].sudo().browse(transaction_id)
             assert tx in order.transaction_ids()
         elif order:
-            tx = order.get_portal_last_transaction()
+            if order.amount_total ==0:
+                #creating a transaction for a 0 amount order, using transfer acquirer.
+                vals = {'acquirer_id': 5,
+                'return_url': '/shop/payment/validate'}
+
+                vals['type'] = 'form_save'
+                tx = order._create_payment_transaction(vals)
+
+                # store the new transaction into the transaction list and if there's an old one, we remove it
+                last_tx_id = request.session.get('__website_sale_last_tx_id')
+                last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+                if last_tx:
+                    PaymentProcessing.remove_payment_transaction(last_tx)
+                PaymentProcessing.add_payment_transaction(tx)
+                request.session['__website_sale_last_tx_id'] = tx.id
+                    
+                #modify the state of the TX as done, as there is nothing to pay
+                tx.state = 'done'
+
+                #comfirm the order
+                order.action_confirm()
+            else:#continue with the original flow of code.
+                tx = order.get_portal_last_transaction()
         else:
             tx = None
 
