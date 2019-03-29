@@ -62,4 +62,34 @@
             </td>
         </xpath>
     </template>
+
+    <template id="badge_content" inherit_id="website_profile.badge_content">
+        <xpath expr="//div[@id='website_profile_badges']" position="after">
+            <t t-if="certification_badges">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="mt-4 mt-lg-2">Certification Badges</h1>
+                        <p class="lead">
+                            You can gain badges by passing certifications. Here is a list of all available certification badges.
+                            <br />Follow the links to reach new heights and skill up!
+                        </p>
+                        <div class="row col-12 align-items-center p-0" t-foreach="certification_badges" t-as="badge">
+                            <div class="col-3">
+                                <t t-call="website_profile.badge_header">
+                                    <t t-if="badge.id in certification_badge_urls" t-set="badge_url" t-value="certification_badge_urls[badge.id]"/>
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <span t-field="badge.description"/>
+                            </div>
+                            <div class="col-3 text-right">
+                                <b t-esc="badge.granted_users_count"/>
+                                <i class="text-muted"> awarded users</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
 </data></odoo>

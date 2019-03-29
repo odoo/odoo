@@ -8,6 +8,7 @@ import werkzeug.exceptions
 from odoo import _
 from odoo import http
 from odoo.http import request
+from odoo.osv import expression
 
 from odoo.addons.website_slides.controllers.main import WebsiteSlides
 from collections import defaultdict
@@ -74,3 +75,39 @@ class WebsiteSlides(WebsiteSlides):
             ] for user in users
         }
         return users_certificates
+
+    # Badges & Ranks Page
+    # ---------------------------------------------------
+    def _prepare_ranks_badges_values(self, **kwargs):
+        """ Extract certification badges, to render them in ranks/badges page in another section.
+        Order them by number of granted users desc and show only badges linked to opened certifications."""
+        values = super(WebsiteSlides, self)._prepare_ranks_badges_values(**kwargs)
+
+        # 1. Getting all certification badges, sorted by granted user desc
+        domain = expression.AND([[('survey_id', '!=', False)], self._prepare_badges_domain(**kwargs)])
+        certification_badges = request.env['gamification.badge'].sudo().search(domain)
+        # keep only the badge with challenge category = slides (the rest will be displayed under 'normal badges' section
+        certification_badges = certification_badges.filtered(
+            lambda b: 'slides' in b.challenge_ids.mapped('challenge_category'))
+
+        if not certification_badges:
+            return values
+
+        # 2. sort by granted users (done here, and not in search directly, because non stored field)
+        certification_badges = certification_badges.sorted("granted_users_count", reverse=True)
+
+        # 3. Remove certification badge from badges and keep only certification badge linked to opened survey
+        badges = values['badges'] - certification_badges
+        certification_badges = certification_badges.filtered(lambda b: b.survey_id.state == 'open')
+
+        # 4. Getting all course url for each badge
+        certification_slides = request.env['slide.slide'].sudo().search([('survey_id', 'in', certification_badges.mapped('survey_id').ids)])
+        certification_badge_urls = {slide.survey_id.certification_badge_id.id: slide.channel_id.website_url for slide in certification_slides}
+
+        # 5. Applying changes
+        values.update({
+            'badges': badges,
+            'certification_badges': certification_badges,
+            'certification_badge_urls': certification_badge_urls
+        })
+        return values
