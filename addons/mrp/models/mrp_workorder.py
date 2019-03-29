@@ -234,6 +234,32 @@ class MrpWorkorder(models.Model):
                 'product_id': self.product_id.id,
             })
 
+    def _action_assign(self):
+        for workorder in self:
+            raw_moves = workorder.move_raw_ids.filtered(
+                lambda move: move.state not in ('done', 'cancel')
+            )
+            for move in raw_moves:
+                wl_to_unlink = self.env['mrp.workorder.line']
+                qty_already_consumed = 0.0
+                workorder_lines = workorder.workorder_line_ids.filtered(lambda w: w.move_id == move)
+                for wl in workorder_lines:
+                    if not wl.qty_done:
+                        wl_to_unlink |= wl
+                    wl.qty_to_consume = wl.qty_done
+                    qty_already_consumed += wl.qty_to_consume
+                    if wl.qty_reserved > wl.qty_to_consume:
+                        wl.qty_reserved = wl.qty_to_consume
+                qty_to_consume = move.product_uom._compute_quantity(
+                    workorder.qty_producing * move.unit_factor,
+                    move.product_id.uom_id,
+                    round=False
+                )
+                wl_to_unlink.unlink()
+                if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=move.product_uom.rounding) > 0:
+                    line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
+                    workorder.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+
     def _assign_default_final_lot_id(self, reference_lot_lines):
         if not reference_lot_lines:
             # self is the first workorder

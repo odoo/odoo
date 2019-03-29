@@ -600,6 +600,7 @@ class MrpProduction(models.Model):
     def action_assign(self):
         for production in self:
             production.move_raw_ids._action_assign()
+            production.workorder_ids._action_assign()
         return True
 
     @api.multi
