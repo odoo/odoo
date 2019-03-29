@@ -16,15 +16,16 @@ class MailMail(models.Model):
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
 
-    @api.model
-    def create(self, values):
-        """ Override mail_mail creation to create an entry in mailing.trace """
+    @api.model_create_multi
+    def create(self, values_list):
+        """ Override mail_mail creation to create an entry in mail.mail.statistics """
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
-        mail = super(MailMail, self).create(values)
-        if values.get('mailing_trace_ids'):
-            mail_sudo = mail.sudo()
-            mail_sudo.mailing_trace_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
-        return mail
+        mails = super(MailMail, self).create(values_list)
+        for mail, values in zip(mails, values_list):
+            if values.get('mailing_trace_ids'):
+                mail_sudo = mail.sudo()
+                mail_sudo.mailing_trace_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
+        return mails
 
     def _get_tracking_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
