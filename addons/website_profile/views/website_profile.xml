@@ -416,7 +416,9 @@
         <table class="table table-sm mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td class="align-middle">
-                    <img t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg" class="my-1" style="height:2.5em" t-att-alt="badge.level"/>
+                    <img t-if="not badge.image and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
+                         class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
+                    <img t-else="" t-attf-src="/web/image/gamification.badge/#{badge.id}/image" class="my-1" style="height:2.5em" t-att-alt="badge.name"/>
                     <h6 t-field="badge.name" class="d-inline my-0"/>
                 </td>
                 <td class="align-middle d-none d-md-table-cell">
