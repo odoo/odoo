@@ -56,29 +56,19 @@ return session.is_bound.then(function () {
         }, 500);
         var observer = new MutationObserver(check_tooltip);
         var start_service = (function () {
-
             return function (observe) {
-
-                var promise = new Promise(function (resolve, reject) {
-                    $(function () {
-                        /**
-                         * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
-                         * registration and starting listening for DOM mutations.
-                         */
-                        _.defer(function () {
-                            tour_manager._register_all(observe);
-                            if (observe) {
-                                observer.observe(document.body, {
-                                    attributes: true,
-                                    childList: true,
-                                    subtree: true,
-                                });
-                            }
-                            resolve();
-                        });
+                return new Promise(function (resolve, reject) {
+                    tour_manager._register_all(observe).then(function () {
+                        if (observe) {
+                            observer.observe(document.body, {
+                                attributes: true,
+                                childList: true,
+                                subtree: true,
+                            });
+                        }
+                        resolve();
                     });
                 });
-                return promise;
             };
         })();
 
