@@ -2155,5 +2155,166 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.strictEqual(record.data.foobool2, true, "foobool2 field should be true");
             model.destroy();
         });
+
+        QUnit.test('notifyChange DELETE_ALL on a one2many', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[1].product_ids = [37, 38];
+            this.params.fieldNames = ['product_ids'];
+
+            var model = createModel({
+                Model: BasicModel,
+                data: this.data,
+            });
+
+            var o2mParams = {
+                modelName: 'product',
+                fields: this.data.product.fields,
+            };
+
+            var resultID = await model.load(this.params);
+            var newRecordID = await model.load(o2mParams);
+            var record = model.get(resultID);
+            var x2mListID = record.data.product_ids.id;
+
+            assert.strictEqual(record.data.product_ids.count, 2,
+                "there should be two records in the relation");
+
+            await model.notifyChanges(resultID, {product_ids: {operation: 'ADD', id: newRecordID}});
+
+            assert.deepEqual(model.localData[x2mListID]._changes, [{
+                operation: 'ADD', id: newRecordID,
+            }], "_changes should be correct");
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.count, 3,
+                "there should be three records in the relation");
+
+            await model.notifyChanges(resultID, {product_ids: {operation: 'DELETE_ALL'}});
+
+            assert.deepEqual(model.localData[x2mListID]._changes, [{
+                id: 37,
+                operation: "DELETE"
+            }, {
+                id: 38,
+                operation: "DELETE"
+            }], "_changes should contain the two 'DELETE' operations");
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.count, 0,
+                "there should be no more records in the relation");
+            model.destroy();
+        });
+
+        QUnit.test('notifyChange MULTI on a one2many', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.records[1].product_ids = [37, 38];
+            this.params.fieldNames = ['product_ids'];
+
+            var model = createModel({
+                Model: BasicModel,
+                data: this.data,
+            });
+
+            var o2mParams = {
+                modelName: 'product',
+                fields: this.data.product.fields,
+            };
+
+            var resultID = await model.load(this.params);
+            var newRecordID = await model.load(o2mParams);
+            var record = model.get(resultID);
+            var x2mListID = record.data.product_ids.id;
+
+            assert.strictEqual(record.data.product_ids.count, 2,
+                "there should be two records in the relation");
+
+            await model.notifyChanges(resultID, {product_ids: {
+                operation: 'MULTI',
+                commands: [{
+                    operation: 'DELETE_ALL'
+                }, {
+                    operation: 'ADD',
+                    id: newRecordID
+                }]
+            }});
+
+            assert.deepEqual(model.localData[x2mListID]._changes, [{
+                id: 37,
+                operation: "DELETE"
+            }, {
+                id: 38,
+                operation: "DELETE"
+            }, {
+                operation: 'ADD', id: newRecordID,
+            }], "_changes should be correct");
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.product_ids.count, 1,
+                "there should be one record in the relation");
+
+            assert.strictEqual(record.data.product_ids.data[0].id, newRecordID,
+                "the id should match");
+        });
+
+        QUnit.test('notifyChange MULTI on a many2many', async function (assert) {
+            assert.expect(3);
+
+            this.params.fieldsInfo = {
+                default: {
+                    category: {
+                        fieldsInfo: {default: {some_char: { context: "{'a': parent.foo}"}}},
+                        relatedFields: {some_char: {type: "char"}},
+                        viewType: 'default',
+                    },
+                    foo: {},
+                },
+            };
+
+            var model = createModel({
+                Model: BasicModel,
+                data: this.data,
+            });
+
+            var resultID = await model.load(this.params);
+            var changes = {
+                category: {
+                    operation: 'MULTI',
+                    commands: [{
+                        operation: 'ADD_M2M',
+                        ids: [{id: 23}, {id: 24}, {id: 25}]
+                    }, {
+                        operation: 'ADD_M2M',
+                        ids: [{id: 26}]
+                    }]
+                }
+            };
+            await model.notifyChanges(resultID, changes);
+            var record = model.get(resultID);
+            var categoryRecord = record.data.category;
+
+            assert.strictEqual(categoryRecord.data.length, 4,
+                "there should 2 records in the relation");
+
+            await model.notifyChanges(resultID, {category: {
+                operation: 'MULTI',
+                commands: [{
+                    operation: 'DELETE_ALL'
+                }, {
+                    operation: 'ADD_M2M',
+                    ids: [{id: 27}]
+                }]
+            }});
+            record = model.get(resultID);
+            categoryRecord = record.data.category;
+            assert.strictEqual(categoryRecord.data.length, 1,
+                "there should 1 record in the relation");
+
+            assert.strictEqual(record.data.category.data[0].data.id, 27,
+                "the id should match");
+
+            model.destroy();
+        });
     });
 });

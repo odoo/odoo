@@ -17,11 +17,10 @@
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_frontend.scss"/>
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_portal.scss"/>
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/product_configurator.scss"/>
-            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_options.scss"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
-            <script type="text/javascript" src="/sale/static/src/js/product_configurator_mixin.js"></script>
-            <script type="text/javascript" src="/sale/static/src/js/product_configurator_modal.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/variant_mixin.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/variant_mixin.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
@@ -35,7 +34,6 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_deleted_archived_variants.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_list_view_b2c.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_no_variant_attribute.js"></script>
-            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_options.js"></script>
         </xpath>
     </template>
 
@@ -420,8 +418,8 @@
 
     <template id="product" name="Product">
 
-        <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+        <t t-set="combination" t-value="product._get_first_possible_combination()"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
         <t t-call="website.layout">
@@ -464,7 +462,7 @@
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <t t-if="first_possible_combination" t-call="sale.variants">
+                                        <t t-if="combination" t-call="sale.variants">
                                             <t t-set="ul_class" t-value="'flex-column'" />
                                             <t t-set="parent_combination" t-value="None" />
                                         </t>
@@ -626,7 +624,7 @@
                     <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio">
                         <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                         <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
-                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="combination_info['list_price']" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                         <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
                             <span t-esc="combination_info['display_name']"/>
                             <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>

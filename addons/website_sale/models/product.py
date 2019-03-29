@@ -182,21 +182,6 @@ class ProductTemplate(models.Model):
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Images", copy=True)
 
-    # website_price deprecated, directly use _get_combination_info instead
-    website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_public_price deprecated, directly use _get_combination_info instead
-    website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_price_difference deprecated, directly use _get_combination_info instead
-    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
-
-    def _website_price(self):
-        current_website = self.env['website'].get_current_website()
-        for template in self.with_context(website_id=current_website.id):
-            res = template._get_combination_info()
-            template.website_price = res.get('price')
-            template.website_public_price = res.get('list_price')
-            template.website_price_difference = res.get('has_discounted_price')
-
     @api.multi
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
@@ -218,38 +203,6 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         return any(v.is_custom for v in self._get_valid_product_attribute_values())
-
-    @api.multi
-    def _is_quick_add_to_cart_possible(self, parent_combination=None):
-        """
-        It's possible to quickly add to cart if there's no optional product,
-        there's only one possible combination and no value is set to is_custom.
-
-        Attributes set to dynamic or no_variant don't have to be tested
-        specifically because they will be taken into account when checking for
-        the possible combinations.
-
-        :param parent_combination: combination from which `self` is an
-            optional or accessory product
-        :type parent_combination: recordset `product.template.attribute.value`
-
-        :return: True if it's possible to quickly add to cart, else False
-        :rtype: bool
-        """
-        self.ensure_one()
-
-        if not self._is_add_to_cart_possible(parent_combination):
-            return False
-        gen = self._get_possible_combinations(parent_combination)
-        first_possible_combination = next(gen)
-        if next(gen, False) is not False:
-            # there are at least 2 possible combinations.
-            return False
-        if self._has_is_custom_values():
-            return False
-        if self.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(first_possible_combination)):
-            return False
-        return True
 
     @api.multi
     def _get_possible_variants_sorted(self, parent_combination=None):
@@ -428,20 +381,6 @@ class Product(models.Model):
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 
     product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
-
-    # website_price deprecated, directly use _get_combination_info instead
-    website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_public_price deprecated, directly use _get_combination_info instead
-    website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
-    # website_price_difference deprecated, directly use _get_combination_info instead
-    website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
-
-    def _website_price(self):
-        for product in self:
-            res = product._get_combination_info_variant()
-            product.website_price = res.get('price')
-            product.website_public_price = res.get('list_price')
-            product.website_price_difference = res.get('has_discounted_price')
 
     @api.multi
     def website_publish_button(self):

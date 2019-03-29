@@ -3,12 +3,12 @@ odoo.define('website_sale_wishlist.wishlist', function (require) {
 
 var publicWidget = require('web.public.widget');
 var wSaleUtils = require('website_sale.utils');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 
-// ProductConfiguratorMixin events are overridden on purpose here
+// VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(ProductConfiguratorMixin, {
+publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
     events: {
         'click #my_wish': '_onClickMyWish',

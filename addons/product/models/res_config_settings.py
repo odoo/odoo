@@ -13,7 +13,8 @@ class ResConfigSettings(models.TransientModel):
              " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies.")
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
-    group_product_variant = fields.Boolean("Variants and Options", implied_group='product.group_product_variant')
+    group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
+    module_sale_product_configurator = fields.Boolean("Product Configurator")
     group_stock_packaging = fields.Boolean('Product Packagings',
         implied_group='product.group_stock_packaging')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
@@ -33,6 +34,19 @@ class ResConfigSettings(models.TransientModel):
         ('1', 'Cubic Feet'),
     ], 'Volume unit of measure', config_parameter='product.volume_in_cubic_feet', default='0')
 
+    @api.onchange('group_product_variant')
+    def _onchange_group_product_variant(self):
+        """The product Configurator requires the product variants activated.
+        If the user disables the product variants -> disable the product configurator as well"""
+        if self.module_sale_product_configurator and not self.group_product_variant:
+            self.module_sale_product_configurator = False
+
+    @api.onchange('module_sale_product_configurator')
+    def _onchange_module_sale_product_configurator(self):
+        """The product Configurator requires the product variants activated
+        If the user enables the product configurator -> enable the product variants as well"""
+        if self.module_sale_product_configurator and not self.group_product_variant:
+            self.group_product_variant = True
 
     @api.model
     def get_values(self):

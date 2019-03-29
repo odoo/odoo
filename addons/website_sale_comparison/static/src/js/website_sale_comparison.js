@@ -4,16 +4,16 @@ odoo.define('website_sale_comparison.comparison', function (require) {
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 var website_sale_utils = require('website_sale.utils');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-// ProductConfiguratorMixin events are overridden on purpose here
+// VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-var ProductComparison = publicWidget.Widget.extend(ProductConfiguratorMixin, {
+var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     xmlDependencies: ['/website_sale_comparison/static/src/xml/comparison.xml'],
 
     template: 'product_comparison_template',
