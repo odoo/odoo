@@ -52,7 +52,7 @@ var FieldManagerMixin = {
                 if (event.data.force_save) {
                     return self.model.save(dataPointID).then(function () {
                         return self._confirmSave(dataPointID);
-                    }, function /* on_failure */ () {
+                    }).guardedCatch(function () {
                         return self._rejectSave(dataPointID);
                     });
                 } else if (options.notifyChange !== false) {
