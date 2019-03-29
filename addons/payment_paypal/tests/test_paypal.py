@@ -67,6 +67,7 @@ class PaypalForm(PaypalCommon):
             'return': urls.url_join(base_url, PaypalController._return_url),
             'notify_url': urls.url_join(base_url, PaypalController._notify_url),
             'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
+            'custom': '{"return_url": "/payment/process"}',
         }
 
         # check form result
@@ -140,7 +141,7 @@ class PaypalForm(PaypalCommon):
             'item_name': u'test_ref_2',
             'address_country': u'France',
             'charset': u'windows-1252',
-            'custom': u'',
+            'custom': u'{"return_url": "/payment/process"}',
             'notify_version': u'3.7',
             'address_name': u'Norbert Poilu',
             'pending_reason': u'multi_currency',

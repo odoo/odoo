@@ -75,9 +75,11 @@ return AbstractModel.extend({
                        .utc();
                 } else {
                     // default hours in the user's timezone
-                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
-                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
+                    start.hours(7);
+                    end.hours(19);
                 }
+                start.add(-this.getSession().getTZOffset(start), 'minutes');
+                end.add(-this.getSession().getTZOffset(end), 'minutes');
             }
         } else {
             start.add(-this.getSession().getTZOffset(start), 'minutes');
