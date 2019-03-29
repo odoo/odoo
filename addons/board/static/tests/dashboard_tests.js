@@ -756,6 +756,48 @@ QUnit.test('save two searches to dashboard', function (assert) {
     actionManager.destroy();
 });
 
+QUnit.test('save a action domain to dashboard', function (assert) {
+    // View domains are to be added to the dashboard domain
+    assert.expect(1);
+
+    var view_domain = ["display_name", "ilike", "a"];
+    var filter_domain = ["display_name", "ilike", "b"];
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.domain, [view_domain, filter_domain],
+                    "the correct domain should be sent");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+        domain: [view_domain],
+    });
+
+    // Add a filter
+    $('span.fa-filter').click();
+    $('.o_add_custom_filter:visible').click();
+    $('.o_searchview_extended_prop_value .o_input').val('b')
+    $('.o_apply_filter').click();
+    // Add it to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
+});
+
 QUnit.test('save to dashboard actions with flag keepSearchView', function (assert) {
     assert.expect(4);
 
