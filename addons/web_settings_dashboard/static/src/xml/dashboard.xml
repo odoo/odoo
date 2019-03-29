@@ -73,6 +73,9 @@
                 <p><strong>Invite new users:</strong></p>
                 <input class="o_user_emails o_input mt8" type="text" placeholder="Enter e-mail addresses"/>
                 <button class="btn btn-primary btn-block o_web_settings_dashboard_invite mt16" data-loading-text="Inviting..."><strong>Invite</strong></button>
+                <div class="mt-1 alert alert-success text-center">
+                    <div><p><small>Remember that each user will increase your monthly fee.<br/>Check out pricing on <a href="www.odoo.com/pricing">www.odoo.com/pricing.</a></small></p></div>
+                </div>
             </div>
             <div class="o_web_settings_dashboard_pending_users mt8">
                 <t t-if="pending_users.length">
