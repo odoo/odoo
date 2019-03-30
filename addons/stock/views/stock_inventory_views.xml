@@ -159,7 +159,7 @@
                 </group>
                 <notebook attrs="{'invisible':[('state','=','draft')]}">
                     <page string="Inventory Details" >
-                        <button name="action_reset_product_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
+                        <button name="action_reset_product_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user" confirm="Are you sure you want to set quantities to 0? This action can't be undone."/>
                         <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
                             <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
                                 <field name="product_tracking" invisible="1"/>
