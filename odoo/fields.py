@@ -418,7 +418,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # by default, computed fields are not stored, not copied and readonly
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
-            attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            attrs['readonly'] = attrs.get('readonly', not (attrs.get('inverse', False) or attrs.get('store', False)))
             attrs['context_dependent'] = attrs.get('context_dependent', True)
         if attrs.get('related'):
             # by default, related fields are not stored and not copied

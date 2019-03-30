@@ -119,7 +119,7 @@ class Lead(models.Model):
     zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country', string='Country', compute="_get_country_id", store=True)
     phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
@@ -271,8 +271,8 @@ class Lead(models.Model):
                 if values:
                     lead.update(values)
 
-    @api.onchange('state_id')
-    def _onchange_state(self):
+    @api.depends('state_id')
+    def _get_country_id(self):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
 

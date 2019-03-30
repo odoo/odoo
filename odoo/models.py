@@ -5265,6 +5265,9 @@ Fields:
                     if not target:
                         continue
                     invalids.append((field, target._ids))
+                    # do not recompute if a value is provided (on_change and default optimization)
+                    if (target==self) and (field.name in fnames):
+                        continue
                     # mark field to be recomputed on target
                     if field.compute_sudo:
                         target = target.sudo()
