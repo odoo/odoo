@@ -552,6 +552,15 @@ class Partner(models.Model):
 
     def write(self, vals):
         if vals.get('active') is False:
+            # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
+            # of partner.user_ids when you create a new user for this partner, see test test_70_archive_internal_partners
+            # You modified it in a previous commit, see original commit of this:
+            # https://github.com/odoo/odoo/commit/9d7226371730e73c296bcc68eb1f856f82b0b4ed
+            #
+            # RCO: when creating a user for partner, the user is automatically added in partner.user_ids.
+            # This is wrong if the user is not active, as partner.user_ids only returns active users.
+            # Hence this temporary hack until the ORM updates inverse fields correctly.
+            self.invalidate_cache(['user_ids'], self._ids)
             for partner in self:
                 if partner.active and partner.user_ids:
                     raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
@@ -763,6 +772,9 @@ class Partner(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         self = self.with_user(name_get_uid or self.env.uid)
+        # as the implementation is in SQL, we force the recompute of fields if necessary
+        self.recompute_fields(['display_name'])
+        self.flush()
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):

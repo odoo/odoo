@@ -209,6 +209,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
+            env.clear()
+
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
@@ -245,6 +247,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # need to commit any modification the module's installation or
             # update made to the schema or data so the tests can run
             # (separately in their own transaction)
+            module.flush()
             cr.commit()
 
             if tools.config.options['test_enable']:
@@ -268,6 +271,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
+            module.flush()
 
         if package.name is not None:
             registry._init_modules.add(package.name)

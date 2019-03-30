@@ -2589,7 +2589,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.balance = line.debit - line.credit
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state', 'company_id')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
@@ -3120,8 +3120,6 @@ class AccountMoveLine(models.Model):
                 # if the pair belongs to move being reverted, do not create CABA entry
                 if cash_basis and not (new_rec.debit_move_id + new_rec.credit_move_id).mapped('move_id.reversed_entry_id'):
                     new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec)
-        self.recompute()
-
         return debit_moves+credit_moves
 
     def auto_reconcile_lines(self):
@@ -3697,7 +3695,6 @@ class AccountPartialReconcile(models.Model):
                                     'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                     'partner_id': line.partner_id.id,
                                 })
-        self.recompute()
         if newly_created_move:
             if move_date > (self.company_id.period_lock_date or date.min) and newly_created_move.date != move_date:
                 # The move date should be the maximum date between payment and invoice (in case

@@ -183,25 +183,6 @@ class Registry(Mapping):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
 
-    @lazy_property
-    def field_sequence(self):
-        """ Return a function mapping a field to an integer. The value of a
-            field is guaranteed to be strictly greater than the value of the
-            field's dependencies.
-        """
-        # map fields on their dependents
-        dependents = {
-            field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
-            for model in self.values()
-            for field in model._fields.values()
-        }
-        # sort them topologically, and associate a sequence number to each field
-        mapping = {
-            field: num
-            for num, field in enumerate(reversed(topological_sort(dependents)))
-        }
-        return mapping.get
-
     def descendants(self, model_names, *kinds):
         """ Return the models corresponding to ``model_names`` and all those
         that inherit/inherits from them.
@@ -300,9 +281,6 @@ class Registry(Mapping):
             func = self._post_init_queue.popleft()
             func()
 
-        if models:
-            models[0].recompute()
-
         # make sure all tables are present
         self.check_tables_exist(cr)
 
@@ -317,12 +295,10 @@ class Registry(Mapping):
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
             _logger.info("Models have no table: %s.", ", ".join(missing))
-            # recreate missing tables following model dependencies
-            deps = {name: model._depends for name, model in env.items()}
-            for name in topological_sort(deps):
-                if name in missing:
-                    _logger.info("Recreate table of model %s.", name)
-                    env[name].init()
+            # recreate missing tables
+            for name in missing:
+                _logger.info("Recreate table of model %s.", name)
+                env[name].init()
             # check again, and log errors if tables are still missing
             missing_tables = set(table2model).difference(existing_tables(cr, table2model))
             for table in missing_tables:

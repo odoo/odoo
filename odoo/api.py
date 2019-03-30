@@ -39,6 +39,7 @@ __all__ = [
     'call_kw',
 ]
 
+import copy
 import logging
 from collections import defaultdict, Mapping
 from contextlib import contextmanager
@@ -364,11 +365,13 @@ def call_kw(model, name, args, kwargs):
     method = getattr(type(model), name)
     api = getattr(method, '_api', None)
     if api == 'model':
-        return _call_kw_model(method, model, args, kwargs)
+        result = _call_kw_model(method, model, args, kwargs)
     elif api == 'model_create':
-        return _call_kw_model_create(method, model, args, kwargs)
+        result = _call_kw_model_create(method, model, args, kwargs)
     else:
-        return _call_kw_multi(method, model, args, kwargs)
+        result = _call_kw_multi(method, model, args, kwargs)
+    model.recompute()
+    return result
 
 
 class Environment(Mapping):
@@ -562,16 +565,32 @@ class Environment(Mapping):
         """
         self.cache.invalidate()
         self.all.todo.clear()
+        # DLE P17: needs to empty towrite on exception/rollback,
+        # otherwise there are pending write transaction which make no sense after the rollback/exception occured.
+        self.all.towrite.clear()
 
     @contextmanager
     def clear_upon_failure(self):
         """ Context manager that clears the environments (caches and fields to
             recompute) upon exception.
         """
+        # DLE P14: Not really sure about this one.
+        # Basically it's for the self.assertRaises of tests,
+        # which can happen in the middle of a test, and it should not rollback the transaction.
+        # Before it was enough to empty the todo and invalidate the cache, but now
+        # that the computation is done when necessary, the todo list and to write list must be preserved.
+        # The only way I see to do that is to copy the cache, todo and towrite somehow, and to apply it back after the "With"
+        # test `test_auto_join`
+        # with self.assertRaises(NotImplementedError):
+        #     partner_obj.search([('category_id.name', '=', 'foo')])
+        todo = dict(self.all.todo)
+        towrite = copy.deepcopy(self.all.towrite)
         try:
             yield
         except Exception:
             self.clear()
+            self.all.todo = todo
+            self.all.towrite = towrite
             raise
 
     def protected(self, field):
@@ -599,8 +618,13 @@ class Environment(Mapping):
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """
-        ids = {rid for recs in self.all.todo.get(field, ()) for rid in recs.ids}
-        return self[field.model_name].browse(ids)
+        rec_lists = self.all.todo.get(field, ())
+        if not rec_lists:
+            return ()
+        result = rec_lists[0]
+        for records in rec_lists[1:]:
+            result += records
+        return result
 
     def check_todo(self, field, record):
         """ Check whether ``field`` must be recomputed on ``record``, and if so,
@@ -611,22 +635,35 @@ class Environment(Mapping):
                 return recs
 
     def add_todo(self, field, records):
-        """ Mark ``field`` to be recomputed on ``records``. """
+        """ Mark ``field`` to be recomputed on ``records``, return newly added records. """
+        if not records:
+            return records
         recs_list = self.all.todo.setdefault(field, [])
+        result = records
         for i, recs in enumerate(recs_list):
             if recs.env == records.env:
                 # only add records if not already in the recordset, much much
                 # cheaper in case recs is big and records is a singleton
                 # already present
-                if not records <= recs:
-                    recs_list[i] |= records
-                break
+                result -= recs_list[i]
+                try:
+                    if not records <= recs:
+                        recs_list[i] |= result
+                    break
+                except TypeError:
+                    # same field of another object already exists
+                    pass
         else:
             recs_list.append(records)
+        return result
 
+    # FP NOTE: why is this so complex, rewrite it?
     def remove_todo(self, field, records):
         """ Mark ``field`` as recomputed on ``records``. """
-        recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        try:
+            recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        except TypeError:
+            recs_list = []
         recs_list = [r for r in recs_list if r]
         if recs_list:
             self.all.todo[field] = recs_list
@@ -639,8 +676,8 @@ class Environment(Mapping):
         """ Return a pair ``(field, records)`` to recompute.
             The field is such that none of its dependencies must be recomputed.
         """
-        field = min(self.all.todo, key=self.registry.field_sequence)
-        return field, self.all.todo[field][0]
+        field = next(iter(self.all.todo))
+        return field
 
     @property
     def recompute(self):
@@ -659,7 +696,11 @@ class Environment(Mapping):
         """ Return the key to store the value of ``field`` in cache, the full
             cache key being ``(key, field, record.id)``.
         """
-        return self if field.context_dependent else self._cache_key
+        # DLE P21: If a value is set in cache by sudo, and then the regular user (e.g. public) tries to access
+        # the field value, no security check were done. Test `test_ir_http_attachment_access`
+        # Either, we separate the cache by user, either we need to check model and field read access at each __getitem__
+        # Not sure what is the most performant.
+        return self if field.context_dependent else self.uid
 
 
 class Environments(object):
@@ -667,9 +708,10 @@ class Environments(object):
     def __init__(self):
         self.envs = WeakSet()           # weak set of environments
         self.cache = Cache()            # cache for all records
-        self.todo = {}                  # recomputations {field: [records]}
-        self.in_draft = False           # flag for draft
+        self.todo = {}                  # recomputations {field: [records]}  FP NOTE: should be renamed to "tocompute"
+        self.mode = False               # flag for draft/onchange
         self.recompute = True
+        self.towrite = defaultdict(lambda : defaultdict(dict))  # {model: {id: {field: value}}}
 
     def add(self, env):
         """ Add the environment ``env``. """
@@ -690,6 +732,12 @@ class Cache(object):
         """ Return whether ``record`` has a value for ``field``. """
         key = record.env.cache_key(field)
         return record.id in self._data[key].get(field, ())
+
+    def get_all_values(self, record, field):
+        """ Return the value of ``field`` for ``record``. """
+        key = record.env.cache_key(field)
+        # DLE P7: Dictionary changed of size during iteration
+        return list(self._data[key].get(field, {}).values())
 
     def get(self, record, field):
         """ Return the value of ``field`` for ``record``. """
@@ -714,7 +762,10 @@ class Cache(object):
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
         key = record.env.cache_key(field)
-        del self._data[key][field][record.id]
+        try:
+            del self._data[key][field][record.id]
+        except KeyError:
+            pass
 
     def contains_value(self, record, field):
         """ Return whether ``record`` has a regular value for ``field``. """
@@ -768,18 +819,32 @@ class Cache(object):
         ids = list(self._data[key][field])
         return model.browse(ids)
 
-    def get_missing_ids(self, records, field):
+    def get_present_records(self, records, field):
+        """ Return the subset of ``records`` that have a value for ``field``. """
+        key = records.env.cache_key(field)
+        ids = self._data[key][field]
+        return records.browse([it for it in records._ids if it in ids])
+
+    def get_missing_ids(self, records, field, ids, limit=1000):
         """ Return the ids of ``records`` that have no value for ``field``. """
         key = records.env.cache_key(field)
         field_cache = self._data[key][field]
-        for record_id in records._ids:
-            if record_id not in field_cache:
-                yield record_id
+        result = []
+        for record_id in ids:
+            # DLE P57: avoid to return the same id multiple times
+            # This prevented to load `stock/data/stock_demo.xml` because in `_compute_company_dependent`
+            # `Property.get_multi(self.name, self.model_name, records.ids)` is not coded to support multiple times the same id passed in the browse record,
+            # and the values ended to something like `stock.location(stock.location(stock.location(stock.location(14,),),),),`
+            if record_id and record_id not in result and (record_id not in field_cache):
+                result.append(record_id)
+                limit = limit-1
+                if limit<1: break
+        return result
 
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """
         src, dst = records.env, env
-        for src_key, dst_key in [(src, dst), (src._cache_key, dst._cache_key)]:
+        for src_key, dst_key in [(src, dst), (src.uid, dst.uid)]:
             if src_key == dst_key:
                 break
             src_cache = self._data[src_key]
@@ -810,6 +875,9 @@ class Cache(object):
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
+        # flush fields to be recomputed before evaluating the cache
+        env['res.partner'].recompute()
+
         # make a full copy of the cache, and invalidate it
         dump = defaultdict(dict)
         for key in [env, env._cache_key]:

@@ -178,6 +178,7 @@ class One2manyCase(TransactionCase):
             'res_model': record._name,
             'res_id': record.id,
         })
+        attachment.flush()
         with self.assertQueryCount(1):
             self.assertEqual(attachment.name, record.display_name,
                              "field should be computed")
@@ -195,6 +196,7 @@ class One2manyCase(TransactionCase):
 
         # writing on res_id must recompute name and invalidate attachment_ids
         attachment.res_id = record.id
+        attachment.flush()
         with self.assertQueryCount(1):
             self.assertEqual(attachment.name, record.display_name,
                              "field should be recomputed")
@@ -210,14 +212,15 @@ class One2manyCase(TransactionCase):
         message = discussion.messages[0]
         message.discussion = False
 
+        # DLE P54: a computed stored field should not depend on the context
         # writing on the one2many and actually modifying the relation must
         # trigger recomputation of fields that depend on its inverse many2one
-        self.assertNotIn(message, discussion.messages)
-        discussion.with_context(compute_name='X').write({'messages': [(4, message.id)]})
-        self.assertEqual(message.name, 'X')
+        # self.assertNotIn(message, discussion.messages)
+        # discussion.with_context(compute_name='X').write({'messages': [(4, message.id)]})
+        # self.assertEqual(message.name, 'X')
 
         # writing on the one2many without modifying the relation should not
         # trigger recomputation of fields that depend on its inverse many2one
-        self.assertIn(message, discussion.messages)
-        discussion.with_context(compute_name='Y').write({'messages': [(4, message.id)]})
-        self.assertEqual(message.name, 'X')
+        # self.assertIn(message, discussion.messages)
+        # discussion.with_context(compute_name='Y').write({'messages': [(4, message.id)]})
+        # self.assertEqual(message.name, 'X')

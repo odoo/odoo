@@ -684,66 +684,51 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Setup of field triggers
     #
-    # The triggers of ``self`` are a collection of pairs ``(field, path)`` of
-    # fields that depend on ``self``. When ``self`` is modified, it invalidates
-    # the cache of each ``field``, and determines the records to recompute based
-    # on ``path``. See method ``modified`` below for details.
+    # The triggers of a field F is a tree that contains the fields that depend
+    # on F, together with the fields to inverse to find out which records to
+    # recompute.
     #
-
-    def resolve_deps(self, model, path0=[], seen=frozenset()):
-        """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
-            where ``path`` is an optional list of field names.
-        """
-        model0 = model
-        result = []
-
-        # add self's own dependencies
-        for dotnames in self.depends:
-            if dotnames == self.name:
-                _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, path0
-            for fname in dotnames.split('.'):
-                field = model._fields[fname]
-                result.append((model, field, path))
-                model = model0.env.get(field.comodel_name)
-                path = None if path is None else path + [fname]
-
-        # add self's model dependencies
-        for mname, fnames in model0._depends.items():
-            model = model0.env[mname]
-            for fname in fnames:
-                field = model._fields[fname]
-                result.append((model, field, None))
-
-        # add indirect dependencies from the dependencies found above
-        seen = seen.union([self])
-        for model, field, path in list(result):
-            # Fields that depend on the inverse of a one2many do not explicitly
-            # depend on the one2many. This avoids useless recomputations when
-            # writing on the one2many without actually modifying it. Actual
-            # modifications do write on the inverse, and therefore trigger the
-            # expected recomputations.
-            if field.type in ('one2many', 'many2many'):
-                for inv_field in model._field_inverses[field]:
-                    inv_model = model0.env[inv_field.model_name]
-                    inv_path = None if path is None else path + [field.name]
-                    result.append((inv_model, inv_field, inv_path))
-            if not field.store and field not in seen:
-                result += field.resolve_deps(model, path, seen)
-
-        return result
+    # For instance, assume that G depends on F, H depends on X.F, I depends on
+    # W.X.F, and J depends on Y.F. The triggers of F will be the tree:
+    #
+    #                                   [G]
+    #                                 X/   \Y
+    #                               [H]     [J]
+    #                             W/
+    #                           [I]
+    #
+    # This tree provides perfect support for the trigger mechanism:
+    # when F is # modified on records,
+    #  - mark G to recompute on records,
+    #  - mark H to recompute on inverse(X, records),
+    #  - mark I to recompute on inverse(W, inverse(X, records)),
+    #  - mark J to recompute on inverse(Y, records).
 
     def setup_triggers(self, model):
-        """ Add the necessary triggers to invalidate/recompute ``self``. """
-        for model, field, path in self.resolve_deps(model):
-            if self.store and not field.store:
-                _logger.info("Field %s depends on non-stored field %s", self, field)
-            if field is not self:
-                path_str = None if path is None else ('.'.join(path) or 'id')
-                model._field_triggers.add(field, (self, path_str))
-            elif path:
-                self.recursive = True
-                model._field_triggers.add(field, (self, '.'.join(path)))
+        def add_trigger(field, path):
+            """ add a trigger on field to recompute self """
+            field_model = model.env[field.model_name]
+            node = field_model._field_triggers.setdefault(field, {})
+            for f in reversed(path):
+                node = node.setdefault(f, {})
+            node.setdefault(None, []).append(self)
+
+        for dotnames in self.depends:
+            field_model = model
+            path = []                   # fields from model to field_model
+            for fname in dotnames.split('.'):
+                field = field_model._fields[fname]
+                add_trigger(field, path)
+
+                if (field is self) and path:
+                    self.recursive = True
+
+                path.append(field)
+                if field.type in ('one2many', 'many2many'):
+                    for inv_field in field_model._field_inverses[field]:
+                        add_trigger(inv_field, path)
+
+                field_model = model.env.get(field.comodel_name)
 
     ############################################################################
     #
@@ -987,181 +972,100 @@ class Field(MetaField('DummyField', (object,), {})):
         if record is None:
             return self         # the field is accessed through the owner class
 
+        env = record.env
         if record._ids:
             # only a single record may be accessed
             record.ensure_one()
-            try:
-                value = record.env.cache.get(record, self)
-            except KeyError:
-                # cache miss, determine value and retrieve it
-                if record.id:
-                    self.determine_value(record)
+            if env.check_todo(self, record) and record not in env.protected(self):
+                recs = self.recursive and record or env.field_todo(self)
+                self.compute_value(recs)
+
+            if not env.cache.contains(record, self):
+                if self.store and record.id:
+                    recs = record._in_cache_without(self)
+                    try:
+                        recs._fetch_field(self)
+                    except AccessError:
+                        record._fetch_field(self)
+
+                elif self.compute:
+                    recs = self.recursive and record or record._in_cache_without(self)
+                    try:
+                        # DLE P35: `test_11_computed_access`
+                        # Prefetch compute fields for which we don't have the access. Same case than just above here
+                        self.compute_value(recs)
+                    except AccessError:
+                        self.compute_value(record)
+
                 else:
-                    self.determine_draft_value(record)
-                value = record.env.cache.get(record, self)
+                    env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
+
+            # raise access rights here instead of in the end of read()
+            value = env.cache.get(record, self)
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
 
         return self.convert_to_record(value, record)
 
-    def __set__(self, record, value):
-        """ set the value of field ``self`` on ``record`` """
-        env = record.env
-
+    def __set__(self, records, value):
+        """ set the value of field ``self`` on ``records`` """
+        # DLE P34: `test_01_basic_set_assertion
+        # You should not be able to assign on a single record. Or if you believe we should from now on, then the test must be changed.
         # only a single record may be updated
-        record.ensure_one()
-
-        # adapt value to the cache level
-        value = self.convert_to_cache(value, record)
-
-        if env.in_draft or not record.id:
-            # determine dependent fields
-            spec = self.modified_draft(record)
-
-            # set value in cache
-            record.env.cache.set(record, self, value)
-
-            if not record.id:
-                # set inverse fields on new records in the comodel
-                if self.relational:
-                    inv_recs = record[self.name].filtered(lambda r: not r.id)
-                    if inv_recs:
-                        for invf in record._field_inverses[self]:
-                            invf._update(inv_recs, record)
-
-            # determine more dependent fields, and invalidate them
-            if self.relational:
-                spec += self.modified_draft(record)
-            env.cache.invalidate(spec)
-
-        elif (self.store or self.inverse or self.inherited):
-            # Write to database
-            write_value = self.convert_to_write(self.convert_to_record(value, record), record)
-            record.write({self.name: write_value})
-
+        records.ensure_one()
+        # DLE P18: need to convert to write the value, at least for *2many
+        # Some write overwrites expects the *2many values to be tuple commands and not browse record
+        # See https://github.com/odoo/odoo/blob/659ff0da13951d0b940c24a070a4a7e51b0897bb/odoo/addons/base/models/res_users.py#L934
+        # test `test_bindings`, `action2.groups_id += group`
+        write_value = self.convert_to_write(value, records) if isinstance(value, BaseModel) else value
+        # DLE P29: issue with `write` overwrite of `/mail/models/mail_thread.py`
+        # Before calling super, it tried to get the value of computed field, which therefore recalled "write"
+        # therefore recalling the write overwrite of `mail`, therefore creating an infinite loop.
+        if self.compute:
+            not_protected = (records - records.env.protected(self))
+            if not_protected:
+                not_protected.write({self.name: write_value})
+            protecteds = (records & records.env.protected(self))
+            if protecteds:
+                for record in protecteds:
+                    record.env.cache.set(record, self, self.convert_to_cache(value, record))
+                    if record.id and self.store:
+                        record.env.all.towrite[record._name][record.id][self.name] = write_value
         else:
-            # Update the cache unless value contains a new record
-            if not (self.relational and not all(value)):
-                record.env.cache.set(record, self, value)
+            records.write({self.name: write_value})
+
 
     ############################################################################
     #
     # Computation of field values
     #
 
-    def _compute_value(self, records):
-        """ Invoke the compute method on ``records``. """
-        # initialize the fields to their corresponding null value in cache
-        fields = records._field_computed[self]
-        cache = records.env.cache
-        for field in fields:
-            for record in records:
-                cache.set(record, field, field.convert_to_cache(False, record, validate=False))
-        if isinstance(self.compute, str):
-            getattr(records, self.compute)()
-        else:
-            self.compute(records)
-
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
         fields = records._field_computed[self]
-        with records.env.do_in_draft(), records.env.protecting(fields, records):
-            try:
-                self._compute_value(records)
-            except (AccessError, MissingError):
-                # some record is forbidden or missing, retry record by record
-                for record in records:
-                    try:
-                        self._compute_value(record)
-                    except Exception as exc:
-                        record.env.cache.set_failed(record, [self], exc)
-
-    def determine_value(self, record):
-        """ Determine the value of ``self`` for ``record``. """
-        env = record.env
-
-        if self.store:
-            # this is a stored field or an old-style function field
-            if self.compute:
-                # this is a stored computed field, check for recomputation
-                recs = record._recompute_check(self)
-                if recs:
-                    # recompute the value (only in cache)
-                    if self.recursive:
-                        recs = record
-                    self.compute_value(recs)
-                    # HACK: if result is in the wrong cache, copy values
-                    if recs.env != env:
-                        computed = record._field_computed[self]
-                        for source, target in zip(recs, recs.with_env(env)):
-                            try:
-                                values = {f.name: source[f.name] for f in computed}
-                                target._update_cache(values, validate=False)
-                            except MissingError as exc:
-                                target._cache.set_failed(target._fields, exc)
-                    # the result is saved to database by BaseModel.recompute()
-                    return
-
-            # read the field from database
-            record._prefetch_field(self)
-
-        elif self.compute:
-            # this is either a non-stored computed field, or a stored computed
-            # field in onchange mode
-            if self.recursive:
-                self.compute_value(record)
+        # DLE P29: This is part of P29. See other comment.
+        with records.env.protecting(fields, records):
+            if isinstance(self.compute, str):
+                getattr(records, self.compute)()
             else:
-                recs = record._in_cache_without(self)
-                self.compute_value(recs)
+                self.compute(records)
 
-        else:
-            # this is a non-stored non-computed field
-            record.env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
-
-    def determine_draft_value(self, record):
-        """ Determine the value of ``self`` for the given draft ``record``. """
-        if self.compute:
-            if self.compute_sudo and not record.env.su:
-                record_sudo = record.sudo()
-                copy_cache(record, record_sudo.env)
-                self.compute_value(record_sudo)
-                record[self.name] = record_sudo[self.name]
-            else:
-                self.compute_value(record)
-            return
-
-        origin = record._origin
-        if origin:
-            # retrieve value from original record
-            value = self.convert_to_cache(origin[self.name], record)
-            return record.env.cache.set(record, self, value)
-
-        if self.type == 'many2one' and self.delegate:
-            # special case: parent records are new as well
-            parent = record.env[self.comodel_name].new()
-            value = self.convert_to_cache(parent, record)
-            return record.env.cache.set(record, self, value)
-
-        null = self.convert_to_cache(False, record, validate=False)
-        record.env.cache.set_special(record, self, lambda: null)
-
-        defaults = record.default_get([self.name])
-        if self.name in defaults:
-            # The null value above is necessary to convert x2many field values.
-            # For instance, converting [(4, id)] accesses the field's current
-            # value, then adds the given id. Without an initial value, the
-            # conversion ends up here to determine the field's value, and this
-            # generates an infinite recursion.
-            value = self.convert_to_cache(defaults[self.name], record)
-            return record.env.cache.set(record, self, value)
+        # even if __set__ already removed the todo, compute method might not set a value
+        for field in fields:
+            records.env.remove_todo(field, records)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, str):
-            getattr(records, self.inverse)()
-        else:
-            self.inverse(records)
+        # DLE P38: `test_13_inverse`
+        fields = records._field_computed[self]
+        # if we are in the inverse of a field, don't call its compute
+        records = records - records.env.protected(self)
+        with records.env.protecting(fields, records):
+            if isinstance(self.inverse, str):
+                getattr(records, self.inverse)()
+            else:
+                self.inverse(records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
@@ -1174,33 +1078,6 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Notification when fields are modified
     #
-
-    def modified_draft(self, record):
-        """ Same as :meth:`modified`, but in draft mode. """
-        env = record.env
-
-        # invalidate the fields on the records in cache that depend on
-        # ``record``, except fields currently being computed
-        spec = []
-        for field, path in record._field_triggers[self]:
-            if not field.compute:
-                # Note: do not invalidate non-computed fields. Such fields may
-                # require invalidation in general (like *2many fields with
-                # domains) but should not be invalidated in this case, because
-                # we would simply lose their values during an onchange!
-                continue
-
-            if path == 'id' and field.model_name == record._name:
-                target = record
-            else:
-                target = env.cache.get_records(env[field.model_name], field)
-                target = target.filtered(lambda t: not t.id)
-            target -= env.protected(field)
-
-            if target:
-                spec.append((field, target._ids))
-
-        return spec
 
 
 class Boolean(Field):
@@ -1665,13 +1542,14 @@ class Date(Field):
         if not value:
             return False
         if isinstance(value, datetime):
-            raise TypeError("%s (field %s) must be string or date, not datetime." % (value, self))
-        return self.from_string(value)
+            # DLE P28: crm demo data pass datetimes to date fields.
+            value = value.date()
+        return self.to_date(value)
 
     def convert_to_export(self, value, record):
         if not value:
             return ''
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.to_date(value) if record._context.get('export_raw_data') else ustr(value)
 
 
 class Datetime(Field):
@@ -1750,10 +1628,8 @@ class Datetime(Field):
                     raise ValueError("Datetime field expects a naive datetime: %s" % value)
                 return value
             return datetime.combine(value, time.min)
-        try:
-            return datetime.strptime(value[:DATETIME_LENGTH], DATETIME_FORMAT)
-        except ValueError:
-            return datetime.strptime(value, DATE_FORMAT)
+
+        return datetime.strptime(value, DATETIME_FORMAT[:len(value)-2])
 
     # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
     # be removed after V12
@@ -1774,15 +1650,16 @@ class Datetime(Field):
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, date) and not isinstance(value, datetime):
-            raise TypeError("%s (field %s) must be string or datetime, not date." % (value, self))
-        return self.from_string(value)
+        # DLE P36:
+        # `test_27_company_dependent`
+        # Do not force to pass datetime, accept date as well.
+        return self.to_datetime(value)
 
     def convert_to_export(self, value, record):
         if not value:
             return ''
         value = self.convert_to_display_name(value, record)
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.to_datetime(value) if record._context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record):
         assert record, 'Record expected'
@@ -1834,6 +1711,15 @@ class Binary(Field):
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
             return bytes(value)
+        # DLE P25: test `TestFileSeparator`
+        # When assigning a binary field value in a create/write,
+        # it is supposed to be bytes, but in some case it is not, it's strings.
+        # Before, they we put in cache as bytes despite the fact we set them using string because they were read from
+        # database, and there they were converted to bytes
+        # Here, as we store directly in cache on create without reading from the database, we need to encode the strings
+        # to bytes when needed.
+        if isinstance(value, str):
+            return value.encode()
         if isinstance(value, int) and \
                 (record._context.get('bin_size') or
                  record._context.get('bin_size_' + self.name)):
@@ -2248,48 +2134,24 @@ class Many2one(_Relational):
         return super(Many2one, self).convert_to_onchange(value, record, names)
 
 
-class _RelationalMultiUpdate(object):
-    """ A getter to update the value of an x2many field, without reading its
-        value until necessary.
-    """
-    __slots__ = ['record', 'field', 'value']
-
-    def __init__(self, record, field, value):
-        self.record = record
-        self.field = field
-        self.value = value
-
-    def __call__(self):
-        # determine the current field's value, and update it in cache only
-        record, field, value = self.record, self.field, self.value
-        cache = record.env.cache
-        cache.remove(record, field)
-        val = field.convert_to_cache(record[field.name] | value, record, validate=False)
-        cache.set(record, field, val)
-        return val
-
-
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
     _slots = {
-        'context_dependent': True,      # depends on context (active_test)
+        # DLE P9: If there is a change in the context, the one2many fields cache values of the initial context is not recomputed
+        # See test test_70_archive_internal_partners
+        'context_dependent': False,      # depends on context (active_test)
     }
-
     def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        """ Update the cached value of ``self`` for ``records`` with ``value``, return True if everything is in cache. """
         if not isinstance(records, BaseModel):
             # the inverse of self is a non-relational field; do not update in
             # this case, as we do not know whether the records are the ones that
             # value makes reference to (via a res_model/res_id pair)
             return
         cache = records.env.cache
+        result = True
         for record in records:
-            special = cache.get_special(record, self)
-            if isinstance(special, _RelationalMultiUpdate):
-                # include 'value' in the existing _RelationalMultiUpdate; this
-                # avoids reading the field's value (which may be large)
-                special.value |= value
-            elif cache.contains(record, self):
+            if cache.contains(record, self):
                 try:
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(record, self, val)
@@ -2297,7 +2159,8 @@ class _RelationalMulti(_Relational):
                     # delay the failure until the field is necessary
                     cache.set_failed(record, [self], exc)
             else:
-                cache.set_special(record, self, _RelationalMultiUpdate(record, self, value))
+                result = False
+        return result
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -2780,7 +2643,17 @@ class Many2many(_RelationalMulti):
         # determine old relation {x: ys}
         old_relation = defaultdict(set)
         if not create:
-            clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
+            # DLE P53: it was possible to add links to many2many fields while you had not the right to access the comodel records,
+            # but then it wasn't possible to remove this link using [(5,)], as it only removed the links of the records to which you had the read access right
+            # e.g. you have the access to self.id1, but not to self.id2
+            # the below added to the current records links to self.id1 & self.id2
+            # `container_user.write({'some_ids': [(6, 0, [self.id1, self.id2])]})`
+            # then, the below only removed self.id1, as you had no the access to self.id2
+            # `container_user.write({'some_ids': [(5,)]})`
+            # It should behave as many2one field: You can write in many2one field a record to which you don't have the access,
+            # as well as emptying the many2one field from this record to which you do not had the access.
+            # test `test_many2many`
+            tables = ['"%s"' % model.env[comodel._name]._table]
             if '"%s"' % self.relation not in tables:
                 tables.append('"%s"' % self.relation)
             query = """
@@ -2789,10 +2662,10 @@ class Many2many(_RelationalMulti):
             """.format(
                 rel=self.relation, id1=self.column1, id2=self.column2,
                 table=comodel._table, tables=",".join(tables),
-                cond=" AND ".join(clauses) if clauses else "1=1",
+                cond="1=1",
             )
             ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
-            cr.execute(query, [tuple(ids)] + params)
+            cr.execute(query, [tuple(ids)])
             for x, y in cr.fetchall():
                 old_relation[x].add(y)
 
@@ -2863,6 +2736,11 @@ class Many2many(_RelationalMulti):
                 self.relation, self.column1, self.column2, ", ".join(["%s"] * len(pairs)),
             )
             cr.execute(query, pairs)
+            # DLE P35: Update the many2many field cache with the new added values
+            # `odoo/addons/test_new_api/tests/test_new_fields.py`
+            # `test_11_stored`
+            for record_id, co_record_ids in new_relation.items():
+                self._update(model.browse(record_id), comodel.browse(co_record_ids))
 
         # process pairs to remove
         pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]

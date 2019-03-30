@@ -535,6 +535,7 @@ class Task(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
+            # DLE NOTE: To check
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 

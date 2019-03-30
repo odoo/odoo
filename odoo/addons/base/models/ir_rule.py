@@ -194,11 +194,18 @@ class IrRule(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super(IrRule, self).create(vals_list)
+        # DLE P33: tests
+        self.flush()
         self.clear_caches()
         return res
 
     def write(self, vals):
         res = super(IrRule, self).write(vals)
+        # DLE P33: tests
+        # - odoo/addons/test_access_rights/tests/test_feedback.py
+        # - odoo/addons/test_access_rights/tests/test_ir_rules.py
+        # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
+        self.flush()
         self.clear_caches()
         return res
 

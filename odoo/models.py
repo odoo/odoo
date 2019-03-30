@@ -131,6 +131,14 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
+def trigger_tree_merge(node1, node2):
+    for key, val in node2.items():
+        if key is None:
+            node1.setdefault(None, set())
+            node1[None].update(val)
+        else:
+            node1.setdefault(key, {})
+            trigger_tree_merge(node1[key], node2[key])
 
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
@@ -279,9 +287,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
-
-    _depends = {}               # dependencies of models backed up by sql views
-                                # {model_name: field_names, ...}
 
     # default values for _transient_vacuum()
     _transient_check_count = 0
@@ -1100,6 +1105,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 except ValidationError as e:
                     raise
                 except Exception as e:
+                    # DLE P24: Why recall check after catching an exception coming from it?
+                    # FP NOTE: this makes it difficult to debug bugs in constraints, I would remove the try: and the 2 except
+                    #          if it's not a ValidationError, it's a bug and exception should propagate
                     raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
 
     @api.model
@@ -1654,7 +1662,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             name
             for name, field in self._fields.items()
             if name not in values
-            if self._log_access and name not in MAGIC_COLUMNS
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
@@ -2379,7 +2386,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             def recompute(field):
                 _logger.info("Storing computed values of %s", field)
                 recs = self.with_context(active_test=False).search([])
-                recs._recompute_todo(field)
+                # DLE P15: we are in the database init, (convert models to database table/columns)
+                # at the end end of the initialization, stored computed fields must be computed right away.
+                # add_todo is nice to add the fields to recompute, but in this case it was never called after the database init,
+                # and the computed stored field todo were lost.
+                # test `test_amount_to_text_10`
+                field.compute_value(recs)
 
             for field in self._fields.values():
                 if not field.store:
@@ -2569,7 +2581,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # 4. initialize more field metadata
         cls._field_computed = {}            # fields computed with the same method
         cls._field_inverses = Collector()   # inverse fields for related fields
-        cls._field_triggers = Collector()   # list of (field, path) to invalidate
+        cls._field_triggers = {}            # {depfield: {depfield: {...}, None: [compute_fields]}}
 
         cls._setup_done = True
 
@@ -2708,8 +2720,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 description = self.env['ir.model']._get(self._name).name
                 if not self.env.user.has_group('base.group_no_one'):
                     raise AccessError(
-                        _('The requested operation cannot be completed due to security restrictions. '
-                          'Please contact your system administrator.\n\n(Document type: %(document_kind)s (%(document_model)s), Operation: %(operation)s)') % {
+                        _('You do not have the right the fields "%(fields)s" on %(document_kind)s (%(document_model)s). '\
+                          'Please contact your system administrator.\n\n(Operation: %(operation)s)') % {
+                        'fields': ','.join(list(invalid_fields)),
                         'document_kind': description,
                         'document_model': self._name,
                         'operation': operation,
@@ -2767,33 +2780,19 @@ Fields:
         :raise AccessError: if user has no read rights on some of the given
                 records
         """
-        # check access rights
-        self.check_access_rights('read')
         fields = self.check_field_access_rights('read', fields)
 
-        # split fields into stored and computed fields
-        stored, inherited, computed = [], [], []
-        for name in fields:
-            field = self._fields.get(name)
-            if field:
-                if field.store:
-                    stored.append(name)
-                elif field.base_field.store:
-                    inherited.append(name)
-                else:
-                    computed.append(name)
-            else:
-                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
+        self.recompute_fields(fields)
 
         # fetch stored fields from the database to the cache; this should feed
         # the prefetching of secondary records
-        self._read_from_database(stored, inherited)
+        self._read(fields)
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
-        for name in (stored + inherited + computed):
+        for name in fields:
             convert = self._fields[name].convert_to_read
             for record, vals in data:
                 # missing records have their vals empty
@@ -2807,13 +2806,10 @@ Fields:
 
         return result
 
-    def _prefetch_field(self, field):
+    def _fetch_field(self, field):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
         """
-        # fetch the records of this model without field_name in their cache
-        records = self._in_cache_without(field)
-
         # determine which fields can be prefetched
         fs = {field}
         if self._context.get('prefetch_fields', True) and field.prefetch:
@@ -2827,39 +2823,13 @@ Fields:
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
             )
+        fields = self.check_field_access_rights('read', [f.name for f in fs])
+        self._read(fields)
 
-        # special case: discard records to recompute for field
-        records -= self.env.field_todo(field)
-
-        # in onchange mode, discard computed fields and fields in cache
-        if not self.id:
-            for f in list(fs):
-                if f.compute or self.env.cache.contains(self, f):
-                    fs.discard(f)
-                else:
-                    records &= self._in_cache_without(f)
-
-        # fetch records with read()
-        assert self in records and field in fs
-        result = []
-        try:
-            result = records.read([f.name for f in fs], load='_classic_write')
-        except AccessError:
-            # not all prefetched records may be accessible, try with only the current recordset
-            result = self.read([f.name for f in fs], load='_classic_write')
-
-        # check the cache, and update it if necessary
-        if not self.env.cache.contains_value(self, field):
-            for values in result:
-                record = self.browse(values.pop('id'))
-                record._update_cache(values, validate=False)
-            if not self.env.cache.contains(self, field):
-                exc = AccessError("No value found for %s.%s" % (self, field.name))
-                self.env.cache.set_failed(self, [field], exc)
-
-    def _read_from_database(self, field_names, inherited_field_names=[]):
+    def _read(self, fields):
         """ Read the given fields of the records in ``self`` from the database,
             and store them in cache. Access errors are also stored in cache.
+            Skip fields that are not stored.
 
             :param field_names: list of column names of model ``self``; all those
                 fields are guaranteed to be read
@@ -2868,6 +2838,23 @@ Fields:
         """
         if not self:
             return
+        self.check_access_rights('read')
+
+        # DLE P27: `test` test_update_with_id:
+        # On the same model, if a read follows a write, we must flush the towrite as `read` fetch from database and overwrites the cache
+        self.flush(fields)
+
+        field_names = []
+        inherited_field_names = []
+        for name in fields:
+            field = self._fields.get(name)
+            if field:
+                if field.store:
+                    field_names.append(name)
+                elif field.base_field.store:
+                    inherited_field_names.append(name)
+            else:
+                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
         env = self.env
         cr, user, context, su = env.args
@@ -2933,7 +2920,7 @@ Fields:
                 # This does not harm in practice, as it is only used in Monetary
                 # fields for rounding the value. As the value comes straight
                 # from the database, it is expected to be rounded already.
-                values = [convert(value, target, validate=False) for value in values]
+                values = [convert(value, target, validate=False) for record_id, value in zip(ids, values)]
                 self.env.cache.update(fetched, field, values)
 
             # determine the fields that must be processed now;
@@ -2949,6 +2936,7 @@ Fields:
             if field.deprecated:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
+        # FP NOTE: move this to fields.py__get__, no need to slow down _read; also easier to debug when exceptions are triggered when they happen
         # store failed values in cache for the records that could not be read
         missing = self - fetched
         if missing:
@@ -3115,6 +3103,17 @@ Fields:
             if not (it or it.origin) or (it or it.origin) in valid_ids
         ])
 
+    @api.model
+    def _sort_values(self, vals):
+        # DLE P39
+        fields = [self._fields[f] for f in vals.keys() if f in self._fields]
+        depend_fields = set()
+        for field in fields:
+            if field.type == 'monetary' and field.currency_field in vals:
+                depend_fields.add(field.currency_field)
+        res = sorted(vals.items(), key=lambda kv: 0 if kv[0] in depend_fields else 1)
+        return res
+
     def unlink(self):
         """ unlink()
 
@@ -3129,11 +3128,10 @@ Fields:
             return True
 
         # for recomputing fields
-        self.modified(self._fields)
-
-        self._check_concurrency()
-
         self.check_access_rights('unlink')
+        self.modified(self._fields)
+        self._check_concurrency()
+        self.flush()
 
         # Check if the records are used as default properties.
         refs = ['%s,%s' % (self._name, i) for i in self.ids]
@@ -3182,10 +3180,6 @@ Fields:
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
             self.invalidate_cache()
-
-        # recompute new-style fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
@@ -3273,119 +3267,168 @@ Fields:
         if not self:
             return True
 
-        self._check_concurrency()
         self.check_access_rights('write')
+        self.check_field_access_rights('write', vals.keys())
+        env = self.env
 
-        bad_names = {'id', 'parent_path'}
-        if self._log_access:
-            # the superuser can set log_access fields while loading registry
-            if not(self.env.su and not self.pool.ready):
-                bad_names.update(LOG_ACCESS_COLUMNS)
+        # DLE P34
+        determine_inverses = {}
+        # DLE P39: for monetary field, their related currency field must be cached before the amount so it can be rounded correctly
+        # test `test_20_monetary`
+        for fname, value in self._sort_values(vals):
+            field = self._fields.get(fname)
+            # DLE P34
+            if field.inverse:
+                determine_inverses.setdefault(field.inverse, []).append(field)
+            # DLE P59: `test_write_base_one2many` `test_performance.py`
+            # Write x2many inverses at the same time
+            toflush = False
+            for record in self:
+                # DLE P46: need to remove the new records from the one2many field cache as they have been created now.
+                # test `test_70_x2many_write`, discussion.very_important_messages |= Message.new({..})
+                if field.type not in ('one2many', 'many2many') or not record.id:
+                    cache_value = field.convert_to_cache(value, record)
 
-        # distribute fields into sets for various purposes
-        store_vals = {}
-        inverse_vals = {}
-        inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
-        unknown_names = []
-        inverse_fields = []
-        protected_fields = []
-        for key, val in vals.items():
-            if key in bad_names:
-                continue
-            field = self._fields.get(key)
-            if not field:
-                unknown_names.append(key)
-                continue
-            if field.store:
-                store_vals[key] = val
-            if field.inherited:
-                inherited_vals[field.related_field.model_name][key] = val
-            elif field.inverse:
-                inverse_vals[key] = val
-                inverse_fields.append(field)
-                protected_fields.extend(self._field_computed.get(field, [field]))
+                    # nothing to do, the record already has the newest value
+                    # DLE: What about one2many, many2many commands that are just adding ids to the existing values?
+                    # DLE P49: in an onchange, the record to which we applied a change already has its cache correctly set,
+                    # as we create the `new` record with already the onchanges values
+                    # `record = self.new(values)`
+                    # We nevertheless needs to trigger the write to trigger the modified to get the values that gets modified
+                    # because of this write.
+                    # Alternatively, in the `onchange` method, the new record must be created from the origin record values,
+                    # and then we assign the new values through __set__
+                    # `test_onchange_one2many_with_domain_on_related_field`
+                    if not env.in_onchange and env.cache.contains(record, field) and (env.cache.get(record, field) == cache_value):
+                        continue
 
-        if unknown_names:
-            _logger.warning("%s.write() with unknown fields: %s",
-                            self._name, ', '.join(sorted(unknown_names)))
+                # when updating a relational field, updates it's inverse fields, as well as those reelying on it's old value
+                if field.relational:
+                    record.modified([field.name])
+                    for invf in record._field_inverses[field]:
+                        # DLE P60: `test_performance.py` `test_write_base_one2many`
+                        # record[field.name] is not in cache, and it will therefore fetch the one2many ids while it doesn't really need them,
+                        # e.g. for [(0, 0, {..})] which only add lines, you do not need to fetch the previous line nor invalidate their inverse.
+                        # You only need to invalidate the one you have in cache, not the other ones.
+                        for rec in self.env[field.comodel_name].browse(env.cache.get_value(record, field, [])):
+                            env.cache.remove(rec, invf)
 
-        with self.env.protecting(protected_fields, self):
-            # update references to parents
-            ref_store_vals = {k: store_vals[k] for k in self._inherits.values() if k in store_vals}
-            if ref_store_vals:
-                self._write(ref_store_vals)
+                # DLE P21: invalidate the field value for other caches if the field is context dependent.
+                # test `TestXMLID`.`test_create`, `self.assertEqual(category.name, 'Bar')`
+                # `category.name` is context dependent (translatable), category context is `{}`
+                # but when calling `load_records`, `install_mode` is added in the context thanks to
+                # self.with_context(install_mode=True)
+                if field.context_dependent:
+                    env.cache.invalidate([(field, record.ids)])
+                if field.type == 'many2many':
+                    # DLE P33: `odoo/addons/test_access_rights/tests/test_ir_rules.py`
+                    # test `test_many2many`
+                    # Apparently you can write on many2many values you can't read,
+                    # (You can read A but you can't read B. You should be able to add A & B on a many2many field but not
+                    # but when reading the many2many field, you should see only A, and not B)
+                    # so you should not cache the write value of your many2many, to force to refetch it and re-apply the record rules
+                    # or filter the values by which you can read, and cache only those, I am not sure what the most efficient
+                    # DLE P52: needs to filter out after all, because of onchanges, in the below test
+                    # test `test_onchange_specific`
+                    env.cache.invalidate([(field, record.ids)])
+                # DLE: What about one2many, many2many commands that are just adding ids to the existing values?
+                if field.type not in ('one2many', 'many2many') or not record.id:
+                    env.cache.set(record, field, cache_value)
+                # DLE P2: We set the value to write in the cache, but then it can be overwritten by a prefetch when
+                # reading another field of the same model. Writing the towrite sooner, before the computation of modified,
+                # allows the possibility to not prefetch or ignore the reads of values to write
+                if record.id and field.store:
+                    # FP NOTE: we could simplify and keep the one in cache instead
+                    # FP TO CHECK: for one2many / many2many, we might concatenate the values instead of overwrite. (imagine 2 write of [(0,0,{})]
+                    # DLE P20: By writring field.convert_to_write(field.convert_to_record(field.convert_to_cache(value, record), record), record)
+                    # You missed the 2many commands such as [(4, 1), (4, 2)] which were converted to (1, 2), therefore completely replacing
+                    # the existing 2many value instead of just adding new ids to it.
+                    env.all.towrite[record._name][record.id][field.name] = value
+                    # DLE P11: When writing on `child_ids`, must write on `parent_id` of the one2many related records,
+                    # Otherwise, as we set in the case the correct value for the inverse field values thanks to the above `if field.relational`,
+                    # the above `if env.cache.contains(record, field) and (env.cache.get(record, field) == value):` matches
+                    # and we therefore actually never write the `parent_id` values in database.
+                    # See test test_duplicate_children_03
+                    if field.type.endswith('one2many'):
+                        # DLE P60
+                        for rec in self.env[field.comodel_name].browse(env.cache.get_value(record, field, [])):
+                            env.all.towrite[rec._name][rec.id][field.inverse_name] = rec._fields[field.inverse_name].convert_to_write(record, rec)
 
-            # update parent records
-            cr = self.env.cr
-            for model_name, parent_vals in inherited_vals.items():
-                parent_name = self._inherits[model_name]
-                # optimization of self.mapped(parent_name)
-                parent_ids = set()
-                query = "SELECT %s FROM %s WHERE id IN %%s" % (parent_name, self._table)
-                for sub_ids in cr.split_for_in_conditions(self.ids):
-                    cr.execute(query, [sub_ids])
-                    parent_ids.update(row[0] for row in cr.fetchall())
+                # FP NOTE: possible huge optimization here: if field was already in todo, don't recall modified
+                record.modified([fname])
 
+                env.remove_todo(field, record)
+
+                for invf in record._field_inverses[field]:
+                    if field.relational:
+                        # DLE P60
+                        records = self.env[field.comodel_name].browse(env.cache.get_value(record, field, []))
+                    else:
+                        records = record[field.name]
+                    # RCO: wait a second, if 'toflush' is true, you don't evaluate the call to _update(). WTF?
+                    toflush = toflush or not invf._update(records, record)
+
+            # flush if parent field
+            if self._parent_store and fname == self._parent_name:
+                toflush = True
+
+            # DLE P59
+            if toflush:
+                self.flush([fname])
+
+        # DLE P34
+        determine_inverses = determine_inverses.values()
+        inverse_fields = [f.name for g in determine_inverses for f in g]
+
+        # DLE P36: `test_40_new`, ask RCO if there is not a better way to filter out new records.
+        to_validate = self.filtered(lambda r: not isinstance(r.id, NewId))
+        # DLE P35: Validate first regular fields, then inverse fields
+        # Because inverse field might be wrong because the regular fields are not valid,
+        # and this can cause infinite recursion or longer processing.
+        # This was the case before: regular fields validation were done in `_write`, which was called before the validation of the inverse fields in `write`
+        # test `test_no_recursion`
+        # DLE P48: do not validate fields in onchange
+        # `test_onchange_related`
+        if not env.in_onchange:
+            to_validate._validate_fields(set(vals) - set(inverse_fields))
+
+        # DLE P34: Batch process inverse fields
+        # test `test_13_inverse`
+        for fields in determine_inverses:
+            for record in self:
                 try:
-                    self.env[model_name].browse(parent_ids).write(parent_vals)
+                    fields[0].determine_inverse(self)
                 except AccessError as e:
-                    description = self.env['ir.model']._get(self._name).name
-                    raise AccessError(
-                        _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                            'previous_message': e.args[0],
-                            'document_kind': description,
-                            'document_model': self._name,
-                        }
-                    )
-
-            # write stored fields with (low-level) method _write
-            if store_vals or inverse_vals or inherited_vals:
-                # if log_access is enabled, this updates 'write_date' and
-                # 'write_uid' and check access rules, even when old_vals is
-                # empty
-                self._write(store_vals)
-
-            if inverse_vals:
-                self.check_field_access_rights('write', list(inverse_vals))
-
-                self.modified(set(inverse_vals) - set(store_vals))
-
-                # group fields by inverse method (to call it once), and order
-                # groups by dependence (in case they depend on each other)
-                field_groups = sorted(
-                    (fields for _inv, fields in groupby(inverse_fields, attrgetter('inverse'))),
-                    key=lambda fields: min(map(self.pool.field_sequence, fields)),
-                )
-                for fields in field_groups:
-                    # If a field is not stored, its inverse method will probably
-                    # write on its dependencies, which will invalidate the field
-                    # on all records. We therefore inverse the field one record
-                    # at a time.
-                    batches = [self] if all(f.store for f in fields) else list(self)
-                    # put the values of fields in cache, and inverse them
-                    inv_vals = {f.name: inverse_vals[f.name] for f in fields}
-                    for records in batches:
-                        for record in records:
-                            record._update_cache(inv_vals)
-                        fields[0].determine_inverse(records)
-
-                self.modified(set(inverse_vals) - set(store_vals))
-
-                # check Python constraints for inversed fields
-                self._validate_fields(set(inverse_vals) - set(store_vals))
-
-            # recompute fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
-
+                    # DLE P32: test `test_feedback.py`, `test_local`: When attempting to write on an inherited field,
+                    # the exception raised must be the one below, for a clearer explanation for the user.
+                    if fields[0].inherited:
+                        description = self.env['ir.model']._get(self._name).name
+                        raise AccessError(
+                            _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                                'previous_message': e.args[0],
+                                'document_kind': description,
+                                'document_model': self._name,
+                            }
+                        )
+                    raise
+        # DLE P58: `test_orm.py``test_write_date`
+        # If there are only fields that do not trigger _write (e.g. only determine inverse),
+        # the below will ensure `_write ` will be called, even with empty vals, to ensure `write_date` and `write_uid` is updated
+        if self._log_access and self.ids:
+            if not any(self._fields[fname].store for fname in vals.keys() if fname in self._fields):
+                for record in self:
+                    if record.id:
+                        env.all.towrite[record._name][record.id]
+            self.env.cache.invalidate([(self._fields['write_date'], self.ids), (self._fields['write_uid'], self.ids)])
+        to_validate._validate_fields(inverse_fields)
         return True
 
     def _write(self, vals):
         # low-level implementation of write()
         if not self:
             return True
-        self.check_field_access_rights('write', list(vals))
 
+        self._check_concurrency()
         cr = self._cr
 
         # determine records that require updating parent_path
@@ -3398,7 +3441,13 @@ Fields:
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
         has_translation = self.env.lang and self.env.lang != 'en_US'
 
+        bad_names = {'id', 'parent_path'}
+        if self._log_access:
+            bad_names.update(LOG_ACCESS_COLUMNS)
+
         for name, val in vals.items():
+            if name in bad_names:
+                continue
             field = self._fields[name]
             assert field.store
 
@@ -3415,15 +3464,10 @@ Fields:
                 other_fields.append(field)
 
         if self._log_access:
-            if 'write_uid' not in vals:
-                columns.append(('write_uid', '%s', self._uid))
-                updated.append('write_uid')
-            if 'write_date' not in vals:
-                columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
-                updated.append('write_date')
-
-        # mark fields to recompute (the ones that depend on old values)
-        self.modified(vals)
+            columns.append(('write_uid', '%s', self._uid))
+            updated.append('write_uid')
+            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+            updated.append('write_date')
 
         # update columns
         if columns:
@@ -3440,29 +3484,26 @@ Fields:
                         + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
                     )
 
-            for name in updated:
-                field = self._fields[name]
-                if callable(field.translate):
-                    # The source value of a field has been modified,
-                    # synchronize translated terms when possible.
-                    self.env['ir.translation']._sync_terms_translations(field, self)
+        # DLE P47: case wher you only change a translation, and no other columns
+        # `test_80_copy` `email.with_context(lang='fr_FR').label = "bonjour"`
+        for name in updated:
+            field = self._fields[name]
+            if callable(field.translate):
+                # The source value of a field has been modified,
+                # synchronize translated terms when possible.
+                self.env['ir.translation']._sync_terms_translations(field, self)
 
-                elif has_translation and field.translate:
-                    # The translated value of a field has been modified.
-                    src_trans = self.read([name])[0][name]
-                    if not src_trans:
-                        # Insert value to DB
-                        src_trans = vals[name]
-                        self.with_context(lang=None).write({name: src_trans})
-                    tname = "%s,%s" % (self._name, name)
-                    val = field.convert_to_column(vals[name], self, vals)
-                    self.env['ir.translation']._set_ids(
-                        tname, 'model', self.env.lang, self.ids, val, src_trans)
-
-        # mark fields to recompute; do this before setting other fields, because
-        # the latter can require the value of computed fields, e.g., a one2many
-        # checking constraints on records
-        self.modified(updated)
+            elif has_translation and field.translate:
+                # The translated value of a field has been modified.
+                src_trans = self.read([name])[0][name]
+                if not src_trans:
+                    # Insert value to DB
+                    src_trans = vals[name]
+                    self.with_context(lang=None).write({name: src_trans})
+                tname = "%s,%s" % (self._name, name)
+                val = field.convert_to_column(vals[name], self, vals)
+                self.env['ir.translation']._set_ids(
+                    tname, 'model', self.env.lang, self.ids, val, src_trans)
 
         # set the value of non-column fields
         if other_fields:
@@ -3472,11 +3513,8 @@ Fields:
             for field in sorted(other_fields, key=attrgetter('_sequence')):
                 field.write(other, vals[field.name])
 
-            # mark fields to recompute
-            self.modified(field.name for field in other_fields)
-
         # check Python constraints
-        self._validate_fields(vals)
+        # self._validate_fields(vals)
 
         # update parent_path
         if parent_records:
@@ -3522,7 +3560,6 @@ Fields:
             # the superuser can set log_access fields while loading registry
             if not(self.env.su and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
-        unknown_names = set()
 
         # classify fields for each record
         data_list = []
@@ -3542,8 +3579,9 @@ Fields:
                 if key in bad_names:
                     continue
                 field = self._fields.get(key)
+                # FP Note: I would do an assert instead; there is no reason to accept a wrong field
                 if not field:
-                    unknown_names.add(key)
+                    _logger.warning("%s.create() with unknown fields: %s", self._name, key)
                     continue
                 if field.store:
                     stored[key] = val
@@ -3555,10 +3593,6 @@ Fields:
                     protected.update(self._field_computed.get(field, [field]))
 
             data_list.append(data)
-
-        if unknown_names:
-            _logger.warning("%s.create() with unknown fields: %s",
-                            self._name, ', '.join(sorted(unknown_names)))
 
         # create or update parent records
         for model_name, parent_name in self._inherits.items():
@@ -3581,52 +3615,39 @@ Fields:
         # create records with stored fields
         records = self._create(data_list)
 
-        # determine which fields to protect on which records
-        protected = [(data['protected'], data['record']) for data in data_list]
-        with self.env.protecting(protected):
-            # group fields by inverse method (to call it once), and order groups
-            # by dependence (in case they depend on each other)
-            field_groups = sorted(
-                (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse'))),
-                key=lambda fields: min(map(self.pool.field_sequence, fields)),
-            )
-            for fields in field_groups:
-                # determine which records to inverse for those fields
-                inv_names = {field.name for field in fields}
-                rec_vals = [
-                    (data['record'], {
-                        name: data['inversed'][name]
-                        for name in inv_names
-                        if name in data['inversed']
-                    })
-                    for data in data_list
-                    if not inv_names.isdisjoint(data['inversed'])
-                ]
+        # group fields by inverse method (to call it once), and order groups
+        # by dependence (in case they depend on each other)
+        field_groups = (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse')))
+        for fields in field_groups:
+            # determine which records to inverse for those fields
+            inv_names = {field.name for field in fields}
+            rec_vals = [
+                (data['record'], {
+                    name: data['inversed'][name]
+                    for name in inv_names
+                    if name in data['inversed']
+                })
+                for data in data_list
+                if not inv_names.isdisjoint(data['inversed'])
+            ]
 
-                # If a field is not stored, its inverse method will probably
-                # write on its dependencies, which will invalidate the field on
-                # all records. We therefore inverse the field record by record.
-                if all(field.store or field.company_dependent for field in fields):
-                    batches = [rec_vals]
-                else:
-                    batches = [[rec_data] for rec_data in rec_vals]
+            # If a field is not stored, its inverse method will probably
+            # write on its dependencies, which will invalidate the field on
+            # all records. We therefore inverse the field record by record.
+            if all(field.store or field.company_dependent for field in fields):
+                batches = [rec_vals]
+            else:
+                batches = [[rec_data] for rec_data in rec_vals]
 
-                for batch in batches:
-                    for record, vals in batch:
-                        record._update_cache(vals)
-                    batch_recs = self.concat(*(record for record, vals in batch))
-                    fields[0].determine_inverse(batch_recs)
-
-                # trick: no need to mark non-stored fields as modified, thanks
-                # to the transitive closure made over non-stored dependencies
+            for batch in batches:
+                for record, vals in batch:
+                    record._cache.update(record._convert_to_cache(vals))
+                batch_recs = self.concat(*(record for record, vals in batch))
+                fields[0].determine_inverse(batch_recs)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
             data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
-
-        # recompute fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
 
         return records
 
@@ -3636,12 +3657,6 @@ Fields:
         assert data_list
         cr = self.env.cr
         quote = '"{}"'.format
-
-        # set boolean fields to False by default (avoid NULL in database)
-        for name, field in self._fields.items():
-            if field.type == 'boolean' and field.store:
-                for data in data_list:
-                    data['stored'].setdefault(name, False)
 
         # insert rows
         ids = []                        # ids of created records
@@ -3682,37 +3697,56 @@ Fields:
             cr.execute(query, params)
             ids.append(cr.fetchone()[0])
 
-        # the new records
+        # put the new records in cache, and update inverse fields, for many2one
+        # cachetoclear is an optimization to avoid modified()'s cost until other_fields are processed
+        cachetoclear = []
         records = self.browse(ids)
         for data, record in zip(data_list, records):
             data['record'] = record
+            # FP TODO: what about data['inherited'] here?
+            for field in self._fields.values():
+                if field.type in ('one2many', 'many2many'):
+                    self.env.cache.set(record, field, ())
+            for fname,value in data['stored'].items():
+                field = self._fields[fname]
+                if field.type in ('one2many', 'many2many'):
+                    cachetoclear.append((record, field))
+                else:
+                    value = field.convert_to_cache(value, record)
+                    self.env.cache.set(record, field, value)
+                    for invf in record._field_inverses[field]:
+                        invf._update(record[field.name], record)
 
         # update parent_path
         records._parent_store_create()
 
-        protected = [(data['protected'], data['record']) for data in data_list]
-        with self.env.protecting(protected):
-            # mark fields to recompute; do this before setting other fields,
-            # because the latter can require the value of computed fields, e.g.,
-            # a one2many checking constraints on records
-            records.modified(self._fields)
+        # mark computed fields as todo
+        # DLE P31: modification of a *2many field can trigger a compute field
+        # e.g. ir.rule.global depends on `ir.rule.groups`
+        modfields = [fname for (fname, field) in self._fields.items()]
+        setfields = data_list[0]
+        records.modified(modfields, setfields['stored'])
 
-            if other_fields:
-                # discard default values from context for other fields
-                others = records.with_context(clean_context(self._context))
-                for field in sorted(other_fields, key=attrgetter('_sequence')):
-                    field.create([
-                        (other, data['stored'][field.name])
-                        for other, data in zip(others, data_list)
-                        if field.name in data['stored']
-                    ])
+        if other_fields:
+            # discard default values from context for other fields
+            others = records.with_context(clean_context(self._context))
+            for field in sorted(other_fields, key=attrgetter('_sequence')):
+                field.create([
+                    (other, data['stored'][field.name])
+                    for other, data in zip(others, data_list)
+                    if field.name in data['stored']
+                ])
 
-                # mark fields to recompute
-                records.modified([field.name for field in other_fields])
+            for d in data_list:
+                d['record'].modified([x.name for x in other_fields], setfields)
 
-            # check Python constraints for stored fields
-            records._validate_fields(name for data in data_list for name in data['stored'])
+        # if value in cache has not been updated by other_fields, remove it
+        for record, field in cachetoclear:
+            if self.env.cache.contains(record, field) and not self.env.cache.get(record, field):
+                self.env.cache.remove(record, field)
 
+        # check Python constraints for stored fields
+        records._validate_fields(name for data in data_list for name in data['stored'])
         records.check_access_rule('create')
 
         # add translations
@@ -4131,6 +4165,44 @@ Fields:
 
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
+        # DLE P13: This is just for test `test_invalid`, which expects a ValueError (raise by _where_calc) rather than
+        # a keyerror (raise by obj._fields[fname])
+        # Now if we decide a KeyError should be raise in this case instead of ValueError, the test needs to be changed.
+        # It would make sense to raise a KeyError for a field which is not in the registry, but I don't know if
+        # it worths the API change.
+        # recompute fields that are used in the domain
+        to_flush = defaultdict(set)             # {model_name: field_names}
+        for arg in args:
+            if isinstance(arg, str):
+                continue
+            if not isinstance(arg[0], str):
+                continue
+            model_name = self._name
+            for fname in arg[0].split('.'):
+                to_flush[model_name].add(fname)
+                model_name = field.comodel_name
+
+        # DLE P56: needs to flush write the order fields
+        # test_15_equivalent_one2many_1
+        # `self.assertEqual([p1,p2], Partner.search([('user_ids', 'in', [u1a,u2])]).ids, "o2m IN matches any on the right side")`
+        # it's sorted by display_name, which needed to be recomputed and stored.
+        order_spec = order or self._order
+        for order_part in order_spec.split(','):
+            order_field = order_part.split()[0]
+            to_flush[self._name].add(order_field)
+
+        # DLE P26: test `test_applied_state_toggle`
+        # FP NOTE: instead we should get the domain including ir.rule & active from query (e.g. args = query.get_args()) and let the above code do it's job
+        # In case we set active/disable a record, a search on this model must trigger the write_flush of the active fields,
+        # as more or less records can be returned according to the `active` flag.
+        # In the above test case, this is even trickier has it uses an empty domain `[]`,
+        # and therefore we never go inside the above loop `for dom_part in args:`
+        if 'active' in self:
+            to_flush[self._name].add('active')
+
+        for model_name, field_names in to_flush.items():
+            self.env[model_name].flush(field_names)
+
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
@@ -4389,6 +4461,9 @@ Fields:
 
         succs = defaultdict(set)        # transitive closure of successors
         preds = defaultdict(set)        # transitive closure of predecessors
+        # DLE P4: Need to flush for because this method does a kind of search query manually trough
+        # a cr.execute, for which we need the data in database (see test `test_res_group_recursion`)
+        self.flush([field_name])
         todo, done = set(self.ids), set()
         while todo:
             # retrieve the respective successors of the nodes in 'todo'
@@ -4962,6 +5037,42 @@ Fields:
             for name, value in values.items():
                 record[name] = value
 
+    @api.model
+    def flush(self, fnames=None):
+        """ Process all the pending recomputations (or at least the given field
+            names `fnames` if present) and flush the pending updates to the
+            database.
+        """
+        def process(model, id_vals):
+            # group record ids by vals, to update in batch when possible
+            updates = defaultdict(list)
+            for rid, vals in id_vals.items():
+                updates[frozendict(vals)].append(rid)
+
+            for vals, ids in updates.items():
+                recs = model.browse(ids)
+                try:
+                    recs._write(vals)
+                except MissingError:
+                    recs.exists()._write(vals)
+
+        if fnames is None:
+            # flush everything
+            self.recompute()
+            while self.env.all.towrite:
+                model_name, id_vals = self.env.all.towrite.popitem()
+                process(self.env[model_name], id_vals)
+        else:
+            # flush self's model if any of the fields must be flushed
+            self.recompute_fields(fnames)
+            if any(
+                fname in vals
+                for vals in self.env.all.towrite.get(self._name, {}).values()
+                for fname in fnames
+            ):
+                id_vals = self.env.all.towrite.pop(self._name)
+                process(self, id_vals)
+
     #
     # New records - represent records that do not exist in the database yet;
     # they are used to perform onchanges.
@@ -5207,63 +5318,70 @@ Fields:
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    def modified(self, fnames):
+    def modified(self, fnames, overwrite=[]):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
 
             :param fnames: iterable of field names that have been modified on
                 records ``self``
+            :param overwrite: list of fields who will not be overwrited, or None
+                for all
+            :param followlink: set as False if you expect no record to link to this one (when create)
         """
-        # group triggers by (model, path) to minimize the calls to search()
-        invalids = []
-        triggers = defaultdict(set)
-        for fname in fnames:
-            mfield = self._fields[fname]
-            # invalidate mfield on self, and its inverses fields
-            invalids.append((mfield, self._ids))
-            for field in self._field_inverses[mfield]:
-                invalids.append((field, None))
-            # group triggers by model and path to reduce the number of search()
-            for field, path in self._field_triggers[mfield]:
-                triggers[(field.model_name, path)].add(field)
+        if not self:
+            return
+        if len(fnames)==1:
+            tree = self._field_triggers.get(self._fields[fnames[0]])
+        else:
+            # merge dependency trees to evaluate all triggers at once
+            tree = {}
+            for fname in fnames:
+                node = self._field_triggers.get(self._fields[fname])
+                if node:
+                    trigger_tree_merge(tree, node)
+        if tree:
+            self._modified_rec(tree, overwrite)
 
-        # process triggers, mark fields to be invalidated/recomputed
-        for model_path, fields in triggers.items():
-            model_name, path = model_path
-            stored = {field for field in fields if field.compute and field.store}
-            # process stored fields
-            if path and stored:
-                # determine records of model_name linked by path to self
-                if path == 'id':
-                    target0 = self
-                else:
-                    Model = self.env[model_name]
-                    f = Model._fields.get(path)
-                    if f and f.store and f.type not in ('one2many', 'many2many'):
-                        # path is direct (not dotted), stored, and inline -> optimise to raw sql
-                        self.env.cr.execute('SELECT id FROM "%s" WHERE "%s" in %%s' % (Model._table, path), [tuple(self.ids)])
-                        target0 = Model.browse(i for [i] in self.env.cr.fetchall())
-                    else:
-                        env = self.env(user=SUPERUSER_ID, context={'active_test': False})
-                        target0 = env[model_name].search([(path, 'in', self.ids)])
-                        target0 = target0.with_env(self.env)
-                # prepare recomputation for each field on linked records
-                for field in stored:
-                    # discard records to not recompute for field
-                    target = target0 - self.env.protected(field)
-                    if not target:
+    def _modified_rec(self, node, overwrite=[]):
+        if not self:
+            return
+        for key, val in node.items():
+            if key is None:
+                # val is a list of fields to mark as todo
+                todo = {}
+                for field in val:
+                    records = self - self.env.protected(field)
+                    if not records:
                         continue
-                    invalids.append((field, target._ids))
-                    # mark field to be recomputed on target
-                    if field.compute_sudo:
-                        target = target.sudo()
-                    target._recompute_todo(field)
-            # process non-stored fields
-            for field in (fields - stored):
-                invalids.append((field, None))
-
-        self.env.cache.invalidate(invalids)
+                    if field.name in overwrite:
+                        continue
+                    if field.compute:
+                        records = self.env.add_todo(field, records)
+                    else:
+                        records2 = self.env.cache.get_present_records(records, field)
+                        self.env.cache.invalidate([(field, records2._ids)])
+                        records = records2 - records
+                    # recursively trigger recomputation of field's dependents
+                    if records:
+                        todo.setdefault(records, [])
+                        todo[records].append(field.name)
+                for records, fieldnames in todo.items():
+                    records.modified(fieldnames)
+            else:
+                # val is another dict structure of dependencies
+                model = self.env[key.model_name]
+                for invf in model._field_inverses[key]:
+                    # use an inverse of field without domain
+                    if not (invf.type in ('one2many', 'many2many') and invf.domain):
+                        try:
+                            records = self.mapped(invf.name)
+                        except MissingError:
+                            records = self.exists().mapped(invf.name)
+                        break
+                else:
+                    records = model.search([(key.name, 'in', self.ids)])
+                records._modified_rec(val)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
@@ -5271,59 +5389,55 @@ Fields:
         """
         return self.env.check_todo(field, self)
 
-    def _recompute_todo(self, field):
-        """ Mark ``field`` to be recomputed. """
-        self.env.add_todo(field, self)
-
-    def _recompute_done(self, field):
-        """ Mark ``field`` as recomputed. """
-        self.env.remove_todo(field, self)
-
     @api.model
-    def recompute(self):
-        """ Recompute stored function fields. The fields and records to
-            recompute have been determined by method :meth:`modified`.
+    def recompute(self, fnames=None):
+        """ Recompute all function fields (or the given ``fnames`` if present).
+            The fields and records to recompute have been determined by method
+            :meth:`modified`.
         """
-        while self.env.has_todo():
-            field, recs = self.env.get_todo()
-            # determine the fields to recompute
-            fs = self.env[field.model_name]._field_computed[field]
-            ns = [f.name for f in fs if f.store]
-            # evaluate fields, and group record ids by update
-            updates = defaultdict(set)
-            for rec in recs:
+        def process(field):
+            recs = self.env.field_todo(field)
+            if not recs:
+                return
+            if field.compute and field.store:
                 try:
-                    vals = {n: rec[n] for n in ns}
+                    field.compute_value(recs)
                 except MissingError:
-                    continue
-                vals = rec._convert_to_write(vals)
-                updates[frozendict(vals)].add(rec.id)
-            # update records in batch when possible
-            with recs.env.norecompute():
-                for vals, ids in updates.items():
-                    target = recs.browse(ids)
-                    try:
-                        target._write(dict(vals))
-                    except MissingError:
-                        # retry without missing records
-                        target.exists()._write(dict(vals))
+                    field.compute_value(recs.exists())
+            else:
+                self.env.cache.invalidate([(field, recs._ids)])
+                self.env.remove_todo(field, recs)
 
-            # mark computed fields as done
-            for f in fs:
-                recs._recompute_done(f)
+        if fnames is None:
+            # recompute everything
+            while self.env.has_todo():
+                process(self.env.get_todo())
+        else:
+            # recompute the given fields on self's model
+            for fname in fnames:
+                process(self._fields[fname])
 
     #
     # Generic onchange method
     #
 
+    def _dependent_fields(self, field):
+        """ Return an iterator on the fields that depend on ``field``. """
+        def traverse(node):
+            for key, val in node.items():
+                if key is None:
+                    yield from val
+                else:
+                    yield from traverse(val)
+        return traverse(self._field_triggers.get(field, {}))
+
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the
             presence of ``other_fields``.
         """
-        # test whether self has an onchange method for field, or field is a
-        # dependency of any field in other_fields
-        return field.name in self._onchange_methods or \
-            any(dep in other_fields for dep, _ in self._field_triggers[field])
+        return (field.name in self._onchange_methods) or any(
+            dep in other_fields for dep in self._dependent_fields(field)
+        )
 
     @api.model
     def _onchange_spec(self, view_info=None):

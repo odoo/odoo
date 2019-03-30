@@ -141,7 +141,7 @@ class TestIRRuleFeedback(Feedback):
         }).with_user(self.user)
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        return self.env['ir.rule'].create({
+        res = self.env['ir.rule'].create({
             'name': name,
             'model_id': self.model.id,
             'groups': [] if global_ else [(4, self.group2.id)],
@@ -152,6 +152,7 @@ class TestIRRuleFeedback(Feedback):
             'perm_unlink': False,
             'perm_' + attr: True,
         })
+        return res
 
     def test_local(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')

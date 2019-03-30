@@ -298,11 +298,8 @@ class TestOnChange(common.TransactionCase):
             'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line1.id, {
-                    'name': partner2.name,
-                    'partner': (partner2.id, partner2.name),
-                    'tags': [(5,)],
-                }),
+                # DLE P51: I see no visible change for this line, I don't really understand why it was the expected value.
+                (4, line1.id),
                 (0, 0, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),

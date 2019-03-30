@@ -82,9 +82,6 @@ class RatingMixin(models.AbstractModel):
                 if record._rating_get_parent_field_name() in values:
                     record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
-        if self.env.recompute and self._context.get('recompute', True):  # trigger the recomputation of all field marked as "to recompute"
-            self.recompute()
-
         return result
 
     def unlink(self):

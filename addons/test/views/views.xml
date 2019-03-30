@@ -1,0 +1,54 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="test.list">
+      <field name="name">test list</field>
+      <field name="model">test</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="test.form">
+      <field name="name">test form</field>
+      <field name="model">test</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <group>
+                  <field name="name"/>
+                </group>
+            </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="test.action_window">
+      <field name="name">test window</field>
+      <field name="res_model">test</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="test.action_window2">
+      <field name="name">test window</field>
+      <field name="res_model">test</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'default_jtype': 'out_invoice'}</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Test" id="test.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Test" id="test.menu" parent="test.menu_root"/>
+
+    <!-- actions -->
+    <menuitem name="No Default" id="test.menu_1_list" parent="test.menu"
+              action="test.action_window"/>
+    <menuitem name="Default  Invoice" id="test.menu_2_list" parent="test.menu"
+              action="test.action_window2"/>
+  </data>
+</odoo>

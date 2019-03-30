@@ -72,10 +72,10 @@ class TestRules(TransactionCase):
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
-        # this removes accessible records only
+        # this removes all records
         container_user.write({'some_ids': [(5,)]})
         self.assertItemsEqual(container_user.some_ids.ids, [])
-        self.assertItemsEqual(container_admin.some_ids.ids, [self.id2])
+        self.assertItemsEqual(container_admin.some_ids.ids, [])
 
     def test_access_rule_performance(self):
         env = self.env(user=self.browse_ref('base.public_user'))
