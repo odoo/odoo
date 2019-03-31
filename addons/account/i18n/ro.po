@@ -7,18 +7,18 @@
 # Sergiu Baltariu <s_baltariu@yahoo.com>, 2017
 # sharkutz <sharkutz4life@yahoo.com>, 2017
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4563,7 +4563,12 @@ msgid "Due date"
 msgstr "Data scadenta"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Duplicare"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -5443,6 +5448,10 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Dacă utilizați termeni de plată, data scadenței va fi calculată automat la "
+"generarea intrărilor contabile. Dacă păstrați termenii de plată și data "
+"scadenței goale, aceasta înseamnă o plată directă. Termenii de plată pot "
+"calcula mai multe date scadente, de exemplu 50% acum, 50% într-o lună."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -5453,6 +5462,12 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"Dacă utilizați termeni de plată, data scadenței va fi calculată automat la "
+"generarea intrărilor contabile. Termenii de plată pot calcula câteva date "
+"scadente, de exemplu 50% acum și 50% într-o lună, dar dacă doriți să forțați"
+" o dată scadentă, asigurați-vă că termenul de plată nu este stabilit pe "
+"factură. Dacă păstrați termenii de plată și data scadenței goale, aceasta "
+"înseamnă o plată directă."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7587,7 +7602,7 @@ msgstr "Mesaj plăți restante"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "Facturi restante, data scadenței a trecut"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -8594,12 +8609,12 @@ msgstr "Obișnuit"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "Sumă scadentă în moneda companiei."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Sumă scadentă în moneda facturii."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual

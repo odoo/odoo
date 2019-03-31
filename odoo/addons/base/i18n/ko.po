@@ -554,6 +554,9 @@ msgid ""
 "        Accounting reports for US\n"
 "    "
 msgstr ""
+"\n"
+"        미국인을 위한 재무제표\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_reports
@@ -607,6 +610,9 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        서비스 데스크에 등록된 품목에 대한 작업 비용.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -684,6 +690,9 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"        통관 번호가 들어있는 전자 송장 생성\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -695,6 +704,12 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
+"\n"
+"        This module follow the implementation guidelines issued by the European Payment Council.\n"
+"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -799,6 +814,37 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        이 모듈은 자동 어카운트 콜렉션에 사용되며 은행에 보낸 SEPA Direct Debit (SDD)\n"
+"        호환 XML 파일(pain.008.001.02 스펙과 일치)의\n"
+"        생성을 지원합니다.\n"
+"\n"
+"        To be elligible for this payment method, a customer must have first\n"
+"        returned a mandate to the company, giving his consent to use direct debit.\n"
+"        This consent must have been encoded as a 'customer mandate' into Odoo.\n"
+"\n"
+"        You also need to meet the following requirements in order to properly\n"
+"        generate a SDD file:\n"
+"        - Your company account must be set to a valid IBAN number\n"
+"        - Your company account must be associated to a bank having a valid BIC\n"
+"        - Your company must have been given a creditor identifier (this can be done in the 'settings' menu of the accounting module)\n"
+"        - Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"        - Every customer for which you generate a payment must have a valid IBAN account number in a bank associated with a correct BIC.\n"
+"\n"
+"        Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"        Any invoice that gets validated for a customer with a mandate will be\n"
+"        automatically set in 'paid' state, and a payment will be generated. An\n"
+"        option in the dashboard will then allow you to view all the payments generated\n"
+"        via SDD and to generate a XML collection file for them, grouping them as\n"
+"        you see fit.\n"
+"\n"
+"        A dedicated 'SEPA Direct Debit' payment method is also available for\n"
+"        open invoices, when selecting a bank account in the 'register payment' wizard.\n"
+"        Use it to generate a SDD payment for the invoices if you added a mandate\n"
+"        for its owner after its validation. You will see an error message if you\n"
+"        try to use this method on an invoice for whose payment no mandate can be used.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -21437,6 +21483,8 @@ msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
+"설치하려는 '%s' 모듈에 종속된 모듈 '%s'.\n"
+"후자는 사용자의 시스템에서 사용할 수 없습니다."
 
 #. module: base
 #: code:addons/base/module/module.py:306
@@ -21451,13 +21499,15 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"업그레이드 하려는 %s 모듈에 종속된 모듈 : %s.\n"
+"하지만 이 모듈은 사용자의 시스템에 사용할 수 없습니다."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "설정 / 사용자 메뉴에서 새로 생성된 사용자를 편집하여 추가 접근 권한을 정의할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -21487,6 +21537,8 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Odoo 서버는 SMTP-over-SSL을 지원하지 않습니다. 대신 STARTTLS를 사용할 수 있습니다 .SSL이 필요하면 서버 측에서"
+" Python 2.6으로 업그레이드해야합니다."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:480
@@ -21494,7 +21546,7 @@ msgstr ""
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
-msgstr ""
+msgstr "서버가 SSL을 지원하지 않는 것 같습니다. 대신 STARTTLS를 시도해보십시오."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -21509,12 +21561,12 @@ msgstr "우편번호"
 #. module: base
 #: model:res.country,name:base.zm
 msgid "Zambia"
-msgstr ""
+msgstr "잠비아"
 
 #. module: base
 #: model:res.country,name:base.zw
 msgid "Zimbabwe"
-msgstr ""
+msgstr "짐바브웨"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_zip
@@ -21528,7 +21580,7 @@ msgstr "우편번호"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "[('blue', 'Blue'),('yellow', 'Yellow')]"
-msgstr ""
+msgstr "[('blue', 'Blue'),('yellow', 'Yellow')]"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
@@ -21543,12 +21595,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_sync
 msgid "account_online_sync"
-msgstr ""
+msgstr "account_online_sync"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_plaid
 msgid "account_plaid"
-msgstr ""
+msgstr "account_plaid"
 
 #. module: base
 #: code:addons/base/res/res_currency.py:117
@@ -21579,53 +21631,53 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "이진수"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "논리값"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr ""
+msgstr "벨기에 배송"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "char"
 
 #. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
-msgstr ""
+msgstr "선택"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_crm
 msgid "crm"
-msgstr ""
+msgstr "crm"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:314
 #, python-format
 msgid "database id"
-msgstr ""
+msgstr "데이터베이스 id"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "날짜"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "datetime"
-msgstr ""
+msgstr "날짜시간"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "documentation"
-msgstr ""
+msgstr "문서"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -21642,29 +21694,29 @@ msgstr "예. BE0477472701"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. English"
-msgstr ""
+msgstr "예 : 영어"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. Global Business Solutions"
-msgstr ""
+msgstr "예 : 글로벌 비지니스 솔루션"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mr."
-msgstr ""
+msgstr "예 : Mr."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "예: 영업 이사"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr ""
+msgstr "예: 주문 수량 업데이트"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -21674,7 +21726,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. en_US"
-msgstr ""
+msgstr "예: ko_KR"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -21686,7 +21738,7 @@ msgstr "예: www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr ""
+msgstr "이베이 커넥터"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
@@ -21696,7 +21748,7 @@ msgstr "전자상거래"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
-msgstr ""
+msgstr "전자 상거래 배송"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_options
@@ -21706,24 +21758,24 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr ""
+msgstr "email@yourcompany.com"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:328
 #, python-format
 msgid "external id"
-msgstr ""
+msgstr "외부 id"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143
 #, python-format
 msgid "false"
-msgstr ""
+msgstr "거짓"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "float"
-msgstr ""
+msgstr "부동소수점"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -21732,12 +21784,14 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
+"for record in self:\n"
+"        record['size'] = len(record.name)"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:248
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
-msgstr ""
+msgstr "format()에는  정확하게 하나의 %char 형식 지정자를 지정해야 합니다"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -21747,12 +21801,12 @@ msgstr ""
 #. module: base
 #: selection:base.language.export,state:0
 msgid "get"
-msgstr ""
+msgstr "가져오기"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "html"
-msgstr ""
+msgstr "html"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -21763,24 +21817,24 @@ msgstr "초기화"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "integer"
-msgstr ""
+msgstr "정수"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "internal note..."
-msgstr ""
+msgstr "내부 메모..."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_url"
-msgstr ""
+msgstr "ir.actions.act_url"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -21801,13 +21855,13 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_actions_client
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.client"
-msgstr ""
+msgstr "ir.actions.client"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report"
-msgstr ""
+msgstr "ir.actions.report"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -22013,17 +22067,17 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr ""
+msgstr "다대다"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "다대일"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "monetary"
-msgstr ""
+msgstr "통화"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:494
@@ -22051,22 +22105,22 @@ msgstr "작성일"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr ""
+msgstr "일대다"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
 msgid "pos_cache"
-msgstr ""
+msgstr "pos_cache"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "pos_sale"
-msgstr ""
+msgstr "pos_sale"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "참조"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
@@ -22106,88 +22160,88 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "selection"
-msgstr ""
+msgstr "선택"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
 msgid "test mimetypes-guessing"
-msgstr ""
+msgstr "mimetypes-guessing 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr ""
+msgstr "접근 권한 및 규칙 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test read_group"
-msgstr ""
+msgstr "read_group 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "test-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_pylint
 msgid "test-eval"
-msgstr ""
+msgstr "test-eval"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
 msgid "test-exceptions"
-msgstr ""
+msgstr "test-exceptions"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_converter
 msgid "test-field-converter"
-msgstr ""
+msgstr "test-field-converter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_impex
 msgid "test-import-export"
-msgstr ""
+msgstr "test-import-export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit
 msgid "test-inherit"
-msgstr ""
+msgstr "test-inherit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
-msgstr ""
+msgstr "test-limits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
 msgid "test-uninstall"
-msgstr ""
+msgstr "test-uninstall"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
-msgstr ""
+msgstr "test_convert"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "text"
-msgstr ""
+msgstr "본문"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "title"
-msgstr ""
+msgstr "제목"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143
 #, python-format
 msgid "true"
-msgstr ""
+msgstr "참"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -22203,7 +22257,7 @@ msgstr "예"
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
-msgstr ""
+msgstr "올란드 제도"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
