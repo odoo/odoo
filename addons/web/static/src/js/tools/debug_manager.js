@@ -306,6 +306,15 @@ DebugManager.include({
             }
         });
     },
+    manage_reports: function () {
+    	this.do_action({
+            name: _t('Manage Reports'),
+            type: 'ir.actions.act_window',
+            res_model: 'ir.actions.report',
+            views: [[false, 'list'], [false, 'form']],
+            domain: [['model', '=', this._action.res_model]],
+        });
+    },
     translate: function() {
         this._rpc({
                 model: 'ir.translation',
