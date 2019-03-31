@@ -22,16 +22,16 @@
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-08 05:29+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -590,7 +590,7 @@ msgstr "Aggiungere allegati"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__channel_ids
 #, python-format
 msgid "Add Channels"
-msgstr "Canali da aggiungere"
+msgstr "Aggiungi canali"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -605,7 +605,7 @@ msgstr "Aggiungere l'email alla lista nera"
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "Aggiungi Followers"
+msgstr "Aggiungi follower"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:63
@@ -787,14 +787,14 @@ msgstr "Sempre"
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Always Allow"
-msgstr "Sempre consentire"
+msgstr "Sempre consentito"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:418
 #, python-format
 msgid "Always Allow |"
-msgstr "Sempre consentire |"
+msgstr "Sempre consentito |"
 
 #. module: mail
 #. openerp-web
@@ -1020,7 +1020,7 @@ msgstr "Bandire"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Ban List"
-msgstr "Elenco bloccati"
+msgstr "elenchi blocco"
 
 #. module: mail
 #. openerp-web
@@ -1070,12 +1070,13 @@ msgstr "Testo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
 msgstr "Non recapitate"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:398
+#: code:addons/mail/static/src/xml/thread.xml:391
 #: selection:mail.notification,email_status:0
 #, python-format
 msgid "Bounced"
@@ -1440,7 +1441,7 @@ msgstr "Crea %s"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Create Next Activity"
-msgstr "Creare attività successiva"
+msgstr "Crea attività successiva"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:400
@@ -1994,7 +1995,7 @@ msgstr "Modelli e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Conversazione email"
+msgstr "Discussione e-mail"
 
 #. module: mail
 #: sql_constraint:mail.blacklist:0
@@ -2138,12 +2139,12 @@ msgstr "Eccezione"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Execute Python Code"
-msgstr "Eseguire codice Python"
+msgstr "Esegui codice Python"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Execute several actions"
-msgstr "Esegui diverse azioni"
+msgstr "Esegui alcune azioni"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2428,12 +2429,12 @@ msgstr "Linee guida del canale %s"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle by Emails"
-msgstr "Gestire con e-mail"
+msgstr "Tramite e-mail"
 
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr "Gestire in Odoo"
+msgstr "Tramite Odoo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
@@ -3166,7 +3167,7 @@ msgstr "Consegna e-mail non riuscita"
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr "Conversazione email"
+msgstr "Discussione e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
@@ -3747,7 +3748,7 @@ msgid ""
 "Newcomers on this moderated channel will automatically receive the "
 "guidelines."
 msgstr ""
-"I nuovi membri di questo canale moderato riceveranno automaticamente le "
+"I nuovi iscritti a questo canale moderato riceveranno automaticamente le "
 "linee guida."
 
 #. module: mail
@@ -4296,13 +4297,13 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
-"Le persone ricevono una notifica automatica spiegandogli che il loro "
-"messaggio è in attesa di moderazione. "
+"Le persone riceveranno una notifica automatica che il loro messaggio è in "
+"attesa di moderazione. "
 
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Permanent Ban"
-msgstr "Bando permanente"
+msgstr "Blocco permanente"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__auto_delete
@@ -4498,7 +4499,7 @@ msgstr "Canali Pubblici"
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Contratto di garanzia per l'editore"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4914,7 +4915,7 @@ msgstr "Inviare di nuovo"
 #: selection:ir.actions.server,state:0
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
 msgid "Send Email"
-msgstr "Inviare e-mail"
+msgstr "Invia e-mail"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:265
@@ -4954,7 +4955,7 @@ msgstr "Inviare le linee guida"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr "Inviare le linee guida ai nuovi abbonati"
+msgstr "Inviare le linee guida ai nuovi iscritti"
 
 #. module: mail
 #. openerp-web
@@ -5704,7 +5705,7 @@ msgstr "Filtro di ricerca non supportato per lo stato di moderazione"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Update the Record"
-msgstr "Aggiornare il record"
+msgstr "Aggiorna il record"
 
 #. module: mail
 #. openerp-web
@@ -5837,7 +5838,7 @@ msgstr "Tipo Vista"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "View all the attachments of the current record"
-msgstr "Visualizzare tutti gli allegati del record attuale"
+msgstr "Visualizza tutti gli allegati del record corrente"
 
 #. module: mail
 #. openerp-web

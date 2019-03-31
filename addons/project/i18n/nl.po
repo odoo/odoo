@@ -3,12 +3,12 @@
 # * project
 # 
 # Translators:
-# Jean-Paul Ladage <j.ladage@zestsoftware.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Martin Trigaux, 2018
+# Jean-Paul Ladage <j.ladage@zestsoftware.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
@@ -209,7 +209,7 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wij waarderen uw feedback. Het helpt ons om continu te verbeteren.\n"
 "            % if object.project_id.rating_status == 'stage':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat uw ticket is geëvolueerd naar het stadium<b>${object.stage_id.name}</b></span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat uw ticket is verplaatst naar de fase <b>${object.stage_id.name}</b></span>\n"
 "            % endif\n"
 "            % if object.project_id.rating_status == 'periodic':\n"
 "                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden <b>${object.project_id.rating_status_period}</b> zolang the taak in de status <b>${object.stage_id.name}</b> is.</span>\n"

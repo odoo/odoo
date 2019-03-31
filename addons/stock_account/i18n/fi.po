@@ -10,18 +10,19 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Timo Koukkari <ti.ko@netikka.fi>, 2018
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
 # Martin Trigaux, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
+"Last-Translator: Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,11 +86,6 @@ msgid "Automated"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Available Products"
-msgstr "Saatavilla olevat tuotteet"
-
-#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Cost (AVCO)"
@@ -151,7 +147,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatio-asetukset"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:587
@@ -220,11 +216,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Exhausted Stock"
-msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -335,12 +326,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Negative Stock"
-msgstr "Negatiiviset saldot"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr ""
@@ -367,6 +353,7 @@ msgstr "Hankintaryhmä"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Tuote"
 
@@ -512,7 +499,12 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Varaston arvostustili (lähtevä)"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:536
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value_currency_id
+msgid "Stock Value Currency"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -520,7 +512,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
+#: code:addons/stock_account/models/stock.py:364
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -528,7 +520,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:369
+#: code:addons/stock_account/models/stock.py:375
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -537,7 +529,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:367
+#: code:addons/stock_account/models/stock.py:373
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -548,7 +540,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "Hyvitä (päivitä SO/PO)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund

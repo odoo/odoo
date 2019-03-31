@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
 "Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
@@ -36,6 +36,22 @@ msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:16
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:13
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr ""
@@ -51,12 +67,17 @@ msgid "Only"
 msgstr ""
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Item"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "தயாரிப்பு"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:59
+#: code:addons/website_event_sale/controllers/main.py:63
 #, python-format
 msgid "Registration"
 msgstr ""
@@ -107,6 +128,12 @@ msgid "Ticket"
 msgstr ""
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:20
+#, python-format
+msgid "Warning"
+msgstr "எச்சரிக்கை"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr ""
+msgstr "இணையதளம்"

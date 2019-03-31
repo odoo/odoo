@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -102,7 +102,10 @@ msgid "FedEx Delivery Methods"
 msgstr "FedEx pristatymo būdai"
 
 #. module: website_sale_delivery
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:29
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+#, python-format
 msgid "Free"
 msgstr "Nemokamas"
 
@@ -117,11 +120,6 @@ msgid "Has delivery"
 msgstr "Turi pristatymą"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
-msgid "Is published"
-msgstr "Yra paskelbtas"
-
-#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
@@ -132,28 +130,9 @@ msgstr ""
 " su mumis dėl daugiau informacijos."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
-msgid "Order Lines displayed on Website"
-msgstr "Užsakymo eilutės, rodomos svetainėje"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
-msgstr ""
-"Užsakymo eilutės rodymui svetainėje. Jos neturėtų būti naudojamos "
-"skaičiavimo tikslais."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
 msgstr "Paskelbtas"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Restrict publishing to this website."
-msgstr "Apriboti skelbimą šioje svetainėje."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -177,11 +156,6 @@ msgid "The amount without tax."
 msgstr "Bendra suma be mokesčių."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Pilna nuoroda dokumento pasiekimui per svetainę."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "Sekimas"
@@ -190,21 +164,6 @@ msgstr "Sekimas"
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
 msgstr "USPS pristatymo būdai"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible on current website"
-msgstr "Matomas esamoje svetainėje"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Website"
-msgstr "Svetainė"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
-msgid "Website URL"
-msgstr "Svetainės nuoroda"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

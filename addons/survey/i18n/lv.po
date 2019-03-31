@@ -3,18 +3,19 @@
 # * survey
 # 
 # Translators:
-# JanisJanis <jbojars@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Arnis Putniņš <arnis@allegro.lv>, 2019
 # ievaputnina <ievai.putninai@gmail.com>, 2019
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2019
+# JanisJanis <jbojars@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2019\n"
+"Last-Translator: JanisJanis <jbojars@gmail.com>, 2019\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -728,6 +729,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Izdzēst nosūtītos e-pastus (tikai masveida sūtīšanas)"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -1319,6 +1321,11 @@ msgid "Message Record Name"
 msgstr "Ziņojuma ieraksta nosaukums"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "Ziņojuma apraksts: vai nu ziņojuma tēma, vai pamatteksta sākums"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
@@ -1736,6 +1743,11 @@ msgid "Public url"
 msgstr "Publisks URL"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "Publicēts"
+
+#. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
 msgstr ""
@@ -1811,7 +1823,7 @@ msgstr "Saistītā dokumenta modelis"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Saistītie vērtējumi"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__reply_to
@@ -2626,6 +2638,11 @@ msgstr "Parādīt Rezultātus"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
 msgstr "Parādīt rezultātus"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "Redzams tīmekļa vietnē kā komentārs"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice

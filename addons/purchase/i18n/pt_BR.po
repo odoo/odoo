@@ -8,7 +8,6 @@
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
 # danimaribeiro <danimaribeiro@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # Adriel Kotviski <kotviski@gmail.com>, 2018
 # Gideoni Silva <gd.willian@gmail.com>, 2018
@@ -17,14 +16,15 @@
 # grazziano <gra.negocia@gmail.com>, 2018
 # Silmar <pinheirosilmar@gmail.com>, 2018
 # Marcelo Costa <marcelo@comdesk.com.br>, 2018
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Marcelo Costa <marcelo@comdesk.com.br>, 2018\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,11 +103,7 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div><p style=\"color:#888888;\">\n"
-"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
-"    ${object.sudo().create_uid.signature | safe}\n"
-"% endif\n"
-"</p>\n"
+"</div>"
 msgstr ""
 
 #. module: purchase
@@ -1756,6 +1752,11 @@ msgstr "Subtotal"
 #: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Moeda do Fornecedor"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Lista de Preços para Fornecedor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax

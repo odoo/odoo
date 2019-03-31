@@ -3,26 +3,25 @@
 # * stock_account
 # 
 # Translators:
-# 卓忆科技 <zhanghao@jointd.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
 # Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,11 +83,6 @@ msgstr "已归档"
 #: selection:product.category,property_valuation:0
 msgid "Automated"
 msgstr "自动"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Available Products"
-msgstr "可用的产品"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -223,11 +217,6 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Exhausted Stock"
-msgstr "耗尽的库存"
-
-#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "First In First Out (FIFO)"
@@ -342,12 +331,7 @@ msgstr ""
 "自动化：当产品进入或离开公司时，自动创建一个会计分录来评估库存。"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Negative Stock"
-msgstr "负数库存"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr "标准价和新价格之间没有差异。"
@@ -374,6 +358,7 @@ msgstr "补货组"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "产品"
 
@@ -525,7 +510,12 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "库存计价科目（出向）"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:536
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value_currency_id
+msgid "Stock Value Currency"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -533,7 +523,7 @@ msgid ""
 msgstr "%s的成本目前等于0。更改你产品的成本或配置以避免错误的评估。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
+#: code:addons/stock_account/models/stock.py:364
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -541,7 +531,7 @@ msgid ""
 msgstr "移动处于不一致状态：有些正在进入，有的正在离开公司。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:369
+#: code:addons/stock_account/models/stock.py:375
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -550,7 +540,7 @@ msgid ""
 msgstr "移动处于不一致的状态：他们在一个单一的步骤中作为一个公司的内部公司，而他们应该通过公司间中转地点。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:367
+#: code:addons/stock_account/models/stock.py:373
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "

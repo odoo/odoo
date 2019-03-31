@@ -3,21 +3,20 @@
 # * stock_account
 # 
 # Translators:
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # milda dvorak <milda.dvorak@optimal4.cz>, 2018
 # Martin Trigaux, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# J.Podhorecky <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: J.Podhorecky <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,11 +78,6 @@ msgstr "Archivováno"
 #: selection:product.category,property_valuation:0
 msgid "Automated"
 msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Available Products"
-msgstr "Dostupné produkty"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -218,11 +212,6 @@ msgid "Display Name"
 msgstr "Zobrazovaný název"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Exhausted Stock"
-msgstr "Vyčerpané zásoby"
-
-#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "First In First Out (FIFO)"
@@ -331,12 +320,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Negative Stock"
-msgstr "Záporné zásoby"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
 msgstr ""
@@ -363,6 +347,7 @@ msgstr "Skupina zásobování"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Výrobek"
 
@@ -508,7 +493,12 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Účet oceňování zásob (výstupní)"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:536
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_value_currency_id
+msgid "Stock Value Currency"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:540
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -516,7 +506,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
+#: code:addons/stock_account/models/stock.py:364
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -524,7 +514,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:369
+#: code:addons/stock_account/models/stock.py:375
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -533,7 +523,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:367
+#: code:addons/stock_account/models/stock.py:373
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
