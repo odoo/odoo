@@ -32,6 +32,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Comandă livrare (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
@@ -139,7 +140,7 @@ msgstr "<strong>Transportator</strong>"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Număr urmărire </strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -281,7 +282,7 @@ msgstr "Informații livrare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Mesaj livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -381,6 +382,7 @@ msgstr ""
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr ""
+"Eroare: această metodă de livrare nu este disponibilă pentru această adresă."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -581,7 +583,7 @@ msgstr "Nume"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Nicio integrare a operatorului de transport"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:73
