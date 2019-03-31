@@ -29,10 +29,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-" * 'Ноорог' төлөв нь магадлагдаагүй шинэ ваучерийг оруулсан дараа хэрэглэгдэнэ.\n"
-"* 'Урьдчилсан' төлөв нь ваучерт дугаар байхгүй үед хэрэглэгдэнэ.\n"
-"* 'Илгээгдсэн' төлөв нь ваучерийг үүсгэж илгээхэд хэрэглэгдэх бөгөөд ваучерийн дугаар олгогдож санхүүгийн бичилт хийгдэнэ\n"
-"* 'Цуцлагдсан' төлөв нь ваучерийг цуцласан тохиолдолд хэрэглэгдэнэ."
+" * 'Ноорог' хэрэглэгч шинээр батлагдаагүй ваучер бүртгэх үед тэр нь нооррог төлөвтэй байна.\n"
+"* 'Pro-forma' төлөв нь ваучерт дугаар байхгүй үед хэрэглэгдэнэ.\n"
+"* 'Батлагдсан' гэдэг нь ваучерийг үүсгээд батласан буюу санхүүгийн бичилтүүд бүртгэгдсэн үеийг илэрхийлнэ.\n"
+"* 'Цуцлагдсан' гэдэг бол хэрэглэгч ваучерийг цуцласан үеийн төлөв байдал юм."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
@@ -58,12 +58,12 @@ msgstr "Санхүүгийн ваучер"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Accounting Voucher Line"
-msgstr ""
+msgstr "Санхүүгийн ваучерийн мөр"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
 msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
+msgstr "Үйлдэл шаардагдсан"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
@@ -78,7 +78,7 @@ msgstr "Шинжилгээний данс"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Шинжилгээний Пайзууд"
+msgstr "Шинжилгээний пайз"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -116,7 +116,7 @@ msgstr "Цуцлах"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr "Баримтыг Цуцлах"
+msgstr "Баримтыг цуцлах"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -144,7 +144,7 @@ msgstr "Энэ журналын холбогдох компани"
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Create a new sale receipt"
-msgstr ""
+msgstr "Борлуулалтын ваучер шинээр бүртгэх"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
@@ -156,7 +156,7 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__currency_id
@@ -179,13 +179,13 @@ msgstr "Огноо"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__name
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Тайлбар"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэцийн нэр"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -200,7 +200,7 @@ msgstr "Ноорог"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr "Ноорог Ваучер"
+msgstr "Ноорог ваучер"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
@@ -210,7 +210,7 @@ msgstr "Эцсийн огноо"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
-msgstr "Санхүүгийн бичилт хийхэд зохистой огноо"
+msgstr "Санхүүгийн гүйлгээ хийгдсэн огноо"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
@@ -237,7 +237,7 @@ msgstr "Ваучерыг харуулах үед энэ мөрийн дараа�
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr "Бүлэглэх"
+msgstr "Бүлэглэлт"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
@@ -290,31 +290,31 @@ msgstr "Журнал"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
-msgstr "Журналийн бичилт"
+msgstr "Ажил гүйлгээ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr "Журналын мөрүүд"
+msgstr "Журналын бичилтүүд"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_main_attachment_id
@@ -335,13 +335,13 @@ msgstr "Зурвасууд"
 #: code:addons/account_voucher/models/account_voucher.py:109
 #, python-format
 msgid "Missing Company"
-msgstr ""
+msgstr "Компани алга"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:111
 #, python-format
 msgid "Missing Currency"
-msgstr ""
+msgstr "Валют алга"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
@@ -412,7 +412,7 @@ msgstr "Төлбөр"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
 msgid "Payment Memo"
-msgstr ""
+msgstr "Төлбөрийн тэмдэглэл"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
@@ -444,7 +444,7 @@ msgstr "Батлагдсан"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "Илгээгдсэн Ваучерууд"
+msgstr "Батлагдсан ваучер"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -469,7 +469,7 @@ msgstr "Худалдан авалтын баримт"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "Худалдан Авалтын Ваучер"
+msgstr "Худалдан авалтын ваучер"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
@@ -487,7 +487,7 @@ msgstr "Хүлээн авах баримтууд"
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "Шинэ худалдан авалтын баримт бүртгэх"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -497,7 +497,7 @@ msgstr "Борлуулалт"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Information"
-msgstr "Борлуулалтын Мэдээлэл"
+msgstr "Борлуулалтын мэдээлэл"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -520,7 +520,7 @@ msgstr "Дараалал"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr "Ноорог Болгох"
+msgstr "Ноорог болгох"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
@@ -533,7 +533,7 @@ msgstr "Төлөв"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr "Төлөв Өөрчлөх"
+msgstr "Төлөв өөрчлөх"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -553,7 +553,7 @@ msgstr "Татварын дүн"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Татвар зөв болгох"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
@@ -573,7 +573,7 @@ msgstr "Энэ баримтын түншийн код."
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr "Үзлэг хийх"
+msgstr "Хяналт хийх"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
@@ -594,12 +594,12 @@ msgstr "Төрөл"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_unit
 msgid "Unit Price"
-msgstr "Нэгж Үнэ"
+msgstr "Нэгж үнэ"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
 msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
+msgstr "Уншаагүй зурвас"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter

@@ -4,11 +4,9 @@
 # 
 # Translators:
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
 # Kim Asplund <kim.asplund@gmail.com>, 2018
 # Jussi Lehto <jussi@gulfeo.com>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
 # Kari Lindgren <karisatu@gmail.com>, 2018
@@ -21,14 +19,17 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Mikko Salmela <salmemik@gmail.com>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
+"Last-Translator: Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,7 +128,7 @@ msgid ""
 "                        <hr/>\n"
 "                    % endif\n"
 "                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
@@ -364,6 +365,11 @@ msgid "<span>Sort by</span>"
 msgstr "<span>Järjestä</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "<span>Your payment has been authorized.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
 msgstr "<strong>Lisää koriin</strong>"
@@ -471,6 +477,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
 "Accessories show up when the customerreviews the cart before payment (cross-"
@@ -478,6 +485,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
 msgstr "Tarvikkeet"
@@ -527,11 +535,7 @@ msgid "Allow the end user to choose this price list"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
-msgid "Allow to use on"
-msgstr ""
-
-#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 msgid "Alternative Products"
 msgstr "Vaihtoehtoiset tuotteet"
@@ -592,7 +596,7 @@ msgstr "Attribuutit"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:92
 #, python-format
 msgid "Average Order"
-msgstr ""
+msgstr "Keskimääräinen tilaus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -825,7 +829,7 @@ msgstr "Laske kuljetuskustannukset tilauksille"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatio-asetukset"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -925,7 +929,7 @@ msgstr "Asiakas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
-msgstr ""
+msgstr "Asiakkaan maa"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -950,7 +954,7 @@ msgstr "Oletushinnasto"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid "Define a new category"
-msgstr ""
+msgstr "Määrittele uusi luokka"
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -967,6 +971,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
 msgstr "Verkkosivuston kuvaus"
@@ -977,6 +982,7 @@ msgid "Desks"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Määritä verkkokauppasivuston esitysjärjestys"
@@ -1198,6 +1204,7 @@ msgid "Image Name"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_image_ids
 msgid "Images"
 msgstr ""
@@ -1270,6 +1277,7 @@ msgstr "Viimeksi muokattu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
+#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
 msgstr ""
 
@@ -1425,11 +1433,6 @@ msgstr ""
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
 msgid "No shipping management on website"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
-msgid "None website"
 msgstr ""
 
 #. module: website_sale
@@ -2040,7 +2043,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell in several currencies"
-msgstr ""
+msgstr "Myy useissa eri valuutoissa"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
@@ -2146,11 +2149,13 @@ msgid "Size"
 msgstr "Koko"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_x
 msgid "Size X"
 msgstr "Koko X"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_y
 msgid "Size Y"
 msgstr "Koko Y"
@@ -2177,7 +2182,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:108
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Myyty"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:539
@@ -2241,6 +2246,7 @@ msgid "Style Name"
 msgstr "Tyylin nimi"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_style_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Styles"
@@ -2252,6 +2258,7 @@ msgid "Subtotal:"
 msgstr "Välisumma:"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
 "Suggest alternatives to your customer(upsell strategy).Those product show up"
@@ -2317,6 +2324,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
 msgid ""
 "The product will be available in each mentioned e-commerce category. Go "
@@ -2472,6 +2480,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_invoice__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
@@ -2482,6 +2491,7 @@ msgstr "Verkkosivu"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
+#: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
 msgstr "Verkkosivun Tuote Kategoria"
@@ -2492,6 +2502,7 @@ msgid "Website Public Categories"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_sequence
 msgid "Website Sequence"
 msgstr ""
@@ -2630,11 +2641,6 @@ msgid "Your cart is empty!"
 msgstr "Ostoskorisi on tyhjä!"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "Your payment has been authorized."
-msgstr "Maksusuorituksesi on hyväksytty."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr ""
@@ -2734,11 +2740,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
-msgid "website"
-msgstr "verkkosivusto"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
 # Fabri Yohann <psn@fabri.pw>, 2018
 # lucasdeliege <deliegelucas@gmail.com>, 2018
@@ -16,8 +16,6 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
-# Martin Trigaux, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Agathe Mollé <molleagathe@gmail.com>, 2018
 # Bruno JOLIVEAU, 2018
@@ -26,14 +24,17 @@
 # Clo <clo@odoo.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Miguel Vidali <mvidali129@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
+# Shark McGnark <peculiarcheese@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Miguel Vidali <mvidali129@gmail.com>, 2018\n"
+"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -744,6 +745,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Supprimer les courriels envoyés (seulement publipostage)"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -1342,6 +1344,13 @@ msgid "Message Record Name"
 msgstr "Nom de l'enregistrement du message"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr ""
+"Description du message : soit le sujet ou le commencement du corps du "
+"message"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
@@ -1758,6 +1767,11 @@ msgstr "Lien public vers les résultats du sondage"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
 msgid "Public url"
 msgstr "URL publique"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "Publié"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
@@ -2660,6 +2674,11 @@ msgstr "Voir les résultats"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
 msgstr "Voir les résultats"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "Visible sur le site web comme commentaire"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice

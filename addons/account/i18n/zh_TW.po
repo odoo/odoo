@@ -3,19 +3,20 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# bluce Lan <bluce.lan@gmail.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# bluce Lan <bluce.lan@gmail.com>, 2018
 # Ying Chang <acc.tou@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Ying Chang <acc.tou@gmail.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -437,15 +438,6 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr "<span class=\"text-muted\">只顯示沒有與銀行帳戶鏈接起來的帳目</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
-msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">金額</span>\n"
-"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">總價格</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -956,6 +948,7 @@ msgstr "帳戶號碼"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "應付帳款"
 
@@ -971,6 +964,7 @@ msgstr "會計屬性"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
 msgstr "應收帳款"
 
@@ -1552,6 +1546,7 @@ msgstr "允許使用分析會計"
 #: model:ir.model.fields,field_description:account.field_cash_box_out__amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__amount
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -2077,10 +2072,11 @@ msgstr "餘額的計算根據期初餘額和交易明細行"
 
 #. module: account
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:340
+#: code:addons/account/models/chart_template.py:352
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
+#: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #, python-format
 msgid "Bank"
 msgstr "銀行"
@@ -2971,6 +2967,7 @@ msgstr "公司"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
+#: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "公司是指業務夥伴"
 
@@ -3168,6 +3165,7 @@ msgstr "內容"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contracts_count
+#: model:ir.model.fields,field_description:account.field_res_users__contracts_count
 msgid "Contracts Count"
 msgstr "合同統計"
 
@@ -3574,6 +3572,7 @@ msgstr "幣別"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
+#: model:ir.model.fields,field_description:account.field_res_users__currency_id
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3649,6 +3648,7 @@ msgstr "客戶付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_payment_term_id
 msgid "Customer Payment Terms"
 msgstr "客戶付款條款"
 
@@ -3665,6 +3665,7 @@ msgid "Customer Portal URL"
 msgstr "客戶網站入口網址"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Customer Taxes"
 msgstr "客戶稅"
@@ -3911,11 +3912,13 @@ msgid "Default taxes applied to local transactions"
 msgstr "適用於本地事務的預設稅收"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
 msgstr "購買產品時使用的預設稅。"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
 msgstr "銷售產品時使用的預設稅。"
@@ -3960,6 +3963,7 @@ msgstr "定義"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__trust
+#: model:ir.model.fields,field_description:account.field_res_users__trust
 msgid "Degree of trust you have in this debtor"
 msgstr "對此債務人的信任度"
 
@@ -3995,9 +3999,10 @@ msgstr "說明從現金出納機取錢的原因:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:305
+#: code:addons/account/static/src/xml/account_reconciliation.xml:310
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__name
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__description
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_type_form
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_line_form
@@ -4263,12 +4268,17 @@ msgid "Due the"
 msgstr "截止"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1271
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "複製"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1303
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
-msgstr "發現重複的供應商。您可能重複記錄了同一供應商的帳單/信用記錄。"
+msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單／退款輸入了兩次"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -4433,6 +4443,7 @@ msgstr "費用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Expense Account"
@@ -4551,6 +4562,7 @@ msgstr "會計期間"
 #: model:ir.model.fields,field_description:account.field_account_invoice__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -4919,6 +4931,7 @@ msgstr "有未清項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
+#: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
 msgstr "有未調節的分錄"
 
@@ -5309,6 +5322,7 @@ msgstr "收入"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
@@ -5465,12 +5479,13 @@ msgid "Invalid fiscal year last day"
 msgstr "無效的會計年度的最後一天"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1334
+#: code:addons/account/models/account_invoice.py:1351
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__invoice_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__invoice_id
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 #: model_terms:ir.ui.view,arch_db:account.invoice_tree
@@ -5629,6 +5644,7 @@ msgstr "已開立憑單"
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_ids
 #: model:ir.model.fields,field_description:account.field_account_register_payments__invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_ids
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5896,6 +5912,7 @@ msgstr "日記帳專案標籤"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_entry_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__journal_item_count
+#: model:ir.model.fields,field_description:account.field_res_users__journal_item_count
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -6022,12 +6039,14 @@ msgid "Keep open"
 msgstr "保持打開"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_income_id
 msgid ""
 "Keep this field empty to use the default value from the product category."
 msgstr "保持這個字段為空，使用來自產品類別的預設值。"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_expense_id
 msgid ""
 "Keep this field empty to use the default value from the product category. If"
@@ -6253,6 +6272,7 @@ msgstr "最後更新時間"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__last_time_entries_checked
+#: model:ir.model.fields,help:account.field_res_users__last_time_entries_checked
 msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
@@ -6275,6 +6295,7 @@ msgstr "逾期活動"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
+#: model:ir.model.fields,field_description:account.field_res_users__last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "最近的憑單和付款匹配時間"
 
@@ -6620,7 +6641,13 @@ msgid "Message Record Name"
 msgstr "消息記錄名稱"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "消息描述：主題或正文的開始部分"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_warn_msg
 msgid "Message for Invoice"
 msgstr "憑單消息"
 
@@ -7446,6 +7473,7 @@ msgstr "業務夥伴的國家"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
+#: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
 msgstr "客戶合同"
 
@@ -7508,6 +7536,7 @@ msgstr "應付帳款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit_limit
+#: model:ir.model.fields,field_description:account.field_res_users__debit_limit
 msgid "Payable Limit"
 msgstr "應付限額"
 
@@ -7717,6 +7746,12 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr "支付用於登記流動性。您可以通過自己的方式或使用安裝的設施來處理這些付款。"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:444
+#, python-format
+msgid "Payments without a customer can't be matched"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -8036,6 +8071,11 @@ msgstr "編程錯誤:在上下文環境中沒有active_id的嚮導操作。"
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
 msgid "Properties"
 msgstr "權益"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__website_published
+msgid "Published"
+msgstr "已公開"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -8838,6 +8878,7 @@ msgstr "選擇的憑單不能被確認，因為它們不在 '草稿' 狀態。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__invoice_warn
+#: model:ir.model.fields,help:account.field_res_users__invoice_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -8862,7 +8903,8 @@ msgid "Send Email"
 msgstr "發送電子信件"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:607
+#: code:addons/account/models/account_invoice.py:633
+#: code:addons/account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "Send Invoice"
 msgstr "發送憑單"
@@ -10037,7 +10079,7 @@ msgstr ""
 "saxon會計用永續盤存的估價，在這種情況下，在這種情況下，費用在客戶應收憑單確認時確認(商品的銷售成本)。"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:891
+#: code:addons/account/models/account_invoice.py:921
 #, python-format
 msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
@@ -10046,12 +10088,13 @@ msgstr "需要供貨商字段，請完善該字段並核實供應商應付憑單
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr "財政狀況將決定該聯繫人的稅和科目。"
 
 #. module: account
-#: code:addons/account/models/account.py:555
+#: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "日記帳銀行帳的所有者必須為公司 (%s)."
@@ -10145,13 +10188,14 @@ msgstr "這張憑單的業務夥伴科目."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
+#: model:ir.model.fields,help:account.field_res_users__has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr "自動上次這個業務夥伴的憑單和付款完全一致。這個業務夥伴至少有一個未調節的借方和貸方."
 
 #. module: account
-#: code:addons/account/models/account.py:648
+#: code:addons/account/models/account.py:656
 #, python-format
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
@@ -10384,6 +10428,7 @@ msgstr "本周"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
@@ -10391,6 +10436,7 @@ msgstr "這個科目被用來代替目前業務夥伴的預設的應付科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
@@ -10547,13 +10593,14 @@ msgstr "該參數會在報表明細行與錄入嚴格一致的情況下被忽略
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:299
 #, python-format
 msgid "This payment is registered but not reconciled."
 msgstr "付款被登記但是沒有調節."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users__property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
@@ -10561,6 +10608,7 @@ msgstr "該付款條款江北用來代替採購訂單或者供應商應付憑單
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users__property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
@@ -10670,16 +10718,24 @@ msgstr "借方總計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
+#: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
 msgstr "已開立憑單總計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit
+#: model:ir.model.fields,field_description:account.field_res_users__debit
 msgid "Total Payable"
 msgstr "應付總計"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Total Price"
+msgstr "總價"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
+#: model:ir.model.fields,field_description:account.field_res_users__credit
 msgid "Total Receivable"
 msgstr "應收總計"
 
@@ -10712,6 +10768,7 @@ msgstr "憑單中幣別的總數量, 貸方是負數."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
+#: model:ir.model.fields,help:account.field_res_users__credit
 msgid "Total amount this customer owes you."
 msgstr "這個客戶欠款的總數量."
 
@@ -10727,6 +10784,7 @@ msgstr "不含稅總金額"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
+#: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
 msgstr "您需要付給這個供應商的總數量."
 
@@ -11085,6 +11143,7 @@ msgstr "當現金出納機的關帳餘額與系統計算的有差異時，用於
 #: model:ir.model.fields,help:account.field_account_move_line__company_currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 #: model:ir.model.fields,help:account.field_res_partner__currency_id
+#: model:ir.model.fields,help:account.field_res_users__currency_id
 msgid "Utility field to express amount currency"
 msgstr "表示貨幣數量的工具字段"
 
@@ -11200,6 +11259,7 @@ msgstr "供應商付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
 msgstr "供應商付款條款"
 
@@ -11215,6 +11275,7 @@ msgid "Vendor Reference"
 msgstr "供應商參考"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Vendor Taxes"
 msgstr "供應商稅"
@@ -11239,12 +11300,17 @@ msgid "View accounts detail"
 msgstr "查看帳戶明細"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__website_published
+msgid "Visible on the website as a comment"
+msgstr "作為評論在網站可見"
+
+#. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Warning"
 msgstr "警告"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:778
+#: code:addons/account/models/account_invoice.py:808
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -11358,12 +11424,19 @@ msgid "Write-off Amount"
 msgstr "核銷金額"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:217
+#, python-format
+msgid "Writeoff Date"
+msgstr ""
+
+#. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
 msgstr "在記帳分錄中有錯誤的借貸值 !"
 
 #. module: account
-#: code:addons/account/models/account_move.py:908
+#: code:addons/account/models/account_move.py:921
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
 msgstr "您正在調節一些已經被調節的分錄."

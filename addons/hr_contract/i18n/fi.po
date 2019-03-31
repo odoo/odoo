@@ -11,17 +11,22 @@
 # Mikko Salmela <salmemik@gmail.com>, 2018
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +37,12 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">(jos määraikainen sopimus)</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span>/ month</span>"
-msgstr ""
+msgstr "<span>/ kuukausi</span>"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -77,7 +82,7 @@ msgstr "Arkistoitu"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Liitteiden määrä"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -97,7 +102,7 @@ msgstr "Yrityksen ajoneuvo"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Sopimusten määrä"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -113,7 +118,7 @@ msgstr "Sopimuksen viite"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Terms"
-msgstr ""
+msgstr "Sopimusehdot"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
@@ -135,18 +140,18 @@ msgstr "Sopimustyypit"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Sopimus on vanhenemassa"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Sopimus vanhentunut"
 
 #. module: hr_contract
 #: code:addons/hr_contract/models/hr_contract.py:99
 #, python-format
 msgid "Contract start date must be earlier than contract end date."
-msgstr ""
+msgstr "Sopimuksen alkupäivä pitää olla aikaisemmin kuin loppupäivä."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -166,7 +171,7 @@ msgstr "Sopimukset"
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Create a new contract"
-msgstr ""
+msgstr "Luo uusi sopimus"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
@@ -190,12 +195,12 @@ msgstr "Valuutta"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "Voimassa oleva sopimus"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "Nykyinen työntekijä"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -216,12 +221,12 @@ msgstr "Näyttönimi"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Tiputusvalikko"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr ""
+msgstr "Muokkaa sopimusta"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -248,12 +253,12 @@ msgstr "Työsopimukset"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "Työntekijän kuukausipalkka."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Employee's working schedule."
-msgstr ""
+msgstr "Työntekijän työaika."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
@@ -263,17 +268,17 @@ msgstr "Päättymispäivä"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr ""
+msgstr "Sopimuksen päättymispäivä (jos määräaikainen sopimus)."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "Koeajan päätyyminen (jos määritetty)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "Koeajan päättyminen"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -339,12 +344,12 @@ msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Tärkeitä viestejä"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -392,7 +397,7 @@ msgstr "Työntekijän viimeisin sopimus"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Pääliite"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -412,7 +417,7 @@ msgstr "Lääkärintarkastuksen päivämäärä"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Ongelma viestin toimituksessa"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -422,7 +427,7 @@ msgstr "Viestit"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Monthly Advantages in Cash"
-msgstr ""
+msgstr "Kuukausipalkat"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -432,7 +437,7 @@ msgstr "Uusi"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Seuraavan toimenpiteen eräpäivä"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
@@ -442,7 +447,7 @@ msgstr "Toimenpiteen kuvaus"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
@@ -458,7 +463,7 @@ msgstr "Toimenpiteiden määrä"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Virheiden määrä"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
@@ -468,7 +473,7 @@ msgstr "Toimenpiteitä vaativien viestien määrä"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Toimitusvirheellisten viestien määrä"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread_counter
@@ -498,7 +503,7 @@ msgstr "Käynnissä olevat"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr ""
+msgstr "Palkkatiedot"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -529,7 +534,7 @@ msgstr "Alkupäivä"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
 msgid "Start date of the contract."
-msgstr ""
+msgstr "Sopimuksen alkupäivä"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -549,11 +554,15 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Määräpäivä on menneisyydessä\n"
+"Tänään: Määräpäivä on tänään\n"
+"Suunniteltu: Tulevat tehtävät."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
-msgstr ""
+msgstr "Sopimuksen tila"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0

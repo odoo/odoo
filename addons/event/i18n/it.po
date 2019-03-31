@@ -8,7 +8,6 @@
 # p_amoruso <p.amoruso@elvenstudio.it>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
@@ -18,14 +17,16 @@
 # David Minneci <david@numeko.it>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"Last-Translator: Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1566,6 +1567,7 @@ msgstr "Evento: schedulatore email"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
+#: model:ir.model.fields,field_description:event.field_res_users__event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2046,6 +2048,7 @@ msgstr "Numero di errori"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
+#: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "Numero di eventi a cui il partner ha partecipato."
 
@@ -2551,6 +2554,18 @@ msgstr "ATTENZIONE: errore dello schedulatore per l'evento: %s"
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr "Gestione magazzino, Produzione (MRP)  e vendite, Import/Export."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
+msgid "Website Messages"
+msgstr "Messaggi sito web"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__website_message_ids
+#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
+msgid "Website communication history"
+msgstr "Cronologia comunicazioni sito"
 
 #. module: event
 #: selection:event.mail,interval_unit:0

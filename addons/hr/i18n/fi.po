@@ -12,19 +12,25 @@
 # Iipponen <erno@web-veistamo.fi>, 2018
 # Kimmo Lehtonen <leban@netzionale.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Martin Trigaux, 2018
 # Miku Laitinen <miku.laitinen@gmail.com>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
+"Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +53,8 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Hallinnoi\" "
+"title=\"Hallinnoi\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -101,12 +109,12 @@ msgstr "<span>Raportointi</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr ""
+msgstr "<span>Hyväksyttävät</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr ""
+msgstr "<span>Tehtävät</span>"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -193,15 +201,18 @@ msgstr "Toimenpiteen tila"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Lisää uusi työntekijä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "Lisätiedot"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "Aliaksen kontaktien tietoturva"
 
@@ -221,7 +232,7 @@ msgstr "Arkistoitu"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Liitteiden määrä"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -363,7 +374,7 @@ msgstr "Täydellinen nimi"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatio-asetukset"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -468,8 +479,8 @@ msgstr "Osastot"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "Keskustelukanava"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -523,7 +534,7 @@ msgstr "Työntekijäryhmä"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
 msgid "Employee Documents"
-msgstr ""
+msgstr "Työntekijän dokumentit"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -579,6 +590,7 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Syötä työntekijän kotiosoite. Ei osoitetta joka on liitetty yritykseen."
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -775,7 +787,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -869,7 +881,7 @@ msgstr "Tehtävät"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "Km koti-työ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -898,7 +910,7 @@ msgstr "Viimeksi päivitetty"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
-msgstr ""
+msgstr "Käynnistä uusia markkinointikampanjoita ja tarjouksia"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -925,7 +937,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Pääliite"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -993,7 +1005,7 @@ msgstr "Jäsenet"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Ongelma viestin toimituksessa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -1026,7 +1038,7 @@ msgstr "Kansalaisuus (maa)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Seuraavan toimenpiteen eräpäivä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
@@ -1036,7 +1048,7 @@ msgstr "Toimenpiteen kuvaus"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1086,7 +1098,7 @@ msgstr "Tässä työtehtävässä parhaillaan olevien työntekijöiden lukumää
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Virheiden määrä"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1107,7 +1119,7 @@ msgstr "Toimenpiteitä vaativien viestien määrä"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Toimitusvirheellisten viestien määrä"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -1202,7 +1214,10 @@ msgid "Planned"
 msgstr "Suunniteltu"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1225,12 +1240,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Kotiosoite"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Henkilökohtaiset tiedot"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1323,7 +1338,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Koulu"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1374,7 +1389,7 @@ msgstr "Naimaton"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Skills"
-msgstr ""
+msgstr "Taidot"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
@@ -1431,6 +1446,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Määräpäivä on menneisyydessä\n"
+"Tänään: Määräpäivä on tänään\n"
+"Suunniteltu: Tulevat tehtävät."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1567,7 +1586,7 @@ msgstr "Käyttäjät"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Työpaikkailmoitukset :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -1614,6 +1633,20 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1673,7 +1706,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Työpaikan osoite"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -1683,7 +1716,7 @@ msgstr "Työsähköposti"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Työn kuvaus"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
@@ -1698,7 +1731,7 @@ msgstr "Matkapuhelin (työ)"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Työorganisaatio"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

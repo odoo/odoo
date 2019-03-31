@@ -13,14 +13,15 @@
 # JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2018
 # Luis González <lgonzalez@vauxoo.com>, 2018
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-08 05:29+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Gabriel Umana <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -780,7 +781,7 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
-"Las respuestas no van al documento original del hilo de discusión. Esto "
+"Las respuestas no van al documento original del hilo de conversación. Esto "
 "tiene un impacto en el id del mensaje generado."
 
 #. module: mail
@@ -1027,12 +1028,13 @@ msgstr "Contenido"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
 msgstr "Rebote"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:398
+#: code:addons/mail/static/src/xml/thread.xml:391
 #: selection:mail.notification,email_status:0
 #, python-format
 msgid "Bounced"
@@ -1227,7 +1229,7 @@ msgstr "Charla"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "Debate del chat"
+msgstr "Conversación del chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1693,17 +1695,17 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Discuss"
-msgstr "Debates"
+msgstr "Conversaciones"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Canal de conversaciones"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
 msgid "Discussions"
-msgstr "Debates"
+msgstr "Conversaciones"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_cancel
@@ -4007,7 +4009,7 @@ msgstr "Abierto"
 #: code:addons/mail/static/src/xml/thread.xml:409
 #, python-format
 msgid "Open Channel in Discuss to moderate"
-msgstr ""
+msgstr "Abrir canal en Conversaciones para moderarla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -4038,7 +4040,7 @@ msgstr "Abrir documento"
 #: code:addons/mail/static/src/js/thread_windows/thread_window.js:192
 #, python-format
 msgid "Open in Discuss"
-msgstr "Abrir para debate"
+msgstr "Abrir en Conversaciones"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -5499,7 +5501,7 @@ msgstr ""
 "- 'Crear o duplicar un nuevo registro': crea un nuevo registro con nuevos valores, o duplica uno existente en la base de datos\n"
 "- 'Escribir en un registro': actualiza los valores de un registro\n"
 "- 'Ejecutar varias acciones': define una acción que lanza otras varias acciones de servidor\n"
-"- 'Añadir seguidores': añade seguidores a un registro (disponible en Discuss)\n"
+"- 'Añadir seguidores': añade seguidores a un registro (disponible en Conversaciones)\n"
 "- 'Enviar un correo electrónico': envía automáticamente un correo electrónico (disponible en email_template)"
 
 #. module: mail
@@ -5795,6 +5797,8 @@ msgid ""
 "Want to <b>get in touch</b> with your contacts? <i>Discuss with them "
 "here.</i>"
 msgstr ""
+"¿Quiere <b>entrar en contacto</b> con sus contactos? <i>Converse con ellos "
+"aquí.</i>"
 
 #. module: mail
 #. openerp-web
@@ -6167,7 +6171,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr "Por ejemplo, discusión de una propuesta"
+msgstr "Por ejemplo, conversación de una propuesta"
 
 #. module: mail
 #. openerp-web

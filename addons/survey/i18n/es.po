@@ -3,32 +3,32 @@
 # * survey
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
 # e2f <projects@e2f.com>, 2018
 # Ana Juaristi <ajuaristio@gmail.com>, 2018
 # Alejandro Santana <alejandrosantana@anubia.es>, 2018
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
 # Sergio Flores <vitavitae1@gmail.com>, 2018
 # Antonio Trueba, 2018
 # Jesus Zapata <jesus@vauxoo.com>, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Gabriel Umaña <gabriel.umana@delfixcr.com>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Martin Trigaux, 2019
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Gabriel Umaña <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -716,6 +716,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Borrar correos enviados (solo envíos masivos)"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -963,7 +964,7 @@ msgstr "Lo hospedo en mi propio sitio web"
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_1
 msgid "I participate to discussion and forums"
-msgstr "Participo de la discusión y los foros"
+msgstr "Participo en la discusión y en los foros"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
@@ -1307,6 +1308,13 @@ msgstr "Error de Envío de Mensaje"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
 msgid "Message Record Name"
 msgstr "Nombre de registro del mensaje"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr ""
+"Descripción del mensaje: o bien el asunto, o el comienzo del cuerpo del "
+"mensaje"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
@@ -1724,6 +1732,11 @@ msgstr "Enlace público a los resultados de la encuesta"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
 msgid "Public url"
 msgstr "URL pública"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "Publicado"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
@@ -2627,6 +2640,11 @@ msgstr "Ver Resultados"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
 msgstr "Ver resultados"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "Visible en el sitio web como un comentario"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice

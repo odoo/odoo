@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -102,7 +102,10 @@ msgid "FedEx Delivery Methods"
 msgstr "Методи доставки FedEx"
 
 #. module: website_sale_delivery
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:29
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+#, python-format
 msgid "Free"
 msgstr "Безкоштовно"
 
@@ -117,11 +120,6 @@ msgid "Has delivery"
 msgstr "Має доставку"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
-msgid "Is published"
-msgstr "Опубліковано"
-
-#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
@@ -132,28 +130,9 @@ msgstr ""
 "Будь ласка, зв’яжіться з нами для отримання детальної інформації."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
-msgid "Order Lines displayed on Website"
-msgstr "Рядки замовлення відображені на веб-сайті"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
-msgstr ""
-"Замовлення рядків, які відображатимуться на веб-сайті. Їх не слід "
-"використовувати для цілей розрахунку."
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
 msgstr "Опубліковано"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Restrict publishing to this website."
-msgstr "Обмеження публікації на цьому веб-сайті."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -177,11 +156,6 @@ msgid "The amount without tax."
 msgstr "Сума без податків"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Повна URL-адреса, для доступу до документації через сайт"
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "Відстеження:"
@@ -190,21 +164,6 @@ msgstr "Відстеження:"
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
 msgstr "Методи доставки USPS "
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible on current website"
-msgstr "Видимий на поточному веб-сайті"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
-msgid "Website"
-msgstr "Веб-сайт"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
-msgid "Website URL"
-msgstr "URL веб-сайту"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

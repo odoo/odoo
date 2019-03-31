@@ -3,32 +3,32 @@
 # * hr
 # 
 # Translators:
+# Martin Trigaux, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # JZH-Odoo <jzh@odoo.com>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
 # Summer Xia <sxi@odoo.com>, 2018
-# Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # keecome <7017511@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Xia Fajin <xia.fajin@elico-corp.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -236,7 +236,10 @@ msgid "Additional Note"
 msgstr "附加说明"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr "别名联系人安全"
 
@@ -503,8 +506,8 @@ msgstr "部门"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "讨论频道"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -1233,7 +1236,10 @@ msgid "Planned"
 msgstr "已安排"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1655,6 +1661,20 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr "我们在寻找一个热情的市场营销经理，让产品更受欢迎，他/她需要有上进心、充满热情，以及……，不怕接触新事物，能够接受许多新事物并实现规模化。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "网上沟通记录"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

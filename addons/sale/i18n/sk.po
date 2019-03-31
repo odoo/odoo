@@ -7,19 +7,19 @@
 # Miroslav Fic <mirko.fic@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
 # Robert Kirschner <robertkirschner@yahoo.com>, 2019
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -285,15 +285,6 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Predané</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
-msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Množstvo</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Celkom</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
 msgstr "<span>Akceptované na základe:</span>"
@@ -339,11 +330,6 @@ msgstr "<span>S platobnými podmienkami:</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
 msgstr "<strong class=\"d-block mb-1\">Faktúry</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
-msgstr "<strong class=\"d-block mb-1\">Fakturačná adresa</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -629,6 +615,7 @@ msgstr "Povolí vám zasielať Pro-Forma faktúry."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Amount"
 msgstr "Suma"
 
@@ -1270,6 +1257,11 @@ msgid "Details"
 msgstr "Detaily"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid "Digital Content"
+msgstr "Digitálny obsah"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
 msgstr "Zľava %"
@@ -1396,6 +1388,7 @@ msgid "Expected Date"
 msgstr "Očakávaný dátum"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
 "Expenses and vendor bills can be re-invoiced to a customer.With this option,"
@@ -1446,11 +1439,6 @@ msgstr "Odberatelia (Partneri)"
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
 msgstr "Zakázané hodnoty na nezodpovedajúcich riadkoch objednávky"
-
-#. module: sale
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "Free sign up"
-msgstr "Voľná registrácia"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1522,6 +1510,7 @@ msgstr ""
 "        typ atribútu je  'Farba'."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__hide_expense_policy
 msgid "Hide Expense Policy"
 msgstr "Skryť nákladovú politiku"
@@ -1984,6 +1973,7 @@ msgid "Manually set quantities on order"
 msgstr "Manuálne nastaviť množstvá na objednávke"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
 msgid ""
 "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
@@ -2006,10 +1996,12 @@ msgstr "Chyba zobrazovania správ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
 msgstr "Správa pre predajnú objednávku"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
 msgstr "Správa pre položku predajnej objednávky"
@@ -2192,11 +2184,6 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Kancelárske stoličky môžu poškodiť vašu podlahu: chráňte ju."
 
 #. module: sale
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "On invitation"
-msgstr "Na pozvanie"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2252,11 +2239,13 @@ msgid "Option not available"
 msgstr "Možnosť nie je k dispozícii"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
 msgstr "Voliteľné produkty"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale.field_product_template__optional_product_ids
 msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
@@ -2361,6 +2350,7 @@ msgid "Ordered Quantity"
 msgstr "Objednané množstvo"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
@@ -2895,6 +2885,7 @@ msgid "Radio"
 msgstr "Rádio"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Policy"
 msgstr "Postup refakturácie"
@@ -2979,6 +2970,7 @@ msgstr "Objednávka predaja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
 msgstr "Počet objednávok predaja"
 
@@ -3057,8 +3049,9 @@ msgid "Sales Information"
 msgstr "Informácie predaja"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:262
+#: code:addons/sale/models/sale.py:271
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -3080,6 +3073,7 @@ msgstr "Položka objednávky"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
 msgstr "Položka objednávok"
@@ -3151,6 +3145,7 @@ msgstr "Obchodné tímy"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Varovania predaja"
 
@@ -3243,8 +3238,10 @@ msgid "Select a product, or create a new one on the fly."
 msgstr "Vyberte produkt alebo vytvorte nový."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
 #: model:ir.model.fields,help:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,help:sale.field_res_users__sale_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -3258,14 +3255,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Predaj a nákup produktov v rozličných merných jednotkách"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
-"Predávajte digitálne produkty - poskytnite sťahovateľný obsah na vašom "
-"zákazníckom portáli"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3908,6 +3897,7 @@ msgstr "Celkom"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Total Price"
 msgstr "Celková cena"
 
@@ -3923,6 +3913,7 @@ msgid "Total Tax Included"
 msgstr "Spolu vrátane DPH"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
 msgstr "Sledovať službu"

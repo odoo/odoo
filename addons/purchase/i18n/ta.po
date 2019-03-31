@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
@@ -93,11 +93,7 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div><p style=\"color:#888888;\">\n"
-"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
-"    ${object.sudo().create_uid.signature | safe}\n"
-"% endif\n"
-"</p>\n"
+"</div>"
 msgstr ""
 
 #. module: purchase
@@ -1703,6 +1699,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"செயல்பாடுகள்\n"
+"காலதாமதம்: காரணமாக தேதி ஏற்கனவே கடந்துவிட்டது\n"
+"இன்று: செயல்பாடு தேதி இன்று\n"
+"திட்டமிடப்பட்டுள்ளது: எதிர்கால நடவடிக்கைகள்."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -1713,6 +1713,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
 msgid "Supplier Currency"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
 msgstr ""
 
 #. module: purchase
@@ -1825,7 +1830,7 @@ msgstr "இன்று"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "இன்று செயல்பாடுகள்"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:42

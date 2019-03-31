@@ -6,8 +6,7 @@
 # Diego de cos <diegodecos@hotmail.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
-# ES R1 <e2fes@hotmail.com>, 2018
-# Martin Trigaux, 2018
+# ced903afe967c2a46d1036224972db9d, 2018
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
@@ -17,16 +16,17 @@
 # Antonio Trueba, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1178,6 +1178,7 @@ msgstr "Evento: Programador de correo"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
+#: model:ir.model.fields,field_description:event.field_res_users__event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -1652,6 +1653,7 @@ msgstr "Número de error"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
+#: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "Cantidad de eventos en los que el cliente ha participado."
 
@@ -2152,6 +2154,18 @@ msgstr "ADVERTENCIA: Error del Programador de Eventos para el evento: %s"
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr "Gestión de almacén, fabricación (MRP) y ventas, importar/exportar."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__website_message_ids
+#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: event
 #: selection:event.mail,interval_unit:0

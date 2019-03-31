@@ -10,22 +10,22 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Martin Trigaux, 2018
 # Metin Akın <aknmetin@gmail.com>, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Saban Yildiz <sabany@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Saban Yildiz <sabany@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"Last-Translator: Saban Yildiz <sabany@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -710,6 +710,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Gönderilen e-postaları sil (yalnızca toplu e-posta ile gönderim)"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -1307,6 +1308,11 @@ msgid "Message Record Name"
 msgstr "Mesaj Kayıt Adı"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "Mesaj tanımı: konu ya da, gövdenin başlangıcı"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
@@ -1722,6 +1728,11 @@ msgstr "Genel bağlantı"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
 msgid "Public url"
 msgstr "Genel url"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "Yayınlandı"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
@@ -2619,6 +2630,11 @@ msgstr "Sonuçları Görüntüleyin"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
 msgstr "Sonuçları Görüntüleyin"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "Web sitesinde bir yorum olarak görünür"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice

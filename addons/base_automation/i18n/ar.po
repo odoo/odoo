@@ -3,7 +3,6 @@
 # * base_automation
 # 
 # Translators:
-# Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Osoul <baruni@osoul.ly>, 2018
@@ -13,20 +12,40 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"Last-Translator: Abdulmajeed Alomar <majeeed87@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: base_automation
+#: model:mail.template,body_html:base_automation.test_mail_template_automation
+msgid "<div>Email automation</div>"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
+msgstr ""
+"يمكن تنفيذ إجراء سيرفر من نوع كود من الموقع، باستخدام متحكم مخصص لهذا. "
+"العنوان هو <base>/website/action/<website_path>. اجعل قيمة هذا الحقل 'صحيح' "
+"للسماح للمستخدمين بتنفيذ هذا الإجراء. إذا كانت قيمته 'خطأ' لا يمكن تنفيذ هذا"
+" الإجراء من خلال الموقع."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -112,6 +131,11 @@ msgid "Automation"
 msgstr "تشغيل آلي"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
+msgid "Available on the Website"
+msgstr "متوفر في الموقع"
+
+#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
@@ -153,6 +177,12 @@ msgstr "الآلية الأساسية: اختبار القاعدة عند الك
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr "الآلية الأساسية: اختبار القاعدة عند كتابة سياق الشيك"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
+msgid "Base Automation: test send an email"
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -312,6 +342,11 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
 "If present, this condition must be satisfied before executing the action "
@@ -390,11 +425,6 @@ msgstr "الدقائق"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "الكائن"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "وصف الكائن"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -499,16 +529,6 @@ msgid "Python Code"
 msgstr "كود بايثون"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "إزالة الإجراء"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "إزالة الإجراء القريني المرتبط بإجراء السيرفر"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
@@ -563,6 +583,11 @@ msgid "Summary"
 msgstr "الملخص"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "الطراز المستهدف"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr "اسم تقني للمستخدم في السجلات"
@@ -576,6 +601,11 @@ msgid ""
 msgstr ""
 "لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء "
 "\"%(state_value)s\""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
+msgid "The full URL to access the server action through the website."
+msgstr "الرابط الكامل المستخدم للوصول لإجراءات السيرفر من خلال الموقع."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -661,6 +691,16 @@ msgstr "ربط القيمة"
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
+msgid "Website Path"
+msgstr "مسار الموقع"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
+msgid "Website Url"
+msgstr "رابط الموقع"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
