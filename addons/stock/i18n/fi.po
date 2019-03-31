@@ -6,7 +6,6 @@
 # artol <arto.leskinen@tek.fi>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
 # Sanna Edelman <direct@generare.com>, 2017
-# Mikko Salmela <salmemik@gmail.com>, 2017
 # Jussi Lehto <jussi@gulfeo.com>, 2017
 # Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Timo Koukkari <ti.ko@netikka.fi>, 2017
@@ -15,6 +14,7 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
@@ -22,6 +22,8 @@
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# Simo Suurla <simo@suurla.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -29,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
+"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1913,7 +1915,7 @@ msgstr "Toimitustilaukset"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Toimituspakkaukset"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2031,7 +2033,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr ""
+msgstr "Määrittele keräilyt"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2816,7 +2818,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Sisällytä nollasaldot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3087,7 +3089,7 @@ msgstr "Inventoinnin viite"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr ""
+msgstr "Inventaarioraportti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3364,7 +3366,7 @@ msgstr "Myöh. siirrot"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_days
 msgid "Lead Time"
-msgstr ""
+msgstr "Toimitusviive"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_type
@@ -3417,7 +3419,7 @@ msgstr "Lokalisointi"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Sijainnit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
@@ -4354,7 +4356,7 @@ msgstr "Pakkausviite:"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "Pakkauksen siirrot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
@@ -4628,6 +4630,8 @@ msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
 msgstr ""
+"Keräilyn prioriteetti. Asettamalla arvo manuaalisesti määrätään kaikkien "
+"siirtojen prioriteetti."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4929,7 +4933,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "Pakkaa"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5210,7 +5214,7 @@ msgstr "Dokumentin viite"
 #: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
-msgstr ""
+msgstr "Määrittele erät, pakkaukset, sijainnit"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5473,6 +5477,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Suunniteltu päivämäärä ensimmäisen erän toimitukseen. Asettamalla arvo "
+"manuaalisesti määritellään kaikkien erien toimituspäivämäärä."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:881
@@ -5783,7 +5789,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
@@ -6596,7 +6602,7 @@ msgstr "Seuranta"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr ""
+msgstr "Seuranta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_product_expiry

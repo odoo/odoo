@@ -48,6 +48,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"לחסום %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:328
@@ -71,6 +74,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+"* טיוטה: לא אושר עדיין ולא יהיה מתוזמן עד לאישור.\n"
+"  * מחכה לביצוע  נוסף: ממתין למהלך נוסף כדי להמשיך לפני שהוא יהפוך לזמין באופן אוטומטי (למשל בהזמנות לפי הזמנה).\n"
+"  * המתנה: אם זה לא מוכן להישלח כי המוצרים הנבחרים לא יכול להיות שמורים.\n"
+"  * מוכן: המוצרים שמורים ומוכנים להישלח. אם מדיניות המשלוח היא \"בהקדם האפשרי\" זה קורה ברגע שנשמר.\n"
+"  * בוצע: עבר עיבוד, לא ניתן לשנות או לבטל עוד .\n"
+"  * בוטל: בוטל, לא ניתן לאשר עוד."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -99,6 +108,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* חדש: כאשר נוצר תנועת מלאי ולא אישר עדיין.\n"
+"* מחכה מעבר נוסף: ניתן לראות מצב זה כאשר עוד מהלך אחד מחכה, למשל בתזרים השוטף.\n"
+"* זמינות ממתינה: מצב זה מגיע כאשר החלטת הרכש היא לא ישרה. זה עשוי להזדקק בהרצת תזמון. הרכיבים נדרשים להיות מיוצרים ...\n"
+"* זמין: כאשר המוצרים שמורים, הוא מוגדר כ- 'זמין'.\n"
+"* בוצע: כאשר המשלוח בתהליך, ניתן לקבוע כ 'בוצע'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -112,6 +126,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"*  מיקום ספק: מיקום וירטואלי מייצג את מיקום המקור עבור מוצרים המגיעים מהספקים שלך\n"
+"* צפייה: מיקום וירטואלי משמש ליצירת מבנים היררכיים עבור המחסן שלך, צבירת תתי מיקומים שלו; לא יכול להכיל מוצרים ישירות\n"
+"* מיקום פנימי: מיקומים פיזיים בתוך מחסנים שלך,\n"
+"* מיקום הלקוח: מיקום וירטואלי המייצג את מיקום היעד עבור מוצרים שנשלחו ללקוחות שלך\n"
+"* הפסד מלאי: מיקום וירטואלי משמש כמקביל עבור פעולות מלאי המשמשים לתקן רמות מלאי (מלאי פיזי)\n"
+"* רכש: מיקום וירטואלי מקביל משמש זמנית עבור פעולות רכש כאשר המקור (ספק או ייצור) אינו ידוע עדיין. מיקום זה אמור להיות ריק כאשר מתזמן הרכש הסתיים.\n"
+"* ייצור: מיקום וירטואלי מקביל  עבור פעולות הייצור: מיקום זה צורך את חומר הגלם ומייצר מוצרים מוגמרים\n"
+"* מיקום העברה: מיקום מקביל, ניתן להשתמש בפעילות בין החברה או בין המחסן"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -695,6 +717,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"הוסף והתאם אישית את מסלול הפעולות והמהלכים על מוצרים במחסנים שלך: למשל. לפרוק> בקרת איכות> מלאי עבור מוצרים נכנסים, בחר> חבילה> משלוח עבור מוצרים יוצאים.\n"
+"ניתן גם להגדיר את אסטרטגיות שים בצד באתרי המחסן כדי לשלוח מוצרים נכנסים לתתי מיקומים ספציפיים של לשים בצד (למשל, ארגזים ספציפיים, מדפים)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -705,6 +729,10 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"הוסף והתאם אישית את מסלול הפעולות והמהלכים על מוצרים במחסן(ים) שלך: למשל. "
+"לפרוק> בקרת איכות> מלאי עבור מוצרים נכנסים, בחר> חבילה> משלוח עבור מוצרים "
+"יוצאים. ניתן גם להגדיר את אסטרטגיות שים בצד באתרי המחסן כדי לשלוח מוצרים "
+"נכנסים לתתי מיקומים ספציפיים של לשים בצד (למשל, ארגזים ספציפיים, מדפים)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -1047,6 +1075,10 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
+"כברירת מחדל, המערכת תיקח מלאי ממיקום המקור ותמתין באופן פסיבי לזמינות. "
+"האפשרות השנייה מאפשרת לרכוש ישירות ממיקום המקור (ובכך מתעלמת מהמלאי הנוכחי) "
+"בכדי לאסוף מוצרים. אם אנחנו רוצים לשרשר תנועות וגם לחכות לתנועה הקודמת, יש "
+"לבחור את האפשרות השנייה הזו."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1134,7 +1166,7 @@ msgstr "קטגוריה מסלולים"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_move_dest_exists
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "מקיימת שרשור תנועות"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -1661,6 +1693,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"כמות שוטפת של מוצרים.\n"
+"בהקשר למיקום מלאי יחיד, זה כולל סחורות המאוחסנות במיקום זה, או בכל אחד מתתי מיקומים.\n"
+"בהקשר עם מחסן יחיד, זה כולל מלאי מאוחסן באתר מחסן זה, או כל אחד מתתי מיקומים.\n"
+"מאוחסנים באתר המלאי של המחסן של חנות זו, או כל אחד מתיי המיקומים.\n"
+"אחרת, זה כולל סחורות המאוחסנות בכל מקום במלאי עם סיוג \"פנימי\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:111
@@ -2471,7 +2508,7 @@ msgstr "יש חבילות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "יש תנועת פסולים"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking

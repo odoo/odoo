@@ -3,28 +3,30 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Mikko Salmela <salmemik@gmail.com>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Martin Trigaux, 2017
 # Topi Aura <topi@aurat.fi>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Kari Lindgren <karisatu@gmail.com>, 2017
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
 # Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
+# Martin Trigaux, 2017
 # Kimmo Lehtonen <leban@netzionale.com>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
 # Jukka Paulin <jukka.paulin@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:25+0000\n"
+"Last-Translator: Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +100,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> En ole kiinnostunut"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:191
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Minua kiinnostaa tämä liidi.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -183,7 +185,7 @@ msgstr "Kaikki maat"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:262
 #, python-format
 msgid "All fields are required !"
-msgstr ""
+msgstr "Kaikki kentät ovat pakollisia!"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
@@ -198,7 +200,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.actions.server,name:website_crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Määritä kumppanille kohdistettu myyjä"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
@@ -220,7 +222,7 @@ msgstr "Määritelty kumppani"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Automaattinen kohdistus"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -305,7 +307,7 @@ msgstr "Ota yhteyttä jälleenmyyjään"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Contact name"
-msgstr ""
+msgstr "Yhteystiedon nimi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -340,7 +342,7 @@ msgstr "Luonut"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
-msgstr ""
+msgstr "Partnerin luoma"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
@@ -381,7 +383,7 @@ msgstr "Kumppanuuden alkupäivä"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr ""
+msgstr "Päivämäärän tarkistus"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -421,12 +423,12 @@ msgstr "Näyttönimi"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Oletko ottanut yhteyttä asiakkaaseen?"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Contact"
-msgstr ""
+msgstr "Muokkaa yhteystietoa"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity

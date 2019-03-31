@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -2621,19 +2621,26 @@ msgstr "Pick fouten"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2003
+#: code:addons/point_of_sale/static/src/js/screens.js:2034
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "Bevestig groot aantal aub"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:344
+#: code:addons/point_of_sale/models/pos_order.py:369
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Definieer een omzetrekening voor dit product:  \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:587
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2083
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "U dient de factuur via de backend af te drukken"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:653
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Kies een relatie voor deze verkoop"
@@ -3729,18 +3736,29 @@ msgstr "Het aantal kassa orders gerelateerd aan deze klant"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2052
+#: code:addons/point_of_sale/static/src/js/screens.js:2094
 #, python-format
 msgid "The order could not be sent"
 msgstr "De order kon niet worden verzonden"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2063
+#: code:addons/point_of_sale/static/src/js/screens.js:2105
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
 "Het order kon niet naar de server worden verzonden door een onbekende fout"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2084
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+"Deze order is al eerder gesynchroniseerd. U dient de factuur vanuit de "
+"backend aan te maken voor deze order:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash

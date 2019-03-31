@@ -3,19 +3,19 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Michael Yeung, 2017
 # Cécile Collart <cco@odoo.com>, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
 # 金儒 楊 <ce1123@cooleagle.com.tw>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
+# Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -4499,12 +4499,17 @@ msgid "Due date"
 msgstr "到期日"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "複製"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
-msgstr "發現重複的供應商。您可能重複記錄了同一供應商的帳單/信用記錄。"
+msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單／退款輸入了兩次"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports
