@@ -3329,7 +3329,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
 msgid "Create a new purchasable product"
-msgstr ""
+msgstr "Creați un nou produs"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -3344,7 +3344,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr ""
+msgstr "Creați o nouă taxă"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
@@ -4331,7 +4331,7 @@ msgstr "Data scadenta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due the"
-msgstr ""
+msgstr "Scadent pe "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5280,6 +5280,10 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Dacă utilizați termeni de plată, data scadenței va fi calculată automat la "
+"generarea intrărilor contabile. Dacă păstrați termenii de plată și data "
+"scadenței goale, aceasta înseamnă o plată directă. Termenii de plată pot "
+"calcula mai multe date scadente, de exemplu 50% acum, 50% într-o lună."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__date_due
@@ -5290,6 +5294,12 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"Dacă utilizați termeni de plată, data scadenței va fi calculată automat la "
+"generarea intrărilor contabile. Termenii de plată pot calcula câteva date "
+"scadente, de exemplu 50% acum și 50% într-o lună, dar dacă doriți să forțați"
+" o dată scadentă, asigurați-vă că termenul de plată nu este stabilit pe "
+"factură. Dacă păstrați termenii de plată și data scadenței goale, aceasta "
+"înseamnă o plată directă."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7538,7 +7548,7 @@ msgstr "Mesaj plăți restante"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "Facturi restante, data scadenței a trecut"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
@@ -8561,12 +8571,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "Sumă scadentă în moneda companiei."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Sumă scadentă în moneda facturii."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual
@@ -12194,12 +12204,12 @@ msgstr ""
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the current month"
-msgstr ""
+msgstr "a lunii curente"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the following month"
-msgstr ""
+msgstr "a următoarei luni"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
