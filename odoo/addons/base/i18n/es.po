@@ -41,12 +41,10 @@
 # Fernando San Martín Woerner <fsnmartin@gmail.com>, 2018
 # ced903afe967c2a46d1036224972db9d, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Ivan Nieto <ivan.n.s@tuta.io>, 2018
 # José Luis <alagunajs@gmail.com>, 2018
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 # Massiel Acuna <mac@odoo.com>, 2018
-# Jesse Garza <jga@odoo.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Fernando Herrera <baloosoftware@gmail.com>, 2019
 # e2f <projects@e2f.com>, 2019
@@ -63,6 +61,8 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2019
 # Antonio Trueba, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -70,7 +70,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:25+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2019\n"
+"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -877,6 +877,9 @@ msgid ""
 "        and its mod 347 report.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo añade soporte para datos de bienes raíces a la localización en español, y al modelo 347.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
@@ -895,6 +898,10 @@ msgid ""
 "        of another database on which a counterpart addon is installed.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo permite a empleados comunicarse con operadores de livechat\n"
+"        de otra base de datos en la cuál se ha agregado un módulo correspondiente.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1051,6 +1058,9 @@ msgid ""
 "       Auto-complete partner companies' data\n"
 "    "
 msgstr ""
+"\n"
+"       Auto-completar datos de la compañía del partner\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -1082,6 +1092,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders.\n"
 msgstr ""
+"\n"
+"    Agrega Control de Calidad a órdenes de trabajo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -1136,6 +1148,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Haga la fecha de bloqueo irreversible:\n"
+"\n"
+"    * No puede definir condiciones más estrictas para asesores que para usuarios. Por ello, la fecha de bloqueo en el asesor debe ser antes que la de los usuarios.\n"
+"    * No puede bloquear un periodo que no ha terminado. Por ello, la fecha de bloqueo para asesores debe ser una antes del último del mes previo.\n"
+"    * La nueva fecha de bloqueo para asesores debe ser posterior a la fecha de bloqueo previa.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1168,6 +1187,10 @@ msgid ""
 "    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
+"\n"
+"    Introduzca correctamente los asientos contables para impuestos por pagar/por cobrar. Cuando use \n"
+"    multi-moneda los impuestos deben registrarse en la fecha de pago\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -8411,7 +8434,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
 msgid "Add OdooBot in discussions"
-msgstr ""
+msgstr "Añadir OdooBot en las conversaciones"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex

@@ -150,6 +150,8 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
+"<br>O necesitate este creată în <b>%s</b>și o regulă va fi declanșată pentru"
+" o îndeplini.  "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -1563,7 +1565,7 @@ msgstr "Întârziere"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Deliver goods directly (1 step)"
-msgstr ""
+msgstr "Livrare directă bunuri (1 pas)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:609
@@ -3732,7 +3734,7 @@ msgstr "Ieșiri"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
 msgid "Outgoing Shipments"
-msgstr ""
+msgstr "Livrare"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:520
@@ -3818,6 +3820,7 @@ msgstr "Tip ambalare"
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
 msgstr ""
+"Împachetare bunuri, transfer bunuri către ieșire și apoi livrare (3 pași)"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -4381,12 +4384,12 @@ msgstr "Propagare Grup Aprovizionare"
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr ""
+msgstr "Trage & Împinge"
 
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Trage din"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4401,7 +4404,7 @@ msgstr "Regulă împingere"
 #. module: stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "Împinge în"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__putaway_id
@@ -4630,17 +4633,19 @@ msgstr "Recepții"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly (1 step)"
-msgstr ""
+msgstr "Recepție bunuri direct în stoc (un pas)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr ""
+msgstr "Recepție bunuri la intrare și apoi transferați în stoc(2 pași)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
+"Recepție bunuri la intrare, verificare calitate și apoi transferați în stoc "
+"(2 pași)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:607
@@ -4853,12 +4858,12 @@ msgstr "Utilizator responsabil"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Reaprovizionarea"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "Reaprovizionare din"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -5113,7 +5118,7 @@ msgstr "Vânzare și achiziționare produse în diferite unități de măsură"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr ""
+msgstr "Transfer bunuri către ieșire și apoi livrare (2 pași)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__sequence
@@ -5221,7 +5226,7 @@ msgstr "Rafturi (Y)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Shipments"
-msgstr ""
+msgstr "Recepție și Livrare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5825,6 +5830,8 @@ msgid ""
 "The rules defined per product will be applied before the rules defined per "
 "product category."
 msgstr ""
+"Regulile definite pentru fiecare produs vor fi aplicate înainte de regulile "
+"definite pentru fiecare categorie de produs."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:160
@@ -5972,6 +5979,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "This is used to correct the product quantities you have in stock."
 msgstr ""
+"Acesta este folosit pentru a corecta cantitățile de produse pe care le aveți"
+" în stoc."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:86
@@ -6222,7 +6231,7 @@ msgstr "Locații tranzit"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 #: selection:stock.rule,procure_method:0
 msgid "Trigger Another Rule"
-msgstr ""
+msgstr "Declanșează alt regulă"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6677,6 +6686,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
+"Atunci când sunt necesare produse în <b>%s</b>,<br/><b>%s</b>sunt create de "
+"la <b>%s</b>pentru a satisface nevoia.  "
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:114
@@ -6685,6 +6696,8 @@ msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
 msgstr ""
+"Când sosesc produsele în <b>%s</b>, <br/><b>%s</b>sunt create pentru a le "
+"trimite în <b>%s</b>. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
