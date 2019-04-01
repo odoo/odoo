@@ -43,14 +43,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     commitChanges: function () {
         var self = this;
-        if (!this.wysiwyg || !this.isRendered) {
+        if (this.mode === 'readonly' || !this.isRendered) {
             return this._super();
         }
         var fieldName = this.nodeOptions['inline-field'];
 
-        if (this.mode == "readonly") {
-            return this._super();
-        }
         if (this.$content.find('.o_basic_theme').length) {
             this.$content.find('*').css('font-family', '');
         }
