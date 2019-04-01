@@ -19,6 +19,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        var self = this;
         var $carriers = $('#delivery_carrier input[name="delivery_type"]');
         // Workaround to:
         // - update the amount/error on the label at first rendering
@@ -26,6 +27,18 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if ($carriers.length > 0) {
             $carriers.filter(':checked').click();
         }
+
+        // Asynchronously retrieve every carrier price
+        _.each($carriers, function (carrierInput, k) {
+            self._showLoading($(carrierInput));
+            self._rpc({
+                route: '/shop/carrier_rate_shipment',
+                params: {
+                    'carrier_id': carrierInput.value,
+                },
+            }).then(self._handleCarrierUpdateResultBadge.bind(self));
+        });
+
         return this._super.apply(this, arguments);
     },
 
@@ -33,6 +46,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {jQuery} $carrierInput
+     */
+    _showLoading: function ($carrierInput) {
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').addClass('d-none');
+        $carrierInput.siblings('.o_delivery_compute').removeClass('d-none').html('<span class="fa fa-spinner fa-spin"/>');
+    },
     /**
      * @private
      * @param {Object} result
@@ -94,6 +115,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onCarrierClick: function (ev) {
         var $radio = $(ev.currentTarget).find('input[type="radio"]');
+        this._showLoading($radio);
         $radio.prop("checked", true);
         var $payButton = $('#o_payment_form_pay');
         $payButton.prop('disabled', true);
