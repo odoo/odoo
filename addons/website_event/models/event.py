@@ -152,6 +152,6 @@ class Event(models.Model):
     def _default_website_meta(self):
         res = super(Event, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = res['website_meta_description'] = self.date_begin
         res['default_twitter']['twitter:card'] = 'summary'
         return res

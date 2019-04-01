@@ -365,7 +365,7 @@ class ProductTemplate(models.Model):
 
     def _default_website_meta(self):
         res = super(ProductTemplate, self)._default_website_meta()
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = res['website_meta_description'] = self.description_sale
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
         return res

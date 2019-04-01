@@ -191,14 +191,13 @@
 
             <meta t-if="main_object and 'website_indexed' in main_object
                 and not main_object.website_indexed" name="robots" content="noindex"/>
-            <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
+            <t t-set="website_meta" t-value="main_object.get_website_meta()"/>
+            <t t-set="meta_description" t-value="website_meta.get('website_meta_description')"/>
             <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
             <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
             <t t-if="main_object">
-                <t t-set="website_meta" t-value="main_object.get_website_meta()"/>
                 <!-- OpenGraph tags for Facebook sharing -->
                 <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
                 <t t-if="opengraph_meta">

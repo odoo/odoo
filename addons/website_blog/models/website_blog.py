@@ -270,7 +270,7 @@ class BlogPost(models.Model):
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = res['website_meta_description'] = self.subtitle
         blog_post_cover_properties = json.loads(self.cover_properties)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name

@@ -386,7 +386,7 @@ class Post(models.Model):
     def _default_website_meta(self):
         res = super(Post, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = res['website_meta_description'] = self.plain_content
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/res.users/%s/image" % (self.create_uid.id)
         res['default_twitter']['twitter:card'] = 'summary'
         return res

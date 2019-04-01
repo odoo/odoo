@@ -65,7 +65,8 @@ class SeoMetadata(models.AbstractModel):
 
         return {
             'default_opengraph': default_opengraph,
-            'default_twitter': default_twitter
+            'default_twitter': default_twitter,
+            'website_meta_description': '',
         }
 
     def get_website_meta(self):
@@ -79,13 +80,14 @@ class SeoMetadata(models.AbstractModel):
         """
         root_url = request.httprequest.url_root.strip('/')
         default_meta = self._default_website_meta()
-        opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
+        opengraph_meta, twitter_meta, website_meta_description = default_meta['default_opengraph'], default_meta['default_twitter'], default_meta['website_meta_description']
         if self.website_meta_title:
             opengraph_meta['og:title'] = self.website_meta_title
             twitter_meta['twitter:title'] = self.website_meta_title
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
             twitter_meta['twitter:description'] = self.website_meta_description
+            website_meta_description = self.website_meta_description
         meta_image = self.website_meta_og_img or opengraph_meta['og:image']
         if meta_image.startswith('/'):
             meta_image = "%s%s" % (root_url, meta_image)
@@ -93,7 +95,8 @@ class SeoMetadata(models.AbstractModel):
         twitter_meta['twitter:image'] = meta_image
         return {
             'opengraph_meta': opengraph_meta,
-            'twitter_meta': twitter_meta
+            'twitter_meta': twitter_meta,
+            'website_meta_description': website_meta_description,
         }
 
 
