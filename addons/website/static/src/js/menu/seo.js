@@ -234,7 +234,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.trigger('title-changed', title);
     },
     description: function () {
-        return ($('meta[name=description]').attr('content') || '').trim();
+        return ($('meta[property="og:description"]').attr('content') || '').trim();
     },
     changeDescription: function (description) {
         // TODO create tag if missing
@@ -342,8 +342,6 @@ var MetaTitleDescription = Widget.extend({
         this.$warning = this.$('div#website_meta_description_warning');
         this.$preview = this.$('.js_seo_preview');
 
-        this._renderPreview();
-
         if (!this.canEditTitle) {
             this.$title.attr('disabled', true);
         }
@@ -366,7 +364,7 @@ var MetaTitleDescription = Widget.extend({
      * Get the current description
      */
     getDescription: function () {
-        return this.$description.val();
+        return this.$description.val() || this.htmlPage.initDescription ;
     },
     /**
      * @private
