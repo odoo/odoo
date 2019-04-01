@@ -2582,7 +2582,7 @@ var JournalDashboardGraph = AbstractField.extend({
         this.$el.empty();
         this.chart = null;
         nv.addGraph(function () {
-            self.$svg = self.$el.append('<svg>');
+            self.$svg = self.$el.find('svg').length ? self.$el.find('svg') : self.$el.append('<svg>');
             switch (self.graph_type) {
                 case "line":
                     self.$svg.addClass('o_graph_linechart');
