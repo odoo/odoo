@@ -36,6 +36,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
         for line, vals in line_values['to_update'].items():
             line.update(vals)
 
+    def _unreserve_order(self, wl):
+        return (- wl.qty_reserved,)
+
     def _update_workorder_lines(self):
         """ Update workorder lines, according to the new qty currently
         produced. It returns a dict with line to create, update or delete.
@@ -69,7 +72,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             # Remove or lower quantity on exisiting workorder lines
             if float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
                 qty_todo = abs(qty_todo)
-                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved):
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: self._unreserve_order(wl)):
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
                     if float_compare(workorder_line.qty_to_consume, qty_todo, precision_rounding=rounding) <= 0:
@@ -91,7 +94,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             else:
                 # Search among wo lines which one could be updated
                 qty_reserved_wl = defaultdict(float)
-                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved, reverse=True):
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: self._unreserve_order(wl)):
                     rounding = workorder_line.product_uom_id.rounding
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break

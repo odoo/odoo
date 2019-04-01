@@ -326,6 +326,12 @@ class MrpWorkorder(models.Model):
 
         if self.next_work_order_id and self.production_id.product_id.tracking != 'none' and not self.qty_remaining:
             self.next_work_order_id._assign_default_final_lot_id(self.final_lot_line_ids)
+            line_values = self.next_work_order_id._update_workorder_lines()
+            self.next_work_order_id.workorder_line_ids |= self.next_work_order_id.workorder_line_ids.create(line_values['to_create'])
+            if line_values['to_delete']:
+                line_values['to_delete'].unlink()
+            for line, vals in line_values['to_update'].items():
+                line.write(vals)
 
         # Set a qty producing
         rounding = self.production_id.product_uom_id.rounding
