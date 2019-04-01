@@ -506,6 +506,24 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 except Exception as e:
                     _logger.warning('invalid custom view(s) for model %s: %s', model, tools.ustr(e))
 
+        #STEP 7: In neuter mode some functions has to been unactive
+        if tools.config['neuter-mode']:
+            mode = tools.config['neuter-mode']
+            cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('installed',))
+            installed_modules = dict(cr.fetchall()) 
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            #Neuter only installed modules
+            pkgs = [p for p in graph if p.name in installed_modules]
+            for pkg in pkgs:
+                neuter = pkg.info.get('neuter')
+                reverse_neuter = pkg.info.get('reverse_neuter')
+                if neuter and reverse_neuter:
+                    py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
+                    if mode == "test":
+                        getattr(py_module, neuter)(cr, registry)
+                    elif mode == "prod":
+                        getattr(py_module, reverse_neuter)(cr, registry)
+
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
         else:
