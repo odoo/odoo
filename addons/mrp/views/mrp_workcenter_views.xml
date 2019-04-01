@@ -17,7 +17,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,gantt,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
-            <field name="domain">[('workcenter_id', '=', active_id), ('state', '!=', 'done')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
+            <field name="context">{'search_default_workcenter_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a work center
@@ -171,7 +172,7 @@
                                         <div class="col-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
-                                                <button class="btn btn-primary" name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1, 'search_default_progress': 1}">
+                                                <button class="btn btn-primary" name="%(action_work_orders)d" type="action">
                                                     <span>WORK ORDERS</span>
                                                 </button>
                                             </t>
