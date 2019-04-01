@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Sale Coupon">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_coupon/static/src/js/website_sale_coupon.test.js"></script>
+    </xpath>
+</template>
+<template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines" active="True">
+    <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
+        <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
+    </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody//tr//td[hasclass('td-product_name')]//div" position="attributes">
+    <!-- Can't xpath "//table[@id='cart_products']/tbody//tr" since optional_product already xpath that one.
+         There will be the same xpath attribute class on the same element. Last installed module will only be taken into account -->
+        <attribute name="t-att-class">'reward_product' if line.is_reward_line else None</attribute>
+    </xpath>
+    <xpath expr="//td[hasclass('td-qty')]/div" position="after">
+        <t t-if="line.is_reward_line">
+            <span class="js_quantity text-muted" t-esc="int(line.product_uom_qty)"/>
+        </t>
+    </xpath>
+</template>
+<template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
+    <xpath expr="//form[@name='coupon_code']" position="after">
+        <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
+            <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
+                <div class="card bg-success text-white mt16">
+                    <div class="card-header clearfix">
+                    <span class="float-left">You have successfully applied following promo code: <b t-esc="coupon.code"/></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.promo_code">
+            <div class="card bg-success text-white mt16">
+                <div class="card-header clearfix">
+                <span class="float-left">You have successfully applied following promo code: <b t-esc="website_sale_order.promo_code"/></span>
+                </div>
+            </div>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
+            <t t-foreach="website_sale_order.generated_coupon_ids.filtered(lambda c: c.state != 'expired')" t-as="coupon">
+                <div class="card bg-success text-white mt16">
+                    <div class="card-header clearfix">
+                        <span class="float-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <b t-esc="coupon.code"/></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="request.params.get('code_not_available')">
+            <div class="card bg-danger text-white mt16">
+                <div class="card-header clearfix">
+                    <span class="float-left">Invalid or expired promo code</span>
+                </div>
+            </div>
+        </t>
+        <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+            <div class="card bg-danger text-white mt16">
+                <div class="card-header clearfix">
+                    <span class="float-left"><t t-esc="website_sale_order.get_promo_code_error()" /></span>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//t[@name='code_not_available']" position="replace"/>
+</template>
+
+<template id="cart_discount" name="Show Discount in Subtotal" customize_show="True" active="False" inherit_id="website_sale.total">
+    <xpath expr="//tr[@id='order_total_untaxed']" position="before">
+        <tr id="order_discounted" t-if="website_sale_order and website_sale_order.reward_amount">
+          <td class="text-right noborder text-muted" title="Discounted amount">Discount:</td>
+          <td class="text-xl-right noborder text-muted">
+               <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;" t-options='{
+                          "widget": "monetary",
+                          "display_currency": website_sale_order.currency_id,
+                 }'/>
+          </td>
+        </tr>
+    </xpath>
+</template>
+
+<template id="cart_summary" name="Payment" inherit_id="website_sale.cart_summary">
+    <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/child::*" position="attributes">
+        <attribute name="t-att-style">'display: None;' if free_shipping_lines and line in free_shipping_lines else ''</attribute>
+    </xpath>
+</template>
+</odoo>
