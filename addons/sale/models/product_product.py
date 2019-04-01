@@ -63,7 +63,14 @@ class ProductAttribute(models.Model):
     type = fields.Selection([
         ('radio', 'Radio'),
         ('select', 'Select'),
-        ('color', 'Color')], default='radio', required=True)
+        ('color', 'Color'),
+        ('description', 'Description')], default='radio', required=True)
+
+    @api.onchange('type')
+    def onchange_type(self):
+        for attribute in self:
+            if attribute.type == 'description':
+                attribute.create_variant = 'no_variant'
 
 
 class ProductAttributeValue(models.Model):

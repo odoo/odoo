@@ -34,6 +34,9 @@
             <xpath expr="//field[@name='create_variant']" position="before">
                 <field name="type" widget="radio"/>
             </xpath>
+            <xpath expr="//field[@name='create_variant']" position="replace">
+                <field name="create_variant" widget="radio" attrs="{'invisible': [('type', '=', 'description')]}"/>
+            </xpath>
             <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
                 <field name="is_custom" groups="product.group_product_variant" />
                 <field name="html_color"/>

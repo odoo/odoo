@@ -417,7 +417,7 @@
                                         </t>
                                     </select>
                                 </t>
-                                <t t-if="a.type == 'radio'">
+                               <t t-if="a.type in ['radio', 'description']">
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
@@ -527,8 +527,17 @@
                                     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
                                     <p class="text-muted">
                                         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
-                                            <t t-if="len(variant_id.value_ids)==1">
-                                                <span t-field="variant_id.attribute_id" />: <span t-field="variant_id.value_ids[0].name" /><br /></t>
+                                            <t t-if="variant_id.value_ids">
+                                                <t t-if="len(variant_id.value_ids)==1">
+                                                    <span t-field="variant_id.attribute_id" />: <span t-field="variant_id.value_ids[0].name" />
+                                                    <br />
+                                                </t>
+                                                <t t-elif="variant_id.attribute_id.type == 'description'">
+                                                    <t t-set="variant_names" t-value="', '.join(variant_id.value_ids.mapped('name'))"/>
+                                                    <span t-field="variant_id.value_ids[0].attribute_id" />:
+                                                    <span t-esc="variant_names" /><br/>
+                                                </t>
+                                            </t>
                                         </t>
                                     </p>
                                 </div>

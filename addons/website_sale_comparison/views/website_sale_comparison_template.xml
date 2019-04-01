@@ -41,17 +41,26 @@
                         <div class='col-lg-8 offset-lg-2' id='product_specifications'>
                             <table class='table table-striped table-sm table-hover'>
                                 <t t-foreach="atts.keys()" t-as="spec">
-                                    <t t-if="len(atts.keys())&gt;1">
+                                    <t t-if="len(atts.keys())">
                                         <tr class="clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
                                             <th class="text-left" t-att-colspan="2"><t t-esc="spec"/></th>
                                         </tr>
                                     </t>
                                     <tr t-foreach="atts[spec]" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
-                                        <td t-esc="att.attribute_id.name"/>
-                                        <td>
-                                            <t t-set='or_separator'>or</t>
-                                            <t t-esc="(' %s ' % or_separator).join(att.value_ids.mapped('name'))"/>
-                                        </td>
+                                        <t t-if="att.attribute_id.type == 'description'">
+                                            <td t-esc="att.attribute_id.name"/>
+                                            <td>
+                                                <t t-set='comma_seperator'>,</t>
+                                                <t t-esc="('%s ' % comma_seperator).join(att.value_ids.mapped('name'))"/>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td t-esc="att.attribute_id.name"/>
+                                            <td>
+                                                <t t-set='or_separator'>or</t>
+                                                <t t-esc="(' %s ' % or_separator).join(att.value_ids.mapped('name'))"/>
+                                            </td>
+                                        </t>
                                     </tr>
                                 </t>
                             </table>
