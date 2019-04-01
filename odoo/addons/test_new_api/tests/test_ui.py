@@ -12,7 +12,5 @@ class TestUi(odoo.tests.HttpCase):
         # the default, but doesn't account for the fact that it could
         # "fall off" into the "o_extra_menu_items" section if the window is
         # too small or there are too many items preceding it in the tests menu
-        self.phantom_js("/web#action=test_new_api.action_discussions",
-                        "odoo.__DEBUG__.services['web_tour.tour'].run('widget_x2many', 100)",
-                        "odoo.__DEBUG__.services['web_tour.tour'].tours.widget_x2many.ready",
-                        login="admin", timeout=120)
+        self.start_tour("/web#action=test_new_api.action_discussions",
+            'widget_x2many', step_delay=100, login="admin", timeout=120)

@@ -24,4 +24,4 @@ class TestSaleSignature(odoo.tests.HttpCase):
         # must be sent to the user so he can see it
         sales_order.force_quotation_send()
 
-        self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_signature')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_signature.ready", login="portal")
+        self.start_tour("/", 'sale_signature', login="portal")

@@ -11,13 +11,6 @@ def break_view(view, fr='<p>placeholder</p>', to='<p t-field="not.exist"/>'):
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteResetViews(odoo.tests.HttpCase):
-    def do_test(self, name):
-        self.browser_js(
-            "/",
-            "odoo.__DEBUG__.services['web_tour.tour'].run('%s')" % name,
-            "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % name,
-            login="admin"
-        )
 
     def fix_it(self, page, mode='soft'):
         self.authenticate("admin", "admin")
@@ -97,9 +90,9 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.addons.website.models.ir_http')
     def test_07_reset_page_view_complete_flow(self):
-        self.do_test('test_reset_page_view_complete_flow_part1')
+        self.start_tour("/", 'test_reset_page_view_complete_flow_part1', login="admin")
         self.fix_it('/test_page_view')
-        self.do_test('test_reset_page_view_complete_flow_part2')
+        self.start_tour("/", 'test_reset_page_view_complete_flow_part2', login="admin")
         self.fix_it('/test_page_view')
 
     @mute_logger('odoo.addons.website.models.ir_http')

@@ -10,4 +10,4 @@ class TestWebsiteSaleCartRecovery(HttpCase):
 
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
-        self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_cart_recovery')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_cart_recovery.ready", login="portal")
+        self.start_tour("/", 'shop_cart_recovery', login="portal")

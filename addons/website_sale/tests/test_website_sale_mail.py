@@ -21,4 +21,4 @@ class TestWebsiteSaleMail(HttpCase):
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
 
         with patch.object(MailMail, 'unlink', lambda self: None):
-            self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_mail')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_mail.ready", login="admin")
+            self.start_tour("/", 'shop_mail', login="admin")

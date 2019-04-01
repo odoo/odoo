@@ -13,4 +13,4 @@ class TestUi(odoo.tests.HttpCase):
             'source_id': 2,
             'url': self.env["ir.config_parameter"].sudo().get_param("web.base.url") + '/contactus',
         })
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('website_links_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.website_links_tour.ready", login="admin")
+        self.start_tour("/", 'website_links_tour', login="admin")
