@@ -240,3 +240,54 @@ class TestProgramRules(TestSaleCouponCommon):
 
         self.assertEqual(len(order.order_line.ids), 2, "The discount line should have been removed as we don't meet the program requirements")
         self.assertEqual(coupon.state, 'new', "The coupon should be reset to Valid as it's reward got removed")
+
+
+    def test_program_rules_promotion_use_best(self):
+        ''' This test will:
+                * Verify the best global promotion according to the
+                  current sale order is used.
+        '''
+        self.immediate_promotion_program.active = False  # Avoid having this program to add rewards on this test
+        order = self.empty_order
+
+        program_5pc = self.env['sale.coupon.program'].create({
+            'name': 'Get 5% discount if buy at least 2 Product',
+            'program_type': 'promotion_program',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 5.0,
+            'rule_min_quantity': 2,
+            'promo_code_usage': 'no_code_needed',
+        })
+        program_10pc = self.env['sale.coupon.program'].create({
+            'name': 'Get 10% discount if buy at least 4 Product',
+            'program_type': 'promotion_program',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'rule_min_quantity': 4,
+            'promo_code_usage': 'no_code_needed',
+        })
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.product_A.id,
+            'name': 'Product A',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 1, "The order should only contains the Product A line")
+
+        sol.product_uom_qty = 3
+        order.recompute_coupon_lines()
+        discounts = set(order.order_line.mapped('name')) - {'Product A'}
+        self.assertEqual(len(discounts), 1, "The order should contains the Product A line and a discount")
+        # The name of the discount is dynamically changed to smth looking like:
+        # "Discount: Get 5% discount if buy at least 2 Product - On product with following tax: Tax 15.00%"
+        self.assertTrue('Get 5% discount' in discounts.pop(), "The discount should be a 5% discount")
+
+        sol.product_uom_qty = 5
+        order.recompute_coupon_lines()
+        discounts = set(order.order_line.mapped('name')) - {'Product A'}
+        self.assertEqual(len(discounts), 1, "The order should contains the Product A line and a discount")
+        self.assertTrue('Get 10% discount' in discounts.pop(), "The discount should be a 10% discount")

@@ -287,6 +287,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
         programs = order._get_applicable_no_code_promo_program()
+        programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
         for program in programs:
             error_status = program._check_promo_code(order, False)
             if not error_status.get('error'):
@@ -355,6 +356,7 @@ class SaleOrder(models.Model):
         order = self
 
         applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
+        applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
         programs_to_remove = applied_programs - applicable_programs
         products_to_remove = programs_to_remove.mapped('discount_line_product_id')

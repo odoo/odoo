@@ -146,6 +146,19 @@ class SaleCouponProgram(models.Model):
                self.discount_type == 'percentage' and \
                self.discount_apply_on == 'on_order'
 
+    def _keep_only_most_interesting_auto_applied_global_discount_program(self):
+        '''Given a record set of programs, remove the less interesting auto
+        applied global discount to keep only the most interesting one.
+        We should not take promo code programs into account as a 10% auto
+        applied is considered better than a 50% promo code, as the user might
+        not know about the promo code.
+        '''
+        programs = self.filtered(lambda p: p._is_global_discount_program() and p.promo_code_usage == 'no_code_needed')
+        if not programs: return self
+        most_interesting_program = max(programs, key=lambda p: p.discount_percentage)
+        # remove least interesting programs
+        return self - (programs - most_interesting_program)
+
     def _check_promo_code(self, order, coupon_code):
         message = {}
         applicable_programs = order._get_applicable_programs()
