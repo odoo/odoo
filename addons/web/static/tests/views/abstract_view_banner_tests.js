@@ -40,13 +40,33 @@ QUnit.module('Views', {
 
         QUnit.test("The banner should be fetched from the route", function (assert) {
             var done = assert.async();
-            assert.expect(5);
+            assert.expect(6);
 
-            var banner_html =
-                '<div>' +
-                    '<link type="text/css" href="' + test_css_url + '" rel="stylesheet">' +
-                    '<div class="hello_banner"/>' +
-                '</div>';
+            var banner_html =`
+                <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-footer">
+                                <a type="action" class="btn btn-primary" data-dismiss="modal"
+                                data-toggle="collapse" href=".o_onboarding_container">
+                                    Remove
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_onboarding_container collapse show">
+                    <div class="o_onboarding_wrap">
+                        <a href="#" data-toggle="modal" data-target=".o_onboarding_modal"
+                           class="float-right o_onboarding_btn_close">
+                            <i class="fa fa-times" title="Close the onboarding panel" />
+                        </a>
+                    </div>
+                    <div>
+                        <link type="text/css" href="` + test_css_url + `" rel="stylesheet">
+                        <div class="hello_banner">Here is the banner</div>
+                    </div>
+                </div>`;
 
             createAsyncView({
                 View: TestView,
@@ -73,6 +93,12 @@ QUnit.module('Views', {
                 var $banner_link = $('link[href$="' + test_css_url + '"]', $banner);
                 assert.strictEqual($banner_link.length, 0,
                     "The stylesheet should have been removed from the banner.");
+
+                testUtils.dom.click(view.$('.o_onboarding_btn_close'));  // click on close to remove banner
+                testUtils.dom.click(view.$('.o_technical_modal .btn-primary:contains("Remove")'));  // click on button remove from techinal modal
+                assert.strictEqual(view.$('.o_onboarding_container.show').length, 0,
+                    "Banner should be removed from the view");
+
                 view.destroy();
                 done();
             });
