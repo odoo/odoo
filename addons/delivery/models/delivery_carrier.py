@@ -64,6 +64,8 @@ class DeliveryCarrier(models.Model):
     return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
     get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", help="The return label can be downloaded by the customer from the customer portal.")
 
+    has_been_neutered = fields.Boolean(required= True, default=False,string="Neutralized") # neutered fields
+
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
     ]
