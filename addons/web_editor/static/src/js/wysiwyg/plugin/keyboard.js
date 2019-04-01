@@ -969,13 +969,13 @@ var KeyboardPlugin = AbstractPlugin.extend({
         var pointA = this.context.invoke('HelperPlugin.makePoint', startNode, 0);
         pointA = dom.nextPointUntil(pointA, function (point) {
             return self.context.invoke('HelperPlugin.isVisibleText', point.node);
-        });
+        }) || pointA;
         var endNode = $contents.length ? $contents[$contents.length - 1] : unbreakable;
         var endOffset = $contents.length ? dom.nodeLength($contents[$contents.length - 1]) : 1;
         var pointB = this.context.invoke('HelperPlugin.makePoint', endNode, endOffset);
         pointB = dom.prevPointUntil(pointB, function (point) {
             return self.context.invoke('HelperPlugin.isVisibleText', point.node);
-        });
+        }) || pointB;
         range.sc = pointA.node;
         range.so = pointA.offset;
         range.ec = pointB.node;
