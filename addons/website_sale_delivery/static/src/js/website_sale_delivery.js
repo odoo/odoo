@@ -51,8 +51,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             // Update discount of the order
             $('#order_discounted').find('.oe_currency_value').text(result.new_amount_order_discounted);
 
-            // We are in freeshipping, so every carrier is Free
-            $('#delivery_carrier .badge').text(_t('Free'));
+            // We are in freeshipping, so every carrier is Free but we don't
+            // want to replace error message by 'Free'
+            $('#delivery_carrier .badge:not(.o_wsale_delivery_carrier_error)').text(_t('Free'));
         }
 
         if (result.status === true) {
@@ -63,10 +64,12 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $carrierBadge.children('span').text(result.new_amount_delivery);
             $carrierBadge.removeClass('d-none');
             $computeBadge.addClass('d-none');
+            $computeBadge.removeClass('o_wsale_delivery_carrier_error');
             $payButton.data('disabled_reasons').carrier_selection = false;
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
             console.error(result.error_message);
+            $computeBadge.addClass('o_wsale_delivery_carrier_error');
             $computeBadge.text(result.error_message);
             $amountDelivery.text(result.new_amount_delivery);
             $amountUntaxed.text(result.new_amount_untaxed);
