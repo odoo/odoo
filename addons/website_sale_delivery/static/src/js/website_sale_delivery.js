@@ -38,38 +38,49 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResult: function (result) {
+        this._handleCarrierUpdateResultBadge(result);
         var $payButton = $('#o_payment_form_pay');
         var $amountDelivery = $('#order_delivery span.oe_currency_value');
         var $amountUntaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amountTax = $('#order_total_taxes span.oe_currency_value');
         var $amountTotal = $('#order_total span.oe_currency_value');
+
+        if (result.status === true) {
+            $amountDelivery.text(result.new_amount_delivery);
+            $amountUntaxed.text(result.new_amount_untaxed);
+            $amountTax.text(result.new_amount_tax);
+            $amountTotal.text(result.new_amount_total);
+            $payButton.data('disabled_reasons').carrier_selection = false;
+            $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+        } else {
+            $amountDelivery.text(result.new_amount_delivery);
+            $amountUntaxed.text(result.new_amount_untaxed);
+            $amountTax.text(result.new_amount_tax);
+            $amountTotal.text(result.new_amount_total);
+        }
+    },
+    /**
+     * @private
+     * @param {Object} result
+     */
+    _handleCarrierUpdateResultBadge: function (result) {
         var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
         var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
 
         if (result.status === true) {
-            // if free delivery (`free_over` field), show 'Free', not '$0'
-            if (parseInt(result.new_amount_delivery)) {
-                $carrierBadge.children('span').text(result.new_amount_delivery);
-            } else {
-                $carrierBadge.text(_t('Free'));
-            }
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
-            $carrierBadge.removeClass('d-none');
-            $computeBadge.addClass('d-none');
-            $computeBadge.removeClass('o_wsale_delivery_carrier_error');
-            $payButton.data('disabled_reasons').carrier_selection = false;
-            $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+             // if free delivery (`free_over` field), show 'Free', not '$0'
+             if (parseInt(result.new_amount_delivery)) {
+                 $carrierBadge.children('span').text(result.new_amount_delivery);
+             } else {
+                 $carrierBadge.text(_t('Free'));
+             }
+             $carrierBadge.children('span').text(result.new_amount_delivery);
+             $carrierBadge.removeClass('d-none');
+             $computeBadge.addClass('d-none');
+             $computeBadge.removeClass('o_wsale_delivery_carrier_error');
         } else {
-            console.error(result.error_message);
             $computeBadge.addClass('o_wsale_delivery_carrier_error');
             $computeBadge.text(result.error_message);
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
         }
     },
 
