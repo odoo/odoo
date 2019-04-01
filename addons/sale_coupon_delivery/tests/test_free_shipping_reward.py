@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.addons.sale_coupon.tests.common import TestSaleCouponCommon
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def setUp(self):
