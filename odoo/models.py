@@ -3102,6 +3102,9 @@ Fields:
         if self._uid == SUPERUSER_ID:
             return self
 
+        if not self._ids:
+            return self
+
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
