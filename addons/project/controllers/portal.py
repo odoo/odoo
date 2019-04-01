@@ -20,8 +20,8 @@ class CustomerPortal(CustomerPortal):
         Task = request.env['project.task']
         # portal users can't view projects they don't follow
         projects = Project.sudo().search([('privacy_visibility', '=', 'portal')])
-        values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
-        values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
+        values['project_count'] = Project.sudo().search_count([('id', 'in', projects.ids)])
+        values['task_count'] = Task.sudo().search_count([('project_id', 'in', projects.ids)])
         return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)

@@ -62,11 +62,11 @@ class ProductWishlist(models.Model):
     @api.model
     def _join_current_user_and_session(self):
         """Assign all dangling session wishlisted products to user."""
-        session_wishes = self.search([
+        session_wishes = self.sudo().search([
             ("session", "=", self.env.user.current_session),
             ("partner_id", "=", False),
         ])
-        partner_wishes = self.search([
+        partner_wishes = self.sudo().search([
             ("partner_id", "=", self.env.user.partner_id.id),
         ])
         partner_products = partner_wishes.mapped("product_id")
