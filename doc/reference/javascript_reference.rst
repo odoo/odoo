@@ -1651,6 +1651,23 @@ order.
 
         <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
+- daterange (FieldDateRange)
+    This widget allow user to select start and end date into single picker.
+
+    - Supported field types: *date*, *datetime*
+
+    Options:
+
+    - related_start_date: apply on end date field to get start date value which
+      is used to display range in the picker.
+    - related_end_date: apply on start date field to get end date value which
+      is used to display range in the picker.
+    - picker_options: extra settings for picker.
+
+    .. code-block:: xml
+
+        <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'/>
+
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
     display a currency.  If there is a currency fields given in option, it will
