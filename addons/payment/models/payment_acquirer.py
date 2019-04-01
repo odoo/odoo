@@ -170,6 +170,8 @@ class PaymentAcquirer(models.Model):
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
     inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids', readonly=False)
 
+    has_been_neutered = fields.Boolean(required=True, default=False, string='Neutralized')
+
     @api.onchange('payment_flow')
     def _onchange_payment_flow(self):
         electronic = self.env.ref('payment.account_payment_method_electronic_in')
