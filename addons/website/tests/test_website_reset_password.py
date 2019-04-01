@@ -31,4 +31,4 @@ class TestWebsiteResetPassword(HttpCase):
             return original_send_mail(*args, **kwargs)
 
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
-            self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('website_reset_password')", "odoo.__DEBUG__.services['web_tour.tour'].tours.website_reset_password.ready", login="admin")
+            self.start_tour("/", 'website_reset_password', login="admin")

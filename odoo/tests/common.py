@@ -931,7 +931,17 @@ class HttpCase(TransactionCase):
             self.browser.clear()
             self._wait_remaining_requests()
 
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        """Wrapper for `browser_js` to start the given `tour_name` with the
+        optional delay between steps `step_delay`. Other arguments from
+        `browser_js` can be passed as keyword arguments."""
+        step_delay = ', %s' % step_delay if step_delay else ''
+        code = kwargs.pop('code', "odoo.__DEBUG__.services['web_tour.tour'].run('%s'%s)" % (tour_name, step_delay))
+        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % tour_name)
+        return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+
     phantom_js = browser_js
+
 
 def users(*logins):
     """ Decorate a method to execute it once for each given user. """
