@@ -5,7 +5,9 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import math
+from datetime import timedelta
 
+from odoo.fields import Datetime as Dt
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import AccessError, UserError
@@ -397,6 +399,9 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
         })
+        self.date_planned_finished = Dt.to_datetime(
+            self.date_planned_start) + timedelta(
+            days=self.product_id.produce_delay)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -429,15 +434,33 @@ class MrpProduction(models.Model):
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
         if 'date_planned_start' in vals:
-            moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
+            moves = self.mapped('move_raw_ids').filtered(
                 lambda r: r.state not in ['done', 'cancel'])
             moves.write({
                 'date_expected': vals['date_planned_start'],
+            })
+        if 'date_planned_finished' in vals:
+            moves = (self.mapped('move_finished_ids')).filtered(
+                lambda r: r.state not in ['done', 'cancel'])
+            moves.write({
+                'date_expected': vals['date_planned_finished'],
             })
         for production in self:
             if 'move_raw_ids' in vals and production.state != 'draft':
                 production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
         return res
+
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        self.ensure_one()
+        dt_now = Dt.to_datetime(fields.Datetime.now())
+        default.update({
+            'date_planned_start': dt_now,
+            'date_planned_finished': dt_now + timedelta(
+                days=self.product_id.produce_delay),
+        })
+        return super(MrpProduction, self).copy(default=default)
 
     @api.model
     def create(self, values):
@@ -466,8 +489,8 @@ class MrpProduction(models.Model):
     def _generate_finished_moves(self):
         move = self.env['stock.move'].create({
             'name': self.name,
-            'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
+            'date': self.date_planned_finished,
+            'date_expected': self.date_planned_finished,
             'picking_type_id': self.picking_type_id.id,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
