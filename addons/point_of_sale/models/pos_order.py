@@ -728,26 +728,28 @@ class PosOrder(models.Model):
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = []
 
-        for tmp_order in orders_to_save:
-            to_invoice = tmp_order['to_invoice']
-            order = tmp_order['data']
-            if to_invoice:
-                self._match_payment_to_invoice(order)
-            pos_order = self._process_order(order)
-            order_ids.append(pos_order.id)
+        with self.env.norecompute():
+            for tmp_order in orders_to_save:
+                to_invoice = tmp_order['to_invoice']
+                order = tmp_order['data']
+                if to_invoice:
+                    self._match_payment_to_invoice(order)
+                pos_order = self._process_order(order)
+                order_ids.append(pos_order.id)
 
-            try:
-                pos_order.action_pos_order_paid()
-            except psycopg2.OperationalError:
-                # do not hide transactional errors, the order(s) won't be saved!
-                raise
-            except Exception as e:
-                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+                try:
+                    pos_order.action_pos_order_paid()
+                except psycopg2.OperationalError:
+                    # do not hide transactional errors, the order(s) won't be saved!
+                    raise
+                except Exception as e:
+                    _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
-            if to_invoice:
-                pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().action_invoice_open()
-                pos_order.account_move = pos_order.invoice_id.move_id
+                if to_invoice:
+                    pos_order.action_pos_order_invoice()
+                    pos_order.invoice_id.sudo().action_invoice_open()
+                    pos_order.account_move = pos_order.invoice_id.move_id
+        self.recompute()
         return order_ids
 
     def test_paid(self):
