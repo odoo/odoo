@@ -5204,6 +5204,8 @@ Fields:
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
+        import pdb
+        pdb.set_trace()
         if fnames is None:
             if ids is None:
                 return self.env.cache.invalidate()
@@ -5231,6 +5233,7 @@ Fields:
         for fname in fnames:
             mfield = self._fields[fname]
             # invalidate mfield on self, and its inverses fields
+            # self.env.add_todo(mfield, self)
             invalids.append((mfield, self._ids))
             for field in self._field_inverses[mfield]:
                 invalids.append((field, None))
@@ -5264,10 +5267,13 @@ Fields:
                     target = target0 - self.env.protected(field)
                     if not target:
                         continue
-                    invalids.append((field, target._ids))
                     # do not recompute if a value is provided (on_change and default optimization)
                     if (target==self) and (field.name in fnames):
                         continue
+
+                    # invalids.append((field, target._ids))
+                    # self.env.add_todo(field, target)
+
                     # mark field to be recomputed on target
                     if field.compute_sudo:
                         target = target.sudo()
@@ -5284,6 +5290,7 @@ Fields:
         """
         return self.env.check_todo(field, self)
 
+    # FP TODO: to remove, only used two times
     def _recompute_todo(self, field):
         """ Mark ``field`` to be recomputed. """
         self.env.add_todo(field, self)
@@ -5293,12 +5300,15 @@ Fields:
         self.env.remove_todo(field, self)
 
     @api.model
-    def recompute(self):
+    def recompute(self, fnames=None):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
         while self.env.has_todo():
             field, recs = self.env.get_todo()
+            if fnames and field not in fnames:
+                continue
+
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]
             ns = [f.name for f in fs if f.store]
@@ -5537,6 +5547,7 @@ Fields:
                     record._onchange_eval(name, field_onchange[name], result)
 
                 # make a snapshot (this forces evaluation of computed fields)
+                record.recompute()
                 snapshot1 = Snapshot(record, nametree)
 
                 # determine which fields have been modified
@@ -5545,7 +5556,9 @@ Fields:
                         todo.append(name)
 
         # determine values that have changed by comparing snapshots
-        self.invalidate_cache()
+
+        # FP TODO, do we need this?
+        # self.invalidate_cache()
         result['value'] = snapshot1.diff(snapshot0)
 
         # format warnings

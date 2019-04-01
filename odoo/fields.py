@@ -1027,7 +1027,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # determine more dependent fields, and invalidate them
             if self.relational:
                 spec += self.modified_draft(record)
-            env.cache.invalidate(spec)
+            for field,obj in spec:
+                env.add_todo(field, record)
 
         else:
             # Write to database
