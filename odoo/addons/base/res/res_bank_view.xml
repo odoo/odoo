@@ -63,6 +63,7 @@
             <field name="arch" type="xml">
                 <form string="Bank account">
                     <group col="4">
+                        <field name="sequence" invisible="1"/>
                         <field name="acc_number"/>
                         <field name="bank_id"/>
                         <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
@@ -77,7 +78,7 @@
             <field name="model">res.partner.bank</field>
             <field name="arch" type="xml">
                 <tree string="Bank Accounts">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="acc_number"/>
                     <field name="bank_name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
