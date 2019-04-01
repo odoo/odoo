@@ -57,11 +57,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
 
         if (result.status === true) {
+            // if free delivery (`free_over` field), show 'Free', not '$0'
+            if (parseInt(result.new_amount_delivery)) {
+                $carrierBadge.children('span').text(result.new_amount_delivery);
+            } else {
+                $carrierBadge.text(_t('Free'));
+            }
             $amountDelivery.text(result.new_amount_delivery);
             $amountUntaxed.text(result.new_amount_untaxed);
             $amountTax.text(result.new_amount_tax);
             $amountTotal.text(result.new_amount_total);
-            $carrierBadge.children('span').text(result.new_amount_delivery);
             $carrierBadge.removeClass('d-none');
             $computeBadge.addClass('d-none');
             $computeBadge.removeClass('o_wsale_delivery_carrier_error');
