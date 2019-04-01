@@ -76,3 +76,9 @@ class TestRules(TransactionCase):
         container_user.write({'some_ids': [(5,)]})
         self.assertItemsEqual(container_user.some_ids.ids, [])
         self.assertItemsEqual(container_admin.some_ids.ids, [self.id2])
+
+    def test_access_rule_performance(self):
+        env = self.env(user=self.browse_ref('base.public_user'))
+        Model = env['test_access_right.some_obj']
+        with self.assertQueryCount(0):
+            Model._filter_access_rules('read')
