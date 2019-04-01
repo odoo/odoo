@@ -10,7 +10,7 @@ class TestUi(odoo.tests.HttpCase):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
 
     def test_02_product_configurator_advanced(self):
         # group_product_variant: use the product configurator
@@ -73,13 +73,13 @@ class TestUi(odoo.tests.HttpCase):
             'attribute_line_ids': [(4, product_template_attribute_line.id) for product_template_attribute_line in product_template_attribute_lines]
         })
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_advanced_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_advanced_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
     def test_03_product_configurator_edition(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_edition_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_edition_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_edition_tour', login="admin")
 
     def test_04_product_configurator_single_custom_value(self):
         # group_product_variant: use the product configurator
@@ -116,7 +116,7 @@ class TestUi(odoo.tests.HttpCase):
             'attribute_line_ids': [(4, product_template_attribute_lines[0].id)]
         })
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_single_custom_attribute_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_single_custom_attribute_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 
     def test_05_product_configurator_pricelist(self):
         """The goal of this test is to make sure pricelist rules are correctly
@@ -156,7 +156,7 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'formula',
             })
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_pricelist_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_pricelist_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login="admin")
 
     def test_06_product_configurator_optional_products(self):
         """The goal of this test is to check that the product configurator
@@ -170,4 +170,4 @@ class TestUi(odoo.tests.HttpCase):
             'optional_product_ids': [(6, 0, [self.env.ref('sale_product_configurator.product_product_1_product_template').id])]
         })
 
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_optional_products_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_optional_products_tour.ready", login="admin")
+        self.start_tour("/web", 'sale_product_configurator_optional_products_tour', login="admin")

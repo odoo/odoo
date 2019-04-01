@@ -202,7 +202,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
-        self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_zoom')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_zoom.ready", login="admin")
+        self.start_tour("/", 'shop_zoom', login="admin")
 
         # CASE: unlink move image to fallback if fallback image empty
         template.image = False
