@@ -988,7 +988,15 @@ class Field(MetaField('DummyField', (object,), {})):
         if record:
             # only a single record may be accessed
             record.ensure_one()
-            if record.env.check_todo(self, record) or not record.env.cache.contains(record, self):
+            if record.env.check_todo(self, record):
+                # self.compute_value(record)
+                if self.recursive:
+                    self.compute_value(record)
+                else:
+                    recs = record._in_cache_without(self)
+                    recs = recs.with_prefetch(record._prefetch)
+                    self.compute_value(recs)
+            if not record.env.cache.contains(record, self):
                 if record.id:
                     self.determine_value(record)
                 else:
@@ -1046,15 +1054,18 @@ class Field(MetaField('DummyField', (object,), {})):
         fields = records._field_computed[self]
         cache = records.env.cache
 
-        for field in fields:
-            for record in records:
-                if not cache.contains(record, field):
-                    cache.set(record, field, field.convert_to_cache(False, record, validate=False))
-
         if isinstance(self.compute, str):
             getattr(records, self.compute)()
+            for record in records:
+                if record.env.check_todo(self, record):
+                    record.env.remove_todo(self, record)
         else:
             self.compute(records)
+        # for field in fields:
+        #     for record in records:
+        #         if not cache.contains(record, field):
+        #             cache.set(record, field, field.convert_to_cache(False, record, validate=False))
+
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
@@ -1073,6 +1084,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def determine_value(self, record):
         """ Determine the value of ``self`` for ``record``. """
         env = record.env
+
 
         if self.store and not (self.compute and env.in_onchange):
             # this is a stored field or an old-style function field

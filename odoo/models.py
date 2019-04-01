@@ -5302,6 +5302,7 @@ Fields:
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
+
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             if fnames and field not in fnames:
