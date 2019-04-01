@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_boxed_inherit" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[hasclass('list-inline')]" position="inside">
+            <li t-if="company.country_id.code == 'MA' and company.l10n_ma_ice" class="list-inline-item">
+                ICE: <span t-field="company.l10n_ma_ice"/>
+            </li>
+        </xpath>
+    </template>
+    <template id="external_layout_clean_inherit" inherit_id="web.external_layout_clean">
+        <xpath expr="//ul[hasclass('list-unstyled')]" position="inside">
+            <li t-if="company.country_id.code == 'MA' and company.l10n_ma_ice"><span t-field="company.l10n_ma_ice"/></li>
+        </xpath>
+    </template>
+    <template id="external_layout_standard_inherit" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[hasclass('list-inline')]" position="inside">
+            <li t-if="company.country_id.code == 'MA' and company.l10n_ma_ice" class="list-inline-item">
+                ICE: <span t-field="company.l10n_ma_ice"/>
+            </li>
+        </xpath>
+    </template>
+    <template id="external_layout_background_inherit" inherit_id="web.external_layout_background">
+        <xpath expr="//ul[hasclass('list-inline')]" position="inside">
+            <li t-if="company.country_id.code == 'MA' and company.l10n_ma_ice" class="list-inline-item">
+                ICE: <span t-field="company.l10n_ma_ice"/>
+            </li>
+        </xpath>
+    </template>
+</odoo>
