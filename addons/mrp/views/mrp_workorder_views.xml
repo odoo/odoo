@@ -434,9 +434,9 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_ready': True, 'search_default_progress': True}</field>
+        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Start a new work order
