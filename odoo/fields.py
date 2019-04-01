@@ -1032,8 +1032,11 @@ class Field(MetaField('DummyField', (object,), {})):
             # determine more dependent fields, and invalidate them
             if self.relational:
                 spec += self.modified_draft(record)
-            for field,obj in spec:
-                env.add_todo(field, record)
+
+            env.cache.invalidate(spec)
+            # FP Check: does not install without that, but would be better to do this
+            # for field,obj in spec:
+            #     env.add_todo(field, record.browse(obj))
 
         else:
             # Write to database

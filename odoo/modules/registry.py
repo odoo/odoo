@@ -82,11 +82,12 @@ class Registry(Mapping):
                 try:
                     registry.setup_signaling()
                     # This should be a method on Registry
-                    try:
-                        odoo.modules.load_modules(registry._db, force_demo, status, update_module)
-                    except Exception:
-                        odoo.modules.reset_modules_state(db_name)
-                        raise
+                    odoo.modules.load_modules(registry._db, force_demo, status, update_module)
+                    # try:
+                    #     odoo.modules.load_modules(registry._db, force_demo, status, update_module)
+                    # except Exception:
+                    #     odoo.modules.reset_modules_state(db_name)
+                    #     raise
                 except Exception:
                     _logger.exception('Failed to load registry')
                     del cls.registries[db_name]

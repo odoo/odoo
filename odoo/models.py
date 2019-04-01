@@ -3402,7 +3402,7 @@ Fields:
     @api.multi
     def _write(self, vals):
         # low-level implementation of write()
-        if not self.id:
+        if not self:
             return True
         self.check_field_access_rights('write', list(vals))
 
