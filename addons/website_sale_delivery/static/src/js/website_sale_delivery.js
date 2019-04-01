@@ -46,16 +46,6 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
         var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
 
-        if (result.new_amount_order_discounted) {
-            // Cross module without bridge
-            // Update discount of the order
-            $('#order_discounted').find('.oe_currency_value').text(result.new_amount_order_discounted);
-
-            // We are in freeshipping, so every carrier is Free but we don't
-            // want to replace error message by 'Free'
-            $('#delivery_carrier .badge:not(.o_wsale_delivery_carrier_error)').text(_t('Free'));
-        }
-
         if (result.status === true) {
             // if free delivery (`free_over` field), show 'Free', not '$0'
             if (parseInt(result.new_amount_delivery)) {
