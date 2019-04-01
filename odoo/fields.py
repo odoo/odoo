@@ -2174,6 +2174,32 @@ class Many2one(_Relational):
         return super(Many2one, self).convert_to_onchange(value, record, names)
 
 
+class Maybe2one(Many2one):
+    """
+    Like a Many2one, without constraint.
+    """
+    type = 'maybe2one'
+    column_type = ('int4', 'int4')
+    _slots = {
+        'ondelete': 'do nothing',         # what to do when value is deleted
+    }
+
+    def update_db_foreign_key(self, model, column):
+        pass
+
+    def convert_to_read(self, value, record, use_name_get=True):
+        try:
+            return super(Many2one, self).convert_to_read(value, record, names)
+        except Exception:
+            return (value.id, '')
+
+    def convert_to_display_name(self, value, record):
+        try:
+            return ustr(value.display_name)
+        except Exception:
+            return ''
+
+
 class _RelationalMultiUpdate(object):
     """ A getter to update the value of an x2many field, without reading its
         value until necessary.
