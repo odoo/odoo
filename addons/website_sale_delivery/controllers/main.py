@@ -29,6 +29,22 @@ class WebsiteSaleDelivery(WebsiteSale):
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
+    @http.route(['/shop/carrier_rate_shipment'], type='json', auth='public', methods=['POST'], website=True)
+    def cart_carrier_rate_shipment(self, carrier_id, **kw):
+        order = request.website.sale_get_order(force_create=True)
+        res = {'carrier_id': carrier_id}
+        carrier = request.env['delivery.carrier'].browse(int(carrier_id))
+        rate = carrier.rate_shipment(order)
+        if rate.get('success'):
+            res['status'] = True
+            res['new_amount_delivery'] = rate['price']
+            res['error_message'] = rate['warning_message']
+        else:
+            res['status'] = False
+            res['new_amount_delivery'] = 0.0
+            res['error_message'] = rate['error_message']
+        return res
+
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)
