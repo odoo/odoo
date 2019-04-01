@@ -45,12 +45,11 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var $amountTotal = $('#order_total span.oe_currency_value');
         var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
         var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
-        var $discount = $('#order_discounted');
 
-        if ($discount && result.new_amount_order_discounted) {
+        if (result.new_amount_order_discounted) {
             // Cross module without bridge
             // Update discount of the order
-            $discount.find('.oe_currency_value').text(result.new_amount_order_discounted);
+            $('#order_discounted').find('.oe_currency_value').text(result.new_amount_order_discounted);
 
             // We are in freeshipping, so every carrier is Free
             $('#delivery_carrier .badge').text(_t('Free'));
