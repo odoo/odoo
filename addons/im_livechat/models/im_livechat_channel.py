@@ -124,31 +124,41 @@ class ImLivechatChannel(models.Model):
     # Channel Methods
     # --------------------------
     @api.multi
-    def get_available_users(self):
+    def _get_available_users(self):
         """ get available user of a given channel
             :retuns : return the res.users having their im_status online
         """
         self.ensure_one()
-        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
+        return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    @api.model
-    def get_mail_channel(self, livechat_channel_id, anonymous_name, user_id=None, country_id=None):
+    @api.multi
+    def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
-            :param livechat_channel_id : the identifier if the im_livechat.channel
             :param anonymous_name : the name of the anonymous person of the channel
+            :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
             :param user_id : the id of the logged in visitor, if any
             :param country_code : the country of the anonymous person of the channel
-            :type livechat_channel_id : int
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
+
+            If this visitor already had an operator within the last 7 days (information stored with the 'im_livechat_previous_operator_pid' cookie),
+            the system will first try to assign that operator if he's available (to improve user experience).
         """
-        # get the avalable user of the channel
-        operators = self.sudo().browse(livechat_channel_id).get_available_users()
-        if len(operators) == 0:
+        self.ensure_one()
+
+        operator = False
+        if previous_operator_id:
+            available_users = self._get_available_users()
+            # previous_operator_id is the partner_id of the previous operator, need to convert to user
+            if previous_operator_id in available_users.mapped('partner_id').ids:
+                operator = next(available_user for available_user in available_users if available_user.partner_id.id == previous_operator_id)
+        if not operator:
+            operator = self._get_random_operator()
+        if not operator:
+            # no one available
             return False
-        # choose the res.users operator and get its partner id
-        operator = random.choice(operators)
+
         operator_partner_id = operator.partner_id.id
         # partner to add to the mail.channel
         channel_partner_to_add = [(4, operator_partner_id)]
@@ -158,7 +168,7 @@ class ImLivechatChannel(models.Model):
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
             'channel_partner_ids': channel_partner_to_add,
             'livechat_operator_id': operator_partner_id,
-            'livechat_channel_id': livechat_channel_id,
+            'livechat_channel_id': self.id,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
@@ -169,24 +179,66 @@ class ImLivechatChannel(models.Model):
         mail_channel._broadcast([operator_partner_id])
         return mail_channel.sudo().channel_info()[0]
 
-    @api.model
-    def get_channel_infos(self, channel_id):
-        channel = self.browse(channel_id)
+    def _get_random_operator(self):
+        """ Return a random operator from the available users of the channel that have the lowest number of active livechats.
+        A livechat is considered 'active' if it has at least one message within the 30 minutes.
+
+        (Some annoying conversions have to be made on the fly because this model holds 'res.users' as available operators
+        and the mail_channel model stores the partner_id of the randomly selected operator)
+
+        :return : user
+        :rtype : res.users
+        """
+        operators = self._get_available_users()
+        if len(operators) == 0:
+            return False
+
+        self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
+            FROM mail_channel c
+            LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
+            LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
+            WHERE m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
+            AND c.channel_type = 'livechat'
+            AND c.livechat_operator_id in %s
+            GROUP BY c.livechat_operator_id
+            ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(operators.mapped('partner_id').ids),))
+        active_channels = self.env.cr.dictfetchall()
+
+        # If inactive operator(s), return one of them
+        active_channel_operator_ids = [active_channel['livechat_operator_id'] for active_channel in active_channels]
+        inactive_operators = [operator for operator in operators if operator.partner_id.id not in active_channel_operator_ids]
+        if inactive_operators:
+            return random.choice(inactive_operators)
+
+        # If no inactive operator, active_channels is not empty as len(operators) > 0 (see above).
+        # Get the less active operator using the active_channels first element's count (since they are sorted 'ascending')
+        lowest_number_of_conversations = active_channels[0]['count']
+        less_active_operator = random.choice([
+            active_channel['livechat_operator_id'] for active_channel in active_channels
+            if active_channel['count'] == lowest_number_of_conversations])
+
+        # convert the selected 'partner_id' to its corresponding res.users
+        return next(operator for operator in operators if operator.partner_id.id == less_active_operator)
+
+    def _get_channel_infos(self):
+        self.ensure_one()
+
         return {
-            'button_text': channel.button_text,
-            'input_placeholder': channel.input_placeholder,
-            'default_message': channel.default_message,
-            "channel_name": channel.name,
-            "channel_id": channel.id,
+            'button_text': self.button_text,
+            'input_placeholder': self.input_placeholder,
+            'default_message': self.default_message,
+            "channel_name": self.name,
+            "channel_id": self.id,
         }
 
-    @api.model
-    def get_livechat_info(self, channel_id, username='Visitor'):
+    def get_livechat_info(self, username='Visitor'):
+        self.ensure_one()
+
         info = {}
-        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
+        info['available'] = len(self._get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
-            info['options'] = self.sudo().get_channel_infos(channel_id)
+            info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
 

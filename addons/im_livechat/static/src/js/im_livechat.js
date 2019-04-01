@@ -215,6 +215,7 @@ var LivechatButton = Widget.extend({
             def = session.rpc('/im_livechat/get_session', {
                 channel_id : this.options.channel_id,
                 anonymous_name : this.options.default_username,
+                previous_operator_id: this._get_previous_operator_id(),
             }, {shadow: true});
         }
         def.then(function (livechatData) {
@@ -233,6 +234,13 @@ var LivechatButton = Widget.extend({
 
                     utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    if (livechatData.operator_pid[0]) {
+                        // livechatData.operator_pid contains a tuple (id, name)
+                        // we are only interested in the id
+                        var operatorPidId = livechatData.operator_pid[0];
+                        var oneWeek = 7*24*60*60;
+                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                    }
                 });
             }
         }).then(function () {
@@ -241,6 +249,24 @@ var LivechatButton = Widget.extend({
             self._openingChat = false;
         });
     }, 200, true),
+    /**
+     * Will try to get a previous operator for this visitor.
+     * If the visitor already had visitor A, it's better for his user experience
+     * to get operator A again.
+     *
+     * The information is stored in the 'im_livechat_previous_operator_pid' cookie.
+     *
+     * @private
+     * @return {integer} operator_id.partner_id.id if the cookie is set
+     */
+    _get_previous_operator_id: function () {
+        var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+        if (cookie) {
+            return cookie;
+        }
+
+        return null;
+    },
     /**
      * @private
      * @return {Promise}
