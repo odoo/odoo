@@ -23,3 +23,19 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
                 'new_amount_order_discounted': self._format_amount(order.reward_amount - amount_free_shipping, currency),
             })
         return result
+
+    @http.route()
+    def cart_carrier_rate_shipment(self, carrier_id, **kw):
+        order = request.website.sale_get_order(force_create=True)
+        free_shipping_lines = order._get_free_shipping_lines()
+        # Avoid computing carrier price delivery is free (coupon). It means if
+        # the carrier has error (eg 'delivery only for Belgium') it will show
+        # Free until the user clicks on it.
+        if free_shipping_lines:
+            return {
+                'carrier_id': carrier_id,
+                'status': True,
+                'new_amount_delivery': 0.0,
+                'error_message': None,
+            }
+        return super(WebsiteSaleCouponDelivery, self).cart_carrier_rate_shipment(carrier_id, **kw)
