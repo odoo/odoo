@@ -8,6 +8,7 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
 
     @http.route()
     def update_eshop_carrier(self, **post):
+        Monetary = request.env['ir.qweb.field.monetary']
         result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
         order = request.website.sale_get_order()
         order.recompute_coupon_lines()
@@ -16,16 +17,17 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
             currency = order.currency_id
             amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
             result.update({
-                'new_amount_delivery': self._format_amount(0.0, currency),
-                'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
-                'new_amount_tax': self._format_amount(order.amount_tax, currency),
-                'new_amount_total': self._format_amount(order.amount_total, currency),
-                'new_amount_order_discounted': self._format_amount(order.reward_amount - amount_free_shipping, currency),
+                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
+                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
+                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
+                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
+                'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
             })
         return result
 
     @http.route()
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
+        Monetary = request.env['ir.qweb.field.monetary']
         order = request.website.sale_get_order(force_create=True)
         free_shipping_lines = order._get_free_shipping_lines()
         # Avoid computing carrier price delivery is free (coupon). It means if
@@ -35,7 +37,8 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
             return {
                 'carrier_id': carrier_id,
                 'status': True,
-                'new_amount_delivery': 0.0,
+                'is_free_delivery': True,
+                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': order.currency_id}),
                 'error_message': None,
             }
         return super(WebsiteSaleCouponDelivery, self).cart_carrier_rate_shipment(carrier_id, **kw)

@@ -20,7 +20,7 @@ publicWidget.registry.websiteSaleDelivery.include({
         this._super.apply(this, arguments);
         if (result.new_amount_order_discounted) {
             // Update discount of the order
-            $('#order_discounted').find('.oe_currency_value').text(result.new_amount_order_discounted);
+            $('#order_discounted').html(result.new_amount_order_discounted);
         }
     },
     /**

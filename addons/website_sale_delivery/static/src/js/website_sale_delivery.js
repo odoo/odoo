@@ -51,8 +51,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {jQuery} $carrierInput
      */
     _showLoading: function ($carrierInput) {
-        $carrierInput.siblings('.o_wsale_delivery_badge_price').addClass('d-none');
-        $carrierInput.siblings('.o_delivery_compute').removeClass('d-none').html('<span class="fa fa-spinner fa-spin"/>');
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').html('<span class="fa fa-spinner fa-spin"/>');
     },
     /**
      * @private
@@ -60,24 +59,24 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _handleCarrierUpdateResult: function (result) {
         this._handleCarrierUpdateResultBadge(result);
-        var $payButton = $('#o_payment_form_pay');
-        var $amountDelivery = $('#order_delivery span.oe_currency_value');
-        var $amountUntaxed = $('#order_total_untaxed span.oe_currency_value');
-        var $amountTax = $('#order_total_taxes span.oe_currency_value');
-        var $amountTotal = $('#order_total span.oe_currency_value');
+        var $payButton = $('#o_payment_form_pay .monetary_field');
+        var $amountDelivery = $('#order_delivery .monetary_field');
+        var $amountUntaxed = $('#order_total_untaxed .monetary_field');
+        var $amountTax = $('#order_total_taxes .monetary_field');
+        var $amountTotal = $('#order_total .monetary_field');
 
         if (result.status === true) {
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
+            $amountDelivery.html(result.new_amount_delivery);
+            $amountUntaxed.html(result.new_amount_untaxed);
+            $amountTax.html(result.new_amount_tax);
+            $amountTotal.html(result.new_amount_total);
             $payButton.data('disabled_reasons').carrier_selection = false;
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
+            $amountDelivery.html(result.new_amount_delivery);
+            $amountUntaxed.html(result.new_amount_untaxed);
+            $amountTax.html(result.new_amount_tax);
+            $amountTotal.html(result.new_amount_total);
         }
     },
     /**
@@ -85,23 +84,19 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResultBadge: function (result) {
-        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
-        var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_wsale_delivery_badge_price');
 
         if (result.status === true) {
              // if free delivery (`free_over` field), show 'Free', not '$0'
-             if (parseInt(result.new_amount_delivery)) {
-                 $carrierBadge.children('span').text(result.new_amount_delivery);
-             } else {
+             if (result.is_free_delivery) {
                  $carrierBadge.text(_t('Free'));
+             } else {
+                 $carrierBadge.html(result.new_amount_delivery);
              }
-             $carrierBadge.children('span').text(result.new_amount_delivery);
-             $carrierBadge.removeClass('d-none');
-             $computeBadge.addClass('d-none');
-             $computeBadge.removeClass('o_wsale_delivery_carrier_error');
+             $carrierBadge.removeClass('o_wsale_delivery_carrier_error');
         } else {
-            $computeBadge.addClass('o_wsale_delivery_carrier_error');
-            $computeBadge.text(result.error_message);
+            $carrierBadge.addClass('o_wsale_delivery_carrier_error');
+            $carrierBadge.text(result.error_message);
         }
     },
 
