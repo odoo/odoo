@@ -49,7 +49,7 @@
                 <t t-if="website and website.channel_id">
                     <script>
                         <t t-call="im_livechat.loader">
-                            <t t-set="channel" t-value="website.channel_id.id"/>
+                            <t t-set="info" t-value="website.get_livechat_channel_info()"/>
                         </t>
                     </script>
                 </t>

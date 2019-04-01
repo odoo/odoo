@@ -123,6 +123,7 @@
             <!-- Qweb2 lib -->
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
+            <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
             <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
             <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
@@ -141,6 +142,7 @@
             <script type="text/javascript" src="/web/static/src/js/core/session.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/utils.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/qweb.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
@@ -187,10 +189,6 @@
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-
-            <t t-if="not info">
-                <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
-            </t>
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
