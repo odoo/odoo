@@ -31,12 +31,6 @@ body.o_connected_user {
     }
 
     .o_menu_sections {
-        a {
-            > .fa-plus, > .fa-pencil {
-                margin-right: $grid-gutter-width/4;
-            }
-        }
-
         .o_mobile_preview a {
             text-align: center;
             font-size: 20px;
@@ -52,10 +46,6 @@ body.o_connected_user {
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
                 @include button-variant($o-brand-primary, $o-brand-primary);
-            }
-
-            > .fa-plus, > .fa-pencil {
-                margin-right: $grid-gutter-width/4;
             }
         }
 
