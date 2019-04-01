@@ -358,7 +358,9 @@ class QWeb(object):
             except QWebException as e:
                 raise e
             except Exception as e:
-                raise QWebException("load could not load template", name=template)
+                template = options.get('caller_template', template)
+                path = options['last_path_node']
+                raise QWebException("load could not load template", e, path, name=template)
 
         if document is None:
             raise QWebException("Template not found", name=template)
@@ -1454,23 +1456,23 @@ class QWeb(object):
                 )
             )
 
-        if nsmap or call_options:
-            # copy the original dict of options to pass to the callee
-            name_options = self._make_name('options')
-            content.append(
-                # options_ = options.copy()
-                ast.Assign(
-                    targets=[ast.Name(id=name_options, ctx=ast.Store())],
-                    value=ast.Call(
-                        func=ast.Attribute(
-                            value=ast.Name(id='options', ctx=ast.Load()),
-                            attr='copy',
-                            ctx=ast.Load()
-                        ),
-                        args=[], keywords=[], starargs=None, kwargs=None
-                    )
+        name_options = self._make_name('options')
+        # copy the original dict of options to pass to the callee
+        content.append(
+            # options_ = options.copy()
+            ast.Assign(
+                targets=[ast.Name(id=name_options, ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='options', ctx=ast.Load()),
+                        attr='copy',
+                        ctx=ast.Load()
+                    ),
+                    args=[], keywords=[], starargs=None, kwargs=None
                 )
             )
+        )
+        if nsmap or call_options:
 
             if call_options:
                 # update this dict with the content of `t-call-options`
@@ -1568,8 +1570,30 @@ class QWeb(object):
                         keywords=[], starargs=None, kwargs=None
                     ))
                 )
-        else:
-            name_options = 'options'
+
+        # options_.update({
+        #     'caller_template': str(options.get('template')),
+        #     'last_path_node': str(options['root'].getpath(el)),
+        # })
+        content.append(
+            ast.Expr(ast.Call(
+                func=ast.Attribute(
+                    value=ast.Name(id=name_options, ctx=ast.Load()),
+                    attr='update',
+                    ctx=ast.Load()
+                ),
+                args=[
+                    ast.Dict(
+                        keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+                        values=[
+                            ast.Str(s=str(options.get('template'))),
+                            ast.Str(s=str(options['root'].getpath(el))),
+                        ]
+                    )
+                ],
+                keywords=[], starargs=None, kwargs=None
+            ))
+        )
 
         # self.compile($tmpl, options)(self, append, values_copy)
         content.append(
