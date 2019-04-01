@@ -814,7 +814,7 @@ class AccountInvoice(models.Model):
         domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
-        type = self.type
+        type = self.type or self.env.context.get('default_type')
         if p:
             rec_account = p.property_account_receivable_id
             pay_account = p.property_account_payable_id
