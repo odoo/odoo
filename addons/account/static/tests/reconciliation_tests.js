@@ -44,6 +44,7 @@ var db = {
             id: {string: "ID", type: 'integer'},
             code: {string: "code", type: 'integer'},
             name: {string: "Displayed name", type: 'char'},
+            deprecated: {string: "Deprecated", type: 'boolean'},
         },
         records: [
             {id: 282, code: 100000, name: "100000 Fixed Asset Account"},
