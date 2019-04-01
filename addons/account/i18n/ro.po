@@ -3,12 +3,12 @@
 # * account
 # 
 # Translators:
-# Sergiu Baltariu <s_baltariu@yahoo.com>, 2016
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016
+# Sergiu Baltariu <s_baltariu@yahoo.com>, 2017
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
 # Martin Trigaux, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1541,12 +1541,12 @@ msgstr "Adresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
-msgstr ""
+msgstr "Ajustare taxă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Tip de ajustare"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2249,7 +2249,7 @@ msgstr "Extras bancă"
 #: code:addons/account/models/account_bank_statement.py:935
 #, python-format
 msgid "Bank Statement %s"
-msgstr ""
+msgstr "Extras de bancă %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -4131,7 +4131,7 @@ msgstr "Dată sfârșit"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
 msgid "End of Following Month"
-msgstr ""
+msgstr "Sfârșitul lunii următoare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
@@ -4859,6 +4859,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
+"Dacă este gol, utilizează jurnalul din nota contabilă pentru a fi inversat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -5510,6 +5511,9 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
+"Nu este permisă ștergerea unei plăți care a creat deja o notă contabilă "
+"deoarece ar crea un decalaj în numerotare. Ar trebui să creați din nou nota "
+"contabilă și să o anulați grație unei stornări regulate."
 
 #. module: account
 #. openerp-web
@@ -6962,7 +6966,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "Facturi restante, data scadenței a trecut"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -7355,7 +7359,7 @@ msgstr ""
 #: selection:account.reconcile.model,amount_type:0
 #: selection:account.reconcile.model.template,amount_type:0
 msgid "Percentage of balance"
-msgstr ""
+msgstr "Procentaj de sold"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1470
@@ -7984,12 +7988,12 @@ msgstr "Obișnuit"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "Sumă scadentă în moneda companiei."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Sumă scadentă în moneda facturii."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -9289,6 +9293,7 @@ msgid ""
 "There is no account defined on the journal %s for %s involved in a cash "
 "difference."
 msgstr ""
+"Nu există un cont definit în jurnal %spentru %s de la diferența de numerar."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:18
@@ -10015,7 +10020,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr ""
+msgstr "Utilizare contabilitate anglo-saxonă "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_sepa
@@ -10492,6 +10497,7 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"Nu puteți schimba moneda companiei deoarece există deja articole de jurnale"
 
 #. module: account
 #: code:addons/account/models/account.py:180
