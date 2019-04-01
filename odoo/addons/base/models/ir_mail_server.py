@@ -153,6 +153,7 @@ class IrMailServer(models.Model):
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
+    has_been_neutered = fields.Boolean(required=True,default=False,string="Neutralized")
 
     @api.multi
     def test_smtp_connection(self):

@@ -64,6 +64,7 @@ class ir_cron(models.Model):
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+    has_been_neutered = fields.Boolean(required=True,default=False,string='Neutralized')
 
     @api.model
     def create(self, values):
