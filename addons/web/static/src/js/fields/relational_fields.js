@@ -1965,6 +1965,9 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
 
         this.colorField = this.nodeOptions.color_field;
+        this.colornames = [_t('No color'), _t('Red'), _t('Orange'), _t('Yellow'), _t('Light blue'),
+            _t('Dark purple'), _t('Salmon pink'), _t('Medium blue'), _t('Dark blue'), _t('Fushia'),
+            _t('Green'), _t('Purple')];
         this.hasDropdown = false;
     },
 
@@ -2033,6 +2036,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         var elements = this.value ? _.pluck(this.value.data, 'data') : [];
         return {
             colorField: this.colorField,
+            colornames: this.colornames,
             elements: elements,
             hasDropdown: this.hasDropdown,
             readonly: this.mode === "readonly",

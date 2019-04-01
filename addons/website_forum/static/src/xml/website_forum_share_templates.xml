@@ -62,8 +62,9 @@
             </button>
             <p>Move this question to the top of the list by sharing it on social networks.</p><br/>
             <div>
+                <t t-set="title">Share on</t>
                 <t t-foreach="medias" t-as="media">
-                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share oe_share_bump #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
+                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share oe_share_bump #{media}" t-attf-aria-label="#{title} #{media}" t-attf-title="#{title} #{media}">
                         <span class="fa fa-square fa-stack-2x"></span>
                         <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
                     </a>

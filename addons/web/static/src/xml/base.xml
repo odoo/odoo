@@ -118,7 +118,7 @@
     <div t-attf-class="o_notification #{widget.className}" t-translation="off" role="alertdialog">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
         <div class="o_notification_title">
-            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" aria-label="Notification" title="Notification"/>
             <t t-raw="widget.title"/>
         </div>
         <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
@@ -209,10 +209,11 @@
 </t>
 
 <t t-name="ControlPanel.SwitchButton">
+    <t t-set="title">View</t>
     <button type="button" t-att-accesskey="view.accessKey"
         t-attf-class="btn btn-secondary fa fa-lg #{view.icon} o_cp_switch_#{view.type} #{viewType === view.type ? ' active' : ''}"
-        t-attf-aria-label="View #{view.type}"
-        t-att-data-view-type="view.type" t-attf-title="View #{view.type}" tabindex="-1"/>
+        t-attf-aria-label="#{title} #{view.displayName}"
+        t-att-data-view-type="view.type" t-attf-title="#{title} #{view.displayName}" tabindex="-1"/>
 </t>
 
 <t t-name="ControlPanel.SwitchButtons.Mobile">
@@ -848,10 +849,10 @@
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
-        <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+        <t t-set="title">Tag color:</t>
+        <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="#{title} #{colornames[color]}">
             <t t-set="_badge_text">
-                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
+                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="#{title} #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
@@ -926,17 +927,20 @@
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable"/>
+    <t t-set="aria_label">is current state</t>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
-        t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
-        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
+        t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step" t-attf-aria-label="#{i.display_name} #{aria_label}">
+        <t t-esc="i.display_name" role="img"/>
     </button>
+    <t t-set="aria_label">is not current state</t>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
-        t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
-        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
+        t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled" t-attf-aria-label="#{i.display_name} #{aria_label}">
+        <t t-esc="i.display_name" role="img"/>
     </button>
+    <t t-set="aria_label">Click to change current state to </t>
     <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
-        t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
-        <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
+        t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled" t-attf-aria-label="#{aria_label} #{i.display_name}">
+        <t t-esc="i.display_name" role="img"/>
     </button>
 </t>
 <t t-name="FieldBinaryImage">
@@ -1316,7 +1320,7 @@
 <t t-name="SearchView.extended_search.proposition.float">
     <input class="o_input"
         t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
-        t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
+        t-att-title="widget.title"
         t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
         t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
