@@ -3,7 +3,6 @@
 # * base
 # 
 # Translators:
-# Gustavo Valverde, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Jose Manuel <admin@jaboweb.com>, 2016
 # Wilcar José Angulo <wilcarjose@gmail.com>, 2016
@@ -22,10 +21,11 @@
 # Soluntec <abraham@soluntec.es>, 2017
 # Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
-# David Vidal <david.vidal@trespinos.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Gustavo Valverde, 2017
+# David Vidal <david.vidal@trespinos.es>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
@@ -33,7 +33,6 @@
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
 # juani_aizean <juani@aizean.com>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
 # Antonio Trueba, 2017
 # Alejandro Die Sanchis <marketing@domatix.com>, 2017
@@ -41,11 +40,14 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Nacho Hermoso <nacho@domatix.com>, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# ES R1 <e2fes@hotmail.com>, 2018
+# ced903afe967c2a46d1036224972db9d, 2018
 # Martin Trigaux, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -53,7 +55,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2019\n"
+"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -940,6 +942,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Haga la fecha de bloqueo irreversible:\n"
+"\n"
+"    * No puede definir condiciones más estrictas para asesores que para usuarios. Por ello, la fecha de bloqueo en el asesor debe ser antes que la de los usuarios.\n"
+"    * No puede bloquear un periodo que no ha terminado. Por ello, la fecha de bloqueo para asesores debe ser una antes del último del mes previo.\n"
+"    * La nueva fecha de bloqueo para asesores debe ser posterior a la fecha de bloqueo previa.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -13805,7 +13814,7 @@ msgstr "Irlanda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "Fecha de bloqueo irreversible"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
