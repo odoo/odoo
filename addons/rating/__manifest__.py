@@ -7,7 +7,7 @@
 This module allows a customer to give rating.
 """,
     'depends': [
-        'mail', 'portal'
+        'mail',
     ],
     'data': [
         'views/rating_view.xml',

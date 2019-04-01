@@ -6,9 +6,9 @@
     'category': 'Hidden',
     'version': '1.0',
     'description': """
-Bridge module for rating on portal and website  stuff.
+Bridge module for rating on portal and website stuff.
         """,
-    'depends': ['rating'],
+    'depends': ['rating', 'portal'],
     'data': [
         'views/portal_rating_templates.xml',
     ],
