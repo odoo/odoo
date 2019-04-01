@@ -3402,7 +3402,7 @@ Fields:
     @api.multi
     def _write(self, vals):
         # low-level implementation of write()
-        if not self:
+        if not self.id:
             return True
         self.check_field_access_rights('write', list(vals))
 
@@ -5204,8 +5204,6 @@ Fields:
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
-        import pdb
-        pdb.set_trace()
         if fnames is None:
             if ids is None:
                 return self.env.cache.invalidate()
@@ -5315,13 +5313,24 @@ Fields:
             # evaluate fields, and group record ids by update
             updates = defaultdict(set)
             for rec in recs:
-                try:
-                    vals = {n: rec[n] for n in ns}
-                except MissingError:
-                    continue
+                vals = {n: rec[n] for n in ns}
+
+                # FP TODO: possible optimization here; if cache has same value, do not write
+                # vals = {}
+                # for f in fs:
+                #     if f.store:
+                #         if self.env.cache.contains(rec, f):
+                #             v = self.env.cache.get(rec, f)
+                #             if v != rec[f.name]:
+                #                 vals[f.name] = rec[f.name]
+                #         else:
+                #             vals[f.name] = rec[f.name]
+
                 vals = rec._convert_to_write(vals)
                 updates[frozendict(vals)].add(rec.id)
             # update records in batch when possible
+
+
             with recs.env.norecompute():
                 for vals, ids in updates.items():
                     target = recs.browse(ids)

@@ -988,15 +988,12 @@ class Field(MetaField('DummyField', (object,), {})):
         if record:
             # only a single record may be accessed
             record.ensure_one()
-            try:
-                value = record.env.cache.get(record, self)
-            except KeyError:
-                # cache miss, determine value and retrieve it
+            if record.env.check_todo(self, record) or not record.env.cache.contains(record, self):
                 if record.id:
                     self.determine_value(record)
                 else:
                     self.determine_draft_value(record)
-                value = record.env.cache.get(record, self)
+            value = record.env.cache.get(record, self)
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
@@ -1048,9 +1045,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # initialize the fields to their corresponding null value in cache
         fields = records._field_computed[self]
         cache = records.env.cache
+
         for field in fields:
             for record in records:
-                cache.set(record, field, field.convert_to_cache(False, record, validate=False))
+                if not cache.contains(record, field):
+                    cache.set(record, field, field.convert_to_cache(False, record, validate=False))
+
         if isinstance(self.compute, str):
             getattr(records, self.compute)()
         else:
