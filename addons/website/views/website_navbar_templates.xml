@@ -77,8 +77,16 @@
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
                     <li t-if="user_id.has_group('base.group_multi_company') and user_id.has_group('website.group_multi_website') and len(multi_website_companies)">
-                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_companies_current['name']"/></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-building d-lg-none"/>
+                            <span class="d-none d-lg-inline-block">
+                                <t t-esc="multi_website_companies_current['name']"/>
+                            </span>
+                        </a>
                         <div class="dropdown-menu" role="menu">
+                            <div class="d-lg-none dropdown-item active">
+                                <span t-esc="multi_website_companies_current['name']"/>
+                            </div>
                             <t t-foreach="multi_website_companies" t-as="multi_website_company">
                                 <a role="menuitem" href="#"
                                     class="dropdown-item oe_menu_text js_multi_company_switch"
@@ -90,8 +98,16 @@
                         </div>
                     </li>
                     <li groups="website.group_multi_website" t-if="multi_website_websites">
-                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_websites_current['name']"/></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-globe d-lg-none"/>
+                            <span class="d-none d-lg-inline-block">
+                                <t t-esc="multi_website_websites_current['name']"/>
+                            </span>
+                        </a>
                         <div class="dropdown-menu" role="menu">
+                            <div class="d-lg-none dropdown-item active">
+                                <span t-esc="multi_website_websites_current['name']"/>
+                            </div>
                             <t t-foreach="multi_website_websites" t-as="multi_website_website">
                                 <a role="menuitem" href="#"
                                     t-att-domain="multi_website_website['domain']"
@@ -106,7 +122,7 @@
 
                     <!-- Page Edition -->
                     <li class="o_new_content_menu" id="new-content-menu">
-                        <a href="#"><span class="fa fa-plus"/>New</a>
+                        <a href="#"><span class="fa fa-plus mr-2"/>New</a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <div class="container pt32 pb32">
                                 <div class="row">
@@ -163,7 +179,7 @@
                         </div>
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">
-                        <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                        <a data-action="edit" href="#"><span class="fa fa-pencil mr-2"/>Edit</a>
                     </li>
                     <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
