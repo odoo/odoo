@@ -612,7 +612,6 @@
                    "display_currency": product.currency_id,
                }'/>
           </h4>
-          <h4 class="d-none oe_not_available bg-warning">Option not available</h4>
       </div>
     </template>
 
@@ -990,11 +989,8 @@
     </template>
 
     <template id='coupon_form' name='Coupon form'>
-        <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <p class="bg-warning">This promo code is not available</p>
-        </t>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
-            method="post" class="mb32" name="coupon_code">
+            method="post" name="coupon_code">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
@@ -1003,6 +999,9 @@
                 </div>
             </div>
         </form>
+        <t t-if="request.params.get('code_not_available')" name="code_not_available">
+            <div class="alert alert-danger text-left" role="alert">This promo code is not available.</div>
+        </t>
     </template>
 
     <template id="checkout">
