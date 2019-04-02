@@ -738,7 +738,7 @@ class MrpProduction(models.Model):
             moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
             (moves_finished + moves_raw).write({'workorder_id': workorder.id})
 
-            workorder.generate_wo_lines()
+            workorder._generate_wo_lines()
         return workorders
 
     def _check_lots(self):

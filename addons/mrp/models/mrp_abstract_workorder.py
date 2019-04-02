@@ -36,9 +36,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
         for line, vals in line_values['to_update'].items():
             line.update(vals)
 
-    def _unreserve_order(self, wl):
-        return (- wl.qty_reserved,)
-
     def _update_workorder_lines(self):
         """ Update workorder lines, according to the new qty currently
         produced. It returns a dict with line to create, update or delete.
@@ -72,7 +69,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             # Remove or lower quantity on exisiting workorder lines
             if float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
                 qty_todo = abs(qty_todo)
-                for workorder_line in move_workorder_lines.sorted(key=lambda wl: self._unreserve_order(wl)):
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl._unreserve_order()):
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
                     if float_compare(workorder_line.qty_to_consume, qty_todo, precision_rounding=rounding) <= 0:
@@ -94,7 +91,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             else:
                 # Search among wo lines which one could be updated
                 qty_reserved_wl = defaultdict(float)
-                for workorder_line in move_workorder_lines.sorted(key=lambda wl: self._unreserve_order(wl)):
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved, reverse=True):
                     rounding = workorder_line.product_uom_id.rounding
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
@@ -258,7 +255,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
-    final_lot_id = fields.Many2one('stock.production.lot', 'Finished Product Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     qty_done = fields.Float('Consumed', digits=dp.get_precision('Product Unit of Measure'))
@@ -387,6 +383,9 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             self.qty_done -= vals['qty_done']
 
         return vals_list
+
+    def _unreserve_order(self):
+        return (self.qty_reserved,)
 
     def _get_move_lines(self):
         return self.move_id.move_line_ids.filtered(lambda ml:
