@@ -15,15 +15,19 @@ class ResPartner(models.Model):
         """Based on current vat validation and implementation, the following
         logic set the code associated and its vat without prefix
         chat on its vat field.
-          0 - Documento Tributario No Domiciliado Sin RUC
-        * 1 - Documento Nacional de Identidad
-          4 - Carnet de Extranjería
-        * 6 - Registro Único de Contribuyentes
-          7 - Pasaporte
-          A - Cédula Diplomática de Identidad
+          0 - Non-Domiciled Tax Document without RUC
+        * 1 - National Identity Document (DNI, Spanish acronym)
+        * 4 - Alien Registration Card
+        * 6 - Single Taxpayer Registration (RUC, Spanish acronym)
+        * 7 - Passport
+        * A - Diplomatic Identity Card
+        * B - Identity document of the country of residence
+        * C - Tax Identification Number - TIN
+        * D - Identification Number - IN
+        * E - Andean Immigration Card (TAM, Spanish acronym)
 
         this represent the catalog no. 6 of SUNAT (1)
-        https://www.vauxoo.com/r/catalogosSUNAT
+        http://cpe.sunat.gob.pe/sites/default/files/inline-files/anexoV-340-2017.pdf
         (*) types are supported in odoo core module base_vat
         """
         self.ensure_one()
@@ -33,7 +37,8 @@ class ResPartner(models.Model):
             return {"vat_type": 'D', "vat_number": '00000000', "vat_code": '1'}
         vat_number = self._split_vat(self.vat)[1]
         vat_type, vat_number = vat_number[0], vat_number[1:]
-        vat_codes = {'R': '6', 'D': '1'}
+        vat_codes = {'R': '6', 'D': '1', 'P': '7', 'E': '4',
+                     'C': 'A', 'B': 'B', 'T': 'C', 'I': 'D', 'A': 'E'}
         vat_code = vat_codes.get(vat_type)
         return {"vat_type": vat_type, "vat_number": vat_number,
                 "vat_code": vat_code}

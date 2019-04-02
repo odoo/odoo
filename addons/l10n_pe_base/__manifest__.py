@@ -18,6 +18,7 @@
         'data/res_country_data.xml',
         'data/res.city.csv',
         'data/res.district.csv',
+        'views/res_partner_view.xml',
     ],
     'installable': True,
 }

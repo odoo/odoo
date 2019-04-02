@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_view_inherit_l10n_pe_edi" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n.pe.edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group/field[@name='vat']" position="attributes">
+                <attribute name="help">
+                    The Tax Identification Number.
+                    Complete it if the contact is subjected to government taxes.
+                    Used in some legal statements.
+                    Possible VAT types with Peru as Country:
+                       - PER10254824220 (PER = RUC)
+                       - PED10254824 (PED = DNI)
+                       - PEE102548242201 (PEE = Alien Registration Card)
+                       - PEPPERU10254 (PEP = Passport)
+                       - PEC102548242201234 (PEC = Diplomatic Identity Card)
+                       - PEB102548242201234 (PEB = Identity document of the country of residence)
+                       - PET102548242201234 (PET = Tax Identification Number - TIN)
+                       - PEI102548242201234 (PEI = Identification Number - IN)
+                       - PEA102548242201234 (PEA = Andean Immigration Card)
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
