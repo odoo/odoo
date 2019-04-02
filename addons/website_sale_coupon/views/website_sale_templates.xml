@@ -25,41 +25,31 @@
     <xpath expr="//form[@name='coupon_code']" position="after">
         <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
             <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
-                <div class="card bg-success text-white mt16">
-                    <div class="card-header clearfix">
-                    <span class="float-left">You have successfully applied following promo code: <b t-esc="coupon.code"/></span>
-                    </div>
+                <div class="alert alert-success text-left mt16" role="alert">
+                    You have successfully applied following promo code: <strong t-esc="coupon.code"/>
                 </div>
             </t>
         </t>
         <t t-if="website_sale_order and website_sale_order.promo_code">
-            <div class="card bg-success text-white mt16">
-                <div class="card-header clearfix">
-                <span class="float-left">You have successfully applied following promo code: <b t-esc="website_sale_order.promo_code"/></span>
-                </div>
+            <div class="alert alert-success text-left mt16" role="alert">
+                You have successfully applied following promo code: <strong t-esc="website_sale_order.promo_code"/>
             </div>
         </t>
         <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
             <t t-foreach="website_sale_order.generated_coupon_ids.filtered(lambda c: c.state != 'expired')" t-as="coupon">
-                <div class="card bg-success text-white mt16">
-                    <div class="card-header clearfix">
-                        <span class="float-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <b t-esc="coupon.code"/></span>
-                    </div>
+                <div class="alert alert-success text-left mt16" role="alert">
+                    Your reward <strong t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <strong t-esc="coupon.code"/>
                 </div>
             </t>
         </t>
         <t t-if="request.params.get('code_not_available')">
-            <div class="card bg-danger text-white mt16">
-                <div class="card-header clearfix">
-                    <span class="float-left">Invalid or expired promo code</span>
-                </div>
+            <div class="alert alert-danger text-left mt16" role="alert">
+                Invalid or expired promo code.
             </div>
         </t>
         <t t-if="website_sale_order.get_promo_code_error(delete=False)">
-            <div class="card bg-danger text-white mt16">
-                <div class="card-header clearfix">
-                    <span class="float-left"><t t-esc="website_sale_order.get_promo_code_error()" /></span>
-                </div>
+            <div class="alert alert-danger text-left mt16" role="alert">
+                <t t-esc="website_sale_order.get_promo_code_error()"/>
             </div>
         </t>
     </xpath>
