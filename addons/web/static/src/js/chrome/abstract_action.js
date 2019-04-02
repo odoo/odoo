@@ -91,11 +91,11 @@ var AbstractAction = Widget.extend(ActionMixin, {
      */
     willStart: function () {
         var self = this;
-        var defs = [this._super.apply(this, arguments)];
+        var proms = [this._super.apply(this, arguments)];
         if (this.hasControlPanel) {
             var params = this.controlPanelParams;
             if (this.loadControlPanel) {
-                defs.push(this
+                proms.push(this
                     .loadFieldView(params.modelName, params.context || {}, params.viewId, 'search')
                     .then(function (fieldsView) {
                         params.viewInfo = {
@@ -104,7 +104,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                         };
                     }));
             }
-            return Promise.all(defs).then(function () {
+            return Promise.all(proms).then(function () {
                 var controlPanelView = new self.config.ControlPanelView(params);
                 return controlPanelView.getController(self).then(function (controlPanel) {
                     self._controlPanel = controlPanel;
@@ -112,7 +112,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                 });
             });
         }
-        return Promise.all(defs);
+        return Promise.all(proms);
     },
     /**
      * @override

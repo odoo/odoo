@@ -7,6 +7,9 @@ var publicWidget = require('web.public.widget');
 var _t = core._t;
 
 var BarChart = publicWidget.Widget.extend({
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
     /**
      * @constructor
      * @param {Object} parent
@@ -25,26 +28,6 @@ var BarChart = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
-        // Accessor functions
-        function getDate(d) {
-            return new Date(d[0]);
-        }
-        function getNbClicks(d) {
-            return d[1];
-        }
-
-        // Prune tick values for visibility purpose
-        function getPrunedTickValues(ticks, nbDesiredTicks) {
-            var nbValues = ticks.length;
-            var keepOneOf = Math.max(1, Math.floor(nbValues / nbDesiredTicks));
-
-            return _.filter(ticks, function (d, i) {
-                return i % keepOneOf === 0;
-            });
-        }
-
         // Fill data for each day (with 0 click for days without data)
         var clicksArray = [];
         var beginDateCopy = this.beginDate;
@@ -54,54 +37,41 @@ var BarChart = publicWidget.Widget.extend({
             beginDateCopy.add(1, 'days');
         }
 
-        // Set title
-        var nbClicks = _.reduce(clicksArray, function (total, val) {
-            return total + val[1];
-        }, 0);
+        var nbClicks = 0;
+        var data = [];
+        var labels = [];
+        clicksArray.forEach(function (pt) {
+            labels.push(pt[0]);
+            nbClicks += pt[1];
+            data.push(pt[1]);
+        });
+
         this.$('.title').html(nbClicks + _t(' clicks'));
 
-        // Fit data into the NVD3 scheme
-        var chartData = [{}];
-        chartData[0]['key'] = _t('# of clicks');
-        chartData[0]['values'] = clicksArray;
+        var config = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    fill: 'start',
+                    label: _t('# of clicks'),
+                    backgroundColor: '#ebf2f7',
+                    borderColor: '#6aa1ca',
 
-        nv.addGraph(function () {
-            var chart = nv.models.lineChart()
-                .x(function (d) {
-                    return getDate(d);
-                })
-                .y(function (d) {
-                    return getNbClicks(d);
-                })
-                .showYAxis(true)
-                .showXAxis(true);
-
-            // Reduce the number of labels on the X axis for visibility
-            var tickValues = getPrunedTickValues(chartData[0]['values'], 10);
-
-            chart.xAxis
-                .tickFormat(function (d) {
-                    return d3.time.format('%d/%m/%y')(new Date(d));
-                })
-                .tickValues(_.map(tickValues, function (d) {
-                    return getDate(d).getTime();
-                }))
-                .rotateLabels(55);
-
-            chart.yAxis
-                .tickFormat(d3.format('d'))
-                .ticks(chartData[0]['values'].length - 1);
-
-            d3.select(self.$('svg')[0])
-                .datum(chartData)
-                .call(chart);
-
-            return self.chart = chart;
-        });
+                }],
+            },
+        };
+        var canvas = this.$('canvas')[0];
+        var context = canvas.getContext('2d');
+        new Chart(context, config);
     },
 });
 
 var PieChart = publicWidget.Widget.extend({
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
     /**
      * @override
      * @param {Object} parent
@@ -115,35 +85,33 @@ var PieChart = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var self = this;
 
-        // Process country data to fit into the NVD3 scheme
-        var processedData = [];
+        // Process country data to fit into the ChartJS scheme
+        var labels = [];
+        var data = [];
         for (var i = 0; i < this.data.length; i++) {
             var countryName = this.data[i]['country_id'] ? this.data[i]['country_id'][1] : _t('Undefined');
-            processedData.push({'label': countryName + ' (' + this.data[i]['country_id_count'] + ')', 'value': this.data[i]['country_id_count']});
+            labels.push(countryName + ' (' + this.data[i]['country_id_count'] + ')');
+            data.push(this.data[i]['country_id_count']);
         }
 
         // Set title
         this.$('.title').html(this.data.length + _t(' countries'));
 
-        nv.addGraph(function () {
-            var chart = nv.models.pieChart()
-                .x(function (d) {
-                    return d.label;
-                })
-                .y(function (d) {
-                    return d.value;
-                })
-                .showLabels(false);
+        var config = {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    label: this.data[0].key,
+                }]
+            },
+        };
 
-            d3.select(self.$('svg')[0])
-                .datum(processedData)
-                .transition().duration(1200)
-                .call(chart);
-
-            return self.chart = chart;
-        });
+        var canvas = this.$('canvas')[0];
+        var context = canvas.getContext('2d');
+        new Chart(context, config);
     },
 });
 
@@ -227,12 +195,9 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
 
             var rowWidth = $('#all_time_countries_charts').parent().width();
-            var chartsSVG = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('svg');
-            chartsSVG.css('height', Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
+            var $chartCanvas = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
+            $chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
 
-            nv.utils.windowResize(function () {
-                _.chain(self.charts).pluck('chart').invoke('update');
-            });
         });
     },
 
@@ -302,20 +267,12 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Resizes the chart when a tab is opened, because NVD3 automatically reduce
-     * the size of the chart to 5px width when the bootstrap tab is closed.
-     *
      * @private
      * @param {Event} ev
      */
     _onGraphTabClick: function (ev) {
         ev.preventDefault();
         $('.graph-tabs li a').tab('show');
-
-        setTimeout(function () {
-            // Force NVD3 to redraw the chart
-            window.dispatchEvent(new Event('resize'));
-        }, 0);
     },
     /**
      * @private

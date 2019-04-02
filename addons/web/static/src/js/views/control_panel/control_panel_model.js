@@ -893,6 +893,7 @@ var ControlPanelModel = mvc.Model.extend({
             }
             context = {
                 timeRangeMenuData: {
+                    comparisonField: filter.fieldName,
                     timeRange: timeRange,
                     timeRangeDescription: timeRangeDescription,
                     comparisonTimeRange: comparisonTimeRange,

@@ -2269,10 +2269,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('graph dashboard widget attach/detach callbacks', async function (assert) {
-        // This widget is rendered with nvd3, and nvd3 renders the graphs when
-        // the svg is in the DOM. The intent of this test is to determine when
-        // the field widgets are in the DOM, so that we can tell nvd3 to render
-        // them.
+        // This widget is rendered with Chart.js.
         var done = assert.async();
         assert.expect(6);
 
@@ -2319,9 +2316,8 @@ QUnit.module('basic_fields', {
 
     QUnit.test('graph dashboard widget is rendered correctly', async function (assert) {
         var done = assert.async();
-        assert.expect(4);
+        assert.expect(3);
 
-        var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
         createView({
             View: KanbanView,
             model: 'partner',
@@ -2336,121 +2332,26 @@ QUnit.module('basic_fields', {
                 '</templates></kanban>',
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
-            // nvd3 seems to do a setTimeout(0) each time the addGraph function is
-            // called, which is done twice in this case as there are 2 records.
-            // for that reason, we need to do two setTimeout(0) as well here to ensure
-            // that both graphs are rendered before starting to check if the rendering
-            // is correct.
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
                     "graph of first record should be a barchart");
-                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_dashboard_graph').length, 1,
                     "graph of second record should be a linechart");
-
-                var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
-                evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-                $('.discreteBar')[0].dispatchEvent(evt);
-                var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText.trim();
-                assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
-                $('.nvtooltip').remove();
 
                 // force a re-rendering of the first record (to check if the
                 // previous rendered graph is correctly removed from the DOM)
                 var firstRecordState = kanban.model.get(kanban.handle).data[0];
                 return kanban.renderer.updateRecord(firstRecordState);
             }).then(function () {
-                return concurrency.delay(0); // one graph is re-rendered
+                return concurrency.delay(0);
             }).then(function () {
-                assert.strictEqual(kanban.$('.o_kanban_record:first() svg').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:first() canvas').length, 1,
                     "there should be only one rendered graph by record");
 
                 kanban.destroy();
                 done();
             });
         });
-    });
-
-    QUnit.test('graph dashboard widget does not need nv to be destroyed', async function (assert) {
-        // this test ensures that the JournalDashboardGraph widget doesn't crash
-        // when being destroyed before nv has been loaded
-        assert.expect(2);
-
-        testUtils.mock.patch(basicFields.JournalDashboardGraph, {
-            destroy: function () {
-                assert.step('destroy');
-                var nv = window.nv;
-                delete window.nv;
-                this._super.apply(this, arguments);
-                window.nv = nv;
-            }
-        });
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates></kanban>',
-            domain: [['id', 'in', [1]]],
-        });
-
-        kanban.destroy();
-        testUtils.mock.unpatch(basicFields.JournalDashboardGraph);
-
-        assert.verifySteps(['destroy']);
-
-        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
-        return concurrency.delay(0);
-    });
-
-    QUnit.test('graph dashboard widget can be destroyed when nv is partially loaded', async function (assert) {
-        // this test ensures that the JournalDashboardGraph widget doesn't crash
-        // when being destroyed before nv has been completely loaded
-        assert.expect(2);
-
-        testUtils.mock.patch(basicFields.JournalDashboardGraph, {
-            destroy: function () {
-                assert.step('destroy');
-                // nv is fully loaded only when nvd3.js has been loaded
-                // which happens sequentially after nv.d3.js
-                // we simulate this race condition with:
-                var offWindowResize = window.nv.utils.offWindowResize;
-                window.nv.utils.offWindowResize = undefined;
-                this._super.apply(this, arguments);
-                window.nv.utils.offWindowResize = offWindowResize;
-            },
-        });
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates></kanban>',
-            domain: [['id', 'in', [1]]],
-        });
-
-        kanban.destroy();
-        testUtils.mock.unpatch(basicFields.JournalDashboardGraph);
-
-        assert.verifySteps(['destroy']);
-
-        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
-        return concurrency.delay(0);
     });
 
     QUnit.test('rendering of a field with dashboard_graph widget in an updated kanban view (ungrouped)', async function (assert) {
@@ -2473,16 +2374,12 @@ QUnit.module('basic_fields', {
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be two graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be two graph rendered");
                 return kanban.update({});
             }).then(function () {
                 return concurrency.delay(0); // one graph is re-rendered
             }).then(function () {
-                return concurrency.delay(0); // one graph is re-rendered
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be one graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be one graph rendered");
                 kanban.destroy();
                 done();
             });
@@ -2509,14 +2406,10 @@ QUnit.module('basic_fields', {
             domain: [['id', 'in', [1, 2]]],
         }).then(function (kanban) {
             concurrency.delay(0).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsN(kanban, '.o_dashboard_graph svg', 2, "there should be two graph rendered");
+                assert.containsN(kanban, '.o_dashboard_graph canvas', 2, "there should be two graph rendered");
                 return kanban.update({groupBy: ['selection'], domain: [['int_field', '=', 10]]});
             }).then(function () {
-                return concurrency.delay(0);
-            }).then(function () {
-                assert.containsOnce(kanban, '.o_dashboard_graph svg', "there should be one graph rendered");
+                assert.containsOnce(kanban, '.o_dashboard_graph canvas', "there should be one graph rendered");
                 kanban.destroy();
                 done();
             });
