@@ -59,9 +59,10 @@ class StockProductionLot(models.Model):
     @api.model
     def _alert_date_exceeded(self):
         # if the alert_date is in the past and the lot is linked to an internal quant
-        # log a next activity on the next.production.lot 
+        # log a next activity on the next.production.lot
         alert_lot_ids = self.env['stock.production.lot'].search([('alert_date', '<=', fields.Date.today())])
         mail_activity_type = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
+        # VFE FIXME will crash if user deletes activity type...
         stock_quants = self.env['stock.quant'].search([
             ('lot_id', 'in', alert_lot_ids.ids),
             ('quantity', '>', 0)]).filtered(lambda quant: quant.location_id.usage == 'internal' )
@@ -69,7 +70,7 @@ class StockProductionLot(models.Model):
 
         # only for lots that do not have already an activity
         # or that do not have a done alert activity, i.e. a mail.message
-        lots = lots.filtered(lambda lot: 
+        lots = lots.filtered(lambda lot:
             not self.env['mail.activity'].search_count([
                 ('res_model', '=', 'stock.production.lot'),
                 ('res_id', '=', lot.id),
@@ -80,9 +81,12 @@ class StockProductionLot(models.Model):
                 ('subtype_id', '=', self.env.ref('mail.mt_activities').id),
                 ('mail_activity_type_id','=', mail_activity_type)]))
         for lot in lots:
-            lot.activity_schedule('product_expiry.mail_activity_type_alert_date_reached',
-            user_id=lot.product_id.responsible_id.id or SUPERUSER_ID, note=_("The alert date has been reached for this lot/serial number")
-        )
+            lot.activity_schedule(
+                'product_expiry.mail_activity_type_alert_date_reached',
+                user_id=lot.product_id.responsible_id.id or SUPERUSER_ID,
+                note=_("The alert date has been reached for this lot/serial number")
+            )
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
