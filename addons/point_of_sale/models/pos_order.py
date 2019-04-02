@@ -505,7 +505,8 @@ class PosOrder(models.Model):
                 '|',
                 ('credit_move_id.move_id', '=', move.id),
                 ('debit_move_id.move_id', '=', move.id)], limit=1)
-            partial_reconcile.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[move])
+            if partial_reconcile:
+                partial_reconcile.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[move])
 
     def _filtered_for_reconciliation(self):
         filter_states = ['invoiced', 'done']
