@@ -218,7 +218,7 @@ class Picking(models.Model):
         # default='1', required=True,  # TDE: required, depending on moves ? strange
         index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
+        help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
         index=True, tracking=True,
