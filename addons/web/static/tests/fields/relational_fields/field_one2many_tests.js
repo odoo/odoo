@@ -831,10 +831,10 @@ QUnit.module('fields', {}, function () {
                             'The right values should be written');
                     }
                     return this._super.apply(this, arguments);
-                }
+                },
             });
 
-            assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim(), "second record",
+            assert.deepEqual(form.$('.o_data_cell.o_many2many_tags_cell').text().trim(), "second record",
                 "the partner_ids should be as specified at initialization");
 
             await testUtils.form.clickEdit(form);
@@ -843,7 +843,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editSelect($cell, "hop");
             await testUtils.form.clickSave(form);
 
-            assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim().split(/\s+/),
+            assert.deepEqual(form.$('.o_data_cell.o_many2many_tags_cell').text().trim().split(/\s+/),
                 ["second", "record", "aaa"],
                 'The partner_ids should have been updated');
 
@@ -3022,11 +3022,11 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // edit mode, then click on Add an item, then click elsewhere
+            // edit mode, then click on Add an item, then press enter
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'enter');
-            assert.hasClass(form.$('input[name="turtle_foo"]'),'o_field_invalid',
+            assert.hasClass(form.$('input[name="turtle_foo"]'), 'o_field_invalid',
                 "input should be marked invalid");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
@@ -8153,14 +8153,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });
@@ -8207,7 +8207,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
             await testUtils.dom.click(form.$el);
 
-            assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2, "should be 2 columns('foo' + 'int_field')");
 
             form.destroy();
         });
@@ -8246,14 +8246,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
         });

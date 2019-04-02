@@ -444,7 +444,6 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
-
 var LinkButton = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'click': '_onClick'
@@ -483,7 +482,6 @@ var LinkButton = AbstractField.extend({
         event.stopPropagation();
         window.open(this.value, '_blank');
     },
-
 });
 
 var FieldDate = InputField.extend({
@@ -1114,6 +1112,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         if (this.mode === 'edit') {
             this.tagName = 'textarea';
         }
+        this.autoResizeOptions = {parent: this};
     },
     /**
      * As it it done in the start function, the autoresize is done only once.
@@ -1122,7 +1121,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     start: function () {
         if (this.mode === 'edit') {
-            dom.autoresize(this.$el, {parent: this});
+            dom.autoresize(this.$el, this.autoResizeOptions);
 
             this.$el = this.$el.add(this._renderTranslateButton());
         }
@@ -1159,11 +1158,22 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
+var ListFieldText = FieldText.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.autoResizeOptions.min_height = 0;
+    },
+});
+
 /**
  * Displays a handle to modify the sequence.
  */
 var HandleWidget = AbstractField.extend({
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    widthFactor: 0,
     tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
@@ -2996,6 +3006,7 @@ return {
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
     FieldText: FieldText,
+    ListFieldText: ListFieldText,
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,

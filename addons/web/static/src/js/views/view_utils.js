@@ -19,10 +19,15 @@ var viewUtils = {
             case 'many2one':
                 return group.res_id || false;
             case 'selection':
-                var descriptor = _.findWhere(groupedByField.selection, group.value);
+                var descriptor = _.find(groupedByField.selection, function (option) {
+                    return option[1] === group.value;
+                });
                 return descriptor && descriptor[0];
-            default:
+            case 'char':
+            case 'boolean':
                 return group.value;
+            default:
+                return false; // other field types are not handled
         }
     },
     /**
