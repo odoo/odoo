@@ -57,7 +57,7 @@ class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     acc_type = fields.Selection([('bank', 'Normal')], compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
     acc_number = fields.Char('Account Number', required=True)
@@ -67,7 +67,7 @@ class ResPartnerBank(models.Model):
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name')
     bank_bic = fields.Char(related='bank_id.bic')
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
 
