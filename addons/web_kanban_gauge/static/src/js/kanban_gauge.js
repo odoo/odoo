@@ -2,8 +2,11 @@ odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
+var core = require('web.core');
 var field_registry = require('web.field_registry');
 var utils = require('web.utils');
+
+var _t = core._t;
 
 /**
  * options
@@ -24,13 +27,8 @@ var utils = require('web.utils');
 
 var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
-    cssLibs: [
-        '/web/static/lib/nvd3/nv.d3.css'
-    ],
     jsLibs: [
-        '/web/static/lib/nvd3/d3.v3.js',
-        '/web/static/lib/nvd3/nv.d3.js',
-        '/web/static/src/js/libs/nvd3.js'
+        '/web/static/lib/Chart/Chart.js',
     ],
 
     //--------------------------------------------------------------------------
@@ -42,98 +40,92 @@ var GaugeWidget = AbstractField.extend({
      * @private
      */
     _render: function () {
-        // parameters
-        var max_value = this.nodeOptions.max_value || 100;
-        if (this.nodeOptions.max_field) {
-            max_value = this.recordData[this.nodeOptions.max_field];
-        }
-        var label = this.nodeOptions.label || "";
-        if (this.nodeOptions.label_field) {
-            label = this.recordData[this.nodeOptions.label_field];
-        }
-        var title = this.nodeOptions.title || this.field.string;
-        // current gauge value
+        // current value
         var val = this.value;
         if (_.isArray(JSON.parse(val))) {
             val = JSON.parse(val);
         }
-        var value = _.isArray(val) && val.length ? val[val.length-1].value : val;
-        // displayed value under gauge
-        var gauge_value = value;
+        var gauge_value = _.isArray(val) && val.length ? val[val.length-1].value : val;
         if (this.nodeOptions.gauge_value_field) {
             gauge_value = this.recordData[this.nodeOptions.gauge_value_field];
         }
 
-        var degree = Math.PI/180,
-            width = 200,
-            height = 150,
-            outerRadius = Math.min(width, height)*0.5,
-            innerRadius = outerRadius*0.7,
-            fontSize = height/7;
-
-        this.$el.empty().attr('style', this.nodeOptions.style + ';position:relative; display:inline-block;');
-
-        var arc = d3.svg.arc()
-                .innerRadius(innerRadius)
-                .outerRadius(outerRadius)
-                .startAngle(-90*degree);
-
-        var svg = d3.select(this.$el[0])
-            .append("svg")
-            .attr("width", '100%')
-            .attr("height", '100%')
-            .attr('viewBox','0 0 '+width +' '+height )
-            .attr('preserveAspectRatio','xMinYMin')
-            .append("g")
-            .attr("transform", "translate(" + (width/2) + "," + (height-(width-height)/2-12) + ")");
-
-        function addText(text, fontSize, dx, dy) {
-            return svg.append("text")
-                .attr("text-anchor", "middle")
-                .style("font-size", fontSize+'px')
-                .attr("dy", dy)
-                .attr("dx", dx)
-                .text(text);
+        // max_value
+        var max_value = this.nodeOptions.max_value || 100;
+        if (this.nodeOptions.max_field) {
+            max_value = this.recordData[this.nodeOptions.max_field];
         }
-        // top title
-        addText(title, 16, 0, -outerRadius-16).style("font-weight",'bold');
+        max_value = Math.max(gauge_value, max_value);
 
-        // center value
-        addText(utils.human_number(value, 1), fontSize, 0, -2).style("font-weight",'bold');
-
-        // bottom label
-        addText(0, 8, -(outerRadius+innerRadius)/2, 12);
-        addText(label, 8, 0, 12);
-        addText(utils.human_number(max_value, 1), 8, (outerRadius+innerRadius)/2, 12);
-
-        // chart
-        svg.append("path")
-            .datum({endAngle: Math.PI/2})
-            .style("fill", "#ddd")
-            .attr("d", arc);
-
-        var foreground = svg.append("path")
-            .datum({endAngle: 0})
-            .style("fill", "hsl(0,80%,50%)")
-            .attr("d", arc);
-
-        var ratio = max_value ? value/max_value : 0;
-        var hue = Math.round(ratio*120);
-
-        foreground.transition()
-            .style("fill", "hsl(" + hue + ",80%,50%)")
-            .duration(1500)
-            .call(arcTween, (ratio-0.5)*Math.PI);
-
-        function arcTween (transition, newAngle) {
-            transition.attrTween("d", function(d) {
-                var interpolate = d3.interpolate(d.endAngle, newAngle);
-                return function (t) {
-                    d.endAngle = interpolate(t);
-                    return arc(d);
-                };
-            });
+        // label
+        var label = this.nodeOptions.label || "";
+        if (this.nodeOptions.label_field) {
+            label = this.recordData[this.nodeOptions.label_field];
         }
+
+        // title
+        var title = this.nodeOptions.title || this.field.string;
+
+        var maxLabel = max_value;
+        if (gauge_value === 0 && max_value === 0) {
+            max_value = 1;
+            maxLabel = 0;
+        }
+		var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [
+                        gauge_value,
+                        max_value - gauge_value
+					],
+					backgroundColor: [
+                        "#1f77b4", "#dddddd"
+					],
+					label: title
+				}],
+			},
+			options: {
+				circumference: Math.PI,
+				rotation: -Math.PI,
+				responsive: true,
+                tooltips: {
+                    displayColors: false,
+                    callbacks: {
+                        label: function(tooltipItems) {
+                            if (tooltipItems.index === 0) {
+                                return _t('Value: ') + gauge_value;
+                            }
+                            return _t('Max: ') + maxLabel;
+                        },
+                    },
+                },
+				title: {
+					display: true,
+					text: title,
+                    padding: 4,
+				},
+                layout: {
+                    padding: {
+                        bottom: 5
+                    }
+                },
+                maintainAspectRatio: false,
+                cutoutPercentage: 70,
+            }
+		};
+        this.$canvas = $('<canvas/>');
+        this.$el.empty();
+        this.$el.append(this.$canvas);
+        this.$el.attr('style', this.nodeOptions.style);
+        this.$el.css({position: 'relative'});
+        var context = this.$canvas[0].getContext('2d');
+        this.chart = new Chart(context, config);
+
+        var humanValue = utils.human_number(gauge_value, 1);
+        var $value = $('<span class="o_gauge_value">').text(humanValue);
+        $value.css({'text-align': 'center', position: 'absolute', left: 0, right: 0, bottom: '6px', 'font-weight': 'bold'});
+        this.$el.append($value);
     },
 });
 

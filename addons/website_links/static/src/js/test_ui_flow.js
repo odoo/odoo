@@ -61,7 +61,7 @@ tour.register('website_links_tour', {
         {
             content: "check click number and ensure graphs are initialized",
             extra_trigger: '.website_links_click_chart .title:contains("1 clicks")',
-            trigger: '.nvd3.nv-pieChart',
+            trigger: 'canvas',
             run: function () {}, // it's a check
         },
         {
@@ -70,9 +70,9 @@ tour.register('website_links_tour', {
         },
         {
             content: "ensure tab is correctly resized",
-            trigger: '.nvd3.nv-lineChart',
+            trigger: '#last_month_charts #last_month_clicks_chart',
             run: function () {
-                var width = $('#last_month_charts .nvd3.nv-lineChart .nv-background rect').width();
+                var width = $('#last_month_charts #last_month_clicks_chart').width();
                 if (width < 50) {
                     console.error("The graphs are probably not resized on tab change.");
                 }
