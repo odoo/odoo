@@ -202,12 +202,6 @@ root can have the following attributes:
     .. code-block:: xml
 
         <tree default_order="sequence,name desc">
-``colors``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
-``fonts``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
     record's attributes.
@@ -222,25 +216,17 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``
+``create``, ``edit``, ``delete``, ``duplicate``, ``import``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
-    the default size of a page. It should be a positive integer
-``on_write``
-    only makes sense on an ``editable`` list. Should be the name of a method
-    on the list's model. The method will be called with the ``id`` of a record
-    after having created or edited that record (in database).
-
-    The method should return a list of ids of other records to load or update.
-``string``
-    alternative translatable label for the view
-
-    .. deprecated:: 8.0
-
-        not displayed anymore
-
-.. toolbar attribute is for tree-tree views
+    the default size of a page. It must be a positive integer
+``groups_limit``
+    when the list view is grouped, the default number of groups of a page. It
+    must be a position integer
+``expand``
+    when the list view is grouped, automatically open the first level of groups
+    if set to true (default: false)
 
 Possible children elements of the list view are:
 
@@ -342,10 +328,35 @@ Possible children elements of the list view are:
         dynamic attributes based on record values. Only effects the current
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
+    ``width_factor`` (for ``editable``)
+        the column relative width (as the layout is fixed)
+    ``width`` (for ``editable``)
+        the column width (as the layout is fixed)
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+``groupby``
+  defines custom headers (with buttons) for the current view when grouping
+  records on many2one fields. It is also possible to add `field`, inside the
+  `groupby` which can be used for modifiers. These fields thus belong on the
+  many2one comodel. These extra fields will be fetched in batch.
+
+  ``name``
+      the name of a many2one field (on the current model). Custom header will be
+      displayed when grouping the view on this field name (only for first level).
+
+  .. code-block:: xml
+
+    <groupby name="partner_id">
+      <field name="name"/> <!-- name of partner_id -->
+        <button type="edit" name"edit" string="Edit/>
+        <button type="object" name="my_method" string="Button1"
+          attrs="{'invisible': [('name', '=', 'Georges')]}"/>
+    </groupby>
+
+  A special button (`type="edit"`) can be defined to open the many2one form view.
 
 ``control``
   defines custom controls for the current view.
