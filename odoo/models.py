@@ -5313,8 +5313,6 @@ Fields:
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
-            if (recs._name=='res.partner') and (field.name=='commercial_partner_id'):
-                print('Cyclick?', field, recs)
 
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]

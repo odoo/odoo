@@ -12,7 +12,7 @@ class test(models.Model):
     dest = fields.Selection([('out_invoice', 'Invoice'),('in_invoice','Bill'),('other','Others')], 'Destination', compute='_get_dest', store=True, readonly=False, default='in_invoice')
 
     @api.depends('source')
-    def _get_journal(self):
+    def _get_dest(self):
         if self.source != 'no':
             self.dest = self.source
 
