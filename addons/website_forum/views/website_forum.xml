@@ -66,9 +66,9 @@
                         <div class="card bg-secondary" t-if="question">
                             <h6 class="card-header"><b>Writer</b></h6>
                             <div class="card-body o_card_people">
-                                <img class="o_wforum_people_photo_container float-left mr-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
-                                <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
-                                <h6>
+                                <img class="o_wforum_people_photo_container mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
+                                <h6 class="text-center">
+                                    <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
                                     <b><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}'/></b>
                                 </h6>
                             </div>
