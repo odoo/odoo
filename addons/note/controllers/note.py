@@ -12,16 +12,9 @@ class NoteController(http.Controller):
         """ Route to create note and their activity directly from the systray """
         note = request.env['note.note'].create({'memo': note})
         if date_deadline:
-            activity_values = {
-                'note': note.memo,
-                'date_deadline': date_deadline,
-                'res_model_id': request.env.ref("note.model_note_note").id,
-                'res_id': note.id,
-                'note_id': note.id,
-            }
-            if not activity_type_id:
-                activity_type_id = request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')], limit=1).id
-            if activity_type_id:
-                activity_values['activity_type_id'] = activity_type_id
-            request.env['mail.activity'].create(activity_values)
+            note.activity_schedule(
+                activity_type_id=activity_type_id or request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')], limit=1).id,
+                note=note.memo,
+                date_deadline=date_deadline
+            )
         return note.id
