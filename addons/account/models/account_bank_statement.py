@@ -241,7 +241,6 @@ class AccountBankStatement(models.Model):
                 #upon bank statement confirmation, look if some lines have the account_id set. It would trigger a journal entry
                 #creation towards that account, with the wanted side-effect to skip that line in the bank reconciliation widget.
                 journal_entries = line_journal_entries[st_line]
-                if st_line.account_id and not journal_entries.ids:
                 st_line.fast_counterpart_creation()
                 if not st_line.account_id and not journal_entries.ids and not st_line.statement_id.currency_id.is_zero(st_line.amount):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
