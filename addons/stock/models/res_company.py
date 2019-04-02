@@ -131,6 +131,7 @@ class Company(models.Model):
         self._create_transit_location()
         self._create_inventory_loss_location()
         self._create_production_location()
+        self.._create_scrap_location()
 
     @api.model
     def create(self, vals):
