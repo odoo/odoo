@@ -244,11 +244,10 @@ class FetchmailServer(models.Model):
             related_invoice.message_post(
                 body=(_("Errors in the E-Invoice :<br/>%s") % (error))
             )
-            activity_vals = {
-                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-                'invoice_user_id': related_invoice.invoice_user_id.id if related_invoice.invoice_user_id else self.env.user.id
-            }
-            related_invoice.activity_schedule(summary='Rejection notice', **activity_vals)
+            related_invoice.activity_schedule(
+                'mail.mail_activity_data_todo',
+                summary='Rejection notice',
+                user_id=related_invoice.invoice_user_id.id if related_invoice.invoice_user_id else self.env.user.id)
 
         elif receipt_type == 'MC':
             # Failed delivery notice
@@ -304,11 +303,10 @@ class FetchmailServer(models.Model):
                 body=(_("Outcome notice: %s<br/>%s") % (related_invoice.l10n_it_send_state, info))
             )
             if related_invoice.l10n_it_send_state == 'delivered_refused':
-                activity_vals = {
-                    'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-                    'invoice_user_id': related_invoice.invoice_user_id.id if related_invoice.invoice_user_id else self.env.user.id
-                }
-                related_invoice.activity_schedule(summary='Outcome notice: Refused', **activity_vals)
+                related_invoice.activity_schedule(
+                    'mail.mail_activity_todo',
+                    user_id=related_invoice.invoice_user_id.id if related_invoice.invoice_user_id else self.env.user.id,
+                    summary='Outcome notice: Refused')
 
         # elif receipt_type == 'MT':
             # Metadata file

@@ -13,7 +13,8 @@ class HrPlanActivityType(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity Type',
         default=lambda self: self.env.ref('mail.mail_activity_data_todo'),
-        domain=lambda self: ['|', ('res_model_id', '=', False), ('res_model_id', '=', self.env['ir.model']._get('hr.employee').id)]
+        domain=lambda self: ['|', ('res_model_id', '=', False), ('res_model_id', '=', self.env['ir.model']._get('hr.employee').id)],
+        ondelete='restrict'
     )
     summary = fields.Char('Summary')
     responsible = fields.Selection([
