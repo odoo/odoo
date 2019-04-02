@@ -34,7 +34,7 @@ function _cartesian() {
  * Returns the product of any number n of arrays.
  * The internal structures of their elements is preserved.
  * For n = 1, no brackets are put around the unique parameter elements
- * For n = 0, the singleton [undefined] is returned since it is the unit
+ * For n = 0, [undefined] is returned since it is the unit
  * of the cartesian product (up to isomorphism).
  *
  * @returns {Array}

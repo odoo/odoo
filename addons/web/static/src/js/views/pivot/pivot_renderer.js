@@ -2,58 +2,42 @@ odoo.define('web.PivotRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
-var core = require('web.core');
-var field_utils = require('web.field_utils');
 var config = require('web.config');
+var core = require('web.core');
+var dataComparisonUtils = require('web.dataComparisonUtils');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
+
 var _t = core._t;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
     className: 'table-hover table-sm table-bordered',
     events: _.extend({}, AbstractRenderer.prototype.events, {
-        'hover td': '_onTdHover',
+        'click td.o_pivot_cell_value': '_onCellValueClicked',
+        'click .o_pivot_header_cell_opened': '_onOpenHeaderClick',
+        'click .o_pivot_measure_row': '_onSpecialRowClick',
+        'click .o_pivot_origin_row': '_onSpecialRowClick',
+        'mouseenter thead tr:last th': '_onMouseenterCell',
+        'mouseenter tbody td': '_onMouseenterCell',
+        'mouseleave thead tr:last th': '_onMouseleaveCell',
+        'mouseleave tbody td': '_onMouseleaveCell',
     }),
 
     /**
-     * @overide
-     *
+     * @override
      * @param {Widget} parent
      * @param {Object} state
      * @param {Object} params
+     * @param {boolean} params.enableLinking configure the pivot view to allow
+     *   opening a list view by clicking on a cell with some data.
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.compare = state.compare;
+        this.enableLinking = params.enableLinking;
         this.fieldWidgets = params.widgets || {};
-        this.timeRangeDescription = params.timeRangeDescription;
-        this.comparisonTimeRangeDescription = params.comparisonTimeRangeDescription;
         this.paddingLeftHeaderTabWidth = config.device.isMobile ? 5 : 30;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @param {Object} state
-     * @param {Object} params
-     */
-    updateState: function (state, params) {
-        if (params.context !== undefined) {
-            var timeRangeMenuData = params.context.timeRangeMenuData;
-            if (timeRangeMenuData) {
-                this.timeRangeDescription = timeRangeMenuData.timeRangeDescription;
-                this.comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription;
-            } else {
-                this.timeRangeDescription = undefined;
-                this.comparisonTimeRangeDescription = undefined;
-            }
-        }
-        this.compare = state.compare;
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -61,13 +45,15 @@ var PivotRenderer = AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Used to determine whether or not to display the no content helper.
-     *
      * @private
-     * @returns {boolean}
+     * @param {string[]} groupBy list of 'fieldName[:period]'
+     * @returns {string[]} list of fields label
      */
-    _hasContent: function () {
-        return this.state.has_data && this.state.measures.length;
+    _getGroupByLabels: function (groupBy) {
+        var self = this;
+        return _.map(groupBy, function (gb) {
+            return self.state.fields[gb.split(':')[0]].string;
+        });
     },
     /**
      * @override
@@ -75,7 +61,8 @@ var PivotRenderer = AbstractRenderer.extend({
      * @returns {Promise}
      */
     _render: function () {
-        if (!this._hasContent()) {
+        var hasContent = this.state.hasData && this.state.measures.length;
+        if (!hasContent) {
             // display the nocontent helper
             this._replaceElement(QWeb.render('View.NoContentHelper', {
                 description: _t("Try to add some records, or make sure that there is at least " +
@@ -84,223 +71,145 @@ var PivotRenderer = AbstractRenderer.extend({
             return this._super.apply(this, arguments);
         }
 
-        if (!this.$el.is('table')) {
-            // coming from the no content helper, so the root element has to be
-            // re-rendered before rendering and appending its content
-            this.renderElement();
-        }
-        var $fragment = $(document.createDocumentFragment());
-        var $table = $('<table>').appendTo($fragment);
-        var $thead = $('<thead>').appendTo($table);
-        var $tbody = $('<tbody>').appendTo($table);
-        var nbr_measures = this.state.measures.length;
-        var nbrCols = (this.state.mainColWidth === 1) ?
-            nbr_measures :
-            (this.state.mainColWidth + 1) * nbr_measures;
-        var i;
-        if (this.compare) {
-            for (i=0; i < 3 * nbrCols + 1; i++) {
-                $table.prepend($('<col>'));
-            }
-        } else {
-            for (i=0; i < nbrCols + 1; i++) {
-                $table.prepend($('<col>'));
-            }
-        }
-        this._renderHeaders($thead, this.state.headers, nbrCols);
-        this._renderRows($tbody, this.state.rows);
-        // todo: make sure the next line does something
-        $table.find('.o_pivot_header_cell_opened,.o_pivot_header_cell_closed').tooltip();
-        this.$el.html($table.contents());
+        this.renderElement(); // in case we come from no content helper
+        this.$el.toggleClass('o_enable_linking', this.enableLinking);
+
+        var $thead = $('<thead>');
+        var $tbody = $('<tbody>');
+        this._renderHeaders($thead);
+        this._renderRows($tbody);
+        this.$el.empty().append($thead).append($tbody);
+        this.$('.o_pivot_header_cell_opened, .o_pivot_header_cell_closed').tooltip();
+
         return this._super.apply(this, arguments);
     },
     /**
      * @private
-     * @param {jQueryElement} $thead
-     * @param {jQueryElement} headers
+     * @param {jQuery} $thead
      */
-    _renderHeaders: function ($thead, headers, nbrCols) {
-        var self = this;
-        var i, j, cell, $row, $cell;
-        var measure, dataType;
-        var id, measureCellIds = [];
+    _renderHeaders: function ($thead) {
+        // groupbyLabels is the list of col groupby fields label
+        var groupbyLabels = this._getGroupByLabels(this.state.colGroupBys);
 
-        var groupbyLabels = _.map(this.state.colGroupBys, function (gb) {
-            return self.state.fields[gb.split(':')[0]].string;
-        });
-
-        for (i = 0; i < headers.length; i++) {
-            $row = $('<tr>');
-            for (j = 0; j < headers[i].length; j++) {
-                cell = headers[i][j];
-                if (i == 0 && j == 0) {
-                    $cell = $('<th>')
-                        .text(cell.title)
-                        .attr('rowspan', cell.height + 1)
-                        .attr('colspan', cell.width);
-                } else {
-                    $cell = $('<th>')
-                        .text(cell.title)
-                        .attr('rowspan', cell.height)
-                        .attr('colspan', (cell.width && self.compare) ? 3 * cell.width : cell.width || (self.compare && cell.measure && 3));
+        this.state.table.headers.forEach(function (row, rowIndex) {
+            var $tr = $('<tr>');
+            row.forEach(function (cell) {
+                var cellParams = {
+                    text: cell.title,
+                    colspan: cell.width,
+                    rowspan: cell.height,
+                    data: {
+                        groupId: cell.groupId,
+                        type: 'col',
+                    }
                 }
-                if (i > 0) {
-                    $cell.attr('title', groupbyLabels[i-1]);
-                }
-                if (cell.expanded !== undefined) {
-                    $cell.addClass(cell.expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
-                    $cell.data('id', cell.id);
-                }
+                var className;
                 if (cell.measure) {
-                    measure = cell.measure;
-                    measureCellIds.push(cell.id);
-                    $cell.addClass('o_pivot_measure_row text-muted')
-                        .text(this.state.fields[measure].string);
-                    $cell.data('id', cell.id).data('measure', measure);
-                    if (cell.id === this.state.sortedColumn.id &&
-                        measure === this.state.sortedColumn.measure) {
-                        $cell.addClass('o_pivot_measure_row_sorted_' + this.state.sortedColumn.order);
-                        if (this.state.sortedColumn.order == 'asc') {
-                            $cell.attr('aria-sorted', 'ascending');
+                    if (cell.originIndexes) {
+                        cellParams.data.originIndexes = cell.originIndexes
+                        className = 'o_pivot_origin_row';
+                    } else {
+                        className = 'o_pivot_measure_row';
+                    }
+                    className += ' text-muted';
+                    if (cell.order) {
+                        className += ' o_pivot_sort_order_' + cell.order;
+                        if (cell.order === 'asc') {
+                            cellParams['aria-sorted'] = 'ascending'
                         } else {
-                            $cell.attr('aria-sorted', 'descending');
+                            cellParams['aria-sorted'] = 'descending'
                         }
                     }
-                }
-                $row.append($cell);
-
-                $cell.toggleClass('d-none d-md-table-cell', (cell.expanded !== undefined) || (cell.measure !== undefined && j < headers[i].length - this.state.measures.length));
-                if (cell.height > 1) {
-                    $cell.css('padding', 0);
-                }
-            }
-            $thead.append($row);
-        }
-        if (this.compare) {
-            var colLabels = [this.timeRangeDescription, this.comparisonTimeRangeDescription, _t('Variation')];
-            var dataTypes = ['data', 'comparisonData', 'variation'];
-            $row = $('<tr>');
-            for (i = 0; i < 3 * nbrCols; i++) {
-                id = measureCellIds[~~(i / 3)];
-                measure = this.state.measures[(~~(i / 3)) % this.state.measures.length];
-                dataType = dataTypes[i % 3];
-                $cell = $('<th>')
-                    .addClass('o_pivot_measure_row text-muted')
-                    .data('data_type', dataType)
-                    .data('id', id)
-                    .data('measure', measure)
-                    .text(colLabels[i % 3])
-                    .attr('rowspan', 1)
-                    .attr('colspan', 1);
-                if (dataType === this.state.sortedColumn.dataType &&
-                    id === this.state.sortedColumn.id &&
-                    measure === this.state.sortedColumn.measure) {
-                    $cell.addClass('o_pivot_measure_row_sorted_' + this.state.sortedColumn.order);
-                    if (this.state.sortedColumn.order === 'asc') {
-                        $cell.attr('aria-sorted', 'ascending');
-                    } else {
-                        $cell.attr('aria-sorted', 'descending');
+                    cellParams.data.measure = cell.measure;
+                } else if ('isLeaf' in cell) {
+                    if (rowIndex > 0) {
+                        cellParams.title = groupbyLabels[rowIndex - 1];
+                    }
+                    className = 'o_pivot_header_cell';
+                    if (!config.device.isMobile) {
+                        className += cell.isLeaf ? '_closed' : '_opened';
                     }
                 }
-                $row.append($cell);
-            }
-            $thead.append($row);
-        }
+                cellParams.class = className;
+            
+                $tr.append($('<th>', cellParams));
+            });
+            $thead.append($tr);
+        });
     },
     /**
      * @private
-     * @param {jQueryElement} $tbody
-     * @param {jQueryElement} rows
+     * @param {jQuery} $tbody
      */
-    _renderRows: function ($tbody, rows) {
+    _renderRows: function ($tbody) {
         var self = this;
-        var i, j, value, measure, name, formatter, $row, $cell, $header;
-        var nbrMeasures = this.state.measures.length;
-        var length = rows[0].values.length;
-        var shouldDisplayTotal = this.state.mainColWidth > 1;
 
-        var groupbyLabels = _.map(this.state.rowGroupBys, function (gb) {
-            return self.state.fields[gb.split(':')[0]].string;
-        });
-        var measureTypes = this.state.measures.map(function (name) {
-            var type = self.state.fields[name].type;
-            return type === 'many2one' ? 'integer' : type;
-        });
-        for (i = 0; i < rows.length; i++) {
-            $row = $('<tr>');
-            $header = $('<td>')
-                .text(rows[i].title)
-                .data('id', rows[i].id)
-                .css('padding-left', (5 + rows[i].indent * self.paddingLeftHeaderTabWidth) + 'px')
-                .addClass(rows[i].expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
-            if (rows[i].indent > 0) $header.attr('title', groupbyLabels[rows[i].indent - 1]);
-            $header.appendTo($row);
-            for (j = 0; j < length; j++) {
-                value = rows[i].values[j];
-                name = this.state.measures[j % nbrMeasures];
-                formatter = field_utils.format[this.fieldWidgets[name] || measureTypes[j % nbrMeasures]];
-                measure = this.state.fields[name];
-                if (this.compare) {
-                    if (value instanceof Object) {
-                        for (var origin in value) {
-                            $cell = $('<td>')
-                                .data('id', rows[i].id)
-                                .data('col_id', rows[i].col_ids[Math.floor(j / nbrMeasures)])
-                                .data('type' , origin)
-                                .toggleClass('o_empty', false)
-                                .addClass('o_pivot_cell_value text-right');
-                            if (origin === 'data') {
-                                $cell.append($('<div>', {class: 'o_value'}).html(formatter(
-                                    value[origin],
-                                    measure
-                                )));
-                            } else if (origin === 'comparisonData') {
-                                $cell.append($('<div>', {class: 'o_comparison_value'}).html(formatter(
-                                    value[origin],
-                                    measure
-                                )));
-                            } else {
-                                $cell.append($('<div>', {class: 'o_variation' + value[origin].signClass}).html(
-                                    field_utils.format.percentage(
-                                        value[origin].magnitude,
-                                        measure
-                                    )
-                                ));
-                            }
-                            if (((j >= length - this.state.measures.length) && shouldDisplayTotal) || i === 0){
-                                $cell.css('font-weight', 'bold');
-                            }
-                            $cell.toggleClass('d-none d-md-table-cell', j < length - nbrMeasures);
-                            $row.append($cell);
-                        }
-                    } else {
-                        for (var l=0; l < 3; l++) {
-                            $cell = $('<td>')
-                                .data('id', rows[i].id)
-                                .toggleClass('o_empty', true)
-                                .addClass('o_pivot_cell_value text-right');
-                            $row.append($cell);
-                        }
-                    }
-                } else {
-                    $cell = $('<td>')
-                                .data('id', rows[i].id)
-                                .data('col_id', rows[i].col_ids[Math.floor(j / nbrMeasures)])
-                                .toggleClass('o_empty', _.isUndefined(value))
-                                .addClass('o_pivot_cell_value text-right');
-                    if (value !== undefined) {
-                        $cell.append($('<div>', {class: 'o_value'}).html(formatter(value, measure)));
-                    }
-                    if (((j >= length - this.state.measures.length) && shouldDisplayTotal) || i === 0){
-                        $cell.css('font-weight', 'bold');
-                    }
-                    $row.append($cell);
+        // measureTypes is a mapping from measure fields to their field type,
+        // with a special case for many2one fields which are mapped to the
+        // 'integer' type (as their group_operator is 'count_distinct')
+        var measureTypes = this.state.measures.reduce(
+            function (acc, measureName) {
+                var type = self.state.fields[measureName].type;
+                acc[measureName] = type === 'many2one' ? 'integer' : type;
+                return acc;
+            },
+            {}
+        );
 
-                    $cell.toggleClass('d-none d-md-table-cell', j < length - nbrMeasures);
+        // groupbyLabels is the list of row groupby fields label
+        var groupbyLabels = this._getGroupByLabels(this.state.rowGroupBys);
+
+        this.state.table.rows.forEach(function (row) {
+            var $tr = $('<tr>');
+            var paddingLeft = 5 + row.indent * self.paddingLeftHeaderTabWidth;
+            $tr.append($('<th>', {
+                text: row.title,
+                title: row.indent > 0 ? groupbyLabels[row.indent - 1] : null,
+                data: {
+                    groupId: row.groupId,
+                    type: 'row',
+                },
+                css: {
+                    'padding-left': paddingLeft + 'px',
+                },
+                class: 'o_pivot_header_cell_' + (row.isLeaf ? 'closed' : 'opened'),
+            }));
+
+            row.subGroupMeasurements.forEach(function (measurement) {
+                var cellParams = {
+                    data: {
+                        groupId: measurement.groupId,
+                        originIndexes: measurement.originIndexes,
+                    },
+                    class: 'o_pivot_cell_value text-right',
+                };
+                if (measurement.isBold) {
+                    cellParams.css = {
+                        'font-weight': 'bold',
+                    };
                 }
-            }
-            $tbody.append($row);
-        }
+                if (measurement.value !== undefined) {
+                    var measure = measurement.measure;
+                    var measureField = self.state.fields[measure];
+                    var $value;
+                    if (measurement.originIndexes.length > 1) {
+                        $value = dataComparisonUtils.renderVariation(measurement.value, measureField);
+                    } else {
+                        var formatType = self.fieldWidgets[measure] || measureTypes[measure];
+                        var formatter = field_utils.format[formatType];
+                        $value = $('<div>', {
+                            class: 'o_value',
+                            html: formatter(measurement.value, measureField),
+                        });
+                    }
+                    cellParams.html = $value;
+                } else {
+                    cellParams.class += ' o_empty'
+                }
+                $tr.append($('<td>', cellParams));
+            });
+            $tbody.append($tr);
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -308,12 +217,104 @@ var PivotRenderer = AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * When the user clicks on a non empty cell, and the view is configured to
+     * allow 'linking' (with enableLinking), we want to open a list view with
+     * the corresponding record.
+     *
      * @private
      * @param {MouseEvent} ev
      */
-    _onTdHover: function (ev) {
-        var $td = $(event.target);
-        $td.closest('table').find('col:eq(' + $td.index()+')').toggleClass('hover');
+    _onCellValueClicked: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        var $target = $(ev.currentTarget);
+        if ($target.hasClass('o_empty') || !this.enableLinking) {
+            return;
+        }
+
+        var context = _.omit(this.state.context, function (val, key) {
+            return key === 'group_by' || _.str.startsWith(key, 'search_default_');
+        });
+
+        var groupId = $target.data('groupId');
+        var originIndexes = $target.data('originIndexes');
+
+        var group = {
+            rowValues: groupId[0],
+            colValues: groupId[1],
+            originIndex: originIndexes[0]
+        };
+
+        this.trigger_up('open_view', {
+            group: group,
+            context: context,
+        });
+    },
+    /**
+     * Highlight the column when hovering a cell.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onMouseenterCell: function (ev) {
+        var index = $(ev.currentTarget).index();
+        if ($(ev.currentTarget).is('th')) { // header cell
+            index += 1; // increment by 1 to compensate the top left empty cell
+        }
+        this.$("td").filter(":nth-child(" + (index + 1) + ")").addClass("o_cell_hover");
+    },
+    /**
+     * @private
+     */
+    _onMouseleaveCell: function () {
+        this.$('.o_cell_hover').removeClass('o_cell_hover');
+    },
+    /**
+     * This method is called when someone clicks on an open header.  When that
+     * happens, we want to close the header, then redisplay the view.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onOpenHeaderClick: function (ev) {
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+
+        var $target = $(ev.target);
+        var groupId = $target.data('groupId');
+        var type = $target.data('type');
+
+        this.trigger_up('close_group', {
+            groupId: groupId,
+            type: type,
+        });
+    },
+    /**
+     * If the user clicks on a measure or origin row, we perform an in-memory sort.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSpecialRowClick: function (ev) {
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+
+        var $target = $(ev.target);
+        var groupId = $target.data('groupId');
+        var measure = $target.data('measure');
+        var originIndexes = $target.data('originIndexes');
+        var isAscending = $target.hasClass('o_pivot_sort_order_asc');
+        var order = isAscending ? 'desc' : 'asc';
+
+        this.trigger_up('sort_rows', {
+            sortedColumn: {
+                groupId: groupId,
+                measure: measure,
+                order: order,
+                originIndexes: originIndexes,
+            }
+        });
     },
 });
 

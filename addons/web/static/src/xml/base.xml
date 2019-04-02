@@ -442,7 +442,7 @@
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
-<t t-name="PivotView.FieldSelection">
+<t t-name="PivotView.GroupBySelection">
     <div class="dropdown-menu o_pivot_field_menu" role="menu">
         <t t-foreach="fields" t-as="field">
             <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">

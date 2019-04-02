@@ -17,7 +17,7 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: 'char'},
                     bar: {string: "Bar", type: 'boolean'},
-                    int_field: {string: "Int Field", type: 'integer'},
+                    int_field: {string: "Int Field", type: 'integer', group_operator: 'sum'},
                     company_id: {string: "company", type: 'many2one', relation: 'company'},
                     category_id: { string: "category", type: 'many2one', relation: 'category' },
                     state: { string: "State", type: 'selection', selection: [['abc', "ABC"], ['def', "DEF"], ['ghi', "GHI"]]},

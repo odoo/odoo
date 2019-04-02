@@ -974,7 +974,7 @@ var MockServer = Class.extend({
                     res[groupByField] = val;
                 }
 
-                if (field.type === 'date') {
+                if (field.type === 'date' && val) {
                     var aggregateFunction = groupByField.split(':')[1];
                     var startDate, endDate;
                     if (aggregateFunction === 'day') {
