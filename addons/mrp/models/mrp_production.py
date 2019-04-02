@@ -585,6 +585,8 @@ class MrpProduction(models.Model):
 
     def action_confirm(self):
         for production in self:
+            if not production.move_raw_ids:
+                raise UserError(_("Add some materials to consume before marking this MO as to do."))
             for move_raw in production.move_raw_ids:
                 move_raw.write({
                     'group_id': production.procurement_group_id.id,
@@ -761,6 +763,9 @@ class MrpProduction(models.Model):
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
+        if not self.move_raw_ids:
+            self.state = 'cancel'
+            return True
         if any(workorder.state == 'progress' for workorder in self.mapped('workorder_ids')):
             raise UserError(_('You can not cancel production order, a work order is still in progress.'))
         documents = {}
