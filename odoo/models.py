@@ -3205,8 +3205,7 @@ Fields:
             self.invalidate_cache()
 
         # recompute new-style fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
+        self.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
@@ -3394,8 +3393,7 @@ Fields:
                 self._validate_fields(set(inverse_vals) - set(store_vals))
 
             # recompute fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
+            self.recompute()
 
         return True
 
@@ -3642,8 +3640,7 @@ Fields:
             data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
 
         # recompute fields
-        if self.env.recompute and self._context.get('recompute', True):
-            self.recompute()
+        self.recompute()
 
         return records
 
@@ -3712,7 +3709,12 @@ Fields:
             # mark fields to recompute; do this before setting other fields,
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
-            records.modified(self._fields)
+            records.modified(self._fields, data_list)
+
+            # mark to recompute in two times as fields that are modified together might
+            # avoid a recomputation
+            # records.modified([key for key in self._fields.keys() if key in data_list])
+            # records.modified([key for key in self._fields.keys() if key not in data_list], noforce=False)
 
             if other_fields:
                 # discard default values from context for other fields
@@ -5217,13 +5219,15 @@ Fields:
         self.env.cache.invalidate(spec)
 
     @api.multi
-    def modified(self, fnames):
+    def modified(self, fnames, overwrite=None):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
 
             :param fnames: iterable of field names that have been modified on
                 records ``self``
+            :param overwrite: list of fields who will not be overwrited, or None
+                for all
         """
         # group triggers by (model, path) to minimize the calls to search()
         invalids = []
@@ -5266,7 +5270,7 @@ Fields:
                     if not target:
                         continue
                     # do not recompute if a value is provided (on_change and default optimization)
-                    if (target==self) and (field.name in fnames):
+                    if (target==self) and (field.name in fnames) and ((overwrite is None) or (field.name in overwrite)):
                         continue
 
                     # invalids.append((field, target._ids))
@@ -5298,15 +5302,19 @@ Fields:
         self.env.remove_todo(field, self)
 
     @api.model
-    def recompute(self, fnames=None):
+    def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
 
+        if not(self.env.recompute and self._context.get('recompute', True)):
+            return False
+
+        done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
-            if fnames and field not in fnames:
-                continue
+            if (recs._name=='res.partner') and (field.name=='commercial_partner_id'):
+                print('Cyclick?', field, recs)
 
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]
@@ -5316,7 +5324,7 @@ Fields:
             for rec in recs:
                 vals = {n: rec[n] for n in ns}
 
-                # FP TODO: possible optimization here; if cache has same value, do not write
+                # FP TODO: possible optimization here; do not write field if value is the same in cache
                 # vals = {}
                 # for f in fs:
                 #     if f.store:
