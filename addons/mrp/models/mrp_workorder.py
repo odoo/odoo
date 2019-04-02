@@ -133,11 +133,12 @@ class MrpWorkorder(models.Model):
         """ browse already created lot and respective quantities"""
         for wo in self.filtered(lambda wo: wo.product_tracking != 'none'):
             lots_stack = {}
+            rounding = wo.product_uom_id.rounding
             for line in wo.production_id.workorder_ids.mapped('final_lot_line_ids').filtered(lambda line: line.lot_id):
                 # group qty_done by lot_id
-                if line.lot_id.id not in lots_stack or line.qty_done > lots_stack[line.lot_id.id]:
+                if line.lot_id.id not in lots_stack or float_compare(line.qty_done, lots_stack[line.lot_id.id], precision_rounding=rounding) > 0:
                     lots_stack[line.lot_id.id] = line.qty_done
-            if sum(lots_stack.values()) < wo.qty_production:
+            if float_compare(sum(lots_stack.values()), wo.qty_production, precision_rounding=rounding) < 0:
                 # There are still quantities to produce without lot so propose all the
                 # exsisting lots
                 wo.final_lot_domain = self.env['stock.production.lot'].search([
@@ -245,6 +246,7 @@ class MrpWorkorder(models.Model):
             )
             wl_to_unlink = self.env['mrp.workorder.line']
             for move in raw_moves:
+                rounding = move.product_uom.rounding
                 qty_already_consumed = 0.0
                 workorder_lines = workorder.workorder_line_ids.filtered(lambda w: w.move_id == move)
                 for wl in workorder_lines:
@@ -253,14 +255,14 @@ class MrpWorkorder(models.Model):
 
                     wl.qty_to_consume = wl.qty_done
                     qty_already_consumed += wl.qty_to_consume
-                    if wl.qty_reserved > wl.qty_to_consume:
+                    if float_compare(wl.qty_reserved, wl.qty_to_consume, precision_rounding=rounding) > 0:
                         wl.qty_reserved = wl.qty_to_consume
                 qty_to_consume = move.product_uom._compute_quantity(
                     workorder.qty_producing * move.unit_factor,
                     move.product_id.uom_id,
                     round=False
                 )
-                if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=move.product_uom.rounding) > 0:
+                if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
                     workorder.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
             wl_to_unlink.unlink()
@@ -271,13 +273,14 @@ class MrpWorkorder(models.Model):
             if not r_line.lot_id:
                 continue
             candidates = self.final_lot_line_ids.filtered(lambda line: line.lot_id == r_line.lot_id)
+            rounding = self.product_uom_id.rounding
             if not candidates:
                 self.write({
                     'final_lot_id': r_line.lot_id.id,
                     'qty_producing': r_line.qty_done,
                 })
                 return True
-            elif candidates.qty_done < r_line.qty_done:
+            elif float_compare(candidates.qty_done, r_line.qty_done, precision_rounding=rounding) < 0:
                 self.write({
                     'final_lot_id': r_line.lot_id.id,
                     'qty_producing': r_line.qty_done - candidates.qty_done,
@@ -302,7 +305,7 @@ class MrpWorkorder(models.Model):
             return True
 
         self.ensure_one()
-        if self.qty_producing <= 0:
+        if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
         # One a piece is produced, you can launch the next work order
@@ -359,7 +362,9 @@ class MrpWorkorder(models.Model):
             other workorders of this production
         2. Save final lot and quantity producing to suggest on next workorder
         """
+        self.ensure_one()
         final_lot_quantity = self.qty_production
+        rounding = self.product_uom_id.rounding
         # Get the max quantity possible for current lot in other workorders
         for workorder in (self.production_id.workorder_ids - self):
             # We add the remaining quantity to the produced quantity for the
@@ -369,16 +374,16 @@ class MrpWorkorder(models.Model):
             # In this case we select 4 since it would conflict with the first
             # workorder otherwise.
             line = workorder.final_lot_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
-            if line and line.qty_done + workorder.qty_remaining <= final_lot_quantity:
+            if line and float_compare(line.qty_done + workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) <= 0:
                 final_lot_quantity = line.qty_done + workorder.qty_remaining
-            elif workorder.qty_remaining < final_lot_quantity:
+            elif float_compare(workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
                 final_lot_quantity = workorder.qty_remaining
 
         # final lot line for this lot on this workorder.
         current_lot_lines = self.final_lot_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
 
         # this lot has already been produced
-        if final_lot_quantity < current_lot_lines.qty_done + self.qty_producing:
+        if float_compare(final_lot_quantity, current_lot_lines.qty_done + self.qty_producing, precision_rounding=rounding) < 0:
             raise UserError(_('You have produced %s %s of lot %s in the previous workorder. You are trying to produce %s in this one') %
                 (final_lot_quantity, self.product_id.uom_id.name, self.final_lot_id.name, current_lot_lines.qty_done + self.qty_producing))
 
