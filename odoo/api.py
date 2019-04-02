@@ -955,15 +955,22 @@ class Environment(Mapping):
                 # only add records if not already in the recordset, much much
                 # cheaper in case recs is big and records is a singleton
                 # already present
-                if not records <= recs:
-                    recs_list[i] |= records
-                break
+                try:
+                    if not records <= recs:
+                        recs_list[i] |= records
+                    break
+                except TypeError:
+                    # same field of another object already exists
+                    pass
         else:
             recs_list.append(records)
 
     def remove_todo(self, field, records):
         """ Mark ``field`` as recomputed on ``records``. """
-        recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        try:
+            recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        except TypeError:
+            recs_list = []
         recs_list = [r for r in recs_list if r]
         if recs_list:
             self.all.todo[field] = recs_list
@@ -1034,6 +1041,7 @@ class Cache(object):
         try:
             value = self._data[key][field][record._ids[0]]
         except KeyError:
+            this_should_not_happen
             raise CacheMiss(record, field)
 
         return value.get() if isinstance(value, SpecialValue) else value

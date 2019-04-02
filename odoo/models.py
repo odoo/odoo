@@ -5334,7 +5334,7 @@ Fields:
 
             with recs.env.norecompute():
                 for vals, ids in updates.items():
-                    target = recs.browse(ids)
+                    target = recs.browse([x for x in ids if x])
                     try:
                         target._write(dict(vals))
                     except MissingError:
@@ -5540,6 +5540,7 @@ Fields:
                 if field.type == 'many2one' and field.delegate and not value:
                     # do not nullify all fields of parent record for new records
                     continue
+
                 record[name] = value
 
         result = {'warnings': OrderedSet()}

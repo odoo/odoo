@@ -1024,6 +1024,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
             # set value in cache, inverse field, and mark record as dirty
             record.env.cache.set(record, self, value)
+            if env.check_todo(self, record):
+                env.remove_todo(self, record)
+
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(record[self.name], record)
@@ -1033,10 +1036,11 @@ class Field(MetaField('DummyField', (object,), {})):
             if self.relational:
                 spec += self.modified_draft(record)
 
-            env.cache.invalidate(spec)
+
+            # env.cache.invalidate(spec)
             # FP Check: does not install without that, but would be better to do this
-            # for field,obj in spec:
-            #     env.add_todo(field, record.browse(obj))
+            for field,obj in spec:
+                env.add_todo(field, record.browse(obj))
 
         else:
             # Write to database
