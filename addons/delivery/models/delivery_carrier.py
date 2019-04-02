@@ -87,7 +87,7 @@ class DeliveryCarrier(models.Model):
             'name': 'New Providers',
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', 'ilike', 'delivery_']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
