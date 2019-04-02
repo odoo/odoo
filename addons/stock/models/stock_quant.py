@@ -213,7 +213,7 @@ class StockQuant(models.Model):
         for quant in quants:
             try:
                 with self._cr.savepoint():
-                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
+                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", [quant.id], log_exceptions=False)
                     quant.invalidate_cache(ids=[quant.id])
                     quant.write({
                         'quantity': quant.quantity + quantity,
@@ -254,6 +254,8 @@ class StockQuant(models.Model):
         rounding = product_id.uom_id.rounding
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         reserved_quants = []
+        self._cr.execute("SELECT 1 FROM stock_quant WHERE id IN %s FOR UPDATE", [tuple(quants.ids)], log_exceptions=False)
+        quants.invalidate_cache(ids=quants.ids)
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve

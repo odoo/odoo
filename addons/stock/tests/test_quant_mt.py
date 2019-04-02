@@ -154,3 +154,31 @@ class MTStockQuant(CommitCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0)
         self.assertEqual(user_error_count, 0)
 
+    @classmethod
+    def reserve_quant(cls, env, stock_location, product1):
+        env['stock.quant']._update_reserved_quantity(product1, stock_location, 10)
+
+    @classmethod
+    def consume_quant(cls, env, stock_location, product1):
+        env['stock.quant']._update_reserved_quantity(product1, stock_location, -10)
+        env['stock.quant']._update_available_quantity(product1, stock_location, -10)
+
+
+    def test_reserved_quantity(self):
+        self.set_initial_stock(self.env,
+                               self.env['stock.location'].browse(self.id_stock_location),
+                               self.env['product.product'].browse(self.id_product1))
+
+        user_error_count = self.run_mp_test_jobs(NBO_TEST_JOBS * [64 * [self.reserve_quant, self.consume_quant]])
+
+        stock_location = self.env['stock.location'].browse(self.id_stock_location)
+        product1 = self.env['product.product'].browse(self.id_product1)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0)
+
+        # we must not get any UserError
+        # "It is not possible to reserve more products of Product A than you have in stock"
+        # or
+        # "It is not possible to unreserve more products of Product A than you have in stock"
+        self.assertEqual(user_error_count, 0)
+
