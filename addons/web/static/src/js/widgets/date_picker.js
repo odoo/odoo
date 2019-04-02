@@ -16,6 +16,7 @@ var DateWidget = Widget.extend({
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
         'show.datetimepicker': '_onDateTimePickerShow',
+        'click': 'openDatePicker',
     },
     /**
      * @override
@@ -49,7 +50,6 @@ var DateWidget = Widget.extend({
             },
             widgetParent: 'body',
             keyBinds: null,
-            allowInputToggle: true,
         }, options || {});
 
         this.__libInput = 0;
@@ -63,6 +63,9 @@ var DateWidget = Widget.extend({
         this.$el.datetimepicker(this.options);
         this.__libInput--;
         this._setReadonly(false);
+    },
+    openDatePicker: function() {
+        this.$el.datetimepicker('show');
     },
     /**
      * @override
