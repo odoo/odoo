@@ -1,11 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="account_fiscal_position_uae_countries" model="account.fiscal.position.template">
-        <field name="name">UAE</field>
+    <record id="account_fiscal_position_dubai" model="account.fiscal.position.template">
+        <field name="name">Dubai</field>
         <field name="auto_apply" eval="True"/>
-        <field name="sequence" eval="1"/>
         <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="[(6,0,[ref('base.state_ae_du')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+
+    <record id="account_fiscal_position_abu_dhabi" model="account.fiscal.position.template">
+        <field name="name">Abu Dhabi</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="[(6,0,[ref('base.state_ae_az')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_abu_dhabi_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_abu_dhabi"/>
+        <field name="position_id" ref="account_fiscal_position_abu_dhabi"/>
+    </record>
+
+    <record id="account_fiscal_position_sharjah" model="account.fiscal.position.template">
+        <field name="name">Sharjah</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="(6,0,[ref('base.state_ae_sh')])"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_sharjah_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_sharjah"/>
+        <field name="position_id" ref="account_fiscal_position_sharjah"/>
+    </record>
+
+    <record id="account_fiscal_position_ajman" model="account.fiscal.position.template">
+        <field name="name">Ajman</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="(6,0,[ref('base.state_ae_aj')])"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_ajman_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_ajman"/>
+        <field name="position_id" ref="account_fiscal_position_ajman"/>
+    </record>
+
+    <record id="account_fiscal_position_umm_al_quwain" model="account.fiscal.position.template">
+        <field name="name">Umm Al Quwain</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="(6,0,[ref('base.state_ae_uq')])"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_umm_al_quwain_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_umm_al_quwain"/>
+        <field name="position_id" ref="account_fiscal_position_umm_al_quwain"/>
+    </record>
+
+    <record id="account_fiscal_position_ras_al_khaima" model="account.fiscal.position.template">
+        <field name="name">Ras Al-Khaima</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="(6,0,[ref('base.state_ae_rk')])"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_ras_al_khaima_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_ras_al_khaima"/>
+        <field name="position_id" ref="account_fiscal_position_ras_al_khaima"/>
+    </record>
+
+    <record id="account_fiscal_position_fujairah" model="account.fiscal.position.template">
+        <field name="name">Fujairah</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_ids" eval="(6,0,[ref('base.state_ae_fu')])"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="account_fiscal_position_fujairah_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
+        <field name="tax_dest_id" ref="uae_sale_tax_5_fujairah"/>
+        <field name="position_id" ref="account_fiscal_position_fujairah"/>
     </record>
 
     <record id="account_fiscal_position_non_uae_countries" model="account.fiscal.position.template">
@@ -14,7 +92,7 @@
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="acccount_fiscal_position_tax_non_uae_01" model="account.fiscal.position.tax.template">
-        <field name="tax_src_id" ref="uae_sale_tax_5"/>
+        <field name="tax_src_id" ref="uae_sale_tax_5_dubai"/>
         <field name="tax_dest_id" ref="uae_sale_tax_0"/>
         <field name="position_id" ref="account_fiscal_position_non_uae_countries"/>
     </record>
