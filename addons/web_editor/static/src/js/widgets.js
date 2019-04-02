@@ -769,7 +769,7 @@ function createVideoNode(url, options) {
     options = options || {};
 
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
-    var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
 
     var igRegExp = /\/\/instagram.com\/p\/(.[a-zA-Z0-9]*)/;
@@ -788,10 +788,10 @@ function createVideoNode(url, options) {
     var youkuMatch = url.match(youkuRegExp);
 
     var $video = $('<iframe>');
-    if (ytMatch && ytMatch[1].length === 11) {
-        var youtubeId = ytMatch[1];
+    if (ytMatch && ytMatch[2].length === 11) {
+        var youtubeId = ytMatch[2];
         $video = $('<iframe>', {
-            src: '//www.youtube.com/embed/' + youtubeId,
+            src: '//www.youtube' + (ytMatch[1] || '') + '.com/embed/' + youtubeId,
             width: '640',
             height: '360'
         });
