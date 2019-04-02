@@ -34,13 +34,16 @@ class ProductCategory(models.Model):
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
 
-    @api.depends('name', 'parent_id.complete_name')
+    @api.depends('name', 'parent_id')
     def _compute_complete_name(self):
         for category in self:
-            if category.parent_id:
-                category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
-            else:
-                category.complete_name = category.name
+            c = category
+            names = [category.name]
+            while c.parent_id:
+                c = c.parent_id
+                names.insert(0, c.name)
+            category.complete_name = ' / '.join(names)
+
 
     def _compute_product_count(self):
         read_group_res = self.env['product.template'].read_group([('categ_id', 'child_of', self.ids)], ['categ_id'], ['categ_id'])

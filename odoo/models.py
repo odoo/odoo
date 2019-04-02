@@ -5310,9 +5310,15 @@ Fields:
         if not(self.env.recompute and self._context.get('recompute', True)):
             return False
 
+        count = 0
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
+
+            # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
+            count+= 1
+            if count > 100:
+                print('Cycling', recs, field)
 
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]

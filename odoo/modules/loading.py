@@ -529,8 +529,6 @@ def reset_modules_state(db_name):
     # installation/upgrade/uninstallation fails, which is the only known case
     # for which modules can stay marked as 'to %' for an indefinite amount
     # of time
-    import pdb
-    pdb.set_trace()
     db = odoo.sql_db.db_connect(db_name)
     with db.cursor() as cr:
         cr.execute(
