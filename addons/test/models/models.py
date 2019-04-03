@@ -17,7 +17,7 @@ class test(models.Model):
     @api.depends('user_id')
     def _get_company(self):
         for record in self:
-            record.company_id = record.user_id.company_id
+            record.company_id = 1
 
     @api.depends('source', 'source2')
     def _get_dest(self):
