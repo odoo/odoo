@@ -125,9 +125,9 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
-        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
-               "Also used as a base price for pricelists. "
-               "Expressed in the default unit of measure of the product.")
+        help="Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+             "Also used as a base price for pricelists. "
+             "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume')
     weight = fields.Float('Weight', digits=dp.get_precision('Stock Weight'))
 
@@ -382,6 +382,9 @@ class ProductProduct(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
+    def _convert_to_price_uom(self, price, price_uom):
+        return self.uom_id._compute_price(price, price_uom)
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
@@ -465,7 +468,7 @@ class ProductProduct(models.Model):
             name = d.get('name', '')
             code = self._context.get('display_default_code', True) and d.get('default_code', False) or False
             if code:
-                name = '[%s] %s' % (code,name)
+                name = '[%s] %s' % (code, name)
             return (d['id'], name)
 
         partner_id = self._context.get('partner_id')
@@ -674,7 +677,6 @@ class ProductProduct(models.Model):
                     prices[product.id], currency, product.company_id, fields.Date.today())
 
         return prices
-
 
     # compatibility to remove after v10 - DEPRECATED
     @api.multi

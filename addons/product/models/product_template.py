@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
+        help="Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits=dp.get_precision('Volume'), store=True)
@@ -414,7 +414,7 @@ class ProductTemplate(models.Model):
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
+            products_ns = Product._name_search(name, args + domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
             if (not products) or (limit and (len(templates) > limit)):

@@ -72,7 +72,6 @@ class SaleOrder(models.Model):
         for order in self:
             invoice_ids = order.order_line.mapped('invoice_lines.invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
 
-
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
 
             if order.state not in ('sale', 'done'):
@@ -962,12 +961,15 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
-            line.update({
-                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
-            })
+            line._update_price_with_taxes(price)
+
+    def _update_price_with_taxes(self, price):
+        taxes = self.tax_id.compute_all(price, self.order_id.currency_id, self.product_uom_qty, product=self.product_id, partner=self.order_id.partner_shipping_id)
+        self.update({
+            'price_tax': sum(tax.get('amount', 0.0) for tax in taxes.get('taxes', [])),
+            'price_total': taxes['total_included'],
+            'price_subtotal': taxes['total_excluded'],
+        })
 
     @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
@@ -1434,11 +1436,11 @@ class SaleOrderLine(models.Model):
             )
 
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
-            return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+            return product.with_context(sale_order_line=self, pricelist=self.order_id.pricelist_id.id).price
+        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id, sale_order_line=self)
 
         final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        base_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        base_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom)
         if currency != self.order_id.pricelist_id.currency_id:
             base_price = currency._convert(
                 base_price, self.order_id.pricelist_id.currency_id,
@@ -1543,33 +1545,45 @@ class SaleOrderLine(models.Model):
             raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
-    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
+    def _get_real_price_currency(self, product, rule_id, qty, uom):
         """Retrieve the price before applying the pricelist
             :param obj product: object of current product record
-            :parem float qty: total quentity of product
-            :param tuple price_and_rule: tuple(price, suitable_rule) coming from pricelist computation
-            :param obj uom: unit of measure of current order line
-            :param integer pricelist_id: pricelist id of sales order"""
+            :param float qty: total quantity of product
+            :param int rule_id: rule with which price is computed
+            :param obj uom: unit of measure of current order line"""
+        price, product, product_currency, currency_id = self._get_price(product, rule_id, qty, uom)
+        cur_factor, currency_id = self._get_cur_factor(product, product_currency, currency_id)
+        uom_factor = self._get_uom_factor(product, uom)
+        return price * uom_factor * cur_factor, currency_id
+
+    def _get_price(self, product, rule_id, qty, uom):
         PricelistItem = self.env['product.pricelist.item']
-        field_name = 'lst_price'
+        price = product['lst_price']
         currency_id = None
         product_currency = None
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.pricelist_id.discount_policy == 'without_discount':
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).get_product_price_rule(product, qty, self.order_id.partner_id)
+                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id, sale_order_line=self).get_product_price_rule(product, qty, self.order_id.partner_id)
                     pricelist_item = PricelistItem.browse(rule_id)
-
-            if pricelist_item.base == 'standard_price':
-                field_name = 'standard_price'
-            if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
-                field_name = 'price'
-                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
-                product_currency = pricelist_item.base_pricelist_id.currency_id
+            price, product, product_currency = self._retrieve_price(product, pricelist_item)
             currency_id = pricelist_item.pricelist_id.currency_id
+        return price, product, product_currency, currency_id
 
-        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.company_id.currency_id
+    def _retrieve_price(self, product, pricelist_item):
+        product_currency = None
+        field_name = 'lst_price'
+        if pricelist_item.base == 'standard_price':
+            field_name = 'standard_price'
+        if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
+            field_name = 'price'
+            product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
+            product_currency = pricelist_item.base_pricelist_id.currency_id
+        return product[field_name], product, product_currency
+
+    def _get_cur_factor(self, product, product_currency, currency_id):
+        product_currency = product_currency or (product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0
@@ -1577,16 +1591,17 @@ class SaleOrderLine(models.Model):
             if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id or self.env.user.company_id, self.order_id.date_order or fields.Date.today())
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id, self.order_id.date_order)
+        return cur_factor, currency_id
 
+    def _get_uom_factor(self, product, uom):
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:
             # the unit price is in a different uom
             uom_factor = uom._compute_price(1.0, product.uom_id)
         else:
             uom_factor = 1.0
-
-        return product[field_name] * uom_factor * cur_factor, currency_id
+        return uom_factor
 
     def _get_protected_fields(self):
         return [
@@ -1613,11 +1628,10 @@ class SaleOrderLine(models.Model):
             fiscal_position=self.env.context.get('fiscal_position')
         )
 
-        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id, sale_order_line=self)
 
         price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        new_list_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-
+        new_list_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom)
         if new_list_price != 0:
             if self.order_id.pricelist_id.currency_id != currency:
                 # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
