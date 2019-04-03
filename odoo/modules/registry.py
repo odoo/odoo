@@ -316,7 +316,7 @@ class Registry(Mapping):
 
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
-            _logger.warning("Models have no table: %s.", ", ".join(missing))
+            _logger.info("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
             deps = {name: model._depends for name, model in env.items()}
             for name in topological_sort(deps):
