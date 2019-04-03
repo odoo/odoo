@@ -8,7 +8,7 @@ import logging
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import _
@@ -80,8 +80,8 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validate the time off', oldname='manager_id')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
-        help='This area is automaticly filled by the user who validate the time off with second level (If time off type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=True)
+        help='This area is automaticly filled by the user who validates the allocation with second level (If time off type needs second validation)')
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -221,7 +221,7 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.holiday_status_id.validation_type == 'both':
+                if allocation.state == 'confirm' and allocation.validation_type == 'both':
                     allocation._check_approval_update('validate1')
                 else:
                     allocation._check_approval_update('validate')
@@ -462,7 +462,7 @@ class HolidaysAllocation(models.Model):
                 ).create(self._prepare_holiday_values(employee))
             # TODO is it necessary to interleave the calls?
             childs.action_approve()
-            if childs and self.holiday_status_id.validation_type == 'both':
+            if childs and self.validation_type == 'both':
                 childs.action_validate()
         return childs
 
@@ -484,39 +484,42 @@ class HolidaysAllocation(models.Model):
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        if not current_employee or self.env.in_onchange:
+        if self.env.user.id == SUPERUSER_ID:
             return
+
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for holiday in self:
-            val_type = holiday.holiday_status_id.validation_type
-            if state == 'confirm':
-                continue
+            val_type = holiday.validation_type
 
-            if state == 'draft':
-                if holiday.employee_id != current_employee and not is_manager:
-                    raise UserError(_('Only a time off Manager can reset other people time off.'))
-                continue
+            if not is_manager and state != 'confirm':
+                if state == 'draft':
+                    if holiday.employee_id != current_employee:
+                        raise UserError(_('Only a Leave Manager can reset other people leaves.'))
+                else:
+                    # use ir.rule based first access check: department, members, ... (see security.xml)
+                    holiday.check_access_rule('write')
 
-            if not is_officer:
-                raise UserError(_('Only a time off Officer or Manager can approve or refuse time off requests.'))
+                    # This handles states validate1 validate and refuse
+                    if holiday.employee_id == current_employee:
+                        raise UserError(_('Only a Leave Manager can approve its own requests.'))
 
-            if is_officer:
-                # use ir.rule based first access check: department, members, ... (see security.xml)
-                holiday.check_access_rule('write')
+                    if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
+                        manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
+                        team_leader = holiday.employee_id.leave_manager_id
+                        error = False
 
-            if holiday.employee_id == current_employee and not is_manager:
-                raise UserError(_('Only a time off Manager can approve its own requests.'))
+                        if not manager and not team_leader:
+                            error = not is_officer
+                        else:
+                            error = (not (manager and manager == current_employee) and not (team_leader and team_leader == self.env.user))
 
-            if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
-                manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-                if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('You must be either %s\'s manager or time off manager to approve this time off') % (holiday.employee_id.name))
+                        if error:
+                            raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (holiday.employee_id.name))
 
-            if state == 'validate' and val_type == 'both':
-                if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('Only an time off Manager can apply the second approval on time off requests.'))
+                    if state == 'validate' and val_type == 'both':
+                        raise UserError(_('Only an Leave Manager can apply the second approval on leave requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
@@ -529,10 +532,13 @@ class HolidaysAllocation(models.Model):
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_id:
                 responsible = self.holiday_status_id.responsible_id
-        if self.state == 'confirm' and self.employee_id.parent_id.user_id:
-            responsible = self.employee_id.parent_id.user_id
-        elif self.department_id.manager_id.user_id:
-            responsible = self.department_id.manager_id.user_id
+        elif self.state == 'confirm':
+            if self.employee_id.leave_manager_id and self.employee_id.leave_manager_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
+                responsible = self.employee_id.leave_manager_id
+            elif self.employee_id.parent_id.user_id and self.employee_id.parent_id.user_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
+                responsible = self.employee_id.parent_id.user_id
+            elif self.department_id.manager_id.user_id:
+                responsible = self.department_id.manager_id.user_id
 
         return responsible
 

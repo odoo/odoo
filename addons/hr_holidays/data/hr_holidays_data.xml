@@ -43,7 +43,8 @@
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="allocation_type">fixed_allocation</field>
-            <field name="validation_type">both</field>
+            <field name="leave_validation_type">both</field>
+            <field name="allocation_validation_type">both</field>
             <field name="color_name">brown</field>
             <field name="unpaid" eval="True"/>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>

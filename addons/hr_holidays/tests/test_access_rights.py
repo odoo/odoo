@@ -17,7 +17,8 @@ class TestLeavesRights(TestHrHolidaysBase):
         super(TestLeavesRights, self).setUp()
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'hr',
             'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
@@ -295,13 +296,13 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_manager_by_manager(self):
         """ Manager validates manager-only leaves """
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         self.employee_leave.sudo(self.user_hrmanager_id).action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_manager_by_officer_department_manager(self):
         """ Officer validates manager-only leaves for co-workers from department he manages"""
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         self.employee_hruser.write({'department_id': self.hr_dept.id})
         self.employee_leave.sudo().department_id.write({'manager_id': self.employee_hruser.id})
         self.employee_leave.sudo(self.user_hruser).action_approve()
@@ -309,7 +310,7 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_manager_by_officer_department_manager_other(self):
         """ Officer may not validates manager-only leaves for co-workers from department he does not"""
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         self.employee_hruser.write({'department_id': self.hr_dept.id})
         self.employee_leave.sudo().department_id.write({'manager_id': self.employee_hrmanager.id})
         with self.assertRaises(AccessError):
@@ -318,14 +319,14 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_manager_by_officer_manager(self):
         """ Officer validates manager-only leaves for co-workers that he manages"""
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         self.employee_emp.write({'parent_id': self.employee_hruser.id})
         self.employee_leave.sudo(self.user_hruser).action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_manager_by_officer_manager_other(self):
         """ Officer may not validate manager-only leaves for co-workers he does not manage"""
-        self.leave_type.write({'validation_type': 'manager'})
+        self.leave_type.write({'leave_validation_type': 'manager'})
         self.employee_emp.write({'parent_id': self.employee_hrmanager.id})
         with self.assertRaises(UserError):
             self.employee_leave.sudo(self.user_hruser).action_approve()
@@ -340,14 +341,14 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_both_by_manager(self):
         """ Manager validates double validation leaves """
-        self.leave_type.write({'validation_type': 'both'})
+        self.leave_type.write({'leave_validation_type': 'both'})
         self.employee_leave.sudo(self.user_hrmanager_id).action_approve()
         self.employee_leave.sudo(self.user_hrmanager_id).action_validate()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_both_by_officer(self):
         """ Officer may not validate double validation leaves """
-        self.leave_type.write({'validation_type': 'both'})
+        self.leave_type.write({'leave_validation_type': 'both'})
         self.employee_leave.sudo(self.user_hruser).action_approve()
         with self.assertRaises(UserError):
             self.employee_leave.sudo(self.user_hruser).action_validate()
@@ -358,7 +359,7 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_both_by_officer_and_manager(self):
         """ Officer + Manager complete double validation leaves """
-        self.leave_type.write({'validation_type': 'both'})
+        self.leave_type.write({'leave_validation_type': 'both'})
         self.employee_leave.sudo(self.user_hruser).action_approve()
         self.employee_leave.sudo(self.user_hrmanager_id).action_validate()
 
@@ -404,7 +405,8 @@ class TestMultiCompany(TestHrHolidaysBase):
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited - Company New',
             'company_id': self.new_company.id,
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'hr',
             'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False

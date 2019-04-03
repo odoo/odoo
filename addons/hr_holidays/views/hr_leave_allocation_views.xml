@@ -107,7 +107,7 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"
+                <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader" class="oe_highlight"
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr_holidays.group_hr_holidays_user"
@@ -343,14 +343,14 @@
         id="hr_holidays_menu_manager_approve_allocations"
         name="Allocations"
         parent="hr_holidays_menu_manager_approve"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         action="hr_leave_allocation_action_approve_department"
         sequence="2"/>
     <menuitem
         id="hr_holidays_menu_manager_all_allocations"
         name="Allocations"
         parent="hr_holidays_menu_manager_all"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         action="hr_leave_allocation_action_all"
         sequence="2"/>
 

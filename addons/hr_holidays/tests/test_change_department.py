@@ -9,7 +9,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
 
 class TestChangeDepartment(TestHrHolidaysBase):
-        
+
     def test_employee_change_department_request_change_department(self):
         self.HolidaysEmployeeGroup = self.env['hr.leave'].sudo(self.user_employee_id)
 
@@ -17,7 +17,7 @@ class TestChangeDepartment(TestHrHolidaysBase):
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
         })
 
         def create_holiday(name, start, end):

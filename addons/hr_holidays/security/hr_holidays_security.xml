@@ -93,7 +93,7 @@
     <record id="hr_leave_allocation_rule_employee_update" model="ir.rule">
         <field name="name">Allocations: employee: create/write/unlink not validated own</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
+        <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse']), ('holiday_type', '=', 'employee')]</field>
         <field name="perm_read" eval="False"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -111,7 +111,7 @@
     <record id="hr_leave_allocation_rule_officer_update" model="ir.rule">
         <field name="name">Allocations: see all time off: create/write/unlink own + managed employee + without department + same or managed department</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
-        <field name="domain_force">['|',
+        <field name="domain_force">[('holiday_type', '=', 'employee'), '|',
 '|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id),
 '|', '|', ('department_id', '=', False), ('department_id.member_ids.user_id', 'in', [user.id]), ('department_id.manager_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>

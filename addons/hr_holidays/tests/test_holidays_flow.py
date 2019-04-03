@@ -28,12 +28,14 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
-            'validation_type': 'hr',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'hr',
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
             'allocation_type': 'no',
-            'validation_type': 'manager',
+            'leave_validation_type': 'manager',
+            'allocation_validation_type': 'manager',
         })
 
         HolidaysEmployeeGroup = Requests.sudo(self.user_employee_id)
@@ -101,7 +103,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.holidays_status_limited = HolidayStatusManagerGroup.create({
             'name': 'Limited',
             'allocation_type': 'fixed',
-            'validation_type': 'both',
+            'leave_validation_type': 'both',
+            'allocation_validation_type': 'both',
         })
         HolidaysEmployeeGroup = Requests.sudo(self.user_employee_id)
 
