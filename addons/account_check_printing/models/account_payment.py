@@ -151,12 +151,12 @@ class AccountPayment(models.Model):
         """ The stub is the summary of paid invoices. It may spill on several pages, in which case only the check on
             first page is valid. This function returns a list of stub lines per page.
         """
-        if len(self.invoice_ids) == 0:
+        if len(self.reconciled_invoice_ids) == 0:
             return None
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.invoice_ids.sorted(key=lambda r: r.date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.date_due)
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 
