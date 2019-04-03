@@ -10,8 +10,8 @@ class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
     _description = 'BOM Structure Report'
 
-    def _get_report_xslx_values(self, bom_id, bom_qty, variant, report_name='all'):
-        data = self._get_report_values([bom_id], {'report_name': report_name, 'quantity': bom_qty, 'variant': variant})
+    def _get_report_xslx_values(self, bom_id, quantity, variant, report_name='all'):
+        data = self._get_report_values([bom_id], {'report_name': report_name, 'quantity': quantity, 'variant': variant})
         header = self.get_header(report_name)
         columns = self.get_column_key(report_name)
         bom_report_name = self._get_report_name()
@@ -97,7 +97,7 @@ class ReportBomStructure(models.AbstractModel):
             'lines': lines,
             'variants': bom_product_variants,
             'bom_uom_name': bom_uom_name,
-            'bom_qty': bom_quantity,
+            'quantity': bom_quantity,
             'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
             'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
         }
@@ -213,8 +213,8 @@ class ReportBomStructure(models.AbstractModel):
                 sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
                 price += sub_price
             else:
-                prod_qty = line.product_qty * factor
-                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * prod_qty
+                quantity = line.product_qty * factor
+                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * quantity
                 price += self.env.user.company_id.currency_id.round(not_rounded_price)
         return price
 

@@ -142,7 +142,7 @@ var MrpBomReport = stock_report_generic.extend({
             return $(el).data('id');
         });
         framework.blockUI();
-        var bom_quantity = this.$searchView.find('.o_mrp_bom_report_qty').val();
+        var quantity = this.$searchView.find('.o_mrp_bom_report_qty').val();
         var report_name = this.$searchView.find('.bom_report').children('option:selected').attr('data-type');
         var variant = this.$searchView.find('.o_mrp_bom_report_variants').val();
         var bom_id = parseInt(this.given_context.active_id);
@@ -150,7 +150,7 @@ var MrpBomReport = stock_report_generic.extend({
         session.get_file({
             url: '/bom_report_xslx/'+ bom_id,
             data: {
-                bom_quantity: bom_quantity,
+                quantity: quantity || 1,
                 variant: variant || 0,
                 report_name: report_name,
             },

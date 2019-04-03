@@ -10,7 +10,7 @@ from odoo.http import content_disposition, request
 
 class BomReportController(http.Controller):
     @http.route('/bom_report_xslx/<int:bom_id>', type='http')
-    def get_report_xlsx(self, bom_id, bom_quantity, variant, report_name='all', **kw):
+    def get_report_xlsx(self, bom_id, quantity, variant, report_name='all', **kw):
         response = request.make_response(
             None,
             headers=[
@@ -19,7 +19,7 @@ class BomReportController(http.Controller):
             ]
         )
         report_obj = request.env['report.mrp.report_bom_structure']
-        data, header, columns, report_name = report_obj._get_report_xslx_values(bom_id, bom_quantity, variant, report_name)
+        data, header, columns, report_name = report_obj._get_report_xslx_values(bom_id, quantity, variant, report_name)
         self.prepare_xlsx_sheet(data, header, columns, report_name, response)
         return response
 
