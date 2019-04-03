@@ -529,7 +529,7 @@ class AccountMoveLine(models.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state', 'company_id')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
@@ -580,7 +580,10 @@ class AccountMoveLine(models.Model):
                     reconciled = True
             line.reconciled = reconciled
 
-            line.amount_residual = line.company_id.currency_id.round(amount * sign)
+            cur = line.company_id.currency_id
+            import ipdb
+            ipdb.set_trace()
+            line.amount_residual = cur.round(amount * sign)
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.depends('debit', 'credit')
@@ -673,7 +676,7 @@ class AccountMoveLine(models.Model):
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', index=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
-    company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one('res.company', related='move_id.company_id', string='Company', store=True, readonly=True)
 
     # TODO: put the invoice link and partner_id on the account_move
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")

@@ -3526,7 +3526,6 @@ Fields:
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
-        print('VALS', vals_list)
         if not vals_list:
             return self.browse()
 
@@ -3649,10 +3648,12 @@ Fields:
     def _create(self, data_list):
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
+        print('data_list', data_list[0]['stored'])
         cr = self.env.cr
         quote = '"{}"'.format
 
         # set boolean fields to False by default (avoid NULL in database)
+        # FP Note: what about removing this code and delegating that to postgresql, default value for booleans
         for name, field in self._fields.items():
             if field.type == 'boolean' and field.store:
                 for data in data_list:
@@ -3705,6 +3706,7 @@ Fields:
         # update parent_path
         records._parent_store_create()
 
+
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
             # mark fields to recompute; do this before setting other fields,
@@ -3712,7 +3714,9 @@ Fields:
             # a one2many checking constraints on records
 
             for d in data_list:
+                print('modified: ', d['stored'])
                 d['record'].modified(self._fields, d['stored'])
+
 
             if other_fields:
                 # discard default values from context for other fields
@@ -5270,15 +5274,11 @@ Fields:
                     # do not recompute if a value is provided (on_change and default optimization)
                     if (target==self) and (field.name in fnames) and ((overwrite is None) or (field.name in overwrite)):
                         continue
-                    if field.name=='dest2':
-                        import ipdb
-                        ipdb.set_trace()
 
                     # invalids.append((field, target._ids))
                     # self.env.add_todo(field, target)
 
                     # mark field to be recomputed on target
-                    print ('to recompute', field.name, target, '=',self, '-', field.name in overwrite, overwrite, fnames)
                     if field.compute_sudo:
                         target = target.sudo()
                     target._recompute_todo(field)

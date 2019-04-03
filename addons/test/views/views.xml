@@ -19,11 +19,23 @@
       <field name="arch" type="xml">
         <form>
             <group>
-              <field name="name"/>
-              <field name="source"/>
-              <field name="source2"/>
-              <field name="dest"/>
-              <field name="dest2"/>
+                <group>
+                  <field name="name"/>
+                  <field name="source"/>
+                  <field name="source2"/>
+                  <field name="dest"/>
+                  <field name="dest2"/>
+                </group>
+                <group>
+                  <field name="user_id"/>
+                  <field name="company_id"/>
+                </group>
+                <field name="line_ids">
+                    <tree string="Lines">
+                        <field name="name"/>
+                        <field name="company_id"/>
+                    </tree>
+                </field>
             </group>
         </form>
       </field>
