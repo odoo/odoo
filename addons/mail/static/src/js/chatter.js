@@ -81,6 +81,7 @@ var Chatter = Widget.extend({
             var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
+            this.reloadOnUploadAttachment = this.postRefresh === 'always';
         }
     },
     /**
@@ -572,6 +573,9 @@ var Chatter = Widget.extend({
      * @private
      */
     _onReloadAttachmentBox: function () {
+        if (this.reloadOnUploadAttachment) {
+            this.trigger_up('reload');
+        }
         this._reloadAttachmentBox();
     },
     /**
