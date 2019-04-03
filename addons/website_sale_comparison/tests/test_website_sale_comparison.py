@@ -60,7 +60,7 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_admin_tour_comparison(self):
+    def test_01_admin_tour_product_comparison(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('product_comparison')", "odoo.__DEBUG__.services['web_tour.tour'].tours.product_comparison.ready", login='admin')
 
     def test_02_admin_tour_product_comparison_dynamic_variant(self):
