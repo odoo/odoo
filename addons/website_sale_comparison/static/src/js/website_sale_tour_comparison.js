@@ -164,7 +164,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
                         model: 'product.template',
                         method: 'create',
                         args: [{
-                            'name': 'Bottle',
+                            'name': 'Classic Chair',
                             'is_published': true,
                             'attribute_line_ids': [[0, 0 , {
                                 'attribute_id': attribute_id,
@@ -193,35 +193,36 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         },
     },
     {
-        content: "search product 'Bottle'",
+        content: "search product 'Classic Chair'",
         extra_trigger: '.js_sale',
         trigger: '#wrapwrap',
         run: function() {
-            window.location.href = '/shop?search=Bottle';
+            window.location.href = '/shop?search=Classic Chair';
         },
     },
     {
         content: "click on product",
-        trigger: '.oe_product_cart a:contains("Bottle")',
+        trigger: '.oe_product_cart a:contains("Classic Chair")',
     },
     {
         content: "click on compare button",
         trigger: '.btn.btn-primary:not(.btn-block):contains("Compare")',
     },
     {
-        content: "check product 'Bottle' with first variant(red) is on compare page",
-        trigger: '.product_summary:contains("Bottle (red)")',
-        run: function () {},
+        content: "check product 'Classic Chair' with first variant(red) is on compare page",
+        trigger: '.product_summary:contains("Classic Chair (red)")',
+    },
+    {
+        content: "check alternative product 'Conference Chair' with first variant(Steel) is on compare page",
+        trigger: '.product_summary:contains("Conference Chair (Steel)")',
     },
     {
         content: "check there are correct attribute legs",
         trigger: '.General:contains("Legs")',
-        run: function () {},
     },
     {
         content: "check there are correct attribute color",
         trigger: '.Uncategorized:contains("color")',
-        run: function () {},
     },
     ]);
 });
