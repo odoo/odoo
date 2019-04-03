@@ -86,6 +86,9 @@ class SaleOrder(models.Model):
             else:
                 invoice_status = 'no'
 
+            import ipdb
+            ipdb.set_trace()
+
             order.update({
                 'invoice_count': len(set(invoice_ids.ids)),
                 'invoice_ids': invoice_ids.ids,
