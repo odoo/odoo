@@ -119,11 +119,12 @@ class SaleOrder(models.Model):
             # This part is pretty much a copy-paste of the method '_onchange_discount' of
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
-            pu, currency_id = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
             if pu != 0:
-                if order.pricelist_id.currency_id.id != currency_id:
+                if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                    pu = request.env['res.currency'].browse(currency_id).with_context(product_context).compute(pu, order.pricelist_id.currency_id)
+                    date = order.date_order or fields.Date.today()
+                    pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
                 discount = (pu - price) / pu * 100
                 if discount < 0:
                     discount = 0
