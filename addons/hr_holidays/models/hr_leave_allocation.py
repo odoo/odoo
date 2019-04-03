@@ -42,10 +42,10 @@ class HolidaysAllocation(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, tracking=True, copy=False, default='confirm',
-        help="The status is set to 'To Submit', when a time off request is created." +
-        "\nThe status is 'To Approve', when time off request is confirmed by user." +
-        "\nThe status is 'Refused', when time off request is refused by manager." +
-        "\nThe status is 'Approved', when time off request is approved by manager.")
+        help="The status is set to 'To Submit', when an allocation request is created." +
+        "\nThe status is 'To Approve', when an allocation request is confirmed by user." +
+        "\nThe status is 'Refused', when an allcoation request is refused by manager." +
+        "\nThe status is 'Approved', when an allocation request is approved by manager.")
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
@@ -77,7 +77,7 @@ class HolidaysAllocation(models.Model):
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
     first_approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the time off', oldname='manager_id')
+        help='This area is automatically filled by the user who validates the allocation', oldname='manager_id')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validates the allocation with second level (If time off type needs second validation)')
@@ -358,12 +358,12 @@ class HolidaysAllocation(models.Model):
     @api.multi
     def unlink(self):
         for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
-            raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
+            raise UserError(_('You cannot delete an allocation which is in %s state.') % (holiday.state,))
         return super(HolidaysAllocation, self).unlink()
 
     @api.multi
     def copy_data(self, default=None):
-        raise UserError(_('A time off cannot be duplicated.'))
+        raise UserError(_('An allocation cannot be duplicated.'))
 
     ####################################################
     # Business methods
@@ -496,7 +496,7 @@ class HolidaysAllocation(models.Model):
             if not is_manager and state != 'confirm':
                 if state == 'draft':
                     if holiday.employee_id != current_employee:
-                        raise UserError(_('Only a Leave Manager can reset other people leaves.'))
+                        raise UserError(_('Only a Leave Manager can reset other people allocations.'))
                 else:
                     # use ir.rule based first access check: department, members, ... (see security.xml)
                     holiday.check_access_rule('write')
@@ -516,10 +516,10 @@ class HolidaysAllocation(models.Model):
                             error = (not (manager and manager == current_employee) and not (team_leader and team_leader == self.env.user))
 
                         if error:
-                            raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (holiday.employee_id.name))
+                            raise UserError(_('You must be either %s\'s manager or Leave manager to approve this allocation') % (holiday.employee_id.name))
 
                     if state == 'validate' and val_type == 'both':
-                        raise UserError(_('Only an Leave Manager can apply the second approval on leave requests.'))
+                        raise UserError(_('Only an Leave Manager can apply the second approval on allocation requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
