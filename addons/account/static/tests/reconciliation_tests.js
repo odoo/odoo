@@ -54,6 +54,7 @@ var db = {
             code: {string: "code", type: 'integer'},
             name: {string: "Displayed name", type: 'char'},
             company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
+            deprecated: {string: "Deprecated", type: 'boolean'},
         },
         records: [
             {id: 282, code: 100000, name: "100000 Fixed Asset Account", company_id: 1},
