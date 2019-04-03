@@ -2,7 +2,9 @@
 
 <odoo>
     <template id="lead_message_template">
-        <p>Opportunity created by Odoo Lead Generation</p>
+        <p>
+            <span><t t-esc="message_title"/></span>
+        </p>
         <div style="background-color:#ffffff;padding:15px;">
             <table style="width:100%">
                 <tr valign="top">
@@ -118,6 +120,20 @@
                     </t>
                 </tbody>
             </table>
+        </div>
+    </template>
+
+    <template id="lead_message_not_found">
+        <p>Lead Enrichment based on email address</p>
+        <div style="background-color:#ffffff;padding:15px;">
+            <span> No company data found based on the email address. No credit was consumed. </span>
+        </div>
+    </template>
+
+    <template id="lead_message_wrong_mail">
+        <p>Lead Enrichment based on email address</p>
+        <div style="background-color:#ffffff;padding:15px;">
+            <span>Enrichement could not be done as the domain of provided email address is one of an email provider.</span>
         </div>
     </template>
 </odoo>

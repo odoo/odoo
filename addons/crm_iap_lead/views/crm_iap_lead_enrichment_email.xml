@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="crm_enrich_mail">
+                <field name="name">crm.iap.lead.enrich.mail.button</field>
+                <field name="model">crm.lead</field>
+                <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+                <field name="arch" type="xml">
+                    <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d']" position="after">
+                        <button name="lead_enrich_mail" string="Enrich"
+                                type="object"
+                                title="Enrich this opportunity with company data based on the email address"
+                                attrs="{'invisible': ['|', ('probability', '=', 0), '&amp;', ('partner_address_email', '=', False), ('email_from', '=', False)]}"/>
+                    </xpath>
+                </field>
+        </record>
+
+        <record id="action_enrich_mail" model="ir.actions.server" >
+            <field name="name">Enrich</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">   
+    if records:
+        records.lead_enrich_mail_server_action()
+            </field>
+        </record>
+
+    </data>
+</odoo>
