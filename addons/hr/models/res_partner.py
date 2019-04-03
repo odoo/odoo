@@ -13,11 +13,20 @@ class Partner(models.Model):
     def get_static_mention_suggestions(self):
         """ Extend the mail's static mention suggestions by adding the employees. """
         suggestions = super(Partner, self).get_static_mention_suggestions()
-
+        users_obj = self.env['res.users']
         try:
             employee_group = self.env.ref('base.group_user')
-            hr_suggestions = [{'id': user.partner_id.id, 'name': user.name, 'email': user.email}
-                              for user in employee_group.users]
+            users = users_obj.search(
+                [('groups_id', '=', employee_group.id)])
+            users_fields = users.read(
+                ['partner_id', 'name', 'email'], load='')
+            hr_suggestions = [
+                {
+                    'id': user['partner_id'],
+                    'name': user['name'],
+                    'email': user['email']}
+                for user in users_fields
+            ]
             suggestions.append(hr_suggestions)
             return suggestions
         except AccessError:
