@@ -3645,7 +3645,6 @@ Fields:
     def _create(self, data_list):
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
-        print('data_list', data_list[0]['stored'])
         cr = self.env.cr
         quote = '"{}"'.format
 
@@ -3724,7 +3723,6 @@ Fields:
                 # records.modified([field.name for field in other_fields])
 
             for d in data_list:
-                print('modified: ', d['stored'])
                 d['record'].modified(self._fields, d['stored'])
 
             # check Python constraints for stored fields
@@ -5242,7 +5240,6 @@ Fields:
                 triggers[(field.model_name, path)].add(field)
 
         # process triggers, mark fields to be invalidated/recomputed
-        print('Start FOR', self, fnames)
         for model_path, fields in triggers.items():
             model_name, path = model_path
             stored = {field for field in fields if field.compute and field.store}
@@ -5282,7 +5279,6 @@ Fields:
             # process non-stored fields
             for field in (fields - stored):
                 invalids.append((field, None))
-        print('END FOR')
 
         self.env.cache.invalidate(invalids)
 
@@ -5314,8 +5310,6 @@ Fields:
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
-            print('recomputing ', field, recs)
-
             # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
             count+= 1
             if count > 100:
