@@ -114,6 +114,12 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "open compare menu",
         trigger: '.o_product_panel_header',
+        // set timeout to load products in popover
+        run: function (actions) {
+            setTimeout(function () {
+                actions.click();
+            }, 1000);
+        }
     },
     {
         content: "remove product",
