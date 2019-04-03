@@ -4,7 +4,7 @@ import logging
 import pytz
 
 from odoo import _, api, fields, models
-from odoo.addons.mail.models.mail_template import format_tz
+from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import html_translate
 
@@ -219,7 +219,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
         if self.date_begin:
-            self.date_begin_located = format_tz(self.with_context(use_babel=True).env, self.date_begin, tz=self.date_tz)
+            self.date_begin_located = format_datetime(self.env, self.date_begin, tz=self.date_tz, dt_format='medium')
         else:
             self.date_begin_located = False
 
@@ -227,7 +227,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
         if self.date_end:
-            self.date_end_located = format_tz(self.with_context(use_babel=True).env, self.date_end, tz=self.date_tz)
+            self.date_end_located = format_datetime(self.env, self.date_end, tz=self.date_tz, dt_format='medium')
         else:
             self.date_end_located = False
 
@@ -561,7 +561,7 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
+            return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
 
     @api.multi
     def summary(self):

@@ -165,7 +165,8 @@ class TestDateRangeFunction(unittest.TestCase):
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
-        date_datetime = datetime.datetime.strptime('2017-01-31 12:00:00', "%Y-%m-%d %H:%M:%S")
+        datetime_str = '2017-01-31 12:00:00'
+        date_datetime = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
         date_date = date_datetime.date()
         date_str = '2017-01-31'
 
@@ -176,6 +177,12 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, False), '')
         self.assertEqual(misc.format_date(self.env, None), '')
 
+        self.assertEqual(misc.format_datetime(self.env, date_datetime), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, datetime_str), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, ''), '')
+        self.assertEqual(misc.format_datetime(self.env, False), '')
+        self.assertEqual(misc.format_datetime(self.env, None), '')
+
     def test_01_code_and_format(self):
         date_str = '2017-01-31'
         lang = self.env['res.lang']
@@ -183,6 +190,7 @@ class TestFormatLangDate(TransactionCase):
         # Activate French and Simplified Chinese (test with non-ASCII characters)
         lang.search([('active', '=', False), ('code', 'in', ['fr_FR', 'zh_CN'])]).write({'active': True})
 
+        # -- test `date`
         # Change a single parameter
         self.assertEqual(misc.format_date(lang.with_context(lang='fr_FR').env, date_str), '31/01/2017')
         self.assertEqual(misc.format_date(lang.env, date_str, lang_code='fr_FR'), '31/01/2017')
@@ -195,3 +203,18 @@ class TestFormatLangDate(TransactionCase):
 
         # Change 3 parameters
         self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, lang_code='en_US', date_format='MMM d, y'), 'Jan 31, 2017')
+
+        # -- test `datetime`
+        datetime_str = '2017-01-31 10:33:00'
+
+        # Change languages and timezones
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='Europe/Brussels'), '31 janv. 2017 à 11:33:00')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='America/New_York'), '2017\u5E741\u670831\u65E5 \u4E0A\u53485:33:00')  # '2017年1月31日 上午5:33:00'
+
+        # Change language, timezone and format
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='en_US').env, datetime_str, tz='Europe/Brussels', dt_format='MMM d, y'), 'Jan 31, 2017')
+
+        # Check given `lang_code` overwites context lang
+        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')

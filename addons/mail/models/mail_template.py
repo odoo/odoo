@@ -6,10 +6,9 @@ import base64
 import copy
 import datetime
 import dateutil.relativedelta as relativedelta
+import functools
 import logging
 
-import functools
-import lxml
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
@@ -18,59 +17,18 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-def format_date(env, date, pattern=False):
-    if not date:
-        return ''
+def format_date(env, date, pattern=False, lang_code=False):
     try:
-        return tools.format_date(env, date, date_format=pattern)
+        return tools.format_date(env, date, date_format=pattern, lang_code=lang_code)
     except babel.core.UnknownLocaleError:
         return date
 
 
-def format_tz(env, dt, tz=False, format=False):
-    record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
-    timestamp = fields.Datetime.from_string(dt)
-
-    ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
-
-    # Babel allows to format datetime in a specific language without change locale
-    # So month 1 = January in English, and janvier in French
-    # Be aware that the default value for format is 'medium', instead of 'short'
-    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
-    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
-    if env.context.get('use_babel'):
-        # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
-        from babel.dates import format_datetime
-        return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
-
-    if format:
-        return str(ts.strftime(format))
-    else:
-        lang = env.context.get("lang")
-        langs = env['res.lang']
-        if lang:
-            langs = env['res.lang'].search([("code", "=", lang)])
-        format_date = langs.date_format or '%B-%d-%Y'
-        format_time = langs.time_format or '%I-%M %p'
-
-        fdate = ts.strftime(format_date)
-        ftime = ts.strftime(format_time)
-        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
-
-def format_amount(env, amount, currency):
-    fmt = "%.{0}f".format(currency.decimal_places)
-    lang = env['res.lang']._lang_get(env.context.get('lang') or 'en_US')
-
-    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
-        .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-    pre = post = u''
-    if currency.position == 'before':
-        pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency.symbol or '')
-    else:
-        post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
-
-    return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
+def format_datetime(env, dt, tz=False, dt_format='medium', lang_code=False):
+    try:
+        return tools.format_datetime(env, dt, tz=tz, dt_format=dt_format, lang_code=lang_code)
+    except babel.core.UnknownLocaleError:
+        return dt
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -320,9 +278,9 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
-            'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
+            'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
+            'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
+            'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
@@ -499,6 +457,10 @@ class MailTemplate(models.Model):
                     results[res_id]['attachments'] = attachments
 
         return multi_mode and results or results[res_ids[0]]
+
+    # ----------------------------------------
+    # EMAIL
+    # ----------------------------------------
 
     @api.multi
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
