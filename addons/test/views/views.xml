@@ -7,8 +7,6 @@
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
-          <field name="source"/>
-          <field name="dest"/>
         </tree>
       </field>
     </record>
@@ -19,6 +17,7 @@
       <field name="arch" type="xml">
         <form>
             <group>
+                <!--
                 <group>
                   <field name="name"/>
                   <field name="source"/>
@@ -30,6 +29,7 @@
                   <field name="user_id"/>
                   <field name="company_id"/>
                 </group>
+                -->
                 <field name="line_ids">
                     <tree string="Lines">
                         <field name="name"/>
