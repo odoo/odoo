@@ -22,9 +22,9 @@ class ResPartner(models.Model):
 
     @api.onchange('type')
     def _onchange_partner_type(self):
-        company = self.company_id or self.parent_id.company_id
-        subcontracting_location = company.subcontracting_location_id
         if self.type == 'subcontractor':
+            company = self.company_id or self.parent_id.company_id
+            subcontracting_location = company.subcontracting_location_id
             self.update({
                 'property_stock_customer': subcontracting_location,
                 'property_stock_supplier': subcontracting_location
@@ -39,10 +39,10 @@ class ResPartner(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('type') == 'subcontractor':
-                company = vals.get('company_id') and self.env['res.company'].browse(vals['company_id']) or \
-                          self.browse(vals.get('parent_id')).company_id
-                subcontracting_location = company.subcontracting_location_id
                 if not vals.get('property_stock_supplier') and not vals.get('property_stock_customer'):
+                    company = vals.get('company_id') and self.env['res.company'].browse(vals['company_id']) or \
+                              self.browse(vals.get('parent_id')).company_id
+                    subcontracting_location = company.subcontracting_location_id
                     vals['property_stock_supplier'] = subcontracting_location
                     vals['property_stock_customer'] = subcontracting_location
         return super(ResPartner, self).create(vals_list)

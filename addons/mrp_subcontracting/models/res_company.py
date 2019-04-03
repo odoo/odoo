@@ -34,7 +34,6 @@ class ResCompany(models.Model):
     def _create_resupply_subcontractor_rules(self):
         self.ensure_one()
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.id), ('active', '=', True)], limit=1)
-        # FIXME why only one warehouse here?
         subcontracting_location = self.subcontracting_location_id
         production_location = wh._get_production_location()
         resupply_route = wh._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto', _('Resupply Subcontractor on Order'))

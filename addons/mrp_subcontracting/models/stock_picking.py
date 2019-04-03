@@ -54,7 +54,7 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def action_done(self):
         for picking in self:
-            subcontracted_productions = picking.move_lines.mapped('move_orig_ids.production_id')
+            subcontracted_productions = picking._get_subcontracted_productions()
             for subcontracted_production in subcontracted_productions:
                 subcontracted_production.button_mark_done()
         res = super(StockPicking, self).action_done()
@@ -130,8 +130,5 @@ class StockPicking(models.Model):
             moves = mo.mapped('move_raw_ids') + mo.mapped('move_finished_ids')
             if any(move.has_tracking != 'none' for move in moves):
                 continue
-            for m in mo.move_raw_ids:
+            for m in moves:
                 m.quantity_done = m.product_uom_qty
-            for m in mo.move_finished_ids:
-                m.quantity_done = m.product_uom_qty
-
