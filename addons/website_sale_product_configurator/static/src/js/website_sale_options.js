@@ -15,6 +15,9 @@ publicWidget.registry.WebsiteSale.include({
     //--------------------------------------------------------------------------
 
     _onProductReady: function () {
+        if (this.isBuyNow) {
+            return this._submitForm();
+        }
         this.optionalProductsModal = new OptionalProductsModal(this.$form, {
             rootProduct: this.rootProduct,
             isWebsite: true,
