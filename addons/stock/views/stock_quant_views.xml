@@ -89,7 +89,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Inventory Valuation" editable="top" decoration-danger="quantity &lt; 0">
+            <tree js_class="singleton_list" string="Inventory Valuation" editable="top" decoration-danger="quantity &lt; 0">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
