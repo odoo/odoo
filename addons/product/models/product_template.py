@@ -417,7 +417,7 @@ class ProductTemplate(models.Model):
         # we need to add the base _name_search to the results
         # FIXME awa: this is really not performant at all but after discussing with the team
         # we don't see another way to do it
-        if len(searched_ids) < limit:
+        if not limit or len(searched_ids) < limit:
             searched_ids |= set([template_id[0] for template_id in
                 super(ProductTemplate, self)._name_search(
                     name,
