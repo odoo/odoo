@@ -297,10 +297,7 @@ class Warehouse(models.Model):
             if self[rule_field]:
                 self[rule_field].write(values)
             else:
-                if values:
-                    values.update(rule_details['create_values'])
-                else:
-                    values = rule_details['create_values']
+                values.update(rule_details['create_values'])
                 values.update({'warehouse_id': self.id})
                 self[rule_field] = self.env['stock.rule'].create(values)
         return True
