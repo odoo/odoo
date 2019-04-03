@@ -207,6 +207,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.partner',
+        label: 'load_partners',
         fields: ['name','street','city','state_id','country_id','vat',
                  'phone','zip','mobile','email','barcode','write_date',
                  'property_account_position_id','property_product_pricelist'],
@@ -594,7 +595,7 @@ exports.PosModel = Backbone.Model.extend({
     load_new_partners: function(){
         var self = this;
         return new Promise(function (resolve, reject) {
-            var fields = _.find(self.models, function(model){ return model.model === 'res.partner'; }).fields;
+            var fields = _.find(self.models, function(model){ return model.label === 'load_partners'; }).fields;
             var domain = [['customer','=',true],['write_date','>',self.db.get_partner_write_date()]];
             rpc.query({
                 model: 'res.partner',
