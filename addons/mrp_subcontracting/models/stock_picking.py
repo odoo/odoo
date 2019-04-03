@@ -64,7 +64,7 @@ class StockPicking(models.Model):
         look on the origin moves of the move lines of the picking if there is a manufacturing order.
         """
         self.ensure_one()
-        subcontracted_productions = self.move_lines.mapped('move_orig_ids.production_id')
+        subcontracted_productions = self._get_subcontracted_productions()
         subcontracted_move_lines = self.env['stock.move.line']
         for subcontracted_production in subcontracted_productions:
             subcontracted_move_lines |= subcontracted_production.move_raw_ids.mapped('move_line_ids')
@@ -76,7 +76,7 @@ class StockPicking(models.Model):
 
     def action_record_components(self):
         self.ensure_one()
-        subcontracted_productions = self.move_lines.mapped('move_orig_ids.production_id')
+        subcontracted_productions = self._get_subcontracted_productions()
         to_register = subcontracted_productions.filtered(lambda mo: mo.state not in ('to_close', 'done'))
         if to_register:
             mo = to_register[0]
