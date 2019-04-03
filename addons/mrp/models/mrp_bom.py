@@ -129,7 +129,7 @@ class MrpBom(models.Model):
             domain = [('product_tmpl_id', '=', product_tmpl.id)]
         else:
             # neither product nor template, makes no sense to search
-            return False
+            raise UserError(_('You should provide either a product or a product template to search a BoM'))
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
