@@ -434,6 +434,10 @@ class WebsiteSale(http.Controller):
             product_custom_attribute_values=product_custom_attribute_values,
             no_variant_attribute_values=no_variant_attribute_values
         )
+
+        if kw.get('express'):
+            return request.redirect("/shop/checkout?express=1")
+
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)

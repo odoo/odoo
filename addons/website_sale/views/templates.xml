@@ -488,7 +488,8 @@
                                     </t>
                                     <t t-call="website_sale.product_price" />
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
+                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"/> Add to Cart</a>
+                                    <div id="product_option_block"/>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
@@ -594,6 +595,12 @@
             </div>
         </div>
       </xpath>
+    </template>
+
+    <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <a role="button" id="buy_now" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block" href="#"><i class="fa fa-bolt"/> Buy Now</a>
+        </xpath>
     </template>
 
     <template id="product_price">
