@@ -3713,11 +3713,6 @@ Fields:
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
 
-            for d in data_list:
-                print('modified: ', d['stored'])
-                d['record'].modified(self._fields, d['stored'])
-
-
             if other_fields:
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self._context))
@@ -3729,7 +3724,11 @@ Fields:
                     ])
 
                 # mark fields to recompute
-                records.modified([field.name for field in other_fields])
+                # records.modified([field.name for field in other_fields])
+
+            for d in data_list:
+                print('modified: ', d['stored'])
+                d['record'].modified(self._fields, d['stored'])
 
             # check Python constraints for stored fields
             records._validate_fields(name for data in data_list for name in data['stored'])
