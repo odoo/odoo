@@ -433,6 +433,7 @@ var VariantMixin = {
 
         $parent.toggleClass('css_not_available', disable);
         $parent.find("#add_to_cart").toggleClass('disabled', disable);
+        $parent.find("#buy_now").toggleClass('disabled', disable);
         $parent
             .parents('.modal')
             .find('.o_sale_product_configurator_add, .o_sale_product_configurator_edit')

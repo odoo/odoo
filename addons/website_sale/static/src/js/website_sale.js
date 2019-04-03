@@ -146,7 +146,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
-        'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, #buy_now, #products_grid .product_price .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
@@ -432,6 +432,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
+        this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
         return this._handleAdd($(ev.currentTarget).closest('form'));
     },
 
@@ -499,6 +500,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
         });
         this.$form.append($productNoVariantAttributeValues);
+
+        if (this.isBuyNow) {
+            this.$form.append($('<input>', {name: 'express', type: "hidden", value: true}));
+        }
 
         this.$form.trigger('submit', [true]);
     },
