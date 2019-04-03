@@ -3440,9 +3440,6 @@ Fields:
                 columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
                 updated.append('write_date')
 
-        # mark fields to recompute (the ones that depend on old values)
-        self.modified(vals)
-
         # update columns
         if columns:
             self.check_access_rule('write')
@@ -3477,7 +3474,7 @@ Fields:
         # mark fields to recompute; do this before setting other fields, because
         # the latter can require the value of computed fields, e.g., a one2many
         # checking constraints on records
-        self.modified(updated)
+        self.modified(vals)
 
         # set the value of non-column fields
         if other_fields:
@@ -5245,6 +5242,7 @@ Fields:
                 triggers[(field.model_name, path)].add(field)
 
         # process triggers, mark fields to be invalidated/recomputed
+        print('Start FOR', self, fnames)
         for model_path, fields in triggers.items():
             model_name, path = model_path
             stored = {field for field in fields if field.compute and field.store}
@@ -5258,9 +5256,6 @@ Fields:
                     f = Model._fields.get(path)
                     if f and f.store and f.type not in ('one2many', 'many2many'):
                         # path is direct (not dotted), stored, and inline -> optimise to raw sql
-                        print('SELECT id FROM '+Model._table+' WHERE '+path+' in ',self.ids)
-                        import ipdb
-                        ipdb.set_trace()
                         self.env.cr.execute('SELECT id FROM "%s" WHERE "%s" in %%s' % (Model._table, path), [tuple(self.ids)])
                         target0 = Model.browse(i for [i] in self.env.cr.fetchall())
                     else:
@@ -5287,6 +5282,7 @@ Fields:
             # process non-stored fields
             for field in (fields - stored):
                 invalids.append((field, None))
+        print('END FOR')
 
         self.env.cache.invalidate(invalids)
 
@@ -5318,6 +5314,7 @@ Fields:
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
+            print('recomputing ', field, recs)
 
             # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
             count+= 1

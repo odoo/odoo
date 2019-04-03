@@ -17,6 +17,7 @@ class test(models.Model):
     @api.depends('user_id')
     def _get_company(self):
         for record in self:
+            print('Main Set CompanyWrite')
             record.company_id = 1
 
     @api.depends('source')
@@ -34,11 +35,13 @@ class test(models.Model):
 class test(models.Model):
     _name = 'test.line'
     name = fields.Char()
-    company_id = fields.Many2one('res.company', 'Company', store=True, compute="_get_company")
+    company_id = fields.Many2one('res.company', 'Company', store=True, compute="_get_company", related="test_id.company_id")
     test_id = fields.Many2one('test.test', 'Test', required=True)
 
-    @api.depends('test_id.company_id')
-    def _get_company(self):
-        for record in self:
-            record.company_id = record.test_id.company_id
+    # @api.depends('test_id.company_id')
+    # def _get_company(self):
+    #     for record in self:
+    #         print('_get_company_start')
+    #         record.company_id = record.test_id.company_id
+    #         print('_get_company_stop')
 
