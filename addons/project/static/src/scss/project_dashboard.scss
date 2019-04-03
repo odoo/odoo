@@ -2,23 +2,27 @@
     .o_project_kanban_boxes {
         display: flex;
         flex-flow: row nowrap;
+        white-space: nowrap;
 
         .o_project_kanban_box {
             position: relative;
             text-align: center;
             padding: 0 0 0 0;
-            width: 33.33%;
+            width: 50%;
 
             &:last-child {
                 text-align: right;
+                width: 33.33%;
             }
 
-            &:nth-child(2){
-                width: 66.66%;
+            &:nth-child(2):last-child {
+                text-align: center;
+                width: 33.33%;
             }
 
             &:first-child {
                 text-align: left;
+                width: 33.33%;
             }
 
             .o_value {
