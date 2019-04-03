@@ -359,18 +359,23 @@ class Manager(Thread):
             added = updated_devices.keys() - devices.keys()
             removed = devices.keys() - updated_devices.keys()
             devices = updated_devices
+            send_devices = False
             for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
                 iot_devices[path].disconnect()
+                _logger.info('Device %s is now disconnected', path)
+                send_devices = True
             for path in [device_add for device_add in added if device_add not in iot_devices]:
                 for driverclass in [d for d in drivers if d.connection_type == devices[path].connection_type]:
                     if driverclass.supported(device = updated_devices[path].dev):
-                        _logger.info('For device %s will be driven', path)
+                        _logger.info('Device %s is now connected', path)
                         d = driverclass(device = updated_devices[path].dev)
                         d.daemon = True
                         d.start()
                         iot_devices[path] = d
-                        self.send_alldevices()
+                        send_devices = True
                         break
+            if send_devices:
+                self.send_alldevices()
             time.sleep(3)
 
 class GattBtManager(Gatt_DeviceManager):
