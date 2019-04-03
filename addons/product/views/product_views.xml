@@ -230,8 +230,9 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                 <field name="currency_id" invisible='1'/>
+                                <field name="cost_currency_id" invisible="1"/>
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
