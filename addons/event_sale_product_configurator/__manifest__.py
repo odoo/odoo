@@ -14,6 +14,7 @@
     'depends': ['sale_product_configurator', 'event_sale'],
     'data': [
         'views/assets.xml',
+        'views/sale_views.xml',
     ],
     'auto_install': True
 }
