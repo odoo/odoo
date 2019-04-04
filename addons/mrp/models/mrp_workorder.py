@@ -220,7 +220,7 @@ class MrpWorkorder(models.Model):
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
         return super(MrpWorkorder, self).write(values)
 
-    def generate_wo_lines(self):
+    def _generate_wo_lines(self):
         """ Generate workorder line """
         self.ensure_one()
         raw_moves = self.move_raw_ids.filtered(
@@ -246,6 +246,32 @@ class MrpWorkorder(models.Model):
             line_values['to_delete'].unlink()
         for line, vals in line_values['to_update'].items():
             line.write(vals)
+
+    def _refresh_wo_lines(self):
+        for workorder in self:
+            raw_moves = workorder.move_raw_ids.filtered(
+                lambda move: move.state not in ('done', 'cancel')
+            )
+            wl_to_unlink = self.env['mrp.workorder.line']
+            for move in raw_moves:
+                rounding = move.product_uom.rounding
+                qty_already_consumed = 0.0
+                workorder_lines = workorder.workorder_line_ids.filtered(lambda w: w.move_id == move)
+                for wl in workorder_lines:
+                    if not wl.qty_done:
+                        wl_to_unlink |= wl
+                        continue
+
+                    qty_already_consumed += wl.qty_done
+                qty_to_consume = move.product_uom._compute_quantity(
+                    workorder.qty_producing * move.unit_factor,
+                    move.product_id.uom_id,
+                    round=False
+                )
+                wl_to_unlink.unlink()
+                if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
+                    line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
+                    workorder.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
 
     def _defaults_from_finished_workorder_line(self, reference_lot_lines):
         for r_line in reference_lot_lines:
