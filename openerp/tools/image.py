@@ -130,7 +130,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     # generate the background color, past it as background
     if randomize:
         color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
-    image.paste(color)
+    image.paste(color, box=(0, 0) + original.size)
     image.paste(original, mask=original)
     # return the new image
     buffer = StringIO.StringIO()
