@@ -169,6 +169,7 @@ class Survey(models.Model):
     def _onchange_scoring_type(self):
         if self.scoring_type == 'no_scoring':
             self.certificate = False
+            self.is_time_limited = False
 
     @api.onchange('users_login_required', 'access_mode')
     def _onchange_access_mode(self):
