@@ -452,6 +452,9 @@ class AccountJournal(models.Model):
         compute='_compute_refund_seq_number_next',
         inverse='_inverse_refund_seq_number_next')
 
+    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Partner'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
+    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
+
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
     company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.user.company_id,

@@ -28,23 +28,6 @@ class WebsiteSale(WebsiteSale):
         order.recompute_coupon_lines()
         return super(WebsiteSale, self).cart(**post)
 
-    def _update_website_sale_coupon(self, **post):
-        order = request.website.sale_get_order()
-        order.recompute_coupon_lines()
-        free_shipping_lines = order._get_free_shipping_lines()
-        currency = order.currency_id
-        result = {}
-        if free_shipping_lines:
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
-            result.update({
-                'new_amount_delivery': self._format_amount(0.0, currency),
-                'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
-                'new_amount_tax': self._format_amount(order.amount_tax, currency),
-                'new_amount_total': self._format_amount(order.amount_total, currency),
-                'new_amount_order_discounted': self._format_amount(order.reward_amount - amount_free_shipping, currency)
-            })
-        return result
-
     # Override
     # Add in the rendering the free_shipping_line
     def _get_shop_payment_values(self, order, **kwargs):

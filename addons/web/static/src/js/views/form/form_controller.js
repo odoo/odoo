@@ -348,6 +348,15 @@ var FormController = BasicController.extend({
         this.renderer.enableButtons();
     },
     /**
+     * Only display the pager if we are not on a new record.
+     *
+     * @override
+     * @private
+     */
+    _isPagerVisible: function () {
+        return !this.model.isNew(this.handle);
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @override

@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Delivery Methods"
+    _description = "Shipping Methods"
     _order = 'sequence, id'
 
     ''' A Shipping Provider
@@ -87,7 +87,7 @@ class DeliveryCarrier(models.Model):
             'name': 'New Providers',
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', 'ilike', 'delivery_']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -108,6 +108,11 @@ class DeliveryCarrier(models.Model):
         if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
             return False
         return True
+
+    @api.onchange('integration_level')
+    def _onchange_integration_level(self):
+        if self.integration_level == 'rate':
+            self.invoice_policy = 'estimated'
 
     @api.onchange('can_generate_return')
     def _onchange_can_generate_return(self):

@@ -545,8 +545,8 @@
                     <h1 class="mt16">Results Overview</h1>
                     <div>Success rate: <mark class="font-weight-bold"><t t-esc="survey_dict['success_rate']"></t>%</mark></div>
                     <div id="scoring_results_chart" t-att-data-graph_data="survey_dict['scoring_graph_data']">
-                        <!-- svg element for drawing pie chart -->
-                        <svg style="height:20em"></svg>
+                        <!-- canvas element for drawing pie chart -->
+                        <canvas/>
                     </div>
                     <hr/>
                 </div>
@@ -701,12 +701,12 @@
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type != 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="bar" t-att-graph-data="graph_data">
-                    <!-- svg element for drawing bar chart -->
-                    <svg style="height:20em"></svg>
+                    <!-- canvas element for drawing bar chart -->
+                    <canvas/>
                 </div>
                 <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type == 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="pie" t-att-graph-data="graph_data">
-                    <!-- svg element for drawing pie chart -->
-                    <svg style="height:20em"></svg>
+                    <!-- canvas element for drawing pie chart -->
+                    <canvas/>
                 </div>
                 <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
                     <table class="table table-hover table-sm">
@@ -765,8 +765,8 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id= "question.id" data-graph_type= "multi_bar" t-att-graph-data="graph_data">
-                <!-- svg element for drawing Multibar chart -->
-                <svg style="height:20em"></svg>
+                <!-- canvas element for drawing Multibar chart -->
+                <canvas/>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
                 <table class="table table-hover table-sm text-right">

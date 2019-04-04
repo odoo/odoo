@@ -91,8 +91,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     confirmChange: function (state, id, fields, ev) {
         this.state = state;
-
-        var record = state.id === id ? state : _.findWhere(state.data, {id: id});
+        var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
         }
@@ -351,6 +350,19 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
+     * This function is meant to be overriden in renderers. It takes a dataPoint
+     * id (for a dataPoint of type record), and should return the corresponding
+     * dataPoint.
+     *
+     * @abstract
+     * @private
+     * @param {string} [recordId]
+     * @returns {Object|null}
+     */
+    _getRecord: function (recordId) {
+        return null;
+    },
+    /**
      * @private
      * @param {jQueryElement} $el
      * @param {Object} node
@@ -510,12 +522,15 @@ var BasicRenderer = AbstractRenderer.extend({
         var oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
+        var oldWidgets = this.widgets;
+        this.widgets = [];
         return this._renderView().then(function () {
             _.each(oldAllFieldWidgets, function (recordWidgets) {
                 _.each(recordWidgets, function (widget) {
                     widget.destroy();
                 });
             });
+            _.invoke(oldWidgets, 'destroy');
         });
     },
     /**

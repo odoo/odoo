@@ -12,7 +12,6 @@ class SaleOrder(models.Model):
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
-    invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery", copy=False)
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
 
@@ -34,13 +33,6 @@ class SaleOrder(models.Model):
             self.recompute_delivery_price = True
 
     @api.multi
-    def _action_confirm(self):
-        res = super(SaleOrder, self)._action_confirm()
-        for so in self:
-            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
-        return res
-
-    @api.multi
     def _remove_delivery_line(self):
         self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
@@ -51,10 +43,7 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
 
         for order in self:
-            if order.state not in ('draft', 'sent'):
-                raise UserError(_('You can add delivery price only on unconfirmed quotations.'))
-            else:
-                order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
+            order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
         return True
 
     def action_open_delivery_wizard(self):
@@ -74,7 +63,8 @@ class SaleOrder(models.Model):
         }
 
     def recompute_delivery_cost(self):
-        delivery_line = self.order_line.filtered('is_delivery')
+        self.ensure_one()
+        delivery_line = self.order_line.filtered('is_delivery')[:1]
         res = self.carrier_id.rate_shipment(self)
         if res.get('success'):
             self.delivery_message = res.get('warning_message', False)
@@ -154,6 +144,13 @@ class SaleOrderLine(models.Model):
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+
+    @api.multi
+    def unlink(self):
+        for line in self:
+            if line.is_delivery:
+                line.order_id.carrier_id = False
+        super(SaleOrderLine, self).unlink()
 
     def _is_delivery(self):
         self.ensure_one()

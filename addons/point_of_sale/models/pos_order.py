@@ -807,6 +807,7 @@ class PosOrder(models.Model):
                 picking_vals = {
                     'origin': order.name,
                     'partner_id': address.get('delivery', False),
+                    'user_id': False,
                     'date_done': order.date_order,
                     'picking_type_id': picking_type.id,
                     'company_id': order.company_id.id,
@@ -911,7 +912,7 @@ class PosOrder(models.Model):
                         'lot_id': lot_id,
                     })
                 if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
-                    if len(move._get_move_lines()) < 2:
+                    if len(move.move_line_ids) < 2:
                         move.quantity_done = qty_done
                     else:
                         move._set_quantity_done(qty_done)
@@ -974,7 +975,7 @@ class PosOrder(models.Model):
         self.env['account.bank.statement.line'].with_context(context).create(args)
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
- 
+
     def _prepare_refund_order_data(self, current_session=None):
         """
         Prepare data for the creation of refund order based on the current order's data. Inheritance may inject its own data here
@@ -998,7 +999,7 @@ class PosOrder(models.Model):
             'amount_total': -self.amount_total,
             'amount_paid': 0,
             }
-         
+
     @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
@@ -1244,10 +1245,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
