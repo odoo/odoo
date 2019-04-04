@@ -418,15 +418,13 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
-                    <field name="name" filter_domain="['|','|','|',('partner_name', 'ilike', self),('email_from', 'ilike', self), ('contact_name', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="name" string="Lead" filter_domain="['|','|','|',('partner_name', 'ilike', self),('email_from', 'ilike', self), ('contact_name', 'ilike', self), ('name', 'ilike', self)]"/>
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
                     <field name="user_id"/>
                     <field name="team_id"/>
-                    <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="city"/>
                     <field name="country_id"/>
                     <field name="create_date"/>
-                    <field name="lost_reason"/>
                     <field name="medium_id"/>
                     <field name="campaign_id"/>
                     <field name="source_id"/>
@@ -436,12 +434,7 @@
                             domain="[('user_id', '=', uid)]"
                             help="Leads that are assigned to me"/>
                     <separator />
-                    <filter string="Leads" name="leads" domain="[('type', '=', 'lead')]"/>
-                    <filter string="Opportunities" name="opportunities" domain="[('type', '=', 'opportunity')]"/>
-                    <separator />
-                    <filter string="Won" name="won"
-                            domain="[('probability', '=', 100)]"/>
-                    <filter string="Lost" name="lost"
+                    <filter string="Lost Leads" name="lost"
                             domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <separator/>
                     <filter string="Activities Todo" name="activities_my"
@@ -458,18 +451,14 @@
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
-                        <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter name="city" string="City" context="{'group_by': 'city'}"/>
                         <filter string="Country" name="country" context="{'group_by':'country_id'}" />
-                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Conversion Date" name="date_conversion" context="{'group_by':'date_conversion'}"/>
-                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
                     </group>
                 </search>
