@@ -35,7 +35,7 @@ var updateTimer = function () {
         $timer.html(formatTime(timeLeftMinutes) + ':' + formatTime(timeLeftSeconds));
     } else {
         clearInterval(interval);
-        $('.js_surveyform').submit();
+        $('.o_survey_form').submit();
     }
 };
 
