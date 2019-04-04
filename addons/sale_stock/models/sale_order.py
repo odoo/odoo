@@ -128,6 +128,8 @@ class SaleOrder(models.Model):
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['incoterms_id'] = self.incoterm.id or False
+        if self.incoterm.id:
+            invoice_vals['incoterm_id'] = self.incoterm.id
         return invoice_vals
 
     @api.model

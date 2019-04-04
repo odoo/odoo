@@ -162,14 +162,14 @@ class MailMail(models.Model):
                 failed = self.env['mail.notification']
                 if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
-                    failed.write({
+                    failed.sudo().write({
                         'email_status': 'exception',
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.res_id and m.model)
                     messages._notify_failure_update()  # notify user that we have a failure
-                (notifications - failed).write({
+                (notifications - failed).sudo().write({
                     'email_status': 'sent',
                 })
         if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
@@ -338,7 +338,7 @@ class MailMail(models.Model):
                 ])
                 if notifs:
                     notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
-                    notifs.write({
+                    notifs.sudo().write({
                         'email_status': 'exception',
                         'failure_type': 'UNKNOWN',
                         'failure_reason': notif_msg,
