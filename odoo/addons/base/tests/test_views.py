@@ -2153,16 +2153,14 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         })
 
     def test_sanity_check(self):
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         assert len(faulty_views) <= 0
 
     def test_fix_view_test1(self):
         # invalidate view1111 only
 
         # check all is ok
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         assert len(faulty_views) <= 0
         # detect the issue
         self.cr.execute("""update ir_ui_view set arch_db=
@@ -2175,8 +2173,7 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         self.env['ir.ui.view'].invalidate_cache()
         # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
         # detect the issue
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         self.assertEqual(self.view1111, faulty_views)
         # solve the issue (with deactivation)
         self.view1._fix_faulty_views()
@@ -2197,8 +2194,7 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         # invalidate view1111 and view131
 
         # check all is ok
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         assert len(faulty_views) <= 0
         # detect the issue
         self.cr.execute("""update ir_ui_view set arch_db=
@@ -2218,8 +2214,7 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         self.env['ir.ui.view'].invalidate_cache()
         # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
         # detect the issue
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         self.assertEqual(self.view1111+self.view131, faulty_views)
         # solve the issue (with deactivation)
         self.view1._fix_faulty_views()
@@ -2241,8 +2236,7 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         # invalidate view1111 and view13
 
         # check all is ok
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         assert len(faulty_views) <= 0
         # detect the issue
         self.cr.execute("""update ir_ui_view set arch_db=
@@ -2262,8 +2256,7 @@ class TestFixFaultyViewsComplex(common.TransactionCase):
         self.env['ir.ui.view'].invalidate_cache()
         # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
         # detect the issue
-        faulty_views = self.view1._get_faulty_views(
-            self.view1, self.env['ir.ui.view'])
+        faulty_views = self.view1._get_faulty_views()
         self.assertEqual(self.view1111+self.view13, faulty_views)
         # solve the issue (with deactivation)
         self.view1._fix_faulty_views()
