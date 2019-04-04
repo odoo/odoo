@@ -1022,6 +1022,85 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2many tags widget: select multiple records', async function (assert) {
+            assert.expect(5);
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i});
+            }
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                    '</form>',
+                res_id: 1,
+                archs: {
+                    'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                    'partner_type,false,search': '<search><field name="display_name"/></search>',
+                },
+            });
+            await testUtils.form.clickEdit(form);
+            await testUtils.fields.many2one.clickOpenDropdown('timmy');
+            await testUtils.fields.many2one.clickItem('timmy','Search More');
+            assert.ok($('.modal .o_list_view'), "should have open the modal");
+
+            // + 1 for the select all
+            assert.containsN($(document),'.modal .o_list_view .o_list_record_selector input', this.data.partner_type.records.length + 1,
+                "Should have record selector checkboxes to select multiple records");
+            //multiple select tag
+            await testUtils.dom.click($('.modal .o_list_view thead .o_list_record_selector input'));
+            assert.ok(!$('.modal .o_select_button').prop('disabled'), "select button should be enabled");
+            await testUtils.dom.click($('.o_select_button'));
+            assert.containsNone($(document),'.modal .o_list_view', "should have closed the modal");
+            assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge', this.data.partner_type.records.length,
+                "many2many tag should now contain 12 records");
+            form.destroy();
+        });
+
+        QUnit.test("many2many tags widget: select multiple records doesn't show already added tags", async function (assert) {
+            assert.expect(5);
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i});
+            }
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                    '</form>',
+                res_id: 1,
+                archs: {
+                    'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                    'partner_type,false,search': '<search><field name="display_name"/></search>',
+                },
+            });
+            await testUtils.form.clickEdit(form);
+
+
+            await testUtils.fields.many2one.clickOpenDropdown('timmy');
+            await testUtils.fields.many2one.clickItem('timmy','Partner1');
+
+            await testUtils.fields.many2one.clickOpenDropdown('timmy');
+            await testUtils.fields.many2one.clickItem('timmy','Search More');
+            assert.ok($('.modal .o_list_view'), "should have open the modal");
+
+            // -1 for the one that is already on the form & +1 for the select all,
+            assert.containsN($(document), '.modal .o_list_view .o_list_record_selector input', this.data.partner_type.records.length - 1 + 1,
+                "Should have record selector checkboxes to select multiple records");
+            //multiple select tag
+            await testUtils.dom.click($('.modal .o_list_view thead .o_list_record_selector input'));
+            assert.ok(!$('.modal .o_select_button').prop('disabled'), "select button should be enabled");
+            await testUtils.dom.click($('.o_select_button'));
+            assert.containsNone($(document),'.modal .o_list_view', "should have closed the modal");
+            assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge', this.data.partner_type.records.length,
+                "many2many tag should now contain 12 records");
+            form.destroy();
+        });
+
         QUnit.test('many2many list add *many* records, remove, re-add', async function (assert) {
             assert.expect(5);
 
