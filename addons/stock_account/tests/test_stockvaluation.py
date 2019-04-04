@@ -14,7 +14,6 @@ class TestStockValuation(TransactionCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.inventory_location = self.env.ref('stock.location_inventory')
         self.partner = self.env['res.partner'].create({'name': 'xxx'})
         self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
         self.uom_unit = self.env.ref('uom.product_uom_unit')
@@ -3908,12 +3907,13 @@ class TestStockValuation(TransactionCase):
         """
         self.product1.standard_price = 15
         self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.inventory_location.company_id = self.env.user.company_id.id
+        inventory_location = self.product1.property_stock_inventory
+        inventory_location.company_id = self.env.user.company_id.id
 
         # Start Inventory: 12 units
         move1 = self.env['stock.move'].create({
             'name': 'Adjustment of 12 units',
-            'location_id': self.inventory_location.id,
+            'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
