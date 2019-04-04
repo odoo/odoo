@@ -478,7 +478,8 @@ ListRenderer.include({
      */
     _moveToPreviousLine: function () {
         if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.columns.length - 1);
+            // FORWARD-PORT THIS COMMIT UP TO SAAS-12.2
+            this._selectCell(this.currentRow - 1, this.columns.length - 1, {inc: -1});
         } else {
             this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
@@ -692,6 +693,8 @@ ListRenderer.include({
      * @param {boolean} [options.force=false] if true, force selecting the cell
      *   even if seems to be already the selected one (useful after a re-
      *   rendering, to reset the focus on the correct field)
+     * @param {integer} [options.inc=1] the increment to use when searching for
+     *   the "next" possible cell (if the cell to select can't be selected)
      * @return {Deferred} fails if no cell could be selected
      */
     _selectCell: function (rowIndex, fieldIndex, options) {
@@ -715,7 +718,7 @@ ListRenderer.include({
             var oldFieldIndex = self.currentFieldIndex;
             self.currentFieldIndex = fieldIndex;
             fieldIndex = self._activateFieldWidget(record, fieldIndex, {
-                inc: 1,
+                inc: options.inc || 1,
                 wrap: wrap,
                 event: options && options.event,
             });
@@ -868,7 +871,7 @@ ListRenderer.include({
         switch (ev.data.direction) {
             case 'previous':
                 if (this.currentFieldIndex > 0) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
+                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {inc: -1, wrap: false})
                         .fail(this._moveToPreviousLine.bind(this));
                 } else {
                     this._moveToPreviousLine();
