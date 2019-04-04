@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         return warehouse_ids
 
     incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterms',
+        'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),

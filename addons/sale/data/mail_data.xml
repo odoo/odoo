@@ -80,11 +80,11 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'
-        Dear ${object.partner_id.name}
         % if object.partner_id.parent_id:
-            (${object.partner_id.parent_id.name})
+            Dear ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+        % else:
+            Dear ${object.partner_id.name},
         % endif
-        ,
         <br /><br />
         Here is
         % if ctx.get('proforma')
