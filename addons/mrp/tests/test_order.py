@@ -691,6 +691,7 @@ class TestMrpOrder(TestMrpCommon):
 
         with self.assertRaises(UserError):
             # try adding another line for a bom product to increase the quantity
+            produce_form.qty_producing = 1
             with produce_form.workorder_line_ids.new() as line:
                 line.product_id = p1
                 line.qty_done = 1
@@ -709,6 +710,7 @@ class TestMrpOrder(TestMrpCommon):
                 'active_id': mo.id,
                 'active_ids': [mo.id],
             }))
+            produce_form.qty_producing = 1
             with produce_form.workorder_line_ids.new() as line:
                 line.product_id = self.product_4
                 line.qty_done = 1
