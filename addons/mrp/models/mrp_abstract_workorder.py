@@ -26,10 +26,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
     )
     use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
 
-    @api.depends('raw_workorder_line_ids', 'finished_workorder_line_ids')
-    def _compute_workorder_line_ids(self):
-        for workorder in self:
-            workorder.workorder_line_ids = workorder.raw_workorder_line_ids | workorder.finished_workorder_line_ids
+    def _workorder_line_ids(self):
+        self.ensure_one()
+        return self.raw_workorder_line_ids | self.finished_workorder_line_ids
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
@@ -61,7 +60,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         move_finished_ids = self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
         move_raw_ids = self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
         for move in move_raw_ids | move_finished_ids:
-            move_workorder_lines = self.workorder_line_ids.filtered(lambda w: w.move_id == move)
+            move_workorder_lines = self._workorder_line_ids().filtered(lambda w: w.move_id == move)
 
             # Compute the new quantity for the current component
             rounding = move.product_uom.rounding
@@ -176,7 +175,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             if move_line.lot_produced_ids or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
                 continue
             # search wo line on which the lot is not fully consumed or other reserved lot
-            linked_wo_line = self.workorder_line_ids.filtered(
+            linked_wo_line = self._workorder_line_ids().filtered(
                 lambda line: line.product_id == move_line.product_id and
                 line.lot_id == move_line.lot_id
             )
@@ -266,7 +265,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         # Before writting produce quantities, we ensure they respect the bom strictness
         self._strict_consumption_check()
         vals_list = []
-        workorder_lines_to_process = self.workorder_line_ids.filtered(lambda line: line.product_id != self.product_id and line.qty_done > 0)
+        workorder_lines_to_process = self._workorder_line_ids().filtered(lambda line: line.product_id != self.product_id and line.qty_done > 0)
         for line in workorder_lines_to_process:
             line._update_move_lines()
             if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
@@ -282,7 +281,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         if self.consumption != 'strict':
             return True
         for move in self.move_raw_ids:
-            lines = self.workorder_line_ids.filtered(lambda l: l.move_id == move)
+            lines = self._workorder_line_ids().filtered(lambda l: l.move_id == move)
             qty_done = sum(lines.mapped('qty_done'))
             qty_to_consume = sum(lines.mapped('qty_to_consume'))
             rounding = self.product_uom_id.rounding

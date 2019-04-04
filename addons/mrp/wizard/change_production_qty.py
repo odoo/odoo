@@ -89,7 +89,7 @@ class ChangeProductionQty(models.TransientModel):
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
                     wo.final_lot_id = False
-                    wo.workorder_line_ids.unlink()
+                    wo._workorder_line_ids().unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
@@ -99,14 +99,19 @@ class ChangeProductionQty(models.TransientModel):
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
                 # TODO: only needed when creating new moves
                 moves_raw = production.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
+                moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
                 if wo == production.workorder_ids[-1]:
                     moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
-                moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
+                    moves_finished |= production.move_finished_ids.filtered(lambda move: not move.operation_id)
                 moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if wo.state not in ('done', 'cancel'):
                     line_values = wo._update_workorder_lines()
-                    wo.workorder_line_ids |= wo.workorder_line_ids.create(line_values['to_create'])
+                    for line in line_values['to_create']:
+                        if line['move_id'] in wo.move_raw_ids:
+                            wo.move_raw_ids |= self.env['mrp.workorder.line'].create(line_values)
+                        else:
+                            wo.move_finished_ids |= self.env['mrp.workorder.line'].create(line_values)
                     if line_values['to_delete']:
                         line_values['to_delete'].unlink()
                     for line, vals in line_values['to_update'].items():

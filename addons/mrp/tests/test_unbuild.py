@@ -422,7 +422,7 @@ class TestUnbuild(TestMrpCommon):
         produce_form.qty_producing = 3.0
         produce_form.final_lot_id = lot_finished_1
         produce_wizard = produce_form.save()
-        produce_wizard.workorder_line_ids[0].lot_id = lot_1
+        produce_wizard._workorder_line_ids()[0].lot_id = lot_1
         produce_wizard.do_produce()
 
         lot_2 = self.env['stock.production.lot'].create({
@@ -444,7 +444,7 @@ class TestUnbuild(TestMrpCommon):
         produce_form.final_lot_id = lot_finished_2
 
         produce_wizard = produce_form.save()
-        produce_wizard.workorder_line_ids[0].lot_id = lot_2
+        produce_wizard._workorder_line_ids()[0].lot_id = lot_2
         produce_wizard.do_produce()
         mo.button_mark_done()
         ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and lot_finished_1 in m.lot_produced_ids)

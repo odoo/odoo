@@ -95,7 +95,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         finished_lot =self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
         workorder.write({'final_lot_id': finished_lot.id})
         workorder.button_start()
-        for workorder_line_id in workorder.workorder_line_ids:
+        for workorder_line_id in workorder._workorder_line_ids():
             if workorder_line_id.product_id.id == product_bolt.id:
                 workorder_line_id.write({'lot_id': lot_bolt.id, 'qty_done': 1})
             if workorder_line_id.product_id.id == product_table_sheet.id:
@@ -199,7 +199,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         finished_lot = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
         workorders[0].write({'final_lot_id': finished_lot.id, 'qty_producing': 1.0})
         workorders[0].button_start()
-        workorders[0].workorder_line_ids[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
+        workorders[0]._workorder_line_ids()[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
         workorders[0].record_production()
 
@@ -212,7 +212,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         workorders[1].button_start()
         workorders[1].qty_producing = 1.0
         workorders[1].final_lot_id = finished_lot
-        workorders[1].workorder_line_ids[0].write({'lot_id': lot_leg.id, 'qty_done': 4})
+        workorders[1]._workorder_line_ids()[0].write({'lot_id': lot_leg.id, 'qty_done': 4})
         workorders[1].record_production()
         move_leg = production_table.move_raw_ids.filtered(lambda p: p.product_id == product_table_leg)
         #self.assertEqual(workorders[1].state, 'done')
@@ -224,7 +224,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         workorders[2].button_start()
         workorders[2].qty_producing = 1.0
         workorders[2].final_lot_id = finished_lot
-        move_lot = workorders[2].workorder_line_ids[0]
+        move_lot = workorders[2]._workorder_line_ids()[0]
         move_lot.write({'lot_id': lot_bolt.id, 'qty_done': 4})
         move_table_bolt = production_table.move_raw_ids.filtered(lambda p: p.product_id.id == product_bolt.id)
         workorders[2].record_production()
@@ -488,7 +488,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         product_form.final_lot_id = laptop_lot_001
         product_consume = product_form.save()
-        product_consume.workorder_line_ids[0].qty_done = 12
+        product_consume._workorder_line_ids()[0].qty_done = 12
         product_consume.do_produce()
 
         # Check consumed move after produce 6 quantity of customized laptop.
@@ -515,8 +515,8 @@ class TestWorkOrderProcess(TestMrpCommon):
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         produce_form.final_lot_id = laptop_lot_002
         product_consume = produce_form.save()
-        self.assertEquals(len(product_consume.workorder_line_ids), 2)
-        product_consume.workorder_line_ids[0].qty_done = 8
+        self.assertEquals(len(product_consume._workorder_line_ids()), 2)
+        product_consume._workorder_line_ids()[0].qty_done = 8
         product_consume.do_produce()
         charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state != 'done')
         keybord_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state !='done')
@@ -654,9 +654,9 @@ class TestWorkOrderProcess(TestMrpCommon):
         produce_form.final_lot_id = lot_a
         product_consume = produce_form.save()
         # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        self.assertEquals(len(product_consume.workorder_line_ids), 2)
-        product_consume.workorder_line_ids.filtered(lambda x: x.product_id == product_C).write({'qty_done': 3000})
-        product_consume.workorder_line_ids.filtered(lambda x: x.product_id == product_B).write({'qty_done': 20})
+        self.assertEquals(len(product_consume._workorder_line_ids()), 2)
+        product_consume._workorder_line_ids().filtered(lambda x: x.product_id == product_C).write({'qty_done': 3000})
+        product_consume._workorder_line_ids().filtered(lambda x: x.product_id == product_B).write({'qty_done': 20})
         product_consume.do_produce()
         mo_custom_product.post_inventory()
 

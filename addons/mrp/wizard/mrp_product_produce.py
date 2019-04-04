@@ -46,8 +46,6 @@ class MrpProductProduce(models.TransientModel):
     move_raw_ids = fields.One2many(related='production_id.move_raw_ids')
     move_finished_ids = fields.One2many(related='production_id.move_finished_ids')
 
-    workorder_line_ids = fields.One2many('mrp.product.produce.line',
-        compute='_compute_workorder_line_ids')
     raw_workorder_line_ids = fields.One2many('mrp.product.produce.line',
         'raw_product_produce_id', string='Components')
     finished_workorder_line_ids = fields.One2many('mrp.product.produce.line',
@@ -106,7 +104,7 @@ class MrpProductProduce(models.TransientModel):
     def _record_production(self):
         # Check all the product_produce line have a move id (the user can add product
         # to consume directly in the wizard)
-        for line in self.workorder_line_ids:
+        for line in self._workorder_line_ids():
             if not line.move_id:
                 # Find move_id that would match
                 if line.raw_product_produce_id:

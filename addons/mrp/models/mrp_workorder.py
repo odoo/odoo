@@ -107,8 +107,6 @@ class MrpWorkorder(models.Model):
     capacity = fields.Float(
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
-    workorder_line_ids = fields.One2many('mrp.workorder.line',
-        compute='_compute_workorder_line_ids', string='Workorder lines')
     raw_workorder_line_ids = fields.One2many('mrp.workorder.line',
         'raw_workorder_id', string='Components')
     finished_workorder_line_ids = fields.One2many('mrp.workorder.line',
@@ -224,7 +222,7 @@ class MrpWorkorder(models.Model):
                 round=False
             )
             line_values = self._generate_lines_values(move, qty_to_consume)
-            if move in self.production_id.move_raw_ids:
+            if move in self.move_raw_ids:
                 self.raw_workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
             else:
                 self.finished_workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
@@ -238,7 +236,7 @@ class MrpWorkorder(models.Model):
             for move in raw_moves:
                 rounding = move.product_uom.rounding
                 qty_already_consumed = 0.0
-                workorder_lines = workorder.workorder_line_ids.filtered(lambda w: w.move_id == move)
+                workorder_lines = workorder._workorder_line_ids().filtered(lambda w: w.move_id == move)
                 for wl in workorder_lines:
                     if not wl.qty_done:
                         wl_to_unlink |= wl
@@ -254,7 +252,10 @@ class MrpWorkorder(models.Model):
                 )
                 if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
-                    workorder.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+                    if move in self.move_raw_ids:
+                        self.raw_workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
+                    else:
+                        self.finished_workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
             wl_to_unlink.unlink()
 
     def _assign_default_final_lot_id(self, reference_lot_lines):
