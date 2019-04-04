@@ -984,24 +984,29 @@ class Field(MetaField('DummyField', (object,), {})):
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
+        env = record.env
 
         if record:
             # only a single record may be accessed
             record.ensure_one()
-            if record.env.check_todo(self, record):
-                # self.compute_value(record)
-                if self.recursive:
-                    self.compute_value(record)
-                else:
+            if env.check_todo(self, record):
+                recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
+                self.compute_value(recs)
+
+            if not env.cache.contains(record, self):
+                if self.store and record.id and not env.in_onchange:
+                    record._prefetch_field(self)
+
+                elif self.compute:
                     recs = record._in_cache_without(self)
                     recs = recs.with_prefetch(record._prefetch)
                     self.compute_value(recs)
-            if not record.env.cache.contains(record, self):
-                if record.id:
-                    self.determine_value(record)
+
                 else:
-                    self.determine_draft_value(record)
-            value = record.env.cache.get(record, self)
+                    env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
+
+            value = env.cache.get(record, self)
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
@@ -1023,7 +1028,7 @@ class Field(MetaField('DummyField', (object,), {})):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record.env.cache.set(record, self, value)
+            env.cache.set(record, self, value)
             if env.check_todo(self, record):
                 env.remove_todo(self, record)
 
@@ -1048,7 +1053,7 @@ class Field(MetaField('DummyField', (object,), {})):
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
-                record.env.cache.set(record, self, value)
+                env.cache.set(record, self, value)
 
     ############################################################################
     #
@@ -1087,58 +1092,6 @@ class Field(MetaField('DummyField', (object,), {})):
                         self._compute_value(record)
                     except Exception as exc:
                         record.env.cache.set_failed(record, [self], exc)
-
-    def determine_value(self, record):
-        """ Determine the value of ``self`` for ``record``. """
-        env = record.env
-
-
-        if self.store and not (self.compute and env.in_onchange):
-            # this is a stored field or an old-style function field
-            if self.compute:
-                # this is a stored computed field, check for recomputation
-                recs = record._recompute_check(self)
-                if recs:
-                    # recompute the value (only in cache)
-                    self.compute_value(recs)
-                    # HACK: if result is in the wrong cache, copy values
-                    if recs.env != env:
-                        computed = record._field_computed[self]
-                        for source, target in zip(recs, recs.with_env(env)):
-                            try:
-                                values = {f.name: source[f.name] for f in computed}
-                                target._cache.update(target._convert_to_cache(values, validate=False))
-                            except MissingError as exc:
-                                target._cache.set_failed(target._fields, exc)
-                    # the result is saved to database by BaseModel.recompute()
-                    return
-
-            # read the field from database
-            record._prefetch_field(self)
-
-        elif self.compute:
-            # this is either a non-stored computed field, or a stored computed
-            # field in onchange mode
-            if self.recursive:
-                self.compute_value(record)
-            else:
-                recs = record._in_cache_without(self)
-                recs = recs.with_prefetch(record._prefetch)
-                self.compute_value(recs)
-
-        else:
-            # this is a non-stored non-computed field
-            record.env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
-
-    def determine_draft_value(self, record):
-        """ Determine the value of ``self`` for the given draft ``record``. """
-        if self.compute:
-            fields = record._field_computed[self]
-            with record.env.protecting(fields, record):
-                self._compute_value(record)
-        else:
-            null = self.convert_to_cache(False, record, validate=False)
-            record.env.cache.set_special(record, self, lambda: null)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
