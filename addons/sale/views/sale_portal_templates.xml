@@ -310,7 +310,7 @@
                     </div>
 
                     <!-- main content -->
-                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}">
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
                         <div t-call="sale.sale_order_portal_content"/>
                     </div>
 
@@ -428,7 +428,7 @@
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
-                <table class="table table-sm" id="sales_order_table">
+                <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
                             <th class="text-left">Products</th>
@@ -519,48 +519,7 @@
 
                 <div id="total" class="row" name="total" style="page-break-inside: avoid;">
                     <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
-                        <!-- Should be replaced in master by t-call="sale.sale_order_portal_content_totals_table" -->
-                        <table class="table table-sm">
-                            <tr class="border-black" style="border-bottom:1px solid #dddddd;">
-                                <td><strong>Subtotal</strong></td>
-                                <td class="text-right">
-                                    <span
-                                        data-id="total_untaxed"
-                                        t-field="sale_order.amount_untaxed"
-                                        t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
-                                    />
-                                </td>
-                            </tr>
-                            <t t-foreach="sale_order.amount_by_group" t-as="amount_by_group">
-                                <tr style="border-bottom:1px solid #dddddd;">
-                                    <t t-if="amount_by_group[3] == 1 and sale_order.amount_untaxed == amount_by_group[2]">
-                                        <td>
-                                            <span t-esc="amount_by_group[0]"/>
-                                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/></span>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="amount_by_group[1]"
-                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
-                                        </td>
-                                    </t>
-                                    <t t-else ="">
-                                        <td>
-                                            <span t-esc="amount_by_group[0]"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="amount_by_group[1]"
-                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
-                                        </td>
-                                    </t>
-                                </tr>
-                            </t>
-                            <tr class="border-black">
-                                <td><strong>Total</strong></td>
-                                <td class="text-right">
-                                    <span data-id="total_amount" t-field="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
-                                </td>
-                            </tr>
-                        </table>
+                        <t t-call="sale.sale_order_portal_content_totals_table"/>
                     </div>
                 </div>
             </section>
