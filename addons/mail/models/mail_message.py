@@ -876,9 +876,4 @@ class Message(models.Model):
 
         channels_sudo._notify(self)
 
-        # Discard cache, because child / parent allow reading and therefore
-        # change access rights.
-        if self.parent_id:
-            self.parent_id.invalidate_cache()
-
         return True
