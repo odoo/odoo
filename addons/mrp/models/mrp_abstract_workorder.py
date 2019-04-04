@@ -28,6 +28,12 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
+        """ Modify the qty currently producing will modify the existing
+        workorder line in order to match the new quantity to consume for each
+        component and their reserved quantity.
+        """
+        if self.qty_producing <= 0:
+            raise UserError(_('You have to produce at least one %s.') % self.product_uom_id.name)
         line_values = self._update_workorder_lines()
         for vals in line_values['to_create']:
             self.workorder_line_ids |= self.workorder_line_ids.new(vals)
