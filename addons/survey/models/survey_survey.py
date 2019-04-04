@@ -346,7 +346,7 @@ class Survey(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def next_page_or_question(self, user_input, page_or_question_id, go_back=False):
+    def next_page_or_question(self, user_input, page_or_question_id):
         """ The next page to display to the user, knowing that page_id is the id
             of the last displayed page.
 
@@ -383,11 +383,8 @@ class Survey(models.Model):
         current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
 
         # All the pages have been displayed
-        if current_page_index == len(pages_or_questions) - 1 and not go_back:
+        if current_page_index == len(pages_or_questions) - 1:
             return (None, False)
-        # Let's get back, baby!
-        elif go_back and survey.users_can_go_back:
-            return (pages_or_questions[current_page_index - 1][1], False)
         else:
             # This will show the last page
             if current_page_index == len(pages_or_questions) - 2:
@@ -395,6 +392,30 @@ class Survey(models.Model):
             # This will show a regular page
             else:
                 return (pages_or_questions[current_page_index + 1][1], False)
+
+    def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
+        questions, page_or_question_id = None, None
+
+        if self.questions_layout == 'page_per_section':
+            if not page_id:
+                raise ValueError("Page id is needed for question layout 'page_per_section'")
+            page_id = int(page_id)
+            questions = self.env['survey.question'].sudo().search([('survey_id', '=', self.id), ('page_id', '=', page_id)])
+            page_or_question_id = page_id
+        elif self.questions_layout == 'page_per_question':
+            if not question_id:
+                raise ValueError("Question id is needed for question layout 'page_per_question'")
+            question_id = int(question_id)
+            questions = self.env['survey.question'].sudo().browse(question_id)
+            page_or_question_id = question_id
+        else:
+            questions = self.question_ids
+
+        # we need the intersection of the questions of this page AND the questions prepared for that user_input
+        # (because randomized surveys do not use all the questions of every page)
+        if answer:
+            questions = questions & answer.question_ids
+        return questions, page_or_question_id
 
     def action_draft(self):
         self.write({'state': 'draft'})

@@ -215,7 +215,9 @@ class SurveyCase(common.SavepointCase):
         return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
 
     def _access_submit(self, survey, token, post_data):
-        return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
