@@ -259,14 +259,14 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 float_round(self.qty_producing, precision_rounding=rounding)
             )
 
-    def _update_raw_moves(self):
+    def _update_moves(self):
         """ Once the production is done. Modify the workorder lines into
         stock move line with the registered lot and quantity done.
         """
         # Before writting produce quantities, we ensure they respect the bom strictness
         self._strict_consumption_check()
         vals_list = []
-        workorder_lines_to_process = self.workorder_line_ids.filtered(lambda line: line.qty_done > 0)
+        workorder_lines_to_process = self.workorder_line_ids.filtered(lambda line: line.product_id != self.product_id and line.qty_done > 0)
         for line in workorder_lines_to_process:
             line._update_move_lines()
             if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
