@@ -948,8 +948,9 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
-    plus_tag_ids = fields.Many2many(string="Plus Tax Grids", relation='account_tax_repatition_plus_tags', comodel_name='account.tax.report.line', copy=True, help="Tag template whose '+' child will be assigned to move lines by this repartition line")
-    minus_tag_ids = fields.Many2many(string="Minus Tax Grids", relation='account_tax_repatition_minus_tags', comodel_name='account.tax.report.line', copy=True, help="Tag template whose '-' child will be assigned to move lines by this repartition line")
+    plus_tag_ids = fields.Many2many(string="Plus Tax Grids", relation='account_tax_repartition_plus_tags', comodel_name='account.tax.report.line', copy=True, help="Tag template whose '+' child will be assigned to move lines by this repartition line")
+    minus_tag_ids = fields.Many2many(string="Minus Tax Grids", relation='account_tax_repartition_minus_tags', comodel_name='account.tax.report.line', copy=True, help="Tag template whose '-' child will be assigned to move lines by this repartition line")
+    financial_tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
     invoice_tax_template_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_template_id")
     refund_tax_template_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_template_id")
 
@@ -960,6 +961,9 @@ class AccountTaxRepartitionLineTemplate(models.Model):
 
         if vals.get('minus_tag_ids'):
             vals['minus_tag_ids'] = self._convert_tag_syntax_to_orm(vals['minus_tag_ids'])
+
+        if vals.get('financial_tag_ids'):
+            vals['financial_tag_ids'] = self._convert_tag_syntax_to_orm(vals['financial_tag_ids'])
 
         return super(AccountTaxRepartitionLineTemplate, self).create(vals)
 
@@ -987,6 +991,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
             tags_to_add = self.env['account.account.tag']
             tags_to_add += record.plus_tag_ids.mapped('children_tag_ids').filtered(lambda x: not x.tax_negate)
             tags_to_add += record.minus_tag_ids.mapped('children_tag_ids').filtered(lambda x: x.tax_negate)
+            tags_to_add += record.financial_tag_ids
 
             rslt.append((0, 0, {
                 'factor_percent': record.factor_percent,
