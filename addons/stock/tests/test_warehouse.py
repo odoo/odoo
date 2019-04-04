@@ -3,8 +3,8 @@
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 
-class TestWarehouse(TestStockCommon):
 
+class TestWarehouse(TestStockCommon):
     def test_inventory_product(self):
         self.product_1.type = 'product'
         inventory_wizard = self.env['stock.change.product.qty'].create({
@@ -574,22 +574,3 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(warehouse.pick_type_id.active)
         self.assertTrue(warehouse.pack_type_id.active)
 
-class TestResupply(TestStockCommon):
-    def setUp(self):
-        super(TestResupply, self).setUp()
-
-        self.warehouse_2 = self.env['stock.warehouse'].create({
-            'name': 'Small Warehouse',
-            'code': 'SWH',
-            'resupply_wh_ids': [(6, 0, [self.warehouse_1.id])]
-        })
-
-        # minimum stock rule for test product on this warehouse
-        self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': self.warehouse_2.id,
-            'location_id': self.warehouse_2.lot_stock_id.id,
-            'product_id': self.product_1.id,
-            'product_min_qty': 10,
-            'product_max_qty': 100,
-            'product_uom': self.uom_unit.id,
-        })

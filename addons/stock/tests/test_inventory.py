@@ -1,27 +1,28 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestInventory(TransactionCase):
-    def setUp(self):
-        super(TestInventory, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.pack_location = self.env.ref('stock.location_pack_zone')
-        self.pack_location.active = True
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product1 = self.env['product.product'].create({
+class TestInventory(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestInventory, cls).setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.pack_location = cls.env.ref('stock.location_pack_zone')
+        cls.pack_location.active = True
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        self.product2 = self.env['product.product'].create({
+        cls.product2 = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
             'tracking': 'serial',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
     def test_inventory_1(self):
