@@ -109,7 +109,16 @@ class ProductProduct(models.Model):
                     move = AccountMove.create(move_vals)
                     move.post()
 
+        tracking_value_ids = [(0, 0,
+            {'company_id': self.env.user.company_id.id,
+            'old_value_float': self.standard_price,
+            'field_type': 'float', 'field': 'standard_price',
+            'new_value_float': new_price, 'field_desc': _('Cost')})]
+
         self.write({'standard_price': new_price})
+        for product in self:
+            if len(product.product_tmpl_id.product_variant_ids) == 1:
+                product.product_tmpl_id._message_log(tracking_value_ids=tracking_value_ids)
         return True
 
     def _get_fifo_candidates_in_move(self):
