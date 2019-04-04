@@ -12,6 +12,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.tools import float_compare, pycompat
 
 
+
 class ProductCategory(models.Model):
     _name = "product.category"
     _description = "Product Category"
@@ -506,7 +507,10 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self.seller_ids:
+        sellers = self.seller_ids
+        if self.env.context.get('force_company'):
+            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
