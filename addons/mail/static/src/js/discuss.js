@@ -1461,8 +1461,9 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {Object} messageData
+     * @param {Function} callback
      */
-    _onPostMessage: function (messageData) {
+    _onPostMessage: function (messageData, callback) {
         var self = this;
         var options = {};
         if (this._selectedMessage) {
@@ -1483,6 +1484,7 @@ var Discuss = AbstractAction.extend({
                 } else {
                     self._threadWidget.scrollToBottom();
                 }
+                callback();
             });
     },
     /**
