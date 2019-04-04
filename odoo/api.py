@@ -726,19 +726,21 @@ class Environment(Mapping):
         """
         cls._local.environments = Environments()
 
-    def __new__(cls, cr, uid, context):
+    def __new__(cls, cr, uid, context, real_uid=None):
         assert context is not None
         args = (cr, uid, context)
+        real_uid = uid if real_uid is None else real_uid
 
         # if env already exists, return it
         env, envs = None, cls.envs
         for env in envs:
-            if env.args == args:
+            if env.args == args and env.real_uid == real_uid:
                 return env
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
+        self.real_uid = real_uid
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
         self._protected = defaultdict(frozenset)    # {field: ids, ...}
@@ -786,7 +788,7 @@ class Environment(Mapping):
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
-        return Environment(cr, uid, context)
+        return Environment(cr, uid, context, self.real_uid)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ return the record corresponding to the given ``xml_id`` """
