@@ -496,14 +496,14 @@ class account_payment(models.Model):
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
-        if not self.invoice_ids:
+        if not self.invoice_ids and not self.partner_type:
             # Set default partner type for the payment type
             if self.payment_type == 'inbound':
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
-            else:
-                self.partner_type = False
+        elif self.payment_type not in ('inbound', 'outbound'):
+            self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
@@ -665,9 +665,7 @@ class account_payment(models.Model):
         if any(len(record.invoice_ids) != 1 for record in self):
             # For multiple invoices, there is account.register.payments wizard
             raise UserError(_("This method should only be called to process a single invoice's payment."))
-        res = self.post()
-        self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
-        return res
+        return self.post()
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.

@@ -7,33 +7,4 @@
     </graph>
 </t>
 
-<t t-name="web.Chart.Tooltip">
-    <table>
-        <thead>
-            <tr>
-                <td colspan="3">
-                    <strong class="x-value">
-                        <t t-esc="title"/>
-                    </strong>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <t t-foreach="lines" t-as="line">
-                <tr>
-                    <td class="legend-color-guide">
-                        <div t-att-style="'background-color:' + line.color +';'"/>
-                    </td>
-                    <td class="key">
-                        <t t-esc="line.label"/>
-                    </td>
-                    <td class="value">
-                        <t t-esc="line.value &amp;&amp; window.parseFloat(line.value).toFixed(2) || 0"/>
-                    </td>
-                </tr>
-            </t>
-        </tbody>
-    </table>
-</t>
-
 </template>

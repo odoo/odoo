@@ -1086,7 +1086,7 @@ class AccountMoveLine(models.Model):
             writeoff_moves += writeoff_move
             # writeoff_move.post()
 
-            line_to_reconcile += writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
+            line_to_reconcile += writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id).sorted(key='id')[-1:]
         if writeoff_moves:
             writeoff_moves.post()
         # Return the writeoff move.line which is to be reconciled
@@ -1350,38 +1350,48 @@ class AccountMoveLine(models.Model):
     def create_analytic_lines(self):
         """ Create analytic items upon validation of an account.move.line having an analytic account or an analytic distribution.
         """
+        lines_to_create_analytic_entries = self.env['account.move.line']
         for obj_line in self:
             for tag in obj_line.analytic_tag_ids.filtered('active_analytic_distribution'):
                 for distribution in tag.analytic_distribution_ids:
                     vals_line = obj_line._prepare_analytic_distribution_line(distribution)
                     self.env['account.analytic.line'].create(vals_line)
             if obj_line.analytic_account_id:
-                vals_line = obj_line._prepare_analytic_line()[0]
-                self.env['account.analytic.line'].create(vals_line)
+                lines_to_create_analytic_entries |= obj_line
 
-    @api.one
+        # create analytic entries in batch
+        if lines_to_create_analytic_entries:
+            values_list = lines_to_create_analytic_entries._prepare_analytic_line()
+            self.env['account.analytic.line'].create(values_list)
+
+    @api.multi
     def _prepare_analytic_line(self):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             an analytic account. This method is intended to be extended in other modules.
+            :return list of values to create analytic.line
+            :rtype list
         """
-        amount = (self.credit or 0.0) - (self.debit or 0.0)
-        default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
-        return {
-            'name': default_name,
-            'date': self.date,
-            'account_id': self.analytic_account_id.id,
-            'tag_ids': [(6, 0, self._get_analytic_tag_ids())],
-            'unit_amount': self.quantity,
-            'product_id': self.product_id and self.product_id.id or False,
-            'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': amount,
-            'general_account_id': self.account_id.id,
-            'ref': self.ref,
-            'move_id': self.id,
-            'user_id': self.invoice_id.user_id.id or self._uid,
-            'partner_id': self.partner_id.id,
-            'company_id': self.analytic_account_id.company_id.id or self.env.user.company_id.id,
-        }
+        result = []
+        for move_line in self:
+            amount = (move_line.credit or 0.0) - (move_line.debit or 0.0)
+            default_name = move_line.name or (move_line.ref or '/' + ' -- ' + (move_line.partner_id and move_line.partner_id.name or '/'))
+            result.append({
+                'name': default_name,
+                'date': move_line.date,
+                'account_id': move_line.analytic_account_id.id,
+                'tag_ids': [(6, 0, move_line._get_analytic_tag_ids())],
+                'unit_amount': move_line.quantity,
+                'product_id': move_line.product_id and move_line.product_id.id or False,
+                'product_uom_id': move_line.product_uom_id and move_line.product_uom_id.id or False,
+                'amount': amount,
+                'general_account_id': move_line.account_id.id,
+                'ref': move_line.ref,
+                'move_id': move_line.id,
+                'user_id': move_line.invoice_id.user_id.id or self._uid,
+                'partner_id': move_line.partner_id.id,
+                'company_id': move_line.analytic_account_id.company_id.id or self.env.user.company_id.id,
+            })
+        return result
 
     def _prepare_analytic_distribution_line(self, distribution):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having

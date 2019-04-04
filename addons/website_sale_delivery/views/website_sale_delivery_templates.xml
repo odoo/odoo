@@ -6,7 +6,7 @@
             <tr id="order_delivery" t-if="website_sale_order and website_sale_order.carrier_id">
               <td class="text-right noborder text-muted"  title="Delivery will be updated after choosing a new delivery method">Delivery:</td>
               <td class="text-xl-right noborder text-muted" >
-                   <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
+                   <span t-field="website_sale_order.amount_delivery" class="monetary_field" style="white-space: nowrap;" t-options='{
                       "widget": "monetary",
                       "display_currency": website_sale_order.currency_id,
                   }'/>
@@ -31,8 +31,7 @@
             <span t-else="" t-att-class="badge_class">Free</span>
         </t>
         <t t-else="">
-            <span t-attf-class="#{badge_class} d-none" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
-            <span t-attf-class="#{badge_class} o_delivery_compute">Select to compute delivery rate</span>
+            <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
         </t>
         <t t-if="delivery.website_description">
             <div t-field="delivery.website_description" class="text-muted mt8"/>

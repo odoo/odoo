@@ -203,6 +203,7 @@ var MockServer = Class.extend({
         var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
+        var groupbyNodes = {};
 
         var doc;
         if (typeof arch === 'string') {
@@ -220,6 +221,7 @@ var MockServer = Class.extend({
             var modifiers = {};
 
             var isField = (node.tagName === 'field');
+            var isGroupby = (node.tagName === 'groupby');
 
             if (isField) {
                 var fieldName = node.getAttribute('name');
@@ -251,6 +253,10 @@ var MockServer = Class.extend({
                         modifiers[attr] = defaultValue;
                     }
                 });
+            } else if (isGroupby && !node._isProcessed) {
+                var groupbyName = node.getAttribute('name');
+                fieldNodes[groupbyName] = node;
+                groupbyNodes[groupbyName] = node;
             }
 
             // 'transfer_node_to_modifiers' simulation
@@ -290,6 +296,10 @@ var MockServer = Class.extend({
                 node.setAttribute('modifiers', JSON.stringify(modifiers));
             }
 
+            if (isGroupby && !node._isProcessed) {
+                return false;
+            }
+
             return !isField;
         });
 
@@ -316,6 +326,21 @@ var MockServer = Class.extend({
             if (name in onchanges) {
                 node.setAttribute('on_change', "1");
             }
+        });
+        _.each(groupbyNodes, function (node, name) {
+            var field = fields[name];
+            if (field.type !== 'many2one') {
+                throw new Error('groupby can only target many2one');
+            }
+            field.views = {};
+            relModel = field.relation;
+            relFields = $.extend(true, {}, self.data[relModel].fields);
+            node._isProcessed = true;
+            // postprocess simulation
+            field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
+            node.childNodes.forEach(function (child) {
+                node.removeChild(child);
+            });
         });
 
         var xmlSerializer = new XMLSerializer();
@@ -808,7 +833,8 @@ var MockServer = Class.extend({
      * @param {string[]} kwargs.fields fields that we are aggregating
      * @param {Array} kwargs.domain the domain used for the read_group
      * @param {boolean} kwargs.lazy still mostly ignored
-     * @param {integer} kwargs.limit ignored as well
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
      * @returns {Object[]}
      */
     _mockReadGroup: function (model, kwargs) {
@@ -877,6 +903,8 @@ var MockServer = Class.extend({
                     return moment(val).format('YYYY-MM-DD');
                 } else if (aggregateFunction === 'week') {
                     return moment(val).format('ww YYYY');
+                } else if (aggregateFunction === 'quarter') {
+                    return 'Q' + moment(val).format('Q YYYY');
                 } else if (aggregateFunction === 'year') {
                     return moment(val).format('Y');
                 } else {
@@ -978,6 +1006,11 @@ var MockServer = Class.extend({
                 }
                 return 0;
             });
+        }
+
+        if (kwargs.limit) {
+            var offset = kwargs.offset || 0;
+            result = result.slice(offset, kwargs.limit + offset);
         }
 
         return result;
@@ -1163,6 +1196,51 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Simulate a 'web_read_group' call to the server.
+     *
+     * Note: some keys in kwargs are still ignored
+     *
+     * @private
+     * @param {string} model a string describing an existing model
+     * @param {Object} kwargs various options supported by read_group
+     * @param {string[]} kwargs.groupby fields that we are grouping
+     * @param {string[]} kwargs.fields fields that we are aggregating
+     * @param {Array} kwargs.domain the domain used for the read_group
+     * @param {boolean} kwargs.lazy still mostly ignored
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
+     * @param {boolean} [kwargs.expand=false] if true, read records inside each
+     *   group
+     * @param {integer} [kwargs.expand_limit]
+     * @param {integer} [kwargs.expand_orderby]
+     * @returns {Object[]}
+     */
+    _mockWebReadGroup: function (model, kwargs) {
+        var self = this;
+        var groups = this._mockReadGroup(model, kwargs);
+        if (kwargs.expand && kwargs.groupby.length === 1) {
+            groups.forEach(function (group) {
+                group.__data = self._mockSearchReadController({
+                    domain: group.__domain,
+                    model: model,
+                    fields: kwargs.fields,
+                    limit: kwargs.expand_limit,
+                    order: kwargs.expand_orderby,
+                });
+            });
+        }
+        var allGroups = this._mockReadGroup(model, {
+            domain: kwargs.domain,
+            fields: ['display_name'],
+            groupby: kwargs.groupby,
+            lazy: kwargs.lazy,
+        });
+        return {
+            groups: groups,
+            length: allGroups.length,
+        };
+    },
+    /**
      * Simulate a 'write' operation
      *
      * @private
@@ -1240,6 +1318,9 @@ var MockServer = Class.extend({
 
             case 'read_group':
                 return Promise.resolve(this._mockReadGroup(args.model, args.kwargs));
+
+            case 'web_read_group':
+                return Promise.resolve(this._mockWebReadGroup(args.model, args.kwargs));
 
             case 'read_progress_bar':
                 return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));

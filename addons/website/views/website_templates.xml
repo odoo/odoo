@@ -1027,12 +1027,18 @@
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+            <style>
+                html {
+                    font-size: 14px;
+                }
+            </style>
 
-            <t t-if='views'>
+            <t t-if='view'>
                 <script>
                     $(document).ready(function() {
-                        var button = $('#reset_templates_button');
+                        var button = $('.reset_templates_button');
                         button.click(function() {
+                            $('#reset_templates_mode').val($(this).data('mode'));
                             var dialog = $('#reset_template_confirmation').modal('show');
                             var input = dialog.find('input[type="text"]').val('').focus();
                             var dialog_form = dialog.find('form');
@@ -1040,10 +1046,8 @@
                                 if (input.val() == dialog.find('.confirm_word').text()) {
                                     dialog.modal('hide');
                                     button.prop('disabled', true).text('Working...');
-                                    if ($("input[name='templates']:checked").length) {
-                                        $('#reset_templates_form').attr('action', '/website/reset_templates');
-                                        $('#reset_templates_form').trigger('submit');
-                                    }
+                                    $('#reset_templates_form').attr('action', '/website/reset_template');
+                                    $('#reset_templates_form').trigger('submit');
                                 } else {
                                     input.val('').focus();
                                 }
@@ -1056,18 +1060,22 @@
             </t>
         </head>
         <body>
-            <div t-if="views" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
+            <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
                 <div class="modal-dialog">
                     <form role="form">
                         <div class="modal-content">
                             <header class="modal-header">
-                                <h3 class="modal-title">Reset templates</h3>
+                                <h4 class="modal-title">Reset templates</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body">
                                 <div class="form-group row mb0">
-                                    <label for="page-name" class="col-md-9 col-form-label">
+                                    <label for="page-name" class="col-md-12 col-form-label">
                                         <p>The selected templates will be reset to their factory settings.</p>
+                                    </label>
+                                </div>
+                                <div class="form-group row mb0">
+                                    <label for="page-name" class="col-md-9 col-form-label">
                                         <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
                                     </label>
                                     <div class="col-md-3 mt16">
@@ -1099,27 +1107,26 @@
                 </header>
                 <main>
                     <div class="oe_structure">
-                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                        <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
                     </div>
-                    <div class="container" t-if="views and editable">
+                    <div class="container" t-if="view and editable">
                         <div class="alert alert-danger" t-if="debug" role="alert">
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
-                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
+                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
                             <form action="#" method="post" id="reset_templates_form">
-                                <ul class="oe_template_fallback">
-                                    <li t-foreach="views" t-as="view">
+                                <ul>
+                                    <li>
                                         <label>
-                                            <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
                                             <t t-esc="view.name"/>
-                                            <span t-if="not view._get_original_view()" class="text-danger">
-                                                (!!! This view will be removed )
-                                            </span>
                                         </label>
                                     </li>
                                 </ul>
                                 <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <button id="reset_templates_button">Reset selected templates</button>
+                                <input type="hidden" id="reset_templates_view_id" name="view_id" t-att-value="view.id"/>
+                                <input type="hidden" id="reset_templates_mode" name="mode"/>
+                                <button data-mode="soft" class="reset_templates_button btn btn-info">Restore previous version (soft reset).</button>
+                                <button t-if="view.arch_fs" data-mode="hard" class="reset_templates_button btn btn-outline-danger">Reset to initial version (hard reset).</button>
                             </form>
                         </div>
                     </div>

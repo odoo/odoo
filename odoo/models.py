@@ -3102,6 +3102,9 @@ Fields:
         if self._uid == SUPERUSER_ID:
             return self
 
+        if not self._ids:
+            return self
+
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
@@ -3189,7 +3192,7 @@ Fields:
                 cr.execute(query, (self._name, sub_ids))
                 attachments = Attachment.browse([row[0] for row in cr.fetchall()])
                 if attachments:
-                    attachments.unlink()
+                    attachments.sudo().unlink()
 
                 if any(field.translate for field in self._fields.values()):
                     # For the same reason, remove the relevant records in ir_translation

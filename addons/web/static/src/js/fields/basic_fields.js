@@ -444,7 +444,6 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
-
 var LinkButton = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'click': '_onClick'
@@ -483,7 +482,6 @@ var LinkButton = AbstractField.extend({
         event.stopPropagation();
         window.open(this.value, '_blank');
     },
-
 });
 
 var FieldDate = InputField.extend({
@@ -1114,6 +1112,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         if (this.mode === 'edit') {
             this.tagName = 'textarea';
         }
+        this.autoResizeOptions = {parent: this};
     },
     /**
      * As it it done in the start function, the autoresize is done only once.
@@ -1122,7 +1121,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     start: function () {
         if (this.mode === 'edit') {
-            dom.autoresize(this.$el, {parent: this});
+            dom.autoresize(this.$el, this.autoResizeOptions);
 
             this.$el = this.$el.add(this._renderTranslateButton());
         }
@@ -1159,11 +1158,22 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
+var ListFieldText = FieldText.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.autoResizeOptions.min_height = 0;
+    },
+});
+
 /**
  * Displays a handle to modify the sequence.
  */
 var HandleWidget = AbstractField.extend({
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    widthFactor: 0,
     tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
@@ -2483,35 +2493,16 @@ var FieldToggleBoolean = AbstractField.extend({
 
 var JournalDashboardGraph = AbstractField.extend({
     className: "o_dashboard_graph",
-    cssLibs: [
-        '/web/static/lib/nvd3/nv.d3.css'
-    ],
     jsLibs: [
-        '/web/static/lib/nvd3/d3.v3.js',
-        '/web/static/lib/nvd3/nv.d3.js',
-        '/web/static/src/js/libs/nvd3.js'
+        '/web/static/lib/Chart/Chart.js',
     ],
     init: function () {
         this._super.apply(this, arguments);
         this.graph_type = this.attrs.graph_type;
         this.data = JSON.parse(this.value);
     },
-    start: function () {
-        this._onResize = this._onResize.bind(this);
-        nv.utils.windowResize(this._onResize);
-        return this._super.apply(this, arguments);
-    },
-    destroy: function () {
-        if ('nv' in window && nv.utils && nv.utils.offWindowResize) {
-            // if the widget is destroyed before the lazy loaded libs (nv) are
-            // actually loaded (i.e. after the widget has actually started),
-            // nv is undefined, but the handler isn't bound yet anyway
-            nv.utils.offWindowResize(this._onResize);
-        }
-        this._super.apply(this, arguments);
-    },
     /**
-     * The widget view uses the nv(d3) lib to render the graph. This lib
+     * The widget view uses the ChartJS lib to render the graph. This lib
      * requires that the rendering is done directly into the DOM (so that it can
      * correctly compute positions). However, the views are always rendered in
      * fragments, and appended to the DOM once ready (to prevent them from
@@ -2535,23 +2526,7 @@ var JournalDashboardGraph = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     */
-    _customizeChart: function () {
-        if (this.graph_type === 'bar') {
-            // Add classes related to time on each bar of the bar chart
-            var bar_classes = _.map(this.data[0].values, function (v) {return v.type; });
-
-            _.each(this.$('.nv-bar'), function (v, k){
-                // classList doesn't work with phantomJS & addClass doesn't work with a SVG element
-                $(v).attr('class', $(v).attr('class') + ' ' + bar_classes[k]);
-            });
-        }
-    },
-    /**
-     * Render the widget only when it is in the DOM. This is because nvd3
-     * renders graph only when it is in DOM, apparently to compute available
-     * height and width for instance.
+     * Render the widget only when it is in the DOM.
      *
      * @override
      * @private
@@ -2568,89 +2543,101 @@ var JournalDashboardGraph = AbstractField.extend({
      * @private
      */
     _renderInDOM: function () {
-        // note: the rendering of this widget is aynchronous as nvd3 does a
-        // setTimeout(0) before executing the callback given to addGraph
-        var self = this;
         this.$el.empty();
-        this.chart = null;
-        nv.addGraph(function () {
-            self.$svg = self.$el.append('<svg>');
-            switch (self.graph_type) {
-                case "line":
-                    self.$svg.addClass('o_graph_linechart');
-
-                    self.chart = nv.models.lineChart();
-                    self.chart.forceY([0]);
-                    self.chart.options({
-                        x: function (d, u) { return u; },
-                        margin: {'left': 0, 'right': 0, 'top': 5, 'bottom': 0},
-                        showYAxis: false,
-                        showLegend: false,
-                    });
-                    self.chart.xAxis.tickFormat(function (d) {
-                        var label = '';
-                        _.each(self.data, function (v){
-                            if (v.values[d] && v.values[d].x){
-                                label = v.values[d].x;
-                            }
-                        });
-                        return label;
-                    });
-                    self.chart.yAxis.tickFormat(d3.format(',.2f'));
-
-                    self.chart.tooltip.contentGenerator(function (key) {
-                        return qweb.render('GraphCustomTooltip', {
-                            'color': key.point.color,
-                            'key': self.data[0].key,
-                            'value': d3.format(',.2f')(key.point.y)
-                        });
-                    });
-                    break;
-
-                case "bar":
-                    self.$svg.addClass('o_graph_barchart');
-
-                    self.chart = nv.models.discreteBarChart()
-                        .x(function (d) { return d.label; })
-                        .y(function (d) { return d.value; })
-                        .showValues(false)
-                        .showYAxis(false)
-                        .color(['#875A7B', '#526774', '#FA8072'])
-                        .margin({'left': 0, 'right': 0, 'top': 20, 'bottom': 20});
-
-                    self.chart.xAxis.axisLabel(self.data[0].title);
-                    self.chart.yAxis.tickFormat(d3.format(',.2f'));
-
-                    self.chart.tooltip.contentGenerator(function (key) {
-                        return qweb.render('GraphCustomTooltip', {
-                            'color': key.color,
-                            'key': self.data[0].key,
-                            'value': d3.format(',.2f')(key.data.value)
-                        });
-                    });
-                    break;
-            }
-            d3.select(self.$('svg')[0])
-                .datum(self.data)
-                .transition().duration(600)
-                .call(self.chart);
-
-            self._customizeChart();
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onResize: function () {
-        if (this.chart) {
-            this.chart.update();
-            this._customizeChart();
+        var config, cssClass;
+        if (this.graph_type === 'line') {
+            config = this._getLineChartConfig();
+            cssClass = 'o_graph_linechart';
+        } else if (this.graph_type === 'bar') {
+            config = this._getBarChartConfig();
+            cssClass = 'o_graph_barchart';
         }
+        this.$canvas = $('<canvas/>');
+        this.$el.addClass(cssClass);
+        this.$el.empty();
+        this.$el.append(this.$canvas);
+        var context = this.$canvas[0].getContext('2d');
+        this.chart = new Chart(context, config);
+    },
+    _getLineChartConfig: function () {
+        var labels = this.data[0].values.map(function (pt) {
+            return pt.x;
+        });
+        var borderColor = this.data[0].is_sample_data ? '#dddddd' : '#875a7b';
+        var backgroundColor = this.data[0].is_sample_data ? '#ebebeb' : '#dcd0d9';
+        return {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: this.data[0].values,
+                    fill: 'start',
+                    label: this.data[0].key,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    yAxes: [{display: false}],
+                    xAxes: [{display: false}]
+                },
+                maintainAspectRatio: false,
+                elements: {
+                    line: {
+                        tension: 0.000001
+                    }
+                },
+                tooltips: {
+                    intersect: false,
+                    position: 'nearest',
+                    caretSize: 0,
+                },
+            },
+        };
+    },
+    _getBarChartConfig: function () {
+        var data = [];
+        var labels = [];
+        var backgroundColor = [];
+
+        this.data[0].values.forEach(function (pt) {
+            data.push(pt.value);
+            labels.push(pt.label);
+            var color = pt.type === 'past' ? '#ccbdc8' : (pt.type === 'future' ? '#a5d8d7' : '#ebebeb');
+            backgroundColor.push(color);
+        });
+        return {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    fill: 'start',
+                    label: this.data[0].key,
+                    backgroundColor: backgroundColor,
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    yAxes: [{display: false}],
+                },
+                maintainAspectRatio: false,
+                tooltips: {
+                    intersect: false,
+                    position: 'nearest',
+                    caretSize: 0,
+                },
+                elements: {
+                    line: {
+                        tension: 0.000001
+                    }
+                },
+            },
+        };
     },
 });
 
@@ -3019,6 +3006,7 @@ return {
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
     FieldText: FieldText,
+    ListFieldText: ListFieldText,
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,

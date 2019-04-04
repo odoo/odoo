@@ -2,7 +2,7 @@
 <odoo>
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Sale Stock">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_sale_stock/static/src/js/product_configurator_mixin.js" />
+            <script type="text/javascript" src="/website_sale_stock/static/src/js/variant_mixin.js" />
         </xpath>
     </template>
 
@@ -55,17 +55,6 @@
           </div>
         </t>
     </xpath>
-  </template>
-
-  <template id="website_sale_stock_modal" inherit_id="sale.product_configurator_configure_optional_products" name="Stocks Modal">
-        <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
-          <attribute name='t-att-data-max'>max(product.sudo().virtual_available - product.cart_qty, 1) if handle_stock and product.type == "product" and product.inventory_availability in ["always", "threshold"] else None</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('css_quantity')]" position="after">
-          <t t-if="handle_stock">
-            <div class='availability_messages'/>
-          </t>
-        </xpath>
   </template>
 
 </odoo>

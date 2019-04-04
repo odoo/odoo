@@ -285,6 +285,68 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('focus when closing many2one modal in many2one modal', async function (assert) {
+        assert.expect(12);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="trululu"/>' +
+                  '</form>',
+            res_id: 2,
+            archs: {
+                'partner,false,form': '<form><field name="trululu"/></form>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Open many2one modal
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_external_button'));
+
+        var $originalModal = $('.modal-dialog');
+        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($originalModal.length, 1, 'There should be one modal');
+        assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Open many2one modal of field in many2one modal
+        await testUtils.dom.click($originalModal.find('.o_external_button'));
+        var $modals = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modals.length, 2, 'There should be two modals');
+        assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close second modal
+        await testUtils.dom.click($modals.last().find('button[class="close"]'));
+        var $modal = $('.modal-dialog');
+        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+
+        assert.equal($modal.length, 1, 'There should be one modal');
+        assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
+        assert.equal($modal[0], $focusedModal[0], 'Modal is focused');
+        assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
+
+        // Close first modal
+        await testUtils.dom.click($modal.find('button[class="close"]'));
+        $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 0, 'There should be no modal');
+        assert.notOk($('body').hasClass('modal-open'), 'Modal is not said opened');
+
+        form.destroy();
+    });
+
 
     QUnit.test('one2many from a model that has been sorted', async function (assert) {
         assert.expect(1);
@@ -2696,7 +2758,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
+            arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
                             '<field name="product_id"/>' +
@@ -2721,14 +2783,14 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
     });
@@ -2750,7 +2812,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form>' +
+            arch: '<form>' +
                     '<field name="bar"/>' +
                     '<field name="p">' +
                         '<tree editable="bottom">' +
@@ -2775,7 +2837,8 @@ QUnit.module('relational_fields', {
         await testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
         await testUtils.dom.click(form.$el);
 
-        assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
+            "should be 2 columns('foo' + 'int_field')");
 
         form.destroy();
     });
@@ -2788,7 +2851,7 @@ QUnit.module('relational_fields', {
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch:'<form string="Partners">' +
+            arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
                             '<field name="product_id"/>' +
@@ -2814,14 +2877,14 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
     });

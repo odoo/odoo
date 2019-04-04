@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_coupon_view_tree" model="ir.ui.view">
+        <field name="name">sale.coupon.tree</field>
+        <field name="model">sale.coupon</field>
+        <field name="arch" type="xml">
+            <tree string="Coupons" create="false" edit="false" delete="false">
+                <field name="code"/>
+                <field name="expiration_date"/>
+                <field name="program_id"/>
+                <field name="partner_id"/>
+                <field name="order_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_coupon_action" model="ir.actions.act_window">
+        <field name="name">Coupons</field>
+        <field name="res_model">sale.coupon</field>
+        <field name="view_id" ref="sale_coupon_view_tree"/>
+        <field name="domain">[('program_id', '=', active_id)]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <record id="sale_coupon_view_form" model="ir.ui.view">
+        <field name="name">sale.coupon.form</field>
+        <field name="model">sale.coupon</field>
+        <field name="arch" type="xml">
+            <form string="Coupons" create="false" edit="false" delete="false">
+                <header>
+                     <button name="action_coupon_sent" type="object" string="Send by Email" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,used,expired" context="{'state': state}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="expiration_date"/>
+                        <field name="partner_id"/>
+                        <field name="order_id"/>
+                        <field name="sales_order_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

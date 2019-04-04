@@ -51,7 +51,6 @@
                                 <field name="code"/>
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
                                 <field name="show_operations"/>
-                                <field name="show_reserved" attrs="{'invisible': [('show_operations', '!=', False)]}"/>
                             </group>
                         </group>
                         <group>
@@ -221,7 +220,6 @@
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
                     <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
                     <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
-                    <button name="action_cancel" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting')), ('is_locked', '=', False)]}" string="Cancel" groups="base.group_user" type="object"/>
                     <field name="picking_type_code" invisible="1"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', '|', '|', '|', ('picking_type_code', '=', 'incoming'), ('immediate_transfer', '=', True), ('is_locked', '=', False), '&amp;', ('state', 'not in', ('assigned', 'partially_available')), ('move_type', '!=', 'one'), '&amp;', ('state', 'not in', ('assigned', 'partially_available', 'confirmed')), ('move_type', '=', 'one')]}"/>
                     <field name="show_operations" invisible="1" readonly="1"/>
@@ -231,6 +229,7 @@
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>                    <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
                     <field name="picking_type_entire_packs" invisible="1"/>
+                    <button name="action_cancel" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting')), ('is_locked', '=', False)]}" string="Cancel" groups="base.group_user" type="object"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -329,7 +328,8 @@
                                 <group string="Other Information" name="other_infos">
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                                    <field name="priority"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="user_id"/>
                                     <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
@@ -355,6 +355,9 @@
             <field name="arch" type="xml">
                 <search string="Picking Lists">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter name="my_transfers" string="My Transfers" domain="[('user_id','=',uid)]"/>
+                    <filter name="unassigned_transfers" string="Unassigned Transfers" domain="[('user_id','=',False)]"/>
+                    <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
                     <filter name="waiting" string="Waiting" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
@@ -388,6 +391,21 @@
                         <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <!--
+            'Assign a Responsible' in action dropdown
+        -->
+        <record id="action_assign_a_responsible" model="ir.actions.server">
+            <field name="name">Assign a Responsible</field>
+            <field name="model_id" ref="model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">
+action_values = env.ref('stock.stock_assign_responsible_action').read()[0]
+action_values.update({'context': env.context})
+action = action_values
             </field>
         </record>
 

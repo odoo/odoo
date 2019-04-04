@@ -81,13 +81,6 @@
                 <xpath expr="//page[@name='sales']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
-                <xpath expr="//group[@name='sale']" position="after">
-                    <group name="options" groups="product.group_product_variant">
-                        <group string="Options">
-                            <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
-                        </group>
-                    </group>
-                </xpath>
             </field>
         </record>
 
@@ -379,10 +372,6 @@
                                     </div>
                                     <field name="state" invisible="1"/>
                                 </form>
-                                <!-- This is inherited below to make the order lines non-editable (inline)
-                                    for the members of some usability groups (packaging, event):
-                                    Indeed in those cases we need a dialog because there are additional fields to input.
-                                -->
                                 <tree
                                     string="Sales Order Lines"
                                     editable="bottom"
@@ -390,7 +379,6 @@
                                 >
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
-                                        <create name="configure_product_control" string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
@@ -417,8 +405,6 @@
                                             'default_description_sale': name
                                         }"
                                     />
-                                    <field name="product_custom_attribute_value_ids" invisible="1" />
-                                    <field name="product_no_variant_attribute_value_ids" invisible="1" />
                                     <field name="name" widget="section_and_note_text"/>
                                     <field
                                         name="product_uom_qty"
@@ -456,6 +442,7 @@
                                         groups="uom.group_uom"
                                         options='{"no_open": True}'
                                     />
+                                    <field name="customer_lead" />
                                     <field
                                         name="analytic_tag_ids"
                                         groups="analytic.group_analytic_tags"
@@ -477,7 +464,6 @@
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
-                                    <field name="customer_lead" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="price_tax" invisible="1"/>
                                 </tree>
@@ -598,20 +584,6 @@
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
-            </field>
-        </record>
-
-        <!-- inherited view to make the order lines list in the form non-editable
-             for the members of some usability groups -->
-        <record id="view_order_form_editable_list" model="ir.ui.view">
-            <field name="name">sale.order.form.editable.list</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="groups_id" eval="[(4, ref('product.group_stock_packaging'))]"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                    <attribute name="editable"/>
-                </xpath>
             </field>
         </record>
 

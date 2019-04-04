@@ -21,6 +21,11 @@ class PickingType(models.Model):
     _description = "Picking Type"
     _order = 'sequence, id'
 
+    def _default_show_operations(self):
+        return self.user_has_groups('stock.group_production_lot,'
+                                    'stock.group_stock_multi_locations,'
+                                    'stock.group_tracking_lot')
+
     name = fields.Char('Operation Type', required=True, translate=True)
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
@@ -45,10 +50,8 @@ class PickingType(models.Model):
         'Use Existing Lots/Serial Numbers', default=True,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     show_operations = fields.Boolean(
-        'Show Detailed Operations', default=False,
+        'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
-    show_reserved = fields.Boolean(
-        'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -134,11 +137,6 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
-    @api.onchange('show_operations')
-    def onchange_show_operations(self):
-        if self.show_operations is True:
-            self.show_reserved = True
-
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
@@ -218,7 +216,7 @@ class Picking(models.Model):
         # default='1', required=True,  # TDE: required, depending on moves ? strange
         index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
+        help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
         index=True, tracking=True,
@@ -265,6 +263,10 @@ class Picking(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('stock.picking'),
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    user_id = fields.Many2one(
+        'res.users', 'Responsible', tracking=True,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        default=lambda self: self.env.user)
 
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])

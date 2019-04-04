@@ -38,7 +38,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1" >
+                <tree string="Chart of accounts">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
@@ -279,6 +279,10 @@
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                    </group>
+                                    <group string="Invoice References" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                        <field name="invoice_reference_type"/>
+                                        <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
                                     </group>
                                     <group string="Accounting App Options">
                                         <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
@@ -962,7 +966,7 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
-                        <filter string="With tax" name="withtax" domain="[('tax_id','!=',False)]"/>
+                        <filter string="With tax" name="withtax" domain="[('tax_ids','!=',False)]"/>
                         <field name="amount_type"/>
                         <field name="journal_id"/>
                 </search>

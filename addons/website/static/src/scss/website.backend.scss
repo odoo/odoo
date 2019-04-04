@@ -61,65 +61,6 @@
                         text-align: left;
                     }
                 }
-
-                /*------------------------------------------*/
-                /*              Chart design                */
-                /*------------------------------------------*/
-
-                .gapi-analytics-data-chart svg g path, svg [class*="nv-series-"] {
-                    stroke: $o-main-color-muted !important;
-                }
-
-                svg {
-                    padding-top: 2px;
-                    float: left;
-
-                    g.nvd3.nv-wrap.nv-lineChart {
-                        transform: translate(45, 30); // FIXME was marked important before scss convertion
-                    }
-
-                    g.nv-x.nv-axis .tick > line {
-                        opacity: 0 !important;
-                    }
-
-                    .nv-groups {
-                        .nv-series-0 {
-                            stroke-width: 3 !important;
-                            .nv-point {
-                                stroke: $o-brand-primary;
-                                stroke-opacity: 1 !important;
-                                &.hover {
-                                    stroke: darken($o-brand-primary, 10%);
-                                }
-                            }
-                        }
-                        .nv-series-1 {
-                            .nv-point {
-                                stroke: $o-main-color-muted !important;
-                                stroke-opacity: 1 !important;
-                                &.hover {
-                                    stroke: darken($o-main-color-muted, 10%);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                .nvtooltip {
-                    border-radius: 0;
-                    border: 1px solid gray('200');
-                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-
-                    .legend-color-guide > div {
-                        border: none;
-                    }
-                    tr:first-child .legend-color-guide > div {
-                        background-color: $o-brand-primary !important;
-                    }
-                    tr:last-child .legend-color-guide > div {
-                        background-color: darken($o-brand-lightsecondary, 10%) !important;
-                    }
-                }
             }
         }
 
@@ -224,7 +165,6 @@
             .ActiveUsers {
                 position: relative;
                 float: right;
-                top: -60px;
                 right: 10px;
                 border: 1px solid gray('200');
                 font-weight: 300;

@@ -66,15 +66,19 @@ class MailTestFull(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     umbrella_id = fields.Many2one('mail.test', tracking=True)
 
-    def _track_template(self, tracking):
-        res = super(MailTestFull, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(MailTestFull, self)._track_template(changes)
         record = self[0]
-        changes, tracking_value_ids = tracking[record.id]
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
             res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
         return res
+
+    def _creation_subtype(self):
+        if self.umbrella_id:
+            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
+        return super(MailTestFull, self)._creation_subtype()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -124,3 +128,10 @@ class MailModel(models.Model):
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+
+class MailCC(models.Model):
+    _name = 'mail.test.cc'
+    _inherit = ['mail.thread.cc']
+
+    name = fields.Char()

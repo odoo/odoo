@@ -71,6 +71,11 @@ class AccountPayment(models.Model):
 
         return transactions
 
+    def action_validate_invoice_payment(self):
+        res = super(AccountPayment, self).action_validate_invoice_payment()
+        self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
+        return res
+
     @api.multi
     def post(self):
         # Post the payments "normally" if no transactions are needed.

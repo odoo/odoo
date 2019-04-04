@@ -39,21 +39,28 @@ tour.register('sale_tour', {
     content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
-    trigger: ".o_form_editable .o_field_many2one[name='product_id'] input",
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
-    run: 'text DESK0001'
-}, {
-    trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal: false,
     run: function (actions) {
-        actions.auto();
-        if ($('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').length) {
-            $('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').trigger('click');
-        }
+        actions.text("DESK0001", this.$anchor.find('input'));
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been created
+        $descriptionElement.change(function () {
+            $descriptionElement.addClass('product_creation_success');
+        });
     },
+    id: 'product_selection_step'
+}, {
+    trigger: '.o_m2o_dropdown_option a:contains("DESK0001")'
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_creation_success',
+    run: function () {} // wait for product creation
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_sale_order",

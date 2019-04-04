@@ -396,8 +396,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderView: function () {
         var self = this;
-        var oldWidgets = this.widgets;
-        this.widgets = [];
 
         // render the kanban view
         var isGrouped = !!this.state.groupedBy.length;
@@ -418,7 +416,6 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
                 self.$el.append(fragment);
                 self._toggleNoContentHelper();
-                _.invoke(oldWidgets, 'destroy');
                 if (self._isInDom) {
                     _.invoke(self.widgets, 'on_attach_callback');
                 }

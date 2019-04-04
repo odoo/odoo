@@ -21,6 +21,7 @@ var ChatterComposer = BasicComposer.extend({
     template: 'mail.chatter.Composer',
     events: _.extend({}, BasicComposer.prototype.events, {
         'click .o_composer_button_full_composer': '_onOpenFullComposer',
+        'click .o_suggested_show_more_less': '_onClickPartnerSuggestionsReadMoreLess',
     }),
     init: function (parent, model, suggestedPartners, options) {
         this._super(parent, options);
@@ -237,6 +238,14 @@ var ChatterComposer = BasicComposer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPartnerSuggestionsReadMoreLess: function (ev) {
+        ev.preventDefault();
+        this.$('.o_suggested_toggle').toggleClass('o_hidden');
+    },
     /**
      * @private
      */

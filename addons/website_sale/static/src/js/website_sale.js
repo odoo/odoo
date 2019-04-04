@@ -120,13 +120,16 @@ odoo.define('website_sale.website_sale', function (require) {
 
 var core = require('web.core');
 var config = require('web.config');
+var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 require("website.content.zoomodoo");
 
-publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfiguratorMixin, {
+var qweb = core.qweb;
+
+publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
-    events: _.extend({}, ProductConfiguratorMixin.events || {}, {
+    events: _.extend({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
@@ -139,10 +142,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .show_coupon': '_onClickShowCoupon',
-        'submit .o_website_sale_search': '_onSubmitSaleSearch',
+        'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
+        'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
@@ -198,7 +202,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
         if (combination) {
             return JSON.parse(combination);
         }
-        return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
+        return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -326,7 +330,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             return parseInt($parent.find('input.js_product_change:checked').val());
         }
         else {
-            return ProductConfiguratorMixin._getProductId.apply(this, arguments);
+            return VariantMixin._getProductId.apply(this, arguments);
         }
     },
     /**
@@ -368,7 +372,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, productId, productTemplateId, new_carousel) {
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel) {
         var $img;
         var $carousel = $productContainer.find('#o-carousel-product');
 
@@ -414,12 +418,90 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             }
         }
 
-        $carousel.toggleClass('css_not_available', !this.isSelectedVariantAllowed);
+        $carousel.toggleClass('css_not_available',
+            $productContainer.find('.js_main_product').hasClass('css_not_available'));
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAdd: function (ev) {
+        ev.preventDefault();
+        return this._handleAdd($(ev.currentTarget).closest('form'));
+    },
+
+    /**
+     * Initializes the optional products modal
+     * and add handlers to the modal events (confirm, back, ...)
+     *
+     * @private
+     * @param {$.Element} $form the related webshop form
+     */
+    _handleAdd: function ($form) {
+        var self = this;
+        this.$form = $form;
+
+        var productSelector = [
+            'input[type="hidden"][name="product_id"]',
+            'input[type="radio"][name="product_id"]:checked'
+        ];
+
+        var productReady = this.selectOrCreateProduct(
+            $form,
+            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
+            $form.find('.product_template_id').val(),
+            false
+        );
+
+        productReady.then(function (productId){
+            $form.find(productSelector.join(', ')).val(productId);
+
+            self.rootProduct = {
+                product_id: productId,
+                quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+                product_custom_attribute_values: self.getCustomVariantValues($form.find('.js_product')),
+                variant_values: self.getSelectedVariantValues($form.find('.js_product')),
+                no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
+            };
+
+            return self._onProductReady();
+        });
+
+        return productReady;
+    },
+
+    _onProductReady: function () {
+        this._submitForm();
+    },
+
+    /**
+     * Add custom variant values and attribute values that do not generate variants
+     * in the form data and trigger submit.
+     *
+     * @private
+     */
+    _submitForm: function () {
+        var $productCustomVariantValues = $('<input>', {
+            name: 'product_custom_attribute_values',
+            type: "hidden",
+            value: JSON.stringify(this.rootProduct.product_custom_attribute_values)
+        });
+        this.$form.append($productCustomVariantValues);
+
+        var $productNoVariantAttributeValues = $('<input>', {
+            name: 'no_variant_attribute_values',
+            type: "hidden",
+            value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
+        });
+        this.$form.append($productNoVariantAttributeValues);
+
+        this.$form.trigger('submit', [true]);
+    },
 
     /**
      * @private
@@ -596,7 +678,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             $el.attr('selected', $el.is(':selected'));
         });
 
-        return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
+        return VariantMixin.onChangeVariant.apply(this, arguments);
     },
     /**
      * @private
@@ -652,6 +734,134 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     _onClickDeleteProduct: function (ev) {
         ev.preventDefault();
         $(ev.currentTarget).closest('tr').find('.js_quantity').val(0).trigger('change');
+    },
+});
+
+/**
+ * @todo maybe the custom autocomplete logic could be extract to be reusable
+ */
+publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
+    selector: '.o_wsale_products_searchbar_form',
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale_utils.xml'],
+    events: {
+        'input .search-query': '_onInput',
+        'focusout': '_onFocusOut',
+        'keydown .search-query': '_onKeydown',
+    },
+    autocompleteMinWidth: 300,
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this._dp = new concurrency.DropPrevious();
+
+        this._onInput = _.debounce(this._onInput, 400);
+        this._onFocusOut = _.debounce(this._onFocusOut, 100);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$input = this.$('.search-query');
+
+        this.order = this.$('.o_wsale_search_order_by').val();
+        this.limit = parseInt(this.$input.data('limit'));
+        this.displayDescription = !!this.$input.data('displayDescription');
+        this.displayPrice = !!this.$input.data('displayPrice');
+        this.displayImage = !!this.$input.data('displayImage');
+
+        if (this.limit) {
+            this.$input.attr('autocomplete', 'off');
+        }
+
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _fetch: function () {
+        return this._rpc({
+            route: '/shop/products/autocomplete',
+            params: {
+                'term': this.$input.val(),
+                'options': {
+                    'order': this.order,
+                    'limit': this.limit,
+                    'display_description': this.displayDescription,
+                    'display_price': this.displayPrice,
+                    'max_nb_chars': Math.round(Math.max(this.autocompleteMinWidth, parseInt(this.$el.width())) * 0.22),
+                },
+            },
+        });
+    },
+    /**
+     * @private
+     */
+    _render: function (res) {
+        var $prevMenu = this.$menu;
+        this.$el.toggleClass('dropdown show', !!res);
+        if (res) {
+            var products = res['products'];
+            this.$menu = $(qweb.render('website_sale.productsSearchBar.autocomplete', {
+                products: products,
+                hasMoreProducts: products.length < res['products_count'],
+                currency: res['currency'],
+                widget: this,
+            }));
+            this.$menu.css('min-width', this.autocompleteMinWidth);
+            this.$el.append(this.$menu);
+        }
+        if ($prevMenu) {
+            $prevMenu.remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInput: function () {
+        if (!this.limit) {
+            return;
+        }
+        this._dp.add(this._fetch()).then(this._render.bind(this));
+    },
+    /**
+     * @private
+     */
+    _onFocusOut: function () {
+        if (!this.$el.has(document.activeElement).length) {
+            this._render();
+        }
+    },
+    /**
+     * @private
+     */
+    _onKeydown: function (ev) {
+        switch (ev.which) {
+            case $.ui.keyCode.ESCAPE:
+                this._render();
+                break;
+            case $.ui.keyCode.UP:
+                ev.preventDefault();
+                this.$menu.children().last().focus();
+                break;
+            case $.ui.keyCode.DOWN:
+                ev.preventDefault();
+                this.$menu.children().first().focus();
+                break;
+        }
     },
 });
 });

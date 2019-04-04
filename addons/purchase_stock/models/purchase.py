@@ -187,6 +187,7 @@ class PurchaseOrder(models.Model):
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
+            'user_id': False,
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),

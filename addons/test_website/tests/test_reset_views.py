@@ -19,17 +19,17 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
             login="admin"
         )
 
-    def fix_it(self, page):
+    def fix_it(self, page, mode='soft'):
         self.authenticate("admin", "admin")
         resp = self.url_open(page)
         self.assertEqual(resp.status_code, 500, "Waiting 500")
-        self.assertTrue('<button id="reset_templates_button"' in resp.text)
-        data = {'templates': [self.find_template(resp)], 'redirect': page}
-        resp = self.url_open('/website/reset_templates', data)
+        self.assertTrue('<button data-mode="soft" class="reset_templates_button' in resp.text)
+        data = {'view_id': self.find_template(resp), 'redirect': page, 'mode': mode}
+        resp = self.url_open('/website/reset_template', data)
         self.assertEqual(resp.status_code, 200, "Waiting 200")
 
     def find_template(self, response):
-        find = re.search(r'<input.*type="checkbox".*name="templates".*value="([0-9]+)?"', response.text)
+        find = re.search(r'<input.*type="hidden".*name="view_id".*value="([0-9]+)?"', response.text)
         return find and find.group(1)
 
     def setUp(self):
@@ -101,3 +101,18 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.fix_it('/test_page_view')
         self.do_test('test_reset_page_view_complete_flow_part2')
         self.fix_it('/test_page_view')
+
+    @mute_logger('odoo.addons.website.models.ir_http')
+    def test_08_reset_specific_page_view_hard_mode(self):
+        self.test_page_view = self.Website.viewref('test_website.test_page_view')
+        total_views = self.View.search_count([('type', '=', 'qweb')])
+        # Trigger COW then break the QWEB XML on it
+        break_view(self.test_page_view.with_context(website_id=1))
+        # Break it again to have a previous arch different than file arch
+        break_view(self.test_page_view.with_context(website_id=1))
+        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+        with self.assertRaises(AssertionError):
+            # soft reset should not be able to reset the view as previous
+            # version is also broken
+            self.fix_it('/test_page_view')
+        self.fix_it('/test_page_view', 'hard')

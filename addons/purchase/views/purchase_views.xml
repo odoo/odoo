@@ -8,7 +8,7 @@
             web_icon="purchase,static/description/icon.png"
             sequence="25"/>
 
-        <menuitem id="menu_procurement_management" name="Purchase"
+        <menuitem id="menu_procurement_management" name="Orders"
             parent="menu_purchase_root" sequence="1" />
 
         <!--Supplier menu-->
@@ -49,6 +49,9 @@
          parent="menu_purchase_control"
          sequence="13"/>
 
+    <!-- Products Control Menu -->
+    <menuitem id="menu_purchase_products" name="Products" parent="purchase.menu_purchase_root" sequence="5"/>
+
     <record id="product_normal_action_puchased" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="type">ir.actions.act_window</field>
@@ -70,7 +73,7 @@
 
       <!-- Product menu-->
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
-          parent="menu_procurement_management" sequence="20"/>
+          parent="menu_purchase_products" sequence="20"/>
 
         <record id="product_product_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
@@ -90,7 +93,7 @@
         </record>
 
         <menuitem id="product_product_menu" name="Product Variants" action="product_product_action"
-            parent="menu_procurement_management" sequence="21" groups="product.group_product_variant"/>
+            parent="menu_purchase_products" sequence="21" groups="product.group_product_variant"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>

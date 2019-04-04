@@ -50,7 +50,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
     _primary_email = 'email_from'
 
     def _default_probability(self):
@@ -74,7 +74,6 @@ class Lead(models.Model):
         index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
-    email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     description = fields.Text('Notes')
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', tracking=30)
@@ -313,8 +312,7 @@ class Lead(models.Model):
             partner = self.env['res.partner'].browse(context['default_partner_id'])
             vals['email_from'] = partner.email
 
-        # context: no_log, because subtype already handle this
-        return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
+        return super(Lead, self.with_context(context)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -1104,6 +1102,8 @@ class Lead(models.Model):
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
+    def _creation_subtype(self):
+        return self.env.ref('crm.mt_lead_create')
 
     @api.multi
     def _track_subtype(self, init_values):
@@ -1112,8 +1112,6 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
             return self.env.ref('crm.mt_lead_lost')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:
-            return self.env.ref('crm.mt_lead_create')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)
@@ -1204,7 +1202,6 @@ class Lead(models.Model):
         defaults = {
             'name':  msg_dict.get('subject') or _("No Subject"),
             'email_from': msg_dict.get('from'),
-            'email_cc': msg_dict.get('cc'),
             'partner_id': msg_dict.get('author_id', False),
         }
         if msg_dict.get('author_id'):

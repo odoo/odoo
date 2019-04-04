@@ -399,7 +399,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
 
@@ -496,8 +496,6 @@ class Task(models.Model):
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
-    email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
-        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
@@ -660,7 +658,7 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        context = dict(self.env.context, mail_create_nolog=True)
+        context = dict(self.env.context)
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))
@@ -745,10 +743,9 @@ class Task(models.Model):
     # ---------------------------------------------------
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Task, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Task, self)._track_template(changes)
         test_task = self[0]
-        changes, tracking_value_ids = tracking[test_task.id]
         if 'stage_id' in changes and test_task.stage_id.mail_template_id:
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_message': True,
@@ -758,14 +755,16 @@ class Task(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('project.mt_task_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
             return self.env.ref('project.mt_task_blocked')
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return self.env.ref('project.mt_task_ready')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
-            return self.env.ref('project.mt_task_new')
         elif 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
@@ -835,7 +834,6 @@ class Task(models.Model):
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id')
         }

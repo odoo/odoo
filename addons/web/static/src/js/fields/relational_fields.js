@@ -766,6 +766,7 @@ var FieldMany2One = AbstractField.extend({
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1240,8 +1241,7 @@ var FieldX2Many = AbstractField.extend({
     _onEditLine: function (ev) {
         ev.stopPropagation();
         this.trigger_up('edited_list', { id: this.value.id });
-        var editedRecord = this.value.data[ev.data.index];
-        this.renderer.setRowMode(editedRecord.id, 'edit')
+        this.renderer.setRowMode(ev.data.recordId, 'edit')
             .then(ev.data.onSuccess);
     },
     /**

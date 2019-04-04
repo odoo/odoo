@@ -81,7 +81,7 @@ class MaintenanceEquipmentCategory(models.Model):
         return res
 
     def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.equipment')
+        return vals.get('alias_model', 'maintenance.request')
 
     def get_alias_values(self):
         values = super(MaintenanceEquipmentCategory, self).get_alias_values()
@@ -253,9 +253,10 @@ class MaintenanceEquipment(models.Model):
             if not next_requests:
                 equipment._create_new_request(equipment.next_action_date)
 
+
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
 
@@ -264,11 +265,13 @@ class MaintenanceRequest(models.Model):
         return self.env['maintenance.stage'].search([], limit=1)
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('maintenance.mt_req_created')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return self.env.ref('maintenance.mt_req_created')
-        elif 'stage_id' in init_values and self.stage_id.sequence > 1:
+        if 'stage_id' in init_values:
             return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
@@ -331,7 +334,6 @@ class MaintenanceRequest(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
         if request.owner_user_id or request.user_id:
             request._add_followers()

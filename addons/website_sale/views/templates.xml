@@ -17,11 +17,10 @@
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_frontend.scss"/>
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_portal.scss"/>
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/product_configurator.scss"/>
-            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_options.scss"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
-            <script type="text/javascript" src="/sale/static/src/js/product_configurator_mixin.js"></script>
-            <script type="text/javascript" src="/sale/static/src/js/product_configurator_modal.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/variant_mixin.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/variant_mixin.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
@@ -35,7 +34,6 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_deleted_archived_variants.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_list_view_b2c.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_no_variant_attribute.js"></script>
-            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_options.js"></script>
         </xpath>
     </template>
 
@@ -67,15 +65,32 @@
         </xpath>
     </template>
 
+    <!-- Products Search Bar input-group template -->
+    <template id="website_sale_products_search_box" inherit_id="website.website_search_box" primary="True">
+        <xpath expr="//input[@name='search']" position="attributes">
+            <attribute name="data-limit">5</attribute>
+            <attribute name="data-display-description">true</attribute>
+            <attribute name="data-display-price">true</attribute>
+            <attribute name="data-display-image">true</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('input-group')]" position="replace">
+            <form t-attf-class="o_wsale_products_searchbar_form #{_classes}" t-att-action="action if action else '/shop'" method="get">
+                <t>$0</t>
+                <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
+                <t t-raw="0"/>
+            </form>
+        </xpath>
+    </template>
+
     <template id="search" name="Search Box">
-        <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)" method="get" t-att-class="_classes">
+        <t t-call="website_sale.website_sale_products_search_box">
+            <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)"/>
             <t t-if="attrib_values">
                 <t t-foreach="attrib_values" t-as="a">
                     <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])" />
                 </t>
             </t>
-            <t t-call="website.website_search_box" />
-        </form>
+        </t>
     </template>
 
     <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
@@ -191,9 +206,7 @@
                 <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
                 <div class="container py-2 oe_website_sale">
                     <div class="products_pager form-inline justify-content-center">
-                        <t t-call="website_sale.search">
-                            <t t-set="_classes">o_website_sale_search</t>
-                        </t>
+                        <t t-call="website_sale.search"/>
                         <t t-call="website_sale.pricelist_list">
                             <t t-set="_classes">ml-2</t>
                         </t>
@@ -420,8 +433,8 @@
 
     <template id="product" name="Product">
 
-        <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+        <t t-set="combination" t-value="product._get_first_possible_combination()"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
         <t t-call="website.layout">
@@ -464,7 +477,7 @@
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <t t-if="first_possible_combination" t-call="sale.variants">
+                                        <t t-if="combination" t-call="sale.variants">
                                             <t t-set="ul_class" t-value="'flex-column'" />
                                             <t t-set="parent_combination" t-value="None" />
                                         </t>
@@ -599,7 +612,6 @@
                    "display_currency": product.currency_id,
                }'/>
           </h4>
-          <h4 class="d-none oe_not_available bg-warning">Option not available</h4>
       </div>
     </template>
 
@@ -626,7 +638,7 @@
                     <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio">
                         <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                         <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
-                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="combination_info['list_price']" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                         <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
                             <span t-esc="combination_info['display_name']"/>
                             <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
@@ -977,11 +989,8 @@
     </template>
 
     <template id='coupon_form' name='Coupon form'>
-        <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <p class="bg-warning">This promo code is not available</p>
-        </t>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
-            method="post" class="mb32" name="coupon_code">
+            method="post" name="coupon_code">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
@@ -990,6 +999,9 @@
                 </div>
             </div>
         </form>
+        <t t-if="request.params.get('code_not_available')" name="code_not_available">
+            <div class="alert alert-danger text-left" role="alert">This promo code is not available.</div>
+        </t>
     </template>
 
     <template id="checkout">
@@ -1508,19 +1520,19 @@
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
                       <td class="text-xl-right noborder" >
-                          <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                          <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
                       <td class="text-right noborder">Taxes:</td>
                       <td class="text-xl-right noborder">
-                           <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                           <span t-field="website_sale_order.amount_tax" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
                       <td class="text-right"><strong>Total:</strong></td>
                       <td class="text-xl-right">
-                          <strong t-field="website_sale_order.amount_total"
+                          <strong t-field="website_sale_order.amount_total" class="monetary_field"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
                   </tr>
@@ -1696,5 +1708,4 @@
             </div>
         </div>
     </template>
-
 </odoo>

@@ -55,8 +55,10 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 message: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+                         'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
@@ -80,14 +82,14 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[1].subtype_id, self.env.ref('project.mt_task_new'),
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 messages: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
-                         'project: message_process: second message should be the one from Agrolait (partner failed)')
+                         'project: message_process: first message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Cats',
-                         'project: message_process: second message should be the one from Agrolait (subject failed)')
+                         'project: message_process: first message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')

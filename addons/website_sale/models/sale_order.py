@@ -95,17 +95,8 @@ class SaleOrder(models.Model):
 
         if line_id:
             return lines
-        linked_line_id = kwargs.get('linked_line_id', False)
-        optional_product_ids = set(kwargs.get('optional_product_ids', []))
 
-        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
-        if optional_product_ids:
-            # only match the lines with the same chosen optional products on the existing lines
-            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
-        else:
-            lines = lines.filtered(lambda line: not line.option_line_ids)
-
-        return lines
+        return self.env['sale.order.line']
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
@@ -132,28 +123,6 @@ class SaleOrder(models.Model):
             'product_uom': product.uom_id.id,
             'price_unit': pu,
         }
-
-    @api.multi
-    def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
-        """Deprecated, use `get_sale_order_line_multiline_description_sale`"""
-        order = self.sudo().browse(order_id)
-        product_context = dict(self.env.context)
-        product_context.setdefault('lang', order.partner_id.lang)
-        product = self.env['product.product'].with_context(product_context).browse(product_id)
-
-        name = product.display_name
-
-        if product.description_sale:
-            name += '\n%s' % (product.description_sale)
-
-        if no_variant_attribute_values:
-            name += ''.join(['\n%s: %s' % (attribute_value['attribute_name'], attribute_value['attribute_value_name'])
-                for attribute_value in no_variant_attribute_values])
-
-        if custom_values:
-            name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
-
-        return name
 
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
@@ -318,7 +287,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_recovery_email_send(self):
-        self._portal_ensure_token()
+        for order in self:
+            order._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)

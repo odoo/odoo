@@ -84,7 +84,7 @@
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                             <group name="delivery_details">
-                                <field name="invoice_policy" widget="radio" attrs="{'invisible': [('delivery_type', 'in', ('fixed', 'base_on_rule'))]}"/>
+                                <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
@@ -139,7 +139,7 @@
         </record>
 
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
-            <field name="name">Delivery Methods</field>
+            <field name="name">Shipping Methods</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
@@ -308,20 +308,20 @@
                                 string="Add a shipping method"
                                 name="action_open_delivery_wizard"
                                 type="object"
-                                attrs="{'invisible': ['|', '|', ('order_line', '=', []), ('delivery_set', '=', True), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
                                 class="text-warning btn-secondary"
-                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', False), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
                                 string="Recompute shipping cost"
                                 name="recompute_delivery_cost"
                                 type="object"
-                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', True), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                                attrs="{'invisible': ['|', ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
                         </div>
                     </xpath>

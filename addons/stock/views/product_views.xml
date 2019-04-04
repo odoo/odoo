@@ -184,6 +184,7 @@
                     <button string="Putaway Rules" type="object"
                         name="action_view_related_putaway_rules"
                         class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                        attrs="{'invisible': [('type', '=', 'service')]}"
                         context="{'invisible_handle': True, 'single_product': True}"/>
                 </button>
             </field>
@@ -269,6 +270,7 @@
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
@@ -357,6 +359,7 @@
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{
                                 'invisible_handle': True,
                                 'single_product': product_variant_count == 1,

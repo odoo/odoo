@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from email.utils import formataddr
+
 import base64
 import re
 
@@ -37,7 +39,6 @@ class MailComposer(models.TransientModel):
             before being sent to each recipient.
     """
     _name = 'mail.compose.message'
-    _inherit = 'mail.message'
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 500
@@ -58,6 +59,16 @@ class MailComposer(models.TransientModel):
                 - default_model or active_model
         """
         result = super(MailComposer, self).default_get(fields)
+
+        # author
+        if 'author_id' not in result:
+            result['author_id'] = self.env.user.partner_id.id
+            if 'email_from' not in result:
+                result['email_from'] = formataddr((self.env.user.name, self.env.user.email))
+        else:
+            if 'email_from' not in result:
+                author = self.env['res.partner'].browse(result['author_id'])
+                result['email_from'] = formataddr((author.name, author.email))
 
         # v6.1 compatibility mode
         result['composition_mode'] = result.get('composition_mode', self._context.get('mail.compose.message.mode', 'comment'))
@@ -101,18 +112,51 @@ class MailComposer(models.TransientModel):
                 ('mass_mail', 'Email Mass Mailing'),
                 ('mass_post', 'Post on Multiple Documents')]
 
+    # content
+    subject = fields.Char('Subject')
+    body = fields.Html('Contents', default='', sanitize_style=True)
+    parent_id = fields.Many2one(
+        'mail.message', 'Parent Message', index=True, ondelete='set null',
+        help="Initial thread message.")
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 'mail_compose_message_ir_attachments_rel',
+        'wizard_id', 'attachment_id', 'Attachments')
+    # origin
+    email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    author_id = fields.Many2one(
+        'res.partner', 'Author', index=True,
+        help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
+    # related document
+    model = fields.Char('Related Document Model', index=True)
+    res_id = fields.Integer('Related Document ID', index=True)
+    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    # characteristics
+    message_type = fields.Selection([
+        ('comment', 'Comment'),
+        ('notification', 'System notification')],
+        'Type', required=True, default='comment',
+        help="Message type: email for email message, notification for system "
+             "message, comment for other messages such as user replies",
+        oldname='type')
+    subtype_id = fields.Many2one(
+        'mail.message.subtype', 'Subtype', ondelete='set null', index=True,
+        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
+    mail_activity_type_id = fields.Many2one(
+        'mail.activity.type', 'Mail Activity Type',
+        index=True, ondelete='set null')
+    # destination
     composition_mode = fields.Selection(selection=_get_composition_mode_selection, string='Composition mode', default='comment')
+    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
+    no_auto_thread = fields.Boolean(
+        'No threading for answers',
+        help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
+    is_log = fields.Boolean('Log an Internal Note',
+                            help='Whether the message is an internal note (comment mode only)')
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts')
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
-    attachment_ids = fields.Many2many(
-        'ir.attachment', 'mail_compose_message_ir_attachments_rel',
-        'wizard_id', 'attachment_id', 'Attachments')
-    is_log = fields.Boolean('Log an Internal Note',
-                            help='Whether the message is an internal note (comment mode only)')
-    subject = fields.Char(default=False)
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
@@ -120,36 +164,10 @@ class MailComposer(models.TransientModel):
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
-    # mail_message updated fields
-    message_type = fields.Selection(default="comment")
-    subtype_id = fields.Many2one(default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
-
-    @api.multi
-    def check_access_rule(self, operation):
-        """ Access rules of mail.compose.message:
-            - create: if
-                - model, no res_id, I create a message in mass mail mode
-            - then: fall back on mail.message acces rules
-        """
-        # Author condition (CREATE (mass_mail))
-        if operation == 'create' and self._uid != SUPERUSER_ID:
-            # read mail_compose_message.ids to have their values
-            message_values = {}
-            self._cr.execute('SELECT DISTINCT id, model, res_id FROM "%s" WHERE id = ANY (%%s) AND res_id = 0' % self._table, (self.ids,))
-            for mid, rmod, rid in self._cr.fetchall():
-                message_values[mid] = {'model': rmod, 'res_id': rid}
-            # remove from the set to check the ids that mail_compose_message accepts
-            author_ids = [mid for mid, message in message_values.items()
-                          if message.get('model') and not message.get('res_id')]
-            self = self.browse(list(set(self.ids) - set(author_ids)))  # not sure slef = ...
-
-        return super(MailComposer, self).check_access_rule(operation)
-
-    @api.multi
-    def _notify(self, **kwargs):
-        """ Override specific notify method of mail.message, because we do
-            not want that feature in the wizard. """
-        return
+    # technical stuff
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+    layout = fields.Char('Layout', copy=False)  # xml id of layout
+    add_sign = fields.Boolean(default=True)
 
     @api.model
     def get_record_data(self, values):
