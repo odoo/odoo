@@ -5701,6 +5701,78 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('execute group header button with keyboard navigation', async function (assert) {
+        assert.expect(13);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<groupby name="m2o">' +
+                        '<button type="object" name="some_method" string="Do this"/>' +
+                    '</groupby>' +
+                '</tree>',
+            groupBy: ['m2o'],
+            intercepts: {
+                execute_action: function (ev) {
+                    assert.strictEqual(ev.data.action_data.name, 'some_method');
+                },
+            },
+        });
+
+        assert.containsNone(list, '.o_data_row', "all groups should be closed");
+
+        // focus create button as a starting point
+        list.$('.o_list_button_add').focus();
+        assert.ok(document.activeElement.classList.contains('o_list_button_add'));
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.tagName, 'INPUT',
+            'focus should now be on the record selector (list header)');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.textContent, 'Value 1 (3)',
+            'focus should be on first group header');
+
+        // unfold first group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.containsN(list, '.o_data_row', 3, "first group should be open");
+
+        // move to first record of opened group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        assert.strictEqual(document.activeElement.tagName, 'INPUT',
+            'focus should be in first row checkbox');
+
+        // move back to the group header
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'up');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should be back on first group header');
+
+        // fold the group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should still be on first group header');
+        assert.containsNone(list, '.o_data_row', "first group should now be folded");
+
+        // unfold the group
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.ok(document.activeElement.classList.contains('o_group_name'),
+            'focus should still be on first group header');
+        assert.containsN(list, '.o_data_row', 3, "first group should be open");
+
+        // simulate a move to the group header button with tab (we can't trigger a native event
+        // programmatically, see https://stackoverflow.com/a/32429197)
+        list.$('.o_group_header .o_group_buttons button:first').focus();
+        assert.strictEqual(document.activeElement.tagName, 'BUTTON',
+            'focus should be on the group header button');
+
+        // click on the button by pressing enter
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
+        assert.containsN(list, '.o_data_row', 3, "first group should still be open");
+
+        list.destroy();
+    });
+
     QUnit.test('add a new row in grouped editable="top" list', async function (assert) {
         assert.expect(7);
 
