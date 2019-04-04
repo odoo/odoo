@@ -786,6 +786,53 @@ QUnit.test('save two searches to dashboard', function (assert) {
     actionManager.destroy();
 });
 
+QUnit.test('save a action domain to dashboard', function (assert) {
+    // View domains are to be added to the dashboard domain
+    assert.expect(1);
+
+    var view_domain = ["display_name", "ilike", "a"];
+    var filter_domain = ["display_name", "ilike", "b"];
+
+    // The filter domain already contains the view domain, but is always added by dashboard..,
+    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain]
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.domain, expected_domain,
+                    "the correct domain should be sent");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+        domain: [view_domain],
+    });
+
+    // Add a filter
+    testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
+    testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
+    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
+    testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    // Add it to dashboard
+    testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    testUtils.dom.click(actionManager.$('.o_add_to_board'));
+    testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+
+    actionManager.destroy();
+});
+
 QUnit.test("Views should be loaded in the user's language", function (assert) {
     assert.expect(2);
     var form = createView({
