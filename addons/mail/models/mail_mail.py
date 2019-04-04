@@ -5,6 +5,7 @@ import base64
 import datetime
 import logging
 import psycopg2
+import smtplib
 import threading
 import re
 
@@ -394,11 +395,12 @@ class MailMail(models.Model):
                     mail.id, mail.message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
-            except psycopg2.Error:
-                # If an error with the database occurs, chances are that the cursor is unusable.
-                # This will lead to an `psycopg2.InternalError` being raised when trying to write
-                # `state`, shadowing the original exception and forbid a retry on concurrent
-                # update. Let's bubble it.
+            except (psycopg2.Error, smtplib.SMTPServerDisconnected):
+                # If an error with the database or SMTP session occurs, chances are that the cursor
+                # or SMTP session are unusable, causing further errors when trying to save the state.
+                _logger.exception(
+                    'Exception while processing mail with ID %r and Msg-Id %r.',
+                    mail.id, mail.message_id)
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)
