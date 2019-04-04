@@ -23,7 +23,7 @@ class Assert(YamlTag):
         self.severity = severity
         self.string = string
         super(Assert, self).__init__(**kwargs)
-    
+
 class Record(YamlTag):
     def __init__(self, model, id, use='id', view=True, **kwargs):
         self.model = model
@@ -83,14 +83,14 @@ class Eval(YamlTag):
         super(Eval, self).__init__()
     def __str__(self):
         return '!eval %s' % str(self.expression)
-    
+
 class Ref(YamlTag):
     def __init__(self, expr="False", *args, **kwargs):
         self.expr = expr
         super(Ref, self).__init__(*args, **kwargs)
     def __str__(self):
         return 'ref(%s)' % repr(self.expr)
-    
+
 def assert_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Assert(**kwargs)
@@ -137,28 +137,28 @@ def url_constructor(loader, node):
 def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
     return Eval(expression)
-    
+
 def ref_constructor(loader, tag_suffix, node):
     if tag_suffix == "id":
         kwargs = {"id": loader.construct_scalar(node)}
     else:
         kwargs = loader.construct_mapping(node)
     return Ref(**kwargs)
-    
+
 # Registers constructors for custom tags.
 # Constructors are actually defined globally: do not redefined them in another
 # class/file/package.  This means that module recorder need import this file.
 def add_constructors():
-    yaml.add_constructor(u"!assert", assert_constructor)
-    yaml.add_constructor(u"!record", record_constructor)
-    yaml.add_constructor(u"!python", python_constructor)
-    yaml.add_constructor(u"!menuitem", menuitem_constructor)
-    yaml.add_constructor(u"!act_window", act_window_constructor)
-    yaml.add_constructor(u"!function", function_constructor)
-    yaml.add_constructor(u"!report", report_constructor)
-    yaml.add_constructor(u"!context", context_constructor)
-    yaml.add_constructor(u"!delete", delete_constructor)
-    yaml.add_constructor(u"!url", url_constructor)
-    yaml.add_constructor(u"!eval", eval_constructor)
-    yaml.add_multi_constructor(u"!ref", ref_constructor)
+    yaml.add_constructor(u"!assert", assert_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!record", record_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!python", python_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!menuitem", menuitem_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!act_window", act_window_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!function", function_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!report", report_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!context", context_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!delete", delete_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!url", url_constructor, Loader=yaml.FullLoader)
+    yaml.add_constructor(u"!eval", eval_constructor, Loader=yaml.FullLoader)
+    yaml.add_multi_constructor(u"!ref", ref_constructor, Loader=yaml.FullLoader)
 add_constructors()

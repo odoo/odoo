@@ -791,7 +791,7 @@ class YamlInterpreter(object):
         yaml_tag.add_constructors()
 
         is_preceded_by_comment = False
-        for node in yaml.load(yaml_string):
+        for node in yaml.load(yaml_string, Loader=yaml.FullLoader):
             is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
                 self._process_node(node)
