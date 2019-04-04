@@ -378,6 +378,12 @@ class PurchaseOrderLine(models.Model):
                 values.append(val)
         return self.env['stock.move'].create(values)
 
+                    elif move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
+                        # Edge case: the dropship is returned to the stock, no to the supplier.
+                        # In this case, the received quantity on the PO is set although we didn't
+                        # receive the product physically in our stock. To avoid counting the
+                        # quantity twice, we do nothing.
+                        pass
     def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         """ This function purpose is to be override with the purpose to forbide _run_buy  method
         to merge a new po line in an existing one.
