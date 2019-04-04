@@ -105,7 +105,8 @@ return session.is_bound.then(function () {
                 observer.disconnect();
             };
         }
-
+        // helper to start a tour manually (or from a python test with its counterpart start_tour function)
+        odoo.startTour = tour_manager.run.bind(tour_manager);
         return tour_manager;
     });
 });
