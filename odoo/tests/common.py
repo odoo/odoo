@@ -1117,7 +1117,7 @@ class Form(object):
         else:
             self._init_from_defaults(self._model)
 
-    def _o2m_set_edition_view(self, descr, node):
+    def _o2m_set_edition_view(self, descr, node, level):
         default_view = next(
             (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
             'tree'
@@ -1146,7 +1146,7 @@ class Form(object):
                 edition['tree'] = subarch
 
         # don't recursively process o2ms in o2ms
-        self._process_fvg(submodel, edition, o2m=False)
+        self._process_fvg(submodel, edition, level=level-1)
         descr['views']['edition'] = edition
 
     def __str__(self):
@@ -1156,16 +1156,16 @@ class Form(object):
             self._values.get('id', False),
         )
 
-    def _process_fvg(self, model, fvg, o2m=True):
+    def _process_fvg(self, model, fvg, level=2):
         """ Post-processes to augment the fields_view_get with:
 
         * an id field (may not be present if not in the view but needed)
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
-        fvg['fields']['id'] = {'type': 'id'}
+        fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {}
+        modifiers = fvg['modifiers'] = {'id': {'required': False, 'readonly': True}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
@@ -1181,10 +1181,9 @@ class Form(object):
                 contexts[fname] = ctx
 
             descr = fvg['fields'].get(fname) or {'type': None}
-            if o2m and descr['type'] == 'one2many':
-                self._o2m_set_edition_view(descr, f)
+            if level and descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f, level)
 
-        fvg['modifiers']['id'] = {'required': False, 'readonly': True}
         fvg['onchange'] = model._onchange_spec(fvg)
 
     def _init_from_defaults(self, model):
@@ -1263,7 +1262,9 @@ class Form(object):
                 stack.append(e1 or e2)
             elif isinstance(it, list):
                 f, op, val = it
-                field_val = vals[f]
+                # hack-ish handling of parent.<field> modifiers
+                f, n = re.subn(r'^parent\.', '', f, 1)
+                field_val = (vals['•parent•'] if n else vals)[f]
                 stack.append(self._OPS[op](field_val, val))
             else:
                 raise ValueError("Unknown domain element %s" % it)
@@ -1391,9 +1392,12 @@ class Form(object):
 
                 for (c, rid, vs) in oldvals:
                     if c in (0, 1):
-                        items = getattr(vs, 'changed_items', vs.items)
+                        items = list(getattr(vs, 'changed_items', vs.items)())
+                        # FIXME: should be more extensive processing of o2m defaults
+                        vs.setdefault('id', False)
+                        vs['•parent•'] = self._values
                         vs = {
-                            k: v for k, v in items()
+                            k: v for k, v in items
                             if nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=vs)
                         }
                     v.append((c, rid, vs))
