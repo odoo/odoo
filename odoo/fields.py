@@ -985,7 +985,6 @@ class Field(MetaField('DummyField', (object,), {})):
         if record is None:
             return self         # the field is accessed through the owner class
         env = record.env
-
         if record:
             # only a single record may be accessed
             record.ensure_one()
@@ -1015,10 +1014,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __set__(self, record, value):
         """ set the value of field ``self`` on ``record`` """
-        env = record.env
-
-        # only a single record may be updated
         record.ensure_one()
+        env = record.env
 
         # adapt value to the cache level
         value = self.convert_to_cache(value, record)
@@ -1041,7 +1038,6 @@ class Field(MetaField('DummyField', (object,), {})):
             if self.relational:
                 spec += self.modified_draft(record)
 
-
             # env.cache.invalidate(spec)
             # FP Check: does not install without that, but would be better to do this
             for field,obj in spec:
@@ -1051,6 +1047,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
+
+            # FP TODO: not sure to understand why? if it's a many2one, it's good to set it in the cache
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
                 env.cache.set(record, self, value)
@@ -1934,6 +1932,10 @@ class Selection(Field):
             return value or False
         if value and self.column_type[0] == 'int4':
             value = int(value)
+        print(self.get_values(record.env))
+        if value=='en_US':
+            import ipdb
+            ipdb.set_trace()
         if value in self.get_values(record.env):
             return value
         elif not value:
