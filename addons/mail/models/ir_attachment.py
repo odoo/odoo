@@ -15,6 +15,19 @@ class IrAttachment(models.Model):
         for record in self:
             record.register_as_main_attachment(force=False)
 
+    @api.multi
+    def unlink(self):
+        self.remove_as_main_attachment()
+        super(IrAttachment, self).unlink()
+
+    @api.multi
+    def remove_as_main_attachment(self):
+        for attachment in self:
+            related_record = self.env[attachment.res_model].browse(attachment.res_id)
+            if related_record and hasattr(related_record, 'message_main_attachment_id'):
+                if related_record.message_main_attachment_id == attachment:
+                    related_record.message_main_attachment_id = False
+
     def register_as_main_attachment(self, force=True):
         """ Registers this attachment as the main one of the model it is
         attached to.
