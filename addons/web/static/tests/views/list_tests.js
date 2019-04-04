@@ -359,6 +359,34 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('discard a new record in editable="top" list with less than 4 records', async function (assert) {
+        assert.expect(7);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="bar"/></tree>',
+            domain: [['bar', '=', true]],
+        });
+
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsN(list, 'tbody tr', 4);
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.hasClass(list.$('tbody tr:first'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('.o_list_button_discard'));
+
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsN(list, 'tbody tr', 4);
+        assert.hasClass(list.$('tbody tr:first'), 'o_data_row');
+
+        list.destroy();
+    });
+
     QUnit.test('basic grouped list rendering', async function (assert) {
         assert.expect(4);
 
