@@ -311,7 +311,16 @@ ListRenderer.include({
         if (this.state.count >= 4) {
             $row.remove();
         } else {
-            $row.replaceWith(this._renderEmptyRow());
+            // we want to always keep at least 4 (possibly empty) rows
+            var $emptyRow = this._renderEmptyRow();
+            $row.replaceWith($emptyRow);
+            if (this.editable === "top") {
+                // move the empty row we just inserted after data rows
+                var $lastDataRow = this.$('.o_data_row:last');
+                if ($lastDataRow.length) {
+                    $emptyRow.insertAfter($lastDataRow);
+                }
+            }
         }
     },
     /**
