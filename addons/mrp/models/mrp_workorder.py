@@ -315,8 +315,7 @@ class MrpWorkorder(models.Model):
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
         # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
+        self._start_nextworkorder()
 
         # If last work order, then post lots used
         if not self.next_work_order_id:
@@ -405,6 +404,15 @@ class MrpWorkorder(models.Model):
             })
         else:
             current_lot_lines.qty_done += self.qty_producing
+
+    @api.multi
+    def _start_nextworkorder(self):
+        for record in self:
+            if record.next_work_order_id.state == 'pending':
+                record.next_work_order_id.state = 'ready'
+
+    def _init_nextworkorder_states(self):
+        return 'pending'
 
     @api.multi
     def button_start(self):

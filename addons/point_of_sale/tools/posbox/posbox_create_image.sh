@@ -120,6 +120,14 @@ qemu-system-arm "${QEMU_OPTS[@]}"
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
+find "${MOUNT_POINT}"/usr -type f -name "*.iotpatch"|while read iotpatch; do
+    DIR=$(dirname "${iotpatch}")
+    BASE=$(basename "${iotpatch%.iotpatch}")
+    find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch"|while read file; do
+        patch -f "${file}" < "${iotpatch}"
+    done
+done
+
 # cleanup
 sleep 2
 umount "${MOUNT_POINT}"

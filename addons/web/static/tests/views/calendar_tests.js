@@ -2371,6 +2371,42 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('form_view_id attribute works with popup (for creating events)', async function (assert) {
+        assert.expect(1);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month" '+
+                'event_open_popup="true" ' +
+                'quick_add="false" ' +
+                'form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "load_views") {
+                    assert.strictEqual(args.kwargs.views[0][0], 1,
+                        "should load view with id 1");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.nextTick();
+        calendar.destroy();
+    });
+
     QUnit.test('calendar fallback to form view id in action if necessary', async function (assert) {
         assert.expect(1);
 

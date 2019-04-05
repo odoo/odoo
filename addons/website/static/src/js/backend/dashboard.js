@@ -471,7 +471,8 @@ var Dashboard = AbstractAction.extend({
                 container: $analytics_chart_2[0],
                 options: {
                     title: 'All',
-                    width: '100%'
+                    width: '100%',
+                    tooltip: {isHtml: true},
                 }
             }
         });
