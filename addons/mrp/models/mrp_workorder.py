@@ -220,8 +220,7 @@ class MrpWorkorder(models.Model):
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
         # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
+        self._start_nextworkorder()
 
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
@@ -256,6 +255,15 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    @api.multi
+    def _start_nextworkorder(self):
+        for record in self:
+            if record.next_work_order_id.state == 'pending':
+                record.next_work_order_id.state = 'ready'
+
+    def _init_nextworkorder_states(self):
+        return 'pending'
 
     @api.multi
     def button_start(self):
