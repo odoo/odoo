@@ -4,6 +4,9 @@
     <record id="base.ae" model="res.country">
         <field name="vat_label">TRN</field>
     </record>
+    <record id="base.AED" model="res.currency">
+        <field name="symbol">AED</field>
+    </record>
     <record id="gcc_countries_group" model="res.country.group">
         <field name="name">GCC VAT implementing States</field>
         <field name="country_ids" eval="[(6,0,[ref('base.ae'),ref('base.sa'),ref('base.bh')])]"/>
