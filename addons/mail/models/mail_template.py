@@ -39,7 +39,7 @@ try:
     # This is done on purpose: it prevents incidental or malicious execution of
     # Python code that may break the security of the server.
     from jinja2.sandbox import SandboxedEnvironment
-    mako_template_env = SandboxedEnvironment(
+    jinja_template_env = SandboxedEnvironment(
         block_start_string="<%",
         block_end_string="%>",
         variable_start_string="${",
@@ -51,7 +51,7 @@ try:
         trim_blocks=True,               # do not output newline after blocks
         autoescape=True,                # XML/HTML automatic escaping
     )
-    mako_template_env.globals.update({
+    jinja_template_env.globals.update({
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
@@ -71,8 +71,8 @@ try:
         # is needed, apparently.
         'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
     })
-    mako_safe_template_env = copy.copy(mako_template_env)
-    mako_safe_template_env.autoescape = False
+    jinja_safe_template_env = copy.copy(jinja_template_env)
+    jinja_safe_template_env.autoescape = False
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
 
@@ -181,53 +181,62 @@ class MailTemplate(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def render_post_process(self, html):
-        html = self.env['mail.thread']._replace_local_links(html)
-        return html
+    def _render_jinja_eval_context(self):
+        """ Prepare jinja evaluation context, containing for all rendering
 
-    @api.model
-    def _render_template(self, template_txt, model, res_ids, post_process=False):
-        """ Render the given template text, replace mako expressions ``${expr}``
-        with the result of evaluating these expressions with an evaluation
-        context containing:
-
-         - ``user``: Model of the current user
-         - ``object``: record of the document record this mail is related to
-         - ``context``: the context passed to the mail composition wizard
-
-        :param str template_txt: the template text to render
-        :param str model: model name of the document record this mail is related to.
-        :param int res_ids: list of ids of document records those mails are related to.
+          * ``user``: current user browse record;
+          * ``ctx```: current context, named ctx to avoid clash with jinja
+            internals that already uses context;
+          * various formatting tools;
         """
-        multi_mode = True
-        if isinstance(res_ids, int):
-            multi_mode = False
-            res_ids = [res_ids]
-
-        results = dict.fromkeys(res_ids, u"")
-
-        # try to load the template
-        try:
-            mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
-            template = mako_env.from_string(tools.ustr(template_txt))
-        except Exception:
-            _logger.info("Failed to load template %r", template_txt, exc_info=True)
-            return multi_mode and results or results[res_ids[0]]
-
-        # prepare template variables
-        records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
-        res_to_rec = dict.fromkeys(res_ids, None)
-        for record in records:
-            res_to_rec[record.id] = record
-        variables = {
+        render_context = {
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'format_duration': lambda value: tools.format_duration(value),
             'user': self.env.user,
-            'ctx': self._context,  # context kw would clash with mako internals
+            'ctx': self._context,
         }
-        for res_id, record in res_to_rec.items():
+        return render_context
+
+    @api.model
+    def _render_template_jinja(self, template_txt, model, res_ids):
+        """ Render a string-based template on records given by a model and a list
+        of IDs, using jinja.
+
+        In addition to the generic evaluation context given by _render_jinja_eval_context
+        some new variables are added, depending on each record
+
+          * ``object``: record based on which the template is rendered;
+
+        :param str template_txt: template text to render
+        :param str model: model name of records on which we want to perform rendering
+        :param list res_ids: list of ids of records (all belonging to same model)
+
+        :return dict: {res_id: string of rendered template based on record}
+        """
+        # TDE FIXME: remove that brol (6dde919bb9850912f618b561cd2141bffe41340c)
+        no_autoescape = self._context.get('safe')
+        results = dict.fromkeys(res_ids, u"")
+        if not template_txt:
+            return results
+
+        # try to load the template
+        try:
+            jinja_env = jinja_safe_template_env if no_autoescape else jinja_template_env
+            template = jinja_env.from_string(tools.ustr(template_txt))
+        except Exception:
+            _logger.info("Failed to load template %r", template_txt, exc_info=True)
+            return results
+
+        # prepare template variables
+        variables = self._render_jinja_eval_context()
+        # TDE CHECKME
+        # records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
+        if any(r is None for r in res_ids):
+            raise ValueError(_('Unsuspected None'))
+
+        for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
                 render_result = template.render(variables)
@@ -236,46 +245,123 @@ class MailTemplate(models.Model):
                 raise UserError(_("Failed to render template : %s") % e)
             if render_result == u"False":
                 render_result = u""
-            results[res_id] = render_result
+            results[record.id] = render_result
 
+        return results
+
+    @api.model
+    def _render_template_postprocess(self, rendered):
+        """ Tool method for post processing. In this method we ensure local
+        links ('/shop/Basil-1') are replaced by global links ('https://www.
+        mygardin.com/hop/Basil-1').
+
+        :param rendered: result of ``_render_template``
+
+        :return dict: updated version of rendered
+        """
+        for res_id, html in rendered.items():
+            rendered[res_id] = self.env['mail.thread']._replace_local_links(html)
+        return rendered
+
+    @api.model
+    def _render_template(self, template_txt, model, res_ids, engine='jinja', post_process=False):
+        """ Render the given string on records designed by model / res_ids using
+        the given rendering engine. Currently only jinja is supported.
+
+        :param str template_txt: template text to render
+        :param str model: model name of records on which we want to perform rendering
+        :param list res_ids: list of ids of records (all belonging to same model)
+        :param string engine: jinja
+        :param post_process: perform rendered str / html post processing (see
+          ``_render_template_postprocess``)
+
+        :return dict: {res_id: string of rendered template based on record}
+        """
+        if not isinstance(res_ids, (list, tuple)):
+            raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
+        if engine != 'jinja':
+            raise ValueError(_('Template rendering supports only jinja.'))
+
+        rendered = self._render_template_jinja(template_txt, model, res_ids)
         if post_process:
-            for res_id, result in results.items():
-                results[res_id] = self.render_post_process(result)
+            rendered = self._render_template_postprocess(rendered)
 
-        return multi_mode and results or results[res_ids[0]]
+        return rendered
+
+    def _render_lang(self, res_ids):
+        """ Given some record ids, return the lang for each record based on
+        lang field of template or through specific context-based key.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+
+        :return dict: {res_id: lang code (i.e. en_US)}
+        """
+        self.ensure_one()
+        if not isinstance(res_ids, (list, tuple)):
+            raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
+
+        if self.env.context.get('template_preview_lang'):
+            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
+        else:
+            rendered_langs = self._render_template(self.lang, self.model, res_ids)
+            return dict((res_id, lang)
+                        for res_id, lang in rendered_langs.items())
+
+    def _classify_per_lang(self, res_ids):
+        """ Given some record ids, return for computed each lang a contextualized
+        template and its subset of res_ids.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+
+        :return dict: {lang: (template with lang=lang_code if specific lang computed
+          or template, res_ids targeted by that language}
+        """
+        self.ensure_one()
+
+        lang_to_res_ids = {}
+        for res_id, lang in self._render_lang(res_ids).items():
+            lang_to_res_ids.setdefault(lang, []).append(res_id)
+
+        return dict(
+            (lang, (self.with_context(lang=lang) if lang else self, lang_res_ids))
+            for lang, lang_res_ids in lang_to_res_ids.items()
+        )
+
+    def _render_field(self, field, res_ids, compute_lang=False, set_lang=False, post_process=False):
+        """ Given some record ids, render a given field of template rendered on
+        all records.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+        :param compute_lang: compute rendering language based on template.lang
+        :param set_lang: force language
+        :param post_process: perform rendered str / html post processing (see
+          ``_render_template_postprocess``)
+
+        :return dict: {res_id: string of rendered template based on record}
+        """
+        self.ensure_one()
+        if compute_lang:
+            templates_res_ids = self._classify_per_lang(res_ids)
+        elif set_lang:
+            templates_res_ids = {set_lang: (self.with_context(lang=set_lang), res_ids)}
+        else:
+            templates_res_ids = {self._context.get('lang'): (self, res_ids)}
+
+        return dict(
+            (res_id, rendered)
+            for lang, (template, tpl_res_ids) in templates_res_ids.items()
+            for res_id, rendered in template._render_template(
+                template[field], template.model, tpl_res_ids,
+                post_process=post_process
+            ).items()
+        )
 
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
     # ------------------------------------------------------------
-
-    def get_email_template(self, res_ids):
-        multi_mode = True
-        if isinstance(res_ids, int):
-            res_ids = [res_ids]
-            multi_mode = False
-
-        if res_ids is None:
-            res_ids = [None]
-        results = dict.fromkeys(res_ids, False)
-
-        if not self.ids:
-            return results
-        self.ensure_one()
-
-        if self.env.context.get('template_preview_lang'):
-            lang = self.env.context.get('template_preview_lang')
-            for res_id in res_ids:
-                results[res_id] = self.with_context(lang=lang)
-        else:
-            langs = self._render_template(self.lang, self.model, res_ids)
-            for res_id, lang in langs.items():
-                if lang:
-                    template = self.with_context(lang=lang)
-                else:
-                    template = self
-                results[res_id] = template
-
-        return multi_mode and results or results[res_ids[0]]
 
     def generate_recipients(self, results, res_ids):
         """Generates the recipients of the template. Default values can ben generated
@@ -330,24 +416,14 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
 
-        res_ids_to_templates = self.get_email_template(res_ids)
-
-        # templates: res_id -> template; template -> res_ids
-        templates_to_res_ids = {}
-        for res_id, template in res_ids_to_templates.items():
-            templates_to_res_ids.setdefault(template, []).append(res_id)
-
         results = dict()
-        for template, template_res_ids in templates_to_res_ids.items():
-            Template = self.env['mail.template']
-            # generate fields value for all res_ids linked to the current template
-            if template.lang:
-                Template = Template.with_context(lang=template._context.get('lang'))
+        for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
             for field in fields:
-                Template = Template.with_context(safe=field in {'subject'})
-                generated_field_values = Template._render_template(
-                    getattr(template, field), template.model, template_res_ids,
-                    post_process=(field == 'body_html'))
+                template = template.with_context(safe=(field == 'subject'))
+                generated_field_values = template._render_field(
+                    field, template_res_ids,
+                    post_process=(field == 'body_html')
+                )
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
@@ -371,7 +447,7 @@ class MailTemplate(models.Model):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self._render_template(template.report_name, template.model, res_id)
+                    report_name = self._render_field('report_name', [res_id])[res_id]
                     report = template.report_template
                     report_service = report.report_name
 

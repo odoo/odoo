@@ -2242,11 +2242,11 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
-        lang = get_lang(self.env)
-        if template and template.lang:
-            lang = template._render_template(template.lang, 'account.move', self.id)
-        else:
-            lang = lang.code
+        lang = False
+        if template:
+            lang = template._render_lang(self.ids)[self.id]
+        if not lang:
+            lang = get_lang(self.env).code
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
         ctx = dict(
             default_model='account.move',
