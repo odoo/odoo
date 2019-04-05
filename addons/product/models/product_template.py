@@ -503,6 +503,7 @@ class ProductTemplate(models.Model):
                         variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
                             'attribute_value_ids': [(6, 0, list(value_ids))],
+                            'active': tmpl_id.active,
                         })
                         if len(variants_to_create) > 1000:
                             raise UserError(_(
