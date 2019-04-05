@@ -272,6 +272,7 @@ var BoardRenderer = FormRenderer.extend({
                             context: context,
                             domain: domain,
                             groupBy: context.group_by || [],
+                            orderedBy: context.orderedBy || [],
                         },
                         withControlPanel: false,
                     });
