@@ -716,13 +716,6 @@ class StockMove(models.Model):
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(StockReturnPicking, self).default_get(default_fields)
-        for i, k, vals in res.get('product_return_moves', []):
-            vals.update({'to_refund': True})
-        return res
-
     @api.multi
     def _create_returns(self):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
@@ -732,6 +725,11 @@ class StockReturnPicking(models.TransientModel):
             if return_picking_line and return_picking_line.to_refund:
                 move.to_refund = True
         return new_picking_id, pick_type_id
+
+    def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
+        res = super(StockReturnPicking, self)._prepare_stock_return_picking_line_vals_from_move(stock_move)
+        res['to_refund'] = True
+        return res
 
 
 class StockReturnPickingLine(models.TransientModel):
