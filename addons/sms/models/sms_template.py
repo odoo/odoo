@@ -38,6 +38,10 @@ class SMSTemplate(models.Model):
                        name=_("%s (copy)") % self.name)
         return super(SMSTemplate, self).copy(default=default)
 
+    def unlink(self):
+        self.sudo().mapped('sidebar_action_id').unlink()
+        return super(SMSTemplate, self).unlink()
+
     def action_create_sidebar_action(self):
         ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('sms.sms_composer_view_form')
@@ -64,6 +68,10 @@ class SMSTemplate(models.Model):
                 template.sidebar_action_id.unlink()
         return True
 
+    # ------------------------------------------------------------
+    # RENDERING
+    # ------------------------------------------------------------
+
     def _get_context_lang_per_id(self, res_ids):
         self.ensure_one()
         if res_ids is None:
@@ -74,7 +82,8 @@ class SMSTemplate(models.Model):
             results = dict((res_id, self.with_context(lang=lang)) for res_id in res_ids)
         else:
             rendered_langs = self._render_template(self.lang, self.model, res_ids)
-            results = dict((res_id, self.with_context(lang=lang) if lang else self)
+            results = dict(
+                (res_id, self.with_context(lang=lang) if lang else self)
                 for res_id, lang in rendered_langs.items())
 
         return results
@@ -103,7 +112,3 @@ class SMSTemplate(models.Model):
     def _render_template(self, template_txt, model, res_ids):
         """ Render the jinja template """
         return self.env['mail.template']._render_template(template_txt, model, res_ids)
-
-    def unlink(self):
-        self.sudo().mapped('sidebar_action_id').unlink()
-        return super(SMSTemplate, self).unlink()

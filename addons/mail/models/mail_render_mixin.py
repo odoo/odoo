@@ -3,28 +3,28 @@
 
 from odoo import api, fields, models
 
-class MailRenderMixin(models.AbstractModel):
 
+class MailRenderMixin(models.AbstractModel):
     _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
 
     model_object_field = fields.Many2one(
         'ir.model.fields', string="Field", store=False,
         help="Select target field from the related document model.\n"
-            "If it is a relationship field you will be able to select "
-            "a target field at the destination of the relationship.")
+             "If it is a relationship field you will be able to select "
+             "a target field at the destination of the relationship.")
     sub_object = fields.Many2one(
         'ir.model', 'Sub-model', readonly=True, store=False,
         help="When a relationship field is selected as first field, "
-            "this field shows the document model the relationship goes to.")
+             "this field shows the document model the relationship goes to.")
     sub_model_object_field = fields.Many2one(
         'ir.model.fields', 'Sub-field', store=False,
         help="When a relationship field is selected as first field, "
-            "this field lets you select the target field within the "
-            "destination document model (sub-model).")
+             "this field lets you select the target field within the "
+             "destination document model (sub-model).")
     null_value = fields.Char('Default Value', store=False, help="Optional value to use if the target field is empty")
     copyvalue = fields.Char(
-        'Placeholder Expression',store=False,
+        'Placeholder Expression', store=False,
         help="Final placeholder expression, to be copy-pasted in the desired template field.")
 
     @api.onchange('model_object_field', 'sub_model_object_field', 'null_value')
@@ -65,4 +65,4 @@ class MailRenderMixin(models.AbstractModel):
             if null_value:
                 expression += " or '''%s'''" % null_value
             expression += "}"
-        return expression        
+        return expression
