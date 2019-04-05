@@ -703,10 +703,10 @@ var SeoConfigurator = Dialog.extend({
         var self = this;
         var data = {};
         if (this.canEditTitle) {
-            data.website_meta_title = this.htmlPage.title();
+            data.website_meta_title = this.metaTitleDescription.$title.val();
         }
         if (this.canEditDescription) {
-            data.website_meta_description = this.htmlPage.description();
+            data.website_meta_description = this.metaTitleDescription.$description.val();
         }
         if (this.canEditKeywords) {
             data.website_meta_keywords = this.metaKeywords.keywordList.keywords().join(', ');
