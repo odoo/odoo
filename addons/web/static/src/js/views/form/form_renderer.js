@@ -323,13 +323,15 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      */
     _addOnClickAction: function ($el, node) {
-        var self = this;
-        $el.click(function () {
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: self.state,
+        if (node.attrs.special || node.attrs.confirm || node.attrs.type || $el.hasClass('oe_stat_button')) {
+            var self = this;
+            $el.click(function () {
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: self.state,
+                });
             });
-        });
+        }
     },
     /**
             excludedElements: ".o_notebook .nav.nav-tabs",

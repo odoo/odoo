@@ -380,6 +380,9 @@ var BasicRenderer = AbstractRenderer.extend({
         if (node.attrs.style) {
             $el.attr('style', node.attrs.style);
         }
+        if (node.attrs.placeholder) {
+            $el.attr('placeholder', node.attrs.placeholder);
+        }
     },
     /**
      * Used by list and kanban renderers to determine whether or not to display

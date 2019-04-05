@@ -626,7 +626,7 @@ ActionManager.include({
                 active_id: recordID,
             }));
         } else {
-            def = new Promise(function () {});
+            def = Promise.reject();
         }
 
         // use the DropPrevious to prevent from executing the handler if another

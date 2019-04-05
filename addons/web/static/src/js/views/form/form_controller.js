@@ -511,6 +511,9 @@ var FormController = BasicController.extend({
         } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
             def = saveAndExecuteAction();
+        } else {
+            console.warn('Unhandled button event', ev);
+            return;
         }
 
         def.then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
