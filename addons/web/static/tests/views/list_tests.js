@@ -1957,6 +1957,37 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view with groupby node and modifiers', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1" editable="bottom">' +
+                '<field name="foo"/>' +
+                '<groupby name="currency_id">' +
+                    '<field name="position"/>' +
+                    '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
+                '</groupby>' +
+            '</tree>',
+            groupBy: ['currency_id'],
+        });
+
+        assert.doesNotHaveClass(list.$('.o_data_row:first'), 'o_selected_row',
+            "first row should be in readonly mode");
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row',
+            "the row should be in edit mode");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+        assert.doesNotHaveClass(list.$('.o_data_row:first'), 'o_selected_row',
+            "the row should be back in readonly mode");
+
+        list.destroy();
+    });
+
     QUnit.test('groupby node with edit button', async function (assert) {
         assert.expect(1);
 
