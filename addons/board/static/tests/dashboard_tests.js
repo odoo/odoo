@@ -109,7 +109,7 @@ QUnit.test('display the no content helper', function (assert) {
 });
 
 QUnit.test('basic functionality, with one sub action', function (assert) {
-    assert.expect(25);
+    assert.expect(26);
 
     var form = createView({
         View: BoardView,
@@ -118,7 +118,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
         arch: '<form string="My Dashboard">' +
                 '<board style="2-1">' +
                     '<column>' +
-                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[[\'foo\', \'!=\', \'False\']]"></action>' +
+                        '<action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[[\'foo\', \'!=\', \'False\']]"></action>' +
                     '</column>' +
                 '</board>' +
             '</form>',
@@ -132,6 +132,12 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             }
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
+                assert.deepEqual(args.context.orderedBy, [{
+                        'name': 'foo',
+                        'asc': true,
+                    }],
+                    'orderedBy is present in the search read when specified on the custom action'
+                );
             }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
@@ -686,7 +692,19 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', fu
 });
 
 QUnit.test('save actions to dashboard', function (assert) {
-    assert.expect(3);
+    assert.expect(6);
+
+    testUtils.patch(ListController, {
+        getOwnedQueryParams: function () {
+            var result = this._super.apply(this, arguments);
+            result.context = {
+                'fire': 'on the bayou',
+            }
+            return result;
+        }
+    });
+
+    this.data['partner'].fields.foo.sortable = true;
 
     var actionManager = createActionManager({
         data: this.data,
@@ -696,6 +714,16 @@ QUnit.test('save actions to dashboard', function (assert) {
         },
         mockRPC: function (route, args) {
             if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.context_to_save.group_by, ['foo'],
+                    'The group_by should have been saved');
+                assert.deepEqual(args.context_to_save.orderedBy,
+                    [{
+                        name: 'foo',
+                        asc: true,
+                    }],
+                    'The orderedBy should have been saved');
+                assert.strictEqual(args.context_to_save.fire, 'on the bayou',
+                    'The context of a controller should be passed and flattened');
                 assert.strictEqual(args.action_id, 1,
                     "should save the correct action");
                 assert.strictEqual(args.view_mode, 'list',
@@ -716,11 +744,21 @@ QUnit.test('save actions to dashboard', function (assert) {
     assert.containsOnce(actionManager, '.o_list_view',
         "should display the list view");
 
+    // Sort the list
+    testUtils.dom.click($('.o_column_sortable'));
+
+    // Group It
+    testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Group By)'));
+    testUtils.dom.click($('.o_search_options .o_group_by_menu button'));
+    testUtils.dom.click($('.o_search_options .o_group_by_menu button.o_apply_group'));
+
     // add this action to dashboard
     testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
     testUtils.dom.click($('.o_add_to_board.o_menu_header'));
     testUtils.fields.editInput($('input.o_add_to_board_input'), 'a name');
     testUtils.dom.click($('.o_add_to_board_confirm_button'));
+
+    testUtils.unpatch(ListController);
 
     actionManager.destroy();
 });
