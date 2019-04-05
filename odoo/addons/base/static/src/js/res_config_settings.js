@@ -181,19 +181,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         }));
     },
     /**
-     * add placeholder attr in input element
-     * @override
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
-        }
-    },
-    /**
      * move to selected setting
      *
      * @private
