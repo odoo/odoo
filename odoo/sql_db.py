@@ -398,16 +398,21 @@ class Cursor(object):
             self.commit()
         self.close()
 
+    def _copy_event_handlers(self):
+        return {key: value[:] for key, value in self._event_handlers.items()}
+
     @contextmanager
     @check
     def savepoint(self):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         self.execute('SAVEPOINT "%s"' % name)
+        original_event_handlers = self._copy_event_handlers()
         try:
             yield
         except Exception:
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
+            self._event_handlers = original_event_handlers
             raise
         else:
             self.execute('RELEASE SAVEPOINT "%s"' % name)
