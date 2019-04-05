@@ -392,7 +392,6 @@ function createParent(params) {
 
 return {
     createActionManager: createActionManager,
-    createView: createView,
     createCalendarView: createCalendarView,
     createControlPanel: createControlPanel,
     createDebugManager: createDebugManager,
