@@ -389,6 +389,7 @@ class Post(models.Model):
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/res.users/%s/image" % (self.create_uid.id)
         res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.plain_content
         return res
 
     @api.constrains('parent_id')
