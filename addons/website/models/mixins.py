@@ -93,7 +93,8 @@ class SeoMetadata(models.AbstractModel):
         twitter_meta['twitter:image'] = meta_image
         return {
             'opengraph_meta': opengraph_meta,
-            'twitter_meta': twitter_meta
+            'twitter_meta': twitter_meta,
+            'meta_description': default_meta.get('default_meta_description')
         }
 
 

@@ -173,14 +173,15 @@
             'data-oe-company-name': res_company.name
         }"/>
         <t t-if="not title">
+            <t t-if="not additional_title and main_object and 'name' in main_object">
+                <t t-set="additional_title" t-value="main_object.name"/>
+            </t>
+            <t t-set="default_title"> <t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/> </t>
             <t t-if="main_object and 'website_meta_title' in main_object and main_object.website_meta_title">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
             <t t-else="">
-                <t t-if="not additional_title and main_object and 'name' in main_object">
-                    <t t-set="additional_title" t-value="main_object.name"/>
-                </t>
-                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/></t>
+                <t t-set="title" t-value="default_title"></t>
             </t>
         </t>
         <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
@@ -188,17 +189,18 @@
     <xpath expr="//t[@t-set='head_website']" position="replace">
         <t t-set="head_website">
             <meta name="generator" content="Odoo"/>
-
+            <t t-set="website_meta" t-value="main_object and main_object.get_website_meta() or {}"/>
+            <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
             <meta t-if="main_object and 'website_indexed' in main_object
                 and not main_object.website_indexed" name="robots" content="noindex"/>
             <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
+                and main_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
             <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
             <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
             <t t-if="main_object">
-                <t t-set="website_meta" t-value="main_object.get_website_meta()"/>
+                <meta name="default_description" t-att-content="website_meta_description or website_meta.get('meta_description')" groups="website.group_website_designer"/>
                 <!-- OpenGraph tags for Facebook sharing -->
                 <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
                 <t t-if="opengraph_meta">
