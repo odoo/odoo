@@ -262,11 +262,8 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
         reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
-
-        # import ipdb; ipdb.set_trace()
         posts = request.env['forum.post'].search([('forum_id', '=', forum.id),('name','!=', '')])
         duplicated_reason_id = request.env.ref('website_forum.reason_1').id
-        # print(posts)
 
         values = self._prepare_user_values(**post)
         values.update({
