@@ -102,8 +102,9 @@ class AccountInvoice(models.Model):
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
                         if line['tax_ids']:
-                            #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
-                            taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
+                            #line['tax_ids'] is -2many commands list for account.move.line
+                            tax_ids = [tax_data[id] for tax_data in self.env['account.move.line'].resolve_2many_commands('tax_ids', line['tax_ids'], ['id'])]
+                            taxes = self.env['account.tax'].browse(tax_ids)
                             price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0, is_refund=inv.type in ('in_refund', 'out_refund'))['total_excluded']
                             for tax in taxes:
                                 tax_ids.append((4, tax.id, None))
