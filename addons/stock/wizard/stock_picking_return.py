@@ -54,13 +54,7 @@ class ReturnPicking(models.TransientModel):
                 continue
             if move.move_dest_ids:
                 move_dest_exists = True
-            quantity = move.product_qty - sum(move.move_dest_ids
-                .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
-                .mapped('move_line_ids').mapped('product_qty')
-                )
-            quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
-            product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
-
+            product_return_moves.append((0, 0, self._prepare_stock_return_picking_line_vals_from_move(move)))
         if self.picking_id and not product_return_moves:
             raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
         if self.picking_id:
@@ -72,6 +66,21 @@ class ReturnPicking(models.TransientModel):
             if self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.return_location:
                 location_id = self.picking_id.picking_type_id.return_picking_type_id.default_location_dest_id.id
             self.location_id = location_id
+
+    @api.model
+    def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
+        quantity = stock_move.product_qty - sum(
+            stock_move.move_dest_ids
+            .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
+            .mapped('move_line_ids.product_qty')
+        )
+        quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
+        return {
+            'product_id': stock_move.product_id.id,
+            'quantity': quantity,
+            'move_id': stock_move.id,
+            'uom_id': stock_move.product_id.uom_id.id,
+        }
 
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = {
