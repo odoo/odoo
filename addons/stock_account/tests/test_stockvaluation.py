@@ -5,69 +5,70 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Date, Datetime
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests.common import Form, SavepointCase
 
 
-class TestStockValuation(TransactionCase):
-    def setUp(self):
-        super(TestStockValuation, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.partner = self.env['res.partner'].create({'name': 'xxx'})
-        self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product1 = self.env['product.product'].create({
+class TestStockValuation(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestStockValuation, cls).setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.partner = cls.env['res.partner'].create({'name': 'xxx'})
+        cls.owner1 = cls.env['res.partner'].create({'name': 'owner1'})
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
             'default_code': 'prda',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        self.product2 = self.env['product.product'].create({
+        cls.product2 = cls.env['product.product'].create({
             'name': 'Product B',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
-        self.product1.categ_id.property_valuation = 'real_time'
-        self.product2.categ_id.property_valuation = 'real_time'
-        Account = self.env['account.account']
-        self.stock_input_account = Account.create({
+        cls.product1.categ_id.property_valuation = 'real_time'
+        cls.product2.categ_id.property_valuation = 'real_time'
+        Account = cls.env['account.account']
+        cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.stock_output_account = Account.create({
+        cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.stock_valuation_account = Account.create({
+        cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.expense_account = Account.create({
+        cls.expense_account = Account.create({
             'name': 'Expense Account',
             'code': 'Expense Account',
-            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+            'user_type_id': cls.env.ref('account.data_account_type_expenses').id,
         })
-        self.stock_journal = self.env['account.journal'].create({
+        cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
             'type': 'general',
         })
-        self.product1.categ_id.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
         })
-        self.product1.categ_id.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
         })
 
     def _get_stock_input_move_lines(self):
