@@ -62,6 +62,7 @@ class ResCompany(models.Model):
                 'product_uom_qty': 10,
                 'price_unit': 123,
                 'order_id': sample_sales_order.id,
+                'company_id': sample_sales_order.company_id.id,
             })
         return sample_sales_order
 
