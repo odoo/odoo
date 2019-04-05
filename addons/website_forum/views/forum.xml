@@ -162,6 +162,7 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <field name="state"/>
                                 <field name="closed_reason_id"/>
+                                <field name="duplicated_post_id" attrs="{'invisible': [('closed_reason_id','!=', %(reason_1)d)]}"/>
                                 <field name="closed_uid"/>
                                 <field name="closed_date"/>
                             </group><group>

@@ -18,6 +18,7 @@
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_tour_forum_question.js"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/post_duplicated_from.js"/>
     </xpath>
 </template>
 
@@ -556,9 +557,19 @@
             <div class="form-group row">
                 <label class="col-lg-3 col-form-label" for="reason">Reason:</label>
                 <div class="col-lg-8">
-                    <select class="form-control" name="reason_id">
+                    <select class="form-control select_reason" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
-                            <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                            <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id" t-att-duplicated-option="reason.id == duplicated_reason_id"><t t-esc="reason.name"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row invisible hide_until_duplicate">
+                <label class="col-lg-3 col-form-label" for="reason">Duplicated from:</label>
+                <div class="col-lg-8">
+                    <select class="form-control" name="duplicated_id">
+                        <t t-foreach="posts or []" t-as="post">
+                            <option t-att-value="post.id" ><t t-esc="post.name"/></option>
                         </t>
                     </select>
                 </div>

@@ -242,6 +242,8 @@ class Post(models.Model):
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
 
+    duplicated_post_id = fields.Many2one('forum.post', string="Duplicated From")
+
     def _search_can_view(self, operator, value):
         if operator not in ('=', '!=', '<>'):
             raise ValueError('Invalid operator: %s' % (operator,))
@@ -531,7 +533,7 @@ class Post(models.Model):
         self.sudo().write({'state': 'active'})
 
     @api.multi
-    def close(self, reason_id):
+    def close(self, reason_id, duplicated_id=None):
         if any(post.parent_id for post in self):
             return False
 
@@ -554,6 +556,7 @@ class Post(models.Model):
             'closed_uid': self._uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
             'closed_reason_id': reason_id,
+            'duplicated_post_id': duplicated_id or False,
         })
         return True
 
