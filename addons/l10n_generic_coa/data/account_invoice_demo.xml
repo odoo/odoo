@@ -191,10 +191,10 @@
                         ('user_type_id', '=', ref('account.data_account_type_expenses')),
                         ('company_id', '=', obj().env['res.company']._company_default_get('account.account').id)]"/>
             <field name="invoice_line_tax_ids" model="account.tax"
-                eval="[(6, 0, [obj().search([
+                eval="[(6, 0, obj().search([
                     ('type_tax_use', '=', 'purchase'),
                     ('amount', '&gt;', 0),
-                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).id])]"/>
+                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
         </record>
 
         <function model="account.invoice" name="_onchange_invoice_line_ids">

@@ -207,5 +207,24 @@ QUnit.module('DocumentViewer', {
 
         assert.ok(viewer.isDestroyed(), 'viewer should be destroyed');
     });
+
+    QUnit.test('fileType and integrity test', async function (assert) {
+        assert.expect(3);
+
+        var viewer = await createViewer({
+            attachmentID: 2,
+            attachments: this.attachments,
+        });
+
+        assert.strictEqual(this.attachments[1].type, 'url',
+            "the type should be url");
+        assert.strictEqual(this.attachments[1].fileType, 'youtu',
+            "there should be a fileType 'youtu'");
+        assert.strictEqual(this.attachments[1].youtube, 'FYqW0Gdwbzk',
+            "there should be a youtube token");
+
+        viewer.destroy();
+    });
+
 });
 });

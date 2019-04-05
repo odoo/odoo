@@ -408,6 +408,9 @@ class TestMrpOrder(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 1.0
+        for i in range(len(produce_form.workorder_line_ids)):
+            with produce_form.workorder_line_ids.edit(i) as line:
+                line.qty_done += 1
         product_produce = produce_form.save()
         product_produce.final_lot_id = final_product_lot.id
         # product 1 lot 1 shelf1
@@ -415,8 +418,6 @@ class TestMrpOrder(TestMrpCommon):
         # product 1 lot 2
         self.assertEqual(len(product_produce.workorder_line_ids), 4, 'You should have 4 produce lines. lot 1 shelf_1, lot 1 shelf_2, lot2 and for product which have tracking None')
 
-        for produce_line in product_produce.workorder_line_ids:
-            produce_line.qty_done = produce_line.qty_to_consume + 1
         product_produce.do_produce()
 
         move_1 = mo.move_raw_ids.filtered(lambda m: m.product_id == p1)
