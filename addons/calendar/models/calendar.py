@@ -192,27 +192,27 @@ class Attendee(models.Model):
         invitation_template = invitation_template.with_context(rendering_context)
 
         # send email with attachments
-        mails_to_send = self.env['mail.mail']
+        mail_ids = []
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
-                mail_id = invitation_template.send_mail(attendee.id, notif_layout='mail.mail_notification_light')
 
-                vals = {}
+                email_values = {
+                    'model': None,  # We don't want to have the mail in the tchatter while in queue!
+                    'res_id': None,
+                }
                 if ics_file:
-                    vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
-                                                      'mimetype': 'text/calendar',
-                                                      'datas_fname': 'invitation.ics',
-                                                      'datas': base64.b64encode(ics_file)})]
-                vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
-                vals['res_id'] = False
-                current_mail = self.env['mail.mail'].browse(mail_id)
-                current_mail.mail_message_id.write(vals)
-                mails_to_send |= current_mail
+                    email_values['attachment_ids'] = [
+                        (0, 0, {'name': 'invitation.ics',
+                                'mimetype': 'text/calendar',
+                                'datas_fname': 'invitation.ics',
+                                'datas': base64.b64encode(ics_file)})
+                    ]
+                mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
-        if force_send and mails_to_send:
-            res = mails_to_send.send()
+        if force_send and mail_ids:
+            res = self.env['mail.mail'].browse(mail_ids).send()
 
         return res
 
