@@ -213,7 +213,6 @@ class WebsiteForm(http.Controller):
             attachment_value = {
                 'name': file.filename,
                 'datas': base64.encodestring(file.read()),
-                'datas_fname': file.filename,
                 'res_model': model_name,
                 'res_id': record.id,
             }

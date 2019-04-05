@@ -415,7 +415,6 @@ class MailComposer(models.TransientModel):
                 data_attach = {
                     'name': attach_fname,
                     'datas': attach_datas,
-                    'datas_fname': attach_fname,
                     'res_model': 'mail.compose.message',
                     'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!

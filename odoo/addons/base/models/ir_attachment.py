@@ -201,7 +201,7 @@ class IrAttachment(models.Model):
             vals = {
                 'file_size': len(bin_data),
                 'checksum': self._compute_checksum(bin_data),
-                'index_content': self._index(bin_data, attach.datas_fname, attach.mimetype),
+                'index_content': self._index(bin_data, attach.mimetype),
                 'store_fname': False,
                 'db_datas': value,
             }
@@ -232,8 +232,8 @@ class IrAttachment(models.Model):
         mimetype = None
         if values.get('mimetype'):
             mimetype = values['mimetype']
-        if not mimetype and values.get('datas_fname'):
-            mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if not mimetype and values.get('name'):
+            mimetype = mimetypes.guess_type(values['name'])[0]
         if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
@@ -251,8 +251,8 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, datas_fname, file_type):
-        """ compute the index content of the given filename, or binary data.
+    def _index(self, bin_data, file_type):
+        """ compute the index content of the given binary data.
             This is a python implementation of the unix command 'strings'.
             :param bin_data : datas in binary form
             :return index_content : string containing all the printable character of the binary data
@@ -275,7 +275,6 @@ class IrAttachment(models.Model):
         return ['base.group_system']
 
     name = fields.Char('Name', required=True)
-    datas_fname = fields.Char('Filename')
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
@@ -374,7 +373,7 @@ class IrAttachment(models.Model):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _read_group_allowed_fields(self):
-        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'datas_fname', 'res_field', 'res_model']
+        return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'res_name', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

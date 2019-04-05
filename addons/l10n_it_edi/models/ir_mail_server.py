@@ -135,7 +135,6 @@ class FetchmailServer(models.Model):
         invoice_attachment = self.env['ir.attachment'].create({
                 'name': att_name,
                 'datas': base64.encodestring(att_content),
-                'datas_fname': att_name,
                 'type': 'binary',
                 })
 

@@ -13,8 +13,7 @@
                     <group>
                         <group>
                             <field name="type"/>
-                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                             <field name="mimetype" groups="base.group_no_one"/>
                         </group>
@@ -49,7 +48,6 @@
             <field name="arch" type="xml">
                 <tree string="Attachments">
                     <field name="name"/>
-                    <field name="datas_fname"/>
                     <field name="res_model"/>
                     <field name="res_field"/>
                     <field name="res_id"/>
@@ -64,7 +62,7 @@
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <search string="Attachments">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Attachment"/>
                     <field name="create_date"/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"

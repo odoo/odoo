@@ -237,8 +237,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
     def test_mail_message_access_read_notification(self):
         attachment = self.env['ir.attachment'].create({
             'datas': base64.b64encode(b'My attachment'),
-            'name': 'doc.txt',
-            'datas_fname': 'doc.txt'})
+            'name': 'doc.txt'})
         # attach the attachment to the message
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})

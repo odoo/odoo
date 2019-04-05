@@ -704,9 +704,8 @@ class MassMailing(models.Model):
         def _image_to_url(b64image: bytes):
             """Store an image in an attachement and returns an url"""
             attachment = self.env['ir.attachment'].create({
-                'name': "cropped_image",
                 'datas': b64image,
-                'datas_fname': "cropped_image_mailing_{}".format(self.id),
+                'name': "cropped_image_mailing_{}".format(self.id),
                 'type': 'binary',})
 
             attachment.generate_access_token()

@@ -139,10 +139,9 @@
             <field name="type">in_invoice</field>
         </record>
         <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
-            <field name="name">in_invoice_pdf</field>
             <field name="type">binary</field>
             <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
-            <field name="datas_fname">in_invoice_yourcompany_demo.pdf</field>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
         </record>
         <record id="mail_message_in_invoice_0" model="mail.message">
             <field name="model">account.invoice</field>

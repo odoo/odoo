@@ -9,7 +9,6 @@
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
                 <field name="type"/>
-                <field name="datas_fname"/>
                 <field name="name"/>
                 <field name="priority"/>
                 <field name="create_uid"/>
@@ -30,7 +29,7 @@
                                         <field name="name" class="o_text_overflow"/>
                                     </div>
                                     <div class="o_kanban_record_body">
-                                      <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                                      <field name="name" attrs="{'invisible':[('type','=','url')]}"/>
                                       <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                                     </div>
                                     <div class="o_kanban_record_bottom">

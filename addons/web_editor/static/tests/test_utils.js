@@ -319,10 +319,6 @@ function wysiwygData(data) {
                     string: "display_name",
                     type: 'char',
                 },
-                datas_fname: {
-                    string: "datas_fname",
-                    type: 'char',
-                },
                 mimetype: {
                     string: "mimetype",
                     type: 'char',
@@ -371,7 +367,6 @@ function wysiwygData(data) {
             records: [{
                 id: 1,
                 name: 'image',
-                datas_fname: 'image.png',
                 mimetype: 'image/png',
                 checksum: false,
                 url: '/web_editor/static/src/img/transparent.png',

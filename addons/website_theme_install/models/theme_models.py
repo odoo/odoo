@@ -69,7 +69,6 @@ class ThemeAttachment(models.Model):
     url = fields.Char()
     copy_ids = fields.One2many('ir.attachment', 'theme_template_id', 'Attachment using a copy of me', copy=False, readonly=True)
 
-    # TODO in master: add missing field: datas_fname
 
     @api.multi
     def _convert_to_base_model(self, website, **kwargs):

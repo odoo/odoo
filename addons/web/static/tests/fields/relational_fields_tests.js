@@ -2247,7 +2247,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(route);
                 if (route === '/web/dataset/call_kw/ir.attachment/read') {
-                    assert.deepEqual(args.args[1], ['name', 'datas_fname', 'mimetype']);
+                    assert.deepEqual(args.args[1], ['name', 'mimetype']);
                 }
                 return this._super.apply(this, arguments);
             },

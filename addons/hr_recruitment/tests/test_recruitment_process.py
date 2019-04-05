@@ -30,7 +30,7 @@ class TestRecruitmentProcess(common.TransactionCase):
         applicant = self.env['hr.applicant'].search([('email_from', '=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')], limit=1)
         self.assertTrue(applicant, "Applicant is not created after getting the mail")
         resume_ids = self.env['ir.attachment'].search([
-            ('datas_fname', '=', 'resume.pdf'),
+            ('name', '=', 'resume.pdf'),
             ('res_model', '=', self.env['hr.applicant']._name),
             ('res_id', '=', applicant.id)])
         self.assertEquals(applicant.name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')

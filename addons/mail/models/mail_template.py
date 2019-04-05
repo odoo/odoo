@@ -549,7 +549,6 @@ class MailTemplate(models.Model):
         for attachment in attachments:
             attachment_data = {
                 'name': attachment[0],
-                'datas_fname': attachment[0],
                 'datas': attachment[1],
                 'type': 'binary',
                 'res_model': 'mail.message',

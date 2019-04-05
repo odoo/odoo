@@ -728,8 +728,7 @@ class TestMailPerformancePost(TransactionCase):
         })
         self.vals = [{
             'datas': base64.b64encode(bytes("attachement content %s" % i, 'utf-8')),
-            'name': 'attach %s' % i,
-            'datas_fname': 'fileText_test%s.txt' % i,
+            'name': 'fileText_test%s.txt' % i,
             'mimetype': 'text/plain',
             'res_model': 'mail.compose.message',
             'res_id': 0,
