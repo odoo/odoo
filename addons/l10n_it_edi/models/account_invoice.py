@@ -272,6 +272,7 @@ class AccountInvoice(models.Model):
         message = self.env['mail.message'].create({
             'subject': _('Sending file: %s') % (self.l10n_it_einvoice_id.name),
             'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.user.company_id.l10n_it_address_recipient_fatturapa),
+            'author_id': self.env.user.partner_id.id,
             'email_from': self.env.user.company_id.l10n_it_address_send_fatturapa,
             'mail_server_id': self.env.user.company_id.l10n_it_mail_pec_server_id.id,
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
