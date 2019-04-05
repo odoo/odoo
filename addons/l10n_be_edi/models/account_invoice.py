@@ -119,7 +119,6 @@ class AccountInvoice(models.Model):
                     'res_id': self.id,
                     'res_model': 'account.invoice',
                     'datas': attachment_data,
-                    'datas_fname': attachment_name,
                     'type': 'binary',
                 })
                 self.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment_id.id])

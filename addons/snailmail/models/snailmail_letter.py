@@ -37,7 +37,7 @@ class SnailmailLetter(models.Model):
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade')
     attachment_datas = fields.Binary('Document', related='attachment_id.datas')
-    attachment_fname = fields.Char('Attachment Filename', related='attachment_id.datas_fname')
+    attachment_fname = fields.Char('Attachment Filename', related='attachment_id.name')
     color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
     cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company.snailmail_cover)
     duplex = fields.Boolean(string='Both side', default=lambda self: self.env.company.snailmail_duplex)
@@ -125,7 +125,6 @@ class SnailmailLetter(models.Model):
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
-                'datas_fname': filename,
                 'res_model': 'snailmail.letter',
                 'res_id': self.id,
                 'type': 'binary',  # override default_type from context, possibly meant for another model!

@@ -163,7 +163,6 @@ class AccountInvoice(models.Model):
                 'res_id': invoice.id,
                 'res_model': invoice._name,
                 'datas': base64.encodestring(data),
-                'datas_fname': report_name,
                 'description': description,
                 'type': 'binary',
                 })
@@ -660,7 +659,6 @@ class AccountInvoice(models.Model):
                     attachment_64 = self.env['ir.attachment'].create({
                         'name': name_attachment,
                         'datas': attachment_64,
-                        'datas_fname': name_attachment,
                         'type': 'binary',
                     })
 

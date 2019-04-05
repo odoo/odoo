@@ -207,7 +207,6 @@ class Attendee(models.Model):
                     email_values['attachment_ids'] = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
-                                'datas_fname': 'invitation.ics',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))

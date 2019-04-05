@@ -63,7 +63,6 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         kwargs['body'] = ''
         attachment = self.env['ir.attachment'].sudo(self.user_employee).create({
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
-            'datas_fname': 'catalog.doc',
             'name': 'picture_of_your_dog.doc',
         })
         kwargs['attachment_ids'] = [attachment.id]

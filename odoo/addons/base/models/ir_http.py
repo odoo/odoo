@@ -338,7 +338,7 @@ class IrHttp(models.AbstractModel):
 
     def _binary_record_content(
             self, record, field='datas', filename=None,
-            filename_field='datas_fname', default_mimetype='application/octet-stream'):
+            filename_field='name', default_mimetype='application/octet-stream'):
 
         model = record._name
         mimetype = 'mimetype' in record and record.mimetype or False
@@ -387,7 +387,7 @@ class IrHttp(models.AbstractModel):
         return (status, headers, content)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
         """ Get file, attachment or downloadable content
