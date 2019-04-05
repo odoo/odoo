@@ -2421,11 +2421,12 @@ class MailThread(models.AbstractModel):
 
         # Retrieve the language in which the template was rendered, in order to render the custom
         # layout in the same language.
+        # TDE FIXME: this whole brol should be cleaned !
         lang = self.env.context.get('lang')
         if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
             if template and template.lang:
-                lang = template._render_template(template.lang, self.env.context['default_model'], self.env.context['default_res_id'])
+                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
 
         if not model_description and model:
             model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name

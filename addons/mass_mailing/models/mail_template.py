@@ -8,15 +8,16 @@ class MailTemplate(models.Model):
     _inherit = "mail.template"
 
     @api.model
-    def render_post_process(self, html):
+    def _render_template_postprocess(self, rendered):
         # super will transform relative url to absolute
-        html = super(MailTemplate, self).render_post_process(html)
+        rendered = super(MailTemplate, self)._render_template_postprocess(rendered)
 
         # apply shortener after
         if self.env.context.get('post_convert_links'):
-            html = self.env['link.tracker'].convert_links(
-                html,
-                self.env.context['post_convert_links'],
-                blacklist=['/unsubscribe_from_list']
-            )
-        return html
+            for res_id, html in rendered.items():
+                rendered[res_id] = self.env['link.tracker'].convert_links(
+                    html,
+                    self.env.context['post_convert_links'],
+                    blacklist=['/unsubscribe_from_list']
+                )
+        return rendered
