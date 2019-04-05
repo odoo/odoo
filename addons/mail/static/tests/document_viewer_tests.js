@@ -65,12 +65,12 @@ var createViewer = function (params) {
 QUnit.module('DocumentViewer', {
     beforeEach: function () {
         this.attachments = [
-            {id: 1, datas_fname: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
-            {id: 2, name: 'urlYoutubeName', type: 'url', mimetype: '', url: 'https://youtu.be/FYqW0Gdwbzk', datas_fname: 'urlYoutube'},
-            {id: 3, name: 'urlGoogle', type: 'url', mimetype: '', url: 'https://www.google.com', datas_fname: 'urlRandom'},
-            {id: 4, name: 'text.html', datas_fname: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},
-            {id: 5, name: 'video.mp4', datas_fname: 'video.mp4', type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
-            {id: 6, name: 'image.jpg', datas_fname: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
+            {id: 1, name: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
+            {id: 2, name: 'urlYoutube', type: 'url', mimetype: '', url: 'https://youtu.be/FYqW0Gdwbzk'},
+            {id: 3, name: 'urlRandom', type: 'url', mimetype: '', url: 'https://www.google.com'},
+            {id: 4, name: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},
+            {id: 5, name: 'video.mp4', type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
+            {id: 6, name: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
         ];
     },
 }, function () {
@@ -116,7 +116,7 @@ QUnit.module('DocumentViewer', {
             },
         });
 
-        assert.strictEqual(viewer.$(".o_image_caption:contains('urlYoutubeName')").length, 1,
+        assert.strictEqual(viewer.$(".o_image_caption:contains('urlYoutube')").length, 1,
             "the viewer should be on the right attachment");
         assert.containsOnce(viewer, '.o_viewer_text[data-src="' + youtubeURL + '"]',
             "there should be a video player");

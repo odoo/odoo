@@ -233,13 +233,13 @@ var FileWidget = SearchableMediaWidget.extend({
                 .sortBy(function (r) {
                     if (_.any(self.options.firstFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.name && r.name.match(regex);
+                        return r.name && r.name.match(regex);
                     })) {
                         return -1;
                     }
                     if (_.any(self.options.lastFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.name && r.name.match(regex);
+                        return r.name && r.name.match(regex);
                     })) {
                         return 1;
                     }
@@ -323,9 +323,9 @@ var FileWidget = SearchableMediaWidget.extend({
         domain = ['|', ['public', '=', true]].concat(domain);
         domain = domain.concat(this.options.mimetypeDomain);
         if (needle && needle.length) {
-            domain.push('|', ['name', 'ilike', needle], ['name', 'ilike', needle]);
+            domain.push(['name', 'ilike', needle]);
         }
-        domain.push('|', ['name', '=', false], '!', ['name', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
+        domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], ['url', '!=', false]);
         return domain;
     },

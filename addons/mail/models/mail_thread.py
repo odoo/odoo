@@ -1633,7 +1633,6 @@ class MailThread(models.AbstractModel):
                     'name': name,
                     'datas': base64.b64encode(content),
                     'type': 'binary',
-                    'datas_fname': name,
                     'description': name,
                     'res_model': model,
                     'res_id': res_id,

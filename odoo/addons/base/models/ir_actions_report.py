@@ -154,7 +154,7 @@ class IrActionsReport(models.Model):
         if not attachment_name:
             return None
         return self.env['ir.attachment'].search([
-                ('datas_fname', '=', attachment_name),
+                ('name', '=', attachment_name),
                 ('res_model', '=', self.model),
                 ('res_id', '=', record.id)
         ], limit=1)
@@ -175,7 +175,6 @@ class IrActionsReport(models.Model):
         attachment_vals = {
             'name': attachment_name,
             'datas': base64.encodestring(buffer.getvalue()),
-            'datas_fname': attachment_name,
             'res_model': self.model,
             'res_id': record.id,
         }

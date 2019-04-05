@@ -86,11 +86,11 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
             ('List2', b'My second attachment')
         ]
         _attach_1 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach1', 'datas_fname': 'Attach1',
+            'name': 'Attach1',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
         _attach_2 = self.env['ir.attachment'].sudo(self.user_employee).create({
-            'name': 'Attach2', 'datas_fname': 'Attach2',
+            'name': 'Attach2',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
 

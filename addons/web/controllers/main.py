@@ -1009,7 +1009,7 @@ class Binary(http.Controller):
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename=None, filename_field='datas_fname', unique=None, mimetype=None,
+                       filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
 
         status, headers, content = request.env['ir.http'].binary_content(
@@ -1053,7 +1053,7 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                      filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                      filename_field='name', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None,
                       **kwargs):
         # other kwargs are ignored on purpose
@@ -1063,7 +1063,7 @@ class Binary(http.Controller):
             quality=int(kwargs.get('quality', 0)), access_token=access_token)
 
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                       filename_field='name', unique=None, filename=None, mimetype=None,
                        download=None, width=0, height=0, crop=False, quality=0, access_token=None,
                        placeholder='placeholder.png', **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
@@ -1134,7 +1134,6 @@ class Binary(http.Controller):
                 attachment = Model.create({
                     'name': filename,
                     'datas': base64.encodestring(ufile.read()),
-                    'datas_fname': filename,
                     'res_model': model,
                     'res_id': int(id)
                 })
