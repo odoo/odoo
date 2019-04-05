@@ -91,6 +91,7 @@ class MailTemplate(models.Model):
             res['model_id'] = self.env['ir.model']._get(res.pop('model')).id
         return res
 
+    # description
     name = fields.Char('Name')
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
@@ -105,6 +106,7 @@ class MailTemplate(models.Model):
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
+    # recipients
     use_default_to = fields.Boolean(
         'Default recipients',
         help="Default recipients of the record:\n"
@@ -115,32 +117,28 @@ class MailTemplate(models.Model):
                              help="Comma-separated ids of recipient partners (placeholders may be used here)")
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
-    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
-                                     help="Optional preferred server for outgoing mails. If not set, the highest "
-                                          "priority one will be used.")
+    # content
     body_html = fields.Html('Body', translate=True, sanitize=False)
-    report_name = fields.Char('Report Filename', translate=True,
-                              help="Name to use for the generated report file (may contain placeholders)\n"
-                                   "The extension can be omitted and will then come from the report type.")
-    report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
-    ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
-                                        help="Sidebar action to make this template available on records "
-                                             "of the related document model")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
                                            "emails created from this template")
-    auto_delete = fields.Boolean('Auto Delete', default=True, help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
-
+    report_name = fields.Char('Report Filename', translate=True,
+                              help="Name to use for the generated report file (may contain placeholders)\n"
+                                   "The extension can be omitted and will then come from the report type.")
+    report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
+    # options
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
+                                     help="Optional preferred server for outgoing mails. If not set, the highest "
+                                          "priority one will be used.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
-
-    @api.onchange('model_id')
-    def onchange_model_id(self):
-        # TDE CLEANME: should'nt it be a stored related ?
-        if self.model_id:
-            self.model = self.model_id.model
-        else:
-            self.model = False
+    auto_delete = fields.Boolean(
+        'Auto Delete', default=True,
+        help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+    # contextual action
+    ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
+                                        help="Sidebar action to make this template available on records "
+                                             "of the related document model")
 
     def unlink(self):
         self.unlink_action()
@@ -178,9 +176,9 @@ class MailTemplate(models.Model):
 
         return True
 
-    # ----------------------------------------
+    # ------------------------------------------------------------
     # RENDERING
-    # ----------------------------------------
+    # ------------------------------------------------------------
 
     @api.model
     def render_post_process(self, html):
@@ -245,6 +243,10 @@ class MailTemplate(models.Model):
                 results[res_id] = self.render_post_process(result)
 
         return multi_mode and results or results[res_ids[0]]
+
+    # ------------------------------------------------------------
+    # MESSAGE/EMAIL VALUES GENERATION
+    # ------------------------------------------------------------
 
     def get_email_template(self, res_ids):
         multi_mode = True
@@ -393,9 +395,9 @@ class MailTemplate(models.Model):
 
         return multi_mode and results or results[res_ids[0]]
 
-    # ----------------------------------------
+    # ------------------------------------------------------------
     # EMAIL
-    # ----------------------------------------
+    # ------------------------------------------------------------
 
     def _send_check_access(self, res_ids):
         records = self.env[self.model].browse(res_ids)
