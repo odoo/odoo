@@ -342,8 +342,6 @@ var MetaTitleDescription = Widget.extend({
         this.$warning = this.$('div#website_meta_description_warning');
         this.$preview = this.$('.js_seo_preview');
 
-        this._renderPreview();
-
         if (!this.canEditTitle) {
             this.$title.attr('disabled', true);
         }
