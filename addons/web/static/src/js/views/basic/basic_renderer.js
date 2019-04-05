@@ -731,8 +731,12 @@ var BasicRenderer = AbstractRenderer.extend({
         var defs = [];
         this.defs = defs; // Potentially filled by widget rerendering
         _.each(this.allModifiersData, function (modifiersData) {
-            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
-            self._applyModifiers(modifiersData, record);
+            // `allModifiersData` might contain modifiers registered for other
+            // records than the given record (e.g. <groupby> in list)
+            if (record.id in modifiersData.evaluatedModifiers) {
+                modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+                self._applyModifiers(modifiersData, record);
+            }
         });
         delete this.defs;
 
