@@ -281,6 +281,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -717,6 +720,12 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid "A user cannot have both Tax B2B and Tax B2C"
 msgstr ""
 
 #. module: account
@@ -3710,6 +3719,14 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
+"אדון / גברת יקרים,\n"
+"\n"
+"לפי הרשומות שבידינו, עדיין קיימם תשלומים בחשבונך. ראה פרטים בהמשך.\n"
+"אם הסכום כבר שולם, התעלם מהודעה זו. אחרת, העבר אלינו את הסכום הכולל שלהלן.\n"
+"אם יש לך שאלות בנוגע לחשבונך,אנא  צור איתנו קשר.\n"
+"\n"
+"תודה מראש על שיתוף הפעולה.\n"
+"כל טוב,"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
@@ -9170,6 +9187,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"מצב על בסיס פעילויות\n"
+"איחור: תאריך היעד כבר חלף\n"
+"היום: תאריך הפעילות הוא היום\n"
+"מתוכנן: פעילויות עתידיות."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step

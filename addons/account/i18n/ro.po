@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Cozmin Candea <office@terrabit.ro>, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2019\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -797,6 +797,12 @@ msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid "A user cannot have both Tax B2B and Tax B2C"
+msgstr ""
+
+#. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
 msgstr ""
@@ -1293,7 +1299,7 @@ msgstr "Adaugă un jurnal."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a line"
-msgstr "Adăugați o linie"
+msgstr "Adăugă o linie"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -5846,9 +5852,9 @@ msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
 msgstr ""
-"Indica faptul ca factura a fost platita, iar inregistrarea in jurnal a "
-"facturii a fost reconciliata cu una sau mai multe inregistrari in jurnal a "
-"platii."
+"Indică faptul ca factura a fost plătita, iar înregistrarea din jurnal a "
+"facturii a fost reconciliată cu una sau mai multe înregistrări din jurnal de"
+" plătii."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__sent
@@ -7701,7 +7707,7 @@ msgstr "Încasare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Referință plată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -8223,7 +8229,7 @@ msgstr "Motiv..."
 #: selection:account.account.type,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Receivable"
-msgstr "Creanta"
+msgstr "Creanță"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id

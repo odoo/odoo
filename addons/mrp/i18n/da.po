@@ -307,7 +307,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:502
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr ""
+msgstr "En produktionsordre er allerede udført eller annulleret."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -728,7 +728,7 @@ msgstr "Skift vare antal"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Production Qty"
-msgstr ""
+msgstr "Ændr produktionsantal"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
@@ -875,7 +875,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Create a new manufacturing order"
-msgstr ""
+msgstr "Opret en ny produktionsordre"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1004,6 +1004,8 @@ msgstr "Angiv ressourcens plan"
 msgid ""
 "Defines when a Manufacturing Order is considered as ready to be started"
 msgstr ""
+"Definerer hvornår en produktionsordre anses for at være klar til "
+"igangsætning"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -1175,7 +1177,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr ""
+msgstr "Der opstod undtagelser på produktionsordrene:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1479,6 +1481,10 @@ msgid ""
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
 msgstr ""
+"Hvis produktet er et halvt produceret produkt: Når en produktionsordre behandles,\n"
+"                                    der indeholder det produkt som komponent,\n"
+"                                    så vil de rå materialer for det produkt blive tilføjet til\n"
+"                                    produktionsordren for det endelige produkt."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3555,7 +3561,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniaturebillede"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -3834,6 +3840,7 @@ msgid ""
 "Unlock the manufacturing order to correct what has been consumed or "
 "produced."
 msgstr ""
+"Lås produktionsordren op for at rette forbruget eller det fremstillede."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_unread
@@ -4020,6 +4027,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"Når produkter er krævet i <b>%s</b>, <br/> så oprettes en produktionsordre "
+"til at opfylde behovet."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -4246,6 +4255,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Du kan enten overføre en fil fra din computer eller kopiere/indsætte en "
+"internethenvisning i din fil."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:605
@@ -4452,7 +4463,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:717
 #, python-format
 msgid "manufacturing order"
-msgstr ""
+msgstr "produktionsordre"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view

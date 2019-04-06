@@ -847,6 +847,12 @@ msgstr ""
 " vieną kartą."
 
 #. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid "A user cannot have both Tax B2B and Tax B2C"
+msgstr ""
+
+#. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
 msgstr "Įspėjimas gali būti nustatytas partneriui (Sąskaitai)"
@@ -2576,7 +2582,7 @@ msgstr "Atšaukti"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "Atšaukti: sukurti kreditinę sąskaitą ir sudengti"
+msgstr "Atšaukti: sukurkite kreditinę sąskaitą ir sudenkite"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -3369,7 +3375,7 @@ msgstr "Sukurti banko sąskaitą"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Create a credit note"
-msgstr "Sukurti kreditinę sąskaitą"
+msgstr "Sukurkite kreditinę sąskaitą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3384,17 +3390,17 @@ msgstr "Sukurti kreditinės sąskaitos šabloną."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Sukurti žurnalo įrašą"
+msgstr "Sukurkite žurnalo įrašą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_group_tree
 msgid "Create a new account group"
-msgstr "Sukurti naują sąskaitų grupę"
+msgstr "Sukurkite naują sąskaitų grupę"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "Create a new cash log"
-msgstr "Sukurti naują grynųjų pinigų žurnalą"
+msgstr "Sukurkite naują grynųjų pinigų žurnalą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
@@ -3405,32 +3411,32 @@ msgstr "Sukurkite naują mokestinę aplinką"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid "Create a new incoterm"
-msgstr "Sukurti naują Incoterm"
+msgstr "Sukurkite naują Incoterm"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
 msgid "Create a new purchasable product"
-msgstr "Sukurti naują perkamą produktą"
+msgstr "Sukurkite naują perkamą produktą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Sukurti naują sudengimo modelį"
+msgstr "Sukurkite naują sudengimo modelį"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr "Sukurti naują parduodamą produktą"
+msgstr "Sukurkite naują parduodamą produktą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr "Sukurti naują mokestį"
+msgstr "Sukurkite naują mokestį"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr "Sukurti tiekėjo kreditinę sąskaitą"
+msgstr "Sukurkite tiekėjo kreditinę sąskaitą"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3468,7 +3474,7 @@ msgstr "Sukurti modelį"
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
 msgid "Create new journal"
-msgstr "Sukurti naują žurnalą"
+msgstr "Sukurkite naują žurnalą"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -4072,7 +4078,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years opening &amp; closing dates."
-msgstr "Nustatyti jūsų mokestinių metų atidarymo ir uždarymo datas."
+msgstr "Nustatykite savo mokestinių metų atidarymo ir uždarymo datas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -5934,7 +5940,7 @@ msgstr "Sąskaitos be apmokėjimo"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Sąskaitos pateikimas"
+msgstr "Apskaita"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
@@ -11393,7 +11399,7 @@ msgstr "Nežinomas partneris"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unpaid Invoices"
-msgstr "Neamokėtos sąskaitos"
+msgstr "Neapmokėtos sąskaitos"
 
 #. module: account
 #: selection:account.move,state:0
