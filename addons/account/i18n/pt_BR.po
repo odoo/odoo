@@ -40,6 +40,7 @@
 # Rui Andrada <shingonoide@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
+# Rogerio S. Machado <rogerio.s.machado@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019\n"
+"Last-Translator: Rogerio S. Machado <rogerio.s.machado@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,7 +295,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Enviar mensagem"
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Enviar mensagem</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -857,6 +858,12 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid "A user cannot have both Tax B2B and Tax B2C"
 msgstr ""
 
 #. module: account
@@ -9376,7 +9383,7 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Imagem em tamannho reduzido do contato. O tamanho da imagem será "
+"Imagem em tamanho reduzido do contato. O tamanho da imagem será "
 "automaticamente ajustado para 64x64px, mantendo-se as proporções da imagem "
 "original. Utilize esse campo em lugares onde uma pequena imagem for "
 "necessária."
