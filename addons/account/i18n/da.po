@@ -11,7 +11,6 @@
 # Jarnhold Nattestad <nattestads@gmail.com>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
 # Visti Kristensen <visti@vkdata.dk>, 2017
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Jesper Carstensen <info@danodoo.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
 # Simon Andersen <simon@vkdata.dk>, 2018
@@ -21,6 +20,7 @@
 # Jesper Laugesen <jel@enigma.dk>, 2018
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Martin Trigaux, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2263,6 +2263,8 @@ msgstr "Gem kun hvis leverings- eller fakturaland matcher gruppen."
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
 msgstr ""
+"Tilføj kun hvis leverings eller fakturerings land stemmer overens med "
+"gruppen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -4286,7 +4288,7 @@ msgstr "Beskrivelse på fakturaen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_account_id
 msgid "Destination Account"
-msgstr ""
+msgstr "Destinations konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply
@@ -5716,7 +5718,7 @@ msgstr "Installér kontoplan"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Install More Packages"
-msgstr ""
+msgstr "Installer flere pakker"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_transfer_account_id
@@ -7485,7 +7487,7 @@ msgstr "Åbnings dato"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_journal_id
 msgid "Opening Journal"
-msgstr ""
+msgstr "Åbnings journal"
 
 #. module: account
 #: code:addons/account/models/company.py:339
@@ -9221,7 +9223,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show active taxes"
-msgstr ""
+msgstr "Vis aktive skatter"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9231,7 +9233,7 @@ msgstr "Vis alle poster, hvor den næste handlingsdato er før i dag"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show inactive taxes"
-msgstr ""
+msgstr "Vis inaktive skatter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
@@ -10337,12 +10339,13 @@ msgstr "Der er ikke noget at udligne."
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
-msgstr ""
+msgstr "Der opstod en fejl under behandlingen af denne side."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr ""
+"Disse skatter er standard i alle nye produkter som er blevet oprettet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
@@ -10433,6 +10436,9 @@ msgid ""
 "keeps track of the depreciation occurred on those assets, and creates "
 "account move for those depreciation lines."
 msgstr ""
+"Dette giver dig mulighed for at styre de aktiver, der ejes af en virksomhed "
+"eller en person. Det holder styr på, at afskrivningerne har fundet sted på "
+"disse aktiver, og skaber kontoflytning for disse afskrivningslinjer."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10559,6 +10565,7 @@ msgstr ""
 msgid ""
 "This method should only be called to process a single invoice's payment."
 msgstr ""
+"Denne metode skal kun benyttes for at behandle en enkelt fakturas betaling."
 
 #. module: account
 #. openerp-web

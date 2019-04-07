@@ -179,6 +179,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Overi "
+"dostavo</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -943,7 +945,7 @@ msgstr "Optični čitalec"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Serijski zbirniki"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1900,7 +1902,7 @@ msgstr "Dobavni nalogi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Dostavna pakiranja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -1962,7 +1964,7 @@ msgstr "Opis na dobavnih nalogih"
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "Opis na zbirniku"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingin
@@ -2397,7 +2399,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr ""
+msgstr "Prejemanje informativnih opozoril za partnerje"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2777,7 +2779,7 @@ msgstr "Takojšen prenos?"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr ""
+msgstr "Takoj po potrditvi prodajnega naloga"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3043,7 +3045,7 @@ msgstr "Inventura"
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
 msgid "Inventory Configuration: a step-by-step guide."
-msgstr ""
+msgstr "Nastavitve materialnega knjigovodstva: vodič po korakih."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_date
@@ -3667,7 +3669,7 @@ msgstr "Ročno upravljanje"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr ""
+msgstr "Ročno ali na osnovi samodejnega razporejevalnika"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -4650,7 +4652,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr ""
+msgstr "Serijska obdelava zbirnikov po delavcu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -4948,6 +4950,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
+"Polaganje proizvodov v pakiranja (npr. škatle, zaboji) in sledenje "
+"pakiranjem"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -5465,7 +5469,7 @@ msgstr "Zagon razporejevalnikov"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Sales Flow"
-msgstr ""
+msgstr "Prodajni tok"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5588,7 +5592,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Prodaja in nabava proizvodov v različnih merskih enotah"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_sequence
@@ -5738,7 +5742,7 @@ msgstr "Odpošiljanje neposredno iz zaloge (le odpošiljanje)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Povezovalniki za odpošiljanje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -5752,6 +5756,10 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
+"Povezovalniki za odpošiljanje omogočajo natančen izračun stroškov "
+"odpošiljanja, tiskanje etiket za odpošiljanje in zahtevo za prevzem "
+"prevozniku v vašem skladišču in dostavo kupcu. Povezovalnik za odpošiljanje "
+"se uveljavi iz dostavnih metod."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_code
@@ -6174,7 +6182,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr "Povprečni čas med naročilom kupca in dostavo."
+msgstr "Povprečni čas med naročilom kupca in dobavo."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:836
@@ -6761,7 +6769,7 @@ msgstr "Enota mere"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr ""
+msgstr "Merske enote"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock

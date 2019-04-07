@@ -3,7 +3,6 @@
 # * stock
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2017
 # Pietro Della Notte <pdellanotte@gmail.com>, 2017
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
@@ -14,18 +13,19 @@
 # maiolif <maiolif@mgftools.com>, 2018
 # Alberto Carollo <baba75@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
-# Davide Corio <enlightx@gmail.com>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
+# Davide Corio <enlightx@gmail.com>, 2019
 # Paolo Valier, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
 # 
 msgid ""
@@ -1774,7 +1774,7 @@ msgstr "Cross-Dock"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Rotte di Cross Docking"
+msgstr "Rotte di Cross-Dock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
@@ -1784,7 +1784,7 @@ msgstr "Quantità cumulativa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
 msgid "Current Destination Location"
-msgstr "Location corrente di Destinazione"
+msgstr "Ubicazione di destinazione corrente"
 
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
@@ -1794,12 +1794,12 @@ msgstr "Inventario corrente"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_id
 msgid "Current Picking"
-msgstr "Picking corrente"
+msgstr "Prelievo corrente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
-msgstr "Linea corrente di movimentazione dei Picking"
+msgstr "Riga movimento del prelievo corrente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
@@ -1821,11 +1821,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Quantità attuale di prodotti.\n"
-"In un contesto con una singola stock location, questo include i beni archiviati in questa location, o in uno dei suoi sotto-locations.\n"
-"In un contesto con un singolo magazzino, questo include le merci stoccate nella stock location di magazzino di questo magazzino o uno dei suoi sottomagazzini.\n"
-"Stoccato nella stock location del magazzino del negozio o dei suoi sotto-magazzini.\n"
-"Altrimenti, ciò include le merci stoccate in qualsiasi Magazzino con tipo “interno”."
+"Quantità attuale di prodotti. \n"
+"In un contesto con una sola locazione di magazzino, questa include la merce nella locazione o nei suoi figli.\n"
+"In un contesto con un singolo magazzino, questa include la merce della locazione di questo magazzino o dei suoi figli.\n"
+"In un contesto con un singolo punto vendita, questa include merce della locazione del magazzino del punto vendita o dei suoi figli.\n"
+"Altrimenti, questa include la merce da qualsiasi locazione di magazzino di tipo «interna»."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:111
@@ -1838,19 +1838,19 @@ msgstr "Cliente"
 #: model:ir.model.fields,field_description:stock.field_product_product_sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template_sale_delay
 msgid "Customer Lead Time"
-msgstr "Tempi di consegna Cliente"
+msgstr "Tempo di consegna al cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
 #: model:ir.model.fields,field_description:stock.field_res_users_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Location dei Clienti"
+msgstr "Ubicazione cliente"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Locations dei Clienti"
+msgstr "Ubicazioni del cliente"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -1867,22 +1867,22 @@ msgstr "DATA"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
 msgid "DELIVERED AT FRONTIER"
-msgstr "CONSEGNATO ALLA FRONTIERA"
+msgstr "RESO FRONTIERA"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "RECAPITATO SUL POSTO"
+msgstr "RESO AL LUOGO DI DESTINAZIONE"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr "CONSEGNATO A TERMINALE"
+msgstr "RESO AL TERMINAL"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "SPEDITO TASSE PAGATE"
+msgstr "RESO SDOGANATO"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDU
@@ -1892,12 +1892,12 @@ msgstr "RESO NON SDOGANATO"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr "CONSEGNATO DA BANCHINA"
+msgstr "RESO BANCHINA SDOGANATO"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr "SPEDIZIONE DA NAVE"
+msgstr "FRANCO NAVE"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
@@ -1913,7 +1913,7 @@ msgstr "Operazioni giornaliere"
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "Bacheca"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_date
@@ -1955,19 +1955,19 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
-"Caro Signore / Signora,\n"
+"Spettabile Sig./Sig.ra, \n"
 "\n"
-"I nostri dati indicano che alcuni pagamenti non sono stai da voi effettuati. Troverà i dettagli di seguito.\n"
-"Se l’importo è già stato pagato, si prega di ignorare questo avviso. In caso contrario, la preghiamo di saldare l’importo totale indicato di seguito.\n"
-"Se hai domande sulla tua situazione contabile, ti preghiamo di contattarci.\n"
+"dalle nostre registrazioni contabili risultano ancora alcuni pagamenti in sospeso. Di seguito i dettagli.\n"
+"Se l'importo è già stato pagato, ignorate questo avviso. In caso contrario, Vi chiediamo gentilmente di corrispondere l'importo indicato di seguito.\n"
+"Per qualsiasi dubbio o richiesta a riguardo, non esitate a contattarci.\n"
 "\n"
-"Grazie in anticipo per la vostra collaborazione.\n"
-"I migliori saluti,"
+"Ringraziamo in anticipo per la Vostra collaborazione.\n"
+"Distinti saluti,"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_dest_id
 msgid "Default Destination Location"
-msgstr "Location predefinita di Destinazione"
+msgstr "Ubicazione di destinazione predefinita"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_owner_id
@@ -1990,27 +1990,27 @@ msgstr "Posizione di origine predefinita"
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
-"Unità di misura predefinita utilizzata per tutte le operazioni azionarie."
+"Unità di misura predefinita utilizzata per tutte le operazioni di magazzino."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr "Percorso in entrata predefinito da seguire"
+msgstr "Percorso predefinito da seguire in entrata"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr "Percorso di uscita predefinito da seguire"
+msgstr "Percorso predefinito da seguire in uscita"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr "Predefinito: Preso dallo Stock"
+msgstr "Predefinito: prelevare dal magazzino"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_route_ids
 msgid "Defaults routes through the warehouse"
-msgstr "I percorsi predefiniti attraverso il magazzino"
+msgstr "Percorsi predefiniti attraverso il magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
