@@ -95,7 +95,7 @@ msgstr "Шинжилгээний данс"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "Шинжилгээний ангилал"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -167,7 +167,7 @@ msgstr "Баланс"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "Үлдэгдэл:"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -177,12 +177,12 @@ msgstr "Шинжилгээний дансны төлөвлөгөө"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Дэд данс"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "Энд дарж шинэ шинжилгээний бүлэг үүсгэнэ."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -352,6 +352,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"Odoo-ын борлуулалтын захиалга, төслүүд нь шинжилгээний санхүү бүртгэлтэй "
+"хүрэн холбогдож ажилладаг. Та хялбархнаар борлуулалтын ашиг, орлого, "
+"зарлага, өртөгийг хянах боломжтой."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -410,12 +413,12 @@ msgstr "Нэр"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "Одоогоор ажилбар алга"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "Энэ дансанд одоогоор ажилбар алга"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -455,7 +458,7 @@ msgstr "Эцэг зам"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "Эцэг пайз"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -487,6 +490,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"Та захиалагчийн нэхэмжлэл бүртгэх үед орлого автоматаар бүртгэгдэнэ. "
+"Захиалагчийн нэхэмжлэл нь борлуулалтын захиалга дээр (тогтмол үнээр "
+"нэхэмжлэх), цагийн хуудас дээр (ажлын гүйцэтгэл) эсвэл зардал дээр үндэслэж "
+"бүртгэгдэж болно (аялал, томиололтын зардлыг нөхөн нэхэмжлэх гэх мэт)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -497,6 +504,7 @@ msgstr "Шинжилгээний бичилт хайх"
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
+"Идэвхигүй болгосноор Шинжилгээний пайзыг устгалгүйгээр нуух боломжтой."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -506,13 +514,13 @@ msgstr "Пайзууд"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Date"
-msgstr ""
+msgstr "Даалгаврын огноо"
 
 #. module: analytic
 #: sql_constraint:account.analytic.distribution:0
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "Шинжилгээний хуваарилалтын хувь 0-ээс 100 хооронд байх ёстой."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:195
@@ -521,11 +529,13 @@ msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"Шинжилгээний бичилт үүсгэх гэж оролдож буй данс нь танай компаны данс биш "
+"байна."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgstr "Энэ таньд шинжилгээний дансаа ангилахад тус болно."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
