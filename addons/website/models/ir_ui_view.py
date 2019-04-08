@@ -10,6 +10,7 @@ from odoo import tools
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.http import request
+from odoo.tools import lazy
 
 _logger = logging.getLogger(__name__)
 
@@ -341,21 +342,23 @@ class View(models.Model):
 
             cur_company = self.env.user.company_id
             qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
-            qcontext['multi_website_companies'] = [
+            qcontext['multi_website_companies'] = lazy(lambda: [
                 {'company_id': comp.id, 'name': comp.name}
                 for comp in self.env.user.company_ids if comp != cur_company
-            ]
+            ])
 
+            # try pre-loading all website menu
             qcontext.update(dict(
                 self._context.copy(),
                 website=request.website,
                 url_for=url_for,
-                res_company=request.website.company_id.sudo(),
+                res_company=lazy(lambda: request.website.company_id.sudo()),
                 default_lang_code=request.env['ir.http']._get_default_lang().code,
                 languages=request.env['ir.http']._get_language_codes(),
                 translatable=translatable,
                 editable=editable,
                 menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
+                website_menu=self.env['website.menu'].search([('website_id', '=', request.website.id)]).into_tree().child_id,
             ))
 
         return qcontext

@@ -454,8 +454,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
                                 self, key1, key2)
 
-        # prefetch only stored, column, non-manual and non-deprecated fields
-        if not (self.store and self.column_type) or self.manual or self.deprecated:
+        # prefetch only stored, column, non-manual and non-deprecated fields with either no or default translation
+        if not (self.store and self.column_type) or self.manual or self.deprecated or callable(self.translate):
             self.prefetch = False
 
         if not self.string and not self.related:

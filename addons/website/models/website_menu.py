@@ -158,3 +158,26 @@ class Menu(models.Model):
             menu_id.write(menu)
 
         return True
+
+    def into_tree(self):
+        return MenuProxy.from_menus(self)[0]
+
+class MenuProxy:
+    @classmethod
+    def from_menus(cls, menus, for_parent=False):
+        return [
+            MenuProxy(m, MenuProxy.from_menus(menus, m.id))
+            for m in menus
+            if m.parent_id.id == for_parent
+        ]
+
+    def __init__(self, node, child_id):
+        self._node = node
+        self.child_id = child_id
+
+    def __getattr__(self, name):
+        # __getitem__ doesn't work for methods
+        return getattr(self._node, name)
+
+    def __getitem__(self, name):
+        return self._node[name]

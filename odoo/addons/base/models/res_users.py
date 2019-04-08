@@ -382,8 +382,7 @@ class Users(models.Model):
 
     def _read_from_database(self, field_names, inherited_field_names=[]):
         super(Users, self)._read_from_database(field_names, inherited_field_names)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(field_names):
+        if set(USER_PRIVATE_FIELDS).intersection(field_names) and not self.check_access_rights('write', raise_exception=False):
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:

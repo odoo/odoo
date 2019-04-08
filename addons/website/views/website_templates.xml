@@ -131,7 +131,7 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
+    <t t-set="has_visible_submenu" t-value="any(menu.is_visible for menu in submenu.child_id)"/>
     <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
@@ -259,7 +259,7 @@
         <attribute name="t-if">website.user_id != user_id</attribute>
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
-        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+        <t t-foreach="website_menu" t-as="submenu">
             <t t-call="website.submenu">
                 <t t-set="item_class" t-value="'nav-item'"/>
                 <t t-set="link_class" t-value="'nav-link'"/>
