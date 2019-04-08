@@ -412,6 +412,8 @@ class AccountInvoice(models.Model):
     @api.depends('partner_id', 'source_email')
     def _get_vendor_display_info(self):
         for invoice in self:
+            import ipdb
+            ipdb.set_trace()
             vendor_display_name = invoice.partner_id.name
             invoice.invoice_icon = ''
             if not vendor_display_name:

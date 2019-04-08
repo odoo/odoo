@@ -994,7 +994,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.compute_value(recs)
 
             if not env.cache.contains(record, self):
-                if self.store and record.id and not env.in_onchange:
+                if self.store and record.id:
                     record._prefetch_field(self)
 
                 elif self.compute:
