@@ -56,7 +56,7 @@
                                 <th class="text-right"><span>Quantity</span></th>
                                 <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
                                 <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                    <span>Disc.(%)</span>
+                                    <span>Disc.%</span>
                                 </th>
                                 <th t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                 <th class="text-right" groups="account.group_show_line_subtotals_tax_excluded">Amount</th>

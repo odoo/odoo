@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2 name="order">Order Interface</h2>
+                    <h2 name="order">PoS Interface</h2>
                     <div class="row mt16 o_settings_container">
                         <div id="category_reference" class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -85,22 +85,7 @@
                                     Display pictures of product categories
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('iface_display_categ_images', '=', False)]}">
-                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="Categories" class="btn-link"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" >
-                            <field name="iface_start_categ_domain_ids" invisible="1"/>
-                            <div class="o_setting_left_pane">
-                                <field name="start_category"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="start_category"/>
-                                <div class="text-muted">
-                                    Start selling from a default product category
-                                </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
-                                    <field name="iface_start_categ_id" domain="[('id', 'in', iface_start_categ_domain_ids)]"/>
+                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +101,9 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
                                     <field name="iface_available_categ_ids" widget="many2many_tags"/>
                                 </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
+                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" title="Don't turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
@@ -126,6 +114,20 @@
                                 <label for="iface_vkeyboard"/>
                                 <div class="text-muted">
                                     Use a virtual keyboard for touchscreens
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="start_category"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="start_category"/>
+                                <div class="text-muted">
+                                    Start selling from a default product category
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
+                                    <field name="iface_start_categ_id"/>
                                 </div>
                             </div>
                         </div>

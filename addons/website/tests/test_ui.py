@@ -21,7 +21,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
             </t>
         '''
         generic_aboutus.arch = oe_structure_layout
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('html_editor_multiple_templates')", "odoo.__DEBUG__.services['web_tour.tour'].tours.html_editor_multiple_templates.ready", login='admin')
+        self.start_tour("/", 'html_editor_multiple_templates', login='admin')
         self.assertEqual(View.search_count([('key', '=', 'website.aboutus')]), 2, "Aboutus view should have been COW'd")
         self.assertTrue(generic_aboutus.arch == oe_structure_layout, "Generic Aboutus view should be untouched")
         self.assertEqual(len(generic_aboutus.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
@@ -30,12 +30,12 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertEqual(len(specific_aboutus.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
     def test_html_editor_scss(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('test_html_editor_scss')", "odoo.__DEBUG__.services['web_tour.tour'].tours.test_html_editor_scss.ready", login='admin')
+        self.start_tour("/", 'test_html_editor_scss', login='admin')
 
 
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('rte_translator')", "odoo.__DEBUG__.services['web_tour.tour'].tours.rte_translator.ready", login='admin', timeout=120)
+        self.start_tour("/", 'rte_translator', login='admin', timeout=120)
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -45,7 +45,7 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/", "console.log('test successful')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")
 
     def test_02_admin_tour_banner(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('banner')", "odoo.__DEBUG__.services['web_tour.tour'].tours.banner.ready", login='admin')
+        self.start_tour("/", 'banner', login='admin')
 
     def test_03_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
@@ -57,4 +57,4 @@ class TestUi(odoo.tests.HttpCase):
                     self.ref('website.group_website_publisher')
                 ])]
         })
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('restricted_editor')", "odoo.__DEBUG__.services['web_tour.tour'].tours.restricted_editor.ready", login='restricted')
+        self.start_tour("/", 'restricted_editor', login='restricted')

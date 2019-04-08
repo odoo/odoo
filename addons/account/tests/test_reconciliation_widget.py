@@ -25,9 +25,8 @@ class TestUi(odoo.tests.HttpCase):
         prep = requests.models.PreparedRequest()
         prep.prepare_url(url="http://localhost/web#", params=payload)
 
-        self.phantom_js(prep.url.replace('http://localhost','').replace('?','#'),
-            "odoo.__DEBUG__.services['web_tour.tour'].run('bank_statement_reconciliation')",
-            "odoo.__DEBUG__.services['web_tour.tour'].tours.bank_statement_reconciliation.ready", login="admin")
+        self.start_tour(prep.url.replace('http://localhost', '').replace('?', '#'),
+            'bank_statement_reconciliation', login="admin")
 
 
 @odoo.tests.tagged('post_install', '-at_install')

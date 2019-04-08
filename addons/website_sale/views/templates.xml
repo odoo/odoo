@@ -493,9 +493,9 @@
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
                             <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
                             <hr t-if="product.description_sale" />
-                            <div class="o_not_editable">
-                                <p t-field="product.description_sale" class="text-muted" />
-                                <div id="product_attributes_simple">
+                            <div>
+                                <p t-field="product.description_sale" class="text-muted mt-3" placeholder="A short description that will also appear on documents." />
+                                <div class="o_not_editable" id="product_attributes_simple">
                                     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
                                     <p class="text-muted">
                                         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
@@ -612,7 +612,6 @@
                    "display_currency": product.currency_id,
                }'/>
           </h4>
-          <h4 class="d-none oe_not_available bg-warning">Option not available</h4>
       </div>
     </template>
 
@@ -990,11 +989,8 @@
     </template>
 
     <template id='coupon_form' name='Coupon form'>
-        <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <p class="bg-warning">This promo code is not available</p>
-        </t>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
-            method="post" class="mb32" name="coupon_code">
+            method="post" name="coupon_code">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
@@ -1003,6 +999,9 @@
                 </div>
             </div>
         </form>
+        <t t-if="request.params.get('code_not_available')" name="code_not_available">
+            <div class="alert alert-danger text-left" role="alert">This promo code is not available.</div>
+        </t>
     </template>
 
     <template id="checkout">

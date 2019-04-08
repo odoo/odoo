@@ -416,12 +416,12 @@ class PricelistItem(models.Model):
         default='3_global', required=True,
         help='Pricelist Item applicable on selected option')
     base = fields.Selection([
-        ('list_price', 'Public Price'),
+        ('list_price', 'Sales Price'),
         ('standard_price', 'Cost'),
         ('pricelist', 'Other Pricelist')], "Based on",
         default='list_price', required=True,
         help='Base price for computation.\n'
-             'Public Price: The base price will be the Sale/public Price.\n'
+             'Sales Price: The base price will be the Sales Price.\n'
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
