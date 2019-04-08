@@ -65,6 +65,7 @@ class TestWebsitePriceList(TransactionCase):
         self.addCleanup(patcher.stop)
 
     def get_pl(self, show, current_pl, country):
+        self.website.invalidate_cache(['pricelist_ids'], [self.website.id])
         pl_ids = self.website._get_pl_partner_order(
             country,
             show,
@@ -185,7 +186,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
         self.website2 = Website.create({'name': 'Website 2'})
 
         # Remove existing pricelists and create new ones
-        Pricelist.search([]).write({'active': False})
+        existing_pricelists = Pricelist.search([])
         self.backend_pl = Pricelist.create({
             'name': 'Backend Pricelist',
             'website_id': False,
@@ -230,6 +231,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
             'name': 'Website 2 Pricelist',
             'website_id': self.website2.id,
         })
+        existing_pricelists.write({'active': False})
 
         simulate_frontend_context(self)
 
