@@ -203,16 +203,28 @@ class ProductProduct(models.Model):
 
         product_values = {product: 0 for product in self}
         product_move_ids = {product: [] for product in self}
+
+        def _get_move_values(domain, field_name):
+            StockMove.check_access_rights('read')
+            query = StockMove._where_calc(domain)
+            StockMove._apply_ir_rules(query, 'read')
+            from_clause, where_clause, where_clause_params = query.get_sql()
+            query_str = ("SELECT stock_move.product_id, ARRAY_AGG(stock_move.id), "
+                         "SUM(%s) FROM %s "
+                         "WHERE %s GROUP BY stock_move.product_id "
+                         ) % (field_name, from_clause, where_clause)
+            self.env.cr.execute(query_str, where_clause_params)
+            for product_id, move_ids, qty in self.env.cr.fetchall():
+                product = self.browse(product_id)
+                product_values[product] = qty
+                product_move_ids[product] = move_ids
+
+        domain = [('product_id', 'in', self.ids)] + StockMove._get_all_base_domain()
+        field_name = 'remaining_value'
         if to_date:
-            domain = [('product_id', 'in', self.ids), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
-            for move in StockMove.search(domain).with_context(prefetch_fields=False):
-                product_values[move.product_id] += move.value
-                product_move_ids[move.product_id].append(move.id)
-        else:
-            domain = [('product_id', 'in', self.ids)] + StockMove._get_all_base_domain()
-            for move in StockMove.search(domain).with_context(prefetch_fields=False):
-                product_values[move.product_id] += move.remaining_value
-                product_move_ids[move.product_id].append(move.id)
+            domain.append(('date', '<=', to_date))
+            field_name = 'value'
+        _get_move_values(domain, field_name)
 
         for product in self:
             if product.cost_method in ['standard', 'average']:
