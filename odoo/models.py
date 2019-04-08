@@ -342,11 +342,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if self._log_access:
             add('create_uid', fields.Many2one(
-                'res.users', string='Created by', automatic=True, readonly=True))
+                'res.users', string='Created by', automatic=True, readonly=True, default=lambda self: self._uid))
             add('create_date', fields.Datetime(
                 string='Created on', automatic=True, readonly=True))
             add('write_uid', fields.Many2one(
-                'res.users', string='Last Updated by', automatic=True, readonly=True))
+                'res.users', string='Last Updated by', automatic=True, readonly=True, default=lambda self: self._uid))
             add('write_date', fields.Datetime(
                 string='Last Updated on', automatic=True, readonly=True))
             last_modified_name = 'compute_concurrency_field_with_access'
@@ -3663,9 +3663,9 @@ Fields:
         # column names, formats and values (for common fields)
         columns0 = [('id', "nextval(%s)", self._sequence)]
         if self._log_access:
-            columns0.append(('create_uid', "%s", self._uid))
+            # columns0.append(('create_uid', "%s", self._uid)) --> not necessary as in default values
             columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
-            columns0.append(('write_uid', "%s", self._uid))
+            # columns0.append(('write_uid', "%s", self._uid)) --> not necessary as in default values
             columns0.append(('write_date', "%s", AsIs("(now() at time zone 'UTC')")))
 
         for data in data_list:
@@ -5524,6 +5524,8 @@ Fields:
                 lines.read(list(subnames), load='_classic_write')
 
         # create a new record with values, and attach ``self`` to it
+        import ipdb
+        ipdb.set_trace()
         with env.do_in_onchange():
             record = self.new(values)
             # attach ``self`` with a different context (for cache consistency)
