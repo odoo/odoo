@@ -29,10 +29,9 @@ class TestSurveyInternals(common.TestSurveyCommon):
                 kwargs['labels_2'] = [{'value': 'Row0'}, {'value': 'Row1'}]
             question = self._add_question(self.page_0, 'Q0', question_type, **kwargs)
 
-            answer_tag = '%s_%s' % (self.survey.id, question.id)
             self.assertDictEqual(
-                question.validate_question({answer_tag: ''}, answer_tag),
-                {answer_tag: 'TestError'}
+                question.validate_question(''),
+                {question.id: 'TestError'}
             )
 
     @users('survey_manager')
@@ -40,25 +39,24 @@ class TestSurveyInternals(common.TestSurveyCommon):
         question = self._add_question(
             self.page_0, 'Q0', 'date', validation_required=True,
             validation_min_date='2015-03-20', validation_max_date='2015-03-25', validation_error_msg='ValidationError')
-        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'Is Alfred an answer ?'}, answer_tag),
-            {answer_tag: _('This is not a date')}
+            question.validate_question('Is Alfred an answer ?'),
+            {question.id: _('This is not a date')}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '2015-03-19'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('2015-03-19'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '2015-03-26'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('2015-03-26'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '2015-03-25'}, answer_tag),
+            question.validate_question('2015-03-25'),
             {}
         )
 
@@ -67,40 +65,38 @@ class TestSurveyInternals(common.TestSurveyCommon):
         question = self._add_question(
             self.page_0, 'Q0', 'numerical_box', validation_required=True,
             validation_min_float_value=2.2, validation_max_float_value=3.3, validation_error_msg='ValidationError')
-        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'Is Alfred an answer ?'}, answer_tag),
-            {answer_tag: _('This is not a number')}
+            question.validate_question('Is Alfred an answer ?'),
+            {question.id: _('This is not a number')}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '2.0'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('2.0'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '4.0'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('4.0'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: '2.9'}, answer_tag),
+            question.validate_question('2.9'),
             {}
         )
 
     @users('survey_manager')
     def test_answer_validation_textbox_email(self):
         question = self._add_question(self.page_0, 'Q0', 'textbox', validation_email=True)
-        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'not an email'}, answer_tag),
-            {answer_tag: _('This answer must be an email address')}
+            question.validate_question('not an email'),
+            {question.id: _('This answer must be an email address')}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'email@example.com'}, answer_tag),
+            question.validate_question('email@example.com'),
             {}
         )
 
@@ -109,20 +105,19 @@ class TestSurveyInternals(common.TestSurveyCommon):
         question = self._add_question(
             self.page_0, 'Q0', 'textbox', validation_required=True,
             validation_length_min=2, validation_length_max=8, validation_error_msg='ValidationError')
-        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'l'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('l'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'waytoomuchlonganswer'}, answer_tag),
-            {answer_tag: 'ValidationError'}
+            question.validate_question('waytoomuchlonganswer'),
+            {question.id: 'ValidationError'}
         )
 
         self.assertEqual(
-            question.validate_question({answer_tag: 'valid'}, answer_tag),
+            question.validate_question('valid'),
             {}
         )
 

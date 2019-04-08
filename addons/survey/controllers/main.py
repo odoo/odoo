@@ -292,7 +292,7 @@ class Survey(http.Controller):
         This will take into account the validation errors and store the answers to the questions.
         If the time limit is reached, errors will be skipped, answers will be ignored and
         survey state will be forced to 'done'"""
-        # Validation
+        # Survey Validation
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return {
@@ -304,33 +304,39 @@ class Survey(http.Controller):
                                                                            page_id=post.get('page_id'),
                                                                            question_id=post.get('question_id'))
 
-        errors = {}
-        for question in questions:
-            answer_tag = "%s_%s" % (survey_sudo.id, question.id)
-            errors.update(question.validate_question(post, answer_tag))
-
-        if errors:
-            return {
-                'error': 'validation',
-                'fields': errors,
-            }
-
         if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
-        # Submitting survey
         if not answer_sudo.is_time_limit_reached:
+            # Prepare answers and comment by question
+            prepared_questions = {}
             for question in questions:
-                answer_tag = "%s_%s" % (survey_sudo.id, question.id)
-                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
+                answer_full = post.get(str(question.id))
+                answer_without_comment, comment = self._extract_comment_from_answers(question, answer_full)
+                prepared_questions[question.id] = {'answer': answer_without_comment, 'comment': comment}
+
+            # Questions Validation
+            errors = {}
+            for question in questions:
+                answer = prepared_questions[question.id]['answer']
+                comment = prepared_questions[question.id]['comment']
+                errors.update(question.validate_question(answer, comment))
+            if errors:
+                return {'error': 'validation', 'fields': errors}
+
+            # Submitting questions
+            for question in questions:
+                answer = prepared_questions[question.id]['answer']
+                comment = prepared_questions[question.id]['comment']
+                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
         elif 'previous_page_id' in post:
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
             return '/survey/fill/%s/%s?previous_page_id=%s' % (survey_sudo.access_token, answer_token, post['previous_page_id'])
-        elif 'button_submit' in post:
+        else:
             next_page, unused = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id)
             vals = {'last_displayed_page_id': page_or_question_id}
 
@@ -579,3 +585,42 @@ class Survey(http.Controller):
                 {"text": "Unanswered", "count": answer_perf['skipped']}
             ])
         return values
+
+    def _extract_comment_from_answers(self, question, answers):
+        """
+        As answer is a custom structure depending of the question type
+        that can contain question answers but also comment that need to be extracted
+        before validating and saving answers.
+        If multiple answers, they are listed in an array, except for matrix where answers are structured differently.
+        See input and output for more info on data structures.
+        :param question: survey.question
+        :param answers: {str} answer (for simple questions)
+                    or {list} [answer_1,...,answer_n] (for questions with multiple answers)
+                    or {list} [answer_1, {'comment': comment}] (for questions with simple answers and with comment)
+                    or {list} [answer_1,...,answer_n, {'comment': comment}] (for questions with multiple answers with comment)
+                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] (for matrix without comment)
+                    or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}, {'comment': comment}] (for matrix with comment)
+        :return: answers_no_comment : {str} answer for simple choice (or text and number) question types
+                                  or {list} [answer_1,...,answer_n] for multiple choices question types except matrix
+                                  or {list} [{sub_question_1: [answer_1,...,answer_n]}, {sub_question_2: [...]}] for matrix
+                 comment : {str} extracted comment for the given question
+        """
+        comment = None
+        answers_no_comment = []
+        if answers:
+            if question.question_type == 'matrix':
+                if 'comment' in answers:
+                    comment = answers['comment'].strip()
+                    answers.pop('comment')
+                answers_no_comment = answers
+            else:
+                if not isinstance(answers, list):
+                    answers = [answers]
+                for answer in answers:
+                    if 'comment' in answer:
+                        comment = answer['comment'].strip()
+                    else:
+                        answers_no_comment.append(answer)
+                if len(answers_no_comment) == 1:
+                    answers_no_comment = answers_no_comment[0]
+        return answers_no_comment, comment
