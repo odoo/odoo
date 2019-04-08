@@ -12,11 +12,17 @@ from odoo.modules.module import get_module_resource
 
 
 class HrEmployeePrivate(models.Model):
+    """
+    NB: Any field only available on the model hr.employee (i.e. not on the
+    hr.employee.public model) should have `groups="hr.group_hr_user"` on its
+    definition to avoid being prefetched when the user hasn't access to the
+    hr.employee model. Indeed, the prefetch loads the data for all the fields
+    that are available according to the group defined on them.
+    """
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
-
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin']
     _mail_post_access = 'read'
 
     @api.model
@@ -83,7 +89,6 @@ class HrEmployeePrivate(models.Model):
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user", tracking=True)
     google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user", tracking=True)
-    job_title = fields.Char("Job Title")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -99,17 +104,8 @@ class HrEmployeePrivate(models.Model):
         help="Small-sized photo of the employee. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
-    # work
-    address_id = fields.Many2one(
-        'res.partner', 'Work Address')
-    work_phone = fields.Char('Work Phone')
-    mobile_phone = fields.Char('Work Mobile')
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
-    work_email = fields.Char('Work Email')
-    work_location = fields.Char('Work Location')
     # employee in company
-    job_id = fields.Many2one('hr.job', 'Job Position')
-    department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     coach_id = fields.Many2one('hr.employee', 'Coach')
@@ -118,21 +114,79 @@ class HrEmployeePrivate(models.Model):
         'emp_id', 'category_id',
         string='Tags')
     # misc
-    notes = fields.Text('Notes')
-    color = fields.Integer('Color Index', default=0)
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", copy=False)
-    pin = fields.Char(string="PIN", help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).", copy=False)
+    notes = fields.Text('Notes', groups="hr.group_hr_user")
+    color = fields.Integer('Color Index', default=0, groups="hr.group_hr_user")
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
+    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
+        help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).")
     departure_reason = fields.Selection([
         ('fired', 'Fired'),
         ('resigned', 'Resigned'),
         ('retired', 'Retired')
-    ], string="Departure Reason", copy=False, tracking=True)
-    departure_description = fields.Text(string="Additional Information", copy=False, tracking=True)
+    ], string="Departure Reason", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+
+    @api.multi
+    def name_get(self):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).name_get()
+        return self.env['hr.employee.public'].browse(self.ids).name_get()
+
+    @api.multi
+    def read(self, fields, load='_classic_read'):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).read(fields, load=load)
+        private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())
+        if private_fields:
+            raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
+        return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """
+            We override the _search because it is the method that checks the access rights
+            This is correct to override the _search. That way we enforce the fact that calling
+            search on an hr.employee returns a hr.employee recordset, even if you don't have access
+            to this model, as the result of _search (the ids of the public employees) is to be
+            browsed on the hr.employee model. This can be trusted as the ids of the public
+            employees exactly match the ids of the related hr.employee. 
+        """
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        return self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.multi
+    def get_formview_id(self, access_uid=None):
+        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        if access_uid:
+            self_sudo = self.sudo(access_uid)
+        else:
+            self_sudo = self
+
+        if self_sudo.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).get_formview_id(access_uid=access_uid)
+        # Hardcode the form view for public employee
+        return self.env.ref('hr.hr_employee_public_view_form').id
+
+    @api.multi
+    def get_formview_action(self, access_uid=None):
+        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
+        if access_uid:
+            self_sudo = self.sudo(access_uid)
+        else:
+            self_sudo = self
+
+        if not self_sudo.check_access_rights('read', raise_exception=False):
+            res['res_model'] = 'hr.employee.public'
+
+        return res
 
     @api.constrains('pin')
     def _verify_pin(self):
