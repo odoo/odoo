@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons import decimal_precision as dp
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
@@ -55,12 +55,15 @@ class ProductPricelist(models.Model):
     @api.multi
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
+        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
+            self._check_website_pricelist()
         self.clear_cache()
         return res
 
     @api.multi
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
+        self._check_website_pricelist()
         self.clear_cache()
         return res
 
@@ -77,6 +80,11 @@ class ProductPricelist(models.Model):
         if website:
             res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
         return res
+
+    def _check_website_pricelist(self):
+        for website in self.env['website'].search([]):
+            if not website.pricelist_ids:
+                raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
 
     @api.multi
     def _is_available_on_website(self, website_id):
