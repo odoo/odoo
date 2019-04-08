@@ -225,6 +225,13 @@ class StockPicking(models.Model):
                 raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
         return True
 
+    def _get_estimated_weight(self):
+        self.ensure_one()
+        weight = 0.0
+        for move in self.move_lines:
+            weight += move.product_qty * move.product_id.weight
+        return weight
+
 
 class StockReturnPicking(models.TransientModel):
     _inherit = 'stock.return.picking'
