@@ -428,6 +428,18 @@ ListRenderer.include({
             });
         }
     },
+    /**
+     * @override
+     */
+    updateState: function (state, params) {
+        if (params.noRender) {
+            // the state changed, but we won't do a re-rendering right now, so
+            // remove computed modifiers data (as they are obsolete) to force
+            // them to be recomputed at next (sub-)rendering
+            this.allModifiersData = [];
+        }
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
