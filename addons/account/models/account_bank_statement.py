@@ -539,8 +539,7 @@ class AccountBankStatementLine(models.Model):
         counterpart_moves = self.env['account.move']
 
         # Check and prepare received data
-        if any(rec.statement_id for rec in payment_aml_rec):
-            raise UserError(_('A selected move line was already reconciled.'))
+        self._check_aml_reconcilability(counterpart_aml_dicts=counterpart_aml_dicts, payment_aml_rec=payment_aml_rec, new_aml_dicts=new_aml_dicts)
         for aml_dict in counterpart_aml_dicts:
             if aml_dict['move_line'].reconciled:
                 raise UserError(_('A selected move line was already reconciled.'))
@@ -699,3 +698,7 @@ class AccountBankStatementLine(models.Model):
     def _check_invoice_state(self, invoice):
         if invoice.state == 'in_payment' and all([payment.state == 'reconciled' for payment in invoice.mapped('payment_move_line_ids.payment_id')]):
            invoice.write({'state': 'paid'})
+
+    def _check_aml_reconcilability(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
+        if any(rec.statement_id for rec in payment_aml_rec):
+            raise UserError(_('A selected move line was already reconciled.'))
