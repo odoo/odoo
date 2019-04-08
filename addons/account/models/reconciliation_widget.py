@@ -682,7 +682,7 @@ class AccountReconciliation(models.AbstractModel):
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = st_line._get_common_sql_query(excluded_ids=excluded_ids) + \
                 " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + ")) \
-                ORDER BY date_maturity desc, aml.id desc LIMIT 1"
+                ORDER BY date_maturity asc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
         if results:
