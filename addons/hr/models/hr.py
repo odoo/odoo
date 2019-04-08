@@ -254,6 +254,8 @@ class Employee(models.Model):
     def _onchange_user(self):
         if self.user_id:
             self.update(self._sync_user(self.user_id))
+            if not self.name:
+                self.name = self.user_id.name
 
     @api.onchange('resource_calendar_id')
     def _onchange_timezone(self):
@@ -262,7 +264,6 @@ class Employee(models.Model):
 
     def _sync_user(self, user):
         vals = dict(
-            name=user.name,
             image=user.image,
             work_email=user.email,
         )
@@ -273,7 +274,9 @@ class Employee(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('user_id'):
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
+            user = self.env['res.users'].browse(vals['user_id'])
+            vals.update(self._sync_user(user))
+            vals['name'] = vals.get('name', user.name)
         tools.image_resize_images(vals)
         employee = super(Employee, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
