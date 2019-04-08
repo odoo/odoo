@@ -255,7 +255,6 @@ var AbstractMessage =  Class.extend({
      */
     isEmpty: function () {
         return !this.hasTrackingValues() &&
-        !this.hasSubtypeDescription() &&
         !this.hasAttachments() &&
         !this.getBody();
     },
