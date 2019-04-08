@@ -146,6 +146,7 @@ class Goal(models.Model):
 
     _name = 'gamification.goal'
     _description = 'Gamification Goal'
+    _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
