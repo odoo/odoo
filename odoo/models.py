@@ -5524,8 +5524,6 @@ Fields:
                 lines.read(list(subnames), load='_classic_write')
 
         # create a new record with values, and attach ``self`` to it
-        import ipdb
-        ipdb.set_trace()
         with env.do_in_onchange():
             record = self.new(values)
             # attach ``self`` with a different context (for cache consistency)
@@ -5567,7 +5565,6 @@ Fields:
                     record._onchange_eval(name, field_onchange[name], result)
 
                 # make a snapshot (this forces evaluation of computed fields)
-                record.recompute()
                 snapshot1 = Snapshot(record, nametree)
 
                 # determine which fields have been modified
