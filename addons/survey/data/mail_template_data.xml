@@ -32,6 +32,7 @@
     </p>
 </div>
             </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>
@@ -42,10 +43,6 @@
             <field name="model_id" ref="survey.model_survey_user_input"/>
             <field name="subject">Certification: ${object.survey_id.display_name}</field>
             <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
-            <field name="report_template" ref="certification_report"/>
-            <field name="report_name">Certification Document</field>
-            <field name="lang">${object.partner_id.lang}</field>
-            <field name="auto_delete" eval="True"/>
             <field name="body_html" type="xml">
                 <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
                     <table style="width:600px;margin:5px auto;">
@@ -72,6 +69,11 @@
                     </table>
                 </div>
             </field>
+            <field name="report_template" ref="certification_report"/>
+            <field name="report_name">Certification Document</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
         </record>
     </data>
 </odoo>
