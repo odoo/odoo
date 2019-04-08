@@ -22,3 +22,13 @@ def uninstall_hook(cr, registry):
                     rec._onchange_team_type()
 
     cr.after("commit", partial(update_dashboard_graph_model, cr.dbname))
+
+def _update_sale_teams(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    sale_team = env.ref('sales_team.team_sales_department', False)
+    if sale_team:
+        sale_team.write({
+            'use_quotations': True,
+            'use_invoices': True,
+            'dashboard_graph_model': 'sale.report'
+        })

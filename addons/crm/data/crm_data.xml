@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="sales_team.team_sales_department" model="crm.team">
-            <field name="use_opportunities">True</field>
-            <field name="alias_name">sales</field>
-            <field name="dashboard_graph_model">crm.lead</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
         <!--default alias for leads-->
         <record id="mail_alias_lead_info" model="mail.alias">
             <field name="alias_name"></field>
