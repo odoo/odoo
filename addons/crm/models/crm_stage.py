@@ -43,6 +43,7 @@ class Stage(models.Model):
         help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+    active = fields.Boolean(default=True)
 
     #This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
