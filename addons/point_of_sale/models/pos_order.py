@@ -506,7 +506,13 @@ class PosOrder(models.Model):
                 '|',
                 ('credit_move_id.move_id', '=', move.id),
                 ('debit_move_id.move_id', '=', move.id)], limit=1)
-            partial_reconcile.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[move])
+            if partial_reconcile:
+                # In case none of the order debit move lines have been reconciled
+                # there is no need to create the tax cash basis entries as nothing has been reconciled
+                # a known case is when the the bank journal credit account is set to a receivable account,
+                # which has as effect to fully reconcile the payment line with its counterpart,
+                # leaving no payment lines to reconcile with the order debit lines.
+                partial_reconcile.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[move])
 
     def _filtered_for_reconciliation(self):
         filter_states = ['invoiced', 'done']
