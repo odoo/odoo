@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
 import pprint
+import re
 import werkzeug
-from werkzeug import urls
-from odoo.tools import ustr
-from werkzeug.urls import url_unquote_plus
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import ustr
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 
@@ -31,7 +29,7 @@ class OgoneController(http.Controller):
             # if not base_url
             if not _sub_relative2absolute.base_url:
                 _sub_relative2absolute.base_url = request.env["ir.config_parameter"].sudo().get_param("web.base.url")
-            return match.group(1) + urls.url_join(_sub_relative2absolute.base_url, match.group(2))
+            return match.group(1) + werkzeug.urls.url_join(_sub_relative2absolute.base_url, match.group(2))
 
         _sub_relative2absolute.base_url = request.env["ir.config_parameter"].sudo().get_param("web.base.url")
         html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
@@ -42,9 +40,8 @@ class OgoneController(http.Controller):
     # for Ogone custome payment page
     @http.route('/ogone.htm', type='http', auth="none", website=True, sitemap=False)
     def ogone_html(self, **kw):
-        payment_template_id = 'payment_ogone.checkout_template'
-        payment_template = request.env.ref(payment_template_id)
-        html = payment_template.render({'name': 'Ogone'}, engine='ir.qweb', minimal_qcontext=True)
+        payment_template = request.env.ref('payment_ogone.checkout_template')
+        html = payment_template.render({'name': 'Ogone'}, engine='ir.qweb')
         body = self._replace_local_links(html)
         return body
 

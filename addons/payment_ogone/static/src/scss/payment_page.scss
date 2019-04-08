@@ -1,68 +1,1787 @@
-.navbar-default {
-    background-color: #875A7B;
-    height: 54px;
- }
-.header-default {
-    background-color: #f6f9f9;
-    height: 60px;
+.o_ogone_body_default {
+    line-height: 1;
+    font: inherit;
 }
-.footer-default {
-    background-color: #f6f9f9;
-    color: gray; 
-}
-.body-default {
-    background-color: #fcfcfc;
-}
-table {
-    td {
-        &.ncolinput {
-            @extend .input-group;
-            width: 60%;
-            small {
-                @extend .input-group;
-                input, select {
-                    @extend .form-control;
-                    width: 40%
-                }
-            }
-        }
-        font-family: sans-serif;
+#o_ogone_payment_page {
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /* Reset all tables */
+    table, thead, tbody, tr, td {
+        display: block;
+    }
+    /*odoo copyright Footer*/
+    .o_footer {
+        position: fixed;
+        bottom: 0;
+        border-top: solid 1px #e4e4e4;
+    }
+    /* company logo */
+    div#o_ogone_logo {
+        position: absolute;
+        top: 0.5rem;
+        left: calc(50vw - 480px);
+        height: 3.75rem;
+    }
+    div#o_ogone_logo > img#o_ogone_company_logo {
+        max-height: 3.75rem;
+        max-width: 144px;
+    }
+
+    /**********
+     * HEADER *
+     **********/
+    /* Header */
+    #payment-zone > .ncoltable1:first-of-type {
+        @extend .navbar-light;
+        border-bottom: solid 1px #e4e4e4;
+        padding: 0px 32px 16px 32px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    /* Only use the center of the page */
+    #payment-zone > .ncoltable1:first-of-type tbody {
+        position: relative;
+        width: 960px;
+        height: 3.75rem;
+        margin-left: calc(50% - 480px);
+    }
+    /* Hide unwanted elements */
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(2) td:nth-of-type(1),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(2) td:nth-of-type(3),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(2) td:nth-of-type(4),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) td:nth-of-type(3),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) td:nth-of-type(4) {
+      display: none;
+    }
+    /* Total charge */
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(2) td:nth-of-type(2) {
+        position: absolute;
+        top: 0;
+        right: 0;
         font-weight: bold;
-        &.ncolh1 {
-            small {
-                font-size: medium;
-                font-weight: bold;
-            }
-        }
-        &.ncoltxtl {
-            font-size: medium;
-        }
-        &.ncoltxtl2 {
-           font-size: large;
-        }
-        &.ncoltxtr {
-            small{
-                font-size: small;
-                font-weight: bold;
-            }
-        }
-        &.ncolline1 {
-            small {
-                font-size: small;
-            }
-        }
-        &.ncollogoc {
-            form {
-                small {
-                    margin-left: 25px;
-                }
-            }
+        font-size: 1.5rem;
+        width: auto;
+    }
+    /* Prepare content rows for header */
+    #payment-zone > .ncoltable1:first-of-type tr:first-of-type,
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) {
+        position: absolute;
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        width: 100%;
+        top: 2rem;
+    }
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) {
+        top: calc(2rem + 12px);
+    }
+    #payment-zone > .ncoltable1:first-of-type tr:first-of-type::before {
+        content: "";
+        width: 100%;
+        order: 1;
+    }
+    #payment-zone > .ncoltable1:first-of-type tr:first-of-type > td,
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) > td:first-of-type,
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) > td:nth-of-type(2) {
+        @extend .text-muted;
+        font-size: 0.75rem;
+        width: auto;
+    }
+    /* Beneficiary */
+    /* The benificiary is mostly on the first row, cell 3 & 4, but sometimes on the third row, cell 1 & 2. */
+    #payment-zone > .ncoltable1:first-of-type tr:first-of-type td:nth-of-type(3),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) td:nth-of-type(1),
+    #payment-zone > .ncoltable1:first-of-type tr:first-of-type td:nth-of-type(4),
+    #payment-zone > .ncoltable1:first-of-type tr:nth-of-type(3) td:nth-of-type(2) {
+        order: 1;
+        margin-top: 4px;
+    }
+
+    /*******************
+     * PAYMENT METHODS *
+     *******************/
+    /* Payment methods */
+    .ncoltable2,
+    form[name=OGONE_CC_FORM],
+    form[name=OGONE_CC_FORM] .ncoltable1,
+    #payment-zone table.ncoltable1:nth-of-type(3),
+    #payment-zone table.ncoltable1:nth-of-type(4) {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 32px;
+    }
+    #payment-zone table.ncoltable1:nth-of-type(4) {
+      margin-top: 0;
+    }
+    /* Only use the center of the page */
+    .ncoltable2 tbody,
+    form[name=OGONE_CC_FORM] div.paymentZone,
+    form[name=OGONE_CC_FORM] .ncoltable1 > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(4) > tbody {
+        position: relative;
+        width: 960px;
+        margin-left: calc(50% - 480px);
+        box-sizing: border-box;
+    }
+    @media screen and (max-width: 1000px) {
+        .ncoltable2 tbody,
+        form[name=OGONE_CC_FORM] div.paymentZone,
+        form[name=OGONE_CC_FORM] .ncoltable1 > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(4) > tbody {
+            margin-left: 5%;
+            width: 90%;
         }
     }
-}
-input {
-    &.ncol {
+    /* Hide unwanted elements */
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr:first-of-type,
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:first-of-type:not([colspan="3"]),
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) small {
+        display: none;
+    }
+    /* Payment method button*/
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) {
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        width: calc(33% - 18px);
+        height: 54px;
+        vertical-align: top;
+        margin: 8px;
+        padding: 8px;
+        background-color: #ffffff;
+        border: solid 1px #e4e4e4;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr:not([align=center]):hover,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type):hover {
+        width: calc(33% - 16px);
+        height: 56px;
+        margin: 7px;
+        box-shadow: 0 0 5px 2px #cccccc;
+        -webkit-box-shadow: 0 0 5px 2px #cccccc;
+        -moz-box-shadow: 0 0 5px 2px #cccccc;
+    }
+    /* Payment method name */
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(2),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(2) {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        width: calc(75% - 32px);
+        height: 36px;
+        line-height: 36px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #333;
+    }
+    /* Payment method logo */
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(3) {
+        display: flex;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        height: auto;
+        overflow: hidden;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        align-items: center;
+        justify-content: center;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) input[type=image],
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(3) input[type=image] {
+        /* Fix for Chrome flexbox layout */
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 36px;
+        max-width: 25%;
+        min-width: 0;
+        box-sizing: content-box;
+        /* Fix for Chrome flexbox layout */
+        object-fit: contain;
+        flex-grow: 0;
+        -ms-flex: 0 0 auto;
+        border-top: solid 8px transparent;
+        border-bottom: solid 8px transparent;
+        border-left: solid 10px transparent;
+        border-right: solid 230px transparent;
+        margin: 0 !important;
+    }
+    /* Co-branding */
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) input[type=image][title=VISA]:not(:last-of-type):not(:nth-last-child(2)),
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) input[type=image][title=visa]:not(:last-of-type),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(3) input[type=image][title=VISA]:not(:last-of-type),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(3) input[type=image][title=visa]:not(:last-of-type) {
+        animation-name: alternate-images-first;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: step-start;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) input[type=image] ~ input[type=image],
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) td:nth-of-type(3) input[type=image] ~ input[type=image] {
+        opacity: 0;
+        animation-name: alternate-images;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: step-start;
+    }
+    @keyframes alternate-images-first {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    @keyframes alternate-images {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+    /* Country selection */
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr[align=center] {
+        background-color: initial;
+        border: none;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr[align=center]:hover {
+        box-shadow: none;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:first-of-type[colspan="3"],
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:first-of-type[colspan="3"] > small {
+        height: 100%;
+        display: block;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:first-of-type[colspan="3"] > small {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:first-of-type[colspan="3"] > small select {
+        flex: 1 0 auto;
+        height: 80%;
+        margin-left: 16px;
+    }
+    /* Surcharge */
+    .clDiscount {
+        position: absolute;
+        left: calc(100% + 16px);
+        bottom: 0;
+        width: 250%;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr td:nth-of-type(3) .clDiscount > small {
+        display: inline;
+        font-size: 0.8rem;
+        color: #333;
+    }
+
+    /*****************************************
+     * Terms and Conditions + Privacy Policy *
+     *****************************************/
+    /* Hide the buttons */
+    form[name=OGONE_PM_CHOICE_FORM] tr > td[colspan="2"]:nth-of-type(2),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) > td[colspan="2"]:nth-of-type(2) {
+        position: absolute;
+        left: -8px;
+        top: -8px;
+        width: calc(100% + 16px);
+        height: calc(100% + 16px);
+        overflow: visible;
+        background-color: #fcfcfc;
+        cursor: auto;
+    }
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) > td[colspan="2"]:nth-of-type(2) {
+        background-color: #ffffff;
+    }
+    /* Show the links */
+    form[name=OGONE_PM_CHOICE_FORM] tr > td[colspan="2"] a,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) > td[colspan="2"]:nth-of-type(2) a {
+        position: absolute;
+        width: 100%;
+        z-index: 10;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr > td[colspan="2"] a {
+        width: calc(100vw - 80px);
+    }
+    .paymentZone a.PrivacyPolicyLink,
+    .paymentZone a:active.PrivacyPolicyLink,
+    .paymentZone a:link.PrivacyPolicyLink,
+    .paymentZone a:visited.PrivacyPolicyLink,
+    .paymentZone a:hover.PrivacyPolicyLink {
+        color: #b7b7b7;
+        text-decoration: none;
+        font-size: small;
+        padding: 8px 8px;
+        white-space: normal;
+    }
+    .paymentZone a:hover.PrivacyPolicyLink {
+        text-decoration: underline;
+    }
+    form[name=OGONE_CC_FORM] > table.ncoltable2 > tbody > tr > td[colspan="2"] > small,
+    form[name=OGONE_CC_FORM] > table.ncoltable2 > tbody > tr > td[colspan="2"] > small > small,
+    form[name=OGONE_CC_FORM] > table.ncoltable2 > tbody > tr > td[colspan="2"] > small > small > a.PrivacyPolicyLink {
+        display: block;
+        width: 100%;
+        white-space: normal;
+    }
+
+    /***************************
+     *   +-----+-----+-----+   *
+     *   |  X  +  X  +     +   *
+     *   +-----+-----+-----+   *
+     ***************************/
+    /* When the Terms and Conditions are in the first column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 2) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 2) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: -4px;
+        top: calc(1rem - 6px);
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 2):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 2):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: -3px !important;
+        top: calc(1rem - 5px);
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    /* When the Privacy Policy is in the second column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n) > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n) > td[colspan="2"] a.PrivacyPolicyLink {
+        left: calc(-100% - 10px);
+        top: 32px;
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n):hover > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n):hover > td[colspan="2"] a.PrivacyPolicyLink {
+        left: calc(-100% - 7px) !important;
+        top: 33px;
+        white-space: normal;
+        color: #b7b7b7;
+    }
+
+    /***************************
+     *   +-----+-----+-----+   *
+     *   |     +  X  +  X  +   *
+     *   +-----+-----+-----+   *
+     ***************************/
+    /* When the Terms and Conditions are in the second column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: calc(-100% - 6px);
+        top: calc(100% + 1rem);
+        white-space: normal;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: calc(-100% - 3px);
+        top: calc(100% + 1rem - 1px);
+        white-space: normal;
+    }
+    /* When the Privacy Policy is in the third column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 1) > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 1) > td[colspan="2"] a.PrivacyPolicyLink {
+        left: calc(-200% - 10px);
+        top: calc(100% + 2.5rem - 2px);
+        white-space: normal;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 1):hover > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 1):hover > td[colspan="2"] a.PrivacyPolicyLink {
+        left: calc(-200% - 5px);
+        top: calc(100% + 2.5rem - 3px);
+        white-space: normal;
+    }
+    /* The last row is completely filled, so we should add some extra space for the links */
+    form[name=OGONE_PM_CHOICE_FORM] tr:last-child:nth-child(3n+1) {
+        margin-bottom: 60px;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:last-child:nth-child(3n+1):hover {
+        margin-bottom: 59px;
+    }
+
+    /***************************
+     *   +-----+-----+-----+   *
+     *   |  X  +     +  X  +   *
+     *   +-----+-----+-----+   *
+     ***************************/
+    /* When the Terms and Conditions are in the third column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 1) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 1) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: calc(-200% - 16px);
+        top: calc(100% + 1rem);
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 1):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 1):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+        left: calc(-200% - 11px);
+        top: calc(100% + 1rem - 1px);
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    /* When the Privacy Policy is in the first column of a 3-column layout */
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 2) > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 2) > td[colspan="2"] a.PrivacyPolicyLink {
+        left: -4px;
+        top: 2rem;
+        white-space: normal;
+        color: #b7b7b7;
+    }
+    form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(3n + 2):hover > td[colspan="2"] a.PrivacyPolicyLink,
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(3n + 2):hover > td[colspan="2"] a.PrivacyPolicyLink {
+        top: calc(2rem + 1px);
+        white-space: normal;
+        color: #b7b7b7;
+    }
+
+    /********************
+     * CREDIT CARD FORM *
+     ********************/
+    /* Credit card form*/
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody,
+    form[name=OGONE_CC_FORM] .ncoltable1 > tbody,
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody,
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody,
+    form[name=downloadformING] .ncoltable2 > tbody,
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody,
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody,
+    #payment-zone .ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(4) > tbody,
+    form[name=GiftCardList] .ncoltable2 > tbody,
+    form[name=OGONE_CC_FORM] div.paymentZone {
+        position: relative;
+        display: flex;
+        flex-flow: row wrap;
+        box-sizing: border-box;
+        margin-top: 48px;
+        padding: 16px 16px 32px 16px;
+        background-color: #ffffff;
+        border: solid 1px #e4e4e4;
+        border-radius: 4px;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:first-of-type > td:first-of-type {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:first-of-type > small {
+        white-space: nowrap;
+        color: #333;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(6):not([align=center]),
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-last-of-type(2):not([align=center]) {
+        display: none;
+    }
+    /* Input labels */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:first-of-type,
+    form[name=GiftCardList] .ncoltable2 > tbody > tr > td:first-of-type,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:first-of-type .fieldTitle {
+        text-align: left;
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+    }
+    /* Input block positions */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr,
+    form[name=GiftCardList] .ncoltable2 > tbody > tr,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr {
+        width: calc(100% - 96px);
+        min-height: 24px;
+        margin-top: 16px;
+        margin-left: 48px;
+    }
+    @media (max-width: 750px) {
+        form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr,
+        form[name=GiftCardList] .ncoltable2 > tbody > tr,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:first-of-type,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:first-of-type {
+        margin-left: 16px;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:first-of-type > td > img {
+        position: absolute;
+        left: 72px;
+        top: 172px;
+        max-height: 20px;
+        max-width: 56px;
+        z-index: 10;
+    }
+    @media (max-width: 750px) {
+        form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:first-of-type > td > img {
+            left: 24px;
+        }
+    }
+    /* Hide old labels */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:not(:first-of-type) > td:first-of-type > small {
+        color: transparent;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:first-of-type > small > label {
+        color: #333;
+    }
+    /* Show a mm/yyyy slash */
+    label[for=Ecom_Payment_Card_ExpDate_Month]::after {
+        margin-left: 4px;
+        content: "/";
+    }
+    /* Inputs */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr input:not([src]),
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr input,
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr input,
+    form[name=downloadformING] .ncoltable2 > tbody > tr input[type=submit],
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr input,
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr input,
+    form[name=GiftCardList] .ncoltable2 > tbody > tr td:not(:nth-of-type(3)) input,
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr input,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr input:not([type=checkbox]) {
+        width: calc(100% - 26px);
+        height: 32px;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        margin-top: 8px;
+        padding: 0 12px;
+        background-color: #ffffff;
+        color: #333;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr input:not([src]):hover,
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr input:hover,
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr input:hover,
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr input:hover,
+    form[name=GiftCardList] .ncoltable2 > tbody > tr td:not(:nth-of-type(3)) input:hover,
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr input:hover,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr input:not([type=checkbox]):hover {
+        -webkit-box-shadow: 0 0 5px 2px #cccccc;
+        -moz-box-shadow: 0 0 5px 2px #cccccc;
+        box-shadow: 0 0 5px 2px #cccccc;
+    }
+    /* Selects */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr select,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr select {
+        width: 72px;
+        height: 32px;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        margin-top: 8px;
+        padding: 0 8px;
+        background-color: #ffffff;
+        color: #333;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr select:hover,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr select:hover {
+        -webkit-box-shadow: 0 0 5px 2px #cccccc;
+        -moz-box-shadow: 0 0 5px 2px #cccccc;
+        box-shadow: 0 0 5px 2px #cccccc;
+    }
+    select#Ecom_Payment_Card_ExpDate_Month {
+        width: 56px;
+        margin-right: 4px;
+    }
+    select#Ecom_Payment_Card_ExpDate_Year {
+        width: 72px;
+        margin-left: 4px;
+    }
+    select#OwnerCTY {
+        width: 100%;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(3) input {
+        width: calc(100% - 86px);
+        padding: 0 12px 0 72px;
+    }
+    /* Expiry date input block */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(4) {
+        width: calc(50% - 56px);
+    }
+    /* Card verification code input block */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) {
+        left: calc(50% + 8px);
+        width: calc(50% - 56px);
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) input:not([src]) {
+        width: calc(100% - 90px);
+    }
+    label[for=OwnerZIP] ~ label[for=Ownertown]::before {
+        content: "/ ";
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > small > input[type=text]:nth-last-child(2),
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > small > input[type=text]:nth-child(2) {
+        width: calc(50% - 32px);
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type > small {
+        visibility: visible;
+    }
+    /* Submit button */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:first-of-type > small > input[type=submit],
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type > input[type=submit],
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-last-of-type(2) > td:first-of-type > input[type=submit],
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit],
+    form[name=downloadformING] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit],
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr input,
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit],
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr > td:first-of-type input[type=submit],
+    form[name=GiftCardList] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit],
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit] {
         @extend .btn;
-        @extend .btn-primary; 
+        @extend .btn-primary;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td:first-of-type > small > input[type=submit]:hover,
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type > input[type=submit]:hover,
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit]:hover,
+    form[name=downloadformING] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit]:hover,
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr input:hover,
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit]:hover,
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr > td:first-of-type input[type=submit]:hover,
+    form[name=GiftCardList] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit]:hover,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:first-of-type input[type=submit]:hover {
+        @extend .btn:hover;
+        @extend .btn-primary:hover;
+    }
+    /* Card verification code help */
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) > td:nth-of-type(2) {
+        position: relative;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) a.midncol {
+        box-sizing: content-box;
+        position: absolute;
+        top: 13px;
+        right: 32px;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        text-overflow: clip;
+        white-space: nowrap;
+        background: url("ic_help.png");
+        background-repeat: no-repeat;
+        background-size: 24px;
+        padding: 24px 24px 0 0;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) select[name=CVCFlag] {
+        width: calc(100% - 64px);
+    }
+
+    /**************
+     * iDEAL FORM *
+     **************/
+    table#iDealTbl > tbody {
+        position: relative;
+        display: flex;
+        flex-flow: row wrap;
+        box-sizing: border-box;
+        margin-top: 48px;
+        padding: 16px 16px 32px 16px;
+        background-color: #ffffff;
+        border: solid 1px #e4e4e4;
+        border-radius: 4px;
+    }
+    table#iDealTbl > tbody > tr:first-of-type {
+        width: 100%;
+        margin: 56px 32px 8px 34px;
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+    }
+    table#iDealTbl > tbody > tr:nth-of-type(2) > td:first-of-type > img {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+    table#iDealTbl > tbody > tr:nth-of-type(2) {
+        flex-grow: 1;
+    }
+    table#iDealTbl > tbody > tr:nth-of-type(2) > td:nth-of-type(2),
+    table#iDealTbl > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > select {
+        width: calc(100% - 18px);
+    }
+    table#iDealTbl select[name=ISSUERID] {
+        height: 32px;
+        margin-top: 8px;
+        margin-left: 32px;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        padding: 0 8px;
+    }
+    table#iDealTbl select[name=ISSUERID]:hover {
+        -webkit-box-shadow: 0 0 5px 2px #cccccc;
+        -moz-box-shadow: 0 0 5px 2px #cccccc;
+        box-shadow: 0 0 5px 2px #cccccc;
+    }
+    table#iDealTbl input[type=submit] {
+        height: 32px;
+        margin-top: 8px;
+        margin-left: 16px;
+        margin-right: 32px;
+        border: solid 1px #03a9f4;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #03a9f4;
+        color: #ffffff;
+    }
+    table#iDealTbl input[type=submit]:hover {
+        margin-top: 7px;
+        margin-left: 15px;
+        margin-right: 33px;
+        -webkit-box-shadow: 0 0 5px 2px #cccccc;
+        -moz-box-shadow: 0 0 5px 2px #cccccc;
+        box-shadow: 0 0 5px 2px #cccccc;
+    }
+
+    /*********************
+     * DIRECT DEBIT FORM *
+     *********************/
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody {
+        display: flex;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr {
+        width: calc(100% - 96px);
+        margin-top: 16px;
+        margin-left: 48px;
+        min-height: 24px;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:first-of-type {
+        margin-left: 16px;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td > div.fieldValue {
+        padding: 0;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td > div.fieldTitle,
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.fieldTitle {
+        padding: 0;
+        text-align: left;
+        visibility: hidden;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td {
+        width: 100%;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td > div.sectionTitle {
+        font-variant: small-caps;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        text-align: start;
+        padding: 0;
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td > div.fieldTitle > label,
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) label {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        visibility: visible;
+    }
+    form[name=OGONE_DD_FORM] label[for=owner_city]::before {
+        content: "/ ";
+    }
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > div.fieldValue > input[type=text]:nth-last-child(2),
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > div.fieldValue > input[type=text]:nth-child(2) {
+        width: calc(50% - 33px);
+    }
+
+    /*****************************
+     * DIRECT DEBIT CONFIRMATION *
+     *****************************/
+    div#payment-zone > table.ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody td.ncoltxtl {
+        margin-top: 16px;
+        margin-left: 48px;
+        font-variant: small-caps;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        text-align: start;
+    }
+    div#payment-zone > table.ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody td.ncoltxtl:not([align=right]) {
+        height: 0;
+        margin-top: 0;
+    }
+    div#payment-zone > table.ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody td.ncoltxtr {
+        display: inline-block;
+        width: 250px;
+        max-width: calc(100% - 80px);
+        min-height: 1rem;
+        margin-top: 8px;
+        margin-left: 48px;
+        font-size: 1.25rem;
+        padding: 0.25rem 0.75rem;
+        font-weight: normal;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        white-space: nowrap;
+    }
+    div#payment-zone > table.ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody tr:last-of-type td.ncoltxtc > form[name=OGONE_DD_FORM] > input[type=submit] {
+        margin-top: 24px;
+    }
+
+    /*******
+     * ELV *
+     *******/
+    /* This element contains a &nbsp;, so we fix the height of the row here */
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > div.fieldValue {
+        max-height: 42px;
+    }
+    span.star {
+        visibility: visible;
+    }
+
+    /***************
+     * ELV AUSTRIA *
+     ***************/
+    /* Put 'Bank account' and 'BLZ' on seperate rows */
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    /* Make sure the items wrap in their flex parent */
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > * {
+        width: 100%;
+    }
+    /* Make sure the label is aligned to the start */
+    form[name=OGONE_DD_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > span.fieldTitle {
+        padding: 0;
+        text-align: left;
+    }
+
+    /****************************
+     * SOFORT (DIRECT EBANKING) *
+     ****************************/
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:first-of-type,
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:last-of-type {
+        width: 100%;
+    }
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:first-of-type {
+        margin-top: 16px;
+    }
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit] {
+        padding: 1px 16px;
+        width: auto;
+    }
+    form[name=downloadformDirectEbanking] .ncoltable2 > tbody > tr:last-of-type > td:first-of-type input[type=submit]:hover {
+        padding: 0 17px 2px 15px;
+    }
+
+    /*************
+     * SURCHARGE *
+     *************/
+    form[name=downloadformING] .ncoltable2 > tbody {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    form[name=downloadformING] .ncoltable2 > tbody tr:nth-of-type(2),
+    form[name=downloadformING] .ncoltable2 > tbody tr:nth-of-type(4) {
+        display: none;
+    }
+    form[name=downloadformING] .ncoltable2 > tbody tr {
+        width: 100%;
+    }
+    form[name=downloadformING] .ncoltable2 > tbody tr:not(:last-of-type) {
+        margin-top: 16px;
+    }
+    form[name=downloadformING] .ncoltable2 > tbody tr:first-of-type td:nth-of-type(2) {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 16px;
+    }
+
+    /**************
+     * BANCONTACT *
+     **************/
+    html body #payment-zone > table.ncoltable1 {
+        min-width: 0;
+    }
+    html body table.ncoltable3 {
+        min-width: 0;
+    }
+
+    /**************************
+     * BANK TRANSFER - PAGE 1 *
+     **************************/
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr:last-of-type {
+        display: none;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr {
+        width: calc(100% - 96px);
+        margin-top: 16px;
+        margin-left: 48px;
+        min-height: 24px;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) > td:first-of-type label {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        visibility: visible;
+    }
+
+    /**************************
+     * BANK TRANSFER - PAGE 2 *
+     **************************/
+    /* Use the full width for the table */
+    form[name=OGONE_BT_FORM] .ncoltable1 {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 32px;
+    }
+    /* Only use the center of the page for the table body */
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody {
+        margin-left: calc(50% - 480px);
+        width: 960px;
+        position: relative;
+        box-sizing: border-box;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr {
+        width: calc(100% - 96px);
+        margin-top: 16px;
+        margin-left: 48px;
+        min-height: 24px;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:first-of-type,
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:last-of-type {
+        display: none;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:nth-of-type(2) {
+        margin-left: 16px;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:nth-of-type(2) > td {
+        text-align: start;
+    }
+
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:nth-of-type(2) > td .DDlabel {
+        font-variant: small-caps;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:not(:nth-of-type(2)) > td:first-of-type > p:not(.DDtxt) > small {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        visibility: visible;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:not(:nth-of-type(2)) > td:nth-of-type(2) {
+        padding-top: 0.5rem;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:not(:nth-of-type(2)) > td:nth-of-type(2) > p:not(.DDtxt) > small {
+        display: inline-block;
+        font-size: 1.25rem;
+        padding: 0.25rem 0.75rem;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        white-space: nowrap;
+        width: 200px;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr:not(:nth-of-type(2)) > td:nth-of-type(2) > p:not(.DDtxt) > small > span#rfbt {
+        font-weight: normal;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr > td:first-of-type p.DDtxt {
+        text-align: start;
+    }
+    form[name=OGONE_BT_FORM] .ncoltable1 > tbody > tr > td:first-of-type p.DDtxt b {
+        font-weight: bold;
+    }
+
+    /*******
+     * ATU *
+     *******/
+    form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_BIN {
+        width: calc((100% - 176px) / 22 * 10);
+    }
+    form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_1 {
+        padding-left: 12px;
+        width: calc((100% - 176px) / 22 * 8);
+    }
+    form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_2 {
+        padding-left: 12px;
+        width: calc((100% - 176px) / 22 * 2);
+    }
+    form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_IssuerNum {
+        padding-left: 12px;
+        width: calc((100% - 176px) / 22 * 2);
+    }
+    /************
+     * Cofinoga *
+     ************/
+    form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr > td input[type=image][src] {
+        height: 64px;
+    }
+
+    /**********
+     * Klarna *
+     **********/
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:first-of-type,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:nth-of-type(2) {
+        display: none;
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:nth-of-type(3) > td {
+        text-align: left;
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr select[name=Ecom_ShipTo_DOB_month],
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr select[name=Ecom_ShipTo_DOB_year] {
+        margin-left: 16px;
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#Ecom_BillTo_Postal_Name_Last,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#Ecom_BillTo_Postal_Name_First {
+        width: calc(50% - 28px);
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#owner_zip,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#owner_city {
+        width: calc(50% - 30px);
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr div.tc,
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr div.tc a {
+        line-height: 24px;
+        font-size: 1rem;
+        vertical-align: middle;
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr div.tc a {
+        padding: 0;
+    }
+    form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr input[type=checkbox] {
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+    }
+
+    /*******************
+     * Klarna - Page 2 *
+     *******************/
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody {
+        height: auto;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:first-of-type > td:first-of-type > .DDtxt > small {
+        display: block;
+        text-align: left;
+        padding: 16px;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:first-of-type > td:first-of-type > .DDtxt > small > b {
+        display: inline-block;
+        font-weight: bold;
+        line-height: 2rem;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table {
+        width: 50%;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table > tbody > tr:first-of-type > td:first-of-type[colspan="2"] > b {
+        font-weight: bold;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table > tbody > tr > td:first-of-type:not([colspan="2"]) {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table > tbody > tr > td:first-of-type:not([colspan="2"]) u {
+        text-decoration: none;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table > tbody > tr > td:nth-of-type(2) {
+        padding-top: 0.5rem;
+        padding-bottom: 1.5rem;
+    }
+    #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table > tbody > tr > td br {
+        display: none;
+    }
+
+    /********************
+     * Klarna - Failure *
+     ********************/
+    .ncoltable1:nth-of-type(2) > tbody h3 + small {
+        display: block;
+        padding-top: 2rem;
+    }
+    #payment-zone > i {
+        margin-left: calc(50% - 352px);
+    }
+
+    /**************
+     * Intersolve *
+     **************/
+    table.ncoltable1:nth-of-type(3) > tbody {
+        height: 8.75rem;
+    }
+    form[name=GiftCardList] .ncoltable2,
+    form[name=GiftCardList] .ncoltable2 > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+    #payment-zone table.ncoltable1:nth-of-type(4) > tbody {
+        margin-top: 0;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedTxt > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedAmount > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingTxt > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingAmount > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#LeftDetail > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RightDetail > small,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td:nth-of-type(3)[width="30%"] > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidTxt > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidAmount > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedTxt > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedAmount > small {
+        display: inline-block;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr {
+        width: 100%;
+    }
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidTxt,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidAmount,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedTxt > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedAmount > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#RemainingTxt > small,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#RemainingAmount > small {
+        position: absolute;
+        left: 0;
+        width: 100%;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedTxt,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedAmount,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingTxt,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingAmount,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#LeftDetail,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RightDetail,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td:nth-of-type(3)[width="30%"] {
+        margin-bottom: 8px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedTxt,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#LeftDetail,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidTxt,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedTxt > small {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        top: 0;
+    }
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidTxt,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedTxt > small {
+        top: 16px;
+        left: 16px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#ProcessedAmount,
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RightDetail,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidAmount,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedAmount > small {
+        width: 150px;
+        top: 1.5rem;
+        font-size: 1.25rem;
+        padding: 0.25rem 0.75rem;
+        font-weight: normal;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        white-space: nowrap;
+    }
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#PaidAmount,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#ProcessedAmount > small {
+        top: calc(1.5rem + 16px);
+        left: 16px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingTxt,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#RemainingTxt > small {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        left: 16px;
+        top: 4.5rem;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td:nth-of-type(3)[width="30%"] {
+        font-size: small;
+        top: 4.5rem;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody > tr > td#RemainingAmount,
+    table.ncoltable1:nth-of-type(3) > tbody > tr > td#RemainingAmount > small {
+        width: 150px;
+        left: 16px;
+        top: 6rem;
+        font-size: 1.25rem;
+        padding: 0.25rem 0.75rem;
+        font-weight: normal;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        white-space: nowrap;
+    }
+    #payment-zone table.ncoltable1:nth-of-type(4) > tbody > tr {
+        width: 100%;
+    }
+    form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 {
+        margin-bottom: 64px;
+    }
+    .ncoltable1:nth-of-type(3) ~ form[name=OGONE_CC_FORM] > table.ncoltable2 > tbody {
+        margin-top: -16px;
+    }
+
+    /**********************
+     * Credit Card Tokens *
+     **********************/
+    form[name=OGONE_CC_FORM] .ncoltable1 > tbody > tr:first-of-type > td:first-of-type > small {
+      font-variant: small-caps;
+      font-size: small;
+      font-weight: 500;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable1 > tbody > tr:first-of-type {
+        padding-bottom: 1rem;
+    }
+    form[name=OGONE_CC_FORM] .ncoltable1 > tbody > tr:nth-of-type(2) > td:first-of-type input[type=checkbox] {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+    }
+
+    /**********************
+     * Scheduled Payments *
+     **********************/
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]:not([style="padding-top:10px"]) > tbody > tr:nth-of-type(2) > td:not([id]).ncoltxtc {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]:not([style="padding-top:10px"]) > tbody > tr:not(:first-of-type) > td:not([id]).ncoltxtc:first-of-type {
+        display: inline-block;
+        width: 50%;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]:not([style="padding-top:10px"]) > tbody > tr:not(:first-of-type):not(:nth-of-type(2)) > td:not([id]).ncoltxtc:first-of-type {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]:not([style="padding-top:10px"]) > tbody > tr:not(:first-of-type) > td:not([id]).ncoltxtc:nth-of-type(2) {
+        display: inline-block;
+        width: 45%;
+    }
+
+    /*************************
+     * Subscription Payments *
+     *************************/
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody {
+        height: auto;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:first-of-type {
+        margin-top: 16px;
+        margin-left: 16px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:not(:first-of-type) {
+        margin-top: 16px;
+        margin-left: 48px;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:first-of-type > td:first-of-type {
+        font-variant: small-caps;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:not(:first-of-type) > td:first-of-type {
+        font-variant: small-caps;
+        font-size: small;
+        font-weight: 500;
+        text-align: start;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:not(:first-of-type) > td:nth-of-type(2) {
+        margin-top: 0.5rem;
+    }
+    table.ncoltable1:nth-of-type(2)[cellpadding="2"]#ncol_SUB > tbody > tr:not(:first-of-type) > td:nth-of-type(2) > small {
+        display: inline-block;
+        width: 250px;
+        max-width: calc(100% - 80px);
+        font-size: 1.25rem;
+        padding: 0.25rem 0.75rem;
+        font-weight: normal;
+        border: solid 1px #e4e4e4;
+        border-radius: 3px;
+        white-space: nowrap;
+    }
+
+    /*********************
+     * CONFIRMATION PAGE *
+     *********************/
+    /* Confirmation */
+    .ncoltable1:nth-of-type(2) {
+        width: 100%;
+    }
+    .ncoltable1:nth-of-type(2) > tbody {
+        padding: 144px 0 48px 0;
+    }
+    .ncoltable1:nth-of-type(2) > tbody > tr:first-of-type {
+        position: relative;
+    }
+    /* Hide unwanted info */
+    .ncoltable1:nth-of-type(2)[cellpadding="4"] > tbody small {
+        display: none;
+    }
+    .ncoltable1:nth-of-type(2) > tbody h3 {
+        width: 100%;
+        color: #333;
+    }
+
+    /**********
+     * FOOTER *
+     **********/
+    /* Footer */
+    .ncoltable3 {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 32px;
+    }
+    /* Only use the center of the page */
+    .ncoltable3 tbody {
+        margin-left: 25%;
+        width: 50%;
+        position: relative;
+        box-sizing: border-box;
+    }
+    .ncoltable3 tbody tr {
+        display: block;
+    }
+    /* Cancel row */
+    .ncoltable3 tbody tr:nth-of-type(2) {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 38px;
+    }
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td,
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center,
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center > table,
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center > table > tbody,
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center > table > tbody > tr {
+        width: 100%;
+        height: 38px;
+    }
+    .ncoltable3 tbody tr:nth-of-type(2) td center table tbody {
+        margin: 0;
+    }
+    /* Button row */
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center > table > tbody > tr {
+        display: flex;
+        justify-content: center;
+    }
+    .ncoltable3 > tbody > tr:nth-of-type(2) > td > center > table > tbody > tr > td {
+        width: auto;
+        margin: 0 8px;
+    }
+    /* Cancel button, Back button, Back to merchant site button */
+    .ncoltable3 input#ncol_cancel,
+    .ncoltable3 input#btn_Back,
+    form[name=BackToMerchForm] input.ncol {
+        @extend .btn;
+        @extend .btn-secondary;
+    }
+
+    .ncoltable3 input#ncol_cancel:hover,
+    .ncoltable3 input#btn_Back:hover,
+    form[name=BackToMerchForm] input.ncol:hover {
+        @extend .btn:hover;
+        @extend .btn-secondary:hover;
+    }
+    /* Links and logos row */
+    .ncoltable3 tbody tr:first-of-type {
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    .ncoltable3 > tbody > tr:first-of-type > td:first-of-type {
+        display: none;
+    }
+    /* Norton/Symantec */
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(3) > a {
+        position: absolute;
+        top: 56px;
+        left: 0;
+        width: 107px;
+        height: 64px;
+    }
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(3) > a > img {
+        width: 107px;
+        height: 64px;
+    }
+    /* Ingenico */
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) img {
+        position: absolute;
+        top: 56px;
+        right: 0;
+        height: 64px;
+    }
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > a > img {
+        height: 64px;
+    }
+    /* Links */
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small {
+        position: absolute;
+        top: 136px;
+        left: 0;
+        right: 0;
+        padding-bottom: 16px;
+        color: #ffffff;
+    }
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a,
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a:active,
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a:link,
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a:visited,
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a:hover,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a:active,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a:link,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a:visited,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a:hover {
+        color: #b8b8b8;
+        text-decoration: none;
+        font-size: small;
+        padding: 0px 8px;
+        line-height: 1rem;
+    }
+    .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a:hover,
+    .ncoltable2 > tbody > tr > td[colspan="2"] a:hover {
+        color: #d4d4d4;
+        text-decoration: underline;
+    }
+
+    /****************************
+     * RESPONSIVE MEDIA QUERIES *
+     ****************************/
+    /* Tablet */
+    @media all and (max-width: 1024px) {
+        /* Header, payment method buttons */
+        #payment-zone > .ncoltable1:first-of-type tbody,
+        form[name=OGONE_CC_FORM] .ncoltable2 tbody,
+        form[name=OGONE_CC_FORM] .ncoltable1 tbody,
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tbody,
+        table#iDealTbl > tbody,
+        form[name=OGONE_DD_FORM] .ncoltable2 > tbody,
+        form[name=downloadformDirectEbanking] .ncoltable2 > tbody,
+        form[name=downloadformING] .ncoltable2 > tbody,
+        form[name=OGONE_BT_FORM] .ncoltable2 > tbody,
+        form[name=OGONE_BT_FORM] .ncoltable1 > tbody,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody,
+        #payment-zone .ncoltable1:nth-of-type(2) > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(4) > tbody,
+        form[name=GiftCardList] .ncoltable2 > tbody,
+        form[name=OGONE_CC_FORM] div.paymentZone {
+            margin-left: calc(50% - 352px);
+            width: 702px;
+        }
+
+        /* Customer logo */
+        div#o_ogone_logo {
+            left: calc(50vw - 352px);
+        }
+    }
+
+    /* Small tablet => 2 column layout */
+    @media all and (max-width: 767px) {
+        /* Header */
+        #payment-zone > .ncoltable1:first-of-type tbody {
+            margin-left: 0;
+            width: 100%;
+        }
+        /* Customer logo */
+        div#o_ogone_logo {
+            left: 33px;
+        }
+        /* Payment method buttons */
+        form[name=OGONE_CC_FORM] .ncoltable2 tbody,
+        form[name=OGONE_CC_FORM] .ncoltable1 tbody,
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tbody,
+        table#iDealTbl > tbody,
+        form[name=OGONE_DD_FORM] .ncoltable2 > tbody,
+        form[name=downloadformDirectEbanking] .ncoltable2 > tbody,
+        form[name=downloadformING] .ncoltable2 > tbody,
+        form[name=OGONE_BT_FORM] .ncoltable2 > tbody,
+        form[name=OGONE_BT_FORM] .ncoltable1 > tbody,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(2)[cellpadding="2"] > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(3) > tbody,
+        #payment-zone table.ncoltable1:nth-of-type(4) > tbody,
+        form[name=GiftCardList] .ncoltable2 > tbody,
+        form[name=OGONE_CC_FORM] div.paymentZone {
+            margin-left: 32px;
+            width: calc(100% - 64px);
+        }
+        form[name=OGONE_CC_FORM] .ncoltable2 tr,
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) {
+            width: calc(50% - 20px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr:not([align=center]):hover,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type):hover {
+            width: calc(50% - 18px);
+        }
+
+        /*********************
+         *   +-----+-----+   *
+         *   |     +  X  +   *
+         *   +-----+-----+   *
+         *   |  X  +     +   *
+         *   +-----+-----+   *
+         *********************/
+        /* When the Terms and Conditions are in the second column of a 2-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n + 1) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n + 1) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: calc(-100% - 6px);
+            top: calc(100% + 1rem - 6px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n + 1):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n + 1):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: calc(-100% - 3px);
+            top: calc(100% + 1rem - 7px);
+        }
+        /* When the Privacy Policy is in the first column of a 2-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n) > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n) > td[colspan="2"] a.PrivacyPolicyLink {
+            left: 4px;
+            top: calc(2.5rem - 14px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n):hover > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n):hover > td[colspan="2"] a.PrivacyPolicyLink {
+            left: 5px;
+            top: calc(2.5rem - 13px);
+        }
+
+        /*********************
+         *   +-----+-----+   *
+         *   |  X  +  X  +   *
+         *   +-----+-----+   *
+         *********************/
+        /* When the Terms and Conditions are in the first column of a 2-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: 4px;
+            top: calc(1rem - 12px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: 5px;
+            top: calc(1rem - 11px);
+        }
+        /* When the Privacy Policy is in the second column of a 2-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n + 1) > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n + 1) > td[colspan="2"] a.PrivacyPolicyLink {
+            left: calc(-100% - 6px);
+            top: calc(2.5rem + 38px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(2n + 1):hover > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(2n + 1):hover > td[colspan="2"] a.PrivacyPolicyLink {
+            left: calc(-100% - 3px);
+            top: calc(2.5rem + 39px);
+        }
+        /* ATU */
+        form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_BIN {
+            width: calc(100% - 86px);
+        }
+        form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_1 {
+            padding-left: 12px;
+            width: calc((100% - 86px) / 12 * 8);
+        }
+        form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_2 {
+            padding-left: 12px;
+            width: calc((100% - 86px) / 12 * 2);
+        }
+        form[name=OGONE_CC_FORM] > .ncoltable2 > tbody > tr:nth-of-type(3) > td:nth-of-type(2) input#Ecom_Payment_Card_Number_IssuerNum {
+            padding-left: 12px;
+            width: calc((100% - 86px) / 12 * 2);
+        }
+        /* Klarna Failure */
+        #payment-zone > i {
+            margin-left: 32px;
+        }
+        /* Footer */
+        .ncoltable3 tbody {
+            margin-left: 17%;
+            width: 66%;
+        }
+    }
+
+    /* Large smartphone => 1 column layout */
+    @media all and (max-width: 551px) {
+        /* Payment method buttons */
+        form[name=OGONE_CC_FORM] .ncoltable2 tr,
+        form[name=OGONE_CC_FORM] .ncoltable1 tr,
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type) {
+            width: calc(100% - 18px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tr:not([align=center]):hover,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:not(:first-of-type):hover {
+            width: calc(100% - 16px);
+        }
+        /* When the Terms and Conditions are in a 1-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(n) > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(n) > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: 4px;
+            top: calc(1rem - 12px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink),
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(n):hover > td[colspan="2"] a:not(.PrivacyPolicyLink) {
+            left: 5px;
+            top: calc(1rem - 11px);
+        }
+        /* When the Privacy Policy is in a 1-column layout */
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(n) > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(n) > td[colspan="2"] a.PrivacyPolicyLink {
+            left: 4px;
+            top: calc(-100% + 2.5rem + 34px);
+        }
+        form[name=OGONE_PM_CHOICE_FORM] tr:nth-of-type(n):hover > td[colspan="2"] a.PrivacyPolicyLink,
+        form[name=GiftCardList] input[name=CompletionLastPM] ~ .ncoltable2 tr:nth-of-type(n):hover > td[colspan="2"] a.PrivacyPolicyLink {
+            left: 5px;
+            top: calc(-100% + 2.5rem + 37px);
+        }
+        /* Expiry date input block */
+        form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(4) {
+            width: calc(100% - 96px);
+        }
+        /* Card verification code input block */
+        form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) {
+            width: calc(100% - 96px);
+        }
+        form[name=OGONE_CC_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) input {
+            width: calc(100% - 58px);
+        }
+        /* Klarna */
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:nth-of-type(4) select,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr:nth-of-type(5) select {
+            width: calc(100%);
+            margin-left: 0;
+        }
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#Ecom_BillTo_Postal_Name_Last,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#Ecom_BillTo_Postal_Name_First {
+            width: calc(100% - 26px);
+        }
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#owner_zip,
+        form[name=OGONE_I_FORM] .ncoltable2 > tbody > tr > td:nth-of-type(2) > input#owner_city {
+            width: calc(100% - 26px);
+        }
+        #payment-zone .ncoltable1:nth-of-type(2)[style="padding-top:10px"] > tbody > tr:nth-of-type(2) > td > table {
+            width: auto;
+        }
+        /* Klarna Failure */
+        #payment-zone > i {
+            margin-top: -1.5rem;
+            display: block;
+        }
+        /* Scheduled Payments */
+        table.ncoltable1:nth-of-type(2)[cellpadding="2"]:not([style="padding-top:10px"]) > tbody > tr:not(:first-of-type) > td:not([id]).ncoltxtc:nth-of-type(2) {
+            text-align: right;
+        }
+        /* Footer */
+        .ncoltable3 tbody {
+            margin-left: 48px;
+            width: calc(100% - 96px);
+        }
+        /* Ingenico */
+        .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) img {
+            position: absolute;
+            top: 230px;
+            left: 50%;
+            right: auto;
+            margin-left: -66px;
+            max-height: 64px;
+            height: auto;
+            max-width: 132px;
+            width: auto;
+            margin-bottom: 75px;
+        }
+        /* Links */
+        .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) {
+            width: 100%;
+        }
+        .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small {
+            position: absolute;
+            top: 150px;
+            left: auto;
+            right: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(2) > small a {
+            display: block;
+            margin-top: -8px;
+        }
+        .ncoltable3 > tbody > tr:first-of-type > td:nth-of-type(3) > a {
+            left: 50%;
+            margin-left: -54px;
+        }
+    }
+
+    /* Smartphone */
+    @media all and (max-width: 319px) {
+        /* Header */
+        #payment-zone > .ncoltable1:first-of-type tbody {
+            margin-left: 0;
+            width: 255px;
+        }
+        /* Confirmed */
+        #payment-zone > .ncoltable1:nth-of-type(2) tbody {
+            margin-left: 0;
+            width: 319px;
+        }
+        /* Payment method buttons */
+        form[name=OGONE_CC_FORM] .ncoltable2 tbody,
+        form[name=OGONE_CC_FORM] .ncoltable1 tbody,
+        form[name=OGONE_PM_CHOICE_FORM] .ncoltable2 tbody,
+        table#iDealTbl > tbody,
+        form[name=OGONE_DD_FORM] .ncoltable2 > tbody,
+        form[name=downloadformDirectEbanking] .ncoltable2 > tbody,
+        form[name=downloadformING] .ncoltable2 > tbody,
+        form[name=OGONE_CC_FORM] div.paymentZone {
+            margin-left: 32px;
+            width: 255px;
+        }
+        /* Footer */
+        .ncoltable3 tbody {
+            margin-left: 48px;
+            width: 207px;
+        }
+    }
+    .PrivacyPolicyLink {
+        display: block;
+        white-space: normal;
+        color: #b7b7b7 !important;
     }
 }

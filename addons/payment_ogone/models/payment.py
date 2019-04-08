@@ -35,6 +35,7 @@ class PaymentAcquirerOgone(models.Model):
                                     help="If you want to use Ogone Aliases, this default "
                                     "Alias Usage will be presented to the customer as the "
                                     "reason you want to keep his payment data")
+    ogone_custom_template = fields.Boolean(string="Use Custom Template")
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -155,7 +156,7 @@ class PaymentAcquirerOgone(models.Model):
             'return_url': ogone_tx_values.pop('return_url', False)
         }
         temp_ogone_tx_values = {
-            'TP': '%s/ogone.htm' % (base_url),
+            'TP': '%s/ogone.htm' % (base_url) if self.ogone_custom_template else False,
             'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
             'AMOUNT': float_repr(float_round(values['amount'], 2) * 100, 0),
