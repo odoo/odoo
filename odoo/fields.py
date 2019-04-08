@@ -1932,10 +1932,6 @@ class Selection(Field):
             return value or False
         if value and self.column_type[0] == 'int4':
             value = int(value)
-        print(self.get_values(record.env))
-        if value=='en_US':
-            import ipdb
-            ipdb.set_trace()
         if value in self.get_values(record.env):
             return value
         elif not value:

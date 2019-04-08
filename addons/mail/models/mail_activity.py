@@ -612,6 +612,8 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'today'
             elif 'planned' in states:
                 record.activity_state = 'planned'
+            else:
+                record.activity_state = False
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):

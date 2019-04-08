@@ -1041,7 +1041,9 @@ class Cache(object):
         try:
             value = self._data[key][field][record._ids[0]]
         except KeyError:
-            this_should_not_happen
+            print('To Check: computed field ', field.name, ' of ', record, ' did not returned a value!')
+            import ipdb
+            ipdb.set_trace()
             raise CacheMiss(record, field)
 
         return value.get() if isinstance(value, SpecialValue) else value
