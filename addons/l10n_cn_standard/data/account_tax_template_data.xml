@@ -1,154 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <!-- sales tax included -->
-    <record id="l10n_cn_standard_sales_included_17" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收17％（含） - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收17％</field>
-        <field name="amount">17</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+    <!-- Account Tax -->
+    <record id="tag1" model="account.account.tag">
+        <field name="name">增值税13%销项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_sales_included_11" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收11％（含） - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收11％</field>
-        <field name="amount">11</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+    <record id="tag2" model="account.account.tag">
+        <field name="name">增值税13%进项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_sales_included_6" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收6％（含） - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收6％</field>
-        <field name="amount">6</field>
+    <record id="vats_standard_business_13" model="account.tax.template">
+        <field name="name">增值税13%销项税</field>
+        <field name="description">增值税13%销项税 - 中国会计科目表-企业会计准则</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
+        <field name="amount" eval="13"/>
         <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="account_id" ref="account_2221_1_5"/>
+        <field name="refund_account_id" ref="account_2221_1_5"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag1')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
-    <record id="l10n_cn_standard_sales_included_3" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收3％（含） - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收3％</field>
-        <field name="amount">3</field>
+    <record id="vatp_standard_business_13" model="account.tax.template">
+        <field name="name">增值税13%进项税</field>
+        <field name="description">增值税13%进项税 - 中国会计科目表-企业会计准则</field>
+        <field name="amount" eval="13"/>
+        <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="account_id" ref="account_2221_1_1"/>
+        <field name="refund_account_id" ref="account_2221_1_1"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag2')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
 
-    <!-- sales tax excluded -->
-    <record id="l10n_cn_standard_sales_excluded_17" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收17％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收17％</field>
-        <field name="amount">17</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+    <record id="tag3" model="account.account.tag">
+        <field name="name">增值税9%销项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_sales_excluded_11" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收11％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收11％</field>
-        <field name="amount">11</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+    <record id="tag4" model="account.account.tag">
+        <field name="name">增值税9%进项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_sales_excluded_6" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收6％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收6％</field>
-        <field name="amount">6</field>
+    <record id="vats_standard_business_9" model="account.tax.template">
+        <field name="name">增值税9%销项税</field>
+        <field name="description">增值税9%销项税 - 中国会计科目表-企业会计准则</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
+        <field name="amount" eval="9"/>
         <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="account_id" ref="account_2221_1_5"/>
+        <field name="refund_account_id" ref="account_2221_1_5"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag3')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
-    <record id="l10n_cn_standard_sales_excluded_small_3" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收3％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收3％</field>
-        <field name="amount">3</field>
+    <record id="vatp_standard_business_9" model="account.tax.template">
+        <field name="name">增值税9%进项税</field>
+        <field name="description">增值税9%进项税 - 中国会计科目表-企业会计准则</field>
+        <field name="amount" eval="9"/>
+        <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_5"/>
-        <field name="account_id" ref="account_2221_1_5"/>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="account_id" ref="account_2221_1_1"/>
+        <field name="refund_account_id" ref="account_2221_1_1"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag4')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
 
-
-    <!-- purchase tax excluded -->
-    <record id="l10n_cn_standard_purchase_excluded_17" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收17％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收17％</field>
-        <field name="amount">17</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_1"/>
-        <field name="account_id" ref="account_2221_1_1"/>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+    <record id="tag5" model="account.account.tag">
+        <field name="name">增值税6%销项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_purchase_excluded_11" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收11％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收11％</field>
-        <field name="amount">11</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_1"/>
-        <field name="account_id" ref="account_2221_1_1"/>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+    <record id="tag6" model="account.account.tag">
+        <field name="name">增值税6%进项税</field>
+        <field name="applicability">taxes</field>
     </record>
-    <record id="l10n_cn_standard_purchase_excluded_6" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收6％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收6％</field>
-        <field name="amount">6</field>
+    <record id="vats_standard_business_6" model="account.tax.template">
+        <field name="name">增值税6%销项税</field>
+        <field name="description">增值税6%销项税 - 中国会计科目表-企业会计准则</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_1"/>
-        <field name="account_id" ref="account_2221_1_1"/>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="amount" eval="6"/>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="account_2221_1_5"/>
+        <field name="refund_account_id" ref="account_2221_1_5"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag5')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
-    <record id="l10n_cn_standard_purchase_excluded_3" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        <field name="name">税收3％ - 中国会计科目表-企业会计准则</field>
-        <field name="description">税收3％</field>
-        <field name="amount">3</field>
-        <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="account_2221_1_1"/>
-        <field name="account_id" ref="account_2221_1_1"/>
+    <record id="vatp_standard_business_6" model="account.tax.template">
+        <field name="name">增值税6%进项税</field>
+        <field name="description">增值税6%进项税 - 中国会计科目表-企业会计准则</field>
+        <field name="amount" eval="6"/>
         <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="account_2221_1_1"/>
+        <field name="refund_account_id" ref="account_2221_1_1"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('tag6')])]"/>
+        <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
     </record>
 </odoo>
