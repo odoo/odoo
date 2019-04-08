@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="s_website_form" name="Form Builder">
+            <form action="/website_form/" method="post" class="s_website_form container-fluid mt32" enctype="multipart/form-data">
+                <div class="container">
+                    <div class="form-group row">
+                        <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
+                            <button class="btn btn-primary btn-lg o_website_form_send">Send</button>
+                            <span id="o_website_form_result"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+
+        <template id="remove_external_snippets" inherit_id="website_enterprise.external_snippets">
+            <xpath expr="//t[@t-install='website_form_editor']" position="replace"/>
+        </template>
+
+        <template id="register_s_website_form" inherit_id="website.snippets" name="Snippet Form Builder">
+            <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+                <t t-snippet="website_form_editor.s_website_form" t-thumbnail="/website_enterprise/static/src/img/s_website_form.png"/>
+            </xpath>
+        </template>
+
+        <template id="snippet_options" inherit_id="website.snippet_options">
+            <xpath expr="//*[@id='so_snippet_addition']" position="attributes">
+                <attribute name="data-selector" add=".s_website_form" separator=","/>
+            </xpath>
+            <xpath expr="//div" position="after">
+              <!-- Form -->
+              <div data-js="website_form_editor" data-selector=".s_website_form">
+                  <a href="#" class="dropdown-item" data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</a>
+                  <a href="#" class="dropdown-item" data-website_form_field_modal="" data-no-preview="true">Add an existing field</a>
+                  <div class="dropdown-submenu">
+                      <a href="#" class="dropdown-item">Add a custom field</a>
+                      <div class="dropdown-menu" role="menu" data-no-preview="true">
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="char">Text</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="text">Long Text</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="integer">Number</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="float">Decimal Number</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="boolean">Checkbox</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="selection">Radio Buttons</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="many2one">Selection</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="one2many">Multiple Checkboxes</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="date">Date</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="datetime">Date &amp; Time</a>
+                          <a href="#" class="dropdown-item" role="menuitem" data-website_form_custom_field="binary">File Upload</a>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Field -->
+              <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
+                    <a href="#" class="dropdown-item" data-toggle-class="o_website_form_field_hidden" data-no-preview="true">Hidden</a>
+              </div>
+
+              <!-- Add move, duplicate and remove controllers to checkboxes and radio buttons -->
+              <div data-selector=".o_website_form_flex_item" data-drop-near=".o_website_form_flex_item"/>
+
+              <!-- Add move and remove controllers to select items -->
+              <div data-selector=".s_website_form .form-field.o_website_form_custom .o_website_form_select_item" data-drop-near=".o_website_form_select_item"/>
+
+              <!-- Required option for fields that are not required fields of the model -->
+              <div data-js='website_form_editor_field' data-selector=".form-field:not(.o_website_form_required)">
+                    <a href="#" class="dropdown-item" data-website_form_field_require="" data-toggle-class="o_website_form_required_custom" data-no-preview="true">Required</a>
+              </div>
+
+              <!-- Remove the duplicate options of model fields -->
+              <div data-js="website_form_editor_field_model" data-selector=".s_website_form .form-field:not(.o_website_form_custom)"/>
+
+              <!-- Remove the delete options of model required fields -->
+              <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_required"/>
+
+              <!-- Remove the duplicate options of radio and checkboxes of model fields -->
+              <div data-js="website_form_editor_field_x2many" data-selector=".s_website_form .form-field:not(.o_website_form_custom) .o_website_form_flex_item"/>
+
+              <!-- Transform the select inputs into editable constructs -->
+              <div data-js="website_form_editor_field_select" data-selector=".s_website_form .form-field:has(select)"/>
+
+              <!-- Remove the duplicate option of model select items -->
+              <div data-js="website_form_editor_field_x2many" data-selector=".s_website_form .form-field:not(.o_website_form_custom) .o_website_form_select_item" data-drop-near=".o_website_form_select_item"/>
+
+              <!-- Remove the delete options of the Submit button -->
+              <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_send"/>
+            </xpath>
+        </template>
+</odoo>

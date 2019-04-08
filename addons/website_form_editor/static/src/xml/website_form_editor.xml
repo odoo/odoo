@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Generic Modal Layout -->
+    <t t-name="website_form_editor.modal">
+        <div role="dialog" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title"><t t-esc="modal_title"/></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&amp;times;</span>
+                        </button>
+                    </header>
+                    <main class="modal-body">
+                        <form role="form">
+                            <t t-raw="modal_body"/>
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="modal-save">Save</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Generic Field Layout -->
+    <t t-name="website_form_editor.field">
+        <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
+            <div class="col-md-4 text-md-right">
+                <label class="col-form-label" t-att-for="field.name">
+                    <t t-esc="field.string"/>
+                </label>
+            </div>
+            <div class="col-md-8">
+                <t t-raw="0"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Char Field -->
+    <t t-name="website_form_editor.field_char">
+        <t t-call="website_form_editor.field">
+            <input
+                type="text"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+                t-att-value="field.value"
+            />
+        </t>
+    </t>
+
+    <!-- Text Field -->
+    <t t-name="website_form_editor.field_text">
+        <t t-call="website_form_editor.field">
+            <textarea
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- HTML Field -->
+    <t t-name="website_form_editor.field_html">
+        <!--
+            Maybe use web_editor ? Not sure it actually makes
+            sense to have random people editing html in a form...
+        -->
+        <t t-call="website_form_editor.field_text"/>
+    </t>
+
+    <!-- Integer Field -->
+    <t t-name="website_form_editor.field_integer">
+        <t t-call="website_form_editor.field">
+            <input
+                type="number"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                step="1"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- Float Field -->
+    <t t-name="website_form_editor.field_float">
+        <t t-call="website_form_editor.field">
+            <input
+                type="number"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                step="any"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- Date Field -->
+    <t t-name="website_form_editor.field_date">
+        <t t-call="website_form_editor.field">
+            <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+            <div class="o_website_form_date input-group date" t-att-id="datepickerID" data-target-input="nearest">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input o_website_form_input"
+                        t-attf-data-target="##{datepickerID}"
+                        t-att-name="field.name"
+                        t-att-required="field.required"
+                />
+                <div class="input-group-append" t-attf-data-target="##{datepickerID}" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <!-- Datetime Field -->
+    <t t-name="website_form_editor.field_datetime">
+        <t t-call="website_form_editor.field">
+            <t t-set="datetimepickerID" t-value="_.uniqueId('datetimepicker')"/>
+            <div class="o_website_form_datetime input-group date" t-att-id="datetimepickerID" data-target-input="nearest">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input o_website_form_input"
+                        t-attf-data-target="##{datetimepickerID}"
+                        t-att-name="field.name"
+                        t-att-required="field.required"
+                />
+                <div class="input-group-append" t-attf-data-target="##{datetimepickerID}" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <!-- Boolean Field -->
+    <t t-name="website_form_editor.field_boolean">
+        <t t-call="website_form_editor.field">
+            <input
+                type="checkbox"
+                value="Yes"
+                class="o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
+    <!-- Selection Field -->
+    <t t-name="website_form_editor.field_selection">
+        <t t-call="website_form_editor.field">
+            <div class="o_website_form_flex">
+                <t t-foreach="field.selection" t-as="option">
+                    <div class="radio o_website_form_flex_item">
+                        <label>
+                            <input
+                                type="radio"
+                                class="o_website_form_input"
+                                t-att-name="field.name"
+                                t-att-value="option[0]"
+                                t-att-required="field.required"
+                            />
+                            <span>
+                                <t t-esc="option[1]"/>
+                            </span>
+                        </label>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <!-- Many2One Field -->
+    <t t-name="website_form_editor.field_many2one">
+        <!-- Binary one2many -->
+        <t t-if="field.relation == 'ir.attachment'">
+            <t t-call="website_form_editor.field_binary"/>
+        </t>
+        <!-- Generic one2many -->
+        <t t-if="field.relation != 'ir.attachment'">
+            <t t-call="website_form_editor.field">
+                <select class="form-control o_website_form_input" t-att-name="field.name" t-att-required="field.required">
+                    <t t-foreach="field.records" t-as="record">
+                        <option t-att-value="record.id" t-att-selected="record.selected">
+                            <t t-esc="record.display_name"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
+        </t>
+    </t>
+
+    <!-- One2Many Field -->
+    <t t-name="website_form_editor.field_one2many">
+        <!-- Binary one2many -->
+        <t t-if="field.relation == 'ir.attachment'">
+            <t t-call="website_form_editor.field_binary">
+                <t t-set="multiple" t-value="1"/>
+            </t>
+        </t>
+        <!-- Generic one2many -->
+        <t t-if="field.relation != 'ir.attachment'">
+            <t t-call="website_form_editor.field">
+                <div class="o_website_form_flex">
+                    <t t-if="!field.records">
+                        <input
+                            class="o_website_form_input"
+                            t-att-name="field.name"
+                            t-att-value="record.id"
+                            t-att-required="field.required"
+                            placeholder="No matching record !"
+                        />
+                    </t>
+                    <t t-foreach="field.records" t-as="record">
+                        <div class="checkbox o_website_form_flex_item">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    class="o_website_form_input"
+                                    t-att-name="field.name"
+                                    t-att-value="record.id"
+                                    t-att-required="field.required"
+                                />
+                                <span>
+                                    <t t-esc="record.display_name"/>
+                                </span>
+                            </label>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <!-- Many2Many Field -->
+    <t t-name="website_form_editor.field_many2many">
+        <t t-call="website_form_editor.field_one2many"/>
+    </t>
+
+    <!-- Binary Field -->
+    <t t-name="website_form_editor.field_binary">
+        <t t-call="website_form_editor.field">
+            <input
+                type="file"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+                t-att-multiple="multiple"
+            />
+        </t>
+    </t>
+
+</templates>
