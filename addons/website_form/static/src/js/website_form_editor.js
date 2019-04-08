@@ -12,7 +12,7 @@ odoo.define('website_form_editor', function (require) {
     var qweb = core.qweb;
 
     options.registry['website_form_editor'] = options.Class.extend({
-        xmlDependencies: ['/website_form_editor/static/src/xml/website_form_editor.xml'],
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
 
         start: function () {
             this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
@@ -24,7 +24,7 @@ odoo.define('website_form_editor', function (require) {
             var self = this;
 
             // Build the form parameters modal
-            var modal = qweb.render("website_form_editor.modal", {
+            var modal = qweb.render("website_form.modal", {
                 modal_title: modal_title,
                 modal_body: modal_body
             });
@@ -91,7 +91,7 @@ odoo.define('website_form_editor', function (require) {
                 ],
             }).then(function (models) {
                 // Models selection input
-                var model_selection = qweb.render("website_form_editor.field_many2one", {
+                var model_selection = qweb.render("website_form.field_many2one", {
                     field: {
                         name: 'model_selection',
                         string: 'Action',
@@ -106,7 +106,7 @@ odoo.define('website_form_editor', function (require) {
                 });
 
                 // Success page input
-                var success_page = qweb.render("website_form_editor.field_char", {
+                var success_page = qweb.render("website_form.field_char", {
                     field: {
                         name: 'success_page',
                         string: 'Thank You Page',
@@ -163,7 +163,7 @@ odoo.define('website_form_editor', function (require) {
                 var fields_in_form = _.map(self.$target.find('.col-form-label'), function (label) { return label.getAttribute('for'); });
                 var available_fields = _.filter(fields_array, function (field) { return !_.contains(fields_in_form, field.name); });
                 // Render the select input
-                var field_selection = qweb.render("website_form_editor.field_many2one", {
+                var field_selection = qweb.render("website_form.field_many2one", {
                     field: {
                         name: 'field_selection',
                         string: 'Field',
@@ -245,7 +245,7 @@ odoo.define('website_form_editor', function (require) {
             } else if (!$current.length) { // only add field if it's not already here
                 this.$modal.find("form").append(
                     // Email To input
-                    $(qweb.render("website_form_editor.field_char", {
+                    $(qweb.render("website_form.field_char", {
                         field: {
                             name: 'email_to',
                             string: 'Recipient email',
@@ -285,7 +285,7 @@ odoo.define('website_form_editor', function (require) {
             }
 
             return Promise.resolve(fieldRelationProm).then(function () {
-                var $content = $(qweb.render("website_form_editor.field_" + field.type, {field: field}));
+                var $content = $(qweb.render("website_form.field_" + field.type, {field: field}));
                 $content.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
                 return $content;
             });
@@ -363,7 +363,7 @@ odoo.define('website_form_editor', function (require) {
 
     // Generic custom field options
     options.registry['website_form_editor_field'] = options.Class.extend({
-        xmlDependencies: ['/website_form_editor/static/src/xml/website_form_editor.xml'],
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
 
         // Option to toggle inputs required attribute
         website_form_field_require: function (previewMode, value, $li) {
@@ -375,7 +375,7 @@ odoo.define('website_form_editor', function (require) {
 
     // Dirty hack to transform select fields into an editable construct
     options.registry['website_form_editor_field_select'] = options.Class.extend({
-        xmlDependencies: ['/website_form_editor/static/src/xml/website_form_editor.xml'],
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
 
         start: function () {
             if (!this.$target.find('#editable_select').length) {
@@ -416,7 +416,7 @@ odoo.define('website_form_editor', function (require) {
                 field.records = records;
 
                 // Replace this field by the new one
-                var $new_select = $(qweb.render("website_form_editor.field_many2one", {field: field}));
+                var $new_select = $(qweb.render("website_form.field_many2one", {field: field}));
                 // Reapply the custom style classes
                 if (this.$target.hasClass('o_website_form_required_custom')) {
                     $new_select.addClass('o_website_form_required_custom');
@@ -431,7 +431,7 @@ odoo.define('website_form_editor', function (require) {
 
     // Superclass for options that need to disable a button from the snippet overlay
     var disable_overlay_button_option = options.Class.extend({
-        xmlDependencies: ['/website_form_editor/static/src/xml/website_form_editor.xml'],
+        xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
 
         // Disable a button of the snippet overlay
         disable_button: function (button_name, message) {
