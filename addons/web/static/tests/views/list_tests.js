@@ -4153,6 +4153,47 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('create record on list with modifiers depending on id', function (assert) {
+        assert.expect(8);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="id" invisible="1"/>' +
+                    '<field name="foo" attrs="{\'readonly\': [[\'id\',\'!=\',False]]}"/>' +
+                    '<field name="int_field" attrs="{\'invisible\': [[\'id\',\'!=\',False]]}"/>' +
+                '</tree>',
+        });
+
+        // add a new record
+        testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        // modifiers should be evaluted to false
+        assert.containsOnce(list, '.o_selected_row');
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:first'), 'o_readonly_modifier');
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        // set a value and save
+        testUtils.fields.editInput(list.$('.o_selected_row input[name=foo]'), 'some value');
+        testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+
+        // modifiers should be evaluted to true
+        assert.hasClass(list.$('.o_data_row:first .o_data_cell:first'), 'o_readonly_modifier');
+        assert.hasClass(list.$('.o_data_row:first .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        // edit again the just created record
+        testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+
+        // modifiers should be evaluted to true
+        assert.containsOnce(list, '.o_selected_row');
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:first'), 'o_readonly_modifier');
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        list.destroy();
+    });
 });
 
 });
