@@ -9,7 +9,7 @@
 Customize and create your own web forms.
 This module adds a new building block in the website builder in order to build new forms from scratch in any website page.
     """,
-    'depends': ['website_enterprise', 'website_form'],
+    'depends': ['website_form'],
     'data': [
         'data/mail_mail_data.xml',
         'views/website_form_editor_templates.xml',
