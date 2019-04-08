@@ -15,7 +15,6 @@
 .o_thread_composer {
     flex: 0 0 auto;
     display: flex;
-    margin: 1px 0;
     border-top: none;
     background: theme-color('light');
 
@@ -69,11 +68,6 @@
         .o_composer_button_full_composer {
             @include o-position-absolute(auto, 0);
         }
-        @include media-breakpoint-down(sm) {
-            .o_composer_button_send {
-                color: $o-brand-primary;
-            }
-        }
 
         .o_mail_emoji_container {
             padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
@@ -119,6 +113,12 @@
 
             .o_mail_emoji_container {
                 margin: 0 -$o-mail-chatter-gap;
+            }
+
+            @include media-breakpoint-down(sm) {
+                .o_composer_button_send {
+                    color: $o-brand-primary;
+                }
             }
         }
 
@@ -243,7 +243,7 @@
                 }
             }
         }
-        .o_composer_button_send, .o_chatter_avatar {
+        .o_composer_send .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
         }
     }
