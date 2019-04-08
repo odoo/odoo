@@ -152,173 +152,102 @@ class SurveyQuestion(models.Model):
             self.question_type = False
 
     # Validation methods
+    def validate_question(self, answer, comment=None):
+        """ Validate question, depending on question type and parameters
+         for simple choice, text, date and number, answer is simply the answer of the question.
+         For other multiple choices questions, answer is a list of answers (the selected choices
+         or a list of selected answers per question -for matrix type-):
+            - Simple answer : answer = 'example' or 2 or question_answer_id or 2019/10/10
+            - Multiple choice : answer = [question_answer_id1, question_answer_id2, question_answer_id3]
+            - Matrix: answer = { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] }
 
-    def validate_question(self, post, answer_tag):
-        """ Validate question, depending on question type and parameters """
+         return dict {question.id (int): error (str)} -> empty dict if no validation error.
+         """
         self.ensure_one()
-        try:
-            checker = getattr(self, 'validate_' + self.question_type)
-        except AttributeError:
-            _logger.warning(self.question_type + ": This type of question has no validation method")
-            return {}
-        else:
-            return checker(post, answer_tag)
-
-    def validate_free_text(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        answer = post[answer_tag].strip()
+        if isinstance(answer, str):
+            answer = answer.strip()
         # Empty answer to mandatory question
-        if self.constr_mandatory and not answer:
-            errors.update({answer_tag: self.constr_error_msg})
-        return errors
+        if self.constr_mandatory and not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
+            return {self.id: self.constr_error_msg}
 
-    def validate_textbox(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        answer = post[answer_tag].strip()
-        # Empty answer to mandatory question
-        if self.constr_mandatory and not answer:
-            errors.update({answer_tag: self.constr_error_msg})
+        # because in choices question types, comment can count as answer
+        if answer or self.question_type in ['simple_choice', 'multiple_choice']:
+            if self.question_type == 'textbox':
+                return self._validate_textbox(answer)
+            elif self.question_type == 'numerical_box':
+                return self._validate_numerical_box(answer)
+            elif self.question_type in ['date', 'datetime']:
+                return self._validate_date(answer)
+            elif self.question_type in ['simple_choice', 'multiple_choice']:
+                return self._validate_choice(answer, comment)
+            elif self.question_type == 'matrix':
+                return self._validate_matrix(answer)
+        return {}
+
+    def _validate_textbox(self, answer):
         # Email format validation
-        # Note: this validation is very basic:
-        #     all the strings of the form
-        #     <something>@<anything>.<extension>
-        #     will be accepted
-        if answer and self.validation_email:
+        # all the strings of the form "<something>@<anything>.<extension>" will be accepted
+        if self.validation_email:
             if not email_validator.match(answer):
-                errors.update({answer_tag: _('This answer must be an email address')})
+                return {self.id: _('This answer must be an email address')}
+
         # Answer validation (if properly defined)
         # Length of the answer must be in a range
-        if answer and self.validation_required:
+        if self.validation_required:
             if not (self.validation_length_min <= len(answer) <= self.validation_length_max):
-                errors.update({answer_tag: self.validation_error_msg})
-        return errors
+                return {self.id: self.validation_error_msg}
+        return {}
 
-    def validate_numerical_box(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        answer = post[answer_tag].strip()
-        # Empty answer to mandatory question
-        if self.constr_mandatory and not answer:
-            errors.update({answer_tag: self.constr_error_msg})
-        # Checks if user input is a number
-        if answer:
-            try:
-                floatanswer = float(answer)
-            except ValueError:
-                errors.update({answer_tag: _('This is not a number')})
-        # Answer validation (if properly defined)
-        if answer and self.validation_required:
+    def _validate_numerical_box(self, answer):
+        try:
+            floatanswer = float(answer)
+        except ValueError:
+            return {self.id: _('This is not a number')}
+
+        if self.validation_required:
             # Answer is not in the right range
             with tools.ignore(Exception):
-                floatanswer = float(answer)  # check that it is a float has been done hereunder
                 if not (self.validation_min_float_value <= floatanswer <= self.validation_max_float_value):
-                    errors.update({answer_tag: self.validation_error_msg})
-        return errors
+                    return {self.id: self.validation_error_msg}
+        return {}
 
-    def date_validation(self, date_type, post, answer_tag, min_value, max_value):
-        self.ensure_one()
-        errors = {}
-        if date_type not in ('date', 'datetime'):
-            raise ValueError("Unexpected date type value")
-        answer = post[answer_tag].strip()
-        # Empty answer to mandatory question
-        if self.constr_mandatory and not answer:
-            errors.update({answer_tag: self.constr_error_msg})
+    def _validate_date(self, answer):
+        isDatetime = self.question_type == 'datetime'
         # Checks if user input is a date
-        if answer:
-            try:
-                if date_type == 'datetime':
-                    dateanswer = fields.Datetime.from_string(answer)
-                else:
-                    dateanswer = fields.Date.from_string(answer)
-            except ValueError:
-                errors.update({answer_tag: _('This is not a date')})
-                return errors
-        # Answer validation (if properly defined)
-        if answer and self.validation_required:
-            # Answer is not in the right range
-            try:
-                if date_type == 'datetime':
-                    date_from_string = fields.Datetime.from_string
-                else:
-                    date_from_string = fields.Date.from_string
-                dateanswer = date_from_string(answer)
-                min_date = date_from_string(min_value)
-                max_date = date_from_string(max_value)
-
-                if min_date and max_date and not (min_date <= dateanswer <= max_date):
-                    # If Minimum and Maximum Date are entered
-                    errors.update({answer_tag: self.validation_error_msg})
-                elif min_date and not min_date <= dateanswer:
-                    # If only Minimum Date is entered and not Define Maximum Date
-                    errors.update({answer_tag: self.validation_error_msg})
-                elif max_date and not dateanswer <= max_date:
-                    # If only Maximum Date is entered and not Define Minimum Date
-                    errors.update({answer_tag: self.validation_error_msg})
-            except ValueError:  # check that it is a date has been done hereunder
-                pass
-        return errors
-
-    def validate_date(self, post, answer_tag):
-        return self.date_validation('date', post, answer_tag, self.validation_min_date, self.validation_max_date)
-
-    def validate_datetime(self, post, answer_tag):
-        return self.date_validation('datetime', post, answer_tag, self.validation_min_datetime, self.validation_max_datetime)
-
-    def validate_simple_choice(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        if self.comments_allowed:
-            comment_tag = "%s_%s" % (answer_tag, 'comment')
-        # Empty answer to mandatory self
-        if self.constr_mandatory and answer_tag not in post:
-            errors.update({answer_tag: self.constr_error_msg})
-        if self.constr_mandatory and answer_tag in post and not post[answer_tag].strip():
-            errors.update({answer_tag: self.constr_error_msg})
-        # Answer is a comment and is empty
-        if self.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and self.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
-            errors.update({answer_tag: self.constr_error_msg})
-        return errors
-
-    def validate_multiple_choice(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        if self.constr_mandatory:
-            answer_candidates = dict_keys_startswith(post, answer_tag)
-            comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
-            if self.comments_allowed:
-                comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
-            # Preventing answers with blank value
-            if all(not answer.strip() for answer in answer_candidates.values()) and answer_candidates:
-                errors.update({answer_tag: self.constr_error_msg})
-            # There is no answer neither comments (if comments count as answer)
-            if not answer_candidates and self.comment_count_as_answer and (not comment_flag or not comment_answer):
-                errors.update({answer_tag: self.constr_error_msg})
-            # There is no answer at all
-            if not answer_candidates and not self.comment_count_as_answer:
-                errors.update({answer_tag: self.constr_error_msg})
-        return errors
-
-    def validate_matrix(self, post, answer_tag):
-        self.ensure_one()
-        errors = {}
-        if self.constr_mandatory:
-            lines_number = len(self.labels_ids_2)
-            answer_candidates = dict_keys_startswith(post, answer_tag)
-            answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
-            # Number of lines that have been answered
-            if self.matrix_subtype == 'simple':
-                answer_number = len(answer_candidates)
-            elif self.matrix_subtype == 'multiple':
-                answer_number = len({sk.rsplit('_', 1)[0] for sk in answer_candidates})
+        try:
+            dateanswer = fields.Datetime.from_string(answer) if isDatetime else fields.Date.from_string(answer)
+        except ValueError:
+            return {self.id: _('This is not a date')}
+        if self.validation_required:
+            # Check if answer is in the right range
+            if isDatetime:
+                min_date = fields.Datetime.from_string(self.validation_min_datetime)
+                max_date = fields.Datetime.from_string(self.validation_max_datetime)
+                dateanswer = fields.Datetime.from_string(answer)
             else:
-                raise RuntimeError("Invalid matrix subtype")
-            # Validate that each line has been answered
-            if answer_number != lines_number:
-                errors.update({answer_tag: self.constr_error_msg})
-        return errors
+                min_date = fields.Date.from_string(self.validation_min_date)
+                max_date = fields.Date.from_string(self.validation_max_date)
+                dateanswer = fields.Date.from_string(answer)
+
+            if (min_date and max_date and not (min_date <= dateanswer <= max_date))\
+                    or (min_date and not min_date <= dateanswer)\
+                    or (max_date and not dateanswer <= max_date):
+                return {self.id: self.validation_error_msg}
+        return {}
+
+    def _validate_choice(self, answer, comment):
+        # Empty comment
+        if self.constr_mandatory \
+                and not answer \
+                and not (self.comments_allowed and self.comment_count_as_answer and comment):
+            return {self.id: self.constr_error_msg}
+        return {}
+
+    def _validate_matrix(self, answers):
+        # Validate that each line has been answered
+        if self.constr_mandatory and len(self.labels_ids_2) != len(answers):
+            return {self.id: self.constr_error_msg}
+        return {}
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_question_ids(self):

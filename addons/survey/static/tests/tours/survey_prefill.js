@@ -55,23 +55,16 @@ tour.register('test_survey_prefill', {
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
         run: 'text Is the prefill working?',
     }, {
-        content: 'Click on Previous Page',
-        trigger: 'button[value="previous"]',
+        // Go back to previous page
+        content: 'Click on the previous page name in the breadcrumb',
+        trigger: 'ol.breadcrumb a:first',
     }, {
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website ?") input',
         run: function () {
-            // wait for prefill
-            // booo ugly (but will be removed when ajax prefill is removed)
-            var maxAttempts = 0;
-            var checkPrefillLoaded = setInterval(function () {
-                if ($('div.js_question-wrapper:contains("How many times did you order products on our website ?") input').val() === '42.0') {
-                    $('.o_survey_title').addClass('prefilled');
-                    clearInterval(checkPrefillLoaded);
-                } else if (maxAttempts >= 50) {
-                    clearInterval(checkPrefillLoaded);
-                }
-                maxAttempts++;
-            }, 100); // check every 100ms
+            var $inputQ3 = $('div.js_question-wrapper:contains("How many times did you order products on our website ?") input');
+            if ($inputQ3.val() === '42.0') {
+                $('.o_survey_title').addClass('prefilled');
+            }
         }
     }, {
         trigger: '.o_survey_title.prefilled',
@@ -107,18 +100,10 @@ tour.register('test_survey_prefill', {
     }, {
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
         run: function () {
-            // wait for prefill
-            // booo ugly (but will be removed when ajax prefill is removed)
-            var maxAttempts = 0;
-            var checkPrefillLoaded = setInterval(function () {
-                if ($('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea').val() === "Is the prefill working?") {
-                    $('.o_survey_title').addClass('prefilled2');
-                    clearInterval(checkPrefillLoaded);
-                } else if (maxAttempts >= 50) {
-                    clearInterval(checkPrefillLoaded);
-                }
-                maxAttempts++;
-            }, 100); // check every 100ms
+            var $inputQ3 = $('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea');
+            if ($inputQ3.val() === "Is the prefill working?") {
+                $('.o_survey_title').addClass('prefilled2');
+            }
         }
     }, {
         trigger: '.o_survey_title.prefilled2',

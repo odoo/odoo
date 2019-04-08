@@ -10,7 +10,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
-        'click button[name="button_submit"]': '_onSubmit',
+        'click button[type="submit"]': '_onSubmit',
         'click .o_survey_header .breadcrumb-item a': '_onBreadcrumbClick',
     },
 
@@ -30,7 +30,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this);
                 this.surveyTimerWidget.attachTo($timer);
                 this.surveyTimerWidget.on('time_up', this, function (ev) {
-                    self.$el.find('button[name="button_submit"]').click();
+                    self.$el.find('button[type="submit"]').click();
                 });
             }
 
@@ -101,9 +101,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     _onSubmit: function (event) {
         event.preventDefault();
-        var $target = $(event.currentTarget);
-        var submitValue = $target.val();
-        this._submitForm({'button_submit': submitValue})
+        if ($(event.currentTarget).val() === 'previous') {
+            this._submitForm({'previous_id': $(event.currentTarget).data('previousId')});
+        } else {
+            this._submitForm({});
+        }
     },
 
     _submitForm: function (params) {
@@ -111,9 +113,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var $form = this.$('form');
         var formData = new FormData($form[0]);
 
-        this.$('div.o_survey_form_date').each(function () {
-            self._updateDateForSubmit($(this), formData);
-        });
         this._prepareSubmitValues(formData, params);
 
         this._resetErrors();
@@ -149,64 +148,113 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
-    // INIT FIELDS
+    // PREPARE SUBMIT TOOLS
     // -------------------------------------------------------------------------
     /*
-    * Convert the client side date format into server side date format before submit
+    * For each type of question, extract the answer from inputs or textarea (comment or answer)
+    *
+    *
+    * @private
+    * @param {Event} event
     */
-    _updateDateForSubmit: function (dateGroup, formData) {
-        var input = $(dateGroup).find('input');
-        var dateValue = input.val();
-        var questionType = $(input).closest('.o_survey_form_date').data('questiontype');
-        if (dateValue) {
-            var momentDate = questionType === 'datetime' ? field_utils.parse.datetime(dateValue, null, {timezone: true}) : field_utils.parse.date(dateValue);
-            var newDate = momentDate ? momentDate.toJSON() : '';
-            formData.set(input.attr('name'), newDate);
-            input.val(newDate);
-        }
-    },
-
-    // TOOLS
-    // -------------------------------------------------------------------------
     _prepareSubmitValues: function (formData, params) {
         var self = this;
+        // Get all context params -- TODO : Use formData instead (test if input with no name are in formData)
         formData.forEach(function(value, key){
-            if (value !== -1) {
-                // Handles Comment
-                if (key.indexOf('_comment') !== -1){
-                    key = key.split('_comment')[0];
-                    value = {'comment': value};
-                }
-                // Handles Matrix - Matrix answer_tag are composed like : 'questionId_rowId_colId'
-                // and are the only ones with this structure.
-                var splitKey = key.split('_');
-                if (splitKey.length === 3 && splitKey[2] === value) {
-                    params = self._prepareSubmitMatrix(params, splitKey, value);
-                }
-                // Handles the rest
-                else {
-                    params = self._prepareSubmitOther(params, key, value);
-                }
+            switch (key) {
+                case 'csrf_token':
+                case 'token':
+                case 'page_id':
+                case 'question_id':
+                    params[key] = value;
+                    break;
+            }
+        });
+
+        // Get all question answers by question type
+        this.$('[data-question-type]').each(function () {
+            switch ($(this).data('questionType')) {
+                case 'free_text':
+                case 'textbox':
+                case 'numerical_box':
+                    params[this.name] = this.value;
+                    break;
+                case 'date':
+                    params = self._prepareSubmitDates(params, this.name, this.value, false);
+                    break;
+                case 'datetime':
+                    params = self._prepareSubmitDates(params, this.name, this.value, true);
+                    break;
+                case 'simple_choice_dropdown':
+                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'option:selected');
+                    break;
+                case 'simple_choice_radio':
+                case 'multiple_choice':
+                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'), 'input:checked');
+                    break;
+                case 'matrix':
+                    params = self._prepareSubmitAnswersMatrix(params, $(this));
+                    break;
             }
         });
     },
 
     /**
+    *   Prepare date answer before submitting form.
+    *   Convert date value from client current timezone to UTC Date to correspond to the server format.
+    *   return params = { 'dateQuestionId' : '2019-05-23', 'datetimeQuestionId' : '2019-05-23 14:05:12' }
+    */
+    _prepareSubmitDates: function(params, questionId, value, isDateTime) {
+        var momentDate = isDateTime ? field_utils.parse.datetime(value, null, {timezone: true}) : field_utils.parse.date(value);
+        var formattedDate = momentDate ? momentDate.toJSON() : '';
+        params[questionId] = formattedDate;
+        return params;
+    },
+
+    /**
+    *   Prepare choice answer before submitting form.
+    *   If the answer is not the 'comment selection' (=Other), calls the _prepareSubmitAnswer method to add the answer to the params
+    *   If there is a comment linked to that question, calls the _prepareSubmitComment method to add the comment to the params
+    */
+    _prepareSubmitChoices: function(params, $parent, questionId, selector) {
+        var self = this;
+        $parent.find(selector).each(function () {
+            if (this.value != '-1') {
+                params = self._prepareSubmitAnswer(params, questionId, this.value);
+            }
+        });
+        params = self._prepareSubmitComment(params, $parent, questionId, false);
+        return params;
+    },
+
+
+    /**
+    *   Prepare matrix answers before submitting form.
+    *   This method adds matrix answers one by one and add comment if any to a params key,value like :
+    *   params = { 'matrixQuestionId' : {'rowId1': [colId1, colId2,...], 'rowId2': [colId1, colId3, ...], 'comment': comment }}
+    */
+    _prepareSubmitAnswersMatrix: function(params, $matrixDiv) {
+        var self = this;
+        $matrixDiv.find('input:checked').each(function () {
+            params = self._prepareSubmitAnswerMatrix(params, $matrixDiv.data('name'), $(this).data('rowId'), this.value);
+        });
+        params = self._prepareSubmitComment(params, $matrixDiv, $matrixDiv.data('name'), true);
+        return params;
+    },
+
+    /**
     *   Prepare answer before submitting form if question type is matrix.
-    *   This method regroups answers by question and by row to make a object like :
+    *   This method regroups answers by question and by row to make an object like :
     *   params = { 'matrixQuestionId' : { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] } }
     */
-    _prepareSubmitMatrix: function(params, splitKey, value) {
-        var key = splitKey[0];
-        var rowId = splitKey[1];
-        var colId = splitKey[2];
-        value = key in params ? params[key] : {};
+    _prepareSubmitAnswerMatrix: function(params, questionId, rowId, colId) {
+        var value = questionId in params ? params[questionId] : {};
         if (rowId in value) {
             value[rowId].push(colId);
         } else {
             value[rowId] = [colId];
         }
-        params[key] = value;
+        params[questionId] = value;
         return params;
     },
 
@@ -216,36 +264,42 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     *   Lonely answer are directly assigned to questionId. Multiple answers are regrouped in an array:
     *   params = { 'questionId1' : lonelyAnswer, 'questionId2' : [multipleAnswer1, multipleAnswer2, ...] }
     */
-    _prepareSubmitOther: function(params, key, value) {
-        if (key in params) {
-            if (params[key].constructor === Array) {
-                params[key].push(value);
+    _prepareSubmitAnswer: function(params, questionId, value) {
+        if (questionId in params) {
+            if (params[questionId].constructor === Array) {
+                params[questionId].push(value);
             } else {
-                params[key] = [params[key], value];
+                params[questionId] = [params[questionId], value];
             }
         } else {
-            params[key] = value;
+            params[questionId] = value;
         }
         return params;
     },
 
     /**
-    * Convert date value in client current timezone (if already answered)
+    *   Prepare comment before submitting form.
+    *   This method extract the comment, encapsulate it in a dict and calls the _prepareSubmitAnswer methods
+    *   with the new value. At the end, the result looks like :
+    *   params = { 'questionId1' : {'comment': commentValue}, 'questionId2' : [multipleAnswer1, {'comment': commentValue}, ...] }
     */
-    _formatDateValue: function ($dateGroup) {
-        var input = $dateGroup.find('input');
-        var dateValue = input.val();
-        if (dateValue !== '') {
-            var momentDate = field_utils.parse.date(dateValue);
-            if ($dateGroup.data('questiontype') === 'datetime') {
-                dateValue = field_utils.format.datetime(momentDate, null, {timezone: true});
-            } else {
-                dateValue = field_utils.format.date(momentDate, null, {timezone: true});
+    _prepareSubmitComment: function(params, $parent, questionId, isMatrix) {
+        var self = this;
+        $parent.find('textarea').each(function () {
+            if (this.value) {
+                var value = {'comment': this.value};
+                if (isMatrix) {
+                    params = self._prepareSubmitAnswerMatrix(params, questionId, this.name, value);
+                } else {
+                    params = self._prepareSubmitAnswer(params, questionId, value);
+                }
             }
-        }
-        input.val(dateValue);
-        return dateValue
+        });
+        return params
     },
+
+    // INIT FIELDS TOOLS
+    // -------------------------------------------------------------------------
 
     /**
     * Initialize datetimepicker in correct format and with constraints
@@ -259,7 +313,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var maxDate = maxDateData ? this._formatDateTime(maxDateData) : moment().add(200, "y");
 
         var datetimepickerFormat = time.getLangDateFormat()
-        if ($dateGroup.data('questiontype') === 'datetime') {
+        if ($dateGroup.find('input').data('questionType') === 'datetime') {
             datetimepickerFormat = time.getLangDatetimeFormat()
         } else {
             // Include min and max date in selectable values
@@ -295,6 +349,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _formatDateTime: function (datetimeValue){
         return field_utils.format.datetime(moment(datetimeValue), null, {timezone: true});
     },
+
+    // ERRORS TOOLS
+    // -------------------------------------------------------------------------
 
     _scrollToError: function ($target) {
         var scrollLocation = $target.offset().top;
