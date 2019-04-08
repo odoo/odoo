@@ -17,6 +17,7 @@
     <br/>
 </div>
         </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>
         </record>
@@ -85,6 +86,7 @@
     </table>
 </div>
             </field>
+            <field name="lang">${object.rating_get_partner_id().lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>

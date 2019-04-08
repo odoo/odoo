@@ -64,12 +64,13 @@
             Used to give a basis for email recipients, name and to ease the definition of a further
             elaborated template.  -->
         <record id="email_template_opportunity_mail" model="mail.template">
-            <field name="name">Lead/Opportunity Mass Mail</field>
+            <field name="name">Lead/Opportunity: Mass Mail</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field name="auto_delete" eval="True"/>
             <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
             <field name="email_to">${(not object.partner_id and object.email_from)|safe}</field>
             <field name="body_html"></field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
         </record>
 
     </data>
