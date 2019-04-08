@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <!-- Generic Modal Layout -->
-    <t t-name="website_form_editor.modal">
+    <t t-name="website_form.modal">
         <div role="dialog" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -27,7 +27,7 @@
     </t>
 
     <!-- Generic Field Layout -->
-    <t t-name="website_form_editor.field">
+    <t t-name="website_form.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
             <div class="col-md-4 text-md-right">
                 <label class="col-form-label" t-att-for="field.name">
@@ -41,8 +41,8 @@
     </t>
 
     <!-- Char Field -->
-    <t t-name="website_form_editor.field_char">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_char">
+        <t t-call="website_form.field">
             <input
                 type="text"
                 class="form-control o_website_form_input"
@@ -54,8 +54,8 @@
     </t>
 
     <!-- Text Field -->
-    <t t-name="website_form_editor.field_text">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_text">
+        <t t-call="website_form.field">
             <textarea
                 class="form-control o_website_form_input"
                 t-att-name="field.name"
@@ -65,17 +65,17 @@
     </t>
 
     <!-- HTML Field -->
-    <t t-name="website_form_editor.field_html">
+    <t t-name="website_form.field_html">
         <!--
             Maybe use web_editor ? Not sure it actually makes
             sense to have random people editing html in a form...
         -->
-        <t t-call="website_form_editor.field_text"/>
+        <t t-call="website_form.field_text"/>
     </t>
 
     <!-- Integer Field -->
-    <t t-name="website_form_editor.field_integer">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_integer">
+        <t t-call="website_form.field">
             <input
                 type="number"
                 class="form-control o_website_form_input"
@@ -87,8 +87,8 @@
     </t>
 
     <!-- Float Field -->
-    <t t-name="website_form_editor.field_float">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_float">
+        <t t-call="website_form.field">
             <input
                 type="number"
                 class="form-control o_website_form_input"
@@ -100,8 +100,8 @@
     </t>
 
     <!-- Date Field -->
-    <t t-name="website_form_editor.field_date">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_date">
+        <t t-call="website_form.field">
             <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
             <div class="o_website_form_date input-group date" t-att-id="datepickerID" data-target-input="nearest">
                 <input
@@ -119,8 +119,8 @@
     </t>
 
     <!-- Datetime Field -->
-    <t t-name="website_form_editor.field_datetime">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_datetime">
+        <t t-call="website_form.field">
             <t t-set="datetimepickerID" t-value="_.uniqueId('datetimepicker')"/>
             <div class="o_website_form_datetime input-group date" t-att-id="datetimepickerID" data-target-input="nearest">
                 <input
@@ -138,8 +138,8 @@
     </t>
 
     <!-- Boolean Field -->
-    <t t-name="website_form_editor.field_boolean">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_boolean">
+        <t t-call="website_form.field">
             <input
                 type="checkbox"
                 value="Yes"
@@ -151,8 +151,8 @@
     </t>
 
     <!-- Selection Field -->
-    <t t-name="website_form_editor.field_selection">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_selection">
+        <t t-call="website_form.field">
             <div class="o_website_form_flex">
                 <t t-foreach="field.selection" t-as="option">
                     <div class="radio o_website_form_flex_item">
@@ -175,14 +175,14 @@
     </t>
 
     <!-- Many2One Field -->
-    <t t-name="website_form_editor.field_many2one">
+    <t t-name="website_form.field_many2one">
         <!-- Binary one2many -->
         <t t-if="field.relation == 'ir.attachment'">
-            <t t-call="website_form_editor.field_binary"/>
+            <t t-call="website_form.field_binary"/>
         </t>
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
-            <t t-call="website_form_editor.field">
+            <t t-call="website_form.field">
                 <select class="form-control o_website_form_input" t-att-name="field.name" t-att-required="field.required">
                     <t t-foreach="field.records" t-as="record">
                         <option t-att-value="record.id" t-att-selected="record.selected">
@@ -195,16 +195,16 @@
     </t>
 
     <!-- One2Many Field -->
-    <t t-name="website_form_editor.field_one2many">
+    <t t-name="website_form.field_one2many">
         <!-- Binary one2many -->
         <t t-if="field.relation == 'ir.attachment'">
-            <t t-call="website_form_editor.field_binary">
+            <t t-call="website_form.field_binary">
                 <t t-set="multiple" t-value="1"/>
             </t>
         </t>
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
-            <t t-call="website_form_editor.field">
+            <t t-call="website_form.field">
                 <div class="o_website_form_flex">
                     <t t-if="!field.records">
                         <input
@@ -237,13 +237,13 @@
     </t>
 
     <!-- Many2Many Field -->
-    <t t-name="website_form_editor.field_many2many">
-        <t t-call="website_form_editor.field_one2many"/>
+    <t t-name="website_form.field_many2many">
+        <t t-call="website_form.field_one2many"/>
     </t>
 
     <!-- Binary Field -->
-    <t t-name="website_form_editor.field_binary">
-        <t t-call="website_form_editor.field">
+    <t t-name="website_form.field_binary">
+        <t t-call="website_form.field">
             <input
                 type="file"
                 class="form-control o_website_form_input"
