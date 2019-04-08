@@ -4,8 +4,7 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
 
@@ -61,8 +60,8 @@ class Department(models.Model):
             department.total_employee = result.get(department.id, 0)
 
 
-class Employee(models.Model):
-    _inherit = "hr.employee"
+class HrEmployeeBase(models.AbstractModel):
+    _inherit = "hr.employee.base"
 
     def _group_hr_user_domain(self):
         group = self.env.ref('hr_holidays.group_hr_holidays_team_leader', raise_if_not_found=False)
@@ -173,7 +172,7 @@ class Employee(models.Model):
 
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
-        super(Employee, self)._onchange_parent_id()
+        super(HrEmployeeBase, self)._onchange_parent_id()
         previous_manager = self._origin.parent_id.user_id
         manager = self.parent_id.user_id
         if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
@@ -199,7 +198,7 @@ class Employee(models.Model):
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
     def write(self, values):
-        res = super(Employee, self).write(values)
+        res = super(HrEmployeeBase, self).write(values)
         today_date = fields.Datetime.now()
         if 'parent_id' in values or 'department_id' in values:
             hr_vals = {}
@@ -207,7 +206,7 @@ class Employee(models.Model):
                 hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
-            holidays = self.env['hr.leave'].search(['|',('state', 'in', ['draft', 'confirm']),('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].search(['|', ('state', 'in', ['draft', 'confirm']), ('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
             holidays.write(hr_vals)
             allocations = self.env['hr.leave.allocation'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
