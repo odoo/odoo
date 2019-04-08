@@ -24,14 +24,7 @@ class TestCertificationFlow(common.SurveyCase, HttpCase):
     def _format_submission_data(self, question, answer, additional_post_data):
         post_data = {}
         post_data['question_id'] = question.id
-        if question.question_type == 'multiple_choice':
-            values = answer
-            for value in values:
-                key = "%s_%s_%s" % (question.survey_id.id, question.id, value)
-                post_data[key] = value
-        else:
-            key = "%s_%s" % (question.survey_id.id, question.id)
-            post_data[key] = answer
+        post_data.update(self._prepare_post_data(question, answer, post_data))
         post_data.update(**additional_post_data)
         return post_data
 

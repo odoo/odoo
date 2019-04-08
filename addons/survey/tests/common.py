@@ -137,7 +137,10 @@ class SurveyCase(common.SavepointCase):
             else:
                 [value] = user_input['value']
                 answer_fname = self._type_match[question.question_type][1]
-                self.assertEqual(getattr(answer_lines, answer_fname), value)
+                if question.question_type == 'numerical_box':
+                    self.assertEqual(getattr(answer_lines, answer_fname), float(value))
+                else:
+                    self.assertEqual(getattr(answer_lines, answer_fname), value)
 
     def assertResponse(self, response, status_code, text_bits=None):
         self.assertEqual(response.status_code, status_code)
@@ -222,3 +225,20 @@ class SurveyCase(common.SavepointCase):
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
         return csrf_token_re.search(text).groups()[1]
+
+    def _prepare_post_data(self, question, answers, post_data):
+        values = answers if isinstance(answers, list) else [answers]
+        if question.question_type == 'multiple_choice':
+            for value in values:
+                value = str(value)
+                if question.id in post_data:
+                    if isinstance(post_data[question.id], list):
+                        post_data[question.id].append(value)
+                    else:
+                        post_data[question.id] = [post_data[question.id], value]
+                else:
+                    post_data[question.id] = value
+        else:
+            [values] = values
+            post_data[question.id] = str(values)
+        return post_data

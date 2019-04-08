@@ -301,7 +301,7 @@ class Survey(http.Controller):
         survey state will be forced to 'done'
 
         TDE NOTE: original comment: # AJAX submission of a page -> AJAX / http ?? """
-        # Validation
+        # Survey Validation
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return {
@@ -313,26 +313,32 @@ class Survey(http.Controller):
                                                                            page_id=post.get('page_id'),
                                                                            question_id=post.get('question_id'))
 
-        errors = {}
-        for question in questions:
-            answer_tag = "%s_%s" % (survey_sudo.id, question.id)
-            errors.update(question.validate_question(post, answer_tag))
-
-        if errors:
-            return {
-                'error': 'validation',
-                'fields': errors,
-            }
-
         if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
-        # Submitting survey
         if not answer_sudo.is_time_limit_reached:
+            # Prepare answers and comment by question
+            prepared_questions = {}
             for question in questions:
-                answer_tag = "%s_%s" % (survey_sudo.id, question.id)
-                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
+                answer = post.get(str(question.id))
+                answer, comment = self._extract_comment_from_answers(question, answer)
+                prepared_questions[question.id] = {'answer': answer, 'comment': comment}
+
+            # Questions Validation
+            errors = {}
+            for question in questions:
+                answer = prepared_questions[question.id]['answer']
+                comment = prepared_questions[question.id]['comment']
+                errors.update(question.validate_question(answer, comment))
+            if errors:
+                return {'error': 'validation', 'fields': errors}
+
+            # Submitting questions
+            for question in questions:
+                answer = prepared_questions[question.id]['answer']
+                comment = prepared_questions[question.id]['comment']
+                request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, answer, comment)
 
         if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -580,3 +586,24 @@ class Survey(http.Controller):
                 {"text": "Unanswered", "count": answer_perf['skipped']}
             ])
         return values
+
+    def _extract_comment_from_answers(self, question, answers):
+        comment = None
+        answers_no_comment = []
+        if answers:
+            if question.question_type == 'matrix':
+                if answers and 'comment' in answers:
+                    comment = answers['comment'].strip()
+                    answers.pop('comment')
+                answers_no_comment = answers
+            else:
+                if not isinstance(answers, list):
+                    answers = [answers]
+                for answer in answers:
+                    if 'comment' in answer:
+                        comment = answer['comment'].strip()
+                    elif answer != '-1':
+                        answers_no_comment.append(answer)
+                if len(answers_no_comment) == 1:
+                    [answers_no_comment] = answers_no_comment
+        return answers_no_comment, comment
