@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 
 
 class StockLocationRoute(models.Model):
@@ -77,11 +77,12 @@ class StockPicking(models.Model):
 
         def _keys_in_sorted(sale_line):
             """ sort by order_id and the sale_person on the order """
-            return (sale_line.order_id.id, sale_line.order_id.user_id.id)
+            return (sale_line.order_id.id, sale_line.order_id.user_id.id or SUPERUSER_ID)
 
         def _keys_in_groupby(sale_line):
             """ group by order_id and the sale_person on the order """
-            return (sale_line.order_id, sale_line.order_id.user_id)
+
+            return (sale_line.order_id, sale_line.order_id.user_id or self.browse(SUPERUSER_ID))
 
         def _render_note_exception_quantity(moves_information):
             """ Generate a note with the picking on which the action
