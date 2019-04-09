@@ -477,9 +477,12 @@ class MailTemplate(models.Model):
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = report.render_qweb_pdf([res_id])
+                    elif report.report_type == 'qweb-text':
+                        result, format = report.render_qweb_text([res_id])
+                    else:
                         raise UserError(_('Unsupported report type %s found.') % report.report_type)
-                    result, format = report.render_qweb_pdf([res_id])
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
