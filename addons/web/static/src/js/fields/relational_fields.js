@@ -16,6 +16,7 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var ControlPanelView = require('web.ControlPanelView');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
@@ -2304,14 +2305,24 @@ var FieldStatus = AbstractField.extend({
      * @private
      */
     _render: function () {
+        var self = this;
+        var nbStages = this._renderStatusbarNbStages();
+        var hasSelected = _.findWhere(this.status_information, {selected: true});
+        nbStages = this.status_information.indexOf(hasSelected) >= nbStages ? nbStages-1 : nbStages;
         var selections = _.partition(this.status_information, function (info) {
-            return (info.selected || !info.fold);
+            return (info.selected
+                || (!info.fold && self.status_information.indexOf(info) < nbStages));
         });
+
         this.$el.html(qweb.render("FieldStatus.content", {
             selection_unfolded: selections[0],
             selection_folded: selections[1],
             clickable: this.isClickable,
         }));
+    },
+
+    _renderStatusbarNbStages: function () {
+        return [2, 2, 4, 6][config.device.size_class] || 7;
     },
 
     //--------------------------------------------------------------------------

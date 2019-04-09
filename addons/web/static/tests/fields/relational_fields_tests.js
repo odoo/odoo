@@ -823,6 +823,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('statusbar with folded stages in dropdown', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields['stage'] = {
+            type: "selection",
+            selection: [['stage1', "Stage1"],['stage2', "Stage2"],['stage3', "Stage3"],['stage4', "Stage4"],['stage5', "Stage5"],['stage6', "Stage6"],['stage7', "Stage7"],['stage8', "Stage8"],['stage9', "Stage9"],['stage10', "Stage10"]],
+            default: 'stage1',
+            string: "Stages",
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<header><field name="stage" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.containsN(form, '.o_statusbar_status > button:not(.dropdown-toggle)', 7,
+            "should have 7 unfolded stage buttons");
+        assert.containsOnce(form, '.o_statusbar_status .dropdown-menu',
+            "should have dropdown for folded stage buttons");
+        assert.containsN(form, '.dropdown-menu button', 3,
+            "should have 3 folded buttons inside dropdown");
+        assert.strictEqual(form.$('.o_statusbar_status > button:not(.dropdown-toggle):first').text().trim(),
+            "Stage7", "should have Stage7 as last unfolded stage");
+
+        testUtils.dom.click('.o_statusbar_status > button.dropdown-toggle');
+        testUtils.dom.click('.o_statusbar_status .dropdown-menu button:first');
+        assert.strictEqual(form.$('.o_statusbar_status > button:not(.dropdown-toggle):first').text().trim(),
+            "Stage8", "should have Stage8 as last unfolded stage after clicking folded stage in dropdown");
+        assert.strictEqual(form.$('.dropdown-menu button:first').text().trim(), "Stage7",
+            "should have Stage7 as first folded button inside dropdown");
+
+        form.destroy();
+    });
+
+
     QUnit.test('statusbar with domain but no value (create mode)', function (assert) {
         assert.expect(1);
 
