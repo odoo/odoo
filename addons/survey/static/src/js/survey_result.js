@@ -1,43 +1,100 @@
 odoo.define('survey.result', function (require) {
 'use strict';
 
-require('web.dom_ready');
 var _t = require('web.core')._t;
+var ajax = require('web.ajax');
+var publicWidget = require('web.public.widget');
 
-if(!$('.js_surveyresult').length) {
-    return Promise.reject("DOM doesn't contain '.js_surveyresult'");
-}
+// The given colors are the same as those used by D3
+var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
+                    "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
+                    "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
 
-    // The given colors are the same as those used by D3
-    var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
-                        "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
-                        "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
+publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
+    selector: '.o_survey_result',
+    events: {
+        'click td.survey_answer i.fa-filter': '_onSurveyAnswerFilterClick',
+        'click .clear_survey_filter': '_onClearFilterClick',
+        'click span.filter-all': '_onFilterAllClick',
+        'click span.filter-finished': '_onFilterFinishedClick',
+    },
 
-    //Script For Pagination
-    var survey_pagination = $('.pagination');
-    $.each(survey_pagination, function(index, pagination){
-        var question_id = $(pagination).attr("data-question_id");
-        var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
-        $('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('d-none');
-        $('#pagination_'+question_id+' li a').click(function(event){
-            event.preventDefault();
-            $('#pagination_'+question_id+' li').removeClass('active');
-            $(this).parent('li').addClass('active');
-            $('#table_question_'+ question_id +' tbody tr').addClass('d-none');
-            var num = $(this).text();
-            var min = (limit * (num-1))-1;
-            if (min == -1){
-                $('#table_question_'+ question_id +' tbody tr:lt('+ limit * num +')').removeClass('d-none');
+    //--------------------------------------------------------------------------
+    // Widget
+    //--------------------------------------------------------------------------
+
+    /**
+    * @override
+    */
+    start: function () {
+        var superDef = this._super.apply(this, arguments);
+        var self = this;
+
+        //Script For Pagination
+        var survey_pagination = $('.pagination');
+        $.each(survey_pagination, function(index, pagination){
+            var question_id = $(pagination).attr("data-question_id");
+            var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
+            self.$('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('d-none');
+            self.$('#pagination_'+question_id+' li a').click(function(event){
+                event.preventDefault();
+                self.$('#pagination_'+question_id+' li').removeClass('active');
+                $(this).parent('li').addClass('active');
+                self.$('#table_question_'+ question_id +' tbody tr').addClass('d-none');
+                var num = $(this).text();
+                var min = (limit * (num-1))-1;
+                if (min === -1){
+                    self.$('#table_question_'+ question_id +' tbody tr:lt('+ limit * num +')').removeClass('d-none');
+                }
+                else{
+                    self.$('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('d-none');
+                }
+            });
+            self.$('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
+        });
+
+        //Script For Graph
+        var survey_graphs = self.$('.survey_graph');
+        $.each(survey_graphs, function(index, graph){
+            var question_id = $(graph).attr("data-question_id");
+            var graph_type = $(graph).attr("data-graph_type");
+            var graph_data = JSON.parse($(graph).attr("graph-data"));
+            var containerSelector = '#graph_question_' + question_id;
+            var chartConfig;
+            if(graph_type === 'multi_bar'){
+                chartConfig = self._initMultibarChart(graph_data);
+                self._loadChart(chartConfig, containerSelector);
             }
-            else{
-                $('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('d-none');
+            else if(graph_type === 'bar'){
+                chartConfig = self._initBarChart(graph_data);
+                self._loadChart(chartConfig, containerSelector);
+            }
+            else if(graph_type === 'pie'){
+                chartConfig = self._initPieChart(graph_data);
+                self._loadChart(chartConfig, containerSelector);
+            }
+            else if (graph_type === 'doughnut') {
+                var quizz_score = $(graph).attr("quizz-score") || 0.0;
+                chartConfig = init_doughnut_chart(graph_data, quizz_score);
+                self._loadChart(chartConfig, containerSelector);
             }
         });
-        $('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
-    });
+
+        var $scoringResultsChart = $('#scoring_results_chart');
+        if ($scoringResultsChart.length > 0) {
+            var chartConfig = self._initPieChart($scoringResultsChart.data('graph_data'));
+            self._loadChart(chartConfig, '#scoring_results_chart');
+        }
+
+        return superDef;
+    },
+
+    // -------------------------------------------------------------------------
+    // Private - Tools
+    // -------------------------------------------------------------------------
 
     // Custom Tick fuction for replacing long text with '...'
-    var customtick_function = function (tick_limit) {
+    _customTick: function (tick_limit) {
         return function(label) {
             if (label.length <= tick_limit) {
                 return label;
@@ -46,10 +103,10 @@ if(!$('.js_surveyresult').length) {
                 return label.slice(0, tick_limit) + '...';
             }
         };
-    };
+    },
 
     //initialize MultiBar Chart
-    function init_multibar_chart (graph_data) {
+    _initMultibarChart: function (graph_data) {
         var chartConfig = {
             type: 'bar',
             data: {
@@ -71,7 +128,7 @@ if(!$('.js_surveyresult').length) {
                 scales: {
                     xAxes: [{
                         ticks: {
-                            callback: customtick_function(25),
+                            callback: this._customTick(25),
                         },
                     }],
                     yAxes: [{
@@ -90,10 +147,10 @@ if(!$('.js_surveyresult').length) {
             },
         };
         return chartConfig;
-    }
+    },
 
     //initialize discreteBar Chart
-    function init_bar_chart(graph_data){
+    _initBarChart: function (graph_data) {
         var chartConfig = {
             type: 'bar',
             data: {
@@ -120,7 +177,7 @@ if(!$('.js_surveyresult').length) {
                 scales: {
                     xAxes: [{
                         ticks: {
-                            callback: customtick_function(35),
+                            callback: this._customTick(35),
                         },
                     }],
                     yAxes: [{
@@ -135,10 +192,10 @@ if(!$('.js_surveyresult').length) {
             },
         };
         return chartConfig;
-    }
+    },
 
-    //initialize Pie Chart
-    function init_pie_chart(graph_data){
+        //initialize Pie Chart
+    _initPieChart: function (graph_data) {
         var data = graph_data.map(function (point) {
             return point.count;
         });
@@ -155,13 +212,13 @@ if(!$('.js_surveyresult').length) {
                         return D3_COLORS[index % 20];
                     }),
                 }]
-        }
+            }
         };
         return chartConfig;
-    }
+    },
 
     //initialize doughnut Chart
-    function init_doughnut_chart(graph_data, quizz_score){
+    _init_doughnut_chart: function (graph_data, quizz_score){
         var data = graph_data.map(function (point) {
             return point.count;
         });
@@ -190,91 +247,96 @@ if(!$('.js_surveyresult').length) {
     }
 
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    function load_chart(chartConfig, containerSelector){
-        var $container = $(containerSelector).css({position: 'relative'});
+    _loadChart: function (chartConfig, containerSelector) {
+        var $container = this.$(containerSelector).css({position: 'relative'});
         var $canvas = $container.find('canvas');
         var ctx = $canvas.get(0).getContext('2d');
         return new Chart(ctx, chartConfig);
-    }
+    },
 
-    //Script For Graph
-    var survey_graphs = $('.survey_graph');
-    $.each(survey_graphs, function(index, graph){
-        var question_id = $(graph).attr("data-question_id");
-        var graph_type = $(graph).attr("data-graph_type");
-        var graph_data = JSON.parse($(graph).attr("graph-data"));
-        var containerSelector = '#graph_question_' + question_id;
-        var chartConfig;
-        if(graph_type == 'multi_bar'){
-            chartConfig = init_multibar_chart(graph_data);
-            load_chart(chartConfig, containerSelector);
-        }
-        else if(graph_type == 'bar'){
-            chartConfig = init_bar_chart(graph_data);
-            load_chart(chartConfig, containerSelector);
-        }
-        else if(graph_type == 'pie'){
-            chartConfig = init_pie_chart(graph_data);
-            load_chart(chartConfig, containerSelector);
-        }
-        else if (graph_type === 'doughnut') {
-            var quizz_score = $(graph).attr("quizz-score") || 0.0;
-            chartConfig = init_doughnut_chart(graph_data, quizz_score);
-            return load_chart(chartConfig, containerSelector);
-        }
-    });
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
 
-    var $scoringResultsChart = $('#scoring_results_chart');
-    if ($scoringResultsChart.length > 0) {
-        var chartConfig = init_pie_chart($scoringResultsChart.data('graph_data'));
-        load_chart(chartConfig, '#scoring_results_chart');
-    }
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSurveyAnswerFilterClick: function (ev) {
+        var cell = $(ev.target);
+        var row_id = cell.data('row_id') | 0;
+        var answer_id = cell.data('answer_id');
 
-    // Script for filter
-    $('td.survey_answer').hover(function(){
-        $(this).find('i.fa-filter').removeClass('invisible');
-    }, function(){
-        $(this).find('i.fa-filter').addClass('invisible');
-    });
-    $('td.survey_answer i.fa-filter').click(function(){
-        var cell = $(this);
-        var row_id = cell.attr('data-row_id') | 0;
-        var answer_id = cell.attr('data-answer_id');
-        if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL + '?' + encodeURI(row_id + ',' + answer_id);
-        }
-        else {
-            window.location.href = document.URL + '&' + encodeURI(row_id + ',' + answer_id);
-        }
-    });
+        var params = this._getQueryStringParams();
+        var filters = params['filters'] ? params['filters'] + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id
+        params['filters'] = filters;
 
-    // for clear all filters
-    $('.clear_survey_filter').click(function(){
-        window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
-    });
-    $('span.filter-all').click(function(){
-        event.preventDefault();
-        if(document.URL.indexOf("finished") != -1){
-            window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
+        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClearFilterClick: function (ev) {
+        var params = this._getQueryStringParams();
+        delete params['filters'];
+        delete params['finished'];
+        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterAllClick: function (ev) {
+        var params = this._getQueryStringParams();
+        delete params['finished'];
+        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterFinishedClick: function (ev) {
+        var params = this._getQueryStringParams();
+        params['finished'] = true;
+        window.location.href = window.location.pathname + '?' + this._toQueryString(params);
+    },
+
+    // TODO DBE : Remove the two next functions in v13 and use URLSearchParams instead (see task id : 1985506)
+    // as IE will not be supported anymore in v13.
+    _getQueryStringParams: function () {
+        var paramsDict = {};
+        var params = window.location.search.split('?');
+        if (params.length === 1) {
+            return paramsDict;
         }
-    }).hover(function(){
-        if(document.URL.indexOf("finished") == -1){
-            $(this)[0].style.cursor = 'default';
+        params = params[1].split('&');
+        params.forEach(function (param) {
+            var paramKeyValue = param.split('=');
+            paramsDict[paramKeyValue[0]] = paramKeyValue.length === 2 ? paramKeyValue[1] : null;
+        });
+        return paramsDict;
+    },
+
+    _toQueryString: function (paramsDict) {
+        var queryString = "";
+        _.each(paramsDict, function (value, key) {
+            if (value) {
+                queryString += key + '=' + value + '&';
+            } else {
+                queryString += key + '&';
+            }
+        });
+        if (queryString.length > 0) {
+            queryString = queryString.substring(0, queryString.length-1);
         }
-    });
-    // toggle finished/all surveys filter
-    $('span.filter-finished').click(function(){
-        event.preventDefault();
-        if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL + '?' + encodeURI('finished');
-        }
-        else if(document.URL.indexOf("finished") == -1){
-            window.location.href = document.URL + '&' + encodeURI('finished');
-        }
-    }).hover(function(){
-        if(document.URL.indexOf("finished") != -1){
-            $(this)[0].style.cursor = 'default';
-        }
-    });
+        return queryString;
+    },
+});
+
+return publicWidget.registry.SurveyResultWidget;
 
 });
