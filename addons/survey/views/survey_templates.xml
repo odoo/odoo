@@ -214,11 +214,7 @@
             <div class="container m-0 p-0">
                 <div class="row">
                     <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
-                    <div
-                        t-if="survey.is_time_limited"
-                        class="js_survey_timer col-lg-4"
-                        t-att-data-timer="answer.start_datetime.isoformat()"
-                        t-att-data-time_limit_minutes="survey.time_limit">
+                    <div t-if="survey.is_time_limited" class="o_survey_timer col-lg-4">
                         <h1 class="timer text-right">00:00</h1>
                     </div>
                 </div>
@@ -256,7 +252,9 @@
 
         <form role="form" method="post" t-att-name="survey.id"
                 t-att-data-answer-token="answer.token"
-                t-att-data-survey-token="survey.access_token">
+                t-att-data-survey-token="survey.access_token"
+                t-att-data-timer="answer.start_datetime.isoformat() if survey.is_time_limited else False"
+                t-att-data-time-limit-minutes="survey.time_limit">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">
