@@ -25,15 +25,19 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function() {
             self.options = self.$target.find('form').data()
-            var $timer = self.$('.o_survey_timer');
+            var $timer = $('.o_survey_timer');
             if ($timer.length) {
-                this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this);
-                this.surveyTimerWidget.attachTo($timer);
-                this.surveyTimerWidget.on('time_up', this, function (ev) {
+                var timeLimitMinutes = self.options.timeLimitMinutes;
+                var timer = self.options.timer;
+                self.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(self, {
+                    'timer': timer,
+                    'timeLimitMinutes': timeLimitMinutes
+                });
+                self.surveyTimerWidget.attachTo($timer);
+                self.surveyTimerWidget.on('time_up', self, function (ev) {
                     self.$el.find('button[type="submit"]').click();
                 });
             }
-
             self.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
@@ -118,7 +122,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         this._resetErrors();
 
         return self._rpc({
-            route: '/survey/submit/' + self.options['surveyToken'] + '/' + self.options['answerToken'],
+            route: '/survey/submit/' + self.options.surveyToken + '/' + self.options.answerToken ,
             params: params,
         }).then(function (result) {
             return self._onSubmitDone(result, params);
