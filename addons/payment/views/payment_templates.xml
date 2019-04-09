@@ -140,11 +140,11 @@
                         <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
-                        <i class="fa fa-lock"> Pay</i>
+                        <i class="fa fa-lock"/> Pay
                     </t>
                 </button>
                 <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"> Add new card</i>
+                    <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>
         </form>
