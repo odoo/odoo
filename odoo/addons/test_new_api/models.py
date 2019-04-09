@@ -128,6 +128,7 @@ class Message(models.Model):
         search='_search_author_partner')
     important = fields.Boolean()
     label = fields.Char(translate=True)
+    priority = fields.Integer()
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -185,6 +186,12 @@ class Message(models.Model):
     @api.model
     def _search_author_partner(self, operator, value):
         return [('author.partner_id', operator, value)]
+
+    @api.multi
+    def write(self, vals):
+        if 'priority' in vals:
+            vals['priority'] = 5
+        return super().write(vals)
 
 
 class EmailMessage(models.Model):
