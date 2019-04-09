@@ -204,6 +204,13 @@ var AbstractField = Widget.extend({
             return self._render();
         });
     },
+    /**
+     * Hook called when the interface has been updated (widgets have been reset
+     * and modifiers have been re-evaluated. This hook can be overriden for
+     * example by widgets that need to compute their layout according to the
+     * available space.
+     */
+    hasBeenUpdated: function () {},
 
     //--------------------------------------------------------------------------
     // Public

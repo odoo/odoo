@@ -92,7 +92,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @returns {Promise<AbstractField[]>} resolved with the list of widgets
      *                                      that have been reset
      */
-    confirmChange: function (state, id, fields, ev) {
+    confirmChange: async function (state, id, fields, ev) {
         this.state = state;
         var record = this._getRecord(id);
         if (!record) {
@@ -120,9 +120,11 @@ var BasicRenderer = AbstractRenderer.extend({
         // state before evaluation
         defs.push(this._updateAllModifiers(record));
 
-        return Promise.all(defs).then(function () {
-            return resetWidgets;
-        });
+        await Promise.all(defs);
+
+        _.invoke(this.allFieldWidgets[id], 'hasBeenUpdated');
+
+        return resetWidgets;
     },
     /**
      * Activates the widget and move the cursor to the given offset

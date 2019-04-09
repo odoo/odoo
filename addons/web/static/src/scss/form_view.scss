@@ -164,7 +164,14 @@
         }
 
         > .o_statusbar_buttons {
+            flex: 1 0 auto;
             flex-flow: row wrap;
+            &:not(.o_statusbar_buttons_full) {
+                max-width: 75%; // leave some space for the status widget
+            }
+            &.o_statusbar_buttons_full {
+                max-width: 100%;
+            }
 
             > .btn {
                 $o-statusbar-buttons-vmargin: 4px;
@@ -252,7 +259,10 @@
                     }
                 }
             }
-
+            > .o_statusbar_dropdown {
+                max-height: 60vh; // prevent dropdown from overflowing
+                overflow: auto; // force scrollbar in dropdown
+            }
         }
 
         // Touch device mode

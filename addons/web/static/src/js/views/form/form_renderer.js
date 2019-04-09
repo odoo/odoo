@@ -49,9 +49,13 @@ var FormRenderer = BasicRenderer.extend({
      */
     on_attach_callback: function () {
         this._isInDom = true;
-        _.forEach(this.allFieldWidgets, function (widgets){
-            _.invoke(widgets, 'on_attach_callback');
-        });
+        for (var key of Object.keys(this.allFieldWidgets)) {
+            for (var w of this.allFieldWidgets[key]) {
+                if (w.on_attach_callback) {
+                    w.on_attach_callback();
+                }
+            }
+        }
         this._super.apply(this, arguments);
     },
     /**
@@ -59,6 +63,13 @@ var FormRenderer = BasicRenderer.extend({
      */
     on_detach_callback: function () {
         this._isInDom = false;
+        for (var key of Object.keys(this.allFieldWidgets)) {
+            for (var w of this.allFieldWidgets[key]) {
+                if (w.on_detach_callback) {
+                    w.on_detach_callback();
+                }
+            }
+        }
         this._super.apply(this, arguments);
     },
 
@@ -505,14 +516,19 @@ var FormRenderer = BasicRenderer.extend({
     _renderHeaderButtons: function (node) {
         var self = this;
         var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
+        var shouldLeaveSomeSpace = false;
         _.each(node.children, function (child) {
             if (child.tag === 'button') {
                 $buttons.append(self._renderHeaderButton(child));
-            }
-            if (child.tag === 'widget') {
+            } else if (child.tag === 'widget') {
                 $buttons.append(self._renderTagWidget(child));
+            } else {
+                shouldLeaveSomeSpace = true;
             }
         });
+        if (!shouldLeaveSomeSpace) {
+            $buttons.addClass('o_statusbar_buttons_full');
+        }
         return $buttons;
     },
     /**
