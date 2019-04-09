@@ -16,9 +16,9 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         trigger: '.o_product_feature_panel:not(.comparator-popover) .badge:contains(1)',
     },
     {
-        content: "add second product 'Large Meeting Table' in a comparison list",
+        content: "add second product 'Conference Chair' in a comparison list",
         extra_trigger: '.o_product_circle:not(.o_red_highlight)',
-        trigger: '.oe_product_cart:contains("Large Meeting Table") button[data-action=o_comparelist]',
+        trigger: '.oe_product_cart:contains("Conference Chair") button[data-action=o_comparelist]',
     },
     {
         content: "check popover is now open and compare button contains two products",
@@ -26,7 +26,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "check products name are correct in the comparelist",
-        trigger: '.comparator-popover .o_comparelist_products:contains("Three-Seat Sofa"):contains("Large Meeting Table")',
+        trigger: '.comparator-popover .o_comparelist_products:contains("Three-Seat Sofa"):contains("Conference Chair")',
     },
     {
         content: "go to product page of customizable desk(with variants)",
@@ -74,15 +74,15 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "check 1st product contains correct variant",
-        trigger: '.product_summary:eq(0) a:contains("Customizable Desk (Steel, White)")',
+        trigger: '.product_summary:eq(0) a:contains("Conference Chair (Steel)")',
     },
     {
         content: "check 2nd product contains correct variant",
-        trigger: '.product_summary:eq(1) a:contains("Customizable Desk (Steel, Black)")',
+        trigger: '.product_summary:eq(1) a:contains("Customizable Desk (Steel, White)")',
     },
     {
         content: "check 3rd product is correctly added",
-        trigger: '.product_summary:eq(2) a:contains("Large Meeting Table")',
+        trigger: '.product_summary:eq(2) a:contains("Customizable Desk (Steel, Black)")',
     },
     {
         content: "check 4th product is correctly added",
@@ -91,7 +91,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "check there are 4 products on compare page",
         trigger: '#o_comparelist_table:contains("Customizable Desk (Steel, White)"):contains("Customizable Desk (Steel, Black)")' +
-                ':contains("Large Meeting Table"):contains("Three-Seat Sofa")',
+                ':contains("Conference Chair"):contains("Three-Seat Sofa")',
     },
     {
         content: "remove one product from compare table",
@@ -105,7 +105,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         content: "check there are 3 products after remove",
         extra_trigger: 'body:not(.notReady)',
         trigger: '#o_comparelist_table:contains("Customizable Desk (Steel, White)")' +
-                ':contains("Large Meeting Table"):contains("Three-Seat Sofa")',
+                ':contains("Conference Chair"):contains("Three-Seat Sofa")',
     },
     {
         content: "check customizable table with black variant is removed",
@@ -134,7 +134,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         trigger: '.o_product_comparison_table:not(:contains("Three-Seat Sofa"))',
     },
     {
-        content: "add product 'Large Meeting Table' to cart",
+        content: "add product 'Conference Chair' to cart",
         trigger: '.product_summary:contains("Customizable Desk (Steel, White)") a:contains("Add to Cart")',
     },
     {
