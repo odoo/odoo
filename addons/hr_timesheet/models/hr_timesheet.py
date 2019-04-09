@@ -42,7 +42,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.user_id = self.employee_id.user_id
+        if self.employee_id:
+            self.user_id = self.employee_id.user_id
+        else:
+            self.user_id = self._default_user()
 
     @api.depends('employee_id')
     def _compute_department_id(self):
