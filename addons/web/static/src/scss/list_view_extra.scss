@@ -11,4 +11,10 @@
            background-image: linear-gradient(to bottom, #fcfcfc, $o-form-lightsecondary);
         }
     }
+    // Subpixels computation is different accross browsers and platforms as no
+    // rounding rule is specified by HTML5. Difference in this computation
+    // breaks one of the editable list tests on Chrome and Firefox on MacOS.
+    .o_field_many2manytags {
+        min-height: 21px;
+    }
 }
