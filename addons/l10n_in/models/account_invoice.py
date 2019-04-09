@@ -70,8 +70,8 @@ class AccountInvoice(models.Model):
             vals['quantity'] = invoice_tax_line.l10n_in_quantity
         return res
 
-    def _prepare_tax_line_vals(self, line, tax):
-        vals = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
+    def _prepare_tax_line_vals(self, line, tax, tax_ids):
+        vals = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax, tax_ids)
         vals['l10n_in_product_id'] = line.product_id.id
         vals['l10n_in_uom_id'] = line.uom_id.id
         vals['l10n_in_quantity'] = line.quantity

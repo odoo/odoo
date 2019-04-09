@@ -42,38 +42,38 @@ class L10nInProductHsnReport(models.Model):
             CASE WHEN pt.l10n_in_hsn_code IS NULL THEN '' ELSE pt.l10n_in_hsn_code END AS hsn_code,
             CASE WHEN pt.l10n_in_hsn_description IS NULL THEN '' ELSE pt.l10n_in_hsn_description END AS hsn_description,
             CASE WHEN uom.l10n_in_code IS NULL THEN '' ELSE uom.l10n_in_code END AS l10n_in_uom_code,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='sgst_group') OR at.l10n_in_reverse_charge = True
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst') OR at.l10n_in_reverse_charge = True
                 THEN 0
                 ELSE aml.quantity
                 END AS quantity,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='igst_group')
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_igst')
                 THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
                 ELSE 0
                 END AS igst_amount,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='cgst_group')
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cgst')
                 THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
                 ELSE 0
                 END AS cgst_amount,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='sgst_group')
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                 THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
                 ELSE 0
                 END AS sgst_amount,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='cess_group')
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cess')
                 THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
                 ELSE 0
                 END AS cess_amount,
-            CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='sgst_group')
+            CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                 THEN 0
                 ELSE (CASE WHEN aml.tax_line_id IS NOT NULL THEN aml.tax_base_amount ELSE aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END) END)
                 END AS price_total,
-            (CASE WHEN at.tax_group_id IN
-                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='sgst_group')
+            (CASE WHEN aat.tax_report_line_id IN
+                (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                 THEN 0
                 ELSE (CASE WHEN aml.tax_line_id IS NOT NULL THEN aml.tax_base_amount ELSE 1 END)
                 END) + (aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END))  AS total
@@ -88,6 +88,8 @@ class L10nInProductHsnReport(models.Model):
             JOIN product_product pp ON pp.id = aml.product_id
             JOIN product_template pt ON pt.id = pp.product_tmpl_id
             LEFT JOIN account_tax at ON at.id = aml.tax_line_id
+            LEFT JOIN account_account_tag_account_move_line_rel aat_aml_rel ON aat_aml_rel.account_move_line_id = aml.id
+            LEFT JOIN account_account_tag aat ON aat.id = aat_aml_rel.account_account_tag_id
             LEFT JOIN account_move_line_account_tax_rel mt ON mt.account_move_line_id = aml.id
             LEFT JOIN uom_uom uom ON uom.id = aml.product_uom_id
             LEFT JOIN account_invoice ai ON ai.id = aml.invoice_id
