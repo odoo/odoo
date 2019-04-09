@@ -185,6 +185,11 @@ class IrModel(models.Model):
                     self._cr.execute('DROP VIEW "%s"' % table)
                 elif kind == 'r':
                     self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+                    # discard all translations for this model
+                    self._cr.execute("""
+                        DELETE FROM ir_translation
+                        WHERE type IN ('model', 'model_terms') AND name LIKE %s
+                    """, [model.model + ',%'])
             else:
                 _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
@@ -574,6 +579,12 @@ class IrModelFields(models.Model):
                 tables_to_drop.add(rel_name)
             if field.state == 'manual' and is_model:
                 model._pop_field(field.name)
+            if field.translate:
+                # discard all translations for this field
+                self._cr.execute("""
+                    DELETE FROM ir_translation
+                    WHERE type IN ('model', 'model_terms') AND name=%s
+                """, ['%s,%s' % (field.model, field.name)])
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields

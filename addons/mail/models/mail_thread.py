@@ -237,7 +237,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        return [('message_ids.has_error', operator, operand)]
+        return ['&', ('message_ids.has_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     @api.multi
     def _compute_message_attachment_count(self):
