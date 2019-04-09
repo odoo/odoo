@@ -382,12 +382,9 @@ class Survey(http.Controller):
         result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
-        filter_finish = False
 
         answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
-        if 'finished' in post:
-            post.pop('finished')
-            filter_finish = True
+        filter_finish = post.get('finished') == 'true'
         if post or filter_finish:
             filter_data = self._get_filter_data(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
@@ -504,13 +501,14 @@ class Survey(http.Controller):
     def _get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
-        for ids in post:
-            #if user add some random data in query URI, ignore it
-            try:
-                row_id, answer_id = ids.split(',')
-                filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-            except:
-                return filters
+        filters_data = post.get('filters')
+        if filters_data:
+            for data in filters_data.split('|'):
+                try:
+                    row_id, answer_id = data.split(',')
+                    filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
+                except:
+                    return filters
         return filters
 
     def page_range(self, total_record, limit):
