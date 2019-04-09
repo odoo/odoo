@@ -91,10 +91,12 @@ class StockQuant(models.Model):
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
-        if product_id.categ_id.removal_strategy_id:
-            return product_id.categ_id.removal_strategy_id.method
-        loc = location_id
+        product = product_id.with_context(prefetch_fields=False)
+        if product.categ_id.removal_strategy_id:
+            return product.categ_id.removal_strategy_id.method
+        loc = location_id.with_context(prefetch_fields=False)
         while loc:
+            loc.read(['removal_strategy_id', 'location_id'], load='')  # Fill cache
             if loc.removal_strategy_id:
                 return loc.removal_strategy_id.method
             loc = loc.location_id
