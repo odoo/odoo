@@ -169,7 +169,7 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
-                                    <textarea name="description" id="description" style="min-height: 120px" required="True"
+                                    <textarea name="description" id="description" style="min-height: 120px"
                                         class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
@@ -249,7 +249,7 @@
                     <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
                         <div class="d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
-                                <small class="font-weight-bold mr-2">Rank:</small>
+                                <small class="font-weight-bold mr-2">Current rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
                                 <a href="/profile/ranks_badges" t-field="user.rank_id"/>
                             </div>
