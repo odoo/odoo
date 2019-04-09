@@ -404,6 +404,14 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+
+        if (this.formatType === 'date' && this.field.type === 'datetime') {
+            // displaying a datetime with a Date widget
+            // We receive UTC
+            // We display the date as seen from UTC
+            // We send just a date to the server (which will translate it to midnight UTC)
+            this.formatOptions.timezone = false;
+        }
         this.datepickerOptions = _.defaults(
             this.nodeOptions.datepicker || {},
             {defaultDate: this.value}
