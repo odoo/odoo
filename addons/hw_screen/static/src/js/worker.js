@@ -47,11 +47,14 @@
                             foreign_js();
                         }
                     }
-                },
-
-                complete: function(jqXHR,err) {
                     if (!stop_longpolling) {
                         longpolling();
+                    }
+                },
+
+                error: function (jqXHR, status, err) {
+                    if (!stop_longpolling) {
+                        setTimeout(longpolling, 5000);
                     }
                 },
 
