@@ -21,7 +21,8 @@
             <tree string="Stages">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="probability"/>
+                <field name="on_change" invisible="1"/>
+                <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
                 <field name="team_id"/>
             </tree>
         </field>
