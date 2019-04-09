@@ -28,7 +28,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (!this.options['readonly']) {
             var $timer = $('.o_survey_timer');
             if ($timer.length) {
-                this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this);
+                var timeLimitMinutes = this.options['timeLimitMinutes'];
+                var timer = this.options['timer'];
+                this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
+                    'timer': timer,
+                    'timeLimitMinutes': timeLimitMinutes
+                });
                 this.surveyTimerWidget.attachTo($timer);
                 this.surveyTimerWidget.on('time_up', this, function (ev) {
                     self.$el.find('button[name="button_submit"]').click();
