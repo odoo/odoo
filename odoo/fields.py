@@ -604,8 +604,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # the case where 'bar' is a computed field that takes advantage of batch
         # computation.
         #
+        print('_compute_related', records, self)
         values = list(others)
         for name in self.related[:-1]:
+            # if self.name=='company_id':
+            #     import ipdb
+            #     ipdb.set_trace()
             try:
                 values = [first(value[name]) for value in values]
             except AccessError as e:
@@ -1022,10 +1026,8 @@ class Field(MetaField('DummyField', (object,), {})):
         # adapt value to the cache level
         value = self.convert_to_cache(value, record)
 
-        if env.in_draft or not record.id:
-            if record._name=='account.move.line' and self.name=='company_id':
-                import ipdb
-                ipdb.set_trace()
+        # if env.in_draft or not record.id:
+        if (not record.id) or not self.store:
             # determine dependent fields
             spec = self.modified_draft(record)
 
@@ -1050,13 +1052,12 @@ class Field(MetaField('DummyField', (object,), {})):
         else:
             # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
+            print('__set__', record, self.name, write_value)
             record.write({self.name: write_value})
 
-            # FP TODO: not sure to understand why? if it's a many2one, it's good to set it in the cache
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
                 env.cache.set(record, self, value)
-                env.remove_todo(self, record)
 
     ############################################################################
     #

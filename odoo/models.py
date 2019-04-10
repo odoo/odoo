@@ -3262,6 +3262,7 @@ Fields:
         if not self:
             return True
 
+        print('write', self, vals)
         self._check_concurrency()
         self.check_access_rights('write')
 
@@ -3361,6 +3362,7 @@ Fields:
                 self._validate_fields(set(inverse_vals) - set(store_vals))
 
             # recompute fields
+            print('Write Recompute', self.env.all.todo)
             self.recompute()
 
         return True
@@ -3371,6 +3373,7 @@ Fields:
         if not self:
             return True
         self.check_field_access_rights('write', list(vals))
+        print('write', self, vals)
 
         cr = self._cr
 
@@ -3443,6 +3446,7 @@ Fields:
         # the latter can require the value of computed fields, e.g., a one2many
         # checking constraints on records
         self.modified(vals)
+
 
         # set the value of non-column fields
         if other_fields:
@@ -3605,13 +3609,14 @@ Fields:
             data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
 
         # recompute fields
-        self.recompute()
+        records.recompute()
 
         return records
 
     @api.model
     def _create(self, data_list):
         """ Create records from the stored field values in ``data_list``. """
+        print('_create', self, data_list)
         assert data_list
         cr = self.env.cr
         quote = '"{}"'.format
@@ -3671,9 +3676,11 @@ Fields:
         # update parent_path
         records._parent_store_create()
 
-        # mark computed fields as todo
-        for d in data_list:
-            d['record'].modified(self._fields, d['stored'])
+        # FP TODO: possibly big speed improvement: group records having the same data['stored'].keys() before modified
+        print('_create, pre mod')
+        for data in data_list:
+            data['record'].modified(list(iter(self._fields.keys())), list(iter(data['stored'].keys())))
+
 
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
@@ -3694,8 +3701,9 @@ Fields:
                 # mark fields to recompute
                 # records.modified([field.name for field in other_fields])
 
+            print('_create, pre mod other')
             for d in data_list:
-                d['record'].modified([x.name for x in other_fields], d['stored'])
+                d['record'].modified([x.name for x in other_fields], list(iter(d['stored'].keys())))
 
             # check Python constraints for stored fields
             records._validate_fields(name for data in data_list for name in data['stored'])
@@ -5186,24 +5194,29 @@ Fields:
         self.env.cache.invalidate(spec)
 
     @api.multi
-    def modified(self, fnames, overwrite=None):
+    def modified(self, fnames, updated=None):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
 
             :param fnames: iterable of field names that have been modified on
                 records ``self``
-            :param overwrite: list of fields who will not be overwrited, or None
-                for all
+            :param updated: list of fields who should not be recomputed
         """
         # group triggers by (model, path) to minimize the calls to search()
 
+        print('modified', self, fnames, updated)
         invalids = []
         triggers = defaultdict(set)
         for fname in fnames:
             mfield = self._fields[fname]
             # invalidate mfield on self, and its inverses fields
-            # self.env.add_todo(mfield, self)
+
+            if (updated is None) or (fname in updated):
+                self.env.remove_todo(mfield, self)
+            elif mfield.compute:
+                self.env.add_todo(mfield, self)
+
             invalids.append((mfield, self._ids))
             for field in self._field_inverses[mfield]:
                 invalids.append((field, None))
@@ -5238,7 +5251,7 @@ Fields:
                     if not target:
                         continue
                     # do not recompute if a value is provided (on_change and default optimization)
-                    if (target==self) and (field.name in fnames) and ((overwrite is None) or (field.name in overwrite)):
+                    if (target==self) and (field.name in fnames) and ((updated is None) or (field.name in updated)):
                         continue
 
                     # invalids.append((field, target._ids))
@@ -5247,6 +5260,8 @@ Fields:
                     # mark field to be recomputed on target
                     if field.compute_sudo:
                         target = target.sudo()
+                    if (target==self) and (field.name in fnames):
+                        continue
                     target.env.add_todo(field, target)
 
             # process non-stored fields
@@ -5271,8 +5286,8 @@ Fields:
             recompute have been determined by method :meth:`modified`.
         """
 
-        if not(self.env.recompute and self._context.get('recompute', True)):
-            return False
+        # if not(self.env.recompute and self._context.get('recompute', True)):
+        #     return False
 
         count = 0
         done = {}
