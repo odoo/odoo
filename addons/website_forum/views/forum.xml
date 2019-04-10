@@ -254,7 +254,7 @@
             <field name="name">forum.tag.list</field>
             <field name="model">forum.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tag">
+                <tree string="Tags">
                     <field name="name"/>
                     <field name="forum_id"/>
                 </tree>
@@ -281,7 +281,7 @@
         </record>
 
         <record id="forum_tag_action" model="ir.actions.act_window">
-            <field name="name">Tag</field>
+            <field name="name">Tags</field>
             <field name="res_model">forum.tag</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -292,7 +292,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tag" action="forum_tag_action" sequence="30"/>
+        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tags" action="forum_tag_action" sequence="30"/>
         <menuitem id="menu_forum_rank_global" parent="menu_website_forum_global" name="Ranks" action="gamification.gamification_karma_ranks_action" sequence="5"/>
     </data>
 </odoo>
