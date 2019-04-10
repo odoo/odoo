@@ -29,15 +29,18 @@ _logger = logging.getLogger(__name__)
 
 def _to_unicode(s):
     try:
-        return s.decode('utf-8')
+        return s.decode('utf-16')
     except UnicodeError:
         try:
-            return s.decode('latin')
+            return s.decode('utf-8')
         except UnicodeError:
             try:
-                return s.encode('ascii')
+                return s.decode('latin')
             except UnicodeError:
-                return s
+                try:
+                    return s.encode('ascii')
+                except UnicodeError:
+                    return s
 
 def textToString(element):
     buffer = u""
@@ -57,7 +60,10 @@ class TxtIndex(indexer):
         return ['.txt', '.py']
 
     def _doIndexContent(self, content):
-        return content
+        res = _to_unicode(content)
+        if '\x00' in res:
+            return ''
+        return res
 
 cntIndex.register(TxtIndex())
 
