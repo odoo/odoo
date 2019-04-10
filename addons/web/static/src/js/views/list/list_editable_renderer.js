@@ -598,7 +598,7 @@ ListRenderer.include({
         this.commitChanges(curRecordId).then(function () {
             var $prevRow = self._getRow(self.allRecordIds[prevRecordIndex]);
             var prevRowIndex = $prevRow.prop('rowIndex') - 1;
-            self._selectCell(prevRowIndex, self.columns.length - 1);
+            self._selectCell(prevRowIndex, self.columns.length - 1, {inc: -1});
         });
     },
     /**
