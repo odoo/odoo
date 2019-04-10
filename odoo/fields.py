@@ -1023,13 +1023,15 @@ class Field(MetaField('DummyField', (object,), {})):
         value = self.convert_to_cache(value, record)
 
         if env.in_draft or not record.id:
+            if record._name=='account.move.line' and self.name=='company_id':
+                import ipdb
+                ipdb.set_trace()
             # determine dependent fields
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
             env.cache.set(record, self, value)
-            if env.check_todo(self, record):
-                env.remove_todo(self, record)
+            env.remove_todo(self, record)
 
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
@@ -1054,6 +1056,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
                 env.cache.set(record, self, value)
+                env.remove_todo(self, record)
 
     ############################################################################
     #

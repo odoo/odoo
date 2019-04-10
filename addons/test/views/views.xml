@@ -17,26 +17,24 @@
       <field name="arch" type="xml">
         <form>
             <group>
-                <!--
                 <group>
                   <field name="name"/>
                   <field name="source"/>
-                  <field name="source2"/>
                   <field name="dest"/>
-                  <field name="dest2"/>
                 </group>
                 <group>
                   <field name="user_id"/>
                   <field name="company_id"/>
+                  <field name="nbr_currency"/>
                 </group>
-                -->
-                <field name="line_ids">
-                    <tree string="Lines">
-                        <field name="name"/>
-                        <field name="company_id"/>
-                    </tree>
-                </field>
             </group>
+            <field name="line_ids">
+                <tree string="Lines" editable="bottom">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
         </form>
       </field>
     </record>

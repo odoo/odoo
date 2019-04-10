@@ -944,9 +944,6 @@ class Environment(Mapping):
             return the corresponding recordset to recompute.
         """
         for recs in self.all.todo.get(field, []):
-            if (recs._name != record._name):
-                import ipdb
-                ipdb.set_trace()
             if recs & record:
                 return recs
 
@@ -970,6 +967,7 @@ class Environment(Mapping):
         else:
             recs_list.append(records)
 
+    # FP NOTE: why is this so complex, rewrite it?
     def remove_todo(self, field, records):
         """ Mark ``field`` as recomputed on ``records``. """
         if (records._name.startswith('account.move')) and (field.name in ('company_id','journal_id', 'currency_id')):
@@ -990,7 +988,7 @@ class Environment(Mapping):
         """ Return a pair ``(field, records)`` to recompute.
             The field is such that none of its dependencies must be recomputed.
         """
-        field = min(self.all.todo, key=self.registry.field_sequence)
+        field = next(iter(self.all.todo))
         return field, self.all.todo[field][0]
 
     @property
@@ -1055,11 +1053,19 @@ class Cache(object):
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
+        if field.name in ('company_id','journal_id'):
+            print('    set', field.name, record, value)
         key = record.env.cache_key(field)
         self._data[key][field][record._ids[0]] = value
 
     def update(self, records, field, values):
         """ Set the values of ``field`` for several ``records``. """
+        if field.name in ('company_id','journal_id'):
+            print(' update', field.name, records, values)
+            for v in values:
+                if not v:
+                    import ipdb
+                    ipdb.set_trace()
         key = records.env.cache_key(field)
         self._data[key][field].update(zip(records._ids, values))
 

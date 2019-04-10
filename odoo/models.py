@@ -3611,7 +3611,6 @@ Fields:
 
     @api.model
     def _create(self, data_list):
-        print('Create', self._name, data_list)
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
         cr = self.env.cr
@@ -3682,7 +3681,6 @@ Fields:
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
 
-            print('Other Fields', other_fields)
             if other_fields:
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self._context))
@@ -5280,10 +5278,8 @@ Fields:
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
-            if self._name=='account.move.line':
-                print('Recomputing', field.name, recs)
-            # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
-            count+= 1
+
+            count+= 1                      # Loop Detection in computed fields
             if count > 100:
                 print('Cycling computed fields', recs, field)
 
