@@ -328,100 +328,16 @@
             </field>
         </record>
 
-        <record id="view_account_bank_journal_tree" model="ir.ui.view">
-            <field name="name">account.bank.journal.tree</field>
-            <field name="model">account.journal</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-                <tree string="Account Journal">
-                    <field name='sequence' widget='handle'/>
-                    <field name="name"/>
-                    <field name="bank_acc_number"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+        <record id="action_new_bank_setting" model="ir.actions.server">
+            <field name="name">Add a Bank Account</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.setting_init_bank_account_action()
             </field>
         </record>
-        <record id="account_bank_journal_view_kanban" model="ir.ui.view">
-            <field name="name">account.bank.journal.kanban</field>
-            <field name="model">account.journal</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong><field name="name"/></strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-        <record id="view_account_bank_journal_form" model="ir.ui.view">
-            <field name="name">account.bank.journal.form</field>
-            <field name="model">account.journal</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-                <form string="Bank Account">
-                    <sheet>
-                        <field name="type" invisible="1"/>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Bank Account Name"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="company_partner_id" invisible="1"/>
-                                <field name="bank_account_id"/>
-                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
-                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
-                            </group>
-                            <group>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                            </group>
-                        </group>
-                        <group>
-                            <div name="advanced_info"> <!--The content of this div is hidden in the setup wizard inheriting this form view-->
-                                <group string="Payment Method Types">
-                                    <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
-                                    <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
-                                </group>
-                            </div>
 
-                            <group name="bank_statement" string="Bank Statements" groups="account.group_account_user">
-                                <field name="post_at_bank_rec"/>
-                                <label for="bank_statements_source"/>
-                                <div name="bank_source">
-                                    <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
-                                </div>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="action_account_bank_journal_form" model="ir.actions.act_window">
-            <field name="name">Bank Accounts</field>
-            <field name="res_model">account.journal</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_bank_journal_view_kanban')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
-            <field name="domain">[('type', '=', 'bank')]</field>
-            <field name="context">{'default_type': 'bank'}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a bank account
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_account_bank_journal_form" id="menu_action_account_bank_journal_form" parent="account_account_menu" groups="account.group_account_manager" sequence="8"/>
+        <menuitem action="action_new_bank_setting" id="menu_action_account_bank_journal_form" parent="account_account_menu" groups="account.group_account_manager" sequence="8"/>
 
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
