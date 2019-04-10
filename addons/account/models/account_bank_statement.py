@@ -27,6 +27,7 @@ class AccountCashboxLine(models.Model):
     number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
     cashbox_id = fields.Many2one('account.bank.statement.cashbox', string="Cashbox")
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.user.company_id.currency_id)
 
 
 class AccountBankStmtCashWizard(models.Model):
