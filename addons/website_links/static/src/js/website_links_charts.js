@@ -162,7 +162,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var formattedClicksByDay = {};
             var beginDate;
             for (var i = 0; i < _clicksByDay.length; i++) {
-                var date = moment(_clicksByDay[i]['create_date:day'], 'DD MMMM YYYY');
+                var date = moment(_clicksByDay[i]['create_date:day'][1], 'DD MMMM YYYY');
                 if (i === 0) {
                     beginDate = date;
                 }

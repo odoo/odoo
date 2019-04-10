@@ -952,11 +952,7 @@ var MockServer = Class.extend({
                     } else {
                         res[groupByField] = false;
                     }
-                } else {
-                    res[groupByField] = val;
-                }
-
-                if (field.type === 'date') {
+                } else if (field.type === 'date' && val) {
                     var aggregateFunction = groupByField.split(':')[1];
                     var startDate, endDate;
                     if (aggregateFunction === 'day') {
@@ -965,6 +961,9 @@ var MockServer = Class.extend({
                     } else if (aggregateFunction === 'week') {
                         startDate = moment(val, 'ww YYYY');
                         endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'quarter') {
+                        startDate = moment(val.slice(1), 'Q YYYY');
+                        endDate = startDate.clone().add(1, 'quarters');
                     } else if (aggregateFunction === 'year') {
                         startDate = moment(val, 'Y');
                         endDate = startDate.clone().add(1, 'years');
@@ -972,8 +971,12 @@ var MockServer = Class.extend({
                         startDate = moment(val, 'MMMM YYYY');
                         endDate = startDate.clone().add(1, 'months');
                     }
+                    res[groupByField] = [startDate.format('YYYY-MM-DD') + '/'+ endDate.format('YYYY-MM-DD'), val];
                     res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
                 } else {
+                    res[groupByField] = val;
+                }
+                if (field.type !== 'date') {
                     res.__domain = [[fieldName, '=', val]].concat(res.__domain);
                 }
 

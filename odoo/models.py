@@ -2079,25 +2079,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
-        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
-        groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
-        dt = [
-            f for f in groupby
-            if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
-        ]
-
-        # iterate on all results and replace the "full" date/datetime value
-        # (range, label) by just the formatted label, in-place
-        for group in result:
-            for df in dt:
-                # could group on a date(time) field which is empty in some
-                # records, in which case as with m2o the _raw value will be
-                # `False` instead of a (value, label) pair. In that case,
-                # leave the `False` value alone
-                if group.get(df):
-                    group[df] = group[df][1]
-        return result
+        return self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

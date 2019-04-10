@@ -4298,6 +4298,9 @@ var BasicModel = AbstractModel.extend({
                         });
                         value = choice ? choice[1] : false;
                     }
+                    if (_.contains(['date', 'datetime'], list.fields[rawGroupBy].type)) {
+                        value = value[1];
+                    }
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
                         count: group[rawGroupBy + '_count'],

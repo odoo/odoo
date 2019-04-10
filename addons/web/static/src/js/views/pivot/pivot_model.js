@@ -1100,7 +1100,11 @@ var PivotModel = AbstractModel.extend({
             return _t("Undefined");
         }
         if (value instanceof Array) {
-            return this._getNumberedValue(value, field);
+            if (_.contains(['date', 'datetime'], this.fields[field.split(':')[0]].type)) {
+                return value[1];
+            } else {
+                return this._getNumberedValue(value, field);
+            }
         }
         if (field && this.fields[field] && (this.fields[field].type === 'selection')) {
             var selected = _.where(this.fields[field].selection, {0: value})[0];
