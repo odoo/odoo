@@ -3362,7 +3362,7 @@ Fields:
                 self._validate_fields(set(inverse_vals) - set(store_vals))
 
             # recompute fields
-            print('Write Recompute', self.env.all.todo)
+            print('  write.recompute', self.env.all.todo)
             self.recompute()
 
         return True
@@ -3373,7 +3373,7 @@ Fields:
         if not self:
             return True
         self.check_field_access_rights('write', list(vals))
-        print('write', self, vals)
+        print('_write', self, vals)
 
         cr = self._cr
 

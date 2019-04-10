@@ -315,6 +315,10 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_notrack'):
             tracked_fields = track_self._get_tracked_fields(list(values))
         if tracked_fields:
+            # avoid unlimited loop by avoiding to recompute the field (we write on it, so no recompute needed)
+            for f in tracked_fields:
+                print('_mail_write remove todo', self, f)
+                self.env.remove_todo(self._fields[f], self)
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
 
@@ -546,7 +550,8 @@ class MailThread(models.AbstractModel):
             :return dict: a dict mapping field name to description, containing on_change fields
         """
         tracked_fields = []
-        for name, field in self._fields.items():
+        for name in updated_fields:
+            field = self._fields[name]
             tracking = getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
             if tracking:
                 tracked_fields.append(name)

@@ -1090,16 +1090,18 @@ class Field(MetaField('DummyField', (object,), {})):
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
         fields = records._field_computed[self]
-        with records.env.do_in_draft(), records.env.protecting(fields, records):
-            try:
-                self._compute_value(records)
-            except (AccessError, MissingError):
-                # some record is forbidden or missing, retry record by record
-                for record in records:
-                    try:
-                        self._compute_value(record)
-                    except Exception as exc:
-                        record.env.cache.set_failed(record, [self], exc)
+        self._compute_value(records)
+
+        # with records.env.do_in_draft(), records.env.protecting(fields, records):
+            # try:
+            #     self._compute_value(records)
+            # except (AccessError, MissingError):
+            #     # some record is forbidden or missing, retry record by record
+            #     for record in records:
+            #         try:
+            #             self._compute_value(record)
+            #         except Exception as exc:
+            #             record.env.cache.set_failed(record, [self], exc)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
