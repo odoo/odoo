@@ -94,7 +94,6 @@ class PosOrderReport(models.Model):
                 SUM(l.qty * u.factor) != 0
         """
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""

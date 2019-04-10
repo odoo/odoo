@@ -82,7 +82,6 @@ class PosSaleReport(models.Model):
                 AS foo""" % (self._table, self._from())
         return request
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(self.get_main_request())

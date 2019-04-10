@@ -220,7 +220,6 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    @api.model_cr_context
     def _init_column(self, name):
         """ Create aliases for existing rows. """
         super(AliasMixin, self)._init_column(name)

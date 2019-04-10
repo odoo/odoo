@@ -39,7 +39,6 @@ class IrConfigParameter(models.Model):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    @api.model_cr
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
         """

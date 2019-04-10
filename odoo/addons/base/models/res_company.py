@@ -102,7 +102,6 @@ class Company(models.Model):
     ]
 
 
-    @api.model_cr
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)

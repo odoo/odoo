@@ -765,7 +765,6 @@ class IrActionsReport(models.Model):
             return None
         return render_func(res_ids, data=data)
 
-    @api.noguess
     def report_action(self, docids, data=None, config=True):
         """Return an action of type ir.actions.report.
 

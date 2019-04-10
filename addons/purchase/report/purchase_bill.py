@@ -20,7 +20,6 @@ class PurchaseBillUnion(models.Model):
     vendor_bill_id = fields.Many2one('account.move', string='Vendor Bill', readonly=True)
     purchase_order_id = fields.Many2one('purchase.order', string='Purchase Order', readonly=True)
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'purchase_bill_union')
         self.env.cr.execute("""

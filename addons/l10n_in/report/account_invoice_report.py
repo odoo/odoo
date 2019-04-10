@@ -302,7 +302,6 @@ class L10nInAccountInvoiceReport(models.Model):
         """
         return group_by_str
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s AS (

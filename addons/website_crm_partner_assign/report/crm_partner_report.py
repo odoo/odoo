@@ -30,7 +30,6 @@ class CrmPartnerReportAssign(models.Model):
                         'grade_id', 'parent_id', 'team_id', 'user_id'],
     }
 
-    @api.model_cr
     def init(self):
         """
             CRM Lead Report

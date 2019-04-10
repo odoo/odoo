@@ -57,7 +57,6 @@ class Lead(models.Model):
                 'utm.mixin', 'format.address.mixin', 'phone.validation.mixin']
     _primary_email = 'email_from'
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(Lead, self)._auto_init()
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
@@ -146,7 +145,6 @@ class Lead(models.Model):
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(Lead, self)._auto_init()
         tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',

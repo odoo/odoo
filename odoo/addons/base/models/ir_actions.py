@@ -283,7 +283,6 @@ class IrActionsActWindowView(models.Model):
     act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(IrActionsActWindowView, self)._auto_init()
         tools.create_unique_index(self._cr, 'act_window_view_unique_mode_per_action',

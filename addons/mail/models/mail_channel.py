@@ -410,7 +410,6 @@ class Channel(models.Model):
             return True
         return super(Channel, self)._alias_check_contact(message, message_dict, alias)
 
-    @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
         if not self._cr.fetchone():

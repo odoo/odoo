@@ -98,7 +98,6 @@ class L10nInProductHsnReport(models.Model):
         """
         return from_str
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE OR REPLACE VIEW %s AS (%s %s)""" % (

@@ -82,7 +82,6 @@ class Lang(models.Model):
             except Exception:
                 raise ValidationError(warning)
 
-    @api.model_cr
     def _register_hook(self):
         # check that there is at least one active language
         if not self.search_count([]):

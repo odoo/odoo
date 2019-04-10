@@ -35,7 +35,6 @@ class LineModel(models.Model):
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
 
-    @api.model_cr
     def init(self):
         # line values should be unique per "base" - useful for testing corner cases with unique lines
         tools.create_unique_index(self._cr, 'test_performance_line_uniq', self._table, ['base_id', 'value'])

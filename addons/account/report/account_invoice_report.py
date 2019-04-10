@@ -164,7 +164,6 @@ class AccountInvoiceReport(models.Model):
                 COALESCE(partner.country_id, commercial_partner.country_id)
         '''
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute('''

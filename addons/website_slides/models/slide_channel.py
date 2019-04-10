@@ -294,7 +294,6 @@ class Channel(models.Model):
     # ORM Overrides
     # ---------------------------------------------------------
 
-    @api.model_cr_context
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
             Overridden here because we need to generate different access tokens

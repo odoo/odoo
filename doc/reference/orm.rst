@@ -1205,20 +1205,6 @@ Porting from the old API to the new API
   :attr:`~odoo.models.Model.write_date` fields: they are now created as
   regular "legitimate" fields, and can be read and written like any other
   field out-of-the-box
-* when straight conversion is impossible (semantics can not be bridged) or the
-  "old API" version is not desirable and could be improved for the new API, it
-  is possible to use completely different "old API" and "new API"
-  implementations for the same method name using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8`. The method should first be defined using the
-  old-API style and decorated with :func:`~odoo.api.v7`, it should then be
-  re-defined using the exact same name but the new-API style and decorated
-  with :func:`~odoo.api.v8`. Calls from an old-API context will be
-  dispatched to the first implementation and calls from a new-API context will
-  be dispatched to the second implementation. One implementation can call (and
-  frequently does) call the other by switching context.
-
-  .. danger:: using these decorators makes methods extremely difficult to
-              override and harder to understand and document
 * uses of :attr:`~odoo.models.Model._columns` or
   :attr:`~odoo.models.Model._all_columns` should be replaced by
   :attr:`~odoo.models.Model._fields`, which provides access to instances of
@@ -1277,28 +1263,3 @@ decorating the old-style method:
 * disabling it entirely, by decorating a method with
   :func:`~odoo.api.noguess` there will be no bridging and methods will be
   called the exact same way from the new and old API styles
-* defining the bridge explicitly, this is mostly for methods which are matched
-  incorrectly (because parameters are named in unexpected ways):
-
-  :func:`~odoo.api.cr`
-     will automatically prepend the current cursor to explicitly provided
-     parameters, positionally
-  :func:`~odoo.api.cr_uid`
-     will automatically prepend the current cursor and user's id to explictly
-     provided parameters
-  :func:`~odoo.api.cr_uid_ids`
-     will automatically prepend the current cursor, user's id and recordset's
-     ids to explicitly provided parameters
-  :func:`~odoo.api.cr_uid_id`
-     will loop over the current recordset and call the method once for each
-     record, prepending the current cursor, user's id and record's id to
-     explicitly provided parameters.
-
-     .. danger:: the result of this wrapper is *always a list* when calling
-                 from a new-API context
-
-  All of these methods have a ``_context``-suffixed version
-  (e.g. :func:`~odoo.api.cr_uid_context`) which also passes the current
-  context *by keyword*.
-* dual implementations using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8` will be ignored as they provide their own "bridging"

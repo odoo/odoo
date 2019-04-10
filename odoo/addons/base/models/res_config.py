@@ -695,7 +695,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         model_name, field_name = full_field_name.rsplit('.', 1)
         return self.env[model_name].fields_get([field_name])[field_name]['string']
 
-    @api.model_cr_context
+    @api.model
     def get_config_warning(self, msg):
         """
         Helper: return a Warning exception with the given message where the %(field:xxx)s

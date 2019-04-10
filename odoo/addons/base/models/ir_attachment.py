@@ -300,7 +300,6 @@ class IrAttachment(models.Model):
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(IrAttachment, self)._auto_init()
         tools.create_index(self._cr, 'ir_attachment_res_idx',
