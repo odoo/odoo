@@ -95,15 +95,7 @@ class HrContract(models.Model):
     def _inverse_wage_with_holidays(self):
         for contract in self:
             if contract.holidays > 20.0:
-                remaining_for_gross = contract.wage_with_holidays * (13.0 + 13.0 * 0.3507 + 0.92)
-                yearly_cost = remaining_for_gross \
-                    + 12.0 * contract.representation_fees \
-                    + 12.0 * contract.fuel_card \
-                    + 12.0 * contract.internet \
-                    + 12.0 * (contract.mobile + contract.mobile_plus) \
-                    + 12.0 * contract.transport_employer_cost \
-                    + contract.warrants_cost \
-                    + 220.0 * contract.meal_voucher_paid_by_employer
+                yearly_cost = contract._get_advantages_costs() + (13.92 + 13.0 * 0.3507) * contract.wage_with_holidays
                 contract.final_yearly_costs = yearly_cost / (1.0 - (contract.holidays - 20.0) / 231.0)
                 contract.wage = contract._get_gross_from_employer_costs(contract.final_yearly_costs)
             else:
@@ -112,7 +104,6 @@ class HrContract(models.Model):
     @api.depends('transport_mode_car', 'transport_mode_public', 'transport_mode_others',
         'company_car_total_depreciated_cost', 'public_transport_reimbursed_amount', 'others_reimbursed_amount')
     def _compute_transport_employer_cost(self):
-        # Don't call to super has we ovewrite the method
         for contract in self:
             transport_employer_cost = 0.0
             if contract.transport_mode_car:
@@ -143,17 +134,13 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage',
-        'social_security_contributions', 'warrants_cost', 'meal_voucher_paid_by_employer')
+    @api.depends(
+        'wage', 'fuel_card', 'representation_fees', 'transport_employer_cost',
+        'internet', 'mobile', 'mobile_plus', 'warrants_cost',
+        'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
-            contract.final_yearly_costs = (
-                contract.yearly_cost_before_charges +
-                contract.social_security_contributions +
-                contract.wage * 0.92 +
-                contract.warrants_cost +
-                (220.0 * contract.meal_voucher_paid_by_employer)
-            )
+            contract.final_yearly_costs = contract._get_advantages_costs() + (13.92 + 13.0 * 0.3507) * contract.wage
 
     @api.depends('holidays', 'final_yearly_costs')
     def _compute_holidays_compensation(self):
@@ -218,6 +205,18 @@ class HrContract(models.Model):
         if self.mobile_plus and not self.mobile:
             raise ValidationError(_('You should have a mobile subscription to select an international communication amount.'))
 
+    def _get_advantages_costs(self):
+        self.ensure_one()
+        return (
+            12.0 * self.representation_fees +
+            12.0 * self.fuel_card +
+            12.0 * self.internet +
+            12.0 * (self.mobile + self.mobile_plus) +
+            12.0 * self.transport_employer_cost +
+            self.warrants_cost +
+            220.0 * self.meal_voucher_paid_by_employer
+        )
+
     def _get_mobile_amount(self, has_mobile, international_communication):
         if has_mobile and international_communication:
             return self.env['ir.default'].sudo().get('hr.contract', 'mobile') + self.env['ir.default'].sudo().get('hr.contract', 'mobile_plus')
@@ -226,17 +225,9 @@ class HrContract(models.Model):
         return 0.0
 
     def _get_gross_from_employer_costs(self, yearly_cost):
-        contract = self
-        remaining_for_gross = yearly_cost \
-            - 12.0 * contract.representation_fees \
-            - 12.0 * contract.fuel_card \
-            - 12.0 * contract.internet \
-            - 12.0 * (contract.mobile + contract.mobile_plus) \
-            - 12.0 * contract.transport_employer_cost \
-            - contract.warrants_cost \
-            - 220.0 * contract.meal_voucher_paid_by_employer
-        gross = remaining_for_gross / (13.0 + 13.0 * 0.3507 + 0.92)
-        return gross
+        self.ensure_one()
+        remaining_for_gross = yearly_cost - self._get_advantages_costs()
+        return remaining_for_gross / (13.92 + 13.0 * 0.3507)
 
 
 class HrEmployee(models.Model):
