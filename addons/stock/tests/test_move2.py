@@ -2049,3 +2049,102 @@ class TestRoutes(TestStockCommon):
 
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
+
+    def test_mtso_mto(self):
+        """ Make a sale order for 5 products when there are only 4 in stock then
+        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        partner_demo_customer = self.env.ref('base.res_partner_1')
+        final_location = partner_demo_customer.property_stock_customer
+        product_a = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
+
+        # We set quantities in the stock location to avoid warnings
+        # triggered by '_onchange_product_id_check_availability'
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 4.0)
+
+        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
+
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                5.0,
+                product_a.uom_id,
+                final_location,
+                'test_mtso_mto',
+                'test_mtso_mto',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        qty_available = self.env['stock.quant']._get_available_quantity(product_a, warehouse.wh_output_stock_loc_id)
+
+        # 3 pickings shloud be created.
+        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertEquals(len(picking_ids), 3)
+        for picking in picking_ids:
+            # Only the picking from Stock to Pack should be MTS
+            if picking.location_id == warehouse.lot_stock_id:
+                self.assertEquals(picking.move_lines.procure_method, 'make_to_stock')
+            else:
+                self.assertEquals(picking.move_lines.procure_method, 'make_to_order')
+
+            self.assertEquals(len(picking.move_lines), 1)
+            self.assertEquals(picking.move_lines.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
+        self.assertEqual(qty_available, 4, 'The 4 products should still be available')
+
+    def test_mtso_mts(self):
+        """ Make a sale order for 4 products when there are  4 in stock then
+        check that MTS is applied on the moves when the rule is set to 'mts_else_mto'
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        partner_demo_customer = self.env.ref('base.res_partner_1')
+        final_location = partner_demo_customer.property_stock_customer
+        product_a = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
+        values = {'warehouse_id': warehouse}
+
+        # We alter one rule and we set it to 'mts_else_mto'
+        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
+        rule.procure_method = 'mts_else_mto'
+
+        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts'})
+
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                4.0,
+                product_a.uom_id,
+                final_location,
+                'test_mtso_mts',
+                'test_mtso_mts',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        # A picking shloud be created with its move having MTS as procure method.
+        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertEquals(len(picking_ids), 1)
+        picking = picking_ids
+        self.assertEquals(picking.move_lines.procure_method, 'make_to_stock')
+        self.assertEquals(len(picking.move_lines), 1)
+        self.assertEquals(picking.move_lines.product_uom_qty, 4)

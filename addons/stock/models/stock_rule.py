@@ -44,10 +44,13 @@ class StockRule(models.Model):
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
-        ('make_to_order', 'Trigger Another Rule')], string='Move Supply Method',
+        ('make_to_order', 'Trigger Another Rule'),
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Move Supply Method',
         default='make_to_stock', required=True,
-        help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
-             Take from Stock: The products will be taken from the available stock.""")
+        help="Take From Stock: the products will be taken from the available stock of the source location.\n"
+             "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
+             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
+             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -109,6 +112,8 @@ class StockRule(models.Model):
             suffix = ""
             if self.procure_method == 'make_to_order' and self.location_src_id:
                 suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.") % (source)
+            if self.procure_method == 'mts_else_mto' and self.location_src_id:
+                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.") % source
             message_dict = {
                 'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.') % (destination, operation, source) + suffix,
                 'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.') % (source, operation, destination)
@@ -167,6 +172,21 @@ class StockRule(models.Model):
         }
         return new_move_vals
 
+    def _get_procure_method(self, product, qty_needed, location):
+        """ When the procure_method of the rule is 'mts_else_mto', we need to get the quantity forcasted to know if
+        we have to apply MTS or MTO on the moves of the procurement.
+        :param product: The product of the move
+        :param qty_needed: The amount needed of that product
+        :param location: The location source of the product
+        :return: The procure_method to apply on the move
+        """
+        if self.procure_method == 'mts_else_mto':
+            qty_available = product.with_context(location=location.id).virtual_available
+            if float_compare(qty_needed, qty_available, precision_rounding=product.uom_id.rounding) <= 0:
+                return 'make_to_stock'
+            return 'make_to_order'
+        return self.procure_method
+
     @api.model
     def _run_pull(self, procurements):
         moves_values_by_company = defaultdict(list)
@@ -219,7 +239,7 @@ class StockRule(models.Model):
             'location_dest_id': location_id.id,
             'move_dest_ids': values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or [],
             'rule_id': self.id,
-            'procure_method': self.procure_method,
+            'procure_method': self._get_procure_method(product_id, product_qty, self.location_src_id),
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,
