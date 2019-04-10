@@ -4,14 +4,13 @@ from odoo import models, fields, api
 
 class test(models.Model):
     _name = 'test.test'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     source = fields.Selection([('out_invoice', 'Set to Invoice'),('in_invoice','Set to Bill'),('other','Set to Others'),('no','Do Not Change'), ('use_source2', 'Use Source 2')], 'Source', default='other')
     dest = fields.Selection([('out_invoice', 'Invoice'),('in_invoice','Bill'),('other','Others')], 'Destination', compute='_get_dest', store=True, readonly=False)
     user_id = fields.Many2one('res.users', 'User', default=lambda x: x.env.user.id)
-    company_id = fields.Many2one('res.company', 'Company', related='user_id.company_id', store=True, tracking=True)
-    nbr_currency = fields.Integer('Sum Currency', compute='_get_nbr_currency', store=True, tracking=True)
+    company_id = fields.Many2one('res.company', 'Company', related='user_id.company_id', store=True)
+    nbr_currency = fields.Integer('Sum Currency', compute='_get_nbr_currency', store=True)
     line_ids = fields.One2many('test.line', 'test_id')
 
     @api.depends('line_ids.currency_id')
