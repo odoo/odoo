@@ -4544,10 +4544,10 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('create record on list with modifiers depending on id', function (assert) {
+    QUnit.test('create record on list with modifiers depending on id', async function (assert) {
         assert.expect(8);
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'foo',
             data: this.data,
@@ -4559,7 +4559,7 @@ QUnit.module('Views', {
         });
 
         // add a new record
-        testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
 
         // modifiers should be evaluted to false
         assert.containsOnce(list, '.o_selected_row');
@@ -4567,15 +4567,15 @@ QUnit.module('Views', {
         assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
 
         // set a value and save
-        testUtils.fields.editInput(list.$('.o_selected_row input[name=foo]'), 'some value');
-        testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+        await testUtils.fields.editInput(list.$('.o_selected_row input[name=foo]'), 'some value');
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
 
         // modifiers should be evaluted to true
         assert.hasClass(list.$('.o_data_row:first .o_data_cell:first'), 'o_readonly_modifier');
         assert.hasClass(list.$('.o_data_row:first .o_data_cell:nth(1)'), 'o_invisible_modifier');
 
         // edit again the just created record
-        testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
 
         // modifiers should be evaluted to true
         assert.containsOnce(list, '.o_selected_row');
