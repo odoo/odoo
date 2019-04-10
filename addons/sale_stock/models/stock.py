@@ -51,6 +51,21 @@ class StockMove(models.Model):
                 values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
                 subtype_id=self.env.ref('mail.mt_note').id)
 
+    def _get_accounting_data_for_valuation(self):
+        journal_id, acc_src, acc_dest, acc_valuation = super(StockMove, self)._get_accounting_data_for_valuation()
+        fpos = self.sale_line_id.order_id.fiscal_position_id
+        if fpos:
+            Account = self.env['account.account']
+            accounts = {
+                'acc_src': Account.browse(acc_src),
+                'acc_dest': Account.browse(acc_dest),
+                'acc_valuation': Account.browse(acc_valuation),
+            }
+            accounts = fpos.map_accounts(accounts)
+            acc_src = accounts['acc_src'].id
+            acc_dest = accounts['acc_dest'].id
+            acc_valuation = accounts['acc_valuation'].id
+        return journal_id, acc_src, acc_dest, acc_valuation
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
