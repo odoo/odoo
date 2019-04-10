@@ -37,7 +37,6 @@ class ReportMembership(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     quantity = fields.Integer(readonly=True)
 
-    @api.model_cr
     def init(self):
         '''Create the view'''
         tools.drop_view_if_exists(self._cr, self._table)

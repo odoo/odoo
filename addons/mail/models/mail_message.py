@@ -585,7 +585,6 @@ class Message(models.Model):
     # mail_message internals
     #------------------------------------------------------
 
-    @api.model_cr
     def init(self):
         self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not self._cr.fetchone():

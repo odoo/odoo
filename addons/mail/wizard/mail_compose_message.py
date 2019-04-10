@@ -430,9 +430,6 @@ class MailComposer(models.TransientModel):
             values['body'] = values.pop('body_html')
 
         # This onchange should return command instead of ids for x2many field.
-        # ORM handle the assignation of command list on new onchange (api.v8),
-        # this force the complete replacement of x2many field with
-        # command and is compatible with onchange api.v7
         values = self._convert_to_write(values)
 
         return {'value': values}

@@ -2772,7 +2772,6 @@ class AccountMoveLine(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
-    @api.model_cr
     def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
             same way when we search on partner_id, with the addition of being optimal when having a query that will
