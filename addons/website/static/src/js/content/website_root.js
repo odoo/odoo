@@ -282,8 +282,8 @@ var WebsiteRoot = BodyManager.extend({
         var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
         _.each($buttons, function (btn) {
             var $btn = $(btn);
-            $btn.attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text());
-            $btn.button('loading');
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> ' + $btn.text());
+            $btn.prop('disabled', true);
         });
     },
     /**
