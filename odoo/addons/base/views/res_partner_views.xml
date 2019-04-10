@@ -326,8 +326,8 @@
                                                         <field t-if="record.state_id.raw_value" name="state_id"/>
                                                         <field name="country_id"/>
                                                     </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone" widget="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile" widget="phone"/></div>
                                                 </div>
                                             </div>
                                         </t>
@@ -362,7 +362,7 @@
                                                 <field name="comment" placeholder="Internal notes..."/>
                                             </group>
                                             <group colspan="5">
-                                                <field name="email"/>
+                                                <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
                                             </group>
