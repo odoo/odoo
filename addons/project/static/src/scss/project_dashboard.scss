@@ -2,28 +2,12 @@
     .o_project_kanban_boxes {
         display: flex;
         flex-flow: row nowrap;
-        white-space: nowrap;
+        justify-content: space-between;
 
         .o_project_kanban_box {
             position: relative;
             text-align: center;
             padding: 0 0 0 0;
-            width: 50%;
-
-            &:last-child {
-                text-align: right;
-                width: 33.33%;
-            }
-
-            &:nth-child(2):last-child {
-                text-align: center;
-                width: 33.33%;
-            }
-
-            &:first-child {
-                text-align: left;
-                width: 33.33%;
-            }
 
             .o_value {
                 font-weight: 800;
@@ -48,13 +32,6 @@
                     }
                 }
             }
-        }
-        .o_project_timesheet_box{
-            position: relative;
-            padding: 0 0 0 0;
-            /* The important are here to assure this class is display in the center */
-            width: 33.33% !important;
-            text-align: center !important;
         }
     }
 }
