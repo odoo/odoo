@@ -206,14 +206,23 @@
                                 <field name="parent_id"/>
                             </group>
                         </group>
-                        <label for="child_id" string="Child Menus"/>
-                        <field name="child_id">
-                            <tree>
-                                <field name="sequence" widget="handle"/>
-                                <field name="name"/>
-                                <field name="url"/>
-                            </tree>
-                        </field>
+                        <group>
+                            <label for="child_id" string="Child Menus"/>
+                            <field name="child_id">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="url"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group groups="base.group_no_one">
+                            <field name="group_ids">
+                                <tree>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </group>
                     </sheet>
                 </form>
             </field>
