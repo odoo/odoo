@@ -179,7 +179,7 @@ class AccountBankStatement(models.Model):
                         account = stmt.journal_id.profit_account_id
                         name = _('Profit')
                     if not account:
-                        raise UserError(_('There is no account defined on the journal %s for %s involved in a cash difference.') % (stmt.journal_id.name, name))
+                        raise UserError(_('Please go on the "%s" journal and define a %s Account.\nThis account will be used to record the cash difference.') % (stmt.journal_id.name, name))
 
                     values = {
                         'statement_id': stmt.id,
