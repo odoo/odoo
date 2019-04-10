@@ -200,12 +200,47 @@ class Inventory(models.Model):
     @api.multi
     def action_start(self):
         for inventory in self:
-            vals = {'state': 'confirm', 'date': fields.Datetime.now()}
             if (inventory.filter != 'partial') and not inventory.line_ids:
-                vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
+                line_values_list = inventory._get_inventory_lines_values()
+                line_ids = []
+                for line_values in line_values_list:
+                    line_id = inventory._insert_inventory_line(line_values)
+                    line_ids.append(line_id)
+                lines = self.env['stock.inventory.line'].browse(line_ids)
+                lines.modified(self.env['stock.inventory.line']._fields)
+
+            vals = {'state': 'confirm', 'date': fields.Datetime.now()}
             inventory.write(vals)
+        self.recompute()
         return True
+
     prepare_inventory = action_start
+
+    def _insert_inventory_line(self, values):
+        row = self._inventory_line_values_to_row(values)
+        cols = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date'] + list(row)
+        fmts = ["nextval('stock_inventory_line_id_seq')", "%s", "now() AT TIME ZONE 'UTC'",
+                "%s", "now() AT TIME ZONE 'UTC'"] + ["%s"] * len(row)
+        params = (self.env.uid, self.env.uid) + tuple(row.values())
+        query = 'INSERT INTO "stock_inventory_line" ({}) VALUES ({}) RETURNING id'
+        self.env.cr.execute(
+            query.format(", ".join('"%s"' % col for col in cols), ", ".join(fmts)),
+            params,
+        )
+        return self.env.cr.fetchone()[0]
+
+    def _inventory_line_values_to_row(self, values):
+        return {
+            "inventory_id": self.id,
+            "product_id": values['product_id'] or None,
+            "product_uom_id": values.get('product_uom_id') or None,
+            "prod_lot_id": values.get('prod_lot_id') or None,
+            "package_id": values.get('package_id') or None,
+            "theoretical_qty": values.get('theoretical_qty', 0),
+            "product_qty": values.get('product_qty', 0),
+            "location_id": values['location_id'] or None,
+            "partner_id": values.get('partner_id') or None,
+        }
 
     @api.multi
     def action_inventory_line_tree(self):
@@ -238,7 +273,7 @@ class Inventory(models.Model):
         if self.company_id:
             domain += ' AND company_id = %s'
             args += (self.company_id.id,)
-        
+
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'
@@ -300,6 +335,7 @@ class Inventory(models.Model):
             vals.append({
                 'inventory_id': self.id,
                 'product_id': product.id,
+                'product_uom_id': product.uom_id.id,
                 'location_id': self.location_id.id,
             })
         return vals
