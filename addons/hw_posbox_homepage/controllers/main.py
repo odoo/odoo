@@ -102,7 +102,8 @@ class IoTboxHomepage(web.Home):
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
                 'type': iot_devices[device].device_type,
-                'message': iot_devices[device].device_identifier + iot_devices[device].get_message()
+                'message': iot_devices[device].device_identifier + iot_devices[device].get_message(),
+                'device_paired': iot_devices[device].device_paired
             })
 
         return {
