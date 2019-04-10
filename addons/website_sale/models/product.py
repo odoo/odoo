@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.addons import decimal_precision as dp
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
@@ -204,7 +203,7 @@ class ProductTemplate(models.Model):
                                                '(upsell strategy).Those product show up on the product page.')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
                                              string='Accessory Products', help='Accessories show up when the customer'
-                                            'reviews the cart before payment (cross-sell strategy).')
+                                             'reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
@@ -345,27 +344,41 @@ class ProductTemplate(models.Model):
         return website and website.company_id or res
 
     def _default_website_sequence(self):
-        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
-        min_sequence = self._cr.fetchone()[0]
-        return min_sequence and min_sequence - 1 or 10
+        ''' We want new product to be the last (highest seq).
+        Every product should ideally have an unique sequence.
+        Default sequence (10000) should only be used for DB first product.
+        As we don't resequence the whole tree (as `sequence` does), this field
+        might have negative value.
+        '''
+        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        max_sequence = self._cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
 
     def set_sequence_top(self):
-        self.website_sequence = self.sudo().search([], order='website_sequence desc', limit=1).website_sequence + 1
+        min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
+        self.website_sequence = min_sequence.website_sequence - 5
 
     def set_sequence_bottom(self):
-        self.website_sequence = self.sudo().search([], order='website_sequence', limit=1).website_sequence - 1
+        max_sequence = self.sudo().search([], order='website_sequence DESC', limit=1)
+        self.website_sequence = max_sequence.website_sequence + 5
 
     def set_sequence_up(self):
-        previous_product_tmpl = self.sudo().search(
-            [('website_sequence', '>', self.website_sequence), ('website_published', '=', self.website_published)],
-            order='website_sequence', limit=1)
+        previous_product_tmpl = self.sudo().search([
+            ('website_sequence', '<', self.website_sequence),
+            ('website_published', '=', self.website_published),
+        ], order='website_sequence DESC', limit=1)
         if previous_product_tmpl:
             previous_product_tmpl.website_sequence, self.website_sequence = self.website_sequence, previous_product_tmpl.website_sequence
         else:
             self.set_sequence_top()
 
     def set_sequence_down(self):
-        next_prodcut_tmpl = self.search([('website_sequence', '<', self.website_sequence), ('website_published', '=', self.website_published)], order='website_sequence desc', limit=1)
+        next_prodcut_tmpl = self.search([
+            ('website_sequence', '>', self.website_sequence),
+            ('website_published', '=', self.website_published),
+        ], order='website_sequence ASC', limit=1)
         if next_prodcut_tmpl:
             next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
         else:
