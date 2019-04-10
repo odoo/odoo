@@ -563,9 +563,16 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
-                        relDataPoint = this.localData[data[fieldName]];
-                        relDataPoint = this._applyX2ManyOperations(relDataPoint);
-                        data[fieldName] = relDataPoint.res_ids;
+                        if (typeof data[fieldName] === 'string') {
+                            relDataPoint = this.localData[data[fieldName]];
+                            relDataPoint = this._applyX2ManyOperations(relDataPoint);
+                            data[fieldName] = relDataPoint.res_ids;
+                        } else {
+                            // no datapoint has been created yet (because the loading of relational
+                            // data has been batched, and hasn't started yet), so the value is still
+                            // the list of ids in the relation
+                            data[fieldName] = data[fieldName] || [];
+                        }
                     } else {
                         data[fieldName] = this.get(data[fieldName]) || [];
                     }
