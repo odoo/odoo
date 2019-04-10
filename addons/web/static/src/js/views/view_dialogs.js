@@ -287,6 +287,15 @@ var SelectCreateDialog = ViewDialog.extend({
             event.stopPropagation();
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
         },
+        field_changed: function (ev) {
+            ev.stopPropagation();
+        },
+        switch_view: function (ev) {
+            ev.stopPropagation();
+        },
+        do_action: function (ev) {
+            ev.stopPropagation();
+        },
     }),
 
     /**
