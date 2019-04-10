@@ -1063,6 +1063,8 @@ class Field(MetaField('DummyField', (object,), {})):
     def _compute_value(self, records):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
+        if (records._name.startswith('account.move')) and (self.name in ('company_id','journal_id','currency_id')):
+            print('         computing', self.name, records._name, records.ids)
         fields = records._field_computed[self]
         cache = records.env.cache
 
@@ -1073,6 +1075,8 @@ class Field(MetaField('DummyField', (object,), {})):
                     record.env.remove_todo(self, record)
         else:
             self.compute(records)
+        if (records._name.startswith('account.move')) and (self.name in ('company_id','journal_id','currency_id')):
+            print('         end computing', self.name, records._name, records.ids)
         # for field in fields:
         #     for record in records:
         #         if not cache.contains(record, field):

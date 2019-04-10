@@ -2410,7 +2410,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             def recompute(field):
                 _logger.info("Storing computed values of %s", field)
                 recs = self.with_context(active_test=False).search([])
-                recs._recompute_todo(field)
+                recs.env.add_todo(field, recs)
 
             for field in self._fields.values():
                 if not field.store:
@@ -3611,6 +3611,7 @@ Fields:
 
     @api.model
     def _create(self, data_list):
+        print('Create', self._name, data_list)
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
         cr = self.env.cr
@@ -3667,9 +3668,13 @@ Fields:
         for data, record in zip(data_list, records):
             data['record'] = record
 
+
         # update parent_path
         records._parent_store_create()
 
+        # mark computed fields as todo
+        for d in data_list:
+            d['record'].modified(self._fields, d['stored'])
 
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
@@ -3677,6 +3682,7 @@ Fields:
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
 
+            print('Other Fields', other_fields)
             if other_fields:
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self._context))
@@ -3691,7 +3697,7 @@ Fields:
                 # records.modified([field.name for field in other_fields])
 
             for d in data_list:
-                d['record'].modified(self._fields, d['stored'])
+                d['record'].modified([x.name for x in other_fields], d['stored'])
 
             # check Python constraints for stored fields
             records._validate_fields(name for data in data_list for name in data['stored'])
@@ -5193,6 +5199,7 @@ Fields:
                 for all
         """
         # group triggers by (model, path) to minimize the calls to search()
+
         invalids = []
         triggers = defaultdict(set)
         for fname in fnames:
@@ -5242,7 +5249,8 @@ Fields:
                     # mark field to be recomputed on target
                     if field.compute_sudo:
                         target = target.sudo()
-                    target._recompute_todo(field)
+                    target.env.add_todo(field, target)
+
             # process non-stored fields
             for field in (fields - stored):
                 invalids.append((field, None))
@@ -5254,11 +5262,6 @@ Fields:
             corresponding records that must be recomputed.
         """
         return self.env.check_todo(field, self)
-
-    # FP TODO: to remove, only used two times
-    def _recompute_todo(self, field):
-        """ Mark ``field`` to be recomputed. """
-        self.env.add_todo(field, self)
 
     def _recompute_done(self, field):
         """ Mark ``field`` as recomputed. """
@@ -5277,6 +5280,8 @@ Fields:
         done = {}
         while self.env.has_todo():
             field, recs = self.env.get_todo()
+            if self._name=='account.move.line':
+                print('Recomputing', field.name, recs)
             # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
             count+= 1
             if count > 100:
