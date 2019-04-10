@@ -300,8 +300,9 @@
                                 <div class="o_row col-5 pl-0">
                                     <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
                                 </div>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
                                 <field name="currency_id" invisible='1'/>
+                                <field name="cost_currency_id" invisible="1"/>
                             </group>
                         </group>
                         <group>

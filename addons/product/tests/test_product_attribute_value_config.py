@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import time
+
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -422,6 +424,47 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # CASE invalid combination (too much):
         self.assertEqual(self.computer._get_closest_possible_combination(computer_ssd_256 + computer_ram_8 + computer_hdd_4 + computer_hdd_2),
             computer_ssd_256 + computer_ram_8 + computer_hdd_4)
+
+        # Make sure this is not extremely slow:
+        product_template = self.env['product.template'].create({
+            'name': 'many combinations',
+        })
+
+        for i in range(10):
+            # create the attributes
+            product_attribute = self.env['product.attribute'].create({
+                'name': "att %s" % i,
+                'create_variant': 'dynamic',
+                'sequence': i,
+            })
+
+            for j in range(10):
+                # create the attribute values
+                self.env['product.attribute.value'].create([{
+                    'name': "val %s/%s" % (i, j),
+                    'attribute_id': product_attribute.id,
+                    'sequence': j,
+                }])
+
+            # set attribute and attribute values on the template
+            self.env['product.template.attribute.line'].create([{
+                'attribute_id': product_attribute.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, product_attribute.value_ids.ids)]
+            }])
+
+        # Get a value in the middle for each attribute to make sure it would
+        # take time to reach it (if looping one by one like before the fix).
+        combination = self.env['product.template.attribute.value']
+        for ptal in product_template.attribute_line_ids:
+            combination += ptal.product_template_value_ids[5]
+
+        started_at = time.time()
+        self.assertEqual(product_template._get_closest_possible_combination(combination), combination)
+        elapsed = time.time() - started_at
+        # It should take around 10ms, but to avoid false positives we check an
+        # higher value. Before the fix it would take hours.
+        self.assertLess(elapsed, 0.5)
 
     def test_clear_caches(self):
         """The goal of this test is to make sure the cache is invalidated when
