@@ -623,6 +623,8 @@ var FieldMany2One = AbstractField.extend({
             initial_view: view,
             disable_multiple_selection: true,
             no_create: !self.can_create,
+            kanban_view_ref: self.attrs.kanban_view_ref,
+            tree_view_ref: self.attrs.tree_view_ref,
             on_selected: function (records) {
                 self.reinitialize(records[0]);
                 self.activate();

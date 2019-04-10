@@ -312,7 +312,10 @@ var SelectCreateDialog = ViewDialog.extend({
         var self = this;
         var _super = this._super.bind(this);
         var viewType = config.device.isMobile ? 'kanban' : 'list';
-        return this.loadViews(this.res_model, this.context, [[false, viewType], [false, 'search']], {})
+        var viewRefID = config.device.isMobile ?
+            (this.options.kanban_view_ref && JSON.parse(this.options.kanban_view_ref) || false) :
+            (this.options.tree_view_ref && JSON.parse(this.options.tree_view_ref) || false);
+        return this.loadViews(this.res_model, this.context, [[viewRefID, viewType], [false, 'search']], {})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
