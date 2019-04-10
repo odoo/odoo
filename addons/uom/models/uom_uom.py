@@ -13,7 +13,7 @@ class UoMCategory(models.Model):
     measure_type = fields.Selection([
         ('unit', 'Units'),
         ('weight', 'Weight'),
-        ('time', 'Time'),
+        ('working_time', 'Working Time'),
         ('length', 'Length'),
         ('volume', 'Volume'),
     ], string="Type of Measure")
@@ -24,7 +24,7 @@ class UoMCategory(models.Model):
 
     @api.multi
     def unlink(self):
-        if self.filtered(lambda categ: categ.measure_type == 'time'):
+        if self.filtered(lambda categ: categ.measure_type == 'working_time'):
             raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
         return super(UoMCategory, self).unlink()
 
@@ -111,7 +111,7 @@ class UoM(models.Model):
 
     @api.multi
     def unlink(self):
-        if self.filtered(lambda uom: uom.measure_type == 'time'):
+        if self.filtered(lambda uom: uom.measure_type == 'working_time'):
             raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
         return super(UoM, self).unlink()
 
