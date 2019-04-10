@@ -189,6 +189,12 @@ class AccountInvoice(models.Model):
                 info['title'] = type_payment
                 self.outstanding_credits_debits_widget = json.dumps(info)
                 self.has_outstanding = True
+            else:
+                self.has_outstanding = False
+                self.outstanding_credits_debits_widget = False
+        else:
+            self.has_outstanding = False
+            self.outstanding_credits_debits_widget = False
 
     @api.model
     def _get_payments_vals(self):

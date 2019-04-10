@@ -265,6 +265,7 @@ class Partner(models.Model):
     @api.depends('vat')
     def _compute_same_vat_partner(self):
         for partner in self:
+            print('VAT', partner)
             partner_id = partner.id
             if isinstance(partner_id, models.NewId):
                 # deal with onchange(), which is always called on a single record

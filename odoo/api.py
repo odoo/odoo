@@ -944,6 +944,9 @@ class Environment(Mapping):
             return the corresponding recordset to recompute.
         """
         for recs in self.all.todo.get(field, []):
+            if (recs._name != record._name):
+                import ipdb
+                ipdb.set_trace()
             if recs & record:
                 return recs
 
@@ -957,12 +960,16 @@ class Environment(Mapping):
                 # already present
                 try:
                     if not records <= recs:
+                        print('Add Todo: ', records._name, i)
                         recs_list[i] |= records
                     break
                 except TypeError:
                     # same field of another object already exists
                     pass
         else:
+            if (records._name == 'account.invoice.line') and (field.name=='reconciled'):
+                import ipdb
+                ipdb.set_trace()
             recs_list.append(records)
 
     def remove_todo(self, field, records):
@@ -1105,13 +1112,17 @@ class Cache(object):
         ids = list(self._data[key][field])
         return model.browse(ids)
 
-    def get_missing_ids(self, records, field):
+    def get_missing_ids(self, records, field, ids, limit):
         """ Return the ids of ``records`` that have no value for ``field``. """
         key = records.env.cache_key(field)
         field_cache = self._data[key][field]
-        for record_id in records._ids:
-            if record_id not in field_cache:
-                yield record_id
+        ids = []
+        for record_id in ids:
+            if record_id and (record_id not in field_cache):
+                ids.append(record_id)
+                limit = limit-1
+                if limit<1: break
+        return ids
 
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """

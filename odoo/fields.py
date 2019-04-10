@@ -990,16 +990,18 @@ class Field(MetaField('DummyField', (object,), {})):
             record.ensure_one()
             if env.check_todo(self, record):
                 recs = record._in_cache_without(self)
-                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
             if not env.cache.contains(record, self):
                 if self.store and record.id:
-                    record._prefetch_field(self)
+                    recs = record._in_cache_without(self)
+                    try:
+                        recs._fetch_field(self)
+                    except AccessError:
+                        record._fetch_field(self)
 
                 elif self.compute:
                     recs = record._in_cache_without(self)
-                    recs = recs.with_prefetch(record._prefetch)
                     self.compute_value(recs)
 
                 else:
@@ -1041,7 +1043,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # env.cache.invalidate(spec)
             # FP Check: does not install without that, but would be better to do this
             for field,obj in spec:
-                env.add_todo(field, record.browse(obj))
+                env.add_todo(field, obj)
 
         else:
             # Write to database
@@ -1134,11 +1136,11 @@ class Field(MetaField('DummyField', (object,), {})):
                     lambda rec: rec if path == 'id' else rec._mapped_cache(path) & records
                 )
             else:
+                # FP TODO: remove protected
                 target = env.cache.get_records(target, field) - protected
 
             if target:
-                spec.append((field, target._ids))
-
+                spec.append((field, target))
         return spec
 
 

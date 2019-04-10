@@ -520,10 +520,10 @@ class HolidaysRequest(models.Model):
                 holiday.activity_update()
         return holiday
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
+    def _read_from_database(self, field_names):
         if 'name' in field_names and 'employee_id' not in field_names:
             field_names.append('employee_id')
-        super(HolidaysRequest, self)._read_from_database(field_names, inherited_field_names)
+        super(HolidaysRequest, self)._read_from_database(field_names)
         if 'name' in field_names:
             if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
                 return

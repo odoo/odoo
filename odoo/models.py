@@ -342,11 +342,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if self._log_access:
             add('create_uid', fields.Many2one(
-                'res.users', string='Created by', automatic=True, readonly=True, default=lambda self: self._uid))
+                'res.users', string='Created by', automatic=True, readonly=True))
             add('create_date', fields.Datetime(
                 string='Created on', automatic=True, readonly=True))
             add('write_uid', fields.Many2one(
-                'res.users', string='Last Updated by', automatic=True, readonly=True, default=lambda self: self._uid))
+                'res.users', string='Last Updated by', automatic=True, readonly=True))
             add('write_date', fields.Datetime(
                 string='Last Updated on', automatic=True, readonly=True))
             last_modified_name = 'compute_concurrency_field_with_access'
@@ -2798,33 +2798,20 @@ Fields:
                 records
         """
         # check access rights
+        # FP Note: should we move that to _read
         self.check_access_rights('read')
         fields = self.check_field_access_rights('read', fields)
 
-        # split fields into stored and computed fields
-        stored, inherited, computed = [], [], []
-        for name in fields:
-            field = self._fields.get(name)
-            if field:
-                if field.store:
-                    stored.append(name)
-                elif field.base_field.store:
-                    inherited.append(name)
-                else:
-                    computed.append(name)
-            else:
-                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
-
         # fetch stored fields from the database to the cache; this should feed
         # the prefetching of secondary records
-        self._read_from_database(stored, inherited)
+        self._read(fields)
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
         self = self.with_prefetch(self._prefetch.copy())
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
-        for name in (stored + inherited + computed):
+        for name in fields:
             convert = self._fields[name].convert_to_read
             # restrict the prefetching of self's model to self; this avoids
             # computing fields on a larger recordset than self
@@ -2842,13 +2829,10 @@ Fields:
         return result
 
     @api.multi
-    def _prefetch_field(self, field):
+    def _fetch_field(self, field):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
         """
-        # fetch the records of this model without field_name in their cache
-        records = self._in_cache_without(field)
-
         # determine which fields can be prefetched
         fs = {field}
         if self._context.get('prefetch_fields', True) and field.prefetch:
@@ -2862,41 +2846,13 @@ Fields:
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
             )
-
-        # special case: discard records to recompute for field
-        records -= self.env.field_todo(field)
-
-        # in onchange mode, discard computed fields and fields in cache
-        if self.env.in_onchange:
-            for f in list(fs):
-                if f.compute or self.env.cache.contains(self, f):
-                    fs.discard(f)
-                else:
-                    records &= self._in_cache_without(f)
-
-        # fetch records with read()
-        assert self in records and field in fs
-        records = records.with_prefetch(self._prefetch)
-        result = []
-        try:
-            result = records.read([f.name for f in fs], load='_classic_write')
-        except AccessError:
-            # not all prefetched records may be accessible, try with only the current recordset
-            result = self.read([f.name for f in fs], load='_classic_write')
-
-        # check the cache, and update it if necessary
-        if not self.env.cache.contains_value(self, field):
-            for values in result:
-                record = self.browse(values.pop('id'), self._prefetch)
-                record._cache.update(record._convert_to_cache(values, validate=False))
-            if not self.env.cache.contains(self, field):
-                exc = AccessError("No value found for %s.%s" % (self, field.name))
-                self.env.cache.set_failed(self, [field], exc)
+        self._read([f.name for f in fs])
 
     @api.multi
-    def _read_from_database(self, field_names, inherited_field_names=[]):
+    def _read(self, fields):
         """ Read the given fields of the records in ``self`` from the database,
             and store them in cache. Access errors are also stored in cache.
+            Skip fields that are not stored.
 
             :param field_names: list of column names of model ``self``; all those
                 fields are guaranteed to be read
@@ -2905,6 +2861,18 @@ Fields:
         """
         if not self:
             return
+
+        field_names = []
+        inherited_field_names = []
+        for name in fields:
+            field = self._fields.get(name)
+            if field:
+                if field.store:
+                    field_names.append(name)
+                elif field.base_field.store:
+                    inherited_field_names.append(name)
+            else:
+                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
         env = self.env
         cr, user, context = env.args
@@ -3663,9 +3631,9 @@ Fields:
         # column names, formats and values (for common fields)
         columns0 = [('id', "nextval(%s)", self._sequence)]
         if self._log_access:
-            # columns0.append(('create_uid', "%s", self._uid)) --> not necessary as in default values
+            columns0.append(('create_uid', "%s", self._uid))
             columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
-            # columns0.append(('write_uid', "%s", self._uid)) --> not necessary as in default values
+            columns0.append(('write_uid', "%s", self._uid))
             columns0.append(('write_date', "%s", AsIs("(now() at time zone 'UTC')")))
 
         for data in data_list:
@@ -4693,7 +4661,7 @@ Fields:
     #
 
     @classmethod
-    def _browse(cls, ids, env, prefetch=None, add_prefetch=True):
+    def _browse(cls, ids, env, prefetch=None):
         """ Create a recordset instance.
 
         :param ids: a tuple of record ids
@@ -4705,12 +4673,11 @@ Fields:
         records._ids = ids
         if prefetch is None:
             prefetch = defaultdict(set)         # {model_name: set(ids)}
+        prefetch[cls._name].update(ids)
         records._prefetch = prefetch
-        if add_prefetch:
-            prefetch[cls._name].update(ids)
         return records
 
-    def browse(self, arg=None, prefetch=None):
+    def browse(self, ids=None, prefetch=None):
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -4718,8 +4685,12 @@ Fields:
 
         Can take no ids, a single id or a sequence of ids.
         """
-        ids = _normalize_ids(arg)
-        #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
+        if not ids:
+            ids = ()
+        elif ids.__class__ in IdType:
+            ids = ids,
+        else:
+            ids = tuple(ids)
         return self._browse(ids, self.env, prefetch)
 
     #
@@ -5018,7 +4989,7 @@ Fields:
     def __iter__(self):
         """ Return an iterator over ``self``. """
         for id in self._ids:
-            yield self._browse((id,), self.env, self._prefetch, False)
+            yield self._browse((id,), self.env, self._prefetch)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -5174,15 +5145,11 @@ Fields:
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        recs = self.browse(self._prefetch[self._name])
-        ids = [self.id]
-        for record_id in self.env.cache.get_missing_ids(recs - self, field):
-            if not record_id:
-                # Do not prefetch `NewId`
-                continue
-            ids.append(record_id)
-            if limit and limit <= len(ids):
-                break
+        if not self.id:
+            return self
+        ids = self.env.cache.get_missing_ids(self, field, self._prefetch[self._name], limit)
+        if self.id not in ids:
+            ids.append(self.id)
         return self.browse(ids)
 
     @api.model
@@ -5313,7 +5280,7 @@ Fields:
             # FO TO Remove: Cycling detection loop, to remove when recursive fields are removed
             count+= 1
             if count > 100:
-                print('Cycling', recs, field)
+                print('Cycling computed fields', recs, field)
 
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]
@@ -5748,34 +5715,6 @@ PGERROR_TO_OE = defaultdict(
     '23502': convert_pgerror_not_null,
     '23505': convert_pgerror_unique,
 })
-
-def _normalize_ids(arg, atoms=set(IdType)):
-    """ Normalizes the ids argument for ``browse`` (v7 and v8) to a tuple.
-
-    Various implementations were tested on the corpus of all browse() calls
-    performed during a full crawler run (after having installed all website_*
-    modules) and this one was the most efficient overall.
-
-    A possible bit of correctness was sacrificed by not doing any test on
-    Iterable and just assuming that any non-atomic type was an iterable of
-    some kind.
-
-    :rtype: tuple
-    """
-    # much of the corpus is falsy objects (empty list, tuple or set, None)
-    if not arg:
-        return ()
-
-    # `type in set` is significantly faster (because more restrictive) than
-    # isinstance(arg, set) or issubclass(type, set); and for new-style classes
-    # obj.__class__ is equivalent to but faster than type(obj). Not relevant
-    # (and looks much worse) in most cases, but over millions of calls it
-    # does have a very minor effect.
-    if arg.__class__ in atoms:
-        return arg,
-
-    return tuple(arg)
-
 
 def lazy_name_get(self):
     """ Evaluate self.name_get() lazily. """

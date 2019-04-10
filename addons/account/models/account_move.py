@@ -581,8 +581,6 @@ class AccountMoveLine(models.Model):
             line.reconciled = reconciled
 
             cur = line.company_id.currency_id
-            import ipdb
-            ipdb.set_trace()
             line.amount_residual = cur.round(amount * sign)
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
