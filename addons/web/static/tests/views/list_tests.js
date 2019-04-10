@@ -3212,6 +3212,90 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" readonly="1"/>' +
+                    '<field name="qux"/>' +
+                '</tree>',
+        });
+
+        // start on 'qux', line 3
+        await testUtils.dom.click(list.$('.o_data_row:nth(2) .o_data_cell:nth(2)'));
+        assert.hasClass(list.$('.o_data_row:nth(2)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(2) .o_data_cell input[name=qux]')[0]);
+
+        // Press 'shift-Tab' -> should go to first cell (same line)
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB, shiftKey: true});
+        await testUtils.nextTick();
+        assert.hasClass(list.$('.o_data_row:nth(2)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(2) .o_data_cell input[name=foo]')[0]);
+
+        list.destroy();
+    });
+
+    QUnit.test('pressing SHIFT-TAB in editable list with a readonly field in first column [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="int_field" readonly="1"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux"/>' +
+                '</tree>',
+        });
+
+        // start on 'foo', line 3
+        await testUtils.dom.click(list.$('.o_data_row:nth(2) .o_data_cell:nth(1)'));
+        assert.hasClass(list.$('.o_data_row:nth(2)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(2) .o_data_cell input[name=foo]')[0]);
+
+        // Press 'shift-Tab' -> should go to previous line (last cell)
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB, shiftKey: true});
+        await testUtils.nextTick();
+        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(1) .o_data_cell input[name=qux]')[0]);
+
+        list.destroy();
+    });
+
+    QUnit.test('pressing SHIFT-TAB in editable list with a readonly field in last column [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="int_field"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux" readonly="1"/>' +
+                '</tree>',
+        });
+
+        // start on 'int_field', line 3
+        await testUtils.dom.click(list.$('.o_data_row:nth(2) .o_data_cell:first'));
+        assert.hasClass(list.$('.o_data_row:nth(2)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(2) .o_data_cell input[name=int_field]')[0]);
+
+        // Press 'shift-Tab' -> should go to previous line ('foo' field)
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB, shiftKey: true});
+        await testUtils.nextTick();
+        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:nth(1) .o_data_cell input[name=foo]')[0]);
+
+        list.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating list view with TAB', async function (assert) {
         assert.expect(2);
 
@@ -4456,6 +4540,47 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.o_list_button_add'));
 
         assert.strictEqual($('.o_data_cell').text(), "blipblipyopgnap" + inputText);
+
+        list.destroy();
+    });
+
+    QUnit.test('create record on list with modifiers depending on id', function (assert) {
+        assert.expect(8);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="id" invisible="1"/>' +
+                    '<field name="foo" attrs="{\'readonly\': [[\'id\',\'!=\',False]]}"/>' +
+                    '<field name="int_field" attrs="{\'invisible\': [[\'id\',\'!=\',False]]}"/>' +
+                '</tree>',
+        });
+
+        // add a new record
+        testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        // modifiers should be evaluted to false
+        assert.containsOnce(list, '.o_selected_row');
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:first'), 'o_readonly_modifier');
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        // set a value and save
+        testUtils.fields.editInput(list.$('.o_selected_row input[name=foo]'), 'some value');
+        testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+
+        // modifiers should be evaluted to true
+        assert.hasClass(list.$('.o_data_row:first .o_data_cell:first'), 'o_readonly_modifier');
+        assert.hasClass(list.$('.o_data_row:first .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        // edit again the just created record
+        testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+
+        // modifiers should be evaluted to true
+        assert.containsOnce(list, '.o_selected_row');
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:first'), 'o_readonly_modifier');
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
 
         list.destroy();
     });
