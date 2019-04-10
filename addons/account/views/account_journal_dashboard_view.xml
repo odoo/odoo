@@ -271,7 +271,7 @@
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
                                     <div class="col-7 text-left">
-                                        <a type="object" name="action_open_to_check"><t t-esc="dashboard.number_to_check"/> moves to check</a>
+                                        <a type="object" name="action_open_to_check"><t t-esc="dashboard.number_to_check"/> to check</a>
                                     </div>
                                     <div class="col-5 text-right">
                                         <span><t t-esc="dashboard.to_check_balance"/></span>
@@ -324,6 +324,16 @@
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
+                            <t t-if="dashboard.number_to_check > 0">
+                                <div class="row">
+                                    <div class="col-7 text-left">
+                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-esc="dashboard.number_to_check"/> to check</a>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.to_check_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
                         <div t-if="dashboard.is_sample_data">
                             <span class="badge badge-warning text-uppercase o_sample_data_label">Sample data</span>
