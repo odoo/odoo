@@ -116,8 +116,8 @@ class Field(MetaField('DummyField', (object,), {})):
         :param required: whether the value of the field is required (boolean, by
             default ``False``)
 
-        :param index: whether the field is indexed in database (boolean, by
-            default ``False``)
+        :param index: whether the field is indexed in database. Note: no effect
+            on non-stored and virtual fields. (boolean, by default ``False``)
 
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value; use
