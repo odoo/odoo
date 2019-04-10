@@ -252,7 +252,6 @@ class HolidaysRequest(models.Model):
         ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(HolidaysRequest, self)._auto_init()
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',

@@ -45,13 +45,11 @@ class BaseGengoTranslations(models.TransientModel):
     sync_limit = fields.Integer("No. of terms to sync", default=20)
     authorized_credentials = fields.Boolean('The private and public keys are valid')
 
-    @api.model_cr
     def init(self):
         icp = self.env['ir.config_parameter'].sudo()
         if not icp.get_param(self.GENGO_KEY):
             icp.set_param(self.GENGO_KEY, str(uuid.uuid4()))
 
-    @api.model_cr
     def get_gengo_key(self):
         icp = self.env['ir.config_parameter'].sudo()
         return icp.get_param(self.GENGO_KEY, default="Undefined")

@@ -17,7 +17,6 @@ class ReportStockForecat(models.Model):
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True)
     reference = fields.Char('Reference')
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, 'report_stock_forecast')
         query = """

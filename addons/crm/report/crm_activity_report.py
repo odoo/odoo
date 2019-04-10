@@ -75,7 +75,6 @@ class ActivityReport(models.Model):
                 m.model = 'crm.lead' AND (m.mail_activity_type_id IS NOT NULL OR m.subtype_id = %s)
         """ % (disccusion_subtype.id,)
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""

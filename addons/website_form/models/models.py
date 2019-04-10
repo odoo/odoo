@@ -79,7 +79,6 @@ class website_form_model_fields(models.Model):
     _description = 'Fields'
     _inherit = 'ir.model.fields'
 
-    @api.model_cr
     def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``
         #  (so that we can use it as a whitelist rather than a blacklist)

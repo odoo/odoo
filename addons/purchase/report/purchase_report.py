@@ -50,7 +50,6 @@ class PurchaseReport(models.Model):
     qty_billed = fields.Float('Qty Billed', readonly=True)
     qty_to_be_billed = fields.Float('Qty to be Billed', readonly=True)
 
-    @api.model_cr
     def init(self):
         # self._table = sale_report
         tools.drop_view_if_exists(self.env.cr, self._table)

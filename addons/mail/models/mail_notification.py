@@ -37,7 +37,6 @@ class Notification(models.Model):
             ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
-    @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_is_read_email_status_mail_message_id',))
         if not self._cr.fetchone():

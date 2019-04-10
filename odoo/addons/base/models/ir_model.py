@@ -1191,7 +1191,7 @@ class IrModelAccess(models.Model):
         self._cr.execute(query, (model_name, tuple(group_ids)))
         return bool(self._cr.rowcount)
 
-    @api.model_cr
+    @api.model
     def group_names_with_access(self, model_name, access_mode):
         """ Return the names of visible groups which have been granted
             ``access_mode`` on the model ``model_name``.
@@ -1288,7 +1288,7 @@ class IrModelAccess(models.Model):
     def unregister_cache_clearing_method(cls, model, method):
         cls.__cache_clearing_methods.discard((model, method))
 
-    @api.model_cr
+    @api.model
     def call_cache_clearing_methods(self):
         self.invalidate_cache()
         self.check.clear_cache(self)    # clear the cache of check function
@@ -1352,7 +1352,6 @@ class IrModelData(models.Model):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
 
-    @api.model_cr_context
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
         tools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
