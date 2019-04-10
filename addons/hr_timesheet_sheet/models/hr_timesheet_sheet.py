@@ -111,6 +111,12 @@ class HrTimesheetSheet(models.Model):
             if not new_user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
             self._check_sheet_date(forced_user_id=new_user_id)
+        if 'timesheet_ids' in vals:
+            for one2manyline in vals['timesheet_ids']:
+                # If updating record and trying to explicitly set amount:
+                if one2manyline[0] == 1 and 'amount' in one2manyline[2]:
+                    # Remove amount field so that it is calculated from employee timesheet_cost:
+                    del one2manyline[2]['amount']            
         return super(HrTimesheetSheet, self).write(vals)
 
     @api.multi
