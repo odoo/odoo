@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-import unittest
-from odoo.tests import Form
+
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.exceptions import UserError
+from odoo.tests import Form
 
 
 class TestWorkOrderProcess(TestMrpCommon):
@@ -719,6 +720,64 @@ class TestWorkOrderProcess(TestMrpCommon):
             self.assertEqual(workorder.final_lot_id, serial_c)
             workorder.record_production()
             self.assertEqual(workorder.state, 'done')
+
+    def test_03b_test_serial_number_defaults(self):
+        """ Check the constraint on the workorder final_lot. The first workorder
+        produces 2/2 units without serial number (serial is only required when
+        you register a component) then the second workorder try to register a
+        serial number. It should be allowed since the first workorder did not
+        specify a seiral number.
+        """
+        bom = self.env.ref('mrp.mrp_bom_laptop_cust_rout')
+        product = bom.product_tmpl_id.product_variant_id
+        product.tracking = 'serial'
+
+        lot_1 = self.env['stock.production.lot'].create({
+            'product_id': product.id,
+            'name': 'LOT000001'
+        })
+
+        lot_2 = self.env['stock.production.lot'].create({
+            'product_id': product.id,
+            'name': 'LOT000002'
+        })
+        self.env['stock.production.lot'].create({
+            'product_id': product.id,
+            'name': 'LOT000003'
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2.0
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        workorder_0 = mo.workorder_ids[0]
+        workorder_0.record_production()
+        workorder_0.record_production()
+        with self.assertRaises(UserError):
+            workorder_0.record_production()
+
+        workorder_1 = mo.workorder_ids[1]
+        with Form(workorder_1) as wo:
+            wo.final_lot_id = lot_1
+        workorder_1.record_production()
+
+        self.assertTrue(len(workorder_1.allowed_lots_domain) > 1)
+        with Form(workorder_1) as wo:
+            wo.final_lot_id = lot_2
+        workorder_1.record_production()
+
+        workorder_2 = mo.workorder_ids[2]
+        self.assertEqual(workorder_2.allowed_lots_domain, lot_1 | lot_2)
+
+        self.assertEqual(workorder_0.finished_workorder_line_ids.qty_done, 2)
+        self.assertFalse(workorder_0.finished_workorder_line_ids.lot_id)
+        self.assertEqual(sum(workorder_1.finished_workorder_line_ids.mapped('qty_done')), 2)
+        self.assertEqual(workorder_1.finished_workorder_line_ids.mapped('lot_id'), lot_1 | lot_2)
 
     def test_04_test_planning_date(self):
         """ Test that workorder are planned at the correct time. """
