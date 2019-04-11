@@ -1045,11 +1045,27 @@ class OrderedSet(MutableSet):
     def discard(self, elem):
         self._map.pop(elem, None)
 
+
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+
+class IterableGenerator:
+    """ An iterable object based on a generator function, which is called each
+        time the object is iterated over.
+    """
+    __slots__ = ['func', 'args']
+
+    def __init__(self, func, *args):
+        self.func = func
+        self.args = args
+
+    def __iter__(self):
+        return self.func(*self.args)
+
 
 def groupby(iterable, key=None):
     """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
