@@ -1073,7 +1073,8 @@ class Field(MetaField('DummyField', (object,), {})):
         cache = records.env.cache
 
         for record in records:
-            record.env.remove_todo(self, record)
+            for field in fields:
+                record.env.remove_todo(field, record)
         if isinstance(self.compute, str):
             getattr(records, self.compute)()
         else:
