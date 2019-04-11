@@ -52,7 +52,8 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, groupby
+                   Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
+                   groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -172,15 +173,41 @@ class MetaModel(api.Meta):
 
 
 class NewId(object):
-    """ Pseudo-ids for new records, encapsulating an optional reference. """
-    __slots__ = ['ref']
+    """ Pseudo-ids for new records, encapsulating an optional origin id (actual
+        record id) and an optional reference (any value).
+    """
+    __slots__ = ['origin', 'ref']
 
-    def __init__(self, ref=None):
+    def __init__(self, origin=None, ref=None):
+        self.origin = origin
         self.ref = ref
 
     def __bool__(self):
         return False
-    __nonzero__ = __bool__
+
+    def __eq__(self, other):
+        return isinstance(other, NewId) and (
+            (self.origin and other.origin and self.origin == other.origin)
+            or (self.ref and other.ref and self.ref == other.ref)
+        )
+
+    def __hash__(self):
+        return hash(self.origin or self.ref or id(self))
+
+    def __repr__(self):
+        return (
+            "<NewId origin=%r>" % self.origin if self.origin else
+            "<NewId ref=%r>" % self.ref if self.ref else
+            "<NewId 0x%x>" % id(self)
+        )
+
+
+def origin_ids(ids):
+    """ Return an iterator over the origin ids corresponding to ``ids``.
+        Actual ids are returned as is, and ids without origin are not returned.
+    """
+    return ((id_ or id_.origin) for id_ in ids if (id_ or id_.origin))
+
 
 IdType = (int, str, NewId)
 
@@ -2517,6 +2544,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 field.required = True
                 field.ondelete = "cascade"
+            field.delegate = True
 
         # reflect fields with delegate=True in dictionary self._inherits
         for field in self._fields.values():
@@ -3110,14 +3138,21 @@ Fields:
         if not where_clause:
             return self
 
-        valid_ids = []
+        # detemine ids in database that satisfy ir.rules
+        valid_ids = set()
         query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
             self._table, ",".join(tables), self._table, " AND ".join(where_clause),
         )
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
             self._cr.execute(query, [sub_ids] + where_params)
-            valid_ids.extend(row[0] for row in self._cr.fetchall())
-        return self.browse(valid_ids)
+            valid_ids.update(row[0] for row in self._cr.fetchall())
+
+        # return new ids without origin and ids with origin in valid_ids
+        return self.browse([
+            it
+            for it in self._ids
+            if not (it or it.origin) or (it or it.origin) in valid_ids
+        ])
 
     @api.multi
     def unlink(self):
@@ -4720,10 +4755,8 @@ Fields:
 
     @property
     def ids(self):
-        """ List of actual record ids in this recordset (ignores placeholder
-        ids for records to create)
-        """
-        return [it for it in self._ids if it]
+        """ Return the list of actual record ids corresponding to ``self``. """
+        return list(origin_ids(self._ids))
 
     # backward-compatibility with former browse records
     _cr = property(lambda self: self.env.cr)
@@ -4951,30 +4984,42 @@ Fields:
     #
 
     @api.model
-    def new(self, values={}, ref=None):
-        """ new([values]) -> record
+    def new(self, values={}, origin=None, ref=None):
+        """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
         initialized with the provided ``value``. The record is *not* created
         in database, it only exists in memory.
 
-        One can pass a reference value to identify the record among other new
+        One can pass an ``origin`` record, which is the actual record behind the
+        result. It is retrieved as ``record._origin``. Two new records with the
+        same origin record are considered equal.
+
+        One can also pass a ``ref`` value to identify the record among other new
         records. The reference is encapsulated in the ``id`` of the record.
         """
-        record = self.browse([NewId(ref)])
+        if origin is not None:
+            origin = origin.id
+        record = self.browse([NewId(origin, ref)])
         record._cache.update(record._convert_to_cache(values, update=True))
 
-        if record.env.in_onchange:
-            # The cache update does not set inverse fields, so do it manually.
-            # This is useful for computing a function field on secondary
-            # records, if that field depends on the main record.
-            for name in values:
-                field = self._fields.get(name)
-                if field:
+        # set inverse fields on new records in the comodel
+        for name in values:
+            field = self._fields.get(name)
+            if field and field.relational:
+                inv_recs = record[name].filtered(lambda r: not r.id)
+                if inv_recs:
                     for invf in self._field_inverses[field]:
-                        invf._update(record[name], record)
+                        invf._update(inv_recs, record)
 
         return record
+
+    @property
+    def _origin(self):
+        """ Return the actual records corresponding to ``self``. """
+        ids = tuple(origin_ids(self._ids))
+        prefetch_ids = IterableGenerator(origin_ids, self._prefetch_ids)
+        return self._browse(self.env, ids, prefetch_ids)
 
     #
     # Dirty flags, to mark record fields modified (in draft mode)
@@ -5430,10 +5475,11 @@ Fields:
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
                 for name, subnames in tree.items():
+                    field = record._fields[name]
                     # x2many fields are serialized as a list of line snapshots
                     self[name] = (
                         [Snapshot(line, subnames) for line in record[name]]
-                        if subnames else record[name]
+                        if field.type in ('one2many', 'many2many') else record[name]
                     )
 
             def diff(self, other):
@@ -5445,14 +5491,15 @@ Fields:
                 for name, subnames in self['<tree>'].items():
                     if (name == 'id') or (other.get(name) == self[name]):
                         continue
-                    if not subnames:
-                        field = record._fields[name]
+                    field = record._fields[name]
+                    if field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
                         result[name] = commands = [(5,)]
                         for line_snapshot in self[name]:
                             line = line_snapshot['<record>']
+                            line = line._origin or line
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
@@ -5475,21 +5522,21 @@ Fields:
         # prefetch x2many lines without data (for the initial snapshot)
         for name, subnames in nametree.items():
             if subnames and values.get(name):
-                # retrieve all ids in commands, and read the expected fields
-                line_ids = []
+                # retrieve all ids in commands
+                line_ids = set()
                 for cmd in values[name]:
                     if cmd[0] in (1, 4):
-                        line_ids.append(cmd[1])
+                        line_ids.add(cmd[1])
                     elif cmd[0] == 6:
-                        line_ids.extend(cmd[2])
-                lines = self.browse()[name].browse(line_ids)
-                lines.read(list(subnames), load='_classic_write')
+                        line_ids.update(cmd[2])
+                # build corresponding new lines, and prefetch fields
+                new_lines = self[name].browse(NewId(id_) for id_ in line_ids)
+                for subname in subnames:
+                    new_lines.mapped(subname)
 
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
-            record = self.new(values)
-            # attach ``self`` with a different context (for cache consistency)
-            record._origin = self.with_context(__onchange=True)
+            record = self.new(values, origin=self)
 
         # make a snapshot based on the initial values of record
         with env.do_in_onchange():

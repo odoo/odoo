@@ -214,6 +214,7 @@ class Multi(models.Model):
     name = fields.Char(related='partner.name', readonly=True)
     partner = fields.Many2one('res.partner')
     lines = fields.One2many('test_new_api.multi.line', 'multi')
+    partners = fields.One2many(related='partner.child_ids')
 
     @api.onchange('name')
     def _onchange_name(self):

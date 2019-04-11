@@ -962,15 +962,15 @@ class UsersImplied(models.Model):
             if 'groups_id' in values:
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
+                gs = user.groups_id._origin
                 group_public = self.env.ref('base.group_public', raise_if_not_found=False)
                 group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
-                if group_public and group_public in user.groups_id:
-                    gs = self.env.ref('base.group_public') | self.env.ref('base.group_public').trans_implied_ids
-                elif group_portal and group_portal in user.groups_id:
-                    gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
-                else:
-                    gs = user.groups_id | user.groups_id.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
+                if group_public and group_public in gs:
+                    gs = group_public
+                elif group_portal and group_portal in gs:
+                    gs = group_portal
+                gs = gs | gs.trans_implied_ids
+                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     @api.multi
