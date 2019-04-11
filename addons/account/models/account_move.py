@@ -536,8 +536,6 @@ class AccountMoveLine(models.Model):
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         for line in self:
-            import ipdb
-            ipdb.set_trace()
             if not line.account_id.reconcile and line.account_id.internal_type != 'liquidity':
                 line.reconciled = False
                 line.amount_residual = 0

@@ -1074,6 +1074,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         for record in records:
             for field in fields:
+                # FP TODO: what about putting a NoValue in the cache to control nobody reads the value inbetween; should avois tricky bugs with cross-referenced fields (but only for readonly, not onchange)
                 record.env.remove_todo(field, record)
         if isinstance(self.compute, str):
             getattr(records, self.compute)()
