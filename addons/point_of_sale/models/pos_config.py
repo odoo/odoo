@@ -63,14 +63,7 @@ class PosConfig(models.Model):
     def _compute_default_customer_html(self):
         return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
 
-    @api.depends('limit_categories', 'iface_available_categ_ids')
-    def _compute_iface_start_categ_domain_ids(self):
-        if self.limit_categories:
-            self.iface_start_categ_domain_ids =  self.iface_available_categ_ids
-        else:
-            self.iface_start_categ_domain_ids = self.env['pos.category'].search([])
-
-    name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale.")
+    name = fields.Char(string='Point of Sale', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     journal_ids = fields.Many2many(
@@ -110,10 +103,8 @@ class PosConfig(models.Model):
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
-    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Category Tree',
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
-    iface_start_categ_domain_ids = fields.Many2many('pos.category', compute='_compute_iface_start_categ_domain_ids', store=False,
-        help='Technical field used as a domain for iface_start_categ_id.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -164,7 +155,7 @@ class PosConfig(models.Model):
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    start_category = fields.Boolean("Set Start Category")
+    start_category = fields.Boolean("Set Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Available Product Categories")
     module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
@@ -322,10 +313,16 @@ class PosConfig(models.Model):
 
     @api.onchange('limit_categories', 'iface_available_categ_ids', 'iface_start_categ_id')
     def _onchange_limit_categories(self):
+        res = {}
         if not self.limit_categories:
             self.iface_available_categ_ids = False
+        elif not len(self.iface_available_categ_ids):
+             res = {'domain': {'iface_start_categ_id': [('id', 'in', self.env['pos.category'].search([]).ids)]}}
         elif self.iface_start_categ_id not in self.iface_available_categ_ids:
             self.iface_start_categ_id = False
+        if self.iface_available_categ_ids:
+            res = {'domain': {'iface_start_categ_id': [('id', 'in', self.iface_available_categ_ids.ids)]}}
+        return res
 
     @api.onchange('is_header_or_footer')
     def _onchange_header_footer(self):

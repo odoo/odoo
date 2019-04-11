@@ -685,8 +685,10 @@ class Post(models.Model):
 
         # post the message
         question = self.parent_id
+        self_sudo = self.sudo()
         values = {
-            'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
             'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
             'subtype': 'mail.mt_comment',

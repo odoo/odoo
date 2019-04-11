@@ -394,6 +394,9 @@ class PricelistItem(models.Model):
     # query built in _compute_price_rule() above in this file to avoid
     # inconstencies and undeterministic issues.
 
+    def _get_default_applied_on(self):
+        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '3_global'
+
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',
         help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
@@ -413,15 +416,15 @@ class PricelistItem(models.Model):
         ('2_product_category', ' Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
-        default='3_global', required=True,
+        default=_get_default_applied_on, required=True,
         help='Pricelist Item applicable on selected option')
     base = fields.Selection([
-        ('list_price', 'Public Price'),
+        ('list_price', 'Sales Price'),
         ('standard_price', 'Cost'),
         ('pricelist', 'Other Pricelist')], "Based on",
         default='list_price', required=True,
         help='Base price for computation.\n'
-             'Public Price: The base price will be the Sale/public Price.\n'
+             'Sales Price: The base price will be the Sales Price.\n'
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
@@ -526,3 +529,8 @@ class PricelistItem(models.Model):
         # to be invalided and recomputed.
         self.invalidate_cache()
         return res
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
+        if self.user_has_groups('product.group_product_variant'):
+            self.product_id = False

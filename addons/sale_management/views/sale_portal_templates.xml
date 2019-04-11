@@ -30,14 +30,13 @@
         <xpath expr="//section[@id='signature']" position="after">
             <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
                 <section>
-                    <h3>Optional Products</h3>
-                    <t t-set="display_discount" t-value="True in [option.discount for option in sale_order.sale_order_option_ids]"/>
+                    <h3>Options</h3>
+                    <t t-set="display_discount" t-value="True in [option.discount > 0 for option in sale_order.sale_order_option_ids]"/>
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th class="text-left">Product</th>
                                 <th t-if="display_discount" class="text-right">
-                                    <span>Discount</span>
                                 </th>
                                 <th class="text-right">Price</th>
                                 <th t-if="sale_order.state in ['draft', 'sent'] and report_type == 'html'"></th>
@@ -49,8 +48,8 @@
                                     <td>
                                         <div t-field="option.name"/>
                                     </td>
-                                    <td t-if="display_discount">
-                                        <strong t-if="option.discount" class="text-info text-right">
+                                    <td t-if="display_discount" class="text-right">
+                                        <strong t-if="option.discount" class="text-info">
                                             <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>% discount
                                         </strong>
                                     </td>

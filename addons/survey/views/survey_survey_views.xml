@@ -9,10 +9,10 @@
                 <field name="id" invisible="1"/>
                 <field name="is_closed" invisible="1"/>
                 <header>
+                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_send_survey" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -47,15 +47,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="access_mode"/>
-                            <field name="public_url" readonly="1"
-                                attrs="{'invisible': [('access_mode', '!=', 'public')]}"
-                                widget="CopyClipboardChar"/>
                             <field name="category" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Edit Pages and Questions">
+                        <page string="Questions">
                             <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
                                 <tree decoration-bf="is_page==True">
                                     <control>
@@ -64,30 +60,38 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
+                                    <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
                                 </tree>
                             </field>
-                            <group string="Description" name="description" >
-                                <field name="description" nolabel="1"></field>
-                            </group>
+                        </page>
+                        <page string="Description">
+                            <field name="description" nolabel="1"></field>
                         </page>
                         <page string="Options">
                             <group name="options">
-                                <group string="Candidates" name="candidates">
-                                    <field name="users_login_required"/>
-                                    <field name="is_attempts_limited" attrs="{'invisible': [('access_mode', '=', 'public'), ('users_login_required', '=', False)]}" />
-                                    <field name="attempts_limit" attrs="{'invisible': [('is_attempts_limited', '=', False)]}" />
-                                </group>
                                 <group string="Questions" name="questions">
-                                    <field name="users_can_go_back" string="Enable back button"/>
                                     <field name="questions_layout" widget="radio" />
-                                    <field name="is_time_limited" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" string="Time limit" />
-                                    <field name="time_limit" widget="float_time" nolabel="1" attrs="{'invisible': [('is_time_limited', '=', False)]}" /><span attrs="{'invisible': [('is_time_limited', '=', False)]}"> minutes</span>
+                                    <label for="is_time_limited" string="Time Limit"/>
+                                    <div>
+                                        <field name="is_time_limited" nolabel="1"/>
+                                        <field name="time_limit" widget="float_time" attrs="{'invisible': [('is_time_limited', '=', False)]}" nolabel="1" class="oe_inline" /> <span attrs="{'invisible': [('is_time_limited', '=', False)]}"> minutes</span>
+                                    </div>
                                     <field name="questions_selection" widget="radio" />
+                                    <field name="users_can_go_back" string="Back Button" attrs="{'invisible': [('questions_layout', '=', 'one_page')]}"/>
                                 </group>
-                                <group string="Scoring Informations" name="scoring">
+                                <group string="Candidates" name="candidates">
+                                    <field name="access_mode"/>
+                                    <field name="users_login_required"/>
+                                    <label for="is_attempts_limited" string="Attempts Limit" attrs="{'invisible': [('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
+                                        <field name="is_attempts_limited" nolabel="1"/>
+                                        <field name="attempts_limit" attrs="{'invisible': [('is_attempts_limited', '=', False)]}" nolabel="1" class="oe_inline" /> <span attrs="{'invisible': [('is_attempts_limited', '=', False)]}"> attempts</span>
+                                    </div>
+                                </group>
+                                <group string="Scoring" name="scoring">
                                     <field name="scoring_type" widget="radio" />
                                     <field name="passing_score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
                                     <field name="certificate" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />

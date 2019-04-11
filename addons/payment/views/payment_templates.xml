@@ -63,6 +63,12 @@
                                        t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
                             </t>
                             <span class="payment_option_name" t-esc="acq.name"/>
+                            <t t-if="acq_extra_fees and acq_extra_fees.get(acq)">
+                                <span class="badge badge-pill badge-secondary"> + <t t-esc="acq_extra_fees[acq]" t-options='{"widget": "monetary", "display_currency": acq_extra_fees["currency_id"]}'/> Fee </span>
+                            </t>
+                            <t t-elif="acq.fees_active">
+                                <small class="text-muted">(Some fees may apply)</small>
+                            </t>
                         </label>
                         <ul class="float-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -134,11 +140,11 @@
                         <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
-                        <i class="fa fa-lock"> Pay</i>
+                        <i class="fa fa-lock"/> Pay
                     </t>
                 </button>
                 <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"> Add new card</i>
+                    <i class="fa fa-plus-circle"/> Add new card
                 </button>
             </div>
         </form>

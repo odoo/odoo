@@ -333,7 +333,7 @@ exports.PosModel = Backbone.Model.extend({
         model:  'pos.category',
         fields: ['id', 'name', 'parent_id', 'child_id'],
         domain: function(self) {
-            return self.config.limit_categories ? [['id', 'in', self.config.iface_available_categ_ids]] : [];
+            return self.config.limit_categories && self.config.iface_available_categ_ids.length ? [['id', 'in', self.config.iface_available_categ_ids]] : [];
         },
         loaded: function(self, categories){
             self.db.add_categories(categories);
@@ -346,7 +346,7 @@ exports.PosModel = Backbone.Model.extend({
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
             var domain = [['sale_ok','=',true],['available_in_pos','=',true]];
-            if (self.config.limit_categories) {
+            if (self.config.limit_categories &&  self.config.iface_available_categ_ids.length) {
                 domain.push(['pos_categ_id', 'in', self.config.iface_available_categ_ids]);
             }
             return domain;

@@ -137,7 +137,7 @@
                             <field name="effective_hours" widget="float_time" />
                             <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
                             <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
-                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
+                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('planned_hours', '=', 0.0)]}"/>
                         </group>
                     </group>
                 </page>
