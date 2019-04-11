@@ -79,6 +79,60 @@ class MigrationManager(object):
         self.graph = graph
         self.migrations = defaultdict(dict)
         self._get_files()
+        self._init_migration_history()
+
+    def _init_migration_history(self):
+        """
+        Create stages for a module graph to allow restarting the migration.
+
+        For each module, an ir_logging entry is created for the three possible stages of the migration
+        (pre, post, end) and the `line` column will contain either an empty string (the scripts have
+        not yet been applied for that stage) or a non-empty string (the scripts have been applied).
+        This trick is necessary for 'end' scripts, since we need to possibly restart them even if
+        the module's version is already up-to-date (since the `latest_version` is updated after
+        post scripts are run on an ir_module record).
+
+        Note that this mechanism assumes previous migrations were clean - there should be no
+        ir_logging entries of level `UPGRADE` prior to migration.
+
+        Also, explicit commits in a migration script will very, very probably break this feature
+        and prevent restarting a migration properly.
+        """
+        if not tools.table_exists(self.cr, 'ir_logging'):
+            # database is brand new, skip
+            return
+        for pkg in self.graph:
+            if parse_version(pkg.installed_version) > parse_version(release.major_version):
+                continue
+            version = pkg.installed_version or '0.0'  # new modules have None as installed_version
+            vals = ('server', self.cr.dbname, 'UPGRADE', version, pkg.name, 'migrate')
+            self.cr.execute("""
+                SELECT count(*)
+                FROM ir_logging
+                WHERE type=%s AND dbname=%s AND level=%s
+                AND message=%s AND path=%s AND func=%s
+            """, vals)
+            count = self.cr.fetchone()
+            if count and count[0]:
+                _logger.debug('skipping registration of migration stages for module %s currently in version %s, already done' % (pkg.name, version))
+                continue
+            _logger.debug('registering migration stages for module %s currently in version %s' % (pkg.name, version))
+            for stage in ('pre', 'post', 'end'):
+                vals = (stage, 'server', self.cr.dbname, 'UPGRADE', version, pkg.name, 'migrate', '')
+                self.cr.execute("""
+                    INSERT INTO ir_logging(name,type,dbname,level,message,path,func,line,create_date,write_date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')
+                """, vals)
+
+    def _clean_migration_history(self):
+        """
+        Remove the whole migration history in one go.
+
+        This step **must** be called once all scripts have been loaded and should
+        be followed by an explicit commit.
+        """
+        _logger.debug('cleaning migration history after successful upgrade to version %s' % release.major_version)
+        self.cr.execute("""DELETE FROM ir_logging WHERE level='UPGRADE'""")
 
     def _get_files(self):
         def get_scripts(path):
@@ -146,9 +200,49 @@ class MigrationManager(object):
             lst.sort()
             return lst
 
-        installed_version = getattr(pkg, 'load_version', pkg.installed_version) or ''
+        def _check_migration_stage(pkg, stage):
+            """Check if a module's migration stage has already been applied."""
+            vals = (stage, 'server', self.cr.dbname, 'UPGRADE', pkg.name, 'migrate')
+            self.cr.execute("""
+                SELECT count(*)
+                FROM ir_logging
+                WHERE name=%s AND type=%s AND dbname=%s
+                AND level=%s AND path=%s AND func=%s
+                AND line!=''
+            """, vals)
+            done = bool(self.cr.fetchone()[0])
+            _logger.debug('checking migration stage %s for module %s: %s' % (stage, pkg.name, 'done' if done else 'not done'))
+            return done
+
+        def _register_migration_stage(pkg, stage):
+            """Mark a module's migration stage as having been applied."""
+            _logger.debug('marking migration stage %s for module %s as done' % (stage, pkg.name))
+            vals = (stage, 'server', self.cr.dbname, 'UPGRADE', pkg.name, 'migrate')
+            self.cr.execute("""
+                UPDATE ir_logging
+                SET line='done', write_date=now() at time zone 'UTC'
+                WHERE name=%s AND type=%s AND dbname=%s
+                AND level=%s AND path=%s AND func=%s
+            """, vals)
+
+        def _get_pkg_version(pkg):
+            vals = ('end', 'server', self.cr.dbname, 'UPGRADE', pkg.name, 'migrate')
+            self.cr.execute("""
+                SELECT message
+                FROM ir_logging
+                WHERE name=%s AND type=%s AND dbname=%s
+                AND level=%s AND path=%s AND func=%s
+            """, vals)
+            version = self.cr.fetchone()
+            return version and version[0]
+
+        installed_version = getattr(pkg, 'load_version', pkg.installed_version) if stage != 'end' else _get_pkg_version(pkg) or ''
         parsed_installed_version = parse_version(installed_version)
         current_version = parse_version(convert_version(pkg.data['version']))
+
+        if _check_migration_stage(pkg, stage):
+            _logger.info('module %s: Skipping %s migration step as it was marked as done in a previous upgrade attempt' % (pkg.name, stage))
+            return
 
         versions = _get_migration_versions(pkg)
 
@@ -179,3 +273,4 @@ class MigrationManager(object):
                     finally:
                         if mod:
                             del mod
+        _register_migration_stage(pkg, stage)

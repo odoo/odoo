@@ -427,6 +427,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
+        migrations._clean_migration_history()
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
