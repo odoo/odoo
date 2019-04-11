@@ -267,7 +267,7 @@ class StockMove(models.Model):
 
         # Find back incoming stock moves (called candidates here) to value this move.
         qty_to_take_on_candidates = quantity or valued_quantity
-        candidates = move.product_id._get_fifo_candidates_in_move()
+        candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:

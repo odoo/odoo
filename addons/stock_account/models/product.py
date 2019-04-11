@@ -166,8 +166,11 @@ class ProductProduct(models.Model):
     def _get_fifo_candidates_in_move(self):
         """ Find IN moves that can be used to value OUT moves.
         """
+        return self._get_fifo_candidates_in_move_with_company()
+
+    def _get_fifo_candidates_in_move_with_company(self, move_company_id=False):
         self.ensure_one()
-        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain(move_company_id)
         candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
