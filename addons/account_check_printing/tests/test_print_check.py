@@ -61,7 +61,7 @@ class TestPrintCheck(AccountingTestCase):
     def test_print_check(self):
         # Make a payment for 10 invoices and 5 credit notes
         invoices = self.env['account.invoice']
-        for i in range(0, 15):
+        for i in range(0, 42):
             invoices |= self.create_invoice(is_refund=(i % 3 == 0))
         payment = self.create_payment(invoices)
         self.assertEqual(all(payment.mapped('check_amount_in_words')), True, 'The amount in words is not set on all the payments')
@@ -70,7 +70,7 @@ class TestPrintCheck(AccountingTestCase):
         # Check the data generated for the report
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': True})
         report_pages = payment._check_get_pages()
-        self.assertEqual(len(report_pages), int(math.ceil(len(invoices.ids) / INV_LINES_PER_STUB)))
+        self.assertEqual(len(report_pages), int(math.ceil(len(payment.reconciled_invoice_ids) / INV_LINES_PER_STUB)))
         self.env.ref('base.main_company').write({'account_check_printing_multi_stub': False})
         report_pages = payment._check_get_pages()
         self.assertEqual(len(report_pages), 1)
