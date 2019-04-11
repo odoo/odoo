@@ -480,8 +480,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'sequence': 8,
         })
 
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.valuation = 'real_time'
 
 
         # Receive 10@10 ; create the vendor bill
