@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo.exceptions import UserError
-from odoo.fields import Date, Datetime
+from odoo.fields import Datetime
 from odoo.tests.common import Form, TransactionCase
 
 
@@ -997,7 +997,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move9.remaining_qty, 0.0)  # unused in out moves
 
     def test_fifo_perpetual_3(self):
-        self.product1.cost_method = 'fifo'
+        self.product1.categ_id.property_cost_method = 'fifo'
 
         # in 10 @ 100
         move1 = self.env['stock.move'].create({
@@ -1110,7 +1110,7 @@ class TestStockValuation(TransactionCase):
     def test_fifo_perpetual_4(self):
         """ Fifo and return handling.
         """
-        self.product1.cost_method = 'fifo'
+        self.product1.categ_id.property_cost_method = 'fifo'
 
         # in 8 @ 10
         move1 = self.env['stock.move'].create({
@@ -2589,7 +2589,7 @@ class TestStockValuation(TransactionCase):
         self.assertAlmostEqual(self.product1.stock_value, 0.0)
 
     def test_average_perpetual_6(self):
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
             'name': 'Receive 1 unit at 10',
@@ -2626,7 +2626,7 @@ class TestStockValuation(TransactionCase):
         """ Test edit in the past. Receive 5@10, receive 10@20, edit the first move to receive
         15 instead.
         """
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
             'name': 'IN 5@10',
@@ -2666,7 +2666,7 @@ class TestStockValuation(TransactionCase):
         """ Receive 1@10, then dropship 1@20, finally return the dropship. Dropship should not
             impact the price.
         """
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
             'name': 'IN 1@10',

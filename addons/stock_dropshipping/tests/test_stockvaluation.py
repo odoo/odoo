@@ -270,7 +270,7 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_standard_perpetual_anglosaxon_ordered_return(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
