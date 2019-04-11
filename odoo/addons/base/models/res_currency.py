@@ -219,7 +219,7 @@ class Currency(models.Model):
         _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
         date = self._context.get('date') or fields.Date.today()
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
-        return self._convert(from_amount, to_currency, company, date)
+        return self._convert(from_amount, to_currency, company, date, round=round)
 
     def _select_companies_rates(self):
         return """
