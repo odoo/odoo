@@ -1461,12 +1461,13 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] in (1, 2)} if current else {}
+            c = {t[1] for t in current if t[0] in (1, 2)} if current else set()
             # which view should this be???
             subfields = descr['views']['edition']['fields']
+            # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
                 if command[0] in (0, 1):
-                    c.pop(command[1], None) # remove record from currents
+                    c.discard(command[1])
                     v.append((command[0], command[1], {
                         k: self._cleanup_onchange(
                             subfields[k], v, None
@@ -1475,9 +1476,11 @@ class Form(object):
                         if k in subfields
                     }))
                 elif command[0] == 2:
+                    c.discard(command[1])
                     v.append((2, command[1], False))
                 elif command[0] == 4:
-                    v.append((1, command[1], c.pop(command[1], {})))
+                    c.discard(command[1])
+                    v.append((1, command[1], {}))
                 elif command[0] == 5:
                     v = []
             # explicitly mark all non-relinked (or modified) records as deleted
