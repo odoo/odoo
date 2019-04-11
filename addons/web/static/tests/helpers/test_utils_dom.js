@@ -167,15 +167,6 @@ function triggerKeypressEvent(char) {
 }
 
 /**
- * Opens the datepicker of a given element.
- *
- * @param {jQuery} $datepickerEl element to which a datepicker is attached
- */
-function openDatepicker($datepickerEl) {
-    $datepickerEl.find('.o_datepicker_input').trigger('focus.datetimepicker');
-}
-
-/**
  * Click on a specified element. If the option first or last is not specified,
  * this method also check the unicity and the visibility of the target.
  *
@@ -274,6 +265,16 @@ function triggerEvents($el, events) {
         $el.trigger(event);
     });
     return concurrency.delay(0);
+}
+
+
+/**
+ * Opens the datepicker of a given element.
+ *
+ * @param {jQuery} $datepickerEl element to which a datepicker is attached
+ */
+function openDatepicker($datepickerEl) {
+    click($datepickerEl.find('.o_datepicker_input'));
 }
 
 
