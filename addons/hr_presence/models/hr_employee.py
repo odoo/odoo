@@ -133,12 +133,15 @@ Please, take appropriate measures in order to carry out this work absence.
 Do not hesitate to contact your manager or the human resource department.""")
         return {
             "type": "ir.actions.act_window",
-            "res_model": "sms.send_sms",
+            "res_model": "sms.compose.message",
             "view_mode": 'form',
             "context": {
                 'active_id': self.id,
-                'default_message': body,
-                'default_recipients': self.mobile_phone,
+                'default_content': body,
+                'default_recipient_ids': [(0, False, {
+                    'partner_id': self.user_partner_id.id if self.user_partner_id else False,
+                    'number': self.mobile_phone
+                })]
             },
             "name": "Send SMS",
             "target": "new",

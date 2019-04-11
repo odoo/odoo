@@ -4,21 +4,19 @@ odoo.define('sms.sms_widget', function (require) {
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-var dom = require('web.dom');
-var framework = require('web.framework');
-
 
 var FieldText = basicFields.FieldText;
-var InputField = basicFields.InputField;
+
 var QWeb = core.qweb;
 
-var _t = core._t
+var _t = core._t;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = InputField.extend({
+var SmsWidget = FieldText.extend({
+    className: 'o_field_text',
     /**
      * @constructor
      */
@@ -27,7 +25,6 @@ var SmsWidget = InputField.extend({
         this.nbrChar = 0;
         this.nbrSMS = 0;
         this.encoding = "GSM7";
-        this.tagName = 'div';
     },
 
     //--------------------------------------------------------------------------
@@ -71,8 +68,10 @@ var SmsWidget = InputField.extend({
      * @override
      */
     _renderEdit: function () {
-        this.$el.empty();
-        this._prepareInput($('<textarea/>')).appendTo(this.$el);
+        this._super.apply(this, arguments);
+        var tmp = this.$el;
+        this.$el = $('<div/>');
+        this.$el.append(tmp);
         this.$el.append($(QWeb.render("sms.sms_count", {})));
         this._compute();
     },
@@ -98,7 +97,7 @@ var SmsWidget = InputField.extend({
 
     //--------------------------------------------------------------------------
     // Handlers
-    //--------------------------------------------------------------------------   
+    //--------------------------------------------------------------------------
 
     /**
      * @override

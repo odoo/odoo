@@ -15,12 +15,11 @@
                     <button
                         type="action"
                         name="%(sms.send_sms_form_action)d"
-                        class="btn-sm btn-link mb4 fa fa-envelope-o"
-                        aria-label="Send SMS"
-                        title="Send SMS"
+                        class="btn-sm btn-link mb4 fa fa-comment"
+                        aria-label="Send SMS Text Message"
+                        title="Send SMS Text Message"
                         attrs="{'invisible':[('phone', '=', False)]}"
-                        context="{'field_name': 'phone'}"
-                    />
+                        context="{'field_name': 'phone'}" />
                 </div>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="replace">
@@ -30,15 +29,27 @@
                     <button
                         type="action"
                         name="%(sms.send_sms_form_action)d"
-                        class="btn-sm btn-link mb4 fa fa-envelope-o"
-                        aria-label="Send SMS"
-                        title="Send SMS"
+                        class="btn-sm btn-link mb4 fa fa-comment"
+                        aria-label="Send SMS Text Message"
+                        title="Send SMS Text Message"
                         attrs="{'invisible':[('mobile', '=', False)]}"
-                        context="{'field_name': 'mobile'}"
-                        />
-                    </div>
-                </xpath>
+                        context="{'field_name': 'mobile'}" />
+                </div>
+            </xpath>
         </field>
     </record>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window 
+        id="send_sms_action"
+        name="Send SMS Text Message"
+        src_model="res.partner"
+        res_model="sms.compose.message"
+        view_type="form"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"
+        multi="True"
+        context="{'default_composition_mode': 'mass_sms'}" />
 
 </odoo>

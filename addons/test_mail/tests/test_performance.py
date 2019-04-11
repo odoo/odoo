@@ -219,7 +219,7 @@ class TestAdvMailPerformance(TransactionCase):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=37, emp=44):  # test_mail only: 37 - 44
+        with self.assertQueryCount(__system__=38, emp=45):  # test_mail only: 37 - 44
             record.write({
                 'user_id': self.user_test.id,
             })
