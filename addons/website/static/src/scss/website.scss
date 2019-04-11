@@ -1050,6 +1050,12 @@ table.table_desc tr td {
     background: $light;
     margin-top: -999px;
     transition: margin-top 500ms ease 0s;
+    @include media-breakpoint-down(sm) {
+        .navbar-collapse {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    }
     &.affixed {
         margin-top: 0px !important; // the default margin-top is adapted in JS
     }
