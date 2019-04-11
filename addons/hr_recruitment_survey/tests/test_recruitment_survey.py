@@ -14,11 +14,16 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         cls.department_admins = cls.env['hr.department'].create({'name': 'Admins'})
         cls.survey_sysadmin = cls.env['survey.survey'].create({'title': 'Questions for Sysadmin job offer'})
 
+        cls.job = cls.env['hr.job'].create({
+            'name': 'Technical worker',
+            'survey_id': cls.survey_sysadmin.id,
+        })
         cls.job_sysadmin = cls.env['hr.applicant'].create({
             'name': 'Technical worker',
             'department_id': cls.department_admins.id,
-            'description': 'A nice Sys Admin job offer !'})
-        cls.job_sysadmin.survey_id = cls.survey_sysadmin
+            'description': 'A nice Sys Admin job offer !',
+            'job_id': cls.job.id,
+        })
 
     def test_start_survey(self):
         # We ensure that response is False because we don't know test order
