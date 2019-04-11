@@ -266,10 +266,8 @@ class Partner(models.Model):
     @api.depends('vat')
     def _compute_same_vat_partner_id(self):
         for partner in self:
-            partner_id = partner.id
-            if isinstance(partner_id, models.NewId):
-                # deal with onchange(), which is always called on a single record
-                partner_id = self._origin.id
+            # use _origin to deal with onchange()
+            partner_id = partner._origin.id
             domain = [('vat', '=', partner.vat)]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
@@ -379,7 +377,7 @@ class Partner(models.Model):
         if not self.parent_id:
             return
         result = {}
-        partner = getattr(self, '_origin', self)
+        partner = self._origin
         if partner.parent_id and partner.parent_id != self.parent_id:
             result['warning'] = {
                 'title': _('Warning'),

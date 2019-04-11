@@ -535,7 +535,7 @@ class IrModelFields(models.Model):
             # check whether other fields use the same table
             others = self.search([('ttype', '=', 'many2many'),
                                   ('relation_table', '=', self.relation_table),
-                                  ('id', 'not in', self._origin.ids)])
+                                  ('id', 'not in', self.ids)])
             if others:
                 for other in others:
                     if (other.model, other.relation) == (self.relation, self.model):

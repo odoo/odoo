@@ -956,10 +956,154 @@ class TestFields(common.TransactionCase):
         discussion = discussion.with_context(default_categories=[(4, cat1.id)])
         # no value gives the default value
         new_disc = discussion.new({'name': "Foo"})
-        self.assertEqual(new_disc.categories, cat1)
+        self.assertEqual(new_disc.categories._origin, cat1)
         # value is combined with default value
         new_disc = discussion.new({'name': "Foo", 'categories': [(4, cat2.id)]})
-        self.assertEqual(new_disc.categories, cat1 + cat2)
+        self.assertEqual(new_disc.categories._origin, cat1 + cat2)
+
+    def test_40_new_fields(self):
+        """ Test new records with relational fields. """
+        # create a new discussion with all kinds of relational fields
+        msg0 = self.env['test_new_api.message'].create({'body': "XXX"})
+        msg1 = self.env['test_new_api.message'].create({'body': "WWW"})
+        cat0 = self.env['test_new_api.category'].create({'name': 'AAA'})
+        cat1 = self.env['test_new_api.category'].create({'name': 'DDD'})
+        new_disc = self.env['test_new_api.discussion'].new({
+            'name': "Stuff",
+            'moderator': self.env.uid,
+            'messages': [
+                (4, msg0.id),
+                (4, msg1.id), (1, msg1.id, {'body': "YYY"}),
+                (0, 0, {'body': "ZZZ"})
+            ],
+            'categories': [
+                (4, cat0.id),
+                (4, cat1.id), (1, cat1.id, {'name': "BBB"}),
+                (0, 0, {'name': "CCC"})
+            ],
+        })
+        self.assertFalse(new_disc.id)
+
+        # many2one field values are actual records
+        self.assertEqual(new_disc.moderator.id, self.env.uid)
+
+        # x2many fields values are new records
+        new_msg0, new_msg1, new_msg2 = new_disc.messages
+        self.assertFalse(new_msg0.id)
+        self.assertFalse(new_msg1.id)
+        self.assertFalse(new_msg2.id)
+
+        new_cat0, new_cat1, new_cat2 = new_disc.categories
+        self.assertFalse(new_cat0.id)
+        self.assertFalse(new_cat1.id)
+        self.assertFalse(new_cat2.id)
+
+        # the x2many has its inverse field set
+        self.assertEqual(new_msg0.discussion, new_disc)
+        self.assertEqual(new_msg1.discussion, new_disc)
+        self.assertEqual(new_msg2.discussion, new_disc)
+
+        self.assertFalse(msg0.discussion)
+        self.assertFalse(msg1.discussion)
+
+        self.assertEqual(new_cat0.discussions, new_disc)    # add other discussions
+        self.assertEqual(new_cat1.discussions, new_disc)
+        self.assertEqual(new_cat2.discussions, new_disc)
+
+        self.assertNotIn(new_disc, cat0.discussions)
+        self.assertNotIn(new_disc, cat1.discussions)
+
+        # new lines are connected to their origin
+        self.assertEqual(new_msg0._origin, msg0)
+        self.assertEqual(new_msg1._origin, msg1)
+        self.assertFalse(new_msg2._origin)
+
+        self.assertEqual(new_cat0._origin, cat0)
+        self.assertEqual(new_cat1._origin, cat1)
+        self.assertFalse(new_cat2._origin)
+
+        # the field values are either specific, or the same as the origin
+        self.assertEqual(new_msg0.body, "XXX")
+        self.assertEqual(new_msg1.body, "YYY")
+        self.assertEqual(new_msg2.body, "ZZZ")
+
+        self.assertEqual(msg0.body, "XXX")
+        self.assertEqual(msg1.body, "WWW")
+
+        self.assertEqual(new_cat0.name, "AAA")
+        self.assertEqual(new_cat1.name, "BBB")
+        self.assertEqual(new_cat2.name, "CCC")
+
+        self.assertEqual(cat0.name, "AAA")
+        self.assertEqual(cat1.name, "DDD")
+
+        # special case for many2one fields that define _inherits
+        new_email = self.env['test_new_api.emailmessage'].new({'body': "XXX"})
+        self.assertFalse(new_email.id)
+        self.assertTrue(new_email.message)
+        self.assertFalse(new_email.message.id)
+        self.assertEqual(new_email.body, "XXX")
+
+        new_email = self.env['test_new_api.emailmessage'].new({'message': msg0.id})
+        self.assertFalse(new_email.id)
+        self.assertFalse(new_email._origin)
+        self.assertFalse(new_email.message.id)
+        self.assertEqual(new_email.message._origin, msg0)
+        self.assertEqual(new_email.body, "XXX")
+
+    def test_40_new_ref_origin(self):
+        """ Test the behavior of new records with ref/origin. """
+        Discussion = self.env['test_new_api.discussion']
+        new = Discussion.new
+
+        # new records with identical/different refs
+        xs = new() + new(ref='a') + new(ref='b') + new(ref='b')
+        self.assertEqual([x == y for x in xs for y in xs], [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            0, 0, 1, 1,
+        ])
+        for x in xs:
+            self.assertFalse(x._origin)
+
+        # new records with identical/different origins
+        a, b = Discussion.create([{'name': "A"}, {'name': "B"}])
+        xs = new() + new(origin=a) + new(origin=b) + new(origin=b)
+        self.assertEqual([x == y for x in xs for y in xs], [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            0, 0, 1, 1,
+        ])
+        self.assertFalse(xs[0]._origin)
+        self.assertEqual(xs[1]._origin, a)
+        self.assertEqual(xs[2]._origin, b)
+        self.assertEqual(xs[3]._origin, b)
+        self.assertEqual(xs._origin, a + b + b)
+        self.assertEqual(xs._origin._origin, a + b + b)
+
+        # new records with refs and origins
+        x1 = new(ref='a')
+        x2 = new(origin=b)
+        self.assertNotEqual(x1, x2)
+
+        # new discussion based on existing discussion
+        disc = self.env.ref('test_new_api.discussion_0')
+        new_disc = disc.new(origin=disc)
+        self.assertFalse(new_disc.id)
+        self.assertEqual(new_disc._origin, disc)
+        self.assertEqual(new_disc.name, disc.name)
+        # many2one field
+        self.assertEqual(new_disc.moderator, disc.moderator)
+        # one2many field
+        self.assertTrue(new_disc.messages)
+        self.assertNotEqual(new_disc.messages, disc.messages)
+        self.assertEqual(new_disc.messages._origin, disc.messages)
+        # many2many field
+        self.assertTrue(new_disc.participants)
+        self.assertNotEqual(new_disc.participants, disc.participants)
+        self.assertEqual(new_disc.participants._origin, disc.participants)
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
@@ -1004,6 +1148,16 @@ class TestFields(common.TransactionCase):
             # read the related field discussion_name
             self.assertNotEqual(message.sudo().env, message.env)
             self.assertEqual(message.discussion_name, discussion.name)
+
+    def test_43_new_related(self):
+        """ test the behavior of one2many related fields """
+        partner = self.env['res.partner'].create({
+            'name': 'Foo',
+            'child_ids': [(0, 0, {'name': 'Bar'})],
+        })
+        multi = self.env['test_new_api.multi'].new()
+        multi.partner = partner
+        self.assertEqual(multi.partners.mapped('name'), ['Bar'])
 
     def test_50_defaults(self):
         """ test default values. """
