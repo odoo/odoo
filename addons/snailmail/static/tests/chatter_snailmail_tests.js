@@ -92,6 +92,10 @@ QUnit.module('Chatter', {
                     res_id: 1,
                     message_type: 'snailmail',
                 }],
+            },
+            "ir.attachment": {
+                fields: {},
+                records: [],
             }
         };
     },

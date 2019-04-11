@@ -314,9 +314,6 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
-        # One a piece is produced, you can launch the next work order
-        self._start_nextworkorder()
-
         # If last work order, then post lots used
         if not self.next_work_order_id:
             self._update_finished_move()
@@ -337,6 +334,9 @@ class MrpWorkorder(models.Model):
             # As we may have changed the quantity to produce on the next workorder,
             # make sure to update its wokorder lines
             self.next_work_order_id._apply_update_workorder_lines()
+
+        # One a piece is produced, you can launch the next work order
+        self._start_nextworkorder()
 
         # Test if the production is done
         rounding = self.production_id.product_uom_id.rounding
@@ -407,12 +407,13 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def _start_nextworkorder(self):
-        for record in self:
-            if record.next_work_order_id.state == 'pending':
-                record.next_work_order_id.state = 'ready'
-
-    def _init_nextworkorder_states(self):
-        return 'pending'
+        rounding = self.product_id.uom_id.rounding
+        if self.next_work_order_id.state == 'pending' and (
+                (self.operation_id.batch == 'no' and
+                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
+                (self.operation_id.batch == 'yes' and
+                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
+            self.next_work_order_id.state = 'ready'
 
     @api.multi
     def button_start(self):
