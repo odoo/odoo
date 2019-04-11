@@ -60,6 +60,8 @@ def report_configuration():
     if os.path.isfile(config.rcfile):
         _logger.info("Using configuration file at " + config.rcfile)
     _logger.info('addons paths: %s', odoo.modules.module.ad_paths)
+    if config.get('upgrades_paths'):
+        _logger.info('upgrades path: %s', config['upgrades_paths'])
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
