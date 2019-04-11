@@ -206,7 +206,12 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
         if name.startswith(addons_path):
             break
     else:
-        raise ValueError("Unknown path: %s" % name)
+        for upgrades_path in config.options.get('upgrades_paths').split(','):
+            upgrades_path = os.path.normpath(os.path.normcase(upgrades_path)) + os.sep
+            if name.startswith(upgrades_path):
+                break
+        else:
+            raise ValueError("Unknown path: %s" % name)
 
     if basename is None:
         basename = name
