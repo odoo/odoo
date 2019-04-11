@@ -130,8 +130,14 @@ class MrpWorkorder(models.Model):
             if line:
                 self.qty_producing = line.qty_done
 
+    @api.depends('production_id.workorder_ids.finished_workorder_line_ids',
+    'production_id.workorder_ids.finished_workorder_line_ids.qty_done',
+    'production_id.workorder_ids.finished_workorder_line_ids.lot_id')
     def _compute_allowed_lots_domain(self):
-        """ browse already created lot and respective quantities"""
+        """ Check if all the finished products has been assigned to a serial
+        number or a lot in other workorders. If yes, restrict the selectable lot
+        to the lot/sn used in other workorders.
+        """
         productions = self.mapped('production_id')
         for production in productions:
             if production.product_id.tracking == 'none':
@@ -141,7 +147,10 @@ class MrpWorkorder(models.Model):
             finished_workorder_lines = production.workorder_ids.mapped('finished_workorder_line_ids')
             qties_done_per_lot = defaultdict(list)
             for finished_workorder_line in finished_workorder_lines:
-                qties_done_per_lot[finished_workorder_line.lot_id.id].append(finished_workorder_line.qty_done)
+                # It is possible to have finished workorder lines without a lot (eg using the dummy
+                # test type). Ignore them when computing the allowed lots.
+                if finished_workorder_line.lot_id:
+                    qties_done_per_lot[finished_workorder_line.lot_id.id].append(finished_workorder_line.qty_done)
 
             qty_to_produce = production.product_qty
             allowed_lot_ids = self.env['stock.production.lot']
@@ -321,8 +330,8 @@ class MrpWorkorder(models.Model):
         # Transfer quantities from temporary to final move line or make them final
         self._update_raw_moves()
 
-        # Transfert lot and quantity produced to a finished workorder line
-        if self.product_tracking != 'none' and self.final_lot_id:
+        # Transfer lot (if present) and quantity produced to a finished workorder line
+        if self.product_tracking != 'none':
             self._create_or_update_finished_line()
 
         # Update workorder quantity produced
@@ -380,10 +389,13 @@ class MrpWorkorder(models.Model):
             # In this case we select 4 since it would conflict with the first
             # workorder otherwise.
             line = workorder.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
-            if line and float_compare(line.qty_done + workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) <= 0:
-                final_lot_quantity = line.qty_done + workorder.qty_remaining
-            elif float_compare(workorder.qty_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
-                final_lot_quantity = workorder.qty_remaining
+            line_without_lot = workorder.finished_workorder_line_ids.filtered(lambda line: line.product_id == workorder.product_id and not line.lot_id)
+            quantity_remaining = workorder.qty_remaining + line_without_lot.qty_done
+            quantity = line.qty_done + quantity_remaining
+            if line and float_compare(quantity, final_lot_quantity, precision_rounding=rounding) <= 0:
+                final_lot_quantity = quantity
+            elif float_compare(quantity_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
+                final_lot_quantity = quantity_remaining
 
         # final lot line for this lot on this workorder.
         current_lot_lines = self.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.final_lot_id)
