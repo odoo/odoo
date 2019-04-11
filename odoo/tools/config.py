@@ -118,6 +118,9 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
+        group.add_option("--upgrades-paths", dest="upgrades_paths",
+                         help="specify an additional upgrades path.",
+                         action="callback", callback=self._check_upgrades_paths, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
@@ -420,7 +423,7 @@ class configmanager(object):
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
-                'db_maxconn', 'import_partial', 'addons_path',
+                'db_maxconn', 'import_partial', 'addons_path', 'upgrades_paths',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
@@ -485,6 +488,13 @@ class configmanager(object):
                     os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
 
+        self.options['upgrades_paths'] = (
+            ",".join(os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
+                for x in self.options['upgrades_paths'].split(','))
+            if self.options['upgrades_paths']
+            else ""
+        )
+
         self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
@@ -538,6 +548,16 @@ class configmanager(object):
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _check_upgrades_paths(self, option, opt, value, parser):
+        upgrades_paths = []
+        for path in value.split(','):
+            path = path.strip()
+            res = os.path.abspath(os.path.expanduser(os.path.expandvars(path)))
+            if not os.path.isdir(res):
+                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
+            upgrades_paths.append(res)
+        setattr(parser.values, option.dest, ",".join(upgrades_paths))
 
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
