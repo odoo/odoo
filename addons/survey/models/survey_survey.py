@@ -278,7 +278,9 @@ class Survey(models.Model):
         """
         survey = user_input.survey_id
 
-        if survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
+        if survey.questions_layout == 'one_page':
+            return (None, False)
+        elif survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
             pages_or_questions = list(enumerate(
                 user_input.question_ids
             ))
@@ -451,7 +453,7 @@ class Survey(models.Model):
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
-        if (not self.page_ids and self.questions_layout != 'page_per_question') or not self.question_ids:
+        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         if self.stage_id.closed:
