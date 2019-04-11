@@ -6,13 +6,11 @@
         <field name="model">survey.stage</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <header>
-                    <field name="state" widget="statusbar" options="{'clickable':'1'}"/>
-                </header>
                 <group col='4' colspan='4'>
                     <field name="name" />
                     <field name="sequence" />
                     <field name="fold" />
+                    <field name="state" />
                 </group>
             </form>
         </field>

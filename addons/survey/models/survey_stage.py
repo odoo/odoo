@@ -10,7 +10,7 @@ class SurveyStage(models.Model):
     _order = 'sequence,id'
 
     name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer(default=1)
+    sequence = fields.Integer(default=1, required=True)
     fold = fields.Boolean(string="Folded in kanban view")
 
     state = fields.Selection(
@@ -19,7 +19,7 @@ class SurveyStage(models.Model):
                 ('draft', 'Draft'),
                 ('open', 'In Progress'),
                 ('closed', 'Closed'),
-        ], default='draft',
+        ], default='draft', required=True,
     )
 
     _sql_constraints = [
