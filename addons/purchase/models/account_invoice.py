@@ -25,10 +25,6 @@ class AccountInvoice(models.Model):
             return {}
         self.purchase_id = self.vendor_bill_purchase_id.purchase_order_id
         self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
-        vendor_ref = self.vendor_bill_purchase_id.purchase_order_id.partner_ref
-        if vendor_ref:
-            self.reference = ", ".join([self.reference, vendor_ref]) if (
-                    self.reference and vendor_ref not in self.reference) else vendor_ref
         self.vendor_bill_purchase_id = False
         return {}
 
@@ -97,6 +93,11 @@ class AccountInvoice(models.Model):
             return {}
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
+
+        vendor_ref = self.purchase_id.partner_ref
+        if vendor_ref:
+            self.reference = ", ".join([self.reference, vendor_ref]) if (
+                    self.reference and vendor_ref not in self.reference) else vendor_ref
 
         if not self.invoice_line_ids:
             #as there's no invoice line yet, we keep the currency of the PO
