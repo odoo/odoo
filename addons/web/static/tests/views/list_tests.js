@@ -298,7 +298,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable list datetimepicker destroy widget', async function (assert) {
+    QUnit.test('editable list datetimepicker destroy widget (edition)', async function (assert) {
+        assert.expect(6);
+        var eventPromise = testUtils.makeTestPromise();
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+        list.$el.on({
+            'show.datetimepicker': async function () {
+                assert.containsOnce(list, '.o_selected_row');
+                assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
+                await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
+
+                assert.containsNone(list, '.o_selected_row');
+                assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+
+                eventPromise.resolve();
+            }
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_selected_row');
+
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+
+        await eventPromise;
+        list.destroy();
+    });
+
+    QUnit.test('editable list datetimepicker destroy widget (new line)', async function (assert) {
         assert.expect(7);
         var eventPromise = testUtils.makeTestPromise();
 
