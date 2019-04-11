@@ -299,7 +299,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list datetimepicker destroy widget (edition)', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
         var eventPromise = testUtils.makeTestPromise();
 
         var list = await createView({
@@ -317,8 +317,12 @@ QUnit.module('Views', {
 
                 await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
 
-                assert.containsNone(list, '.o_selected_row');
+                assert.containsOnce(list, '.o_selected_row');
                 assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+
+                await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+
+                assert.containsNone(list, '.o_selected_row');
 
                 eventPromise.resolve();
             }
@@ -328,13 +332,14 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_selected_row');
 
         await testUtils.dom.click(list.$('.o_data_cell:first'));
+        await testUtils.dom.openDatepicker(list.$('.o_datepicker'));
 
         await eventPromise;
         list.destroy();
     });
 
     QUnit.test('editable list datetimepicker destroy widget (new line)', async function (assert) {
-        assert.expect(7);
+        assert.expect(10);
         var eventPromise = testUtils.makeTestPromise();
 
         var list = await createView({
@@ -347,22 +352,20 @@ QUnit.module('Views', {
         });
         list.$el.on({
             'show.datetimepicker': async function () {
-                assert.equal($('.bootstrap-datetimepicker-widget').length, 1,
-                    'The datetimepicker is open');
-
-                assert.equal(list.$('.o_data_row').length, 5,
-                    'There should be 5 rows');
-
-                assert.equal(list.$('.o_selected_row').length, 1,
-                    'One row in edit mode');
+                assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+                assert.containsN(list, '.o_data_row', 5);
+                assert.containsOnce(list, '.o_selected_row');
 
                 await testUtils.fields.triggerKeydown(list.$('.o_datepicker_input'), 'escape');
 
-                assert.equal(list.$('.o_data_row').length, 4,
-                    'There should be 4 rows');
+                assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+                assert.containsN(list, '.o_data_row', 5);
+                assert.containsOnce(list, '.o_selected_row');
 
-                assert.equal(list.$('.o_selected_row').length, 0,
-                    'No row should be in edit mode');
+                await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+
+                assert.containsN(list, '.o_data_row', 4);
+                assert.containsNone(list, '.o_selected_row');
 
                 eventPromise.resolve();
             }
@@ -374,6 +377,7 @@ QUnit.module('Views', {
             'No row should be in edit mode');
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.openDatepicker(list.$('.o_datepicker'));
 
         await eventPromise;
         list.destroy();
