@@ -148,5 +148,19 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
         </record>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image']" position="before">
+                    <div groups="hr.group_hr_user" class="alert alert-danger text-center" role="alert" attrs="{'invisible': [('employee_warning', '=', False)]}">
+                        <a class="close" data-dismiss="alert" href="#">x</a>
+                        <field name="employee_warning" nolabel="1" class="oe_inline"/> <button class="oe_inline oe_link p-0" type="object" name="action_create_employee">Click here to create it.</button>.
+                    </div>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

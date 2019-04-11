@@ -149,9 +149,9 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="country_group_ids"/>
                         </group>
-                        <div groups="product.group_pricelist_item">
+                        <div>
                             <separator string="Pricelist Items"/>
-                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_pricelist_item">
                                 <tree string="Pricelist Items">
                                     <field name="name" string="Applicable On"/>
                                     <field name="min_quantity"/>
@@ -169,6 +169,30 @@
                 </form>
             </field>
         </record>
+
+        <record id="product_pricelist_view_inherit" model="ir.ui.view">
+            <field name="name">product.pricelist.form.inherit</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="groups_id" eval="[(4, ref('product.group_product_pricelist'))]"/>
+            <field name="arch" type="xml">
+                <field name="item_ids" position="replace">
+                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                        <tree string="Pricelist Items" editable="bottom">
+                            <field name="product_tmpl_id" string="Products" required="1"/>
+                            <field name="product_id" string="Variants" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
+                            <field name="fixed_price" string="Price" widget="monetary"/>
+                            <field name="min_quantity"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="base" invisible="1"/>
+                            <field name="applied_on" invisible="1"/>
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
             <field name="name">website_sale.country_group.form</field>
             <field name="model">res.country.group</field>

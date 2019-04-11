@@ -1410,10 +1410,12 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-            threading.current_thread().url = httprequest.url
-            threading.current_thread().query_count = 0
-            threading.current_thread().query_time = 0
-            threading.current_thread().perf_t0 = time.time()
+            
+            current_thread = threading.current_thread()
+            current_thread.url = httprequest.url
+            current_thread.query_count = 0
+            current_thread.query_time = 0
+            current_thread.perf_t0 = time.time()
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)

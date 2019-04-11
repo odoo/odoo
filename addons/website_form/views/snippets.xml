@@ -14,12 +14,12 @@
         </template>
 
         <template id="remove_external_snippets" inherit_id="website.external_snippets">
-            <xpath expr="//t[@t-install='website_form_editor']" position="replace"/>
+            <xpath expr="//t[@t-install='website_form']" position="replace"/>
         </template>
 
         <template id="register_s_website_form" inherit_id="website.snippets" name="Snippet Form Builder">
             <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
-                <t t-snippet="website_form_editor.s_website_form" t-thumbnail="/website/static/src/img/s_website_form.png"/>
+                <t t-snippet="website_form.s_website_form" t-thumbnail="/website/static/src/img/s_website_form.png"/>
             </xpath>
         </template>
 

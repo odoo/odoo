@@ -5,6 +5,7 @@ var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
 var portalChatter = require('portal.chatter');
+var utils = require('web.utils');
 
 var _t = core._t;
 
@@ -219,11 +220,11 @@ PortalChatter.include({
                 'avg': Math.round(result['rating_stats']['avg'] / STAR_RATING_RATIO * 100) / 100,
                 'percent': [],
             };
-            _.each(_.keys(result['rating_stats']['percent']), function (rating) {
+            _.each(_.keys(result['rating_stats']['percent']).reverse(), function (rating) {
                 if (rating % 2 === 0) {
                     ratingData['percent'].push({
                         'num': rating / STAR_RATING_RATIO,
-                        'percent': result['rating_stats']['percent'][rating],
+                        'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
                     });
                 }
             });
