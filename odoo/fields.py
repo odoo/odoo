@@ -1072,13 +1072,13 @@ class Field(MetaField('DummyField', (object,), {})):
         fields = records._field_computed[self]
         cache = records.env.cache
 
+        for record in records:
+            record.env.remove_todo(self, record)
         if isinstance(self.compute, str):
             getattr(records, self.compute)()
-            for record in records:
-                if record.env.check_todo(self, record):
-                    record.env.remove_todo(self, record)
         else:
             self.compute(records)
+
         if (records._name.startswith('account.move')) and (self.name in ('company_id','journal_id','currency_id')):
             print('         end computing', self.name, records._name, records.ids)
         # for field in fields:
