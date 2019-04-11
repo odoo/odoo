@@ -79,6 +79,11 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
+        vendor_ref = self.purchase_id.partner_ref
+        if vendor_ref:
+            self.reference = ", ".join([self.reference, vendor_ref]) if (
+                    self.reference and vendor_ref not in self.reference) else vendor_ref
+
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
