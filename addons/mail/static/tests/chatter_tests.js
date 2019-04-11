@@ -2260,11 +2260,9 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
                     this.data.partner.records[0].message_follower_ids = [1];
                     followers.push({
                         id: 1,
-                        is_uid: true,
                         name: "Admin",
                         email: "admin@example.com",
-                        res_id: resID,
-                        res_model: 'partner',
+                        partner_id: resID,
                     });
                 }
                 return Promise.resolve(true);
@@ -2464,23 +2462,20 @@ QUnit.test('followers widget: display inactive followers with a different style'
         id: 1,
         name: "Admin",
         email: "admin@example.com",
-        res_id: 101,
-        res_model: 'partner',
-        active: true,
+        partner_id: 101,
+        is_active: true,
     },{
         id: 2,
         name: "Active_partner",
         email: "active_partner@example.com",
-        res_id: 102,
-        res_model: 'partner',
-        active: true,
+        partner_id: 102,
+        is_active: true,
     },{
         id: 3,
         name: "Inactive_partner",
         email: "inactive_partner@example.com",
-        res_id: 103,
-        res_model: 'partner',
-        active: false,
+        partner_id: 103,
+        is_active: false,
     }];
 
     var form = await createView({
@@ -2737,11 +2732,9 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
     var followers = [];
     followers.push({
         id: 1,
-        is_uid: true,
         name: "Admin",
         email: "admin@example.com",
-        res_id: 5,
-        res_model: 'partner',
+        partner_id: 5,
     });
 
     var form = await createView({
@@ -2780,11 +2773,9 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
                 self.data.partner.records[0].message_follower_ids.push(2);
                 followers.push({
                     id: 2,
-                    is_uid: true,
                     name: "Demo User",
                     email: "demo-user@example.com",
-                    res_id: 8,
-                    res_model: 'partner',
+                    partner_id: 8,
                 });
 
                 // post a legit message so that it does not crashes

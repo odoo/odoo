@@ -218,7 +218,8 @@ class Cursor(object):
 
         if self.sql_log:
             encoding = psycopg2.extensions.encodings[self.connection.encoding]
-            _logger.debug("query: %s", self._obj.mogrify(query, params).decode(encoding, 'replace'))
+            _logger.debug(self._obj.mogrify(query, params).decode(encoding, 'replace'))
+
         now = time.time()
         try:
             params = params or None
@@ -227,6 +228,7 @@ class Cursor(object):
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
             raise
+
 
         # simple query count is always computed
         self.sql_log_count += 1

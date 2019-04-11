@@ -35,6 +35,9 @@ class Followers(models.Model):
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
+    name = fields.Char('Name', compute='_compute_fields', required=True, index=True)
+    email = fields.Char('Email', compute='_compute_fields', required=True, index=True)
+    is_active = fields.Boolean('Is Active', compute='_compute_fields', required=True, index=True)
 
     def _invalidate_documents(self, vals_list=None):
         """ Invalidate the cache of the documents followed by ``self``.
@@ -77,6 +80,17 @@ class Followers(models.Model):
     # --------------------------------------------------
     # Private tools methods to fetch followers data
     # --------------------------------------------------
+
+    @api.depends('partner_id', 'channel_id')
+    def _compute_fields(self):
+        for follower in self:
+            if follower.partner_id:
+                follower.name = follower.partner_id.name
+                follower.email = follower.partner_id.email
+                follower.is_active = follower.partner_id.active
+            else:
+                follower.name = follower.channel_id.name
+                follower.is_active = bool(follower.channel_id)
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None, cids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
@@ -225,7 +239,7 @@ GROUP BY fol.id%s""" % (
     # --------------------------------------------------
 
     def _insert_followers(self, res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes,
-                          customer_ids=None, check_existing=False, existing_policy='skip'):
+                          customer_ids=None, check_existing=True, existing_policy='skip'):
         """ Main internal method allowing to create or update followers for documents, given a
         res_model and the document res_ids. This method does not handle access rights. This is the
         role of the caller to ensure there is no security breach.
@@ -240,7 +254,7 @@ GROUP BY fol.id%s""" % (
         """
         sudo_self = self.sudo()
         if not partner_subtypes and not channel_subtypes:  # no subtypes -> default computation, no force, skip existing
-            new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
+            new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids, check_existing=check_existing)
         else:
             new, upd = self._add_followers(res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes, check_existing=check_existing, existing_policy=existing_policy)
         if new:
@@ -252,7 +266,7 @@ GROUP BY fol.id%s""" % (
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
 
-    def _add_default_followers(self, res_model, res_ids, partner_ids, channel_ids=None, customer_ids=None):
+    def _add_default_followers(self, res_model, res_ids, partner_ids, channel_ids=None, customer_ids=None, check_existing=True):
         """ Shortcut to ``_add_followers`` that computes default subtypes. Existing
         followers are skipped as their subscription is considered as more important
         compared to new default subscription.
@@ -273,7 +287,7 @@ GROUP BY fol.id%s""" % (
         c_stypes = dict.fromkeys(channel_ids or [], default.ids)
         p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
 
-        return self._add_followers(res_model, res_ids, partner_ids, p_stypes, channel_ids, c_stypes, check_existing=True, existing_policy='skip')
+        return self._add_followers(res_model, res_ids, partner_ids, p_stypes, channel_ids, c_stypes, check_existing=check_existing, existing_policy='skip')
 
     def _add_followers(self, res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes,
                        check_existing=False, existing_policy='skip'):

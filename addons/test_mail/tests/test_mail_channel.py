@@ -96,13 +96,17 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
         trigger_read = chell_pigs.name
         for message in chell_pigs.message_ids:
             trigger_read = message.subject
-        for partner in chell_pigs.message_partner_ids:
+        
+        with self.assertRaises(except_orm): # todo check but should use read_follower
+            chell_pigs.message_partner_ids
+
+        for partner in self.group_private.message_partner_ids:
             if partner.id == self.user_portal.partner_id.id:
                 # Chell can read her own partner record
                 continue
             # TODO Change the except_orm to Warning
             with self.assertRaises(except_orm):
-                trigger_read = partner.name
+                trigger_read = partner.with_user(self.user_portal).name
 
 
 class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):

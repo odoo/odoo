@@ -141,48 +141,55 @@ class MailController(http.Controller):
         return True
 
     @http.route('/mail/read_followers', type='json', auth='user')
-    def read_followers(self, follower_ids, res_model):
+    def read_followers(self, follower_ids):
         followers = []
-        is_editable = request.env.user.has_group('base.group_no_one')
-        partner_id = request.env.user.partner_id
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
         res_ids = follower_recs.mapped('res_id')
+        res_models = set(follower_recs.mapped('res_model'))
+        if len(res_models) > 1:
+            raise AccessError("Read_followers can only have one res_model")
+        res_model = res_models.pop()
+        request.env[res_model].check_access_rights("read")
         request.env[res_model].browse(res_ids).check_access_rule("read")
         for follower in follower_recs:
-            is_uid = partner_id == follower.partner_id
-            follower_id = follower.id if is_uid else follower_id
+            if request.env.user.partner_id == follower.partner_id:
+                follower_id = follower.id
             followers.append({
                 'id': follower.id,
-                'name': follower.partner_id.name or follower.channel_id.name,
-                'email': follower.partner_id.email if follower.partner_id else None,
-                'res_model': 'res.partner' if follower.partner_id else 'mail.channel',
-                'res_id': follower.partner_id.id or follower.channel_id.id,
-                'is_editable': is_editable,
-                'is_uid': is_uid,
-                'active': follower.partner_id.active or bool(follower.channel_id),
+                'partner_id': follower.partner_id.id,
+                'channel_id': follower.channel_id.id,
+                'name': follower.name,
+                'email': follower.email,
+                'is_active': follower.is_active,
             })
         return {
             'followers': followers,
-            'subtypes': self.read_subscription_data(res_model, follower_id) if follower_id else None
+            'subtypes': self.read_subscription_data(follower_id) if follower_id else None
         }
 
     @http.route('/mail/read_subscription_data', type='json', auth='user')
-    def read_subscription_data(self, res_model, follower_id):
+    def read_subscription_data(self, follower_id):
+        follower = request.env['mail.followers'].browse(follower_id)
+
+        return self._read_subscription_data(follower)
+
+    def _read_subscription_data(self, follower):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
-        followers = request.env['mail.followers'].browse(follower_id)
-
+        follower.ensure_one()
+        res_model = follower.res_model
         # find current model subtypes, add them to a dictionary
         subtypes = request.env['mail.message.subtype'].search(['&', ('hidden', '=', False), '|', ('res_model', '=', res_model), ('res_model', '=', False)])
+        followed_subtypes_ids = set(follower.subtype_ids.ids)
         subtypes_list = [{
             'name': subtype.name,
             'res_model': subtype.res_model,
             'sequence': subtype.sequence,
             'default': subtype.default,
             'internal': subtype.internal,
-            'followed': subtype.id in followers.mapped('subtype_ids').ids,
+            'followed': subtype.id in followed_subtypes_ids,
             'parent_model': subtype.parent_id.res_model,
             'id': subtype.id
         } for subtype in subtypes]

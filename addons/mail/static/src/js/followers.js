@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_registry = require('web.field_registry');
+var session = require('web.session');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -43,7 +44,6 @@ var Followers = AbstractField.extend({
         this.subtypes = [];
         this.data_subtype = {};
         this._isFollower = undefined;
-        var session = this.getSession();
         this.partnerID = session.partner_id;
 
         this.dp = new concurrency.DropPrevious();
@@ -113,14 +113,14 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
-            if(!record.active) {
+            if(!record.is_active) {
                 record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
             } else {
                 record.title = record.name;
             }
 
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_64'}),
+                'record': record,
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
@@ -205,11 +205,27 @@ var Followers = AbstractField.extend({
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model }
+                    params: { follower_ids: missing_ids}
                 });
         }
+        var partner_id = this.partnerID;
         return Promise.resolve(def).then(function (results) {
             if (results) {
+                var result_trigger_up = false;
+                self.trigger_up('read_followers', {
+                    result: function(res){
+                        result_trigger_up = res;
+                    },
+                });
+                _.each(results.followers, function (record) {
+                    if (record.partner_id) {
+                        record.avatar_url = '/web/image/res.partner/' + record.partner_id + '/image_64';
+                    }
+                    else {
+                        record.avatar_url = '/web/image/mail.channel/' + record.channel_id + '/image_64';
+                    }
+                    record.is_editable = result_trigger_up;
+                });
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
                 if (results.subtypes) { //read_followers will return False if current user is not in the list
                     self.subtypes = results.subtypes;
@@ -219,7 +235,7 @@ var Followers = AbstractField.extend({
             self.followers = _.filter(self.followers, function (follower) {
                 return _.contains(self.value.res_ids, follower.id);
             });
-            var user_follower = _.filter(self.followers, function (rec) { return rec.is_uid; });
+            var user_follower = _.filter(self.followers, function (rec) { return partner_id === rec.partner_id; });
             self._isFollower = user_follower.length >= 1;
         });
     },
@@ -266,7 +282,7 @@ var Followers = AbstractField.extend({
             return this._messageUnsubscribe(ids);
         }
         return new Promise(function (resolve, reject) {
-            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var follower = _.find(self.followers, { partner_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
             var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
             Dialog.confirm(this, text, {
                 title: _t("Warning"),
@@ -361,7 +377,7 @@ var Followers = AbstractField.extend({
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
         this._rpc({
                 route: '/mail/read_subscription_data',
-                params: {res_model: this.model, follower_id: follower_id},
+                params: {follower_id: follower_id},
             })
             .then(function (data) {
                 var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
