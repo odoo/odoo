@@ -88,8 +88,8 @@ class ReportBomStructure(models.AbstractModel):
             'variants': bom_product_variants,
             'bom_uom_name': bom_uom_name,
             'bom_qty': bom_quantity,
-            'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
-            'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
+            'is_variant_applied': self.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
+            'is_uom_applied': self.user_has_groups('uom.group_uom')
         }
 
     def _get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
