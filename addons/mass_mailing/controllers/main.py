@@ -20,7 +20,7 @@ class MassMailController(http.Controller):
     def _log_blacklist_action(self, blacklist_entry, mailing_id, description):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         model_display = mailing.mailing_model_id.display_name
-        blacklist_entry._message_log(description + " ({})".format(model_display))
+        blacklist_entry._message_log(body=description + " ({})".format(model_display))
 
     @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public')
     def unsubscribe_placeholder_link(self, **post):
