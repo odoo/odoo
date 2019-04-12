@@ -404,9 +404,24 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        var datePickerDefaultValue = this.value;
+
+        // displaying a datetime with a Date widget
+        this._datetimeAsDate = this.formatType === 'date' && this.field.type === 'datetime';
+
+         // displaying a datetime with a Date widget
+        if (this._datetimeAsDate) {
+            // With a datetime field we know that:
+            // 1. We receive UTC value from the server: this.formatOptions.timezone = true
+            // 2. We display a date to the user: this.formatType = 'date'
+            // 3. The date that is displayed is expressed according to the user's timezone
+            datePickerDefaultValue = this._offsetValueByTz('from_utc', datePickerDefaultValue);
+            // 4. We send full datetime value to the server
+            this.parseType = 'datetime';
+        };
         this.datepickerOptions = _.defaults(
             this.nodeOptions.datepicker || {},
-            {defaultDate: this.value}
+            {defaultDate: datePickerDefaultValue}
         );
     },
     /**
@@ -452,7 +467,11 @@ var FieldDate = InputField.extend({
      * @private
      */
     _getValue: function () {
-        return this.datewidget.getValue();
+        var value = this.datewidget.getValue();
+        if (this._datetimeAsDate) {
+            value = this._offsetValueByTz('to_utc', value);
+        }
+        return value;
     },
     /**
      * @override
@@ -461,10 +480,14 @@ var FieldDate = InputField.extend({
      * @returns {boolean}
      */
     _isSameValue: function (value) {
+        var resolution = 'day'
         if (value === false) {
             return this.value === false;
         }
-        return value.isSame(this.value, 'day');
+        if (this._datetimeAsDate) {
+            resolution = undefined;
+        }
+        return value.isSame(this.value, resolution);
     },
     /**
      * Instantiates a new DateWidget datepicker.
@@ -472,7 +495,11 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this, this.datepickerOptions);
+        var datePickerWidget = datepicker.DateWidget;
+        if (this._datetimeAsDate) {
+            datePickerWidget = datepicker.DateTimeWidget;
+        }
+        return new datePickerWidget(this, this.datepickerOptions);
     },
 
     /**
@@ -482,9 +509,31 @@ var FieldDate = InputField.extend({
      * @private
      */
     _renderEdit: function () {
-        this.datewidget.setValue(this.value);
+        var value = this.value;
+        if (this._datetimeAsDate) {
+            value = this._offsetValueByTz('from_utc', value);
+        }
+        this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
+    /**
+     * Adds or remove the TimeZone offset in order to convert from and to UTC
+     * @private
+     * @param {string} direction:
+     *    'to_utc': remove the TZ offset from value
+     *              Assuming value is in user's timezone
+     *    'from_utc': adds the TZ offset to value
+     *                Assuming value is in UTC
+     * @param {moment} value: the value onto which the offset should be applied
+     */
+    _offsetValueByTz: function (direction, value) {
+        if (value) {
+            value = value.clone();
+            direction = direction === 'to_utc' ? -1 : 1;
+            value.add(direction * this.getSession().getTZOffset(value), 'minutes');
+        }
+        return value;
+    }
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -496,8 +545,7 @@ var FieldDateTime = FieldDate.extend({
     init: function () {
         this._super.apply(this, arguments);
         if (this.value) {
-            var offset = this.getSession().getTZOffset(this.value);
-            var displayedValue = this.value.clone().add(offset, 'minutes');
+            var displayedValue = this._offsetValueByTz('from_utc', this.value)
             this.datepickerOptions.defaultDate = displayedValue;
         }
     },
@@ -512,7 +560,7 @@ var FieldDateTime = FieldDate.extend({
      */
     _getValue: function () {
         var value = this.datewidget.getValue();
-        return value && value.add(-this.getSession().getTZOffset(value), 'minutes');
+        return this._offsetValueByTz('to_utc', value)
     },
     /**
      * @override
@@ -540,7 +588,7 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _renderEdit: function () {
-        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
+        var value = this._offsetValueByTz('from_utc', this.value)
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
