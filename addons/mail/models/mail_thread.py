@@ -91,7 +91,7 @@ class MailThread(models.AbstractModel):
         compute='_get_followers', search='_search_follower_channels')
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
-        domain=lambda self: [('model', '=', self._name)], auto_join=True)
+        domain=lambda self: [('model', '=', self._name), ('message_type', '!=', 'user_notification')], auto_join=True)
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread',
         help="If checked new messages require your attention.")
@@ -187,8 +187,9 @@ class MailThread(models.AbstractModel):
                                  ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
                                     (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
                                  WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
+                                        msg.message_type != 'user_notification' AND
                                        (msg.author_id IS NULL OR msg.author_id != %s) AND
-                                       (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
+                                       (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel')""",
                              (partner_id, self._name, list(self.ids), partner_id,))
             for result in self._cr.fetchall():
                 res[result[0]] += 1
@@ -205,7 +206,7 @@ class MailThread(models.AbstractModel):
             self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
                                  RIGHT JOIN mail_message_res_partner_needaction_rel rel
                                  ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND (rel.is_read = false OR rel.is_read IS NULL)
-                                 WHERE msg.model = %s AND msg.res_id in %s""",
+                                 WHERE msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
             for result in self._cr.fetchall():
                 res[result[0]] += 1
@@ -225,7 +226,7 @@ class MailThread(models.AbstractModel):
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
                                  RIGHT JOIN mail_message_res_partner_needaction_rel rel
                                  ON rel.mail_message_id = msg.id AND rel.email_status in ('exception','bounce')
-                                 WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s
+                                 WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
             res.update(self._cr.fetchall())
@@ -341,7 +342,7 @@ class MailThread(models.AbstractModel):
         cascaded, because link is done through (res_model, res_id). """
         if not self:
             return True
-        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
+        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('message_type', '!=', 'user_notification')]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
@@ -534,10 +535,12 @@ class MailThread(models.AbstractModel):
         msg_comment = MailMessage.search([
             ('model', '=', self._name),
             ('res_id', '=', self.id),
+            ('message_type', '!=', 'user_notification'),
             ('subtype_id', '=', subtype_comment)])
         msg_not_comment = MailMessage.search([
             ('model', '=', self._name),
             ('res_id', '=', self.id),
+            ('message_type', '!=', 'user_notification'),
             ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
@@ -1948,7 +1951,7 @@ class MailThread(models.AbstractModel):
         # set in the context.
         model = False
         if self.ids:
-            self.ensure_one()
+            self.ensure_one()  # not so usefull
             model = kwargs.get('model', False) if self._name == 'mail.thread' else self._name
             if model and model != self._name and hasattr(self.env[model], 'message_post'):
                 return self.env[model].browse(self.ids).message_post(
@@ -1991,8 +1994,10 @@ class MailThread(models.AbstractModel):
                 subtype = 'mail.%s' % subtype
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
 
+        user_notification = message_type == 'user_notification'
+
         # automatically subscribe recipients if asked to
-        if self._context.get('mail_post_autofollow') and self.ids and partner_ids:
+        if self._context.get('mail_post_autofollow') and self.ids and not user_notification and partner_ids:
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = [p for p in partner_ids if p in self._context.get('mail_post_autofollow_partner_ids')]
@@ -2000,8 +2005,8 @@ class MailThread(models.AbstractModel):
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
-        if self._mail_flat_thread and model and not parent_id and self.ids:
-            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model)], order="id ASC", limit=1)
+        if self._mail_flat_thread and model and not parent_id and self.ids and not user_notification:
+            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
             parent_id = messages.ids and messages.ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
@@ -2047,7 +2052,8 @@ class MailThread(models.AbstractModel):
         canned_response_ids = values.pop('canned_response_ids', False)
         new_message = MailMessage.create(values)
         values['canned_response_ids'] = canned_response_ids
-        self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
+        record = self.env['mail.thread'] if user_notification else self
+        record._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 
     def _message_post_after_hook(self, message, msg_vals, model_description=False, mail_auto_delete=True):
@@ -2137,8 +2143,8 @@ class MailThread(models.AbstractModel):
         return composer.send_mail()
 
     def message_notify(self, partner_ids, body='', subject=False, **kwargs):
-        """ Shortcut allowing to notify partners of messages not linked to
-        any document. It pushes notifications on inbox or by email depending
+        """ Shortcut allowing to notify partners of messages that shouldn't be 
+        displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
         kw_author = kwargs.pop('author_id', False)
         if kw_author:
@@ -2154,16 +2160,15 @@ class MailThread(models.AbstractModel):
             'body': body,
             'author_id': author.id,
             'email_from': email_from,
-            'message_type': 'notification',
+            'message_type': 'user_notification',
             'partner_ids': partner_ids,
-            'model': False,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
         msg_values.update(kwargs)
-        return self.env['mail.thread'].message_post(**msg_values)
+        return self.message_post(**msg_values)
 
     def _message_log(self, body='', subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform

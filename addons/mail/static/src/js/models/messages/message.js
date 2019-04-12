@@ -368,7 +368,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     isLinkedToDocumentThread: function () {
-        return !!(this._documentModel !== 'mail.channel' && this._documentID);
+        return !!(this._documentModel !== 'mail.channel' && this._documentID && this._type !== 'user_notification');
     },
     /**
      * State whether the current user is the author of this message

@@ -168,7 +168,7 @@ class MailMail(models.Model):
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
-                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m.res_id and m.model)
+                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
                     messages._notify_failure_update()  # notify user that we have a failure
                 (notifications - failed).sudo().write({
                     'email_status': 'sent',
@@ -312,7 +312,7 @@ class MailMail(models.Model):
                 bounce_alias = ICP.get_param("mail.bounce.alias")
                 catchall_domain = ICP.get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
-                    if mail.model and mail.res_id:
+                    if mail.mail_message_id.is_thread_message():
                         headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
                         headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)
