@@ -509,12 +509,8 @@ class StockMoveLine(models.Model):
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
         record.message_post_with_view(template, values={'move': move, 'vals': dict(vals, **data)}, subtype_id=self.env.ref('mail.mt_note').id)
 
+    @api.model
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
-        self.ensure_one()
-        rounding = self.product_uom_id.rounding
-        self._free_reservation_impl(product_id, location_id, quantity, rounding, lot_id=lot_id, package_id=package_id, owner_id=owner_id, ml_to_ignore=ml_to_ignore)
-
-    def _free_reservation_impl(self, product_id, location_id, quantity, rounding, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
         unlink the move lines that reserved a quantity now unavailable.
@@ -559,13 +555,13 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
-                    if float_is_zero(quantity, precision_rounding=rounding):
+                    if float_is_zero(quantity, precision_rounding=product_id.uom_id.rounding):
                         break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
                         candidate.product_qty - quantity,
-                        precision_rounding=rounding,
+                        precision_rounding=product_id.uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
