@@ -147,7 +147,7 @@ class Partner(models.Model):
 
             # send email
             for email_chunk in split_every(50, group_tpl_values['recipients']):
-                recipient_values = self.env['mail.thread']._notify_email_recipients_on_records(message, email_chunk, records=record)
+                recipient_values = self.env['mail.thread']._notify_email_recipients_on_records(email_chunk, records=record)
                 create_values = {
                     'body_html': mail_body,
                     'subject': mail_subject,

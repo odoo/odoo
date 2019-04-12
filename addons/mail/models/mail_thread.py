@@ -913,13 +913,12 @@ class MailThread(models.AbstractModel):
         return self._notify_specific_email_values(message)
 
     @api.multi
-    def _notify_email_recipients(self, message, recipient_ids):
+    def _notify_email_recipients(self, recipient_ids):
         """ Format email notification recipient values to store on the notification
         mail.mail. Basic method just set the recipient partners as mail_mail
         recipients. Override to generate other mail values like email_to or
         email_cc.
 
-        :param message: mail.message record being notified by email
         :param recipient_ids: res.partner recordset to notify
         """
         return {
@@ -927,13 +926,13 @@ class MailThread(models.AbstractModel):
         }
 
     @api.model
-    def _notify_email_recipients_on_records(self, message, recipient_ids, records=None):
+    def _notify_email_recipients_on_records(self, recipient_ids, records=None):
         """ Generic wrapper on ``_notify_email_recipients`` checking mail.thread
         inheritance and allowing to call model-specific implementation in a one liner.
         This method should not be overridden. """
         if records and hasattr(records, '_notify_email_recipients'):
-            return records._notify_email_recipients(message, recipient_ids)
-        return self._notify_email_recipients(message, recipient_ids)
+            return records._notify_email_recipients(recipient_ids)
+        return self._notify_email_recipients(recipient_ids)
 
     # ------------------------------------------------------
     # Mail gateway
@@ -1346,7 +1345,7 @@ class MailThread(models.AbstractModel):
                     if message_dict.get('parent_id'):
                         parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
                         if parent_message.author_id:
-                            partner_ids = [(4, parent_message.author_id.id)]
+                            partner_ids = [parent_message.author_id.id]
                 else:
                     subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
@@ -1650,8 +1649,7 @@ class MailThread(models.AbstractModel):
         msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
         recipient_emails = ', '.join([tools.decode_smtp_header(message.get(h)) for h in ['To', 'Cc'] if message.get(h)])
         partner_ids = [x.id for x in self._mail_find_partner_from_emails(tools.email_split(recipient_emails), records=self) if x]
-        msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
-
+        msg_dict['partner_ids'] = partner_ids
         if message.get('Date'):
             try:
                 date_hdr = tools.decode_smtp_header(message.get('Date'))
@@ -1965,19 +1963,9 @@ class MailThread(models.AbstractModel):
         if author_id is None:  # keep False values
             author_id = self.env['mail.message']._get_default_author().id
 
-        # 2: Private message: add recipients (recipients and author of parent message) - current author
-        #   + legacy-code management (! we manage only 4 and 6 commands)
-        partner_ids = set()
-        kwargs_partner_ids = kwargs.pop('partner_ids', [])
-        for partner_id in kwargs_partner_ids:
-            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
-                partner_ids.add(partner_id[1])
-            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
-                partner_ids |= set(partner_id[2])
-            elif isinstance(partner_id, int):
-                partner_ids.add(partner_id)
-            else:
-                pass  # we do not manage anything else
+        partner_ids = set(kwargs.pop('partner_ids', []))
+        channel_ids = set(kwargs.pop('channel_ids', []))
+
         if parent_id and not model:
             parent_message = self.env['mail.message'].browse(parent_id)
             private_followers = set([partner.id for partner in parent_message.partner_ids])
@@ -2031,7 +2019,7 @@ class MailThread(models.AbstractModel):
             'parent_id': parent_id,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
-            'channel_ids': kwargs.get('channel_ids', []),
+            'channel_ids': [(4, cid) for cid in channel_ids],
             'add_sign': add_sign
         })
         if notif_layout:
@@ -2053,10 +2041,10 @@ class MailThread(models.AbstractModel):
         new_message = MailMessage.create(values)
         values['canned_response_ids'] = canned_response_ids
         record = self.env['mail.thread'] if user_notification else self
-        record._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
+        record._message_post_after_hook(new_message, values, model_description, mail_auto_delete)
         return new_message
 
-    def _message_post_after_hook(self, message, msg_vals, model_description=False, mail_auto_delete=True):
+    def _message_post_after_hook(self, message, msg_vals, model_description, mail_auto_delete):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
@@ -2073,7 +2061,6 @@ class MailThread(models.AbstractModel):
             message._notify(
                 self, msg_vals,
                 force_send=self.env.context.get('mail_notify_force_send', True),
-                send_after_commit=True,
                 model_description=model_description,
                 mail_auto_delete=mail_auto_delete,
             )
@@ -2354,7 +2341,7 @@ class MailThread(models.AbstractModel):
             record.message_notify(
                 subject=_('You have been assigned to %s') % record.display_name,
                 body=assignation_msg,
-                partner_ids=[(4, pid) for pid in partner_ids],
+                partner_ids=partner_ids,
                 record_name=record.display_name,
                 notif_layout='mail.mail_notification_light',
                 model_description=model_description,

@@ -1075,7 +1075,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, record, msg_vals, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
+    def _notify(self, record, msg_vals, force_send=False, model_description=False, mail_auto_delete=True):
         """ Main notification method. This method basically does two things
 
          * call ``_notify_compute_recipients`` that computes recipients to
@@ -1089,8 +1089,6 @@ class Message(models.Model):
           simple cases where no notification is actually required;
         :param force_send: tells whether to send notification emails within the
           current transaction or to use the email queue;
-        :param send_after_commit: if force_send, tells whether to send emails after
-          the transaction has been committed using a post-commit hook;
         :param model_description: optional data used in notification process (see
           notification templates);
         :param mail_auto_delete: delete notification emails once sent;
@@ -1100,7 +1098,7 @@ class Message(models.Model):
         rdata = self._notify_compute_recipients(record, msg_vals)
         return self._notify_recipients(
             rdata, record, msg_vals,
-            force_send=force_send, send_after_commit=send_after_commit,
+            force_send=force_send,
             model_description=model_description, mail_auto_delete=mail_auto_delete)
 
     @api.multi
@@ -1131,21 +1129,19 @@ class Message(models.Model):
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
-                else:
-                    if not pshare and notif:  # has an user and is not shared, is therefore user
-                        recipient_data['partners'].append(dict(pdata, notif='email', type='user'))
-                    elif pshare and notif:  # has an user but is shared, is therefore portal
-                        recipient_data['partners'].append(dict(pdata, notif='email', type='portal'))
-                    else:  # has no user, is therefore customer
-                        recipient_data['partners'].append(dict(pdata, notif='email', type='customer'))
+                elif not pshare and notif:  # has an user and is not shared, is therefore user
+                    recipient_data['partners'].append(dict(pdata, notif='email', type='user'))
+                elif pshare and notif:  # has an user but is shared, is therefore portal
+                    recipient_data['partners'].append(dict(pdata, notif='email', type='portal'))
+                else:  # has no user, is therefore customer
+                    recipient_data['partners'].append(dict(pdata, notif='email', type='customer'))
             elif cid:
                 recipient_data['channels'].append({'id': cid, 'notif': notif, 'type': ctype})
         return recipient_data
 
     @api.multi
     def _notify_recipients(self, rdata, record, msg_vals,
-                           force_send=False, send_after_commit=True,
-                           model_description=False, mail_auto_delete=True):
+                           force_send=False, model_description=False, mail_auto_delete=True):
         """ Main method implementing the notification process.
 
         :param rdata: dict containing recipients data: {
@@ -1183,7 +1179,7 @@ class Message(models.Model):
 
         partner_email_rdata = [r for r in rdata['partners'] if r['notif'] == 'email']
         if partner_email_rdata:
-            self.env['res.partner']._notify(self, partner_email_rdata, record, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
+            self.env['res.partner']._notify(self, partner_email_rdata, record, force_send=force_send, model_description=model_description, mail_auto_delete=mail_auto_delete)
 
         if inbox_pids:
             self.env['res.partner'].browse(inbox_pids)._notify_by_chat(self)

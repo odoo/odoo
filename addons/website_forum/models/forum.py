@@ -784,7 +784,6 @@ class Post(models.Model):
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
-        question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -795,7 +794,7 @@ class Post(models.Model):
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
                 ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += [(4, partner.id) for partner in question_followers]
+                partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
