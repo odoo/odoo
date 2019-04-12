@@ -348,7 +348,7 @@ class Channel(models.Model):
     @api.multi
     def _notify_email_recipients(self, recipient_ids):
         # Excluded Blacklisted
-        whitelist = self.env['res.partner'].sudo().search([('id', 'in', recipient_ids)]).filtered(lambda p: not p.is_blacklisted)
+        whitelist = self.env['res.partner'].sudo().browse(recipient_ids).filtered(lambda p: not p.is_blacklisted)
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
@@ -524,6 +524,18 @@ class Channel(models.Model):
         message.ensure_one()
         notifications = self._channel_message_notifications(message)
         self.env['bus.bus'].sendmany(notifications)
+
+    def _notify_thread(self, message, msg_vals, model_description=False, mail_auto_delete=True):
+        # When posting a message on a mail channel, manage moderation and postpone notify users
+        if msg_vals.get('moderation_status') != 'pending_moderation':
+            super(Channel, self)._notify_thread(
+                message,
+                msg_vals,
+                model_description=model_description,
+                mail_auto_delete=mail_auto_delete,
+            )
+        else:
+            message._notify_pending_by_chat()
 
     @api.multi
     def _channel_message_notifications(self, message):

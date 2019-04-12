@@ -163,7 +163,7 @@ class Track(models.Model):
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message, msg_vals, model_description, mail_auto_delete):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.partner_email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -175,7 +175,7 @@ class Track(models.Model):
                     ('partner_email', '=', new_partner.email),
                     ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message, msg_vals, model_description, mail_auto_delete)
+        return super(Track, self)._message_post_after_hook(message, msg_vals)
 
     @api.multi
     def open_track_speakers_list(self):
