@@ -86,7 +86,7 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
         message_type=kw.pop('message_type', "comment"),
         subtype=kw.pop('subtype', "mt_comment"),
         author_id=author_id,
-        **kw  # TODO xdo check list of kw
+        **kw
     )
 
 
