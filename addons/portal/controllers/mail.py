@@ -81,11 +81,13 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
     kw.pop('attachment_ids', None)
     kw.pop('hash', None)
     kw.pop('pid', None)
-    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
-                                                                                   message_type=kw.pop('message_type', "comment"),
-                                                                                   subtype=kw.pop('subtype', "mt_comment"),
-                                                                                   author_id=author_id,
-                                                                                   **kw)
+    return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(
+        body=message,
+        message_type=kw.pop('message_type', "comment"),
+        subtype=kw.pop('subtype', "mt_comment"),
+        author_id=author_id,
+        **kw  # TODO xdo check list of kw
+    )
 
 
 class PortalChatter(http.Controller):

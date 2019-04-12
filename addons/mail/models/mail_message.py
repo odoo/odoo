@@ -1106,18 +1106,17 @@ class Message(models.Model):
         """ Compute recipients to notify based on subtype and followers. This
         method returns data structured as expected for ``_notify_recipients``. """
         msg_sudo = self.sudo()
-
-        pids = [x[1] for x in msg_vals.get('partner_ids')] if 'partner_ids' in msg_vals else msg_sudo.partner_ids.ids
-        cids = [x[1] for x in msg_vals.get('channel_ids')] if 'channel_ids' in msg_vals else msg_sudo.channel_ids.ids
-        subtype_id = msg_vals.get('subtype_id') if 'subtype_id' in msg_vals else msg_sudo.subtype_id.id
-
+        # get values from msg_vals or from message if msg_vals doen't exists
+        pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
+        cids = msg_vals.get('channel_ids', []) if msg_vals else msg_sudo.channel_ids.ids
+        subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
+        # is it possible to have record but no subtype_id ?
         recipient_data = {
             'partners': [],
             'channels': [],
         }
         res = []
-        user_notification = msg_vals.get('message_type') == 'user_notification'
-        res = self.env['mail.followers']._get_recipient_data(not user_notification and record, subtype_id, pids, cids)
+        res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
         author_id = msg_vals.get('author_id') or self.author_id.id if res else False
         for pid, cid, active, pshare, ctype, notif, groups in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
@@ -1169,13 +1168,18 @@ class Message(models.Model):
 
         # notify partners and channels
         if email_cids:
+            author_id = msg_vals.get('author_id') or self.author_id.id
+            email_from = msg_vals.get('email_from') or self.email_from
+            exept_partner = [r['id'] for r in rdata['partners']]
+            if author_id:
+                exept_partner.append(author_id)
             new_pids = self.env['res.partner'].sudo().search([
-                ('id', 'not in', [r['id'] for r in rdata['partners']]),
+                ('id', 'not in', exept_partner),
                 ('channel_ids', 'in', email_cids),
-                ('email', 'not in', [self.author_id.email, self.email_from]),
+                ('email', 'not in', [email_from]),
             ])
             for partner in new_pids:
-                rdata['partners'].append({'id': partner.id, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []})
+                rdata['partners'].append({'id': partner.id, 'share': True, 'active': True, 'notif': 'email', 'type': 'customer', 'groups': []})
 
         partner_email_rdata = [r for r in rdata['partners'] if r['notif'] == 'email']
         if partner_email_rdata:
@@ -1250,8 +1254,9 @@ class Message(models.Model):
         })
         # proceed with notification process to send notification emails and Inbox messages
         for message in self:
-            record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else None
-            message._notify(record, {})
+            if message.is_thread_message(): # note, since we will only intercept _notify_thread for message posted on channel, 
+                # message will always be a thread_message. This check should always be true.
+                self.env[message.model].browse(message.res_id)._notify_thread(message, {})
 
     @api.multi
     def _moderate_send_reject_email(self, subject, comment):
@@ -1348,7 +1353,7 @@ class Message(models.Model):
         MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
         for moderator in moderators_to_notify:
             MailThread.message_notify(
-                moderator.partner_id.ids,
+                partner_ids=moderator.partner_id.ids,
                 subject=_('Message are pending moderation'),  # tocheck: target language
                 body=template.render({'record': moderator.partner_id}, engine='ir.qweb', minimal_qcontext=True),
                 email_from=moderator.company_id.catchall or moderator.company_id.email,

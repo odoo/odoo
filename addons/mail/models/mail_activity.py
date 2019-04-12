@@ -387,14 +387,15 @@ class MailActivity(models.Model):
                 minimal_qcontext=True
             )
             record = self.env[activity.res_model].browse(activity.res_id)
-            record.message_notify(
-                partner_ids=activity.user_id.partner_id.ids,
-                body=body,
-                subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
-                record_name=activity.res_name,
-                model_description=model_description,
-                notif_layout='mail.mail_notification_light',
-            )
+            if activity.user_id:
+                record.message_notify(
+                    partner_ids=activity.user_id.partner_id.ids,
+                    body=body,
+                    subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                    record_name=activity.res_name,
+                    model_description=model_description,
+                    notif_layout='mail.mail_notification_light',
+                )
 
     @api.multi
     def action_done(self):
