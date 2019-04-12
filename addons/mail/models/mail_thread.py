@@ -2072,7 +2072,12 @@ class MailThread(models.AbstractModel):
         for group_tpl_values in [group for group in recipients.values() if group['recipients']]:
             # generate notification email content
             template_ctx = {**base_template_ctx, **group_tpl_values}
-            mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            # {company, is_discussion, lang, message, model_description, record, record_name, signature, subtype, tracking_values, website_url}
+            # {actions, button_access, has_button_access, recipients}
+            if base_template:
+                mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            else:
+                mail_body = message.body
             mail_body = self.env['mail.thread']._replace_local_links(mail_body)
             mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name)
 
@@ -2220,7 +2225,6 @@ class MailThread(models.AbstractModel):
             elif cid:
                 recipient_data['channels'].append({'id': cid, 'notif': notif, 'type': ctype})
         return recipient_data
-
 
     @api.model
     def _notify_encode_link(self, base_link, params):
