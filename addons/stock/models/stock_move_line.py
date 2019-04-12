@@ -568,6 +568,7 @@ class StockMoveLine(models.Model):
                     move_to_recompute_state |= candidate.move_id
                     break
             move_to_recompute_state._recompute_state()
+            return move_to_recompute_state
 
     def _should_bypass_reservation(self, location):
         self.ensure_one()
