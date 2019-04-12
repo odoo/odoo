@@ -106,7 +106,7 @@ class PaymentTransaction(models.Model):
                 for trans in self.filtered(lambda t: t.sale_order_ids):
                     trans = trans.with_context(ctx_company)
                     for invoice in trans.invoice_ids:
-                        invoice.message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+                        invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
 
     @api.multi
