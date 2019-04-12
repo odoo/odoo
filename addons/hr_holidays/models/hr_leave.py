@@ -851,10 +851,10 @@ class HolidaysRequest(models.Model):
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysRequest, self)._notify_get_groups(message, groups)
+        groups = super(HolidaysRequest, self)._notify_get_groups()
 
         self.ensure_one()
         hr_actions = []
