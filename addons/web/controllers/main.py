@@ -41,7 +41,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
-from odoo import http
+from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
@@ -968,8 +968,7 @@ class View(http.Controller):
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):
-        addons_path = http.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
+        return tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb').read()
 
     def force_contenttype(self, headers, contenttype='image/png'):
         dictheaders = dict(headers)
