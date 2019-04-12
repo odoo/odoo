@@ -131,6 +131,9 @@ class StockMove(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated')
+    previous_move_propagate = fields.Boolean(
+        'Cancel previous move', default=False,
+        help='If checked, when this move is cancelled, cancel the linked move too')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -1009,6 +1012,19 @@ class StockMove(models.Model):
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
 
+    def _action_cancel_origin(self):
+        """ This method will cancel all the origin moves """
+        for move in self:
+            siblings_states = (move.move_orig_ids.mapped('move_dest_ids') - move).mapped('state')
+            if all(state == 'cancel' for state in siblings_states) and move.previous_move_propagate:
+                # only cancel if all origin of destination has been cancelled ..
+                move.write({'state': 'cancel'})
+                move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._action_cancel()
+            else:
+                if all(state in ('done', 'cancel') for state in siblings_states):
+                    move.move_orig_ids.write({'move_dest_ids': [(3, move.id, 0)]})
+        return True
+
     def _action_cancel(self):
         if any(move.state == 'done' for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
@@ -1022,11 +1038,13 @@ class StockMove(models.Model):
             if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
+                    move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
+            if move.previous_move_propagate:
+                move._action_cancel_origin()
         self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
         return True
 
