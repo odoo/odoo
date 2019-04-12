@@ -19,6 +19,48 @@ class StockMove(models.Model):
     created_purchase_line_id = fields.Many2one('purchase.order.line',
         'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
 
+    def _action_cancel_origin(self):
+        """ Update purchase order in case of draft state.
+            > Check if all previouse moves cancelled , then cancel or unlink purchase line.
+            > Check if some of previouse moves are not cancel decrease the line quantity.
+            > Check that purchase line has been generated from the multiple move or not.
+        """
+
+        moves_purchase_line = self.filtered(lambda m: m.created_purchase_line_id and m.state not in ('done', 'cancel'))
+        pol_to_unlink = self.env['purchase.order.line']
+        po_to_cancel = self.env['purchase.order']
+        for move in moves_purchase_line:
+            order = move.created_purchase_line_id.order_id
+            purchase_line = move.created_purchase_line_id
+            if move.previous_move_propagate:
+                if order.state not in ['done', 'purchase']:
+                    siblings_states = (move.created_purchase_line_id.move_dest_ids - move).mapped('state')
+                    if all(state == 'cancel' for state in siblings_states):
+                        if len(order.order_line) > 1:
+                            # Need to log the message that line has been removed.
+                            pol_to_unlink += purchase_line
+                        else:
+                            # Cancel order line incase its generated from single demand.
+                            po_to_cancel += order
+                    else:
+                        # When purchase line is merged for two sale orders.
+                        total_previous_qty = 0.0
+                        for move in move.created_purchase_line_id.move_dest_ids:
+                            total_previous_qty += move.product_uom._compute_quantity(move.product_uom_qty, purchase_line.product_uom)
+                        if purchase_line.product_qty >= total_previous_qty:
+                            cancel_quantity = move.product_uom._compute_quantity(move.product_uom_qty, purchase_line.product_uom)
+                            if cancel_quantity == purchase_line.product_qty:
+                                if len(order.order_line.ids) == 1:
+                                    po_to_cancel += order
+                                else:
+                                    pol_to_unlink += purchase_line
+                            else:
+                                purchase_line.write({'product_qty': purchase_line.product_qty - cancel_quantity})
+        pol_to_unlink.unlink()
+        po_to_cancel.button_cancel()
+        # Skip moves which have created purchase lines
+        return super(StockMove, self - moves_purchase_line)._action_cancel_origin()
+
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
