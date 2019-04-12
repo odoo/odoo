@@ -83,7 +83,7 @@ class TestMailPerformance(TransactionCase):
             'partner_id': self.env.ref('base.res_partner_12').id,
         })
 
-        with self.assertQueryCount(__system__=5, demo=5):  # test_mail only: 5 - 5
+        with self.assertQueryCount(__system__=4, demo=4):  # test_mail only: 4 - 4
             record.track = 'X'
 
     @users('__system__', 'demo')
@@ -99,13 +99,13 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(__system__=10, demo=10):  # test_mail only: 10 - 10
+        with self.assertQueryCount(__system__=9, demo=9):  # test_mail only: 9 - 9
             self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('__system__', 'emp')
     @warmup
     def test_create_mail_simple(self):
-        with self.assertQueryCount(__system__=8, emp=8):  # test_mail only: 8 - 8
+        with self.assertQueryCount(__system__=7, emp=7):  # test_mail only: 7 - 7
             self.env['mail.test.simple'].create({'name': 'Test'})
 
     @users('__system__', 'emp')
@@ -161,7 +161,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(__system__=9, emp=8):  # test_mail only: 9 - 8
+        with self.assertQueryCount(__system__=8, emp=7):  # test_mail only: 8 - 7
             model.create({'name': 'Test'})
 
     @users('__system__', 'emp')
@@ -173,7 +173,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(__system__=10, emp=17):  # com runbot: 10 - 16 // test_mail only: 10 - 15
+        with self.assertQueryCount(__system__=10, emp=13):  # com runbot: 10 - 13 // test_mail only: 10 - 13
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -183,7 +183,7 @@ class TestAdvMailPerformance(TransactionCase):
             #voip module read activity_type during create leading to one less query in enterprise on action_feedback
             category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=24, emp=41):  # com runbot: 24 - 41 // test_mail only: 24 - 39
+        with self.assertQueryCount(__system__=24, emp=31):  # com runbot: 24 - 31 // test_mail only: 24 - 31
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'emp')
@@ -192,7 +192,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=10, emp=17):  # com runbot: 10 - 16 // test_mail only: 10 - 15
+        with self.assertQueryCount(__system__=10, emp=14):  # com runbot: 10 - 14 // test_mail only: 10 - 14
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -200,7 +200,7 @@ class TestAdvMailPerformance(TransactionCase):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=26, emp=42):  # com runbot: 26 - 42 // test_mail only: 26 - 40
+        with self.assertQueryCount(__system__=26, emp=31):  # com runbot: 26 - 31 // test_mail only: 26 - 31
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -211,7 +211,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=61, emp=76):  # com runbot: 61 - 76 // test_mail only: 61 - 71
+        with self.assertQueryCount(__system__=56, emp=59):  # com runbot: 56 - 59 // test_mail only: 56 - 59
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -220,7 +220,7 @@ class TestAdvMailPerformance(TransactionCase):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=37, emp=44):  # test_mail only: 37 - 44
+        with self.assertQueryCount(__system__=34, emp=40):  # test_mail only: 34 - 40
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -240,7 +240,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, emp=13):  # test_mail only: 7 - 13
+        with self.assertQueryCount(__system__=6, emp=7):  # test_mail only: 6 - 7
             record.message_post(
                 body='<p>Test message_post as log</p>',
                 subtype='mail.mt_note',
@@ -251,7 +251,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, emp=13):  # test_mail only: 7 - 13
+        with self.assertQueryCount(__system__=6, emp=7):  # test_mail only: 6 - 7
             record.message_post(
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
@@ -264,7 +264,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=52, emp=72):  # com runbot: 49 - 69 // test_mail only: 52 - 69
+        with self.assertQueryCount(__system__=47, emp=51):  # com runbot: 47 - 51 // test_mail only: 47 - 51
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -276,7 +276,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=32, emp=44):  # com runbot 31 - 43 // test_mail only: 32 - 44
+        with self.assertQueryCount(__system__=30, emp=36):  # com runbot 30 - 36 // test_mail only: 30 - 36
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -386,8 +386,7 @@ class TestHeavyMailPerformance(TransactionCase):
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         })
         mail_ids = mail.ids
-
-        with self.assertQueryCount(__system__=14, emp=21):  # test_mail only: 14 - 21
+        with self.assertQueryCount(__system__=16, emp=22):  # test_mail only: 16 - 22
             self.env['mail.mail'].browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
@@ -400,7 +399,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(__system__=85, emp=108):  # com runbot: 82 - 105 // test_mail only: 85 - 105
+        with self.assertQueryCount(__system__=78, emp=82):  # com runbot: 78 - 82 // test_mail only: 78 - 82
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -417,7 +416,7 @@ class TestHeavyMailPerformance(TransactionCase):
         record = self.umbrella.sudo(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(__system__=102, emp=126):  # com runbot: 99 - 123 // test_mail only: 102 - 123
+        with self.assertQueryCount(__system__=95, emp=101):  # com runbot: 95 - 101 // test_mail only: 95 - 101
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -486,7 +485,7 @@ class TestHeavyMailPerformance(TransactionCase):
             'user_id': self.env.uid,
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=61, emp=75):  # com runbot: 60 - 75 // test_mail only: 60 - 72
+        with self.assertQueryCount(__system__=55, emp=58):  # com runbot: 55 - 58 // test_mail only: 55 - 58
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -506,7 +505,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=155, emp=172):  # com runbot: 155 - 172 // test_mail only: 154 - 168
+        with self.assertQueryCount(__system__=147, emp=155):  # com runbot: 147 - 155 // test_mail only: 147 - 155
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
@@ -533,7 +532,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec.message_ids), 1)
-        with self.assertQueryCount(__system__=99, emp=122):  # com runbot: 99 - 122 // test_mail only: 99 - 119
+        with self.assertQueryCount(__system__=96, emp=101):  # com runbot: 96 - 101 // test_mail only: 96 - 101
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
@@ -569,7 +568,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(__system__=105, emp=127):  # test_mail only: 104 - 123
+        with self.assertQueryCount(__system__=101, emp=106):  # test_mail only: 101 - 106
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': umbrella_id,
@@ -601,7 +600,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(__system__=52, emp=66):  # test_mail only: 51 - 66
+        with self.assertQueryCount(__system__=50, emp=62):  # test_mail only: 50 - 62
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -620,7 +619,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.assertEqual(len(rec.message_ids), 3)
 
 
-@tagged('mail_performance_post')
+@tagged('mail_performance')
 class TestMailPerformancePost(TransactionCase):
 
     def setUp(self):
@@ -753,7 +752,7 @@ class TestMailPerformancePost(TransactionCase):
         ]
         self.attachements = self.env['ir.attachment'].sudo(self.env.user).create(self.vals) #-> 163-> 165 query 
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=248):  # test_mail only: 210
+        with self.assertQueryCount(emp=163):  # com runbot 156 // test_mail only: 133
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',

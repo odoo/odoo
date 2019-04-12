@@ -28,13 +28,6 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
-    def test_post_subscribe_recipients_partial(self):
-        original = self.test_record.message_follower_ids
-        self.test_record.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True, 'mail_post_autofollow_partner_ids': [self.partner_2.id]}).message_post(
-            body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
-        self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_2)
-        self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
-
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
         rec = self.env['mail.test.simple'].sudo(self.user_employee).with_context({'mail_create_nolog': True}).create({'name': 'Test'})

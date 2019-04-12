@@ -259,14 +259,14 @@ class BlogPost(models.Model):
         return groups
 
     @api.multi
-    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
+    def _notify_customize_recipients(self, message, msg_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
         msg_type = msg_vals.get('message_type') or message.message_type
         if msg_type == 'comment':
             return {'needaction_partner_ids': []}
-        return {}
+        return super(BlogPost, self)._notify_customize_recipients(message, msg_vals)
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()
