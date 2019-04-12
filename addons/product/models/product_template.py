@@ -503,6 +503,7 @@ class ProductTemplate(models.Model):
                         variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
                             'attribute_value_ids': [(6, 0, list(value_ids))],
+                            'active': tmpl_id.active,
                         })
                         if len(variants_to_create) > 1000:
                             raise UserError(_(
@@ -942,8 +943,10 @@ class ProductTemplate(models.Model):
         if not self.active:
             return _("The product template is archived so no combination is possible.")
 
-        ptal_stack = [self._get_valid_product_template_attribute_lines()]
-        combination_stack = [self.env['product.template.attribute.value']]
+        necessary_values = necessary_values or self.env['product.template.attribute.value']
+        necessary_attributes = necessary_values.mapped('attribute_id')
+        ptal_stack = [self.valid_product_template_attribute_line_ids.filtered(lambda ptal: ptal.attribute_id not in necessary_attributes)]
+        combination_stack = [necessary_values]
 
         # keep going while we have attribute lines to test
         while len(ptal_stack):
@@ -952,7 +955,7 @@ class ProductTemplate(models.Model):
 
             if not attribute_lines:
                 # full combination, if it's possible return it, otherwise skip it
-                if self._is_combination_possible(combination, parent_combination) and all(v in combination for v in (necessary_values or [])):
+                if self._is_combination_possible(combination, parent_combination):
                     yield(combination)
             else:
                 # we have remaining attribute lines to consider

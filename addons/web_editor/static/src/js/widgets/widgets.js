@@ -912,7 +912,7 @@ var VideoWidget = MediaWidget.extend({
         options = options || {};
 
         // Video url patterns(youtube, instagram, vimeo, dailymotion, youku, ...)
-        var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+        var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$/;
         var ytMatch = url.match(ytRegExp);
 
         var insRegExp = /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/;
@@ -939,8 +939,8 @@ var VideoWidget = MediaWidget.extend({
 
         var autoplay = options.autoplay ? '?autoplay=1' : '?autoplay=0';
 
-        if (ytMatch && ytMatch[1].length === 11) {
-            $video.attr('src', '//www.youtube.com/embed/' + ytMatch[1] + autoplay);
+        if (ytMatch && ytMatch[2].length === 11) {
+            $video.attr('src', '//www.youtube' + (ytMatch[1] || '') + '.com/embed/' + ytMatch[2] + autoplay);
         } else if (insMatch && insMatch[2].length) {
             $video.attr('src', '//www.instagram.com/p/' + insMatch[2] + '/embed/');
             videoType = 'ins';

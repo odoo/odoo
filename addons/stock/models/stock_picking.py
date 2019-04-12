@@ -7,7 +7,7 @@ import time
 from datetime import date
 
 from itertools import groupby
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -931,7 +931,7 @@ class Picking(models.Model):
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
-                user_id=responsible.id
+                user_id=responsible.id or SUPERUSER_ID
             )
 
     def _log_less_quantities_than_expected(self, moves):

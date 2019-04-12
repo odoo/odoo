@@ -583,6 +583,7 @@ class MrpProduction(models.Model):
             })
             if workorders:
                 workorders[-1].next_work_order_id = workorder.id
+                workorders[-1]._start_nextworkorder()
             workorders += workorder
 
             # assign moves; last operation receive all unassigned moves (which case ?)

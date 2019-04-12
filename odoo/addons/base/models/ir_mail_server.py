@@ -482,6 +482,8 @@ class IrMailServer(models.Model):
             # do not quit() a pre-established smtp_session
             if not smtp_session:
                 smtp.quit()
+        except smtplib.SMTPServerDisconnected:
+            raise
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % params

@@ -157,8 +157,8 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <span class="o_form_label" string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
-                        <span class="o_form_label" string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                        <span class="o_form_label" attrs="{'invisible': [('state','not in',('draft','sent'))]}">Request for Quotation </span>
+                        <span class="o_form_label" attrs="{'invisible': [('state','in',('draft','sent'))]}">Purchase Order </span>
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>

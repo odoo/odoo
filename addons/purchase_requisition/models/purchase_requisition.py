@@ -421,10 +421,11 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     def _prepare_sellers(self, params):
+        sellers = super(ProductProduct, self)._prepare_sellers(params)
         if params and params.get('order_id'):
-            return self.seller_ids.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
+            return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
-            return self.seller_ids
+            return sellers
 
 
 class ProductTemplate(models.Model):
