@@ -1197,6 +1197,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         from odoo.http import request
         user = self.env.user
 
+        if self._name == "res.users" and self:
+            raise ValueError(
+                "`user_has_groups` works on environment's user, not on %r. "
+                "Use `has_group()` method instead."
+                % (self,)
+            )
+
         has_groups = []
         not_has_groups = []
         for group_ext_id in groups.split(','):
