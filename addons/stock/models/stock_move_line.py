@@ -548,7 +548,7 @@ class StockMoveLine(models.Model):
             move_to_recompute_state = self.env['stock.move']
 
             for candidate in outdated_candidates:
-                if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
+                if float_compare(candidate.product_qty, quantity, precision_rounding=product_id.uom_id.rounding) <= 0:
                     quantity -= candidate.product_qty
                     move_to_recompute_state |= candidate.move_id
                     if candidate.qty_done:
