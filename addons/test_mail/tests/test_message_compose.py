@@ -218,6 +218,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
         self.assertEqual(new_notification.needaction_partner_ids, self.partner_1 | self.user_employee.partner_id)
         self.assertNotIn(new_notification, self.test_record.message_ids)
+        # todo xdo add test message_notify on thread with followers and stuff
 
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):

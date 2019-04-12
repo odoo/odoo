@@ -367,7 +367,7 @@ class MailComposer(models.TransientModel):
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
-                )
+                )['attachment_ids']
                 # Filter out the blacklisted records by setting the mail state to cancel -> Used for Mass Mailing stats
                 if res_id in blacklisted_rec_ids:
                     mail_values['state'] = 'cancel'
