@@ -773,7 +773,7 @@ tour.register('main_flow_tour', {
     position: "right",
 }, {
     edition: "enterprise",
-    trigger: ".button_close_statement",
+    trigger: ".button_back_to_statement",
     content: _t('<p><b>Close this statement.</p>'),
     position: "bottom",
 }]);

@@ -24,9 +24,16 @@ class MrpAbstractWorkorder(models.AbstractModel):
         ('flexible', 'Flexible')],
         required=True,
     )
+    use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
+        """ Modify the qty currently producing will modify the existing
+        workorder line in order to match the new quantity to consume for each
+        component and their reserved quantity.
+        """
+        if self.qty_producing <= 0:
+            raise UserError(_('You have to produce at least one %s.') % self.product_uom_id.name)
         line_values = self._update_workorder_lines()
         for vals in line_values['to_create']:
             self.workorder_line_ids |= self.workorder_line_ids.new(vals)
@@ -68,18 +75,24 @@ class MrpAbstractWorkorder(models.AbstractModel):
             # Remove or lower quantity on exisiting workorder lines
             if float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
                 qty_todo = abs(qty_todo)
-                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved):
+                # Try to decrease or remove lines that are not reserved and
+                # partialy reserved first. A different decrease strategy could
+                # be define in _unreserve_order method.
+                for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl._unreserve_order()):
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
+                    # If the quantity to consume on the line is lower than the
+                    # quantity to remove, the line could be remove.
                     if float_compare(workorder_line.qty_to_consume, qty_todo, precision_rounding=rounding) <= 0:
-                        # update qty_todo for next wo_line
                         qty_todo = float_round(qty_todo - workorder_line.qty_to_consume, precision_rounding=rounding)
                         if line_values['to_delete']:
                             line_values['to_delete'] |= workorder_line
                         else:
                             line_values['to_delete'] = workorder_line
+                    # decrease the quantity on the line
                     else:
                         new_val = workorder_line.qty_to_consume - qty_todo
+                        # avoid to write a negative reserved quantity
                         new_reserved = max(0, workorder_line.qty_reserved - qty_todo)
                         line_values['to_update'][workorder_line] = {
                             'qty_to_consume': new_val,
@@ -90,12 +103,17 @@ class MrpAbstractWorkorder(models.AbstractModel):
             else:
                 # Search among wo lines which one could be updated
                 qty_reserved_wl = defaultdict(float)
+                # Try to update the line with the greater reservation first in
+                # order to promote bigger batch.
                 for workorder_line in move_workorder_lines.sorted(key=lambda wl: wl.qty_reserved, reverse=True):
                     rounding = workorder_line.product_uom_id.rounding
                     if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                         break
                     move_lines = workorder_line._get_move_lines()
                     qty_reserved_wl[workorder_line.lot_id] += workorder_line.qty_reserved
+                    # The reserved quantity according to exisiting move line
+                    # already produced (with qty_done set) and other production
+                    # lines with the same lot that are currently on production.
                     qty_reserved_remaining = sum(move_lines.mapped('product_uom_qty')) - sum(move_lines.mapped('qty_done')) - qty_reserved_wl[workorder_line.lot_id]
                     if float_compare(qty_reserved_remaining, 0, precision_rounding=rounding) > 0:
                         qty_to_add = min(qty_reserved_remaining, qty_todo)
@@ -107,6 +125,13 @@ class MrpAbstractWorkorder(models.AbstractModel):
                         qty_todo -= qty_to_add
                         qty_reserved_wl[workorder_line.lot_id] += qty_to_add
 
+                    # If a line exists without reservation and without lot. It
+                    # means that previous operations could not find any reserved
+                    # quantity and created a line without lot prefilled. In this
+                    # case, the system will not find an existing move line with
+                    # available reservation anymore and will increase this line
+                    # instead of creating a new line without lot and reserved
+                    # quantities.
                     if not workorder_line.qty_reserved and not workorder_line.lot_id and workorder_line.product_tracking != 'serial':
                         line_values['to_update'][workorder_line] = {
                             'qty_done': workorder_line.qty_to_consume + qty_todo,
@@ -123,9 +148,10 @@ class MrpAbstractWorkorder(models.AbstractModel):
     @api.model
     def _generate_lines_values(self, move, qty_to_consume):
         """ Create workorder line. First generate line based on the reservation,
-        in order to match the reservation. If the quantity to consume is greater
-        than the reservation quantity then create line with the correct quantity
-        to consume but without lot or serial number.
+        in order to prefill reserved quantity, lot and serial number.
+        If the quantity to consume is greater than the reservation quantity then
+        create line with the correct quantity to consume but without lot or
+        serial number.
         """
         lines = []
         is_tracked = move.product_id.tracking != 'none'
@@ -220,8 +246,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
             )
 
     def _update_raw_moves(self):
-        """ Once the production is done, the lots written on workorder lines
-        are saved on stock move lines"""
+        """ Once the production is done. Modify the workorder lines into
+        stock move line with the registered lot and quantity done.
+        """
         # Before writting produce quantities, we ensure they respect the bom strictness
         self._strict_consumption_check()
         vals_list = []
@@ -381,6 +408,11 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             vals_list.append(vals)
 
         return vals_list
+
+    def _unreserve_order(self):
+        """ Unreserve line with lower reserved quantity first """
+        self.ensure_one()
+        return (self.qty_reserved,)
 
     def _get_move_lines(self):
         return self.move_id.move_line_ids.filtered(lambda ml:
