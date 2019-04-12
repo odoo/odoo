@@ -301,7 +301,7 @@ class Channel(models.Model):
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             # post 'channel left' message as root since the partner just unsubscribed from the channel
-            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
+            self.sudo().message_post(body=notification, subtype="mail.mt_comment", author_id=partner.id)
         return result
 
     @api.multi
@@ -346,7 +346,7 @@ class Channel(models.Model):
         return super(Channel, self)._message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
-    def _notify_email_recipients(self, message, recipient_ids):
+    def _notify_email_recipients(self, recipient_ids):
         # Excluded Blacklisted
         whitelist = self.env['res.partner'].sudo().search([('id', 'in', recipient_ids)]).filtered(lambda p: not p.is_blacklisted)
         # real mailing list: multiple recipients (hidden by X-Forge-To)
@@ -355,7 +355,7 @@ class Channel(models.Model):
                 'email_to': ','.join(formataddr((partner.name, partner.email_normalized)) for partner in whitelist if partner.email_normalized),
                 'recipient_ids': [],
             }
-        return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
+        return super(Channel, self)._notify_email_recipients(whitelist.ids)
 
     def _extract_moderation_values(self, message_type, **kwargs):
         """ This method is used to compute moderation status before the creation

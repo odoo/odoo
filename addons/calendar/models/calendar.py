@@ -227,7 +227,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Accepted. """
         result = self.write({'state': 'accepted'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return result
 
     @api.multi
@@ -235,7 +236,8 @@ class Attendee(models.Model):
         """ Marks event invitation as Declined. """
         res = self.write({'state': 'declined'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
+            if attendee.event_id:
+                attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return res
 
 

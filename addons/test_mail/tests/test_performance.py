@@ -744,7 +744,7 @@ class TestMailPerformancePost(TransactionCase):
     def test_complete_message_post(self):
         # aims to cover as much features of message_post as possible
         partner_ids = [self.user_inbox.partner_id.id, self.user_email.partner_id.id, self.partner.id]
-        channel_ids = [(4, self.channel_inbox.id), (4, self.channel_email.id)]
+        channel_ids = [self.channel_inbox.id, self.channel_email.id]
         record = self.record.sudo(self.env.user)
         attachements = [ # not linear on number of attachements
             ('attach tuple 1', "attachement tupple content 1"),

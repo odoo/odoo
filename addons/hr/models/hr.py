@@ -280,7 +280,7 @@ class Employee(models.Model):
         tools.image_resize_images(vals)
         employee = super(Employee, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
-        employee._message_log(_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
+        employee._message_log(body=_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
@@ -363,8 +363,8 @@ class Employee(models.Model):
             self = self.sudo(real_user)
         return self
 
-    def _message_log(self, *args, **kwargs):
-        return super(Employee, self._post_author())._message_log(*args, **kwargs)
+    def _message_log(self, **kwargs):
+        return super(Employee, self._post_author())._message_log(**kwargs)
 
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
