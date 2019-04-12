@@ -136,6 +136,13 @@ class StockMove(models.Model):
                                                'workorder_id': move.workorder_id.id,})
         return res
 
+    def _action_cancel_origin(self):
+        moves_production = self.filtered(lambda x: x.created_production_id)
+        # TODO : if manufacturing in 'draft' state cancel the manufacturing order
+        # but currently it is auto confirm.
+        # Skip moves which generated production orders.
+        return super(StockMove, self - moves_production)._action_cancel_origin()
+
     def _action_cancel(self):
         if any(move.quantity_done and (move.raw_material_production_id or move.production_id) for move in self):
             raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
