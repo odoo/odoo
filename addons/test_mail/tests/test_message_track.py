@@ -163,8 +163,8 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.record._fields['email_from'].groups = 'base.group_erp_manager' # patch the group attribute
         self.record.sudo().write({'email_from': 'X'})
 
-        msg_emp = self.record.sudo(self.user_employee)._notify_prepare_template_context(self.record.message_ids)
-        msg_admin = self.record.sudo(self.user_admin)._notify_prepare_template_context(self.record.message_ids)
+        msg_emp = self.record.sudo(self.user_employee)._notify_prepare_template_context(self.record.message_ids, {})
+        msg_admin = self.record.sudo(self.user_admin)._notify_prepare_template_context(self.record.message_ids, {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_admin.get('tracking_values'), "should have protected tracking values")
 

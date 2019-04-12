@@ -1131,9 +1131,9 @@ class Message(models.Model):
         })
         # proceed with notification process to send notification emails and Inbox messages
         for message in self:
-            if message.is_thread_message(): # note, since we will only intercept _notify_thread for message posted on channel, 
+            if message.is_thread_message(): # note, since we will only intercept _notify_thread for message posted on channel,
                 # message will always be a thread_message. This check should always be true.
-                self.env[message.model].browse(message.res_id)._notify_thread(message, {})
+                self.env[message.model].browse(message.res_id)._notify_thread(message)
 
     @api.multi
     def _moderate_send_reject_email(self, subject, comment):
