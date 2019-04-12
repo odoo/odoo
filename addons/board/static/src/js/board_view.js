@@ -271,7 +271,7 @@ var BoardRenderer = FormRenderer.extend({
                         searchQuery: {
                             context: context,
                             domain: domain,
-                            groupBy: context.group_by || [],
+                            groupBy: typeof context.group_by === 'string' && context.group_by ? [context.group_by] : context.group_by || [],
                             orderedBy: context.orderedBy || [],
                         },
                         withControlPanel: false,
