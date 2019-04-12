@@ -1040,6 +1040,9 @@ class GroupsView(models.Model):
         self.env['ir.actions.actions'].clear_caches()
         return res
 
+    def _get_hidden_extra_categories(self):
+        return ['base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability']
+
     @api.model
     def _update_user_groups_view(self):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
@@ -1064,7 +1067,7 @@ class GroupsView(models.Model):
             for app, kind, gs, category_name in self.get_groups_by_application():
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
-                if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
+                if app.xml_id in self._get_hidden_extra_categories():
                     attrs['groups'] = 'base.group_no_one'
 
                 # User type (employee, portal or public) is a separated group. This is the only 'selection'
