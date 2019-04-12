@@ -949,6 +949,44 @@ QUnit.test("Dashboard should use correct groupby", function (assert) {
     form.destroy();
 });
 
+QUnit.test("Dashboard should use correct groupby when defined as a string of one field", function (assert) {
+    assert.expect(1);
+    var form = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{\'group_by\': \'bar\'}" string="ABC" name="51"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'read_group') {
+                assert.deepEqual(args.kwargs.groupby, ['bar'],
+                    'user defined groupby should have precedence on action groupby');
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    context: {
+                        group_by: 'some_field',
+                    },
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
+
+    form.destroy();
+});
+
 QUnit.test('click on a cell of pivot view inside dashboard', function (assert) {
     assert.expect(3);
 
