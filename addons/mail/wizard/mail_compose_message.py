@@ -279,9 +279,13 @@ class MailComposer(models.TransientModel):
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
                             model_description=model_description,
                             **mail_values)
-                        if ActiveModel._name == 'mail.thread' and wizard.model:
-                            post_params['model'] = wizard.model
-                        ActiveModel.browse(res_id).message_post(**post_params)
+                        if ActiveModel._name == 'mail.thread':
+                            if wizard.model:
+                                post_params['model'] = wizard.model
+                                post_params['res_id'] = res_id
+                            ActiveModel.message_notify(**post_params)
+                        else:
+                            ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)

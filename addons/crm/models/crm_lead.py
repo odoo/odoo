@@ -1211,7 +1211,7 @@ class Lead(models.Model):
             defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, msg_vals, model_description, mail_auto_delete):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using

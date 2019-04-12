@@ -1344,15 +1344,17 @@ class MailThread(models.AbstractModel):
                     subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
                     if message_dict.get('parent_id'):
                         parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
-                        if parent_message.author_id:
+                        if parent_message and parent_message.author_id:
                             partner_ids = [parent_message.author_id.id]
                 else:
                     subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
-            if not hasattr(thread, 'message_post'):
-                post_params['model'] = model
-            new_msg = thread.message_post(**post_params)
+            new_msg = False
+            if thread._name == 'mail.thread':  # message with parent_id not linked to record
+                new_msg = thread.message_notify(**post_params)
+            else:
+                new_msg = thread.message_post(**post_params)
 
             if new_msg and original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -1918,10 +1920,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, body='', subject=None,
-                     message_type='notification', subtype=None,
-                     parent_id=False, attachments=None,
-                     notif_layout=False, add_sign=True, model_description=False,
+    def message_post(self, body='', subject=None, subtype_id=False,
+                     message_type='notification', subtype=None, author_id=None, partner_ids=None, channel_ids=None,
+                     parent_id=False, attachments=None, attachment_ids=None, model=False,
+                     add_sign=True, model_description=False,
                      mail_auto_delete=True, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -1940,52 +1942,33 @@ class MailThread(models.AbstractModel):
                     to the related document. Should only be set by Chatter.
             :return int: ID of newly created mail.message
         """
-        if attachments is None:
-            attachments = {}
-        if self.ids and not self.ensure_one():
-            raise exceptions.Warning(_('Invalid record set: should be called as model (without records) or on single-record recordset'))
+        self.ensure_one()  # should always be posted on a record, use message_notify if no record
 
-        # if we're processing a message directly coming from the gateway, the destination model was
-        # set in the context.
-        model = False
-        if self.ids:
-            self.ensure_one()  # not so usefull
-            model = kwargs.get('model', False) if self._name == 'mail.thread' else self._name
-            if model and model != self._name and hasattr(self.env[model], 'message_post'):
-                return self.env[model].browse(self.ids).message_post(
-                    body=body, subject=subject, message_type=message_type,
-                    subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    notif_layout=notif_layout, add_sign=add_sign,
-                    mail_auto_delete=mail_auto_delete, model_description=model_description, **kwargs)
+        if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
+            raise ValueError('message_post should only be call to post message on record. Use message_notify instead')
 
-        # 0: Find the message's author, because we need it for private discussion
-        author_id = kwargs.get('author_id')
+        if 'model' in kwargs or 'res_id' in kwargs:
+            raise ValueError("message_post doesn't support model and res_id parameters anymore. Please call message_post on record")
+
+        # Find the message's author, because we need it for private discussion
         if author_id is None:  # keep False values
-            author_id = self.env['mail.message']._get_default_author().id
+            author_id = self.env['mail.message']._get_default_author().id # self.env.user.partner_id
 
-        partner_ids = set(kwargs.pop('partner_ids', []))
-        channel_ids = set(kwargs.pop('channel_ids', []))
+        partner_ids = set(partner_ids or [])
+        channel_ids = set(channel_ids or [])
 
-        if parent_id and not model:
-            parent_message = self.env['mail.message'].browse(parent_id)
-            private_followers = set([partner.id for partner in parent_message.partner_ids])
-            if parent_message.author_id:
-                private_followers.add(parent_message.author_id.id)
-            private_followers -= set([author_id])
-            partner_ids |= private_followers
+        for pc_id in partner_ids | channel_ids:
+            if not isinstance(pc_id, int):
+                raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
-        # 4: mail.message.subtype
-        subtype_id = kwargs.get('subtype_id', False)
         if not subtype_id:
             subtype = subtype or 'mt_note'
             if '.' not in subtype:
                 subtype = 'mail.%s' % subtype
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
 
-        user_notification = message_type == 'user_notification'
-
         # automatically subscribe recipients if asked to
-        if self._context.get('mail_post_autofollow') and self.ids and not user_notification and partner_ids:
+        if self._context.get('mail_post_autofollow') and partner_ids:
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = [p for p in partner_ids if p in self._context.get('mail_post_autofollow_partner_ids')]
@@ -1993,8 +1976,8 @@ class MailThread(models.AbstractModel):
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
-        if self._mail_flat_thread and model and not parent_id and self.ids and not user_notification:
-            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
+        if self._mail_flat_thread and not parent_id:
+            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
             parent_id = messages.ids and messages.ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
@@ -2011,65 +1994,57 @@ class MailThread(models.AbstractModel):
         values = kwargs
         values.update({
             'author_id': author_id,
-            'model': model,
-            'res_id': model and self.ids[0] or False,
+            'model': self._name,
+            'res_id': self._name and self.id or False,
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
             'parent_id': parent_id,
             'subtype_id': subtype_id,
-            'partner_ids': [(4, pid) for pid in partner_ids],
-            'channel_ids': [(4, cid) for cid in channel_ids],
-            'add_sign': add_sign
+            'partner_ids': partner_ids,
+            'channel_ids': channel_ids,
+            'add_sign': add_sign,
         })
-        if notif_layout:
-            values['layout'] = notif_layout
 
         # 3. Attachments
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
-        values['attachment_ids'] = attachment_ids
 
-        # Avoid warnings about non-existing fields
-        for x in ('from', 'to', 'cc'):
-            values.pop(x, None)
+        values['attachment_ids'] = self._message_post_process_attachments(attachments or [], attachment_ids or [], values)
+        new_message = self._message_create(values)
+        # Set main attachment field if necessary
+        self._message_set_main_attachment_id(values['attachment_ids'])
 
-        # Post the message
-        # canned_response_ids are added by js to be used by other computations (odoobot)
-        # we need to pop it from values since it is not stored on mail.message
-        canned_response_ids = values.pop('canned_response_ids', False)
-        new_message = MailMessage.create(values)
-        values['canned_response_ids'] = canned_response_ids
-        record = self.env['mail.thread'] if user_notification else self
-        record._message_post_after_hook(new_message, values, model_description, mail_auto_delete)
+        if values['author_id'] and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
+            #if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
+            self._message_subscribe([values['author_id']])
+
+        self._message_post_after_hook(new_message, values)
+        self._notify_thread(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 
-    def _message_post_after_hook(self, message, msg_vals, model_description, mail_auto_delete):
-        """ Hook to add custom behavior after having posted the message. Both
-        message and computed value are given, to try to lessen query count by
-        using already-computed values instead of having to rebrowse things. """
-        # Set main attachment field if necessary
-        attachment_ids = msg_vals['attachment_ids']
-        if not self._abstract and attachment_ids and self.ids and not self.message_main_attachment_id:
+    def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
+        if not self._abstract and attachment_ids and not self.message_main_attachment_id:
             all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
                                      or all_attachments
             self.sudo().write({'message_main_attachment_id': prioritary_attachments[0].id})
-        # Notify recipients of the newly-created message (Inbox / Email + channels)
-        if msg_vals.get('moderation_status') != 'pending_moderation':
-            message._notify(
-                self, msg_vals,
-                force_send=self.env.context.get('mail_notify_force_send', True),
-                model_description=model_description,
-                mail_auto_delete=mail_auto_delete,
-            )
 
-            # Post-process: subscribe author
-            if msg_vals['author_id'] and msg_vals['model'] and self.ids and msg_vals['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-                self._message_subscribe([msg_vals['author_id']])
-        else:
-            message._notify_pending_by_chat()
+    def _message_post_after_hook(self, message, msg_vals):
+        """ Hook to add custom behavior after having posted the message. Both
+        message and computed value are given, to try to lessen query count by
+        using already-computed values instead of having to rebrowse things. """
+        pass
+
+    @api.multi
+    def _notify_thread(self, message, msg_vals, model_description=False, mail_auto_delete=True):
+        # Can be overide to intercept and postpone notification mecanism
+        message._notify(
+            self, msg_vals,
+            force_send=self.env.context.get('mail_notify_force_send', True),
+            model_description=model_description,
+            mail_auto_delete=mail_auto_delete,
+        )
 
     @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):
@@ -2129,35 +2104,65 @@ class MailThread(models.AbstractModel):
             composer.write(update_values)
         return composer.send_mail()
 
-    def message_notify(self, partner_ids, body='', subject=False, **kwargs):
+    def message_notify(self, partner_ids=False, parent_id=False, model=False, res_id=False,
+                       author_id=False, body='', subject=False, model_description=False,
+                       mail_auto_delete=True, **kwargs):
         """ Shortcut allowing to notify partners of messages that shouldn't be 
         displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
-        kw_author = kwargs.pop('author_id', False)
-        if kw_author:
-            author = self.env['res.partner'].sudo().browse(kw_author)
+
+        # should we handle channel_ids here?
+        if self:
+            self.ensure_one()
+
+        if author_id:
+            author = self.env['res.partner'].sudo().browse(author_id)
         else:
             author = self.env.user.partner_id
+
         if not author.email:
             raise exceptions.UserError(_("Unable to notify message, please configure the sender's email address."))
         email_from = formataddr((author.name, author.email))
 
-        msg_values = {
+        partner_ids = partner_ids or set()
+        if parent_id:  # looks like no test case are going throug this condition. Linked to private discussion. This may be removed soon.
+            parent_message = self.env['mail.message'].browse(parent_id)
+            private_followers = set([partner.id for partner in parent_message.partner_ids])
+            if parent_message.author_id:
+                private_followers.add(parent_message.author.id)
+            private_followers -= set([author.id])
+            partner_ids |= private_followers
+
+        if not partner_ids:
+            _logger.warning('Message notify called without recipient_ids, skipping')
+            return self.env['mail_message']
+
+        if not (model and res_id):  # both value should be set or none should be set (record)
+            model = False
+            res_id = False
+
+        MailThread = self.env['mail.thread']
+        values = {
+            'parent_id': parent_id,
+            'model': self._name if self else False,
+            'res_id': self.id if self else False,
+            'message_type': 'user_notification',
             'subject': subject,
             'body': body,
             'author_id': author.id,
             'email_from': email_from,
-            'message_type': 'user_notification',
             'partner_ids': partner_ids,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
             'record_name': False,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
+            'reply_to': MailThread._notify_get_reply_to(default=email_from, records=None)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
-        msg_values.update(kwargs)
-        return self.message_post(**msg_values)
+        values.update(kwargs)
+        new_message = MailThread._message_create(values)
+        MailThread._notify_thread(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
+        return new_message
 
-    def _message_log(self, body='', subject=False, message_type='notification', **kwargs):
+    def _message_log(self, body='', author_id=None, subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
         any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2167,14 +2172,15 @@ class MailThread(models.AbstractModel):
         if len(self.ids) > 1:
             raise exceptions.Warning(_('Invalid record set: should be called as model (without records) or on single-record recordset'))
 
-        kw_author = kwargs.pop('author_id', False)
-        if kw_author:
-            author = self.env['res.partner'].sudo().browse(kw_author)
+        if author_id:
+            author = self.env['res.partner'].sudo().browse(author_id)
         else:
             author = self.env.user.partner_id
+            author_id = author.id
+
         if not author.email:
             raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email))
+        email_from = author.email_formatted
 
         message_values = {
             'subject': subject,
@@ -2192,6 +2198,17 @@ class MailThread(models.AbstractModel):
         message_values.update(kwargs)
         message = self.env['mail.message'].sudo().create(message_values)
         return message
+
+    def _message_create(self, values):
+        create_values = dict(values)
+        if 'notif_layout' in create_values:
+            create_values['layout'] = create_values.pop('notif_layout')
+        # Avoid warnings about non-existing fields
+        for x in ('from', 'to', 'cc', 'canned_response_ids'):
+            create_values.pop(x, None)
+        create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
+        create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+        return self.env['mail.message'].create(create_values)
 
     # ------------------------------------------------------
     # Followers API
