@@ -1,5 +1,6 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
+from odoo.tests.common import Form
 import time
 
 
@@ -8,7 +9,7 @@ class TestPayment(AccountingTestCase):
 
     def setUp(self):
         super(TestPayment, self).setUp()
-        self.register_payments_model = self.env['account.register.payments'].with_context(active_model='account.invoice')
+        self.register_payments_model = self.env['account.payment.register'].with_context(active_model='account.invoice')
         self.payment_model = self.env['account.payment']
         self.invoice_model = self.env['account.invoice']
         self.invoice_line_model = self.env['account.invoice.line']
@@ -40,6 +41,8 @@ class TestPayment(AccountingTestCase):
         self.transfer_account = self.env['res.users'].browse(self.env.uid).company_id.transfer_account_id
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
+
+        self.form_payment = Form(self.env['account.payment'])
 
     def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
@@ -82,12 +85,11 @@ class TestPayment(AccountingTestCase):
         return bank_stmt
 
     def test_full_payment_process(self):
-        """ Create a payment for two invoices, post it and reconcile it with a bank statement """
-        inv_1 = self.create_invoice(amount=100, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
-        inv_2 = self.create_invoice(amount=200, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        """ Create a payment for one invoice, post it and reconcile it with a bank statement """
+        inv_1 = self.create_invoice(amount=300, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
 
-        ctx = {'active_model': 'account.invoice', 'active_ids': [inv_1.id, inv_2.id]}
-        register_payments = self.register_payments_model.with_context(ctx).create({
+        ids = [inv_1.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
@@ -99,7 +101,6 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(inv_1.state, 'paid')
-        self.assertEqual(inv_2.state, 'paid')
 
         self.assertRecordValues(payment.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
@@ -108,7 +109,7 @@ class TestPayment(AccountingTestCase):
         self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == inv_1.account_id)[0].full_reconcile_id)
 
         liquidity_aml = payment.move_line_ids.filtered(lambda r: r.account_id == self.account_eur)
-        bank_statement = self.reconcile(liquidity_aml, 200, 0, False)
+        bank_statement = self.reconcile(liquidity_aml, 300, 0, False)
 
         self.assertEqual(liquidity_aml.statement_id, bank_statement)
         self.assertEqual(liquidity_aml.statement_line_id, bank_statement.line_ids[0])
@@ -163,20 +164,21 @@ class TestPayment(AccountingTestCase):
         # One payment for inv_4 (Vendor Bill)
         inv_4 = self.create_invoice(amount=50, partner=self.partner_agrolait.id, type='in_invoice')
 
-        ids = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-            'group_invoices': True,
-        })
-        register_payments.create_payments()
-        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+        ids_out = [inv_1.id, inv_2.id, inv_3.id]
+        ids_in = [inv_4.id]
+        for ids in [ids_out, ids_in]:
+            register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+                'payment_date': time.strftime('%Y') + '-07-15',
+                'journal_id': self.bank_journal_euro.id,
+                'payment_method_id': self.payment_method_manual_in.id,
+            })
+            register_payments.create_payments()
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids_out + ids_in)], order="id desc")
 
-        self.assertEqual(len(payment_ids), 3)
-        self.assertAlmostEquals(register_payments.amount, 750)
+        self.assertEqual(len(payment_ids), 4)
+        self.assertAlmostEquals(sum(payment_ids.filtered(lambda r: r.payment_type == 'inbound').mapped('amount')) - sum(payment_ids.filtered(lambda r: r.payment_type == 'outbound').mapped('amount')), 750)
 
-        inv_1_2_pay = None
+        inv_1_2_pay = self.env['account.payment']
         inv_3_pay = None
         inv_4_pay = None
         for payment_id in payment_ids:
@@ -186,29 +188,24 @@ class TestPayment(AccountingTestCase):
                     self.assertEqual(payment_id.amount, 50)
                     inv_4_pay = payment_id
                 else:
-                    self.assertEqual(payment_id.amount, 600)
-                    inv_1_2_pay = payment_id
+                    self.assertTrue(payment_id.amount in (100, 500))
+                    inv_1_2_pay |= payment_id
             else:
                 self.assertEqual(payment_id.amount, 200)
                 inv_3_pay = payment_id
 
-        self.assertIsNotNone(inv_1_2_pay)
-        self.assertIsNotNone(inv_3_pay)
-        self.assertIsNotNone(inv_4_pay)
-
-        self.assertRecordValues(inv_1_2_pay.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 600.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 600.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
+        self.assertTrue(len(inv_1_2_pay) == 2)
         self.assertEqual(inv_1.state, 'paid')
         self.assertEqual(inv_2.state, 'paid')
 
+        self.assertIsNotNone(inv_3_pay)
         self.assertRecordValues(inv_3_pay.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 200.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 200.0, 'amount_currency': 0.0, 'currency_id': False},
         ])
         self.assertEqual(inv_3.state, 'paid')
 
+        self.assertIsNotNone(inv_4_pay)
         self.assertRecordValues(inv_4_pay.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 50.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': inv_1.account_id.id, 'debit': 50.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
@@ -220,16 +217,15 @@ class TestPayment(AccountingTestCase):
         # Test Customer Invoice
         inv_1 = self.create_invoice(amount=600)
         ids = [inv_1.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=ids))
+        with payment_register as pr:
+            pr.payment_date = time.strftime('%Y') + '-07-15'
+            pr.journal_id = self.bank_journal_euro
+            pr.payment_method_id = self.payment_method_manual_in
 
-        # Perform the partial payment by setting the amount at 550 instead of 600
-        register_payments.amount = 550
+            # Perform the partial payment by setting the amount at 550 instead of 600
+            pr.amount = 550
 
-        register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
         self.assertEqual(len(payment_ids), 1)
@@ -245,16 +241,16 @@ class TestPayment(AccountingTestCase):
         # Test Vendor Bill
         inv_2 = self.create_invoice(amount=500, type='in_invoice', partner=self.partner_china_exp.id)
         ids = [inv_2.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
+        payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=ids))
+        with payment_register as pr:
+            pr.payment_date = time.strftime('%Y') + '-07-15'
+            pr.journal_id = self.bank_journal_euro
+            pr.payment_method_id = self.payment_method_manual_in
 
-        # Perform the partial payment by setting the amount at 300 instead of 500
-        register_payments.amount = 300
+            # Perform the partial payment by setting the amount at 300 instead of 500
+            pr.amount = 300
 
-        register_payments.create_payments()
+        payment_register.save()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
         self.assertEqual(len(payment_ids), 1)
@@ -266,91 +262,6 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_id.payment_type, 'outbound')
         self.assertEqual(payment_id.partner_id, self.partner_china_exp)
         self.assertEqual(payment_id.partner_type, 'supplier')
-
-    def test_multiple_receivables(self):
-        """ Create test to pay several invoices with same partner but multiple receivable accounts """
-        # One payment for inv_1, inv_2 (same receivable account) and inv_3 (another receivable account)
-
-        account_receivable_id_1 = self.account_receivable.id
-        account_receivable_id_2 = self.account_receivable.copy(default={
-            'code': '%s (%s)' % (self.account_receivable.code, 'duplicate 1')
-        }).id
-
-        inv_1 = self.create_invoice(amount=100, account_id=account_receivable_id_1)
-        inv_2 = self.create_invoice(amount=150, account_id=account_receivable_id_1)
-        inv_3 = self.create_invoice(amount=300, account_id=account_receivable_id_2)
-
-        ids = [inv_1.id, inv_2.id, inv_3.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-            'group_invoices': True,
-        })
-        register_payments.create_payments()
-        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
-
-        self.assertEqual(len(payment_ids), 2)
-        self.assertAlmostEquals(register_payments.amount, 550)
-
-        inv_1_pay = payment_ids.filtered(lambda p: p.state == 'posted' and p.invoice_ids and p.invoice_ids == inv_1 + inv_2)
-        inv_2_pay = payment_ids.filtered(lambda p: p.state == 'posted' and p.invoice_ids and p.invoice_ids == inv_3)
-
-        self.assertTrue(inv_1_pay)
-        self.assertTrue(inv_2_pay)
-
-        self.assertRecordValues(inv_1_pay.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 250.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 250.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
-
-        self.assertRecordValues(inv_2_pay.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_3.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
-
-    def test_register_payment_group_invoices(self):
-        """ Tests the 'group invoices' option of the payment registering wizard
-        """
-
-        account_receivable_id_1 = self.account_receivable.id
-        account_receivable_id_2 = self.account_receivable.copy(default={
-            'code': '%s (%s)' % (self.account_receivable.code, 'duplicate 1')
-        }).id
-
-        inv_1 = self.create_invoice(amount=100, account_id=account_receivable_id_1)
-        inv_2 = self.create_invoice(amount=150, account_id=account_receivable_id_1)
-        inv_3 = self.create_invoice(amount=300, account_id=account_receivable_id_2)
-        inv_4 = self.create_invoice(amount=300, account_id=account_receivable_id_2, partner=self.partner_china_exp.id)
-
-        inv_5 = self.create_invoice(amount=42, account_id=account_receivable_id_1)
-        inv_6 = self.create_invoice(amount=1111, account_id=account_receivable_id_1)
-        inv_7 = self.create_invoice(amount=666, account_id=account_receivable_id_2)
-        inv_8 = self.create_invoice(amount=300, account_id=account_receivable_id_2, partner=self.partner_china_exp.id)
-
-        # When grouping invoices, we should have one payment per receivable account
-        ids1 = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
-        register_payments1 = self.register_payments_model.with_context(active_ids=ids1).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-            'group_invoices': True,
-        })
-        register_payments1.create_payments()
-        payment_ids1 = self.payment_model.search([('invoice_ids', 'in', ids1)], order="id desc")
-        self.assertEqual(len(payment_ids1), 3, "3 payments should have been created, one fo each (partner, receivable account).")
-
-        # When not grouping, we should have one payment per invoice
-        ids2 = [inv_5.id, inv_6.id, inv_7.id, inv_8.id]
-        register_payments2 = self.register_payments_model.with_context(active_ids=ids2).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-            'group_invoices': False,
-        })
-        register_payments2.create_payments()
-        payment_ids2 = self.payment_model.search([('invoice_ids', 'in', ids2)], order="id desc")
-        self.assertEqual(len(payment_ids2), 4, "Not grouping payments should always create a distinct payment per invoice.")
 
     def test_payment_and_writeoff_in_other_currency_1(self):
         # Use case:
@@ -595,37 +506,3 @@ class TestPayment(AccountingTestCase):
 
         # The invoice should now be paid
         self.assertEqual(invoice.state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")
-
-    def test_register_payments_multi_invoices(self):
-        inv1 = self.create_invoice(amount=40)
-        inv2 = inv1.copy()
-        inv2.action_invoice_open()
-
-        batch_payment = self.env['account.register.payments'].with_context(active_ids=(inv1 + inv2).ids).create({
-            'amount': 70,
-            'partner_id': inv1.partner_id.id,
-            'journal_id': self.bank_journal_usd.id,
-            'invoice_ids': [(6, False, (inv1 + inv2).ids)],
-            'partner_type': 'customer',
-            'payment_difference_handling': 'reconcile',
-            'payment_type': 'inbound',
-            'payment_method_id': self.payment_method_manual_in.id,
-            'writeoff_account_id': self.account_revenue.id,
-            'writeoff_label': "why can't we live together"})
-
-        payment_id = batch_payment.create_payments()['res_id']
-        payment_id = self.env['account.payment'].browse(payment_id)
-
-        self.assertEqual(inv1.state, 'paid')
-        self.assertEqual(inv2.state, 'paid')
-
-        receivable_inv1 = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        receivable_inv2 = inv2.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        receivable_payment = payment_id.move_line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-
-        self.assertEqual(
-            receivable_inv1.full_reconcile_id.reconciled_line_ids,
-            receivable_inv1 + receivable_inv2 + receivable_payment
-        )
-        write_off_line = payment_id.move_line_ids.filtered(lambda l: l.account_id == payment_id.writeoff_account_id)
-        self.assertEqual(write_off_line.debit, 10)

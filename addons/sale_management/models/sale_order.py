@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.sale_order_template_id.note or self.note
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self.note = template.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {

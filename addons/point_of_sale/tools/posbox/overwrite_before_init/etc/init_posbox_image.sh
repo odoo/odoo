@@ -28,6 +28,8 @@ PKGS_TO_INSTALL="
     cups \
     printer-driver-all \
     cups-ipp-utils \
+    libcups2-dev \
+    pcscd \
     localepurge \
     vim \
     mc \
@@ -37,6 +39,7 @@ PKGS_TO_INSTALL="
     hostapd \
     git \
     rsync \
+    swig \
     console-data \
     lightdm \
     xserver-xorg-video-fbdev \
@@ -49,7 +52,9 @@ PKGS_TO_INSTALL="
     rpi-update \
     adduser \
     postgresql \
+    python-cups \
     python3 \
+    python3-pyscard \
     python3-urllib3 \
     python3-dateutil \
     python3-decorator \
@@ -104,9 +109,14 @@ rm -rf /usr/share/doc
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
-pip3 install pyusb==1.0.0b1
-pip3 install evdev
-pip3 install gatt
+PIP_TO_INSTALL="
+    pyusb==1.0.0b1 \
+    evdev \
+    gatt \
+    v4l2 \
+    pycups"
+
+pip3 install ${PIP_TO_INSTALL}
 
 
 groupadd usbusers
@@ -148,6 +158,7 @@ if [ $SYSTEMD -eq 1 ]; then
     systemctl set-default graphical.target
     ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
     rm /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
+    rm /etc/systemd/system/hostapd.service
 else
     update-rc.d lightdm enable 2
 fi

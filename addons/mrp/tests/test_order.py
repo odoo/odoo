@@ -150,19 +150,13 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
 
     def test_empty_routing(self):
-        """ Checks an empty routing isn't usable on a manufacturing order"""
-        routing = self.env['mrp.routing'].create({
-            'name': 'Routing without operations',
-            'location_id': self.warehouse_1.wh_input_stock_loc_id.id,
-        })
+        """ Check what happens when you work with an empty routing"""
+        routing = self.env['mrp.routing'].create({'name': 'Routing without operations'})
         self.bom_3.routing_id = routing.id
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.product_6
-        production_form.product_qty = 3
-        production_form.product_uom_id = self.product_6.uom_id
         production = production_form.save()
         self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
-        self.assertEqual(production.move_raw_ids[0].location_id.id, self.warehouse_1.wh_input_stock_loc_id.id, 'Raw moves start location should have altered.')
 
     def test_multiple_post_inventory(self):
         """ Check the consumed quants of the produced quants when intermediate calls to `post_inventory` during a MO."""
@@ -414,6 +408,9 @@ class TestMrpOrder(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 1.0
+        for i in range(len(produce_form.workorder_line_ids)):
+            with produce_form.workorder_line_ids.edit(i) as line:
+                line.qty_done += 1
         product_produce = produce_form.save()
         product_produce.final_lot_id = final_product_lot.id
         # product 1 lot 1 shelf1
@@ -421,8 +418,6 @@ class TestMrpOrder(TestMrpCommon):
         # product 1 lot 2
         self.assertEqual(len(product_produce.workorder_line_ids), 4, 'You should have 4 produce lines. lot 1 shelf_1, lot 1 shelf_2, lot2 and for product which have tracking None')
 
-        for produce_line in product_produce.workorder_line_ids:
-            produce_line.qty_done = produce_line.qty_to_consume + 1
         product_produce.do_produce()
 
         move_1 = mo.move_raw_ids.filtered(lambda m: m.product_id == p1)
@@ -697,6 +692,7 @@ class TestMrpOrder(TestMrpCommon):
 
         with self.assertRaises(UserError):
             # try adding another line for a bom product to increase the quantity
+            produce_form.qty_producing = 1
             with produce_form.workorder_line_ids.new() as line:
                 line.product_id = p1
                 line.qty_done = 1
@@ -715,6 +711,7 @@ class TestMrpOrder(TestMrpCommon):
                 'active_id': mo.id,
                 'active_ids': [mo.id],
             }))
+            produce_form.qty_producing = 1
             with produce_form.workorder_line_ids.new() as line:
                 line.product_id = self.product_4
                 line.qty_done = 1

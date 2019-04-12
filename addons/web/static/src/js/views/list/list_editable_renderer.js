@@ -435,6 +435,18 @@ ListRenderer.include({
             });
         }
     },
+    /**
+     * @override
+     */
+    updateState: function (state, params) {
+        if (params.noRender) {
+            // the state changed, but we won't do a re-rendering right now, so
+            // remove computed modifiers data (as they are obsolete) to force
+            // them to be recomputed at next (sub-)rendering
+            this.allModifiersData = [];
+        }
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -586,7 +598,7 @@ ListRenderer.include({
         this.commitChanges(curRecordId).then(function () {
             var $prevRow = self._getRow(self.allRecordIds[prevRecordIndex]);
             var prevRowIndex = $prevRow.prop('rowIndex') - 1;
-            self._selectCell(prevRowIndex, self.columns.length - 1);
+            self._selectCell(prevRowIndex, self.columns.length - 1, {inc: -1});
         });
     },
     /**
@@ -955,6 +967,8 @@ ListRenderer.include({
      * @param {boolean} [options.force=false] if true, force selecting the cell
      *   even if seems to be already the selected one (useful after a re-
      *   rendering, to reset the focus on the correct field)
+     * @param {integer} [options.inc=1] the increment to use when searching for
+     *   the "next" possible cell (if the cell to select can't be selected)
      * @return {Promise} fails if no cell could be selected
      */
     _selectCell: function (rowIndex, fieldIndex, options) {
@@ -979,7 +993,7 @@ ListRenderer.include({
             var oldFieldIndex = self.currentFieldIndex;
             self.currentFieldIndex = fieldIndex;
             fieldIndex = self._activateFieldWidget(record, fieldIndex, {
-                inc: 1,
+                inc: options.inc || 1,
                 wrap: wrap,
                 event: options && options.event,
             });
@@ -1183,7 +1197,7 @@ ListRenderer.include({
         switch (ev.data.direction) {
             case 'previous':
                 if (this.currentFieldIndex > 0) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
+                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {inc: -1, wrap: false})
                         .guardedCatch(this._moveToPreviousLine.bind(this));
                 } else {
                     this._moveToPreviousLine();

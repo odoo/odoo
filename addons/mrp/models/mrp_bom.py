@@ -120,8 +120,7 @@ class MrpBom(models.Model):
         return super(MrpBom, self).unlink()
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
-        """ Finds BoM for particular product, picking and company """
+    def _bom_find_domain(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
         if product:
             if not product_tmpl:
                 product_tmpl = product.product_tmpl_id
@@ -130,7 +129,7 @@ class MrpBom(models.Model):
             domain = [('product_tmpl_id', '=', product_tmpl.id)]
         else:
             # neither product nor template, makes no sense to search
-            return False
+            raise UserError(_('You should provide either a product or a product template to search a BoM'))
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
@@ -138,6 +137,14 @@ class MrpBom(models.Model):
         if bom_type:
             domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without
+        return domain
+
+    @api.model
+    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
+        """ Finds BoM for particular product, picking and company """
+        domain = self._bom_find_domain(product_tmpl=product_tmpl, product=product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
+        if domain is False:
+            return domain
         return self.search(domain, order='sequence, product_id', limit=1)
 
     def explode(self, product, quantity, picking_type=False):

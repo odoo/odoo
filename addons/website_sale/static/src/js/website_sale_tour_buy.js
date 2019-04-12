@@ -32,13 +32,10 @@ tour.register('shop_buy_product', {
             trigger: 'label:contains(Steel) input',
         },
         {
+            id: 'add_cart_step',
             content: "click on add to cart",
             extra_trigger: 'label:contains(Steel) input:propChecked',
             trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
-        },
-        {
-            content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'button:contains("Proceed to Checkout")',
         },
         {
             content: "add suggested",

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form_view" model="ir.ui.view">
+        <field name="name">stock.picking.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="display_view_subcontracted_move_lines" invisible="1" />
+                <button string="Subcontracted Moves" type="object"
+                    name="action_view_subcontracted_move_lines"
+                    class="oe_stat_button" icon="fa-exchange"
+                    attrs="{'invisible': [('display_view_subcontracted_move_lines', '=', False)]}" />
+            </xpath>
+
+            <xpath expr="//button[@name='button_validate'][hasclass('o_btn_validate')]" position="before">
+                <field name="display_action_record_components" invisible="1" />
+                <button name="action_record_components" class="oe_highlight" attrs="{'invisible': [('display_action_record_components', '=', False)]}" string="Record components" type="object"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

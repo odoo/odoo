@@ -151,4 +151,17 @@
             </form>
         </field>
     </record>
+
+    <record id="o2m_recursive_relation_view" model="ir.ui.view">
+        <field name="name">Recursive Relation Test View</field>
+        <field name="model">test_testing_utilities.recursive</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="one_to_many_id"/>
+                    <field name="many_to_one_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
 </odoo>

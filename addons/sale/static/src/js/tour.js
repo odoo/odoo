@@ -44,7 +44,8 @@ tour.register('sale_tour', {
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: function (actions) {
-        actions.text("DESK0001", this.$anchor.find('input'));
+        var $input = this.$anchor.find('input');
+        actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
         // fake keydown to trigger search
         var keyDownEvent = jQuery.Event("keydown");
         keyDownEvent.which = 42;

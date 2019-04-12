@@ -359,7 +359,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("5", 2, 5)]
+            [("5", 0, 5)]
         )
 
     def test_o2m_inner_default(self):
@@ -409,7 +409,10 @@ class TestO2M(TransactionCase):
             self.assertEqual(sub.value, 1)
             self.assertEqual(sub.v, 1)
 
-    def test_m2o_readonly(self):
+    def test_readonly_o2m(self):
+        """ Tests that o2m fields flagged as readonly (readonly="1" in the
+        view) can't be written to
+        """
         r = self.env['test_testing_utilities.parent'].create({
             'subs': [(0, 0, {})]
         })
@@ -421,6 +424,20 @@ class TestO2M(TransactionCase):
             f.subs.edit(index=0)
         with self.assertRaises(AssertionError):
             f.subs.remove(index=0)
+
+    def test_o2m_readonly_subfield(self):
+        """ Tests that readonly is applied to the field of the o2m = not sent
+        as part of the create / write values
+        """
+        f = Form(self.env['o2m_readonly_subfield_parent'])
+        with f.line_ids.new() as new_line:
+            new_line.name = "ok"
+            self.assertEqual(new_line.f, 2)
+        r = f.save()
+        self.assertEqual(
+            (r.line_ids.name, r.line_ids.f),
+            ('ok', 2)
+        )
 
     def test_o2m_dyn_onchange(self):
         f = Form(self.env['test_testing_utilities.onchange_parent'], view='test_testing_utilities.m2o_onchange_view')
@@ -466,6 +483,9 @@ class TestO2M(TransactionCase):
             f.count = 1
             self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
         self.assertEqual(len(r.line_ids), 1)
+
+    def test_o2m_self_recursive(self):
+        Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record

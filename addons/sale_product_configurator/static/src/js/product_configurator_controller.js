@@ -292,7 +292,7 @@ var ProductConfiguratorFormController = FormController.extend({
      *
      * @param {Array} attributeValueIds
      */
-    _getAttributeValueIds(attributeValueIds) {
+    _getAttributeValueIds: function (attributeValueIds) {
         if (!attributeValueIds || attributeValueIds.length === 0){
             return false;
         }

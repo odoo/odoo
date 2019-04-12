@@ -153,7 +153,7 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice" js_class="account_tree">
                     <field name="partner_id" groups="base.group_user" string="Customer"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
@@ -233,7 +233,7 @@
             <field name="name">account.invoice.supplier.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-bf="not partner_id" string="Vendor Bill" js_class="account_bills_tree">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-bf="not partner_id" string="Vendor Bill" js_class="account_tree">
                     <field name="partner_id" invisible="1"/>
                     <field name="source_email" invisible="1"/>
                     <field name="invoice_icon" string=" "/>
@@ -267,7 +267,7 @@
                 <form string="Vendor Bill">
                 <header>
                         <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
-                        <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                        <button name="action_register_payment" type="object" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask for a Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','in_payment','paid'))]}"/>
                         <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" />
@@ -402,7 +402,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="o_attachment_preview" attrs="{'invisible': ['|',('type', '!=', 'in_invoice'),('state', '!=', 'draft')]}" />
+                <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
@@ -420,7 +420,7 @@
                 <header>
                     <button name="action_invoice_sent" string="Send &amp; Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','in_payment','paid'))]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_invoice_sent" string="Send &amp; Print" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','in_payment','paid'))]}" groups="base.group_user"/>
-                    <button name="%(action_account_invoice_payment)d" id="account_invoice_payment_btn" type="action"
+                    <button name="action_register_payment" id="account_invoice_payment_btn" type="object"
                             attrs="{'invisible': [('state', '!=', 'open')]}"
                             string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="account.group_account_invoice"/>
@@ -460,7 +460,7 @@
                                 widget="res_partner_many2one"
                                 context="{'search_default_customer':1, 'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                 options='{"always_reload": True, "no_quick_create": True}'
-                                domain="[('customer', '=', True)]" required="1"/>
+                                domain="[('customer', '=', True)]"/>
                             <field name="payment_term_id"/>
                             <field name="cash_rounding_id" groups="account.group_cash_rounding"/>
                         </group>
@@ -632,6 +632,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                     <field name="activity_ids" widget="mail_activity"/>

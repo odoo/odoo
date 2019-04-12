@@ -24,19 +24,12 @@
         <record id="view_account_supplier_payment_tree" model="ir.ui.view">
             <field name="name">account.supplier.payment.tree</field>
             <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancelled']" edit="false">
-                    <field name="payment_date"/>
-                    <field name="name"/>
-                    <field name="journal_id"/>
-                    <field name="payment_method_id"/>
-                    <field name="partner_id" string="Vendor"/>
-                    <field name="amount" sum="Amount"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="partner_type" invisible="1"/>
-                </tree>
+                <field name="partner_id" position="attributes">
+                    <attribute name="string">Vendor</attribute>
+                </field>
             </field>
         </record>
 
@@ -150,34 +143,73 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
-                            <group>
-                                <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
-                                <label for="amount"/>
-                                <div name="amount_div" class="o_row">
-                                    <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                </div>
-                                <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
-                                <field name="show_partner_bank_account" invisible="1"/>
-                                <field name="payment_method_code" invisible="1"/>
+                            <field name="invoice_ids" invisible="1"/>
+                            <group name="partner_group" invisible="context.get('active_model') == 'account.invoice'">
+                                <field name="payment_type" widget="radio"/>
+                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                            </group>
+                            <group name="right_column">
+                                <field name="communication"/>
+                                <field name="payment_date"/>
                             </group>
                             <group>
-                                <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="communication" attrs="{'invisible': [('state', '!=', 'draft'), ('communication', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="amount"/>
+                                <div name="amount_div" class="o_row">
+                                    <field name="amount"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                                </div>
+                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
+                                <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
+                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('require_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="show_partner_bank_account" invisible="1"/>
+                                <field name="require_partner_bank_account" invisible="1"/>
+                                <field name="payment_method_code" invisible="1"/>
+                            </group>
+                            <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
+                                <label for="payment_difference"/>
+                                <div>
+                                    <field name="payment_difference"/>
+                                    <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                    <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
+                                        <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
+                                        <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <label for="writeoff_label" class="oe_edit_only" string="Label"/>
+                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                    </div>
+                                </div>
                             </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                      <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                      <field name="activity_ids" widget="mail_activity"/>
-                      <field name="message_ids" widget="mail_thread"/>
-                  </div>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_form_multi" model="ir.ui.view">
+            <field name="name">account.payment.form.multi</field>
+            <field name="model">account.payment.register</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment">
+                    <group>
+                        <group>
+                            <field name="payment_method_id" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" widget="selection"/>
+                            <field name="payment_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create Payment" name="create_payments" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -251,138 +283,29 @@
         <record id="view_account_payment_invoice_form" model="ir.ui.view">
             <field name="name">account.payment.invoice.form</field>
             <field name="model">account.payment</field>
+            <field name="inherit_id" ref="view_account_payment_form"/>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <form string="Register Payment">
-                    <sheet>
-                        <group>
-                            <field name="payment_type" invisible="1"/>
-                            <field name="partner_type" invisible="1"/>
-                            <field name="invoice_ids" invisible="1"/>
-                            <field name="partner_id" invisible="1"/>
-                            <field name="state" invisible="1"/>
-                            <group>
-                                <label for="amount"/>
-                                <div name="amount_div" class="o_row">
-                                    <field name="amount"/>
-                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
-                                </div>
-                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
-                                <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
-                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
-                                <field name="show_partner_bank_account" invisible="1"/>
-                                <field name="payment_method_code" invisible="1"/>
-                            </group>
-                            <group>
-                                <field name="payment_date"/>
-                                <field name="communication"/>
-                            </group>
-                            <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
-                                <label for="payment_difference"/>
-                                <div>
-                                    <field name="payment_difference"/>
-                                    <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                    <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
-                                        <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
-                                        <label for="journal_id" string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
-                                        <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
-                                        <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
-                                    </div>
-                                </div>
-                            </group>
-                        </group>
-                    </sheet>
+                <xpath expr="//header" position='replace'></xpath>
+                <xpath expr="//sheet" position='after'>
                     <footer>
-                        <button string='Validate' name="action_validate_invoice_payment" type="object" class="btn-primary"/>
+                        <field name="state" invisible="1"/>
+                        <button string='Validate' name="post" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
-                </form>
+                </xpath>
             </field>
         </record>
 
-        <record id="action_account_invoice_payment" model="ir.actions.act_window">
+        <record id="action_account_invoice_from_list" model="ir.actions.server">
             <field name="name">Register Payment</field>
-            <field name="res_model">account.payment</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_account_payment_invoice_form"/>
-            <field name="context">{'default_invoice_ids': [(4, active_id, None)]}</field>
-            <field name="target">new</field>
-        </record>
-
-
-        <!-- Register payment from several invoices -->
-
-        <record id="view_account_payment_from_invoices" model="ir.ui.view">
-            <field name="name">account.register.payments.wizard</field>
-            <field name="model">account.register.payments</field>
-            <field name="arch" type="xml">
-                <form string="Register Payment">
-                    <group>
-                        <field name="payment_type" invisible="1"/>
-                        <field name="partner_type" invisible="1"/>
-                        <field name="invoice_ids" invisible="1"/>
-                        <field name="partner_id" invisible="1"/>
-                        <field name="multi" invisible="1"/>
-                        <group>
-                            <label for="amount"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount" attrs="{'readonly': [('multi', '=', True)]}"/>
-                                <field name="currency_id"
-                                       attrs="{'readonly': [('multi', '=', True)]}"
-                                       options="{'no_create': True, 'no_open': True}"
-                                       groups="base.group_multi_currency"/>
-                            </div>
-                            <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
-                            <field name="hide_payment_method" invisible="1"/>
-                            <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
-                            <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
-                            <field name="show_partner_bank_account" invisible="1"/>
-                            <field name="payment_method_code" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="payment_date"/>
-                            <field name="group_invoices"/>
-                            <field name="show_communication_field" invisible="1"/>
-                            <field name="communication" attrs="{'invisible': [('show_communication_field', '=', False)]}"/>
-                            <p colspan="2" attrs="{'invisible': [('show_communication_field', '=', True)]}">Memo will be computed from invoices</p>
-                        </group>
-                        <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
-                            <label for="payment_difference"/>
-                            <div>
-                                <field name="payment_difference"/>
-                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
-                                    <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                    <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
-                                    <label for="journal_id" string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
-                                    <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
-                                    <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                    <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
-                                </div>
-                            </div>
-                        </group>
-                    </group>
-                    <footer>
-                        <button string='Validate' name="create_payments" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
-               </form>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_invoice"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_register_payment()
             </field>
         </record>
-
-        <act_window
-            id="action_account_payment_from_invoices"
-            name="Register Payment"
-            res_model="account.register.payments"
-            src_model="account.invoice"
-            view_mode="form"
-            multi="True"
-            target="new"
-            key2="client_action_multi"
-        />
 
         <!-- Action confirm_payments for multi -->
         <record id="action_account_confirm_payments" model="ir.actions.server">
@@ -392,7 +315,7 @@
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="code">
-records.post()
+                records.post()
             </field>
         </record>
 

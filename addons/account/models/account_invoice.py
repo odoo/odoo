@@ -103,6 +103,11 @@ class AccountInvoice(models.Model):
         if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
             return self.env.user.company_id.invoice_terms
 
+    def _get_aml_for_amount_residual(self):
+        """ Get the aml to consider to compute the amount residual of invoices """
+        self.ensure_one()
+        return self.sudo().move_id.line_ids.filtered(lambda l: l.account_id == self.account_id)
+
     @api.one
     @api.depends(
         'state', 'currency_id', 'invoice_line_ids.price_subtotal',
@@ -112,14 +117,13 @@ class AccountInvoice(models.Model):
         residual = 0.0
         residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
-        for line in self.sudo().move_id.line_ids:
-            if line.account_id == self.account_id:
-                residual_company_signed += line.amount_residual
-                if line.currency_id == self.currency_id:
-                    residual += line.amount_residual_currency if line.currency_id else line.amount_residual
-                else:
-                    from_currency = line.currency_id or line.company_id.currency_id
-                    residual += from_currency._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
+        for line in self._get_aml_for_amount_residual():
+            residual_company_signed += line.amount_residual
+            if line.currency_id == self.currency_id:
+                residual += line.amount_residual_currency if line.currency_id else line.amount_residual
+            else:
+                from_currency = line.currency_id or line.company_id.currency_id
+                residual += from_currency._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
         self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
@@ -1000,7 +1004,7 @@ class AccountInvoice(models.Model):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
         if to_open_invoices.filtered(lambda inv: not inv.partner_id):
-            raise UserError(_("The field Vendor is required, please complete it to validate the Vendor Bill."))
+            raise UserError(_("The field Vendor/Customer is required, please complete it to validate the Vendor Bill/Customer Invoice."))
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
         if to_open_invoices.filtered(lambda inv: float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1):
@@ -1031,6 +1035,10 @@ class AccountInvoice(models.Model):
         if self.filtered(lambda inv: inv.state not in ('in_payment', 'paid')):
             raise UserError(_('Invoice must be paid in order to set it to register payment.'))
         return self.write({'state': 'open'})
+
+    @api.multi
+    def action_register_payment(self):
+        return self.env['account.payment'].with_context(active_ids=self.ids, active_model='account.invoice', active_id=self.id).action_register_payment()
 
     @api.multi
     def action_invoice_cancel(self):
@@ -1111,11 +1119,17 @@ class AccountInvoice(models.Model):
         return tax_grouped
 
     @api.multi
+    def _get_aml_for_register_payment(self):
+        """ Get the aml to consider to reconcile in register payment """
+        self.ensure_one()
+        return self.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+
+    @api.multi
     def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
         """ Reconcile payable/receivable lines from the invoice with payment_line """
         line_to_reconcile = self.env['account.move.line']
         for inv in self:
-            line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+            line_to_reconcile += inv._get_aml_for_register_payment()
         return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.multi

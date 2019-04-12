@@ -72,7 +72,7 @@ class Survey(http.Controller):
         if (survey_sudo.is_closed or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
-        if not survey_sudo.page_ids and survey_sudo.questions_layout != 'page_per_question':
+        if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
         if answer_sudo and answer_sudo.state == 'done':

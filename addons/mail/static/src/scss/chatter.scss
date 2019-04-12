@@ -21,11 +21,11 @@
             position: relative;
             float: right;
             flex: 1 1 auto;
+            height: $o-statusbar-height;
 
             .o_chatter_button_attachment {
-                height: $o-statusbar-height - 2px;
+                height: $o-statusbar-height;
                 float: right;
-                padding: 0px;
                 margin-right: 25px;
 
                 .fa-paperclip, .o_chatter_attachment_button_count {
@@ -33,14 +33,19 @@
                 }
             }
             .o_followers {
-                height: $o-statusbar-height + 1;
+                height: $o-statusbar-height;
                 border-bottom: 1px solid transparent;
                 flex: 0 1 auto;
             }
         }
         > .btn {
-            height: $o-statusbar-height + 1;
+            height: $o-statusbar-height;
             border: 1px solid transparent;
+        }
+        .btn {
+            @extend .text-nowrap;
+            padding-right: $btn-padding-x;
+            padding-left: $btn-padding-x;
         }
 
     }
@@ -57,6 +62,14 @@
                 border-color: gray('300');
                 border-width: 1px 1px 0;
             }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_chatter .o_chatter_topbar > .o_topbar_right_area {
+        .o_chatter_button_attachment {
+            margin-right: initial;
         }
     }
 }

@@ -787,6 +787,53 @@ QUnit.test('save two searches to dashboard', async function (assert) {
     actionManager.destroy();
 });
 
+QUnit.test('save a action domain to dashboard', async function (assert) {
+    // View domains are to be added to the dashboard domain
+    assert.expect(1);
+
+    var view_domain = ["display_name", "ilike", "a"];
+    var filter_domain = ["display_name", "ilike", "b"];
+
+    // The filter domain already contains the view domain, but is always added by dashboard..,
+    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain]
+
+    var actionManager = await createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.domain, expected_domain,
+                    "the correct domain should be sent");
+                return Promise.resolve(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    await actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+        domain: [view_domain],
+    });
+
+    // Add a filter
+    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
+    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
+    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    // Add it to dashboard
+    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+
+    actionManager.destroy();
+});
+
 QUnit.test("Views should be loaded in the user's language", async function (assert) {
     assert.expect(2);
     var form = await createView({

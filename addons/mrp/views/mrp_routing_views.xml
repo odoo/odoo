@@ -85,7 +85,6 @@
                                 <field name="name"/>
                             </group>
                             <group>
-                                <field name="location_id" groups="stock.group_adv_location" domain="[('usage', '!=', 'view')]"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                            </group>
                         </group>
@@ -109,7 +108,6 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="active" invisible="1"/>
-                    <field name="location_id" groups="stock.group_adv_location"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -145,11 +143,7 @@
                 <search string="Routing">
                     <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Production Location" name="production_location" domain="[]" context="{'group_by':'location_id'}"/>
-                    </group>
                 </search>
             </field>
         </record>
