@@ -17,3 +17,18 @@ class BaseModel(models.AbstractModel):
         activity_box = E.div(field, {'t-name': "activity-box"})
         templates = E.templates(activity_box)
         return E.activity(templates, string=self._description)
+
+    @api.multi
+    def _notify_email_headers(self):
+        """
+            Generate the email headers based on record
+        """
+        if not self:
+            return {}
+        self.ensure_one()
+        return repr(self._notify_email_header_dict())
+
+    def _notify_email_header_dict(self):
+        return {
+            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
+        }

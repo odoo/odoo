@@ -277,8 +277,8 @@ class MailComposer(models.TransientModel):
                             notif_layout=notif_layout,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
-                            model_description=model_description,
-                            **mail_values)
+                            model_description=model_description)
+                        post_params.update(mail_values)
                         if ActiveModel._name == 'mail.thread':
                             if wizard.model:
                                 post_params['model'] = wizard.model
@@ -336,7 +336,8 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
+                record = self.env[self.model].browse(res_id)
+                mail_values['headers'] = record._notify_email_headers()
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

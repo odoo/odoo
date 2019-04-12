@@ -771,9 +771,9 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
-        groups = super(Post, self)._notify_get_groups(message, groups)
+        groups = super(Post, self)._notify_get_groups()
 
         if self.state == 'active':
             for group_name, group_method, group_data in groups:

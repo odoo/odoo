@@ -72,11 +72,13 @@ class Invite(models.TransientModel):
                     'no_auto_thread': True,
                     'add_sign': True,
                 })
-                self.env['res.partner'].with_context(auto_delete=True)._notify(
-                    message,
-                    [{'id': pid, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []} for pid in new_partners.ids],
-                    document,
-                    force_send=True,
-                    send_after_commit=False)
+                partners_data = [{
+                    'id': pid, 
+                    'share': True, 
+                    'notif': 'email', 
+                    'type': 'customer', 
+                    'groups': []
+                } for pid in new_partners.ids]
+                document._notify_record_by_email(message, partners_data, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

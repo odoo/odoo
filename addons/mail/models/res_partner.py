@@ -132,3 +132,4 @@ class Partner(models.Model):
             return self.env.cr.dictfetchall()
         else:
             return {}
+
