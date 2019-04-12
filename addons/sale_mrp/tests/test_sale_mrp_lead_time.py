@@ -147,3 +147,37 @@ class TestSaleMrpLeadTime(TestStockCommon):
             delta=timedelta(seconds=10),
             msg="Schedule date of manufacturing order should be equal to: Schedule date of pack type picking - product's Manufacturing Lead Time."
         )
+
+    def test_02_forward_cancel_confirm_manufacturing_order(self):
+        """ Test confirm manufacturing order based on rule with option forward cancelation."""
+
+        # Update warehouse_1 with Outgoing Shippings pick + pack + ship
+        self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
+
+        # Set delay on pull rule
+        self.warehouse_1.delivery_route_id.rule_ids.write({'previous_move_propagate': True})
+        self.warehouse_1.mto_pull_id.write({'previous_move_propagate': True})
+
+        # Create sale order of product_1
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.partner_1
+        order_form.warehouse_id = self.warehouse_1
+        with order_form.order_line.new() as line:
+            line.product_id = self.product_1
+            line.product_uom_qty = 6
+        order = order_form.save()
+        # Confirm sale order
+        order.action_confirm()
+
+        # Run scheduler
+        self.env['procurement.group'].run_scheduler()
+
+        # Check manufacturing order created or not
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
+        self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
+        # Check status of manufacturing orders.
+        self.assertEqual(manufacturing_order.state, 'confirmed')
+        # Cancel the delivery order.
+        out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.out_type_id)
+        out.action_cancel()
+        self.assertEqual(manufacturing_order.state, 'confirmed')
