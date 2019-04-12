@@ -93,8 +93,8 @@ class TestUi(odoo.tests.HttpCase):
         admin = self.env.ref('base.user_admin')
 
         # Activate B2C
-        self.env.ref('account.group_show_line_subtotals_tax_included').users |= admin
         self.env.ref('account.group_show_line_subtotals_tax_excluded').users -= admin
+        self.env.ref('account.group_show_line_subtotals_tax_included').users |= admin
 
         # Active pricelist on SO
         self.env.ref('product.group_sale_pricelist').users |= admin
