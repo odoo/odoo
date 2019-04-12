@@ -510,13 +510,17 @@ class StockMoveLine(models.Model):
         record.message_post_with_view(template, values={'move': move, 'vals': dict(vals, **data)}, subtype_id=self.env.ref('mail.mt_note').id)
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
+        self.ensure_one()
+        rounding = self.product_uom_id.rounding
+        self._free_reservation_impl(product_id, location_id, quantity, rounding, lot_id=lot_id, package_id=package_id, owner_id=owner_id, ml_to_ignore=ml_to_ignore)
+
+    def _free_reservation_impl(self, product_id, location_id, quantity, rounding, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
         unlink the move lines that reserved a quantity now unavailable.
 
         :param ml_to_ignore: recordset of `stock.move.line` that should NOT be unreserved
         """
-        self.ensure_one()
 
         if ml_to_ignore is None:
             ml_to_ignore = self.env['stock.move.line']
@@ -547,7 +551,6 @@ class StockMoveLine(models.Model):
             # recompute the moves which we adapted their lines.
             move_to_recompute_state = self.env['stock.move']
 
-            rounding = self.product_uom_id.rounding
             for candidate in outdated_candidates:
                 if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
                     quantity -= candidate.product_qty
