@@ -50,13 +50,6 @@
                         </button>
                         <button name="open_cashbox"
                             class="oe_stat_button"
-                            attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
-                            icon="fa-money"
-                            type="object" context="{'balance': 'start'}">
-                            <span class="o_stat_text">Set Opening Balance</span>
-                        </button>
-                        <button name="open_cashbox"
-                            class="oe_stat_button"
                             attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
                             icon="fa-money"
                             type="object" context="{'balance': 'end'}">

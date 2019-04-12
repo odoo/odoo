@@ -203,6 +203,15 @@ class PosSession(models.Model):
         if values.get('name'):
             pos_name += ' ' + values['name']
 
+        total = 0.0
+        balance_start = None
+        for lines in pos_config.default_cashbox_id.cashbox_lines_ids:
+            total += lines.subtotal
+        if pos_config.session_ids:
+            balance_start = pos_config.last_session_closing_cash
+        else:
+            balance_start = total
+
         statements = []
         ABS = self.env['account.bank.statement']
         uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
@@ -212,6 +221,7 @@ class PosSession(models.Model):
             # newly created bank statement
             ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
             st_values = {
+                'balance_start': balance_start,
                 'journal_id': journal.id,
                 'user_id': self.env.user.id,
                 'name': pos_name
@@ -222,7 +232,7 @@ class PosSession(models.Model):
         values.update({
             'name': pos_name,
             'statement_ids': [(6, 0, statements)],
-            'config_id': config_id
+            'config_id': config_id,
         })
 
         res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
@@ -318,10 +328,9 @@ class PosSession(models.Model):
     def open_cashbox(self):
         self.ensure_one()
         context = dict(self._context)
-        balance_type = context.get('balance') or 'start'
+        balance_type = context.get('balance')
         context['bank_statement_id'] = self.cash_register_id.id
         context['balance'] = balance_type
-        context['default_pos_id'] = self.config_id.id
 
         action = {
             'name': _('Cash Control'),
@@ -335,10 +344,7 @@ class PosSession(models.Model):
         }
 
         cashbox_id = None
-        if balance_type == 'start':
-            cashbox_id = self.cash_register_id.cashbox_start_id.id
-        else:
-            cashbox_id = self.cash_register_id.cashbox_end_id.id
+        cashbox_id = self.cash_register_id.cashbox_end_id.id
         if cashbox_id:
             action['res_id'] = cashbox_id
 

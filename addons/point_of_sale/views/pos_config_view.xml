@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--Account cashbox line-->
+    <!--Account bank cashbox -->
 
-    <record id="account_cashbox_line_view_tree" model="ir.ui.view">
-        <field name="name">account.cashbox.line.tree</field>
-        <field name="model">account.cashbox.line</field>
-        <field name="arch" type="xml">
-            <tree string="Cashbox balance" editable="top">
-                <field name="coin_value"/>
-                <field name="number"/>
-                <field name="subtotal"/>
-            </tree>
-        </field>
-    </record>
+    <record id="view_account_bnk_stmt_cashbox" model="ir.ui.view">
+            <field name="name">account.bnk_stmt_cashbox.form</field>
+            <field name="model">account.bank.statement.cashbox</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="cashbox_lines_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="coin_value" widget="monetary"/>
+                                <field name="number"/>
+                                <field name="subtotal" sum="Total" widget="monetary"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="validate" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
-    <record id="account_cashbox_line_action" model="ir.actions.act_window">
-        <field name="name">Opening/Closing Values</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">account.cashbox.line</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="account_cashbox_line_view_tree"/>
-    </record>
+        <record id="action_view_account_bnk_stmt_cashbox" model="ir.actions.act_window">
+            <field name="name">Cash Control</field>
+            <field name="res_model">account.bank.statement.cashbox</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_bnk_stmt_cashbox"/>
+            <field name="target">new</field>
+        </record>
 
     <record id="pos_config_view_form" model="ir.ui.view">
         <field name="name">pos.config.form.view</field>
@@ -346,14 +357,11 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Default Opening" for="proxy_ip" class="col-lg-4 o_light_label" />
-                                        <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'show_coin_and_value': True}"/>
+                                        <field name="default_cashbox_id"/>
                                     </div>
                                     <div class="row">
                                         <label for="amount_authorized_diff" class="col-lg-4 o_light_label" />
                                         <field name="amount_authorized_diff"/>
-                                    </div>
-                                    <div>
-                                        <button type="action" name="%(account_cashbox_line_action)d" string="Opening/Closing Values" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>
                             </div>
