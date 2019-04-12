@@ -506,20 +506,6 @@ class Channel(models.Model):
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 
-    @api.multi
-    def _notify(self, message):
-        """ Broadcast the given message on the current channels.
-            Send the message on the Bus Channel (uuid for public mail.channel, and partner private bus channel (the tuple)).
-            A partner will receive only on message on its bus channel, even if this message belongs to multiple mail channel. Then 'channel_ids' field
-            of the received message indicates on wich mail channel the message should be displayed.
-            :param : mail.message to broadcast
-        """
-        if not self:
-            return
-        message.ensure_one()
-        notifications = self._channel_message_notifications(message)
-        self.env['bus.bus'].sendmany(notifications)
-
     def _notify_thread(self, message, msg_vals=False, model_description=False, mail_auto_delete=True):
         # When posting a message on a mail channel, manage moderation and postpone notify users
         if not msg_vals or msg_vals.get('moderation_status') != 'pending_moderation':
@@ -533,18 +519,18 @@ class Channel(models.Model):
             message._notify_pending_by_chat()
 
     @api.multi
-    def _channel_message_notifications(self, message):
+    def _channel_message_notifications(self, message, message_format=False):
         """ Generate the bus notifications for the given message
             :param message : the mail.message to sent
             :returns list of bus notifications (tuple (bus_channe, message_content))
         """
-        message_values = message.message_format()[0]
+        message_format = message_format or message.message_format()[0]
         notifications = []
         for channel in self:
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_format)])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
-                notifications.append([channel.uuid, dict(message_values)])
+                notifications.append([channel.uuid, dict(message_format)])
         return notifications
 
     @api.model
