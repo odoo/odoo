@@ -160,7 +160,7 @@ class RatingMixin(models.AbstractModel):
             record.message_post_with_template(
                 template.id,
                 composition_mode=composition_mode,
-                notif_layout=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
+                email_layout_xmlid=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
                 subtype_id=subtype_id
             )
 

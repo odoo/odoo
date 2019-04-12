@@ -1795,7 +1795,7 @@ class MailThread(models.AbstractModel):
             record.message_post_with_template(False, **kwargs)
 
     @api.multi
-    def message_post_with_template(self, template_id, **kwargs):
+    def message_post_with_template(self, template_id, email_layout_xmlid=None, **kwargs):
         """ Helper method to send a mail with a template
             :param template_id : the id of the template to render to create the body of the message
             :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
@@ -1807,7 +1807,6 @@ class MailThread(models.AbstractModel):
             kwargs['message_type'] = 'notification'
         res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
         res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
-        notif_layout = kwargs.pop('notif_layout', None)
 
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
@@ -1818,7 +1817,7 @@ class MailThread(models.AbstractModel):
             default_model=kwargs.get('model', self._name),
             default_res_id=res_id,
             default_template_id=template_id,
-            custom_layout=notif_layout,
+            custom_layout=email_layout_xmlid,
         ).create(kwargs)
         # Simulate the onchange (like trigger in form the view) only
         # when having a template in single-email mode
@@ -1922,14 +1921,13 @@ class MailThread(models.AbstractModel):
 
     def _message_create(self, values):
         create_values = dict(values)
-        if 'notif_layout' in create_values:
-            create_values['layout'] = create_values.pop('notif_layout')
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc', 'canned_response_ids'):
             create_values.pop(x, None)
         create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
         create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
         return self.env['mail.message'].create(create_values)
+
 
     # ------------------------------------------------------
     # Notification API
@@ -2010,7 +2008,7 @@ class MailThread(models.AbstractModel):
 
         base_template_ctx = self._notify_prepare_template_context(message, msg_vals, model_description=model_description)
 
-        template_xmlid = message.layout if message.layout else 'mail.message_notification_email'
+        template_xmlid = message.email_layout_xmlid if message.email_layout_xmlid else 'mail.message_notification_email'
         try:
             base_template = self.env.ref(template_xmlid, raise_if_not_found=True).with_context(lang=base_template_ctx['lang'])
         except ValueError:
@@ -2605,7 +2603,7 @@ class MailThread(models.AbstractModel):
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 record_name=record.display_name,
-                notif_layout='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_light',
                 model_description=model_description,
             )
 

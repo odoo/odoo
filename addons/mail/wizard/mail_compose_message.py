@@ -274,7 +274,7 @@ class MailComposer(models.TransientModel):
                         post_params = dict(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
-                            notif_layout=notif_layout,
+                            email_layout_xmlid=notif_layout,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
                             model_description=model_description)

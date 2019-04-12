@@ -667,7 +667,7 @@ class SaleOrder(models.Model):
         template_id = self._find_mail_template(force_confirmation_template=True)
         if template_id:
             for order in self:
-                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', notif_layout="mail.mail_notification_paynow")
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     @api.multi
     def action_done(self):

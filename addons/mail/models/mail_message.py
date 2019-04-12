@@ -124,7 +124,7 @@ class Message(models.Model):
     moderator_id = fields.Many2one('res.users', string="Moderated By", index=True)
     need_moderation = fields.Boolean('Need moderation', compute='_compute_need_moderation', search='_search_need_moderation')
     #keep notification layout informations to be able to generate mail again
-    layout = fields.Char('Layout', copy=False)  # xml id of layout
+    email_layout_xmlid = fields.Char('Layout', copy=False, oldname='layout')  # xml id of layout
     add_sign = fields.Boolean(default=True)
 
     @api.multi
