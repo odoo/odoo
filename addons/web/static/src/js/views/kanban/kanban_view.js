@@ -188,9 +188,7 @@ var KanbanView = BasicView.extend({
      */
     _processNode: function (node, fv) {
         if (node.tag === 'searchpanel') {
-            if (!config.device.isMobile) {
-                this._processSearchPanelNode(node, fv);
-            }
+            this._processSearchPanelNode(node, fv);
             return false;
         }
         return this._super.apply(this, arguments);
