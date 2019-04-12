@@ -337,10 +337,6 @@ class MrpWorkorder(models.Model):
                 move_line.lot_produced_id = self.final_lot_id.id
                 move_line.done_wo = True
 
-        # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
-
         self.move_line_ids.filtered(
             lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
         ).write({
@@ -391,6 +387,9 @@ class MrpWorkorder(models.Model):
             self.final_lot_id.use_next_on_work_order_id = self.next_work_order_id
             self.final_lot_id = False
 
+        # One a piece is produced, you can launch the next work order
+        self._start_nextworkorder()
+
         # Set a qty producing
         rounding = self.production_id.product_uom_id.rounding
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
@@ -409,6 +408,16 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    @api.multi
+    def _start_nextworkorder(self):
+        rounding = self.product_id.uom_id.rounding
+        if self.next_work_order_id.state == 'pending' and (
+                (self.operation_id.batch == 'no' and
+                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
+                (self.operation_id.batch == 'yes' and
+                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
+            self.next_work_order_id.state = 'ready'
 
     @api.multi
     def button_start(self):

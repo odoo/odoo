@@ -14,6 +14,7 @@ class TestStockValuation(TransactionCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.inventory_location = self.env.ref('stock.location_inventory')
         self.partner = self.env['res.partner'].create({'name': 'xxx'})
         self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
         self.uom_unit = self.env.ref('uom.product_uom_unit')
@@ -3899,3 +3900,47 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, 100)
         self.assertEqual(self.product1.qty_at_date, 10)
         self.assertEqual(self.product1.stock_value, 100)
+
+    def test_inventory_fifo_1(self):
+        """ Make an inventory from a location with a company set, and ensure the product has a stock
+        value. When the product is sold, ensure there is no remaining quantity on the original move
+        and no stock value.
+        """
+        self.product1.standard_price = 15
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.inventory_location.company_id = self.env.user.company_id.id
+
+        # Start Inventory: 12 units
+        move1 = self.env['stock.move'].create({
+            'name': 'Adjustment of 12 units',
+            'location_id': self.inventory_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 12.0
+        move1._action_done()
+
+        self.assertAlmostEqual(move1.value, 180.0)
+        self.assertAlmostEqual(move1.remaining_qty, 12.0)
+        self.assertAlmostEqual(self.product1.stock_value, 180.0)
+
+        # Sell the 12 units
+        move2 = self.env['stock.move'].create({
+            'name': 'Sell 12 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 12.0
+        move2._action_done()
+
+        self.assertAlmostEqual(move1.remaining_qty, 0.0)
+        self.assertAlmostEqual(self.product1.stock_value, 0.0)

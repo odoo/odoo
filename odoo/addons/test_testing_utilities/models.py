@@ -71,7 +71,7 @@ class M2Onchange(models.Model):
     def _on_change_f2(self):
         self.f = self.env['test_testing_utilities.m2o'].search([
             ('name', 'ilike', self.f2),
-        ], limit=1)
+        ], limit=1) if self.f2 else False
 
 class M2MChange(models.Model):
     _name = 'test_testing_utilities.e'
@@ -188,6 +188,13 @@ class O2MSub3(models.Model):
             r.name = str(r.v)
 
 
+class O2MRecursive(models.Model):
+    _name = _description = 'test_testing_utilities.recursive'
+
+    one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
+    many_to_one_ids = fields.One2many('test_testing_utilities.recursive', 'one_to_many_id', readonly=True)
+
+
 class O2MOnchangeParent(models.Model):
     _name = 'test_testing_utilities.onchange_parent'
     _description = 'Testing Utilities Onchange Parent'
@@ -233,3 +240,24 @@ class O2MChangeSub(models.Model):
 
     parent = fields.Many2one('test_testing_utilities.onchange_count')
     name = fields.Char()
+
+class O2MReadonlySubfield(models.Model):
+    _name = 'o2m_readonly_subfield_parent'
+    _description = _name
+
+    line_ids = fields.One2many('o2m_readonly_subfield_child', 'parent_id')
+
+class O2MReadonlySubfieldChild(models.Model):
+    _name = _description = 'o2m_readonly_subfield_child'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('o2m_readonly_subfield_parent')
+    f = fields.Integer(compute='_compute_f', inverse='_inverse_f', readonly=True)
+
+    @api.depends('name')
+    def _compute_f(self):
+        for r in self:
+            r.f = len(r.name) if r.name else 0
+
+    def _inverse_f(self):
+        raise AssertionError("Inverse of f should not be called")

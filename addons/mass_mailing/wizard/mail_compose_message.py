@@ -64,7 +64,8 @@ class MailComposeMessage(models.TransientModel):
                 if mail_values.get('email_to'):
                     recips = tools.email_split(mail_values['email_to'])
                 else:
-                    recips = tools.email_split(partners_email.get(res_id))
+                    partner_id = (mail_values.get('recipient_ids') or [(False, '')])[0][1]
+                    recips = tools.email_split(partners_email.get(partner_id))
                 mail_to = recips[0].lower() if recips else False
                 if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
                         or (not mail_to or not email_re.findall(mail_to)):

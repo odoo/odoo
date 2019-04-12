@@ -10,20 +10,20 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
 # Paulius Sladkevičius <paulius@versada.eu>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Arminas Grigonis <arminas@versada.lt>, 2018
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
 # Silvija Butko <silvija.butko@gmail.com>, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Martin Trigaux, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -295,15 +295,6 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Parduota</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
-msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Suma</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Visa kaina</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
 msgstr "<span>Priimta vardu:</span>"
@@ -350,11 +341,6 @@ msgstr "<strong class=\"d-block mb-1\">Sąskaitos-faktūros</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
-msgstr "<strong class=\"d-block mb-1\">Sąskaitų adresas</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address</strong>"
 msgstr "<strong class=\"d-block mb-1\">Pristatymo adresas</strong>"
 
@@ -372,7 +358,7 @@ msgstr "<strong class=\"text-muted\">Jūsų sutartis</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr "Užsakymo data"
+msgstr "<strong>Užsakymo data</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -641,6 +627,7 @@ msgstr "Leidžia jums siųsti išankstinę sąskaitą faktūrą."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Amount"
 msgstr "Suma"
 
@@ -1013,7 +1000,7 @@ msgstr "Sukurti sąskaitas faktūras"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
-msgstr "Sukurti naują produktą"
+msgstr "Sukurkite naują produktą"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1422,6 +1409,7 @@ msgid "Expected Date"
 msgstr "Planuojama pristatymo data"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
 "Expenses and vendor bills can be re-invoiced to a customer.With this option,"
@@ -1472,11 +1460,6 @@ msgstr "Sekėjai (partneriai)"
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
 msgstr "Neleistinos reikšmės neapmokestinamo pardavimo užsakymo eilutėje"
-
-#. module: sale
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "Free sign up"
-msgstr "Nemokama registracija"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1550,6 +1533,7 @@ msgstr ""
 "        atributo tipas yra \"Spalva\"."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__hide_expense_policy
 msgid "Hide Expense Policy"
 msgstr "Slėpti išlaidų politiką"
@@ -1813,7 +1797,7 @@ msgstr "Sąskaitos: neapmokestinta suma"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "Sąskaitos pateikimas"
+msgstr "Apskaita"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2014,6 +1998,7 @@ msgid "Manually set quantities on order"
 msgstr "Užsakant rankiniu būdu nustatyti kiekius"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
 msgid ""
 "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
@@ -2036,10 +2021,12 @@ msgstr "Žinutės pristatymo klaida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
 msgstr "Pardavimo užsakymo žinutė"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
 msgstr "Pardavimo užsakymo eilutės pranešimas"
@@ -2223,11 +2210,6 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Biuro kėdės gali pažeisti jūsų grindis, apsaugokite jas."
 
 #. module: sale
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "On invitation"
-msgstr "Su pakvietimu"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2285,11 +2267,13 @@ msgid "Option not available"
 msgstr "Pasirinkimas negalimas"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
 msgstr "Papildomi produktai"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale.field_product_template__optional_product_ids
 msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
@@ -2395,6 +2379,7 @@ msgid "Ordered Quantity"
 msgstr "Užsakytas kiekis"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
@@ -2929,6 +2914,7 @@ msgid "Radio"
 msgstr "Radijas"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Policy"
 msgstr "Pakartotinių sąskaitų politika"
@@ -3013,6 +2999,7 @@ msgstr "Pardavimo užsakymas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
 msgstr "Pardavimo užsakymų skaičius"
 
@@ -3091,8 +3078,9 @@ msgid "Sales Information"
 msgstr "Pardavimo informacija"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:262
+#: code:addons/sale/models/sale.py:271
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -3114,6 +3102,7 @@ msgstr "Pardavimų užsakymo įrašas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
 msgstr "Pardavimo užsakymo eilutė"
@@ -3185,6 +3174,7 @@ msgstr "Pardavimų komandos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Pardavimų įspėjimai"
 
@@ -3277,8 +3267,10 @@ msgid "Select a product, or create a new one on the fly."
 msgstr "Pasirinkite produktą arba pridėkite naują eigoje."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
 #: model:ir.model.fields,help:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,help:sale.field_res_users__sale_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -3292,14 +3284,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Parduoti ir pirkti produktus skirtingais matavimo vienetais"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
-"Parduokite skaitmeninius produktus - suteikite atsisiunčiamą turinį savo "
-"klientų portale"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3955,6 +3939,7 @@ msgstr "Suma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Total Price"
 msgstr "Bendra kaina"
 
@@ -3970,6 +3955,7 @@ msgid "Total Tax Included"
 msgstr "Iš viso, įskaitant mokesčius"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
 msgstr "Sekimo paslauga"

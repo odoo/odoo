@@ -115,7 +115,7 @@ class Currency(models.Model):
         fractional_value = int(parts[2] or 0)
 
         lang_code = self.env.context.get('lang') or self.env.user.lang
-        lang = self.env['res.lang'].search([('code', '=', lang_code)])
+        lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
                         amt_word=self.currency_unit_label,

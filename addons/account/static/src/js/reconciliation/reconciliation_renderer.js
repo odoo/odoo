@@ -560,7 +560,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'char', //TODO is it a bug or a feature when type date exists ?
             name: 'date',
         }], {
-            account_id: {string: _t("Account")},
+            account_id: {
+                string: _t("Account"),
+                domain: [['deprecated', '=', false]],
+            },
             label: {string: _t("Label")},
             amount: {string: _t("Account")},
         }).then(function (recordID) {

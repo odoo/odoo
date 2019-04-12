@@ -671,6 +671,47 @@ class IrTranslation(models.Model):
         self._modified_model(field.model_name)
 
     @api.model
+    def _upsert_translations(self, vals_list):
+        """ Insert or update translations of type 'model' or 'model_terms'.
+
+            This method is used for creations of translations where the given
+            ``vals_list`` is trusted to be the right values and potential
+            conflicts should be updated to the new given value.
+        """
+        rows_by_type = defaultdict(list)
+        for vals in vals_list:
+            rows_by_type[vals['type']].append((
+                vals['name'], vals['lang'], vals['res_id'], vals['src'], vals['type'],
+                vals.get('module'), vals['value'], vals.get('state'), vals.get('comments'),
+            ))
+
+        if rows_by_type['model']:
+            query = """
+                INSERT INTO ir_translation (name, lang, res_id, src, type,
+                                            module, value, state, comments)
+                VALUES {}
+                ON CONFLICT (type, lang, name, res_id) WHERE type='model'
+                DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
+                    (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
+                     EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
+            """.format(", ".join(["%s"] * len(rows_by_type['model'])))
+            self.env.cr.execute(query, rows_by_type['model'])
+
+        if rows_by_type['model_terms']:
+            query = """
+                INSERT INTO ir_translation (name, lang, res_id, src, type,
+                                            module, value, state, comments)
+                VALUES {}
+                ON CONFLICT (type, name, lang, res_id, md5(src))
+                DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
+                    (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
+                     EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
+            """.format(", ".join(["%s"] * len(rows_by_type['model_terms'])))
+            self.env.cr.execute(query, rows_by_type['model_terms'])
+
+    @api.model
     def translate_fields(self, model, id, field=None):
         """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'

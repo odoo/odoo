@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import collections
 import datetime
 import hashlib
 import pytz
@@ -274,8 +275,32 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        self.env.cr.execute("""
+        WITH RECURSIVE cpid(id, parent_id, commercial_partner_id, final) AS (
+            SELECT
+                id, parent_id, id,
+                (coalesce(is_company, false) OR parent_id IS NULL) as final
+            FROM res_partner
+            WHERE id = ANY(%s)
+        UNION
+            SELECT
+                cpid.id, p.parent_id, p.id,
+                (coalesce(is_company, false) OR p.parent_id IS NULL) as final
+            FROM res_partner p
+            JOIN cpid ON (cpid.parent_id = p.id)
+            WHERE NOT cpid.final
+        )
+        SELECT cpid.id, cpid.commercial_partner_id
+        FROM cpid
+        WHERE final AND id = ANY(%s);
+        """, [self.ids, self.ids])
+
+        d = dict(self.env.cr.fetchall())
         for partner in self:
-            if partner.is_company or not partner.parent_id:
+            fetched = d.get(partner.id)
+            if fetched is not None:
+                partner.commercial_partner_id = fetched
+            elif partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
@@ -469,21 +494,25 @@ class Partner(models.Model):
                 self.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children
-        if self.child_ids:
-            # 2a. Commercial Fields: sync if commercial entity
-            if self.commercial_partner_id == self:
-                commercial_fields = self._commercial_fields()
-                if any(field in values for field in commercial_fields):
-                    self._commercial_sync_to_children()
-            for child in self.child_ids.filtered(lambda c: not c.is_company):
-                if child.commercial_partner_id != self.commercial_partner_id :
-                    self._commercial_sync_to_children()
-                    break
-            # 2b. Address fields: sync if address changed
-            address_fields = self._address_fields()
-            if any(field in values for field in address_fields):
-                contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-                contacts.update_address(values)
+        self._children_sync(values)
+
+    def _children_sync(self, values):
+        if not self.child_ids:
+            return
+        # 2a. Commercial Fields: sync if commercial entity
+        if self.commercial_partner_id == self:
+            commercial_fields = self._commercial_fields()
+            if any(field in values for field in commercial_fields):
+                self._commercial_sync_to_children()
+        for child in self.child_ids.filtered(lambda c: not c.is_company):
+            if child.commercial_partner_id != self.commercial_partner_id:
+                self._commercial_sync_to_children()
+                break
+        # 2b. Address fields: sync if address changed
+        address_fields = self._address_fields()
+        if any(field in values for field in address_fields):
+            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
+            contacts.update_address(values)
 
     @api.multi
     def _handle_first_contact_creation(self):
@@ -556,8 +585,50 @@ class Partner(models.Model):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
             tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partners = super(Partner, self).create(vals_list)
+
+        if self.env.context.get('_partners_skip_fields_sync'):
+            return partners
+
         for partner, vals in pycompat.izip(partners, vals_list):
             partner._fields_sync(vals)
+            partner._handle_first_contact_creation()
+        return partners
+
+    def _load_records_create(self, vals_list):
+        partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
+
+        # batch up first part of _fields_sync
+        # group partners by commercial_partner_id (if not self) and parent_id (if type == contact)
+        groups = collections.defaultdict(list)
+        for partner, vals in pycompat.izip(partners, vals_list):
+            cp_id = None
+            if vals.get('parent_id') and partner.commercial_partner_id != partner:
+                cp_id = partner.commercial_partner_id.id
+
+            add_id = None
+            if partner.parent_id and partner.type == 'contact':
+                add_id = partner.parent_id.id
+            groups[(cp_id, add_id)].append(partner.id)
+
+        for (cp_id, add_id), children in groups.items():
+            # values from parents (commercial, regular) written to their common children
+            to_write = {} 
+            # commercial fields from commercial partner
+            if cp_id:
+                to_write = self.browse(cp_id)._update_fields_values(self._commercial_fields())
+            # address fields from parent
+            if add_id:
+                parent = self.browse(add_id)
+                for f in self._address_fields():
+                    v = parent[f]
+                    if v:
+                        to_write[f] = v.id if isinstance(v, models.BaseModel) else v
+            if to_write:
+                self.browse(children).write(to_write)
+
+        # do the second half of _fields_sync the "normal" way
+        for partner, vals in pycompat.izip(partners, vals_list):
+            partner._children_sync(vals)
             partner._handle_first_contact_creation()
         return partners
 

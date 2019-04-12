@@ -91,6 +91,17 @@ class AccountReconciliation(models.AbstractModel):
             WHERE st_line.id IN %s
         '''
         params = [tuple(st_lines.ids)]
+
+        # Add the res.partner's IR rules to the WHERE clause. In case partners are not shared
+        # between companies, identical partners may exist in a company we don't have access to.
+        ir_rules_query = self.env['res.partner']._where_calc([])
+        self.env['res.partner']._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        where_p3 = (" AND %s" % where_clause).replace('res_partner', 'p3') if where_clause else ''
+        if where_p3:
+            query += where_p3
+            params += where_clause_params
+
         self._cr.execute(query, params)
 
         result = {}
