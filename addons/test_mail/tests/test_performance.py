@@ -485,7 +485,7 @@ class TestHeavyMailPerformance(TransactionCase):
             'user_id': self.env.uid,
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=60, emp=75):  # com runbot: 60 - 75 // test_mail only: 60 - 72
+        with self.assertQueryCount(__system__=61, emp=75):  # com runbot: 60 - 75 // test_mail only: 60 - 72
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
