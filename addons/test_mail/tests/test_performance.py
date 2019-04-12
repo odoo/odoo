@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from email.utils import formataddr
 
@@ -617,3 +618,159 @@ class TestHeavyMailPerformance(TransactionCase):
         self.assertEqual(rec.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
         self.assertEqual(rec.message_ids[2].needaction_partner_ids, self.partners | self.user_portal.partner_id)
         self.assertEqual(len(rec.message_ids), 3)
+
+
+@tagged('mail_performance_post')
+class TestMailPerformancePost(TransactionCase):
+
+    def setUp(self):
+        super(TestMailPerformancePost, self).setUp()
+
+        self._quick_create_ctx = {
+            'no_reset_password': True,
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_notrack': True,
+        }
+        self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'Ernest Employee',
+            'login': 'emp',
+            'email': 'e.e@example.com',
+            'signature': '--\nErnest',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        # record
+        self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'customer',
+            'email': 'customer@example.com',
+        })
+        self.record = self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({
+            'name': 'Test record',
+            'customer_id': self.customer.id,
+            'alias_name': 'test-alias',
+        })
+        # followers
+        self.user_follower_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_follower_email',
+            'login': 'user_follower_email',
+            'email': 'user_follower_email@example.com',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.user_follower_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_follower_inbox',
+            'login': 'user_follower_inbox',
+            'email': 'user_follower_inbox@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.partner_follower = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'partner_follower',
+            'email': 'partner_follower@example.com',
+        })
+        self.record.message_subscribe([
+            self.partner_follower.id,
+            self.user_follower_inbox.partner_id.id,
+            self.user_follower_email.partner_id.id
+        ])
+
+        # partner_ids
+        self.user_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_inbox',
+            'login': 'user_inbox',
+            'email': 'user_inbox@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.user_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_email',
+            'login': 'user_email',
+            'email': 'user_email@example.com',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.partner = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'partner',
+            'email': 'partner@example.com',
+        })
+        # channels user/partner
+        self.partner_channel_inbox = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'partner_channel_inbox',
+            'email': 'partner_channel_inbox@example.com',
+        })
+        self.partner_channel_email = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'partner_channel_email',
+            'email': 'partner_channel_email@example.com',
+        })
+        self.user_channel_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_channel_inbox',
+            'login': 'user_channel_inbox',
+            'email': 'user_channel_inbox@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.user_channel_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
+            'name': 'user_channel_email',
+            'login': 'user_channel_email',
+            'email': 'user_channel_email@example.com',
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        # channels
+        self.channel_inbox = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
+            'name': 'channel_inbox',
+            'channel_partner_ids': [(4, self.partner_channel_inbox.id), (4, self.user_channel_inbox.partner_id.id)]
+        })
+        self.channel_email = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
+            'name': 'channel_email',
+            'email_send': True,
+            'channel_partner_ids': [(4, self.partner_channel_email.id), (4, self.user_channel_email.partner_id.id)]
+        })
+        self.vals = [{
+            'datas': base64.b64encode(bytes("attachement content %s" % i, 'utf-8')),
+            'name': 'attach %s' % i,
+            'datas_fname': 'fileText_test%s.txt' % i,
+            'mimetype': 'text/plain',
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+        } for i in range(3)]
+
+        self.patch(self.env.registry, 'ready', True)
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('emp')
+    @warmup
+    def test_complete_message_post(self):
+        # aims to cover as much features of message_post as possible
+        partner_ids = [self.user_inbox.partner_id.id, self.user_email.partner_id.id, self.partner.id]
+        channel_ids = [(4, self.channel_inbox.id), (4, self.channel_email.id)]
+        record = self.record.sudo(self.env.user)
+        attachements = [ # not linear on number of attachements
+            ('attach tuple 1', "attachement tupple content 1"),
+            ('attach tuple 2', "attachement tupple content 2", {'cid': 'cid1'}),
+            ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
+        ]
+        self.attachements = self.env['ir.attachment'].sudo(self.env.user).create(self.vals) #-> 163-> 165 query 
+        attachement_ids = self.attachements.ids
+        with self.assertQueryCount(emp=248):  # test_mail only: 210
+            self.cr.sql_log = self.warm and self.cr.sql_log_count
+            record.with_context({}).message_post(
+                body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
+                subject='Test Subject',
+                message_type='notification',
+                subtype=None,
+                partner_ids=partner_ids,
+                channel_ids=channel_ids,
+                parent_id=False,
+                attachments=attachements,
+                attachment_ids=attachement_ids,
+                add_sign=True,
+                model_description=False,
+                mail_auto_delete=True
+            )
+            self.cr.sql_log = False
+        self.assertTrue(record.message_ids[0].body.startswith('<p>Test body <img src="/web/image/'))
+        self.assertEqual(self.attachements.mapped('res_model'), [record._name for i in range(3)])
+        self.assertEqual(self.attachements.mapped('res_id'), [record.id for i in range(3)])
+        # self.assertEqual(record.message_ids[0].needaction_partner_ids, [])
