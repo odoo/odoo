@@ -18,7 +18,7 @@
                         t-esc="product_info['list_price']"
                         t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
                 </div>
-                <a role="button" class="btn btn-primary btn-block" t-att-href="channel.product_id.website_url">
+                <a role="button" class="btn btn-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
                     <span class="cta-title text_small_caps">Buy Course</span>
                 </a>
             </t>
