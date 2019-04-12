@@ -8,7 +8,7 @@ class res_company(models.Model):
     _inherit = "res.company"
 
     gengo_private_key = fields.Text(string="Gengo Private Key", copy=False, groups="base.group_system")
-    gengo_public_key = fields.Text(string="Gengo Public Key", copy=False, groups="base.group_user")
+    gengo_public_key = fields.Char(string="Gengo Public Key", copy=False, groups="base.group_user")
     gengo_comment = fields.Text(string="Comments", groups="base.group_user",
       help="This comment will be automatically be enclosed in each an every request sent to Gengo")
     gengo_auto_approve = fields.Boolean(string="Auto Approve Translation ?", groups="base.group_user", default=True,
