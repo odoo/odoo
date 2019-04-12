@@ -31,7 +31,7 @@ tour.register('rte_translator', {
     timeout: 60000,
 }, {
     content: "go to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-lang="en"]',
     extra_trigger: 'html[lang*="fr"]',
 }, {
     content: "Open new page menu",
@@ -140,7 +140,7 @@ tour.register('rte_translator', {
     extra_trigger: 'html[lang*="fr"]:not(:has(#wrap p span))',
 }, {
     content: "return to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-lang="en"]',
 }, {
     content: "edit english version",
     trigger: 'a[data-action=edit]',
