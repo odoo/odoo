@@ -426,7 +426,7 @@ class Survey(http.Controller):
         return json.dumps(ret)
 
     @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
-    def survey_print(self, survey_token, answer_token=None, **post):
+    def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
@@ -441,6 +441,7 @@ class Survey(http.Controller):
             return request.render("survey.403", {'survey': survey_sudo})
 
         return request.render('survey.survey_print', {
+            'review': review,
             'survey': survey_sudo,
             'answer': answer_sudo,
             'page_nr': 0,
