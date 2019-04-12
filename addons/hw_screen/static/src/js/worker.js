@@ -9,7 +9,7 @@
         function longpolling() {
             $.ajax({
                 type: 'POST',
-                url: 'http://'+window.location.host+'/point_of_sale/get_serialized_order',
+                url: window.location.origin+'/point_of_sale/get_serialized_order',
                 dataType: 'json',
                 beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/json');},
                 data: JSON.stringify({jsonrpc: '2.0'}),
@@ -47,11 +47,14 @@
                             foreign_js();
                         }
                     }
-                },
-
-                complete: function(jqXHR,err) {
                     if (!stop_longpolling) {
                         longpolling();
+                    }
+                },
+
+                error: function (jqXHR, status, err) {
+                    if (!stop_longpolling) {
+                        setTimeout(longpolling, 5000);
                     }
                 },
 

@@ -703,7 +703,7 @@ class AccountInvoice(models.Model):
         # Subscribe internal users on the newly created bill
         partners = self.env['res.partner'].browse(seen_partner_ids)
         is_internal = lambda p: (p.user_ids and
-                                 all(p.user_ids.mapped(lambda u: u.user_has_groups('base.group_user'))))
+                                 all(p.user_ids.mapped(lambda u: u.has_group('base.group_user'))))
         partners_to_subscribe = partners.filtered(is_internal)
         if partners_to_subscribe:
             invoice.message_subscribe([p.id for p in partners_to_subscribe])
