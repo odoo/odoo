@@ -562,9 +562,9 @@ class StockMoveLine(models.Model):
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
                         candidate.product_qty - quantity,
-                        precision_rounding=self.product_uom_id.rounding,
+                        precision_rounding=rounding,
                         rounding_method='UP')
-                    candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
+                    candidate.product_uom_qty = product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
                     break
             move_to_recompute_state._recompute_state()
