@@ -547,10 +547,12 @@ class IrActionsServer(models.Model):
         res = False
         for action in self:
             eval_context = self._get_eval_context(action)
-            if hasattr(self, 'run_action_%s_multi' % action.state):
+            if hasattr(self, 'run_action_multi'):
                 # call the multi method
-                run_self = self.with_context(eval_context['env'].context)
-                func = getattr(run_self, 'run_action_%s_multi' % action.state)
+                run_self = action.with_context(eval_context['env'].context)
+                func = getattr(run_self, 'run_action_multi')
+                if hasattr(self, 'run_action_%s_multi' % action.state):
+                    func = getattr(run_self, 'run_action_%s_multi' % action.state)
                 res = func(action, eval_context=eval_context)
 
             elif hasattr(self, 'run_action_%s' % action.state):
