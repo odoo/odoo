@@ -725,7 +725,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -822,12 +827,12 @@ msgstr "קבוצות חשבון"
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "בעל החשבון"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "שם בעל החשבון "
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -933,7 +938,7 @@ msgstr "תבנית מיסוי חשבון"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "חשבון TaxCloud"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1007,7 +1012,7 @@ msgstr "קבוצות חשבון"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "שם בעל החשבון, במקרה שהוא שונה משמו של בעל החשבון"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2130,7 +2135,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
+msgstr "סוג חשבון בנק: רגיל או IBAN. מסומנת מתוך מספר חשבון הבנק."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_liquidity
@@ -4850,7 +4855,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
 msgid "Has all required arguments"
-msgstr ""
+msgstr "יש את כל הטיעונים הנדרשים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
@@ -6859,7 +6864,7 @@ msgstr ""
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Not done"
-msgstr ""
+msgstr "לא מוכן"
 
 #. module: account
 #. openerp-web
@@ -9646,7 +9651,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_register_payments__payment_method_code
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
-msgstr ""
+msgstr "שדה טכני המשמש להתאמת הממשק לסוג התשלום שנבחר."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__max_date

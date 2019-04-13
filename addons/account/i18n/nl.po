@@ -839,8 +839,17 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Het is niet mogelijk dat zowel B2B als B2C prijzen zijn ingesteld op een gebruiker.\n"
+"Verkeerd ingestelde gebruiker(s): %s\n"
+"Ga naar de algemene instellingen en kies bij prijzen voor, of 'Prijzen exclusief BTW' of 'Prijzen inclusief BTW'\n"
+"(of wissel twee keer de instelling als deze al op de juiste waarde stat)"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2324,7 +2333,7 @@ msgstr "Bankafschriften"
 #: code:addons/account/models/account_journal_dashboard.py:36
 #, python-format
 msgid "Bank: Balance"
-msgstr "Bank: Balans"
+msgstr "Bank: Saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__base
@@ -2723,7 +2732,7 @@ msgstr "Kasverschil gevonden tijdens het tellen (%s)"
 #: code:addons/account/models/account_journal_dashboard.py:34
 #, python-format
 msgid "Cash: Balance"
-msgstr "Kas: Balans"
+msgstr "Kas: Saldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -6821,7 +6830,7 @@ msgstr "Match regex"
 #: code:addons/account/models/chart_template.py:934
 #, python-format
 msgid "Match existing invoices/bills."
-msgstr "Match bestaande facturen"
+msgstr "Match bestaande facturen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -8072,7 +8081,7 @@ msgstr "Percentage van aantal"
 #: selection:account.reconcile.model,amount_type:0
 #: selection:account.reconcile.model.template,amount_type:0
 msgid "Percentage of balance"
-msgstr "Percentage van balans"
+msgstr "Percentage van saldo"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1975
@@ -8147,7 +8156,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr "Gebruik A.U.B. de volgende communicatie voor U betaling :"
+msgstr "Gebruik a.u.b. de volgende communicatie bij betaling:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_url
@@ -9661,7 +9670,7 @@ msgstr "Stel een afschrijving voor."
 #: code:addons/account/models/account_reconcile_model.py:20
 #, python-format
 msgid "Suggest counterpart values."
-msgstr "Stel tegenwaardes voor."
+msgstr "Stel een tegenrekening voor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10385,7 +10394,7 @@ msgstr "Het grootboekschema van het bedrijf (indien van toepassing)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 msgid "The closing balance is different than the computed one!"
-msgstr "De afsluitbalans is anders dan de berekende balans!"
+msgstr "Het eindsaldo is anders dan het berekende eindsaldo!"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -10657,7 +10666,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Het reconsiliatie model zal enkel toegepast worden op de geselcteerde "
+"Het aflettermodel zal enkel toegepast worden op de geselcteerde "
 "klanten/leveranciers categorien."
 
 #. module: account
@@ -10667,7 +10676,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"het reconsiliatie model zal enkel toegepast worden op de geslecteerde "
+"het aflettermodel zal enkel toegepast worden op de geslecteerde "
 "klanten/leveranciers."
 
 #. module: account
@@ -10679,7 +10688,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Het reconsiliatie model zal enkel toegepast worden op het geselecteerde verrchting type:\n"
+"Het aflettermodel zal enkel toegepast worden op het geselecteerde verrchting type:\n"
 "        * Ontvangen bedrag: Enkel toegepast indien bedrag ontvangen.\n"
 "        * Bedrag betaald: Enkel toegepast indien bedrag betaald.\n"
 "        * Bedrag betaald/ontvangen: Toegepast in beide gevallen."
@@ -10690,7 +10699,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Het reconsiliatie model zal enkel toegepast worden indien klant/leverancier "
+"Het aflettermodel zal enkel toegepast worden indien klant/leverancier "
 "gedefinieerd is."
 
 #. module: account
@@ -10700,8 +10709,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Het reconsiliatie model zal enkel toegepast worden indien het bedrag kleiner"
-" dan, groter dan of tussen gespecifieerde bedrag(en) ligt."
+"Het aflettermodel zal enkel toegepast worden indien het bedrag kleiner dan, "
+"groter dan of tussen gespecifieerde bedrag(en) ligt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -10712,9 +10721,9 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Het reconsilliatie model zal enkel toegepast worden indien de label:\n"
-"        * Bevatten: De voorgestelde label zal de string bevatten (hoofdletter gevoelig).\n"
-"        * Niet Bevatten: Negatie van \"Bevatten\".\n"
+"Het aflettermodel zal enkel toegepast worden indien de label:\n"
+"        * Bevat: De voorgestelde label zal de tekst bevatten (hoofdletter gevoelig).\n"
+"        * Bevat niet: De voorgestelde label zal de tekst niet bevatten.\n"
 "        * Match Regex: Definieer uw eigen reguliere expressie."
 
 #. module: account
@@ -10723,8 +10732,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be available from the selected journals."
 msgstr ""
-"Het reconsiliatie model zal enkel beschikbaar zijn van de geslecteerde "
-"joernalen."
+"Het aflettermodel zal enkel beschikbaar zijn van de geslecteerde joernalen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -10925,8 +10933,8 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Dit stelt u in staat om groepsbetalingen uit te voeren in een enkele beweging en dit vereenvoudigd het reconsilliatie proces.\n"
-"- Dit installeerd de account_batch_payment module. "
+"Dit stelt u in staat om groepsbetalingen uit te voeren in een enkele beweging en dit vereenvoudigd het afletterproces.\n"
+"- Dit installeert de account_batch_payment module. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11088,8 +11096,8 @@ msgid ""
 "This parameter will be bypassed in case of a statement line communication "
 "matching exactly existing entries"
 msgstr ""
-"Deze parameter wordt omzeild in geval van een verrichtings communicatie "
-"regel match met exact bestaande entries"
+"Deze parameter wordt omzeild in geval van een bankafschrifregel "
+"communicatieregel match met exact bestaande boekingen"
 
 #. module: account
 #. openerp-web
@@ -11708,7 +11716,7 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
-"Bevestigde afschriftregel automatisch (afletteren gebaseerd op uw regels)"
+"Bevestig de afschriftregel automatisch (afletteren gebaseerd op uw regels)"
 
 #. module: account
 #: selection:account.bank.statement,state:0
