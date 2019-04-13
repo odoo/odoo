@@ -24,6 +24,7 @@
 # Umur Akın <umura@projetgrup.com>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"Last-Translator: Ugur Yilmaz <ugurlu2001@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +90,7 @@ msgstr "&amp;times;"
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, geniş bacak."
 
 #. module: sale
 #. openerp-web
@@ -241,7 +242,7 @@ msgstr "<i class=\"fa fa-print\"/> Yazdır"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Sepete ekle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -256,7 +257,7 @@ msgstr "<small><b class=\"text-muted\">Bu teklifin süresi doldu</b></small>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Avantajınız</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -307,6 +308,7 @@ msgstr "<span>'adına kabul edildi.</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Bu teklife ödeme yaparak, aşağıdaki koşulları kabul ediyorum:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -327,7 +329,7 @@ msgstr "<span>İndirim</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>Bir miktar için:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -459,7 +461,7 @@ msgstr "Ödeme alıcısından bir yevmiye belirtilmelidir %s."
 #: code:addons/sale/models/sale.py:804
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Bir işlem oluşturmak için bir ödeme alıcısı oluşturmak gerekir."
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -472,6 +474,8 @@ msgstr "Ürün başına tek bir satış fiyatı"
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
+"Bir işlem, farklı para birimleri olan satış siparişleriyle "
+"ilişkilendirilemez."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -479,6 +483,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Bir işlem, farklı ortaklara sahip satış siparişleriyle ilişkilendirilemez."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -510,7 +515,7 @@ msgstr "Kabull Et &amp; Öde"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept and sign online"
-msgstr ""
+msgstr "Kabul et ve online olarak imzala"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -526,6 +531,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün konfigürasyonuna göre, teslim edilen miktar otomatik olarak mekanizma ile hesaplanabilir :\n"
+"  - Manuel: Miktar,satırında manüel olarak ayarlanır\n"
+"  - Analitik Harcamalardan: Miktar, kaydedilen harcamalardan elde edilen miktardır\n"
+"  - Zaman Çizelgesi: Miktar, bu satış hattına bağlı görevlerde kaydedilen saatlerin toplamıdır\n"
+"  - Stok Hareketi: Miktar onaylanmış seçimlerden geliyor\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -582,7 +592,7 @@ msgstr "Bir Bölüm Ekle"
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Add one"
-msgstr ""
+msgstr "Ekle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice__comment
@@ -605,6 +615,8 @@ msgstr "Avans: %s"
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
+"Bu özellik değeri için kullanıcıların özelleştirilmiş değerler girmesine "
+"izin ver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -642,7 +654,7 @@ msgstr "Analitik Hesap"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Gider Analitiği"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -670,6 +682,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"İskontoları; Satış siparişlerinden yada hesaplanmış iskontolardan manual "
+"olarak uygula Fiyat Listelerinden (Fiyat listesi konfigürasyonu içerisinden "
+"seçimlik olarak aktive edilir)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -677,6 +692,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Onaylanmış işlemi geçersiz kılmak istediğinize emin misinizBu işlem geri "
+"alınamaz."
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -706,7 +723,7 @@ msgstr "Nitelikler"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Onaylanmış İşlemler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
@@ -735,14 +752,14 @@ msgstr "Banka Adı"
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Müşteri ID Bilgisine Göre"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:13
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Doküman Referansına Göre"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_5
@@ -4047,7 +4064,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "User entered custom product attribute values"
-msgstr ""
+msgstr "Kullanıcı tarafından girilen özel ürün nitelik değerleri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4070,6 +4087,8 @@ msgid ""
 "Validity date of the quotation, after this date, the customer won't be able "
 "to validate the quotation online."
 msgstr ""
+"Teklifin geçerlilik tarihi; bu tarihten sonra müşteri, teklifi çevrimiçi "
+"olarak doğrulayamaz."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4145,6 +4164,7 @@ msgstr "Yanlış değer girildi!"
 #: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Bir müşteriyi Adı, TIN, E-posta veya Dahili Referansına göre bulabilirsiniz."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:268
@@ -4153,6 +4173,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Gönderilmiş bir teklifi veya onaylanmış bir müşteri siparişini "
+"silemezsiniz.İlk önce iptal etmelisin."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1491
@@ -4161,6 +4183,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Müşteri siparişi onaylandıktan sonra bir sipariş satırını "
+"kaldıramazsınız.Miktarı 0 olarak ayarlamalısınız."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4168,6 +4192,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Tüm siparişleri seçebilirsiniz ve tümünü faturalandırabilirsiniz yada her "
+"bir siparişi birer birer seçip faturalandırabilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4176,6 +4202,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Burada satış siparişlerinde görünecek olan iletişim türünü "
+"belirleyebilirsiniz.Ödeme yöntemini seçtiklerinde müşteriye iletişim bilgisi"
+" verilecektir."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4183,6 +4212,8 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "                    whether it's a physical product, a consumable or services."
 msgstr ""
+"Satın aldığınız her şey için bir ürün tanımlamanız gerekir, ister fiziksel "
+"bir ürün, ister tüketim ürünü, ister hizmet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4213,7 +4244,7 @@ msgstr "Siparişiniz reddedilecek bir durumda değil."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost Bağlantısı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

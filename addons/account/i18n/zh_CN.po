@@ -844,7 +844,12 @@ msgstr "一种税只能定义一个替换规则"
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -11691,7 +11696,7 @@ msgstr "您不能支付已部分支付的发票。您需要先核销付款分录
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr "不能在包含日记项的帐户上执行此操作。"
+msgstr "科目已经使用过，不允许删除的相关提示"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36

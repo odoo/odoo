@@ -12,8 +12,8 @@
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
-# hed shefetr <hed@laylinetech.com>, 2018
 # Yves Goldberg <admin@ygol.com>, 2019
+# hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # 
 msgid ""
@@ -478,6 +478,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"על פי תצורת המוצר,  הכמות הנשלחת יכולה להיות מחושבת באופן אוטומטי על ידי מנגנון:\n"
+"  - ידני: הכמות נקבעת ידנית על הקו\n"
+"  - אנליטית מהוצאות: הכמות היא הסכום הכמותי מהוצאות שנרשמו\n"
+"  - גליון זמנים: הכמות היא מספר השעות שנרשמו במשימות הקשורות לקו מכירה זה\n"
+"  - תנועות מלאי: הכמות מגיעה מליקוטים שאושרו\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -2035,7 +2040,7 @@ msgstr ""
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Not done"
-msgstr ""
+msgstr "לא מוכן"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

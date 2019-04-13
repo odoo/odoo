@@ -8,10 +8,10 @@
 # palica <pavol.cupka@gmail.com>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
-# Jan Prokop, 2019
 # Martin Trigaux, 2019
 # Matus Krnac <matus.krnac@gmail.com>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -518,7 +518,7 @@ msgstr "<span>Zľava(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr "<span>Import účteniek</span>"
+msgstr "<span>Import faktúr</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -834,7 +834,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -1193,7 +1198,7 @@ msgstr "Protiúčet účtovného zápisu pre dane oprávnené na základe platie
 #: model:ir.cron,cron_name:account.ir_cron_reverse_entry
 #: model:ir.cron,name:account.ir_cron_reverse_entry
 msgid "Account; Reverse entries"
-msgstr "Účet; reverzné položky"
+msgstr "Účet; storno položky"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1466,7 +1471,7 @@ msgstr "Alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr "Názov alias pre účtenky dodávateľa"
+msgstr "Názov alias pre dodávateľské faktúry"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
@@ -2118,7 +2123,7 @@ msgstr "Bilancia"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance_cash_basis
 msgid "Balance Cash Basis"
-msgstr ""
+msgstr "Zostatok hotovostného základu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -2398,28 +2403,28 @@ msgstr "Vedúci účtovník"
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr "Účtenky"
+msgstr "Dodávateľské faktúry"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Analýza účteniek"
+msgstr "Analýza dodávateľských faktúr"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "Účtenky na zaplatenie"
+msgstr "Dodávateľské faktúry na úhradu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Účtenky na potvrdenie"
+msgstr "Dodávateľské faktúry na overenie"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
 #, python-format
 msgid "Bills to pay"
-msgstr "Účtenky na zaplatenie"
+msgstr "Dodávateľské faktúry na úhradu"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -2985,7 +2990,7 @@ msgstr "Kód"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix
 msgid "Code Prefix"
-msgstr ""
+msgstr "Predpona kódu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__coin_value
@@ -3855,7 +3860,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__reverse_date
 msgid "Date of the reverse accounting entry."
-msgstr ""
+msgstr "Dátum storno účtovného záznamu."
 
 #. module: account
 #. openerp-web
@@ -4162,15 +4167,15 @@ msgid ""
 "Disable this option to use a simplified versions of vendor bills, where "
 "products are hidden."
 msgstr ""
-"Zakážte túto možnosť, ak chcete mať zjednodušený náhľad na účtenky "
-"dodávateľa, kde produkty sú skryté."
+"Zakážte túto možnosť, ak chcete mať zjednodušený náhľad na dodávateľské "
+"faktúry, kde produkty sú skryté."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Disable to have a simplified view of vendor bills, without the products."
 msgstr ""
-"Zakážte, ak chcete mať zjednodušený náhľad na účtenky dodávateľa, bez "
+"Zakážte, ak chcete mať zjednodušený náhľad na dodávateľské faktúry, bez "
 "produktov."
 
 #. module: account
@@ -4973,7 +4978,7 @@ msgstr "Ísť na panel konfigurácie"
 #: code:addons/account/models/company.py:459
 #, python-format
 msgid "Go to the journal configuration"
-msgstr ""
+msgstr "Ísť na konfiguráciu účtovnej knihy"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -5191,7 +5196,8 @@ msgstr "Ak zaškrtnuté, nová účtovná osnova nebude obsahovať toto v predvo
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Ak prázdne, pouźíva túto účtovnú knihu účtovného vstupu na zvrátenie."
+msgstr ""
+"Ak prázdne, pouźíva túto účtovnú knihu účtovného vstupu na stornovanie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_register_payments__group_invoices
@@ -5250,6 +5256,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically reversed at the"
 " reversal date you defined."
 msgstr ""
+"Ak je táto voľna zaškrtnutá, položka bude automaticky stornovaná v deň "
+"storna ktorý ste zadefinovali."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5343,12 +5351,12 @@ msgstr "Importovať .qif súbory"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_invoice_import_wizard_action
 msgid "Import Vendor Bills"
-msgstr "Import účteniek dodávateľa"
+msgstr "Import dodávateľských faktúr"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_import_wizard
 msgid "Import Your Vendor Bills from Files."
-msgstr "Import účteniek dodávateľa zo súborov."
+msgstr "Import dodávateľských faktúr zo súborov."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -6098,7 +6106,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_import_wizard__journal_id
 msgid "Journal where to generate the bills"
-msgstr ""
+msgstr "Účtovný denník pre dodávateľské faktúry"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_currency_id
@@ -6497,7 +6505,7 @@ msgstr "Zobraziť medzisúčet riadkov"
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
 msgid "Link to an existing journal"
-msgstr ""
+msgstr "Pripojiť k existujúcej účtovnej knihe"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__move_id
@@ -6713,7 +6721,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:934
 #, python-format
 msgid "Match existing invoices/bills."
-msgstr ""
+msgstr "Porovnajte existujúce faktúry "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -6983,7 +6991,7 @@ msgstr "Nové"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
-msgstr ""
+msgstr "Nový názov účtovnej knihy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8689,13 +8697,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__auto_reverse
 msgid "Reverse Automatically"
-msgstr ""
+msgstr "Automatické storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reverse_entry_id
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Vstup obratu"
+msgstr "Vstup storna"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:20
@@ -8703,12 +8711,12 @@ msgstr "Vstup obratu"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr "Reverzné pohyby"
+msgstr "Strono pohyby"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed entry"
-msgstr ""
+msgstr "Stornovaný záznam"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -9004,7 +9012,7 @@ msgid ""
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
 "Vyberte 'Predaj' pre zákaznícke faktúry v účtovných knihách.\n"
-"Vyberte 'Nákup' pre účtenky dodávateľov v účtovných knihách.\n"
+"Vyberte 'Nákup' pre dodávateľské faktúry v účtovných knihách.\n"
 "Vyberte 'Hotovosť'alebo'Banka'pre účtovné knihy, ktoré sa používajú u zákazníckých alebo dodávateľských platieb.\n"
 "Vyberte 'Všeobecné', pre rôzne operácie účtovných kníh."
 
@@ -9215,7 +9223,7 @@ msgstr "Nastavte účtovnú osnovu a zaznačte počiatočné zostatky."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_company_step
 msgid "Setup your company's data for reports headers."
-msgstr ""
+msgstr "Nastavte dáta spoločnosti pre hlavičku výkazov."
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_invoice_action_share
@@ -10258,7 +10266,7 @@ msgstr ""
 #: code:addons/account/models/account_fiscal_year.py:42
 #, python-format
 msgid "The ending date must not be prior to the starting date."
-msgstr ""
+msgstr "Dátum ukončenia nesmie byť menší ako dátum začiatku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -10840,7 +10848,7 @@ msgid ""
 "orders and vendor bills"
 msgstr ""
 "Termín tejto platby bude použitý nemiesto prednastaveného pre nákupné "
-"objednávky a účtenky predajcov"
+"objednávky a dodávateľskí faktúry"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -11312,12 +11320,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_products_in_bills
 msgid "Use products in vendor bills"
-msgstr "Použiť produkt na účtenkách dodávateľa"
+msgstr "Použiť produkt na faktúrach dodávateľov"
 
 #. module: account
 #: model:res.groups,name:account.group_products_in_bills
 msgid "Use products on vendor bills"
-msgstr "Použiť produkt na účtenkách dodávateľa"
+msgstr "Použiť produkt na faktúrach dodávateľa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__template_id
@@ -11475,7 +11483,7 @@ msgstr "Účtenka dodávateľa - %s"
 #: model:ir.actions.act_window,name:account.action_vendor_bill_template
 #, python-format
 msgid "Vendor Bills"
-msgstr "Účtenky dodávateľa"
+msgstr "Faktúry dodávateľa"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -11607,6 +11615,8 @@ msgid ""
 "We cannot find any journal for this company. You should create one.\n"
 "Please go to Configuration > Journals."
 msgstr ""
+"Nemožno nájsť žiadnu účtovnú knihu pre túto spoločnosť. Treba ju vytvoriť.\n"
+"Chodte do Konfigurácia > Účtovné knihy."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -11653,7 +11663,7 @@ msgstr "Či má byť táto účtovná kniha zobrazená na nástenke alebo nie"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
-msgstr ""
+msgstr "Použije sa ako názov účtovnej knihy spojenej s týmto bankovým účtom"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__amount_currency
@@ -11684,7 +11694,7 @@ msgstr "Suma odpisu"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:217
 #, python-format
 msgid "Writeoff Date"
-msgstr ""
+msgstr "Dátum zápisu"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11811,7 +11821,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:583
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr ""
+msgstr "Nemôžete zmazať platbu ktorá už bola zaúčtovaná."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:729
@@ -11898,7 +11908,7 @@ msgstr "Nemôžete miešať položky z účtov pohľadávok a záväzkov."
 #: code:addons/account/models/account_move.py:124
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
-msgstr ""
+msgstr "Nemôžete zmeniť záznam účtovnej knihy so zaúčtovanou platbou."
 
 #. module: account
 #: code:addons/account/models/account_move.py:331

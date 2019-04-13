@@ -732,7 +732,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -790,7 +795,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "회계 계정 서식"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -2151,7 +2156,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
+msgstr "은행 계좌 유형 : 일반 또는 IBAN. 은행 계좌 번호로 추측합니다."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_liquidity
@@ -2995,7 +3000,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -3174,7 +3179,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_bank_journal_form
 msgid "Create a bank account"
-msgstr ""
+msgstr "은행 계좌 생성"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
@@ -3988,7 +3993,7 @@ msgstr "계산된 결산 잔액과 지정된 결산 잔액 간의 차이입니�
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "요약"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__group_products_in_bills
@@ -4096,7 +4101,7 @@ msgstr "청구서에 표시"
 #: code:addons/account/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "사용 권한 없음. 이 데이터는 사용자 이메일에서 무시됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -4531,7 +4536,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
-msgstr ""
+msgstr "회계 연도"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4874,7 +4879,7 @@ msgstr "비조정 항목이 있음"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
 msgid "Has all required arguments"
-msgstr ""
+msgstr "필요한 모든 인수가 있음"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
@@ -5937,7 +5942,7 @@ msgstr "6월"
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Just done"
-msgstr ""
+msgstr "즉시 완료"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__reason
@@ -6894,7 +6899,7 @@ msgstr ""
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Not done"
-msgstr ""
+msgstr "아직 완료되지 않았습니다."
 
 #. module: account
 #. openerp-web
@@ -7359,7 +7364,7 @@ msgstr "상위 메시지"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "상위 경로"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_state
@@ -8619,7 +8624,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "은행 계좌 번호 확인"
 
 #. module: account
 #. openerp-web
@@ -9073,7 +9078,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "BIC 또는 Swift라고도 합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__origin
