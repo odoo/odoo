@@ -534,7 +534,7 @@ class StockMoveLine(models.Model):
                 ('move_id.state', 'not in', ['done', 'cancel']),
                 ('product_id', '=', product_id.id),
                 ('lot_id', '=', lot_id.id if lot_id else False),
-                ('location_id', '=', location_id.id),
+                ('location_id.parent_path', '=like', location_id.parent_path + '%'),
                 ('owner_id', '=', owner_id.id if owner_id else False),
                 ('package_id', '=', package_id.id if package_id else False),
                 ('product_qty', '>', 0.0),
