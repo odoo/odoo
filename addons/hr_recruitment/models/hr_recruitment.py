@@ -377,6 +377,9 @@ class Applicant(models.Model):
             defaults['priority'] = msg.get('priority')
         if custom_values:
             defaults.update(custom_values)
+        existing = self.search([('email_from', '=', msg.get('from'))]).ids
+        if existing:
+            return self.env['hr.applicant'].browse(existing).message_post(subtype='mail.mt_comment', **msg).ids
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
     @api.multi
