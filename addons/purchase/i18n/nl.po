@@ -9,7 +9,7 @@
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
@@ -56,6 +56,32 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Beste\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Als bijlage vind u de ${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'inkooporder bevestiging'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    met referentie: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ bron: ${object.origin})\n"
+"% endif\n"
+"een totaalbedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"van ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Aarzel niet om ons te contacteren als u vragen heeft.</p>\n"
+"<p>Met vriendelijke groeten,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -86,6 +112,31 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"In de bijlage vind u een <strong>${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'inkooporder bevestiging'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    met referentie: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ bron: ${object.origin})\n"
+"% endif\n"
+"totaal <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"van ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>U kan reageren op deze e-mail indien u vragen heeft.</p>\n"
+"<p>Bedankt,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:98
