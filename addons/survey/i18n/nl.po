@@ -349,7 +349,7 @@ msgstr "<span>Aantal pogingen resterend</span>:"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "<span>Time limit for this survey: </span>"
-msgstr ""
+msgstr "<span>Tijdslimiet voor deze enquête:</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
@@ -421,7 +421,7 @@ msgstr "Toegangstoken"
 #. module: survey
 #: sql_constraint:survey.survey:0
 msgid "Access token should be unique"
-msgstr ""
+msgstr "Toegangstoken moet uniek zijn"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
@@ -731,7 +731,7 @@ msgstr "Email opstellen"
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_3
 msgid "Conference chair"
-msgstr ""
+msgstr "Conferentiestoel"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
@@ -808,18 +808,21 @@ msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
 msgstr ""
+"Tokens aanmaken voor iemand anders dan werknemers is niet toegestaan voor "
+"interne enquêtes."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:246
 #, python-format
 msgid "Creating token for archived surveys is not allowed."
 msgstr ""
+"Het aanmaken van tokens voor gearchiveerde enquêtes is niet toegestaan."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:248
 #, python-format
 msgid "Creating token for closed surveys is not allowed."
-msgstr ""
+msgstr "Token aanmaken voor afgesloten enquetes is niet toegestaan."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:252
@@ -829,6 +832,8 @@ msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
 msgstr ""
+"Het aanmaken van tokens voor externe mensen is niet toegestaan voor enquetes"
+" die authenticatie nodig hebben."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -840,7 +845,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr ""
+msgstr "Klanten ontvangen hetzelfde token"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_2_choice_5
@@ -897,6 +902,8 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyze "
 "answers."
 msgstr ""
+"Ontwerp gemakkelijk uw enquête, verstuur uitnodigingen om te beantwoorden "
+"via e-mail en analyseer de antwoorden."
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_2
@@ -932,13 +939,13 @@ msgstr "Weergavemodus"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__display_mode
 msgid "Display mode of simple choice questions."
-msgstr ""
+msgstr "Weergave modus voor gemakkelijke keuzevragen."
 
 #. module: survey
 #: model:survey.question,question:survey.vendor_certification_page_1_question_1
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
 msgid "Do we sell Acoustic Bloc Screens?"
-msgstr ""
+msgstr "Verkopen we akoestische blokschermen?"
 
 #. module: survey
 #: model:survey.question,question:survey.survey_feedback_p2_q3
@@ -951,6 +958,7 @@ msgstr "Heeft u nog opmerkingen, vragen of bezorgdheden?"
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
 msgstr ""
+"Denkt u dat er producten ontbreken in ons assortiment? (niet beoordeeld)"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -1100,7 +1108,7 @@ msgstr "Groepeer op"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
-msgstr ""
+msgstr "Handel bestaande"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_1_question_3_choice_2
@@ -1183,6 +1191,7 @@ msgstr "Indien aangevinkt kunnen gebruikers terug naar vorige pagina's."
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
+"Indien aangevinkt moeten gebruikers aanmelden, zelfs met een geldig token."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage__closed
@@ -1325,7 +1334,7 @@ msgstr "Labels"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids_2
 msgid "Labels used for proposed choices: rows of matrix"
-msgstr ""
+msgstr "Labels gebruiker voor voorgestelde keuzes: rijen of matrix"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids
@@ -1333,6 +1342,8 @@ msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns"
 " of matrix"
 msgstr ""
+"Labels gebruikt voor voorgestelde keuzes: gemakkelijke keuze, multiple "
+"choice en kolommen of matrix"
 
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_2_choice_4
@@ -1453,7 +1464,7 @@ msgstr "Maximum datum kan niet kleiner zijn dan minimum datum!"
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max datetime cannot be smaller than min datetime!"
-msgstr ""
+msgstr "Maximale einddatum kan niet kleiner zijn dan minimale einddatum!"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -1564,7 +1575,7 @@ msgstr "Mijn activiteiten"
 #. module: survey
 #: model:survey.survey,title:survey.vendor_certification
 msgid "MyCompany Vendor Certification"
-msgstr ""
+msgstr "MyCompany leverancier certificering"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__name
@@ -2040,7 +2051,7 @@ msgstr "Informatie scores"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
 msgid "Scoring Type"
-msgstr ""
+msgstr "Soort score"
 
 #. module: survey
 #: selection:survey.survey,scoring_type:0
@@ -2087,6 +2098,7 @@ msgstr "Secties en vragen"
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
 msgid "Select all the available customizations for our Customizable Desk"
 msgstr ""
+"Selecteer alle mogelijke personalisaties voor onze gepersonaliseerde bureau"
 
 #. module: survey
 #: model:survey.question,question:survey.vendor_certification_page_1_question_2
@@ -2157,7 +2169,7 @@ msgstr "Overgeslagen"
 #: code:addons/survey/wizard/survey_invite.py:112
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
-msgstr ""
+msgstr "Sommige van de e-mails die u net heeft ingegeven zijn foutief: %s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -2369,7 +2381,7 @@ msgstr "Test invoer"
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_2
 msgid "Test your knowledge of our prices."
-msgstr ""
+msgstr "Test uw kennis van onze prijzen."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_1
@@ -2438,6 +2450,8 @@ msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited"
 " number of attempts."
 msgstr ""
+"De limiet van het aantal pogingen moet een positief getal zijn indien het "
+"aantal pogingen gelimiteerd is."
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row4
@@ -2448,7 +2462,7 @@ msgstr "Het checkout proces is duidelijk en veilig"
 #: code:addons/survey/wizard/survey_invite.py:85
 #, python-format
 msgid "The following customers have already received an invite"
-msgstr ""
+msgstr "De volgende klanten hebben al een uitnodiging ontvangen"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:91
@@ -2689,7 +2703,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.vendor_certification_page_2_question_3_choice_2
 msgid "Underpriced"
-msgstr ""
+msgstr "Te goedkoop"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -2724,7 +2738,7 @@ msgstr "Gebruik sjabloon"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
 msgid "Use this field to add additional explanations about your question"
-msgstr ""
+msgstr "Gebruik dit veld om extra uitleg toe te voegen over uw vraag"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -2898,6 +2912,8 @@ msgid ""
 "You can only create certifications for surveys that have a scoring "
 "mechanism."
 msgstr ""
+"U kan alleen certificeringen maken voor enquêtes die een score mechanisme "
+"hebben."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:455
@@ -2941,12 +2957,12 @@ msgstr "controleer uw antwoorden"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_expired
 msgid "survey expired"
-msgstr ""
+msgstr "enquête vervallen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void
 msgid "survey is void"
-msgstr ""
+msgstr "enquête is leeg"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403

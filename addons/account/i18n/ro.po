@@ -820,6 +820,17 @@ msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
+msgstr ""
+
+#. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
 msgstr ""
@@ -2766,7 +2777,7 @@ msgstr "Sabloane Planuri de conturi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of account set."
-msgstr ""
+msgstr "Planul de conturi este setat."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -5724,19 +5735,21 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:958
 #, python-format
 msgid "Invoice must be in draft state in order to validate it."
-msgstr ""
+msgstr "Factura trebuie să fie în starea de proiect pentru a fi validată."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:985
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
 msgstr ""
+"Factura trebuie plătită pentru a fi înscrisă pentru înregistrarea plății."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:972
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
 msgstr ""
+"Factura trebuie validată pentru a fi înscrisă pentru înregistrarea plății."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5746,7 +5759,7 @@ msgstr "Factură plătită"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr ""
+msgstr "Trimite factura & Tipăreşte"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -6144,7 +6157,7 @@ msgstr "Iunie"
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Doar făcut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__reason
@@ -8647,7 +8660,7 @@ msgstr "Valoare reziduală în valută"
 #: code:addons/account/models/account_journal_dashboard.py:32
 #, python-format
 msgid "Residual amount"
-msgstr ""
+msgstr "Valoare reziduală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__user_id
@@ -9113,7 +9126,7 @@ msgstr "Trimite email"
 #: code:addons/account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "Send Invoice"
-msgstr ""
+msgstr "Trimite factura"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9552,7 +9565,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Step Completed!"
-msgstr ""
+msgstr "Pasul a fost finalizat!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -10558,6 +10571,8 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
+"Valoarea reziduală dintr-un element de jurnal exprimată în moneda sa "
+"(posibil nu fie moneda companiei)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual

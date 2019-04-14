@@ -27,7 +27,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr ""
+msgstr "# e-mails te verzenden"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -49,6 +49,8 @@ msgid ""
 "<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
 "title=\"Absent\" name=\"presence_absent\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Afwezig\""
+" title=\"Afwezig\" name=\"presence_absent\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -56,6 +58,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
 "label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
+"label=\"Aanwezig\" title=\"Aanwezig\" name=\"presence_present\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -63,6 +67,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"To define\" name=\"presence_to_define\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"Te "
+"definiëren\" title=\"Te definiëren\" name=\"presence_to_define\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
@@ -71,26 +77,29 @@ msgid ""
 "                            Last Activity\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Laatste activiteit\n"
+"                        </span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
 msgid "<span class=\"o_stat_text\">Connected</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verbonden</span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span> sent emails</span>"
-msgstr ""
+msgstr "<span>verzonden e-mails</span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span>At least </span>"
-msgstr ""
+msgstr "<span>Ten minste </span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span>IP List (comma separated):</span>"
-msgstr ""
+msgstr "<span>IP lijst (gesplitst met komma's):</span>"
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
@@ -131,7 +140,7 @@ msgstr "E-mail opstellen"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr ""
+msgstr "Bereken aanwezigheid en open aanwezigheidsweergave"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
@@ -156,7 +165,7 @@ msgstr "Werknemer"
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr ""
+msgstr "Aanwezigheid werknemer"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -175,12 +184,12 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr ""
+msgstr "HR aanwezigheid laatste datum berekend"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "HR aanwezigheidsstatus"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -200,7 +209,7 @@ msgstr "Niet beschikbaar"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "Aanwezigheid"
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
@@ -216,23 +225,23 @@ msgstr "Rapportages"
 #: code:addons/hr_presence/models/hr_employee.py:152
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr ""
+msgstr "Er is geen professioneel e-mailadres voor deze werknemer."
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:130
 #, python-format
 msgid "There is no professional phone for this employee."
-msgstr ""
+msgstr "Er is geen professioneel telefoonnummer voor deze werknemer."
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
 msgid "To Define"
-msgstr ""
+msgstr "Te definiëren"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "Onverwachte afwezigheid"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -243,7 +252,7 @@ msgstr "Gebruikerslog"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_ip_list
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_ip_list
 msgid "Valid IP addresses"
-msgstr ""
+msgstr "Geldig IP adres"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:112
@@ -252,3 +261,5 @@ msgstr ""
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
+"U heeft niet de rechten om dit te doen. Gelieve een administrator te "
+"contacteren."
