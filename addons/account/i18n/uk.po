@@ -5,7 +5,6 @@
 # Translators:
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2018
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
-# Olha Koshelieva <olha.koshelieva@gmail.com>, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2018
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2018
 # Dmytro Kriesovich <dimscoffer@bigmir.net>, 2018
@@ -61,7 +60,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Рахунок (Реф. ${object.number or 'немає'})"
+msgstr "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -95,7 +94,7 @@ msgstr "%s Послідовність"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>від</span>"
+msgstr "&amp;nbsp;<span>на</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
@@ -460,7 +459,7 @@ msgstr "<span class=\"o_form_label\">місяця</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">В рахунках</span>"
+msgstr "<span class=\"o_stat_text\">Виставлено рахунок</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -626,8 +625,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
-"<strong class=\"text-center\">Відскануйте мене за допомогою додатку "
-"банкінгу.</strong><br/><br/>"
+"<strong class=\"text-center\">Відскануйте мене за допомогою банківського "
+"додатку.</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -661,7 +660,7 @@ msgstr "<strong>Код клієнта:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
-msgstr "<strong>Замовник: </strong>"
+msgstr "<strong>Клієнт: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -701,17 +700,17 @@ msgstr "<strong>Пам'ятка: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Amount: </strong>"
-msgstr "Сума оплати"
+msgstr "<strong>Сума платежу: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Date: </strong>"
-msgstr "Дата платежу:"
+msgstr "<strong>Дата платежу: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Method: </strong>"
-msgstr "Спосіб платежу:"
+msgstr "<strong>Спосіб оплати: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -759,10 +758,10 @@ msgid ""
 "                goes out of the cash box."
 msgstr ""
 "Касовий Реєстр дозволяє вам керувати коштами у готівковій формі\n"
-"Журналів.\n"
-" Ця функція дозволяє легко щоденно стежити за готівковими\n"
-" виплатами. Ви можете ввести кошти, які знаходяться в касі, \n"
-"а потім вносити записи, коли кошти надходять або виходить з каси."
+"журналів. Ця функція дозволяє легко щоденно стежити за готівковими\n"
+" оплатами. Ви можете ввести кошти, які знаходяться в касі, \n"
+"а потім вносити записи, коли кошти надходять\n"
+" або виходить з каси."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:2018
@@ -857,6 +856,17 @@ msgstr "Вибраний рядок заяви вже був узгоджени�
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 "Схема оподаткування може бути визначена лише один раз на однакові податки."
+
+#. module: account
+#: code:addons/account/models/res_users.py:17
+#, python-format
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account

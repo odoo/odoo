@@ -31,7 +31,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Leads </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Leads </span>"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -76,7 +76,7 @@ msgstr "Bedrijfsgrootte"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "Maximale bedrijfsgrootte"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -130,7 +130,7 @@ msgstr "Weergavenaam"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:73
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "Geef een geldige Regex regel in."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
@@ -140,7 +140,7 @@ msgstr "Filter op"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
 msgid "Filter companies based on their size."
-msgstr ""
+msgstr "Filter bedrijven gebaseerd op hun grootte."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
@@ -170,7 +170,7 @@ msgstr "Hoog"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
-msgstr ""
+msgstr "IAP Credits"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
@@ -187,7 +187,7 @@ msgstr "IP-adres"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
-msgstr ""
+msgstr "Industrieën"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
@@ -215,7 +215,7 @@ msgstr "Lead"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Lead Data"
-msgstr ""
+msgstr "Lead gegevens"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_lead_form
@@ -227,13 +227,13 @@ msgstr "Lead generatie informatie"
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_rule_id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_rule_id
 msgid "Lead Generation Rule"
-msgstr ""
+msgstr "Lead generatie regel"
 
 #. module: crm_iap_lead_website
 #: model:ir.actions.act_window,name:crm_iap_lead_website.crm_reveal_view_action
 #: model:ir.ui.menu,name:crm_iap_lead_website.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr ""
+msgstr "Lead geneer weergaves"
 
 #. module: crm_iap_lead_website
 #: model:ir.actions.server,name:crm_iap_lead_website.ir_cron_crm_reveal_lead_ir_actions_server
@@ -251,6 +251,8 @@ msgstr "Lead/Prospect"
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
+"Laat leeg om altijd te matchen. Odoo zal geen lead aanmaken als er geen "
+"match is"
 
 #. module: crm_iap_lead_website
 #: selection:crm.reveal.rule,priority:0
@@ -263,11 +265,13 @@ msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
+"Verzeker u ervan of u GDPR compliant moet zijn voor het bewaren van "
+"persoonlijke gegevens."
 
 #. module: crm_iap_lead_website
 #: sql_constraint:crm.reveal.rule:0
 msgid "Maximum 5 contacts are allowed!"
-msgstr ""
+msgstr "Maximaal 5 contacten zijn toegestaan!"
 
 #. module: crm_iap_lead_website
 #: selection:crm.reveal.rule,priority:0
@@ -292,7 +296,7 @@ msgstr "Aantal gegenereerde leads"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr ""
+msgstr "Aantal gegenereerde opportuniteiten"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__country_ids
@@ -307,6 +311,8 @@ msgid ""
 "Only visitors of following states will be converted into "
 "leads/opportunities."
 msgstr ""
+"Alleen bezoekers van de volgende provincies worden geconverteerd in "
+"leads/prospects."
 
 #. module: crm_iap_lead_website
 #: selection:crm.reveal.rule,lead_type:0
@@ -316,7 +322,7 @@ msgstr "Prospect"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr ""
+msgstr "Prospect gegevens"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -425,7 +431,7 @@ msgstr "Soort"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__regex_url
 msgid "URL Expression"
-msgstr ""
+msgstr "URL expressie"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -457,7 +463,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr ""
+msgstr "Website verkeer condities"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -467,12 +473,12 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr ""
+msgstr "bijvoorbeeld bezoekers uit de VS"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "employees"
-msgstr ""
+msgstr "werknemers"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
