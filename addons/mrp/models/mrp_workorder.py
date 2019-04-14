@@ -415,15 +415,8 @@ class MrpWorkorder(models.Model):
                  float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
             self.next_work_order_id.state = 'ready'
 
-    @api.multi
-    def button_start(self):
-        self.ensure_one()
-        # As button_start is automatically called in the new view
-        if self.state in ('done', 'cancel'):
-            return True
-
+    def _prepare_workcenter_productivity_data(self):
         # Need a loss in case of the real time exceeding the expected
-        timeline = self.env['mrp.workcenter.productivity']
         if self.duration < self.duration_expected:
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
             if not len(loss_id):
@@ -432,20 +425,29 @@ class MrpWorkorder(models.Model):
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
             if not len(loss_id):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-        if self.production_id.state != 'progress':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
-        timeline.create({
+        return {
             'workorder_id': self.id,
             'workcenter_id': self.workcenter_id.id,
             'description': _('Time Tracking: ')+self.env.user.name,
             'loss_id': loss_id[0].id,
             'date_start': datetime.now(),
             'user_id': self.env.user.id
-        })
-        return self.write({'state': 'progress',
-                    'date_start': datetime.now(),
+        }
+
+    @api.multi
+    def button_start(self):
+        self.ensure_one()
+        # As button_start is automatically called in the new view
+        if self.state in ('done', 'cancel'):
+            return True
+
+        timeline = self.env['mrp.workcenter.productivity']
+        if self.production_id.state != 'progress':
+            self.production_id.action_start()
+        timeline.create(self._prepare_workcenter_productivity_data())
+        return self.write({
+            'state': 'progress',
+            'date_start': datetime.now(),
         })
 
     @api.multi
