@@ -159,12 +159,12 @@ msgstr "도메인을 업데이트 하기 이전에"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "바인딩 모델"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "바인딩 유형"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -206,7 +206,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "대상 모델 생성/작성"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -301,7 +301,7 @@ msgstr "진행중"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "고객이십니까?"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_date_action_last
@@ -347,7 +347,7 @@ msgstr "라인"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
 msgid "Link using field"
-msgstr ""
+msgstr "필드를 사용하여 링크"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -363,19 +363,19 @@ msgstr "모델"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_name
 msgid "Model Description"
-msgstr ""
+msgstr "모델 설명"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_crud_model_id
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr ""
+msgstr "생성 / 업데이트 된 모델을 기록하십시오. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "서버 작업이 실행되는 모델"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -422,7 +422,7 @@ msgstr "갱신할 때"
 msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
-msgstr ""
+msgstr "대상 보기에 대한 설명(예 : 사용 및 용도)이 있는 사용자를 위한 선택적 도움말."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_partner_id
@@ -444,7 +444,7 @@ msgstr "우선 순위"
 msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
-msgstr ""
+msgstr "새로 생성된 레코드를 서버 작업에 사용되는 레코드에 연결하기 위한 필드를 제공합니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_code
@@ -481,7 +481,7 @@ msgstr "서버 동작"
 msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
-msgstr ""
+msgstr "값을 설정하면 주어진 모델의 메뉴에서 이 조치를 사용할 수 있습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -514,6 +514,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"서버 조작의 유형. 다음 값을 사용할 수 있습니다 :\n"
+"- '파이썬 코드 실행' : 실행될 파이썬 코드 조각\n"
+"- '새 레코드 만들기 또는 복사' : 새 값으로 새 레코드 만들기 또는 데이터베이스의 기존 레코드 복사\n"
+"- '레코드에 쓰기' : 레코드 값 업데이트\n"
+"- '몇 가지 작업 실행' : 여러 가지 다른 서버 작업을 트리거하는 작업 정의\n"
+"- \"팔로워 추가\": 팔로워를 레코드에 추가합니다 (토론에서 사용 가능).)\n"
+"- '이메일 보내기': 자동으로 이메일 보내기 (email_template에서 사용 가능)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -543,7 +550,7 @@ msgstr "사용자"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "매핑된 값"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
@@ -557,7 +564,7 @@ msgstr "하루 기준으로 시간을 지정한 조건을 계산할 때는 작�
 msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
-msgstr ""
+msgstr "여러 작업을 처리 할 때 실행 순서는 시퀀스를 기반으로 합니다. 작은 숫자가 우선 순위가 높습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
