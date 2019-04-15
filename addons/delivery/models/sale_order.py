@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
     def _compute_available_carrier(self):
         carriers = self.env['delivery.carrier'].search([])
         for rec in self:
-            rec.available_carrier_ids = carriers.available_carriers(rec.partner_id) if rec.partner_id else carriers
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
