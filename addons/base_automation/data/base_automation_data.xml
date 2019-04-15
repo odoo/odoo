@@ -13,4 +13,39 @@
             <field name="active" eval="False" />
         </record>
     </data>
+    <data>
+        <record id="base_automation_failure_wizard_form" model="ir.ui.view">
+            <field name="name">Failed automated action</field>
+            <field name="model">base.automation.failure.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="row container">
+                        <div class="col-12 text-center">
+                          <div class="card text-white bg-danger mb-3 w-75 ml64">
+                            <div class="card-header">
+                                    <span class="fa fa-2x fa-warning" t-translation="off">&amp;nbsp;</span>
+                                    <span class="text-white text-uppercase">Danger Zone</span>
+                            </div>
+                            <div class="card-body bg-transparent text-center">
+                              <p>Performing this action will enable you to continue your workflow
+                                  but any data created after this could potentially be corrupted,
+                                  as you are effectively disabling a customization that may set
+                                  important and/or required fields.</p>
+                              <p>Please confirm that you want to deactivate this automated action.</p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <footer>
+                        <button
+                            string="Yes, I understand the risks"
+                            type="object"
+                            name="deactivate"
+                            class="btn-secondary"/>
+                        <button special="cancel" string="Oops, no!" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
 </odoo>

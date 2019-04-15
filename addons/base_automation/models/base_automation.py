@@ -26,6 +26,19 @@ DATE_RANGE_FUNCTION = {
 }
 
 
+class AutomationFailureWizard(models.TransientModel):
+    _name = 'base.automation.failure.wizard'
+    _description = 'Automated action failure wizard'
+
+    def deactivate(self):
+        failures = self.env['base.automation'].browse(self._context.get('failed_automation_ids'))
+        failures.write({'active': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+
 class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automated Action'
@@ -174,6 +187,32 @@ class BaseAutomation(models.Model):
         else:
             return records, None
 
+    @api.model
+    def _add_postmortem_action(self, e):
+        if self.user_has_groups('base.group_system'):
+            view1 = self.env.ref('base_automation.base_automation_failure_wizard_form')
+            view2 = self.env.ref('base_automation.view_base_automation_form')
+            e.actions = [{
+                'label': _('Disable action'),
+                'action': {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'base.automation.failure.wizard',
+                    'target': 'new',
+                    'views': [[view1.id, 'form']],
+                    },
+                'options': {'additional_context': {'failed_automation_ids': self.ids}},
+            }, {
+                'label': _('Go to action'),
+                'action': {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'base.automation',
+                    'res_id': self.id,
+                    'target': 'new',
+                    'views': [[view2.id, 'form']],
+                    },
+                'description': _("Go to the back-end view of the faulty action to fix it")
+            }]
+
     def _process(self, records, domain_post=None):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
@@ -207,7 +246,11 @@ class BaseAutomation(models.Model):
                         'active_id': record.id,
                         'domain_post': domain_post,
                     }
-                    self.action_server_id.with_context(**ctx).run()
+                    try:
+                        self.action_server_id.with_context(**ctx).run()
+                    except Exception as e:
+                        self._add_postmortem_action(e)
+                        raise e
 
     def _check_trigger_fields(self, record):
         """ Return whether any of the trigger fields has been modified on ``record``. """
@@ -309,7 +352,12 @@ class BaseAutomation(models.Model):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
                 server_action = action_rule.action_server_id.with_context(active_model=self._name, onchange_self=self)
-                res = server_action.run()
+                try:
+                    res = server_action.run()
+                except Exception as e:
+                    self._add_postmortem_action(e)
+                    raise e
+
                 if res:
                     if 'value' in res:
                         res['value'].pop('id', None)
