@@ -174,7 +174,7 @@ class StockRule(models.Model):
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         partner = values['supplier'].name
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=company_id.id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
@@ -197,7 +197,7 @@ class StockRule(models.Model):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
-        seller = product_id._select_seller(
+        seller = product_id.with_context(force_company=company_id.id)._select_seller(
             partner_id=partner,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order.date(),

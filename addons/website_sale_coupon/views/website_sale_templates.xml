@@ -20,6 +20,9 @@
             <span class="js_quantity text-muted" t-esc="int(line.product_uom_qty)"/>
         </t>
     </xpath>
+    <xpath expr="//del" position="attributes">
+        <attribute name="t-if">not line.is_reward_line</attribute>
+    </xpath>
 </template>
 <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
     <xpath expr="//form[@name='coupon_code']" position="after">

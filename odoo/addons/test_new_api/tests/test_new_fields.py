@@ -52,6 +52,10 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             records.body = 'Faulty'
 
+        # field assigmenent does not cache the wrong value when write overridden
+        record.priority = 4
+        self.assertEqual(record.priority, 5)
+
     def test_10_computed(self):
         """ check definition of computed fields """
         # by default function fields are not stored and readonly

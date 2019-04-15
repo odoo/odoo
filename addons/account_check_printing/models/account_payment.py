@@ -7,34 +7,15 @@ from odoo.tools.misc import formatLang, format_date
 
 INV_LINES_PER_STUB = 9
 
-class AccountRegisterPayments(models.TransientModel):
-    _inherit = "account.register.payments"
-
-    check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
-    # Note: a check_number == 0 means that it will be attributed when the check is printed
-    check_number = fields.Char(string="Check Number", readonly=True, copy=False, default=0,
-        help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
-             "you can manage the numbering in the journal configuration page.")
-
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        if hasattr(super(AccountRegisterPayments, self), '_onchange_journal_id'):
-            super(AccountRegisterPayments, self)._onchange_journal_id()
-        if self.journal_id.check_manual_sequencing:
-            self.check_number = self.journal_id.check_sequence_id.number_next_actual
-
-    @api.onchange('amount')
-    def _onchange_amount(self):
-        if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
-            super(AccountRegisterPayments, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else False
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
 
     def _prepare_payment_vals(self, invoices):
-        res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
+        res = super(AccountPaymentRegister, self)._prepare_payment_vals(invoices)
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
+            currency_id = self.env['res.currency'].browse(res['currency_id'])
             res.update({
-                'check_amount_in_words': self.currency_id.amount_to_text(res['amount']) if self.multi else self.check_amount_in_words,
+                'check_amount_in_words': currency_id.amount_to_text(res['amount']),
             })
         return res
 
@@ -48,11 +29,18 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
-    @api.onchange('amount','currency_id')
+    @api.onchange('amount', 'currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
         self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else ''
         return res
+
+    @api.onchange('journal_id')
+    def _onchange_journal_id(self):
+        if hasattr(super(AccountPayment, self), '_onchange_journal_id'):
+            super(AccountPayment, self)._onchange_journal_id()
+        if self.journal_id.check_manual_sequencing:
+            self.check_number = self.journal_id.check_sequence_id.number_next_actual
 
     def _check_communication(self, payment_method_id, communication):
         super(AccountPayment, self)._check_communication(payment_method_id, communication)
@@ -90,7 +78,7 @@ class AccountPayment(models.Model):
                 ('journal_id', '=', self[0].journal_id.id),
                 ('check_number', '!=', "0")], order="check_number desc", limit=1)
             next_check_number = last_printed_check and int(last_printed_check.check_number) + 1 or 1
-            
+
             return {
                 'name': _('Print Pre-numbered Checks'),
                 'type': 'ir.actions.act_window',
@@ -152,12 +140,12 @@ class AccountPayment(models.Model):
         """ The stub is the summary of paid invoices. It may spill on several pages, in which case only the check on
             first page is valid. This function returns a list of stub lines per page.
         """
-        if len(self.invoice_ids) == 0:
+        if len(self.reconciled_invoice_ids) == 0:
             return None
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.invoice_ids.sorted(key=lambda r: r.date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.date_due)
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 

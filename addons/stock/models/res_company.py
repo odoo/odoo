@@ -126,13 +126,16 @@ class Company(models.Model):
         for company in company_without_property:
             company._create_scrap_location()
 
+    def _create_per_company_locations(self):
+        self.ensure_one()
+        self._create_transit_location()
+        self._create_inventory_loss_location()
+        self._create_production_location()
+        self._create_scrap_location()
+
     @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
-
-        company.sudo()._create_transit_location()
-        company.sudo()._create_inventory_loss_location()
-        company.sudo()._create_production_location()
-        company.sudo()._create_scrap_location()
+        company.sudo()._create_per_company_locations()
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         return company

@@ -28,13 +28,16 @@ class ProductionLot(models.Model):
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
     ]
 
-    @api.model_create_multi
-    def create(self, vals_list):
+    def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)
         if active_picking_id:
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(_('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_create()
         return super(ProductionLot, self).create(vals_list)
 
     @api.multi

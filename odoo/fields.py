@@ -945,7 +945,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
-            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            try:
+                with model._cr.savepoint():
+                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
         else:
             sql.drop_index(model._cr, indexname, model._table)
 
@@ -1029,10 +1033,12 @@ class Field(MetaField('DummyField', (object,), {})):
                 spec += self.modified_draft(record)
             env.cache.invalidate(spec)
 
-        else:
+        elif (self.store or self.inverse or self.inherited):
             # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
+
+        else:
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
                 record.env.cache.set(record, self, value)

@@ -263,7 +263,7 @@
                         </button>
                        <button string="Routes" type="action"
                             name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', '!=', 'product')]}"
+                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-cogs"
                             context="{'default_product_id': id}"
                             groups="stock.group_stock_multi_locations"/>
@@ -352,7 +352,7 @@
                         </button>
                         <button string="Routes" type="action"
                             name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', '!=', 'product')]}"
+                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-cogs"
                             context="{'default_product_tmpl_id': id}"
                             groups="stock.group_stock_multi_locations"/>
