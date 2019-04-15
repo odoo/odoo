@@ -117,7 +117,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".client-line:contains('Deco Addict')",
     }, {
         content: "confirm selection",
-        trigger: ".clientlist-screen .next",
+        trigger: ".list-screen .next",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -140,7 +140,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".client-line:contains('Lumber Inc')",
     },  {
         content: "confirm selection",
-        trigger: ".clientlist-screen .next",
+        trigger: ".list-screen .next",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",

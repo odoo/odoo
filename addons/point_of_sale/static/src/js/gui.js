@@ -130,7 +130,13 @@ var Gui = core.Class.extend({
     // goes to the previous screen (as specified in the order). The history only
     // goes 1 deep ...
     back: function() {
-        var previous = this.pos.get_order().get_screen_data('previous-screen');
+        var previous = this.startup_screen;
+
+        var order = this.pos.get_order();
+        if (order) {
+            previous = order.get_screen_data('previous-screen');
+        }
+
         if (previous) {
             this.show_screen(previous);
         }

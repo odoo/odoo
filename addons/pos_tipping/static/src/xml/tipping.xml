@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Chrome">
+        <t t-jquery=".pos-rightheader .oe_status" t-operation="after">
+            <span class="placeholder-OrderSearchWidget"></span>
+            <span class="placeholder-TippingWidget"></span>
+        </t>
+    </t>
+    <t t-name="TippingWidget">
+        <div class="oe_status">
+            <div class="oe_icon oe_green">
+                <i class="fa fa-fw fa-heart" role="img" aria-label="Adjust tips" title="Adjust tips"></i>
+            </div>
+        </div>
+    </t>
+    <t t-name="TippingScreenWidget">
+        <div class="list-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class="button back">
+                        <i class="fa fa-angle-double-left"></i>
+                        Back
+                    </span>
+                    <span class="searchbox">
+                        <input placeholder="Search orders" type="search" class="search-input"/>
+                        <span class="search-clear"></span>
+                    </span>
+                    <span class="searchbox"></span>
+                </section>
+                <section class="full-content">
+                    <div class="window">
+                        <section class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix touch-scrollable scrollable-y">
+                                    <table class="list-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Reference</th>
+                                                <th>Time</th>
+                                                <th>Table</th>
+                                                <th>Customer</th>
+                                                <th class="align-right">Amount w/o tip</th>
+                                                <th class="align-right">Tip</th>
+                                                <th class="align-right">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list-table-contents"/>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="TippingScreenOrder">
+        <tr>
+            <td t-esc="widget.order.uid"/>
+            <td t-esc="widget.order.creation_date"/>
+            <td t-esc="widget.order.table"/>
+            <td t-esc="widget.order.partner_name || ''"/>
+            <td class="pos-right-align" t-esc="widget.format_currency_no_symbol(widget.order.amount_total_without_tip)"/>
+            <td class="pos-right-align" t-esc="widget.order.is_tipped ? widget.format_currency_no_symbol(widget.order.tip_amount) : ''"/>
+            <td class="pos-right-align" t-esc="widget.format_currency_no_symbol(widget.order.amount_total)"/>
+        </tr>
+    </t>
+
+    <t t-name="OrderSearchWidget">
+        <div class="oe_status">
+            <div class="oe_icon oe_green">
+                <i class="fa fa-fw fa-search" role="img" aria-label="Search orders" title="Search orders"></i>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="OrderSearchScreenOrders">
+        <tr t-foreach="filtered_open_orders" t-as="order" t-att-data-uid="order.uid">
+            <td t-esc="order.uid"/>
+            <td t-esc="order.card_name"/>
+            <td t-esc="widget.get_customer_name(order)"/>
+            <td t-esc="order.table"/>
+            <td t-esc="widget.format_currency_no_symbol(order.amount_total)"/>
+        </tr>
+    </t>
+
+    <t t-name="OrderSearchScreen">
+        <div class="list-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class="button back">
+                        <i class="fa fa-angle-double-left"></i>
+                        Back
+                    </span>
+                    <span class="searchbox">
+                        <input placeholder="Search open orders" type="search" class="search-input"/>
+                        <span class="search-clear"></span>
+                    </span>
+                    <span class="searchbox"></span>
+                </section>
+                <section class="full-content">
+                    <div class="window">
+                        <section class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix touch-scrollable scrollable-y">
+                                    <table class="list-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order Name</th>
+                                                <th>Card Name</th>
+                                                <th>Customer</th>
+                                                <th>Table</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list-table-contents"/>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CancelPopupWidget" t-extend="PopupWidget">
+        <t t-jquery=".button.cancel" t-operation="inner">
+            Cancel
+        </t>
+    </t>
+
+    <t t-name="AuthorizeCardButton">
+        <span class="control-button">
+            <i class="fa fa-credit-card"></i>
+            Open Tab
+        </span>
+    </t>
+
+    <t t-extend="OrderReceipt">
+        <t t-jquery=".before-footer" t-operation="after">
+            <t t-if="receipt.print_tip">
+                <br/><br/><br/>
+                <div>
+                    TIP: <div class="pos-receipt-right-align">________________________</div><br/><br/>
+                    TOTAL: <div class="pos-receipt-right-align">________________________</div><br/><br/>
+                    SIGNATURE: <div class="pos-receipt-right-align">________________________________</div>
+                </div>
+            </t>
+        </t>
+    </t>
+</templates>
