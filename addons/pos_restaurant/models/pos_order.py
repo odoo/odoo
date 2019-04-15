@@ -108,6 +108,23 @@ class PosOrder(models.Model):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
     @api.model
+    def _get_table_draft_order_fields(self):
+        return [
+            'id',
+            'pricelist_id',
+            'partner_id',
+            'sequence_number',
+            'session_id',
+            'pos_reference',
+            'create_uid',
+            'create_date',
+            'customer_count',
+            'fiscal_position_id',
+            'table_id',
+            'to_invoice',
+        ]
+
+    @api.model
     def get_table_draft_orders(self, table_id):
         """Generate an object of all draft orders for the given table.
 
@@ -120,20 +137,7 @@ class PosOrder(models.Model):
         """
         table_orders = self.search_read(
                 domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
-                fields = [
-                    'id',
-                    'pricelist_id',
-                    'partner_id',
-                    'sequence_number',
-                    'session_id',
-                    'pos_reference',
-                    'create_uid',
-                    'create_date',
-                    'customer_count',
-                    'fiscal_position_id',
-                    'table_id',
-                    'to_invoice',
-                    ])
+                fields = self._get_table_draft_order_fields())
 
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)
