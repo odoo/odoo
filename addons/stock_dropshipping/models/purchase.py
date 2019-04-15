@@ -17,7 +17,9 @@ class PurchaseOrderLine(models.Model):
         return res
 
     def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        if values.get('route_ids') and values['route_ids'] == self.env.ref('stock_dropshipping.route_drop_shipping'):
+        if values.get('sale_line_id') and values['sale_line_id'] != self.sale_line_id.id:
+            # if this is defined, this is a dropshipping line, so no
+            # this is to correctly map delivered quantities to the so lines
             return False
         return super(PurchaseOrderLine, self)._merge_in_existing_line(
             product_id=product_id, product_qty=product_qty, product_uom=product_uom,
