@@ -42,7 +42,7 @@ class L10nInProductHsnReport(models.Model):
             CASE WHEN pt.l10n_in_hsn_code IS NULL THEN '' ELSE pt.l10n_in_hsn_code END AS hsn_code,
             CASE WHEN pt.l10n_in_hsn_description IS NULL THEN '' ELSE pt.l10n_in_hsn_description END AS hsn_description,
             CASE WHEN uom.l10n_in_code IS NULL THEN '' ELSE uom.l10n_in_code END AS l10n_in_uom_code,
-            CASE WHEN aat.tax_report_line_id IN
+            CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst') OR at.l10n_in_reverse_charge = True
                 THEN 0
                 ELSE aml.quantity
