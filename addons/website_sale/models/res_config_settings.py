@@ -9,10 +9,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_order_mail_template(self):
-        if self.env['ir.module.module'].search([('name', '=', 'website_quote')]).state in ('installed', 'to upgrade'):
-            return self.env.ref('website_quote.confirmation_mail').id
-        else:
-            return self.env.ref('sale.email_template_edi_sale').id
+        return self.env.ref('sale.email_template_edi_sale').id
 
     def _default_recovery_mail_template(self):
         try:
