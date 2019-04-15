@@ -35,6 +35,7 @@ class Project(models.Model):
             'projects': self,
             'currency': currency,
             'timesheet_domain': [('project_id', 'in', self.ids)],
+            'profitability_domain': [('project_id', 'in', self.ids)],
             'stat_buttons': self._plan_get_stat_button(),
         }
 

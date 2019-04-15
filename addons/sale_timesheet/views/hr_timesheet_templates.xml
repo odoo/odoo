@@ -66,7 +66,7 @@
                                             </td>
                                             <td>Timesheets</td>
                                             <th rowspan="6">
-                                                <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)" data-context='{"pivot_row_groupby": ["timesheet_invoice_id"], "pivot_column_groupby": ["date:month"],"pivot_measures": ["amount"]}' data-views='[[0, "pivot"], [0, "list"]]' tabindex="-1">Profitability</a>
+                                                <a type="action" data-model="project.profitability.report" t-att-data-domain="json.dumps(profitability_domain)" data-context="{'group_by_no_leaf':1, 'group_by':[], 'sale_show_order_product_name': 1}" data-views='[[0, "pivot"], [0, "graph"]]' tabindex="-1">Profitability</a>
                                             </th>
                                             <td class="o_timesheet_plan_dashboard_cell">
                                                 <t t-esc="dashboard['profit']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
