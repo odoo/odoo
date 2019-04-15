@@ -720,7 +720,7 @@ class PosOrder(models.Model):
 
             try:
                 pos_order.action_pos_order_paid()
-            except psycopg2.OperationalError:
+            except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
