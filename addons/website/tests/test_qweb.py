@@ -108,6 +108,7 @@ class MockRequest(object):
 class TestQwebProcessAtt(TransactionCase):
     def setUp(self):
         super(TestQwebProcessAtt, self).setUp()
+        self.env.ref('base.lang_fr').active = True
         self.website = self.env['website'].browse(1)
         self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
         self.website.default_lang_id = self.env.ref('base.lang_en')
