@@ -29,6 +29,8 @@
                                         <th t-if="data['report_name'] != 'bom_structure'" class="o_mrp_prod_cost text-right" title="This is the cost defined on the product.">Product Cost</th>
                                         <th t-if="data['report_name'] != 'bom_structure'" class="o_mrp_bom_cost text-right" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
                                         <th t-if="data['report_type'] == 'html' and data['has_attachments']" class="o_mrp_has_attachments" title="Files attached to the product">Attachments</th>
+                                        <th class="text-right">Vendor Name</th>
+                                        <th class="text-right">Vendor Cost</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,6 +48,12 @@
                                         </td>
                                         <td t-if="data['report_name'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
                                             <span><t t-esc="data['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
+                                        </td>
+                                        <td class="text-right">
+                                          <span><t t-esc="data['vendor_name']"/></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span><t t-esc="data['vendor_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
                                         </td>
                                         <td t-if="data['report_type'] == 'html'">
                                             <span>
@@ -114,6 +122,12 @@
                 <td class="o_mrp_bom_cost text-right">
                     <span t-esc="l['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                 </td>
+                <td class="text-right">
+                  <span t-if="'vendor_name' in l" t-esc="l['vendor_name']"/>
+                </td>
+                <td class="text-right">
+                    <span t-if="'vendor_cost' in l" t-esc="l['vendor_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
                 <td>
                     <span>
                         <t t-if="l['attachments']">
@@ -141,6 +155,12 @@
                 <td class="o_mrp_bom_cost text-right">
                     <span t-esc="data['operations_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                 </td>
+                <td class="text-right">
+                  <span t-if="'vendor_name' in data['operations']" t-esc="data['vendor_name']"/>
+                </td>
+                <td class="text-right">
+                  <span t-if="'vendor_cost' in data['operations']" t-esc="data['vendor_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
                 <td/>
             </tr>
         </t>
@@ -163,6 +183,12 @@
               <td class="o_mrp_prod_cost"></td>
               <td class="o_mrp_bom_cost text-right">
                   <span t-esc="op['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+              </td>
+              <td class="text-right">
+                  <span t-if="'vendor_name' in op" t-esc="op['vendor_name']"/>
+              </td>
+              <td class="text-right">
+                  <span t-if="'vendor_cost' in op" t-esc="op['vendor_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
               </td>
               <td/>
           </tr>
@@ -200,6 +226,12 @@
               </td>
               <td t-if="data['report_name'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
                   <span t-esc="l['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+              </td>
+              <td class="text-right">
+                  <span t-if="'vendor_name' in l" t-esc="l['vendor_name']"/>
+              </td>
+              <td class="text-right">
+                  <span t-if="'vendor_cost' in l" t-esc="l['vendor_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
               </td>
           </tr>
       </t>

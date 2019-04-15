@@ -93,22 +93,31 @@ class ReportBomStructure(models.AbstractModel):
             'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
         }
 
+    def _get_vendor(self, product, quantity, uom):
+        seller = product._select_seller(partner_id=False, quantity=quantity, date=False, uom_id=uom)
+        if not seller and product.seller_ids:
+            seller = product.seller_ids[0]
+        return seller
+
     def _get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
         bom = self.env['mrp.bom'].browse(bom_id)
         bom_quantity = line_qty
+        product = False
         if line_id:
             current_line = self.env['mrp.bom.line'].browse(int(line_id))
             bom_quantity = current_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id)
         # Display bom components for current selected product variant
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
-        else:
+        if not product:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if product:
+            seller = self._get_vendor(product=product, quantity=bom_quantity, uom=bom.product_uom_id)
             attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
             ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)])
         else:
             product = bom.product_tmpl_id
+            seller = self._get_vendor(product=product, quantity=bom_quantity, uom=bom.product_uom_id)
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
         operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
@@ -124,7 +133,9 @@ class ReportBomStructure(models.AbstractModel):
             'operations': operations,
             'operations_cost': sum([op['total'] for op in operations]),
             'attachments': attachments,
-            'operations_time': sum([op['duration_expected'] for op in operations])
+            'operations_time': sum([op['duration_expected'] for op in operations]),
+            'vendor_name': seller.display_name or '',
+            'vendor_cost': seller.price or 0.0
         }
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
         lines['components'] = components
@@ -145,6 +156,7 @@ class ReportBomStructure(models.AbstractModel):
             else:
                 sub_total = price
             sub_total = self.env.company.currency_id.round(sub_total)
+            seller = self._get_vendor(product=line.product_id, quantity=line_quantity, uom=line.product_uom_id)
             components.append({
                 'prod_id': line.product_id.id,
                 'name': line.product_id.display_name,
@@ -160,7 +172,8 @@ class ReportBomStructure(models.AbstractModel):
                 'phantom_bom': line.child_bom_id and line.child_bom_id.type == 'phantom' or False,
                 'attachments': self.env['mrp.document'].search(['|', '&',
                     ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)]),
-
+                'vendor_name': seller.display_name or '',
+                'vendor_cost': seller.price or 0.0
             })
             total += sub_total
         return components, total
@@ -226,7 +239,9 @@ class ReportBomStructure(models.AbstractModel):
                     'level': bom_line['level'],
                     'code': bom_line['code'],
                     'child_bom': bom_line['child_bom'],
-                    'prod_id': bom_line['prod_id']
+                    'prod_id': bom_line['prod_id'],
+                    'vendor_name': bom_line['vendor_name'],
+                    'vendor_cost': bom_line['vendor_cost']
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
