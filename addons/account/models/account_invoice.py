@@ -1082,14 +1082,7 @@ class AccountInvoice(models.Model):
                     tax = tax_map[tax_vals['id']] = self.env['account.tax'].browse(tax_vals['id'])
 
                 val = self._prepare_tax_line_vals(line, tax_vals, affecting_base_tax_ids)
-                key = tax.get_grouping_key({
-                    'tax_id': val['tax_id'],
-                    'tax_repartition_line_id': val['tax_repartition_line_id'],
-                    'account_id': val['account_id'],
-                    'account_analytic_id': val['account_analytic_id'],
-                    'analytic_tag_ids': val['analytic_tag_ids'],
-                    'tax_ids': affecting_base_tax_ids,
-                })
+                key = tax.get_grouping_key(val)
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
