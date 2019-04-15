@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
+from odoo.tools import float_repr
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.addons.sale.controllers.portal import CustomerPortal
@@ -9,8 +10,17 @@ from odoo.addons.sale.controllers.portal import CustomerPortal
 
 class CustomerPortal(CustomerPortal):
 
+    # Deprecated because override opportunities are **really** limited
+    # In fact it should be removed in master ASAP
     @http.route(['/my/orders/<int:order_id>/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, access_token=None, **post):
+        values = self.update_line_dict(line_id, remove, unlink, order_id, access_token, **post)
+        if values:
+            return [values['order_line_product_uom_qty'], values['order_amount_total']]
+        return values
+
+    @http.route(['/my/orders/<int:order_id>/update_line_dict'], type='json', auth="public", website=True)
+    def update_line_dict(self, line_id, remove=False, unlink=False, order_id=None, access_token=None, **kwargs):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
@@ -26,8 +36,17 @@ class CustomerPortal(CustomerPortal):
             return False  # return False to reload the page, the line must move back to options and the JS doesn't handle it
         number = -1 if remove else 1
         quantity = order_line.product_uom_qty + number
+        if quantity < 0:
+            quantity = 0
         order_line.write({'product_uom_qty': quantity})
-        return [str(quantity), str(order_sudo.amount_total)]
+        currency = order_sudo.currency_id
+
+        return {
+            'order_line_product_uom_qty': str(quantity),
+            'order_line_price_total': float_repr(order_line.price_total, currency.decimal_places),
+            'order_line_price_subtotal': float_repr(order_line.price_subtotal, currency.decimal_places),
+            'order_amount_total': float_repr(order_sudo.amount_total, currency.decimal_places),
+        }
 
     @http.route(["/my/orders/<int:order_id>/add_option/<int:option_id>"], type='http', auth="public", website=True)
     def add(self, order_id, option_id, access_token=None, **post):

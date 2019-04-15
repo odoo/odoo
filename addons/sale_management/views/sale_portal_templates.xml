@@ -91,7 +91,7 @@
                         </span>
                     </div>
                     <!-- TODO add uom in this case too -->
-                    <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
+                    <input disabled="1" type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
                     <div class="input-group-append d-print-none">
                         <span class="input-group-text">
                             <a t-att-href="sale_order.get_portal_url(suffix='/update_line/%s' % line.id)" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">

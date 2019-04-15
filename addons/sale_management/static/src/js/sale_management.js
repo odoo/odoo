@@ -18,24 +18,34 @@ if (!$('.o_portal_sale_sidebar').length) {
             ev.preventDefault();
             var self = this;
             var href = this.$el.attr("href");
-            var order_id = href.match(/my\/orders\/([0-9]+)/);
-            var line_id = href.match(/update_line\/([0-9]+)/);
+            var order_id = href.match(/my\/orders\/(?<order_id>[0-9]+)/).groups.order_id;
+            var line_id = href.match(/update_line(_dict)?\/(?<line_id>[0-9]+)/).groups.line_id;
             var params = {
-                'line_id': line_id[1],
+                'line_id': line_id,
                 'remove': self.$el.is('[href*="remove"]'),
                 'unlink': self.$el.is('[href*="unlink"]'),
             };
-            var token = href.match(/token=(.*)/);
-            if (token) {
-                params.access_token = token;
+            var matched = href.match(/token=(?<token>[\w\d-]*)/);
+            if (matched.groups.token) {
+                params.access_token = matched.groups.token;
             }
-            var url = "/my/orders/" + parseInt(order_id[1]) + "/update_line";
+            var url = "/my/orders/" + parseInt(order_id) + "/update_line_dict";
             ajax.jsonRpc(url, 'call', params).then(function (data) {
                 if (!data) {
                     window.location.reload();
                 }
-                self.$el.parents('.input-group:first').find('.js_quantity').val(data[0]);
-                $('[data-id="total_amount"]>span').html(data[1]);
+                self.$el.parents('.input-group:first').find('.js_quantity').val(data.order_line_product_uom_qty);
+                var $priceTotal = self.$el.parents('tr:first').find('.oe_order_line_price_total .oe_currency_value');
+                var $priceSubTotal = self.$el.parents('tr:first').find('.oe_order_line_price_subtotal .oe_currency_value');
+                if ($priceTotal && data.order_line_price_total) {
+                    $priceTotal.text(data.order_line_price_total);
+                }
+                if ($priceSubTotal && data.order_line_price_subtotal) {
+                    $priceSubTotal.text(data.order_line_price_subtotal);
+                }
+                if (data.order_amount_total) {
+                    $('[data-id="total_amount"]>span').text(data.order_amount_total);
+                }
             });
             return false;
         },
