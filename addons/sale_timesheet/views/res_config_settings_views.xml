@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='section_leaves']" position="before">
                 <h2>Billing</h2>
-                <div name="timesheet_billing" class="row mt16 o_settings_container" title="Sell services (e.g. project, maintenance), record time spent using Timesheets app and invoice them based on a fixed price (ordered quantity) or on the time spent (delivered quantity)">
+                <div name="timesheet_billing" class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Time Billing</span>
@@ -17,15 +17,15 @@
                                 Sell services and invoice time spent
                             </div>
                             <div class="content-group" name="msg_module_sale_timesheet">
-                                <div class="mt16">
+                                <div class="pt-2">
                                     <div>
-                                        <button name="%(sale_timesheet.product_template_action_time_based)d" string="Setup your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
+                                        <button name="%(sale_timesheet.product_template_action_fixed)d" string="Configure your fixed price services" type="action" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                     <div>
-                                        <button name="%(sale_timesheet.product_template_action_fixed)d" string="Setup your fixed price services" type="action" class="btn-link" icon="fa-arrow-right"/>
+                                        <button name="%(sale_timesheet.product_template_action_time_based)d" string="Configure your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                     <div>
-                                        <button name="%(sale_timesheet.product_template_action_milestone)d" string="Setup your milestone services" type="action" class="btn-link" icon="fa-arrow-right"/>
+                                        <button name="%(sale_timesheet.product_template_action_milestone)d" string="Configure your milestone services" type="action" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>
                             </div>
