@@ -113,7 +113,7 @@ var MrpBomReport = stock_report_generic.extend({
         this.$searchView = $(QWeb.render('mrp.report_bom_search', _.omit(this.data, 'lines')));
         this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this));
         this.$searchView.find('.o_mrp_bom_report_variants').on('change', this._onChangeVariants.bind(this));
-        this.$searchView.find('.o_mrp_bom_report_type').on('change', this._onChangeType.bind(this));
+        this.$searchView.find('.o_mrp_bom_report_name').on('change', this._onChangeType.bind(this));
     },
     _onClickPrint: function (ev) {
         var childBomIDs = _.map(this.$el.find('.o_mrp_bom_foldable').closest('tr'), function (el) {
@@ -121,7 +121,7 @@ var MrpBomReport = stock_report_generic.extend({
         });
         framework.blockUI();
         var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id +
-                         '&report_type=' + this.given_context.report_type +
+                         '&report_name=' + this.given_context.report_name +
                          '&quantity=' + (this.given_context.searchQty || 1);
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
             reportname += '&childs=' + JSON.stringify(childBomIDs);
@@ -147,8 +147,8 @@ var MrpBomReport = stock_report_generic.extend({
         }
     },
     _onChangeType: function (ev) {
-        var report_type = $("option:selected", $(ev.currentTarget)).data('type');
-        this.given_context.report_type = report_type;
+        var report_name = $("option:selected", $(ev.currentTarget)).data('type');
+        this.given_context.report_name = report_name;
         this._reload_report_type();
     },
     _onChangeVariants: function (ev) {
@@ -195,7 +195,7 @@ var MrpBomReport = stock_report_generic.extend({
     },
     _reload_report_type: function () {
         this.$('.o_mrp_bom_cost.o_hidden, .o_mrp_prod_cost.o_hidden').toggleClass('o_hidden');
-        if (this.given_context.report_type === 'bom_structure') {
+        if (this.given_context.report_name === 'bom_structure') {
            this.$('.o_mrp_bom_cost, .o_mrp_prod_cost').toggleClass('o_hidden');
         }
     },

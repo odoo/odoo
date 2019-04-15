@@ -22,7 +22,7 @@ class ReportBomStructure(models.AbstractModel):
                 else:
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), unfolded=True)
                 doc['report_type'] = 'pdf'
-                doc['report_structure'] = data and data.get('report_type') or 'all'
+                doc['report_name'] = data and data.get('report_name') or 'all'
                 docs.append(doc)
             if not candidates:
                 if data and data.get('childs'):
@@ -30,7 +30,7 @@ class ReportBomStructure(models.AbstractModel):
                 else:
                     doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), unfolded=True)
                 doc['report_type'] = 'pdf'
-                doc['report_structure'] = data and data.get('report_type') or 'all'
+                doc['report_name'] = data and data.get('report_name') or 'all'
                 docs.append(doc)
         return {
             'doc_ids': docids,
@@ -42,7 +42,7 @@ class ReportBomStructure(models.AbstractModel):
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
         res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
         res['lines']['report_type'] = 'html'
-        res['lines']['report_structure'] = 'all'
+        res['lines']['report_name'] = 'all'
         res['lines']['has_attachments'] = res['lines']['attachments'] or any(component['attachments'] for component in res['lines']['components'])
         res['lines'] = self.env.ref('mrp.report_mrp_bom').render({'data': res['lines']})
         return res
@@ -83,8 +83,8 @@ class ReportBomStructure(models.AbstractModel):
         return {
             'lines': lines,
             'variants': bom_product_variants,
-            'bom_uom_name': bom_uom_name,
-            'bom_qty': bom_quantity,
+            'uom': bom_uom_name,
+            'quantity': bom_quantity,
             'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
             'is_uom_applied': self.env.user.user_has_groups('uom.group_uom')
         }
@@ -109,12 +109,12 @@ class ReportBomStructure(models.AbstractModel):
         operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
-            'bom_qty': bom_quantity,
-            'bom_prod_name': product.display_name,
-            'currency': self.env.company.currency_id,
+            'quantity': bom_quantity,
+            'name': product.display_name,
+            'currency': self.env.user.company_id.currency_id,
             'product': product,
             'code': bom and bom.display_name or '',
-            'price': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
+            'prod_cost': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
             'operations': operations,
@@ -143,11 +143,11 @@ class ReportBomStructure(models.AbstractModel):
             sub_total = self.env.company.currency_id.round(sub_total)
             components.append({
                 'prod_id': line.product_id.id,
-                'prod_name': line.product_id.display_name,
+                'name': line.product_id.display_name,
                 'code': line.child_bom_id and line.child_bom_id.display_name or '',
-                'prod_qty': line_quantity,
-                'prod_uom': line.product_uom_id.name,
-                'prod_cost': self.env.company.currency_id.round(price),
+                'quantity': line_quantity,
+                'uom': line.product_uom_id.name,
+                'prod_cost': self.env.user.company_id.currency_id.round(price),
                 'parent_id': bom.id,
                 'line_id': line.id,
                 'level': level or 0,
@@ -213,12 +213,12 @@ class ReportBomStructure(models.AbstractModel):
             lines = []
             for bom_line in bom_lines:
                 lines.append({
-                    'name': bom_line['prod_name'],
+                    'name': bom_line['name'],
                     'type': 'bom',
-                    'quantity': bom_line['prod_qty'],
-                    'uom': bom_line['prod_uom'],
+                    'quantity': bom_line['quantity'],
+                    'uom': bom_line['uom'],
                     'prod_cost': bom_line['prod_cost'],
-                    'bom_cost': bom_line['total'],
+                    'total': bom_line['total'],
                     'level': bom_line['level'],
                     'code': bom_line['code'],
                     'child_bom': bom_line['child_bom'],
@@ -226,14 +226,14 @@ class ReportBomStructure(models.AbstractModel):
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
-                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['prod_qty'], line, level + 1))
+                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['quantity'], line, level + 1))
             if data['operations']:
                 lines.append({
                     'name': _('Operations'),
                     'type': 'operation',
                     'quantity': data['operations_time'],
                     'uom': _('minutes'),
-                    'bom_cost': data['operations_cost'],
+                    'total': data['operations_cost'],
                     'level': level,
                 })
                 for operation in data['operations']:
@@ -243,7 +243,7 @@ class ReportBomStructure(models.AbstractModel):
                             'type': 'operation',
                             'quantity': operation['duration_expected'],
                             'uom': _('minutes'),
-                            'bom_cost': operation['total'],
+                            'total': operation['total'],
                             'level': level + 1,
                         })
             return lines
