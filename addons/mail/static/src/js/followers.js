@@ -257,7 +257,6 @@ var Followers = AbstractField.extend({
                         [self.res_id],
                         ids.partner_ids,
                         ids.channel_ids,
-                        {}, // FIXME
                     ];
                     self._rpc({
                         model: self.model,
