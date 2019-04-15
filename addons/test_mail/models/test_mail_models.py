@@ -15,6 +15,19 @@ class MailTestSimple(models.Model):
     email_from = fields.Char()
 
 
+class MailTestGateway(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances. """
+    _description = 'Simple Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway'
+    _inherit = ['mail.blacklist.mixin', 'mail.thread']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
