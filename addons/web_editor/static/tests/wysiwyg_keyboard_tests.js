@@ -1179,6 +1179,30 @@ var keyboardTestsEnter = [{
             start: "br->0",
         },
     },
+    {
+        name: "in ul.o_checklist > li.o_checked > p: ENTER at end",
+        content: '<ul class="o_checklist"><li class="o_checked"><p>test</p></li></ul>',
+        steps: [{
+            start: "p:contents()[0]->4",
+            key: 'ENTER',
+        }],
+        test: {
+            content: '<ul class="o_checklist"><li class="o_checked"><p>test</p></li><li><p><br></p></li></ul>',
+            start: "br->0",
+        },
+    },
+    {
+        name: "in ul.o_checklist > li.o_checked > p > b: ENTER within text",
+        content: '<ul class="o_checklist"><li class="o_checked"><p><b>test</b></p></li></ul>',
+        steps: [{
+            start: "b:contents()[0]->2",
+            key: 'ENTER',
+        }],
+        test: {
+            content: '<ul class="o_checklist"><li class="o_checked"><p><b>te</b></p></li><li><p><b>st</b></p></li></ul>',
+            start: "b:eq(1):contents()[0]->0",
+        },
+    },
 
     // end list UL / OL
 
