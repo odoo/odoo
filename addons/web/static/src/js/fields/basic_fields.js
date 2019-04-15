@@ -408,9 +408,10 @@ var FieldDate = InputField.extend({
 
         // displaying a datetime with a Date widget
         this._datetimeAsDate = this.formatType === 'date' && this.field.type === 'datetime';
+        this.managesDateTime = this.formatType === 'datetime' || this._datetimeAsDate;
 
          // displaying a datetime with a Date widget
-        if (this._datetimeAsDate) {
+        if (this.managesDateTime) {
             // With a datetime field we know that:
             // 1. We receive UTC value from the server: this.formatOptions.timezone = true
             // 2. We display a date to the user: this.formatType = 'date'
@@ -468,7 +469,7 @@ var FieldDate = InputField.extend({
      */
     _getValue: function () {
         var value = this.datewidget.getValue();
-        if (this._datetimeAsDate) {
+        if (this.managesDateTime) {
             value = this._offsetValueByTz('to_utc', value);
         }
         return value;
@@ -481,11 +482,11 @@ var FieldDate = InputField.extend({
      */
     _isSameValue: function (value) {
         var resolution = 'day'
+        if (this.managesDateTime) {
+            resolution = undefined;
+        }
         if (value === false) {
             return this.value === false;
-        }
-        if (this._datetimeAsDate) {
-            resolution = undefined;
         }
         return value.isSame(this.value, resolution);
     },
@@ -496,7 +497,7 @@ var FieldDate = InputField.extend({
      */
     _makeDatePicker: function () {
         var datePickerWidget = datepicker.DateWidget;
-        if (this._datetimeAsDate) {
+        if (this.managesDateTime) {
             datePickerWidget = datepicker.DateTimeWidget;
         }
         return new datePickerWidget(this, this.datepickerOptions);
@@ -510,7 +511,7 @@ var FieldDate = InputField.extend({
      */
     _renderEdit: function () {
         var value = this.value;
-        if (this._datetimeAsDate) {
+        if (this.managesDateTime) {
             value = this._offsetValueByTz('from_utc', value);
         }
         this.datewidget.setValue(value);
@@ -538,60 +539,6 @@ var FieldDate = InputField.extend({
 
 var FieldDateTime = FieldDate.extend({
     supportedFieldTypes: ['datetime'],
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        if (this.value) {
-            var displayedValue = this._offsetValueByTz('from_utc', this.value)
-            this.datepickerOptions.defaultDate = displayedValue;
-        }
-    },
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * return the datepicker value
-     *
-     * @private
-     */
-    _getValue: function () {
-        var value = this.datewidget.getValue();
-        return this._offsetValueByTz('to_utc', value)
-    },
-    /**
-     * @override
-     * @private
-     */
-    _isSameValue: function (value) {
-        if (value === false) {
-            return this.value === false;
-        }
-        return value.isSame(this.value);
-    },
-    /**
-     * Instantiates a new DateTimeWidget datepicker rather than DateWidget.
-     *
-     * @override
-     * @private
-     */
-    _makeDatePicker: function () {
-        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
-    },
-    /**
-     * Set the datepicker to the right value rather than the default one.
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        var value = this._offsetValueByTz('from_utc', this.value)
-        this.datewidget.setValue(value);
-        this.$input = this.datewidget.$input;
-    },
 });
 
 var FieldMonetary = InputField.extend({
