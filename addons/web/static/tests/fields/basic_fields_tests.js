@@ -2285,8 +2285,8 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('do not trigger a field_changed for datetime field with date widget', function (assert) {
-        assert.expect(3);
+    QUnit.test('do trigger a field_changed for datetime field with date widget', function (assert) {
+        assert.expect(6);
 
         var form = createView({
             View: FormView,
@@ -2303,17 +2303,21 @@ QUnit.module('basic_fields', {
             },
             mockRPC: function (route, args) {
                 assert.step(args.method);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {datetime: '2017-02-08 00:00:00'},
+                        'We should send full datetime UTC value');
+                }
                 return this._super.apply(this, arguments);
             },
         });
 
-        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/08/2017',
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/08/2017 10:00:00',
             'the date should be correct');
 
         form.$('input[name="datetime"]').val('02/08/2017').trigger('input').trigger('change');
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.verifySteps(['read']); // should not have save as nothing changed
+        assert.verifySteps(['read', 'write', 'read']);
 
         form.destroy();
     });
