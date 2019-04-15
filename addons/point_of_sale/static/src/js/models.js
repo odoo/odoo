@@ -2658,7 +2658,7 @@ exports.NumpadState = Backbone.Model.extend({
             this.set({
                 buffer: "-" + newChar
             });
-        } else {
+        } else if (!(newChar === '.') || oldBuffer.indexOf('.') === -1) {
             this.set({
                 buffer: (this.get('buffer')) + newChar
             });
