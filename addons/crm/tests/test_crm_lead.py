@@ -52,14 +52,14 @@ class TestCRMLead(TestCrmCases):
         self.env['mail.thread'].with_user(self.crm_salesman).message_process('crm.lead', request_message)
 
         # After getting the mail, I check details of new lead of that customer
-        lead = self.env['crm.lead'].with_user(self.crm_salesman).search([('email_from', '=', 'Mr. John Right <info@customer.com>')], limit=1)
+        lead = self.env['crm.lead'].with_user(self.crm_salesman).search([('email_normalized', '=', 'info@customer.com')], limit=1)
         self.assertTrue(lead.ids, 'Fail to create merge opportunity wizard')
         self.assertFalse(lead.partner_id, 'Customer should be a new one')
         self.assertEqual(lead.name, 'Fournir votre devis avec le meilleur prix.', 'Subject does not match')
 
         # I reply his request with welcome message.
         # TODO revert mail.mail to mail.compose.message (conversion to customer should be automatic).
-        lead = self.env['crm.lead'].search([('email_from', '=', 'Mr. John Right <info@customer.com>')], limit=1)
+        lead = self.env['crm.lead'].search([('email_normalized', '=', 'info@customer.com')], limit=1)
         mail = self.env['mail.compose.message'].with_context(active_model='crm.lead', active_id=lead.id).create({
             'body': "Merci de votre intérêt pour notre produit, nous vous contacterons bientôt. Bien à vous",
             'email_from': 'sales@mycompany.com'
@@ -70,7 +70,7 @@ class TestCRMLead(TestCrmCases):
             pass
 
         # Now, I convert him into customer and put him into regular customer list
-        lead = self.env['crm.lead'].search([('email_from', '=', 'Mr. John Right <info@customer.com>')], limit=1)
+        lead = self.env['crm.lead'].search([('email_normalized', '=', 'info@customer.com')], limit=1)
         lead.handle_partner_assignation()
 
     def test_crm_lead_merge(self):
