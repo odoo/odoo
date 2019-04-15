@@ -109,6 +109,7 @@ class TestQwebProcessAtt(TransactionCase):
     def setUp(self):
         super(TestQwebProcessAtt, self).setUp()
         self.website = self.env['website'].browse(1)
+        self.env.ref('base.lang_fr').active = True
         self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
         self.website.default_lang_id = self.env.ref('base.lang_en')
         self.website.cdn_activated = True
