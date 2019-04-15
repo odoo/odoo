@@ -436,12 +436,6 @@ email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""",
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
-# Updated in 7.0 to match the model name as well
-# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
-# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?[^>]*@([^>]*)>", re.UNICODE)
-discussion_re = re.compile("<.*-open(?:object|erp)-private[^>]*@([^>]*)>", re.UNICODE)
-
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
 
@@ -550,20 +544,6 @@ def email_validate(email):
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
-
-def email_references(references):
-    ref_match, model, thread_id, hostname, is_private = False, False, False, False, False
-    if references:
-        ref_match = reference_re.search(references)
-    if ref_match:
-        model = ref_match.group(2)
-        thread_id = int(ref_match.group(1))
-        hostname = ref_match.group(3)
-    else:
-        ref_match = discussion_re.search(references)
-        if ref_match:
-            is_private = True
-    return (ref_match, model, thread_id, hostname, is_private)
 
 # was mail_message.decode()
 def decode_smtp_header(smtp_header):
