@@ -649,6 +649,37 @@ QUnit.module('Search View', {
         window.Date = RealDate;
     });
 
+    QUnit.test('Filter with JSON-parsable domain works', function (assert) {
+        assert.expect(1);
+
+        var domain = [['foo' ,'=', 'Gently Weeps']];
+        var xml_domain = JSON.stringify(domain);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, domain,
+                        'A JSON parsable xml domain should be handled just like any other');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<filter string="Foo" name="gently_weeps" domain="' + _.escape(xml_domain) + '" />' +
+            '</search>';
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {search_default_gently_weeps: true};
+
+        actionManager.doAction(1);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', function (assert) {
