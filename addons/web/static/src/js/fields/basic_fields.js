@@ -408,9 +408,9 @@ var FieldDate = InputField.extend({
 
         // displaying a datetime with a Date widget
         this._datetimeAsDate = this.formatType === 'date' && this.field.type === 'datetime';
-        this.managesDateTime = this.formatType === 'datetime' || this._datetimeAsDate;
 
-         // displaying a datetime with a Date widget
+        // The widget manages a datetime
+        this.managesDateTime = this.formatType === 'datetime' || this._datetimeAsDate;
         if (this.managesDateTime) {
             // With a datetime field we know that:
             // 1. We receive UTC value from the server: this.formatOptions.timezone = true
@@ -481,7 +481,7 @@ var FieldDate = InputField.extend({
      * @returns {boolean}
      */
     _isSameValue: function (value) {
-        var resolution = 'day'
+        var resolution = 'day';
         if (this.managesDateTime) {
             resolution = undefined;
         }
