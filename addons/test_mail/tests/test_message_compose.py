@@ -182,11 +182,10 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(msg.needaction_partner_ids, self.env['res.partner'])
 
         self.format_and_process(
-            MAIL_TEMPLATE_PLAINTEXT,
-            email_from=self.user_admin.email,
+            MAIL_TEMPLATE_PLAINTEXT, self.user_admin.email, 'not_my_businesss@example.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
-            to='not_my_businesss@example.com',
-            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id)
+            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id,
+            target_model='mail.test.simple')
         reply = self.test_record.message_ids - msg
         self.assertTrue(reply)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
