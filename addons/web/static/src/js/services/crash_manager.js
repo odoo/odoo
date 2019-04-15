@@ -129,15 +129,45 @@ var CrashManager = core.Class.extend({
             this.show_error(error);
         }
     },
+    /**
+     * Get the buttons to help the user fix the error he sees
+     *
+     * @param {Object} action
+     * @param {string} action.label label for the button that activates the action to execute
+     * @param {string|Object} action.action either the xmlid of an existing action, or an object defining a new action
+     * @param {Object} action.option extra parameters for the action's execution, part of the do_action spec
+     * @param {string} action.description a description of what the action button does when clicked
+     * */
+    getActionButtons: function (action) {
+        if (action) {
+            return {
+                text: action.label,
+                classes: "btn-secondary",
+                click: function (e) {
+                    core.bus.trigger(
+                        "do_action",
+                        action.action,
+                        action.options
+                    );
+                },
+                close: true,
+                title: action.description,
+            };
+        }
+        return [];
+    },
     show_warning: function(error) {
         if (!this.active) {
             return;
         }
-        return new Dialog(this, {
+        new Dialog(this, {
             size: 'medium',
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
-            $content: $(QWeb.render('CrashManager.warning', {error: error}))
+            $content: $(QWeb.render('CrashManager.warning', {error: error})),
+            buttons: [{text: _t("Ok"), close: true, classes: "btn-primary"}].concat(
+                error.data.actions.map(this.getActionButtons)
+            ),
         }).open({shouldFocusButtons:true});
     },
     show_error: function(error) {
@@ -146,7 +176,10 @@ var CrashManager = core.Class.extend({
         }
         var dialog = new Dialog(this, {
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Error"),
-            $content: $(QWeb.render('CrashManager.error', {error: error}))
+            $content: $(QWeb.render('CrashManager.error', {error: error})),
+            buttons: [{text: _t("Ok"), close: true, classes: "btn-primary"}].concat(
+                error.data.actions.map(this.getActionButtons)
+            ),
         });
 
         // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed

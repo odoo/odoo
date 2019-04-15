@@ -50,6 +50,7 @@ var Dialog = Widget.extend({
      * @param {boolean} [options.technical=true]
      *        If set to false, the modal will have the standard frontend style
      *        (use this for non-editor frontend features)
+     * @param {string} [options.description] - extra message to add at the end of the body
      */
     init: function (parent, options) {
         var self = this;
@@ -65,6 +66,7 @@ var Dialog = Widget.extend({
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
+            description: '',
         });
 
         this.$content = options.$content;
@@ -75,6 +77,7 @@ var Dialog = Widget.extend({
         this.size = options.size;
         this.buttons = options.buttons;
         this.technical = options.technical;
+        this.description = options.description;
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -91,6 +94,7 @@ var Dialog = Widget.extend({
                 title: self.title,
                 subtitle: self.subtitle,
                 technical: self.technical,
+                description: self.description,
             }));
             switch (self.size) {
                 case 'large':
@@ -131,7 +135,7 @@ var Dialog = Widget.extend({
             var $button = dom.renderButton({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
-                    disabled: buttonData.disabled,
+                    disabled: buttonData.disabled, title: buttonData.title,
                 },
                 icon: buttonData.icon,
                 text: buttonData.text,
@@ -183,7 +187,7 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
-            self.$modal.find(".modal-body").replaceWith(self.$el);
+            self.$modal.find(".modal-body").first().replaceWith(self.$el);
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
             self.$modal.modal('show');

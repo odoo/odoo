@@ -155,6 +155,9 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             }).then(function () {
                 // Listen to 'scroll' event and propagate it on main bus
                 self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
+                core.bus.on('do_action', self, function (action, options) {
+                    self.action_manager.do_action(action, options);
+                });
                 core.bus.trigger('web_client_ready');
                 odoo.isReady = true;
                 if (session.uid === 1) {
