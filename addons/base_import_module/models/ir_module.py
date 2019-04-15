@@ -49,8 +49,8 @@ class IrModule(models.Model):
                     _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
-                err = _("Unmet module dependencies: %s") % ', '.join(
-                    unmet_dependencies,
+                err = _("Unmet module dependencies: \n\n - %s") % '\n - '.join(
+                    known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
                 )
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
@@ -142,7 +142,7 @@ class IrModule(models.Model):
                     module.ad_paths.remove(module_dir)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
-            r.append("Error while importing module '%s': %r" % (mod, error))
+            r.append("Error while importing module '%s'.\n\n %s \n Make sure those modules are installed and try again." % (mod, error))
         return '\n'.join(r), module_names
 
 
