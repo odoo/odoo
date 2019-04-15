@@ -84,6 +84,7 @@ var Dialog = Widget.extend({
             renderHeader: true,
             renderFooter: true,
             onForceClose: false,
+            description: '',
         });
 
         this.$content = options.$content;
@@ -99,6 +100,7 @@ var Dialog = Widget.extend({
         this.renderHeader = options.renderHeader;
         this.renderFooter = options.renderFooter;
         this.onForceClose = options.onForceClose;
+        this.description = options.description;
 
         core.bus.on('close_dialogs', this, this.destroy.bind(this));
     },
@@ -119,6 +121,7 @@ var Dialog = Widget.extend({
                 technical: self.technical,
                 renderHeader: self.renderHeader,
                 renderFooter: self.renderFooter,
+                description: self.description,
             }));
             switch (self.size) {
                 case 'extra-large':
@@ -191,7 +194,7 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
-            self.$modal.find(".modal-body").replaceWith(self.$el);
+            self.$modal.find(".modal-body").first().replaceWith(self.$el);
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
             if (self.$parentNode) {

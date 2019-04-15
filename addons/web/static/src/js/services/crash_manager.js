@@ -28,6 +28,7 @@ var CrashManagerDialog = Dialog.extend({
     ),
 
     /**
+     * @param {string} [options.description] - extra message to add at the end of the body
      * @param {Object} error
      * @param {string} error.message    the message in Warning/Error Dialog
      * @param {string} error.traceback  the traceback in ErrorDialog
@@ -242,14 +243,49 @@ var CrashManager = AbstractService.extend({
         }
         var message = error.data ? error.data.message : error.message;
         var title = _.str.capitalize(error.type) || _t("Something went wrong !");
-        return this._displayWarning(message, title, options);
+        return this._displayWarning(message, title, Object.assign({}, options, {
+            buttons: [{text: _t("Ok"), close: true, classes: "btn-primary"}].concat(
+                error.data.actions.map(this.getActionButtons)
+            ),
+        }));
     },
+    /**
+     * Get the buttons to help the user fix the error he sees
+     *
+     * @param {Object} action
+     * @param {string} action.label label for the button that activates the action to execute
+     * @param {string|Object} action.action either the xmlid of an existing action, or an object defining a new action
+     * @param {Object} action.option extra parameters for the action's execution, part of the do_action spec
+     * @param {string} action.description a description of what the action button does when clicked
+     * */
+    getActionButtons: function (action) {
+        if (action) {
+            return {
+                text: action.label,
+                classes: "btn-secondary",
+                click: function (e) {
+                    core.bus.trigger(
+                        "do_action",
+                        action.action,
+                        action.options
+                    );
+                },
+                close: true,
+                title: action.description,
+            };
+        }
+        return [];
+    },
+
     show_error: function (error) {
         if (!active) {
             return;
         }
         var dialog = new ErrorDialog(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Error"),
+            buttons: [{text: _t("Ok"), close: true, classes: "btn-primary"}].concat(
+                error.data.actions.map(this.getActionButtons)
+            ),
         }, {
             message: error.message,
             traceback: error.data.debug,
