@@ -204,17 +204,17 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN TO_CHAR(ai.l10n_in_shipping_bill_date, 'DD-MON-YYYY')
                     ELSE ''
                     END) as gst_format_shipping_bill_date,
-                CASE WHEN aat.tax_report_line_id IN
+                CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_igst')
                     THEN aml.balance
                     ELSE 0
                     END AS igst_amount,
-                CASE WHEN aat.tax_report_line_id IN
+                CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cgst')
                     THEN aml.balance
                     ELSE 0
                     END AS cgst_amount,
-                CASE WHEN aat.tax_report_line_id IN
+                CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                     THEN aml.balance
                     ELSE 0
@@ -222,10 +222,11 @@ class L10nInAccountInvoiceReport(models.Model):
                 (SELECT sum(temp_aml.balance) from account_move_line temp_aml
                     JOIN account_account_tag_account_move_line_rel aat_aml_rel_temp ON aat_aml_rel_temp.account_move_line_id = temp_aml.id
                     JOIN account_account_tag aat_temp ON aat_temp.id = aat_aml_rel_temp.account_account_tag_id
+                    JOIN account_tax_report_line_tags_rel tag_rep_ln_temp ON aat_temp.id = tag_rep_ln_temp.account_account_tag_id
                     where temp_aml.move_id = aml.move_id and temp_aml.product_id = aml.product_id
-                    and aat_temp.tax_report_line_id IN (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cess')
+                    and tag_rep_ln_temp.account_tax_report_line_id IN (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cess')
                     ) AS cess_amount,
-                CASE WHEN aat.tax_report_line_id IN
+                CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst') OR at.l10n_in_reverse_charge = True
                     THEN NULL
                     ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount ELSE NULL END)
@@ -245,6 +246,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 JOIN account_tax at ON at.id = aml.tax_line_id
                 JOIN account_account_tag_account_move_line_rel aat_aml_rel ON aat_aml_rel.account_move_line_id = aml.id
                 JOIN account_account_tag aat ON aat.id = aat_aml_rel.account_account_tag_id
+                JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
                 LEFT JOIN res_partner cp ON cp.id = c.partner_id
                 LEFT JOIN res_country_state cps ON cps.id = cp.state_id
                 LEFT JOIN account_invoice ai ON ai.id = aml.invoice_id
@@ -258,7 +260,7 @@ class L10nInAccountInvoiceReport(models.Model):
     def _where(self):
         return """
                 WHERE am.state = 'posted'
-                    AND aat.tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst'))
+                    AND tag_rep_ln.account_tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst'))
         """
 
     def _group_by(self):

@@ -39,14 +39,14 @@ class L10nInPaymentReport(models.AbstractModel):
         filter_tax = taxes.filtered(lambda t: t.type_tax_use != 'none')
         tax_compute = filter_tax.compute_all(price_unit, currency=currency, quantity=quantity, product=product, partner=partner)
         for tax_data in tax_compute['taxes']:
-            tax_report_lines = AccountTag.browse(tax_data['tag_ids'][0][2]).mapped('tax_report_line_id')
-            if tax_report_lines == tax_report_line_sgst:
+            tax_report_lines = AccountTag.browse(tax_data['tag_ids'][0][2]).mapped('tax_report_line_ids')
+            if tax_report_line_sgst in tax_report_lines:
                 res['sgst_amount'] += tax_data['amount']
-            elif tax_report_lines == tax_report_line_cgst:
+            if tax_report_line_cgst in tax_report_lines:
                 res['cgst_amount'] += tax_data['amount']
-            elif tax_report_lines == tax_report_line_igst:
+            if tax_report_line_igst in tax_report_lines:
                 res['igst_amount'] += tax_data['amount']
-            elif tax_report_lines == tax_report_line_cess:
+            if tax_report_line_cess in tax_report_lines:
                 res['cess_amount'] += tax_data['amount']
         res.update(tax_compute)
         return res
