@@ -293,8 +293,8 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 """
 
 MAIL_EML_ATTACHMENT = """Subject: Re: test attac
-From: Anon <anon@odoo.com>
-To: anon@gmail.com
+From: {email_from}
+To: {to}
 References: <f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>
 Message-ID: <cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>
 Date: Wed, 14 Mar 2018 14:26:58 +0100
@@ -508,8 +508,8 @@ X-ME-Sender: <xms:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>
 Received: from [1.1.1.1] (unknown [1.1.1.1])
 	by mail.xxxx.com (Postfix) with ESMTPA id BF5E1111D
 	for <catchall@xxxx.xxxx>; Fri, 13 Apr 2018 22:11:50 -0400 (EDT)
-From: "xxxx xxxx" <xxxx@xxxx.com>
-To: "xxxx" <catchall@xxxx.xxxx>
+From: Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>
+To: generic@mydomain.com
 Subject: Re: xxxx (Ref PO1)
 Date: Sat, 14 Apr 2018 02:11:42 +0000
 Message-Id: <em67f5c44a-xxxx-xxxx-xxxx-69f56d618a94@wswin7hg4n4l1ce>
@@ -674,3 +674,121 @@ o</a>.
 </body></html>
 --------=_MB48E455BD-2850-42EC-B1CA-886CDF48905E--"""
 
+
+MAIL_BOUNCE = """Return-Path: <>
+X-Original-To: {to}
+Delivered-To: {to}
+Received: by mail2.test.ironsky (Postfix)
+    id 93A83A5F0D; Mon, 15 Apr 2019 15:41:06 +0200 (CEST)
+Date: Mon, 15 Apr 2019 15:41:06 +0200 (CEST)
+From: MAILER-DAEMON@mail2.test.ironsky (Mail Delivery System)
+Subject: {subject}
+To: {to}
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+    boundary="92726A5F09.1555335666/mail2.test.ironsky"
+Message-Id: <20190415134106.93A83A5F0D@mail2.test.ironsky>
+
+This is a MIME-encapsulated message.
+
+--92726A5F09.1555335666/mail2.test.ironsky
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host mail2.test.ironsky.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<{email_from}>: host tribulant.com[23.22.38.89] said: 550 No such
+    person at this address. (in reply to RCPT TO command)
+
+--92726A5F09.1555335666/mail2.test.ironsky
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail2.test.ironsky
+X-Postfix-Queue-ID: 92726A5F09
+X-Postfix-Sender: rfc822; {to}
+Arrival-Date: Mon, 15 Apr 2019 15:40:24 +0200 (CEST)
+
+Final-Recipient: rfc822; {email_from}
+Original-Recipient: rfc822;{email_from}
+Action: failed
+Status: 5.0.0
+Remote-MTA: dns; tribulant.com
+Diagnostic-Code: smtp; 550 No such person at this address.
+
+--92726A5F09.1555335666/mail2.test.ironsky
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Return-Path: <{to}>
+Received: from [127.0.0.1] (host-212-68-194-133.dynamic.voo.be [212.68.194.133])
+    (Authenticated sender: aaa)
+    by mail2.test.ironsky (Postfix) with ESMTPSA id 92726A5F09
+    for <{email_from}>; Mon, 15 Apr 2019 15:40:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=test.ironsky; s=mail;
+    t=1555335624; bh=x6cSjphxNDiRDMmm24lMAUKtdCFfftM8w/fdUyfoeFs=;
+    h=references:Subject:From:Reply-To:To:Date:From;
+    b=Bo0BsXAHgKiBfBtMvvO/+KaS9PuuS0+AozL4SxU05jHZcJFc7qFIPEpqkJIdbzNcQ
+     wq0PJYclgX7QZDOMm3VHQwcwOxBDXAbdnpfkPM9/wa+FWKfr6ikowMTHHT3CA1qNbe
+     h+BQVyBKIvr/LDFPSN2hQmfXWwWupm1lgUhJ07T4=
+Content-Type: multipart/mixed; boundary="===============7355787381227985247=="
+MIME-Version: 1.0
+Message-Id: <288877393590487.1555335624.090619087219238-openerp-32-project.task@aaa>
+references: <670034078674109.1555335454.587288856506348-openerp-32-project.task@aaa>
+Subject: Re: Test
+From: Mitchell Admin <admin@yourcompany.example.com>
+Reply-To: YourCompany Research & Development <aaa+catchall@test.ironsky>
+To: Raoul <{email_from}>
+Date: Mon, 15 Apr 2019 13:40:24 -0000
+X-Odoo-Objects: project.project-3, ,project.task-32
+X-Spam-Status: No, score=-2.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+    DKIM_ADSP_NXDOMAIN,HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE
+    shortcircuit=no autolearn=no autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail2.test.ironsky
+
+--===============7355787381227985247==
+Content-Type: multipart/alternative; boundary="===============8588563873240298690=="
+MIME-Version: 1.0
+
+--===============8588563873240298690==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+
+CgpaYm91bGl1b2l1b2l6ZWYKCi0tCkFkbWluaXN0cmF0b3IKU2VudApieQpbMV0gWW91ckNvbXBh
+bnkKCnVzaW5nCk9kb28gWzJdIC4KCgoKWzFdIGh0dHA6Ly93d3cuZXhhbXBsZS5jb20KWzJdIGh0
+dHBzOi8vd3d3Lm9kb28uY29tP3V0bV9zb3VyY2U9ZGImdXRtX21lZGl1bT1lbWFpbAo=
+
+--===============8588563873240298690==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+
+CjxkaXY+CgoKPGRpdj48cD5aYm91bGl1b2l1b2l6ZWY8L3A+PC9kaXY+Cgo8ZGl2IGNsYXNzPSJm
+b250LXNpemU6IDEzcHg7Ij48c3BhbiBkYXRhLW8tbWFpbC1xdW90ZT0iMSI+LS0gPGJyIGRhdGEt
+by1tYWlsLXF1b3RlPSIxIj4KQWRtaW5pc3RyYXRvcjwvc3Bhbj48L2Rpdj4KPHAgc3R5bGU9ImNv
+bG9yOiAjNTU1NTU1OyBtYXJnaW4tdG9wOjMycHg7Ij4KICAgIFNlbnQKICAgIDxzcGFuPgogICAg
+YnkKICAgIDxhIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246bm9uZTsgY29sb3I6ICM4NzVBN0I7IiBo
+cmVmPSJodHRwOi8vd3d3LmV4YW1wbGUuY29tIj4KICAgICAgICA8c3Bhbj5Zb3VyQ29tcGFueTwv
+c3Bhbj4KICAgIDwvYT4KICAgIAogICAgPC9zcGFuPgogICAgdXNpbmcKICAgIDxhIHRhcmdldD0i
+X2JsYW5rIiBocmVmPSJodHRwczovL3d3dy5vZG9vLmNvbT91dG1fc291cmNlPWRiJmFtcDt1dG1f
+bWVkaXVtPWVtYWlsIiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOm5vbmU7IGNvbG9yOiAjODc1QTdC
+OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
+
+--===============8588563873240298690==--
+
+--===============7355787381227985247==--
+
+--92726A5F09.1555335666/mail2.test.ironsky--
+"""
