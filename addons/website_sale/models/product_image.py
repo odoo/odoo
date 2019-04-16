@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website.tools import get_video_embed_url
+from odoo.addons.website.tools import get_video_embed_code
 
 
 class ProductImage(models.Model):
@@ -27,7 +27,7 @@ class ProductImage(models.Model):
     @api.depends('video_url')
     def _compute_embed_code(self):
         for image in self:
-            image.embed_code = get_video_embed_url(image.video_url)
+            image.embed_code = get_video_embed_code(image.video_url)
 
     @api.constrains('video_url')
     def _check_valid_video_url(self):
