@@ -81,6 +81,33 @@ class ProcurementRule(models.Model):
         move._action_confirm()
         return True
 
+    def _run_move_multiple(self, move_values):
+        if not self.location_src_id:
+            msg = _('No source location defined on procurement rule: %s!') % (self.name, )
+            raise UserError(msg)
+
+        move_ids = []
+        Move = self.env['stock.move'].sudo()
+        company = False
+        for move_value in move_values:
+            group_id = False
+            if self.group_propagation_option == 'propagate':
+                group_id = move_value['values'].get('group_id', False) and move_value['values']['group_id'].id
+            elif self.group_propagation_option == 'fixed':
+                group_id = self.group_id.id
+
+            move_params = self._get_stock_move_values(move_value['product_id'], move_value['product_qty'],
+                                               move_value['product_uom'], move_value['location_id'], move_value['name'],
+                                               move_value['origin'], move_value['values'], group_id)
+            if company != move_params.get('company_id', False):
+                company = move_params.get('company_id', False)
+                Move = Move.with_context(force_company=company)
+            move = Move.create(move_params)
+            move_ids.append(move.id)
+        # Since action_confirm launch following procurement_group we should activate it.
+        Move.browse(move_ids)._action_confirm()
+        return True
+
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'move') set on it.
@@ -172,6 +199,61 @@ class ProcurementGroup(models.Model):
         ('direct', 'Partial'),
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
+
+    @api.model
+    def run_multiple(self, line_values):
+        rule_cache = {}
+
+        def cache_rule_add(line_value, rule):
+            key = cache_get_rule_key(line_value)
+            rule_cache[key] = rule
+
+        def cache_get_rule_key(line_value):
+            warehouse = line_value['values'].get('warehouse_id', False)
+            warehouse_routes = warehouse.route_ids
+            routes = line_value['values'].get('route_ids', False)
+            product_routes = line_value['product_id'].route_ids | line_value['product_id'].categ_id.total_route_ids
+            return (
+                warehouse.id if warehouse else False,
+                line_value['location_id'].id,
+                tuple(routes.ids) if routes else False,
+                tuple(product_routes.ids) if product_routes else False,
+                tuple(warehouse_routes.ids) if warehouse_routes else False
+            )
+
+        def cache_get_rule(line_value):
+            key = cache_get_rule_key(line_value)
+            return rule_cache.get(key, False)
+
+        def get_rule(line_value):
+            rule = cache_get_rule(line_value)
+            if not rule:
+                rule = self._get_rule(line_value['product_id'], line_value['location_id'], line_value['values'])
+                cache_rule_add(line_value, rule)
+            if not rule:
+                raise UserError(_('No procurement rule found. Please verify the configuration of your routes'))
+            return rule
+
+        grouped_values = {}
+        company = self.env['res.company']._company_default_get('procurement.group')
+        for line_value in line_values:
+            line_value['values'].setdefault('company_id', company)
+            line_value['values'].setdefault('priority', '1')
+            line_value['values'].setdefault('date_planned', fields.Datetime.now())
+
+            rule = get_rule(line_value)
+            rule_fct = '_run_%s' % rule.action
+            grouped_values.setdefault(rule_fct, {'rule': rule, 'lines': []})
+            grouped_values[rule_fct]['lines'].append(line_value)
+
+        for fct, grouped_value in grouped_values.items():
+            multiple_rule_fct = fct + '_multiple'
+            if hasattr(grouped_value['rule'], multiple_rule_fct):
+                getattr(grouped_value['rule'], multiple_rule_fct)(grouped_value['lines'])
+            else:
+                for line in grouped_value['lines']:
+                    getattr(grouped_value['rule'], fct)(**line)
+        return True
 
     @api.model
     def run(self, product_id, product_qty, product_uom, location_id, name, origin, values):

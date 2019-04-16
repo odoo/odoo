@@ -109,7 +109,7 @@ class SaleOrderLine(models.Model):
         if lines:
             lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_procurement_rule()
         return res
-    
+
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -246,9 +246,9 @@ class SaleOrderLine(models.Model):
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        errors = []
+        line_values = []
         for line in self:
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+            if line.state != 'sale' or not line.product_id.type in ('consu', 'product'):
                 continue
             qty = line._get_qty_procurement()
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
@@ -283,12 +283,17 @@ class SaleOrderLine(models.Model):
                 product_qty = line.product_uom._compute_quantity(product_qty, quant_uom, rounding_method='HALF-UP')
                 procurement_uom = quant_uom
 
-            try:
-                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
-            except UserError as error:
-                errors.append(error.name)
-        if errors:
-            raise UserError('\n'.join(errors))
+            line_values.append({
+                'product_id': line.product_id,
+                'product_qty': product_qty,
+                'product_uom': procurement_uom,
+                'location_id': line.order_id.partner_shipping_id.property_stock_customer,
+                'name': line.name,
+                'origin': line.order_id.name,
+                'values': values
+            })
+
+        self.env['procurement.group'].run_multiple(line_values)
         return True
 
     @api.multi
