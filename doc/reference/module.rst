@@ -106,7 +106,7 @@ Available manifest fields are:
     located in ``static/src/css`` inside the module.
 ``images`` (``list(str)``)
     Specify image files to be used by the module.
-``installable`` (``bool`` default: ``False``)
+``installable`` (``bool`` default: ``True``)
     Whether a user should be able to install the module from the Web UI or not.
 ``maintainer`` (``str``)
     Person or entity in charge of the maintenance of this module, by default
