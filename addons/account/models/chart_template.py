@@ -687,6 +687,7 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'account_id': acc_template_ref[account_reconcile_model.account_id.id],
                 'label': account_reconcile_model.label,
+                'to_check': account_reconcile_model.to_check,
                 'amount_type': account_reconcile_model.amount_type,
                 'force_tax_included': account_reconcile_model.force_tax_included,
                 'amount': account_reconcile_model.amount,
