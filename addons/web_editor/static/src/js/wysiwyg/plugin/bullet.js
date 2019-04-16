@@ -313,6 +313,10 @@ var BulletPlugin = AbstractPlugin.extend({
         if (!range) {
             return;
         }
+        // list groups shouldn't be outdented like regular lists
+        if ($(dom.ancestor(range.sc, dom.isList)).hasClass('list-group')) {
+            return;
+        }
 
         var self = this;
         var nodes = [];
