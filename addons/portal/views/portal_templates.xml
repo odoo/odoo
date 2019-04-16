@@ -53,6 +53,11 @@
                     </nav>
                 </header>
                 <main>
+                    <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+                        <div class="container">
+                            <t t-raw="o_portal_fullwidth_alert"/>
+                        </div>
+                    </div>
                     <t t-raw="0"/>
                 </main>
                 <footer id="bottom" data-anchor="true" class="bg-light o_footer">
@@ -75,7 +80,9 @@
 
     <template id="portal_back_in_edit_mode" name="Back to edit mode">
         <div t-ignore="true" class="text-center">
-            This is a preview of the customer portal. <a t-att-href="backend_url"><i class="fa fa-arrow-right"/> Back to edit mode</a>
+            <t t-if="custom_html" t-raw="custom_html"/>
+            <t t-else="">This is a preview of the customer portal.</t>
+            <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
     </template>
@@ -83,13 +90,6 @@
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
             <t t-set="is_portal" t-value="True"/>
-
-            <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
-                <div class="container">
-                    <t t-raw="o_portal_fullwidth_alert"/>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
-            </div>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="row align-items-center bg-white no-gutters border rounded">

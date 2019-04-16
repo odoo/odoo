@@ -25,6 +25,10 @@ class AccountInvoice(models.Model):
             return {}
         self.purchase_id = self.vendor_bill_purchase_id.purchase_order_id
         self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
+        vendor_ref = self.vendor_bill_purchase_id.purchase_order_id.partner_ref
+        if vendor_ref:
+            self.reference = ", ".join([self.reference, vendor_ref]) if (
+                    self.reference and vendor_ref not in self.reference) else vendor_ref
         self.vendor_bill_purchase_id = False
         return {}
 

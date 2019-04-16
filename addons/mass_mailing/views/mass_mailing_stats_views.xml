@@ -36,6 +36,7 @@
         <field name="arch" type="xml">
             <tree string="Mail Statistics" create="0">
                 <field name="email"/>
+                <field name="state"/>
                 <field name="message_id"/>
                 <field name="sent"/>
                 <field name="exception"/>
@@ -43,6 +44,7 @@
                 <field name="clicked"/>
                 <field name="replied"/>
                 <field name="bounced"/>
+                <field name="ignored"/>
             </tree>
         </field>
     </record>
@@ -52,31 +54,31 @@
         <field name="model">mail.mail.statistics</field>
         <field name="arch" type="xml">
             <form string="Mail Statistics" create="0">
-                <div class="oe_form_box_info bg-info oe_text_center alert-info" attrs="{'invisible': [('exception', '=', False)]}" role="alert">
-                    <p><strong>This email could not be sent.</strong></p>
-                </div>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
+                    <div class="oe_form_box_info bg-info oe_text_center alert-info" attrs="{'invisible': [('exception', '=', False)]}" role="alert">
+                        <p><strong>This email could not be sent.</strong></p>
+                    </div>
                     <group>
                         <group>
-                            <field name="email"/>
+                            <field name="email" string="Email"/>
                             <field name="mass_mailing_id"/>
                             <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <field name="mail_mail_id_int" groups="base.group_no_one"/>
+                            <field name="message_id" groups="base.group_no_one"/>
+                            <field name="model" groups="base.group_no_one"/>
+                            <field name="res_id" groups="base.group_no_one"/>
                         </group>
-
                         <group>
-                            <field name="exception" attrs="{'invisible': [('exception', '=', False)]}"/>
+                            <field name="exception"/>
                             <field name="sent"/>
                             <field name="opened"/>
                             <field name="clicked"/>
                             <field name="replied"/>
                             <field name="bounced"/>
-                        </group>
-
-                        <group groups="base.group_no_one">
-                            <field name="mail_mail_id_int"/>
-                            <field name="message_id"/>
-                            <field name="model"/>
-                            <field name="res_id"/>
+                            <field name="ignored"/>
                         </group>
                     </group>
                 </sheet>

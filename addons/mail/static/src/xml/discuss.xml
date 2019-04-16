@@ -316,7 +316,8 @@
                     <span class="o_preview_counter">
                         <t t-if="preview.unreadCounter &gt; 0">&amp;nbsp;(<t t-esc="preview.unreadCounter"/>)</t>
                     </span>
-                    <span class="o_last_message_date"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
+                    <span t-if="preview.isLinkedToDocumentThread" class="o_discuss_icon o_thread_window_expand fa fa-expand"/>
+                    <span class="o_last_message_date ml-auto mr-2"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
                 </div>
                 <div class="o_last_message_preview">
                     <t t-if="preview.body">

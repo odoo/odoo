@@ -1126,7 +1126,7 @@ class Form(object):
         else:
             self._init_from_defaults(self._model)
 
-    def _o2m_set_edition_view(self, descr, node):
+    def _o2m_set_edition_view(self, descr, node, level):
         default_view = next(
             (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
             'tree'
@@ -1154,16 +1154,9 @@ class Form(object):
                 edition = views['tree']
                 edition['tree'] = subarch
 
-        self._process_fvg(submodel, edition)
+        # don't recursively process o2ms in o2ms
+        self._process_fvg(submodel, edition, level=level-1)
         descr['views']['edition'] = edition
-
-    def _get_node(self, f):
-        """ Find etree node for the field ``f`` in the current arch
-        """
-        return next(
-            n for n in self._view['tree'].iter('field')
-            if n.get('name') == f
-        )
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1172,16 +1165,16 @@ class Form(object):
             self._values.get('id', False),
         )
 
-    def _process_fvg(self, model, fvg):
+    def _process_fvg(self, model, fvg, level=2):
         """ Post-processes to augment the fields_view_get with:
 
         * an id field (may not be present if not in the view but needed)
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
-        fvg['fields']['id'] = {'type': 'id'}
+        fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {}
+        modifiers = fvg['modifiers'] = {'id': {'required': False, 'readonly': True}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
@@ -1197,10 +1190,9 @@ class Form(object):
                 contexts[fname] = ctx
 
             descr = fvg['fields'].get(fname) or {'type': None}
-            if descr['type'] == 'one2many':
-                self._o2m_set_edition_view(descr, f)
+            if level and descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f, level)
 
-        fvg['modifiers']['id'] = {'required': False, 'readonly': True}
         fvg['onchange'] = model._onchange_spec(fvg)
 
     def _init_from_defaults(self, model):
@@ -1258,12 +1250,13 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False):
-        d = self._view['modifiers'][field].get(modifier, default)
+    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
-        vals = self._values
+        if vals is None:
+            vals = self._values
         stack = []
         for it in reversed(d):
             if it == '!':
@@ -1278,7 +1271,9 @@ class Form(object):
                 stack.append(e1 or e2)
             elif isinstance(it, list):
                 f, op, val = it
-                field_val = vals[f]
+                # hack-ish handling of parent.<field> modifiers
+                f, n = re.subn(r'^parent\.', '', f, 1)
+                field_val = (vals['•parent•'] if n else vals)[f]
                 stack.append(self._OPS[op](field_val, val))
             else:
                 raise ValueError("Unknown domain element %s" % it)
@@ -1377,7 +1372,8 @@ class Form(object):
         load/save
         """
         values = {}
-        for f in self._view['fields']:
+        fields = self._view['fields']
+        for f in fields:
             v = self._values[f]
             if self._get_modifier(f, 'required'):
                 assert v is not False, "{} is a required field".format(f)
@@ -1387,9 +1383,33 @@ class Form(object):
                 continue
 
             if self._get_modifier(f, 'readonly'):
-                node = self._get_node(f)
+                node = _get_node(self._view, f)
                 if not node.get('force_save'):
                     continue
+
+            if fields[f]['type'] == 'one2many':
+                view = fields[f]['views']['edition']
+                modifiers = view['modifiers']
+                oldvals = v
+                v = []
+
+                nodes = {
+                    n.get('name'): n
+                    for n in view['tree'].iter('field')
+                }
+                nodes['id'] = etree.Element('field', attrib={'name': 'id'})
+
+                for (c, rid, vs) in oldvals:
+                    if c in (0, 1):
+                        items = list(getattr(vs, 'changed_items', vs.items)())
+                        # FIXME: should be more extensive processing of o2m defaults
+                        vs.setdefault('id', False)
+                        vs['•parent•'] = self._values
+                        vs = {
+                            k: v for k, v in items
+                            if nodes[k].get('force_save') or not self._get_modifier(k, 'readonly', modmap=modifiers, vals=vs)
+                        }
+                    v.append((c, rid, vs))
 
             values[f] = v
         return values
@@ -1425,11 +1445,15 @@ class Form(object):
         values = {}
         for k, v in self._values.items():
             if f[k]['type'] == 'one2many':
-                # web client sends a 4 for unmodified o2m rows
-                values[k] = [
-                    (4, rid, False) if (c == 1 and not vs) else (c, rid, vs)
-                    for (c, rid, vs) in v
-                ]
+                it = values[k] = []
+                for (c, rid, vs) in v:
+                    if c == 1 and not vs:
+                        # web client sends a 4 for unmodified o2m rows
+                        it.append((4, rid, False))
+                    elif c == 1 and isinstance(vs, UpdateDict):
+                        it.append((1, rid, dict(vs.changed_items())))
+                    else:
+                        it.append((c, rid, vs))
             else:
                 values[k] = v
         return values
@@ -1446,12 +1470,13 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] in (1, 2)} if current else {}
+            c = {t[1] for t in current if t[0] in (1, 2)} if current else set()
             # which view should this be???
             subfields = descr['views']['edition']['fields']
+            # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
                 if command[0] in (0, 1):
-                    c.pop(command[1], None) # remove record from currents
+                    c.discard(command[1])
                     v.append((command[0], command[1], {
                         k: self._cleanup_onchange(
                             subfields[k], v, None
@@ -1460,9 +1485,11 @@ class Form(object):
                         if k in subfields
                     }))
                 elif command[0] == 2:
+                    c.discard(command[1])
                     v.append((2, command[1], False))
                 elif command[0] == 4:
-                    v.append((1, command[1], c.pop(command[1], {})))
+                    c.discard(command[1])
+                    v.append((1, command[1], {}))
                 elif command[0] == 5:
                     v = []
             # explicitly mark all non-relinked (or modified) records as deleted
@@ -1528,9 +1555,16 @@ class O2MForm(Form):
         if self._index is None:
             commands.append((0, 0, values))
         else:
-            (c, _, vs) = commands[proxy._command_index(self._index)]
-            assert c in (0, 1)
-            vs.update(values)
+            index = proxy._command_index(self._index)
+            (c, id_, vs) = commands[index]
+            if c == 0:
+                vs.update(values)
+            elif c == 1:
+                vs = UpdateDict(vs)
+                vs.update(values)
+                commands[index] = (1, id_, vs)
+            else:
+                raise AssertionError("Expected command type 0 or 1, found %s" % c)
 
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
         proxy._parent._perform_onchange([proxy._field])
@@ -1539,19 +1573,30 @@ class O2MForm(Form):
         """ Validates values and returns only fields modified since
         load/save
         """
-        values = {}
-        for f in self._view['fields']:
-            v = self._values[f]
-            if self._get_modifier(f, 'required'):
-                assert v is not False, "{} is a required field".format(f)
+        values = UpdateDict(self._values)
+        values._changed.update(self._changed)
 
-            # skip unmodified fields
-            if f not in self._changed:
-                continue
-            # if self._get_modifier(f, 'readonly'):
-            #     continue
-            values[f] = v
+        for f in self._view['fields']:
+            if self._get_modifier(f, 'required'):
+                assert self._values[f] is not False, "{} is a required field".format(f)
+
         return values
+
+class UpdateDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._changed = set()
+
+    def changed_items(self):
+        return (
+            (k, v) for k, v in self.items()
+            if k in self._changed
+        )
+
+    def update(self, *args, **kw):
+        super().update(*args, **kw)
+        if args and isinstance(args[0], UpdateDict):
+            self._changed.update(args[0]._changed)
 
 class X2MProxy(object):
     _parent = None
@@ -1754,6 +1799,13 @@ def record_to_values(fields, record):
         r[f] = v
     return r
 
+def _get_node(view, f, *arg):
+    """ Find etree node for the field ``f`` in the view's arch
+    """
+    return next((
+        n for n in view['tree'].iter('field')
+        if n.get('name') == f
+    ), *arg)
 
 def tagged(*tags):
     """

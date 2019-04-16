@@ -2085,7 +2085,7 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
     assert.expect(24);
 
     var resID = 2;
-    var partnerID = 1;
+    var partnerID = 2;
     var followers = [];
     var nbReads = 0;
     var subtypes = [
