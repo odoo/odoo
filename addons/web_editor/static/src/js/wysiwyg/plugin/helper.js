@@ -308,6 +308,7 @@ var HelperPlugin = AbstractPlugin.extend({
         var range = this.context.invoke('editor.createRange');
 
         var spaceToRemove = [];
+        var offset;
         while ((node = nodes.pop())) {
             next = node[prevOrNext];
             while (next && !next.tagName) {
@@ -318,6 +319,31 @@ var HelperPlugin = AbstractPlugin.extend({
                 }
                 break;
             }
+
+            // handle merge of text with p (useful in case of <li>text</li> with <li><p>text</p></li>)
+            if (next && dom.isText(node) && this.isNodeBlockType(next)) {
+                node = [next, next = node][0]; // swap node and next
+                direction = direction === 'next' ? 'prev' : 'next'; // switch direction
+            }
+            if (next && dom.isText(next) && this.isNodeBlockType(node)) {
+                if (this.isBlankNode(node, true)) {
+                    $(node).empty();
+                }
+                $(node)[direction === 'next' ? 'append' : 'prepend'](next);
+                offset = direction === 'next' ? 0 : dom.nodeLength(next);
+                if (dom.isText(next[prevOrNext])) {
+                    // merge text if needed
+                    var sib = next[prevOrNext];
+                    var firstText = (direction === 'next' ? sib : next).textContent;
+                    var secondText = (direction === 'next' ? next : sib).textContent;
+                    next.textContent = firstText + secondText;
+                    $(sib).remove();
+                    offset = firstText.length;
+                }
+                result = this.makePoint(next, offset);
+                break;
+            }
+
             if (
                 !next ||
                 !(node.tagName || next.tagName === 'BR') ||
@@ -330,7 +356,7 @@ var HelperPlugin = AbstractPlugin.extend({
                 var newNext = next[prevOrNext];
                 $(next).remove();
                 next = newNext;
-                var offset = (next ? direction === 'prev' : direction === 'next') ? dom.nodeLength(next) : 0;
+                offset = (next ? direction === 'prev' : direction === 'next') ? dom.nodeLength(next) : 0;
                 result = this.makePoint(next || node, offset);
                 if (!ifBrRemovedAndMerge) {
                     continue;
