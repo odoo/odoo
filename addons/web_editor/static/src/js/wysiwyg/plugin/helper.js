@@ -109,12 +109,14 @@ var HelperPlugin = AbstractPlugin.extend({
         this.orderStyle(node);
         this.orderClass(otherNode);
         this.orderStyle(otherNode);
-        if (node.attributes.length !== otherNode.attributes.length) {
+        var nodeAttributes = this._getAttrsNoID(node);
+        var otherNodeAttributes = this._getAttrsNoID(otherNode);
+        if (nodeAttributes.length !== otherNodeAttributes.length) {
             return false;
         }
-        for (var i = 0; i < node.attributes.length; i++) {
-            var attr = node.attributes[i];
-            var otherAttr = otherNode.attributes[i];
+        for (var i = 0; i < nodeAttributes.length; i++) {
+            var attr = nodeAttributes[i];
+            var otherAttr = otherNodeAttributes[i];
             if (attr.name !== otherAttr.name || attr.value !== otherAttr.value) {
                 return false;
             }
@@ -455,6 +457,11 @@ var HelperPlugin = AbstractPlugin.extend({
             return this.makePoint(this.firstLeaf(blockToMergeFrom), 0);
         }
 
+        // UL/OL can only have LI, UL or OR as direct children
+        if (dom.isList(blockToMergeInto) && !dom.isLi(blockToMergeFrom) && !dom.isList(blockToMergeFrom)) {
+            return;
+        }
+
         return this.mergeNonSimilarBlocks(blockToMergeFrom, blockToMergeInto);
     },
     /**
@@ -601,22 +608,24 @@ var HelperPlugin = AbstractPlugin.extend({
         var li = dom.ancestor(node, function (n) {
             return n !== node && self.isNodeBlockType(n) || dom.isLi(n);
         });
+        var nextElementSibling = direction === 'next' ? 'nextElementSibling' : 'previousElementSibling';
         li = li && dom.isLi(li) ? li : undefined;
-        if (li && direction === 'next') {
-            if (li.nextElementSibling) {
+        if (li) {
+            if (li[nextElementSibling]) {
                 node = li;
             } else {
                 node = dom.ancestor(node, function (n) {
-                    return ((n.tagName === 'UL' || n.tagName === 'OL') && n.nextElementSibling);
+                    return ((n.tagName === 'UL' || n.tagName === 'OL') && n[nextElementSibling] &&
+                        (direction === 'next' || dom.isList(n[nextElementSibling])));
                 });
             }
         }
 
-        if (!node || !node[direction === 'next' ? 'nextElementSibling' : 'previousElementSibling']) {
+        if (!node || !node[nextElementSibling]) {
             return false;
         }
 
-        node = node[direction === 'next' ? 'nextElementSibling' : 'previousElementSibling'];
+        node = node[nextElementSibling];
 
         var ulFoldedSnippetNode = dom.ancestor(node, function (n) {
             return $(n).hasClass('o_ul_folded');
@@ -633,7 +642,7 @@ var HelperPlugin = AbstractPlugin.extend({
 
         node = this.firstBlockAncestor(node);
 
-        li = dom.ancestor(node, function (n) {
+        li = dom.isList(node) ? undefined : dom.ancestor(node, function (n) {
             return n !== node && self.isNodeBlockType(n) || dom.isLi(n);
         });
         li = li && dom.isLi(li) ? li : undefined;
@@ -1051,9 +1060,15 @@ var HelperPlugin = AbstractPlugin.extend({
      * but without any.
      *
      * @param {Node} node
+     * @param {Boolean} brIsBlank true to consider nodes with BR element
+     *  as ultimate only child to be blank
      * @returns {Boolean}
      */
-    isBlankNode: function (node) {
+    isBlankNode: function (node, brIsBlank) {
+        var self = this;
+        if (brIsBlank && dom.isBR(node)) {
+            return true;
+        }
         if (dom.isVoid(node) || dom.isIcon(node)) {
             return false;
         }
@@ -1062,7 +1077,10 @@ var HelperPlugin = AbstractPlugin.extend({
             }).test(node[dom.isText(node) ? 'textContent' : 'innerHTML'])) {
             return true;
         }
-        if (node.childNodes.length && _.all(node.childNodes, this.isBlankNode.bind(this))) {
+        var areAllChildrenBlank = _.all(node.childNodes, function (node) {
+            return self.isBlankNode(node, brIsBlank);
+        });
+        if (node.childNodes.length && areAllChildrenBlank) {
             return true;
         }
         return false;
@@ -1306,7 +1324,7 @@ var HelperPlugin = AbstractPlugin.extend({
                     $lastContents.after($contents);
                 }
             }
-            while (mergeFromBlock.parentNode && this.isBlankNode(mergeFromBlock.parentNode)) {
+            while (mergeFromBlock.parentNode && this.isBlankNode(mergeFromBlock.parentNode, true)) {
                 mergeFromBlock = mergeFromBlock.parentNode;
             }
             $(mergeFromBlock).remove();
@@ -1478,7 +1496,7 @@ var HelperPlugin = AbstractPlugin.extend({
         if (isAfterBlank) {
             $(node.previousSibling).remove();
         }
-        var isBeforeBlank = node.nextSibling && this.isBlankNode(node.nextSibling)
+        var isBeforeBlank = node.nextSibling && this.isBlankNode(node.nextSibling);
         if (isBeforeBlank) {
             $(node.nextSibling).remove();
         }
@@ -1733,6 +1751,15 @@ var HelperPlugin = AbstractPlugin.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    _getAttrsNoID: function (node) {
+        var nodeAttributes = [];
+        for (var i = 0; i < node.attributes.length; i++) {
+            if (node.attributes[i].name !== 'id') {
+                nodeAttributes.push(node.attributes[i]);
+            }
+        }
+        return nodeAttributes;
+    },
     _insertTextNodeInEditableArea: function (range, text) {
         // try to insert the text node in editable area
         var textNode = this.document.createTextNode(text);
