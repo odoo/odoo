@@ -308,10 +308,10 @@
 
                     - <small class="o_mail_timestamp" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
                     <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
-                        on <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
+                        <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
-                        (from <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
+                        (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
                     <span t-if="options.displayEmailIcons and (message.hasCustomerEmailData() or ['exception', 'bounce'].indexOf(message._customerEmailStatus) > -1)" class="o_thread_tooltip_container">
 

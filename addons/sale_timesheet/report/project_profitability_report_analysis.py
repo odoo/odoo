@@ -29,7 +29,7 @@ class ProfitabilityAnalysis(models.Model):
 
     amount_untaxed_to_invoice = fields.Float("Untaxed Amount To Invoice", digits=(16, 2), readonly=True, group_operator="sum")
     amount_untaxed_invoiced = fields.Float("Untaxed Amount Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
-    expense_amount_untaxed_to_invoice = fields.Float("Untaxed Amount to Re-invoiced", digits=(16, 2), readonly=True, group_operator="sum")
+    expense_amount_untaxed_to_invoice = fields.Float("Untaxed Amount to Re-invoice", digits=(16, 2), readonly=True, group_operator="sum")
     expense_amount_untaxed_invoiced = fields.Float("Untaxed Re-invoiced Amount", digits=(16, 2), readonly=True, group_operator="sum")
 
     def init(self):
