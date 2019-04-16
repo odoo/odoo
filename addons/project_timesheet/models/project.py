@@ -2,16 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class Project(models.Model):
-    _inherit = "project.project"
-
-    allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Enable timesheeting on the project.")
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        help="Analytic account to which this project is linked for financial management."
-             "Use an analytic account to record cost and revenue on your project.")
+    _name = 'project.project'
+    _inherit = ['project.project', 'timesheet.parent.service.mixin']
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -19,17 +15,6 @@ class Project(models.Model):
         if self.partner_id:
             domain = [('partner_id', '=', self.partner_id.id)]
         return {'domain': {'analytic_account_id': domain}}
-
-    @api.onchange('analytic_account_id')
-    def _onchange_analytic_account(self):
-        if not self.analytic_account_id and self._origin:
-            self.allow_timesheets = False
-
-    @api.constrains('allow_timesheets', 'analytic_account_id')
-    def _check_allow_timesheet(self):
-        for project in self:
-            if project.allow_timesheets and not project.analytic_account_id:
-                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
 
     # ---------------------------------------------------------
     # CRUD and ORM Methods
@@ -43,32 +28,6 @@ class Project(models.Model):
             'allow_timesheets': True,
         }
         return self.create(values).name_get()[0]
-
-    @api.model
-    def create(self, values):
-        """ Create an analytic account if project allow timesheet and don't provide one
-            Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
-        """
-        allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
-        if allow_timesheets and not values.get('analytic_account_id'):
-            analytic_account = self.env['account.analytic.account'].create({
-                'name': values.get('name', _('Unknown Analytic Account')),
-                'company_id': values.get('company_id', self.env.user.company_id.id),
-                'partner_id': values.get('partner_id'),
-                'active': True,
-            })
-            values['analytic_account_id'] = analytic_account.id
-        return super(Project, self).create(values)
-
-    @api.multi
-    def write(self, values):
-        # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets'):
-            for project in self:
-                if not project.analytic_account_id and not values.get('analytic_account_id'):
-                    project._create_analytic_account()
-        result = super(Project, self).write(values)
-        return result
 
     @api.multi
     def unlink(self):
@@ -85,19 +44,23 @@ class Project(models.Model):
     # Business Methods
     # ---------------------------------------------------------
 
-    @api.model
-    def _init_data_analytic_account(self):
-        self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
+    def _create_analytic_account_convert_values(self, values):
+        values = super(Project, self)._create_analytic_account_convert_values(values)
+        values.update({
+            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'partner_id': values.get('partner_id'),
+            'active': True,
+        })
+        return values
 
-    def _create_analytic_account(self):
-        for project in self:
-            analytic_account = self.env['account.analytic.account'].create({
-                'name': project.name,
-                'company_id': project.company_id.id,
-                'partner_id': project.partner_id.id,
-                'active': True,
-            })
-            project.write({'analytic_account_id': analytic_account.id})
+    def _create_analytic_account_prepare_values(self):
+        values = super(Project, self)._create_analytic_account_prepare_values()
+        values.update({
+            'company_id': self.company_id.id,
+            'partner_id': self.partner_id.id,
+            'active': True,
+        })
+        return values
 
 
 class Task(models.Model):

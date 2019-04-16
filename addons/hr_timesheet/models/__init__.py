@@ -7,3 +7,5 @@ from . import ir_http
 from . import res_company
 from . import res_config_settings
 from . import uom
+from . import timesheet_service
+from . import timesheet_service_mixin
