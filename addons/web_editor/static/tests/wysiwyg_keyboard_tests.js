@@ -2227,6 +2227,18 @@ var keyboardTestsComplex = [{
             start: "p:contents()[0]->1",
         },
     },
+    {
+        name: "in ul.list-group (div > p > text before): BACKSPACE at start",
+        content: '<div><p>1</p></div><ul class="list-group list-group-flush"><li class="list-group-item"><p><br></p></li></ul>',
+        steps: [{
+            start: "p:eq(1)->0",
+            key: 'BACKSPACE',
+        }],
+        test: {
+            content: '<div><p>1</p></div><ul class="list-group list-group-flush"><li class="list-group-item"><p><br></p></li></ul>',
+            start: "p:eq(1)->0",
+        },
+    },
 ];
 
 QUnit.test('Complex', function (assert) {
