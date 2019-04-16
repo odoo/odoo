@@ -4,6 +4,7 @@ try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
+from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 
 ''' /!\/!\
@@ -25,6 +26,7 @@ Try to keep one call to `get_pricelist_available` by test method.
 '''
 
 
+@tagged('post_install', '-at_install')
 class TestWebsitePriceList(TransactionCase):
 
     # Mock nedded because request.session doesn't exist during test
@@ -162,6 +164,7 @@ class DotDict(dict):
         return DotDict(val) if type(val) is dict else val
 
 
+@tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailable(TransactionCase):
     # This is enough to avoid a mock (request.session/website do not exist during test)
     def get_pricelist_available(self, show_visible=False, website_id=1, country_code=None, website_sale_current_pl=None):
@@ -259,6 +262,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
         self.assertEqual(len(pl), 1, "Inactive partner should still get a `property_product_pricelist`")
 
 
+@tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def setUp(self):
         super(TestWebsitePriceListAvailableGeoIP, self).setUp()
@@ -326,6 +330,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
 
+@tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCase):
     def test_get_pricelist_available_multi_company(self):
         ''' Test that the `property_product_pricelist` of `res.partner` is not
@@ -349,6 +354,7 @@ class TestWebsitePriceListHttp(HttpCase):
         self.assertEqual(r.status_code, 200, "The page should not raise an access error because of reading pricelists from other companies")
 
 
+@tagged('post_install', '-at_install')
 class TestWebsitePriceListMultiCompany(TransactionCase):
     def setUp(self):
         ''' Create a basic multi-company pricelist environment:
