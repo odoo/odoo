@@ -56,5 +56,4 @@
     'application': True,
     'auto_install': False,
     'uninstall_hook': 'uninstall_hook',
-    'post_init_hook': '_update_sale_teams',
 }

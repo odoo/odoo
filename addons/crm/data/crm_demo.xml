@@ -5,7 +5,7 @@
             <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
         </record>
 
-        <record id="sales_team.team_sales_department" model="crm.team">
+        <record id="sales_team.team_sales_department" model="crm.team" forcecreate="False">
             <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
         </record>
 
