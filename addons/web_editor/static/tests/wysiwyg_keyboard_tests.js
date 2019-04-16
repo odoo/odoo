@@ -2103,6 +2103,18 @@ var keyboardTestsComplex = [{
             start: "h1:contents()[0]->15",
         },
     },
+    {
+        name: "in ul > li > ul > 1st li > empty p (other ul li ul before): BACKSPACE at start",
+        content: '<ul><li><p>1</p></li><li class="o_indent"><ul><li><p>2</p></li></ul><ul class="o_checklist"><li id="checklist-id-1"><p><br></p></li></ul></li><li><p>3</p></li></ul>',
+        steps: [{
+            start: "p:eq(2)->0",
+            key: 'BACKSPACE',
+        }],
+        test: {
+            content: '<ul><li><p>1</p></li><li class="o_indent"><ul><li><p>2</p></li></ul></li><li><p>3</p></li></ul>',
+            start: "p:eq(1):contents()[0]->1",
+        },
+    },
 ];
 
 QUnit.test('Complex', function (assert) {
