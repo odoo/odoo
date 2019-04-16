@@ -3,6 +3,8 @@ import json
 import logging
 import netifaces as ni
 import os
+from pathlib import Path
+import requests
 import subprocess
 import threading
 import time
@@ -20,13 +22,6 @@ pos_display_template = jinja_env.get_template('pos_display.html')
 
 _logger = logging.getLogger(__name__)
 
-# Get screen_url from the Box for backward compatibility
-box_url = False
-if get_odoo_server_url():
-    result = requests.get("%s/iot/box/%s/screen_url" % (get_odoo_server_url(), get_mac_address()), {})
-    if result.status_code == 200:
-        box_url = result.text
-
 
 class DisplayDriver(Driver):
     connection_type = 'display'
@@ -36,10 +31,11 @@ class DisplayDriver(Driver):
         self._device_type = 'display'
         self._device_connection = 'hdmi'
         self._device_name = device['name']
+        self._connected = True
         self.event_data = threading.Event()
         self.owner = False
         self.rendered_html = ''
-        self.url = 'http://localhost:8069/point_of_sale/display/'
+        self.load_url()
 
     @property
     def device_identifier(self):
@@ -55,7 +51,9 @@ class DisplayDriver(Driver):
         return len(displays) and iot_devices[displays[0]]
 
     def action(self, data):
-        if data.get('action') == "display_refresh":
+        if data.get('action') == "update_url":
+            self.update_url(data.get('url'))
+        elif data.get('action') == "display_refresh":
             self.call_xdotools('F5')
         elif data.get('action') == "take_control":
             self.take_control(self.data['owner'], data.get('html'))
@@ -67,6 +65,38 @@ class DisplayDriver(Driver):
                 'owner': self.owner,
             }
             event_manager.device_changed(self)
+
+    def disconnect(self):
+        self._connected = False
+        super(DisplayDriver, self).disconnect()
+
+    def run(self):
+        while self._connected:
+            if self.url != 'http://localhost:8069/point_of_sale/display/':
+                # Refresh the page every minute
+                time.sleep(60)
+                self.call_xdotools('F5')
+
+    def update_url(self, url=None):
+        firefox_env = os.environ.copy()
+        firefox_env['HOME'] = '/tmp'
+        firefox_env['DISPLAY'] = ':0.0'
+        firefox_env['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
+        self.url = url or 'http://localhost:8069/point_of_sale/display/'
+        if self.device_identifier != 'distant_display':
+            subprocess.Popen(['firefox', self.url], env=firefox_env)
+
+    def load_url(self):
+        if get_odoo_server_url():
+            result = requests.get("%s/iot/box/%s/screen_url" % (get_odoo_server_url(), get_mac_address()), {})
+            if result.status_code == 200:
+                try:
+                    urls = json.loads(result.text)
+                    self.update_url(urls[self.device_identifier])
+                except json.decoder.JSONDecodeError:
+                    self.update_url(result.text)
+        else:
+            self.update_url()
 
     def call_xdotools(self, keystroke):
         os.environ['DISPLAY'] = ":0.0"
