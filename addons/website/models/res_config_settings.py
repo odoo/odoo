@@ -18,6 +18,7 @@ class ResConfigSettings(models.TransientModel):
     website_domain = fields.Char('Website Domain', related='website_id.domain', readonly=False)
     website_country_group_ids = fields.Many2many(related='website_id.country_group_ids', readonly=False)
     website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company', readonly=False)
+    website_logo = fields.Binary(related='website_id.logo', readonly=False)
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang',
         readonly=False)
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
