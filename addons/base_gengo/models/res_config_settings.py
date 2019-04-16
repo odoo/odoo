@@ -7,7 +7,7 @@ from odoo import api, models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    gengo_private_key = fields.Text(string="Gengo Private Key", related="company_id.gengo_private_key", readonly=False)
+    gengo_private_key = fields.Char(string="Gengo Private Key", related="company_id.gengo_private_key", readonly=False)
     gengo_public_key = fields.Text(string="Gengo Public Key", related="company_id.gengo_public_key", readonly=False)
     gengo_comment = fields.Text(string="Comments", related="company_id.gengo_comment",
       help="This comment will be automatically be enclosed in each an every request sent to Gengo")
