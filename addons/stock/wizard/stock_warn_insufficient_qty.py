@@ -36,5 +36,7 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
         return self.scrap_id.do_scrap()
 
     def action_cancel(self):
+        seq = self.env.ref('stock.sequence_stock_scrap')
+        seq.number_next_actual -= 1
         # FIXME in master: we should not have created the scrap in a first place
         return self.scrap_id.sudo().unlink()

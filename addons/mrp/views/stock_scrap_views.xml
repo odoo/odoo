@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="owner_id" position="after">
                 <field name="workorder_id" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
-                <field name="production_id" attrs="{'invisible': [('production_id', '=', False)]}"/>
+                <field name="production_id" invisible="1"/>
             </field>
         </field>
     </record>
