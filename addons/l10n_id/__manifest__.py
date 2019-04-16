@@ -17,7 +17,6 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_post_data.xml',
-        'data/account.account.tag.csv',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_configuration_data.xml',
     ],
