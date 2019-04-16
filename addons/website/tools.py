@@ -4,7 +4,7 @@
 import re
 
 
-def get_video_embed_url(video_url):
+def get_video_embed_code(video_url):
     ''' Computes the valid iframe from given URL that can be embedded
         (or False in case of invalid URL).
     '''
@@ -48,4 +48,4 @@ def get_video_embed_url(video_url):
         else:
             # We directly use the provided URL as it is
             embedUrl = video_url
-        return '<iframe class="embed-responsive-item" src="%s" allowFullScreen="true" frameborder="0"/>' % (embedUrl)
+        return '<iframe class="embed-responsive-item" src="%s" allowFullScreen="true" frameborder="0"></iframe>' % embedUrl
