@@ -2498,15 +2498,19 @@ QUnit.test('Indent/outdent', function (assert) {
 
 QUnit.test('checklist', function (assert) {
     var done = assert.async();
-    assert.expect(10);
+    assert.expect(11);
 
     return weTestUtils.createWysiwyg({
         debug: false,
         wysiwygOptions: {
-
+            generateOptions: function (options) {
+                options.toolbar[4][1] = ['ul', 'ol', 'checklist', 'paragraph'];
+            },
         },
     }).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
+
+        var $btnChecklist = wysiwyg.$('.note-para .fa-check-square');
 
         var checklistTests = [
             {
@@ -2869,11 +2873,70 @@ QUnit.test('checklist', function (assert) {
                         '<p>y</p>',
                 },
             },
+            {
+                name: "convert 2 ul li ul li into two ul li ul.o_checklist li",
+                content: '<ul>' +
+                            '<li>' +
+                                '<p>1</p>' +
+                            '</li>' +
+                            '<li class="o_indent">' +
+                                '<ul>' +
+                                    '<li>' +
+                                        '<p>2</p>' +
+                                    '</li>' +
+                                    '<li>' +
+                                        '<p>3</p>' +
+                                    '</li>' +
+                                    '<li>' +
+                                        '<p>4</p>' +
+                                    '</li>' +
+                                '</ul>' +
+                            '</li>' +
+                            '<li>' +
+                                '<p>5</p>' +
+                            '</li>' +
+                        '</ul>',
+                start: 'p:eq(2):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->1',
+                do: function () {
+                    $btnChecklist.mousedown().click();
+                },
+                test: {
+                    content: '<ul>' +
+                                '<li>' +
+                                    '<p>1</p>' +
+                                '</li>' +
+                                '<li class="o_indent">' +
+                                    '<ul>' +
+                                        '<li>' +
+                                            '<p>2</p>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                    '<ul class="o_checklist">' +
+                                        '<li>' +
+                                            '<p>3</p>' +
+                                        '</li>' +
+                                        '<li>' +
+                                            '<p>4</p>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                '</li>' +
+                                '<li>' +
+                                    '<p>5</p>' +
+                                '</li>' +
+                            '</ul>',
+                },
+            },
         ];
 
         _.each(checklistTests, function (test) {
             testName = test.name;
             wysiwyg.setValue(test.content);
+            if (test.start) {
+                var range = weTestUtils.select(test.start, test.end || test.start, $editable);
+                $(range.sc).mousedown();
+                Wysiwyg.setRange(range.sc, range.so, range.ec, range.eo);
+            }
             test.do();
             assert.deepEqual(wysiwyg.getValue(), test.test.content, testName);
         });
