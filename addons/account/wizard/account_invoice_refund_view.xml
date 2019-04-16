@@ -30,6 +30,11 @@
                                 with the current invoice. A new draft invoice will be created
                                 so that you can edit it.
                              </div>
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','charge')]}" class="oe_grey" colspan="4">
+                                Use this options if you want to add another charge to an existing invoice.
+                                This charge can be due to extra costs after the previous agreement and you need
+                                to charge them to the customer.
+                             </div>
                          </group>
                          <group>
                              <field name="description"/>

@@ -24,7 +24,7 @@ class AccountInvoiceRefund(models.TransientModel):
     date = fields.Date(string='Accounting Date')
     description = fields.Char(string='Reason', required=True, default=_get_reason)
     refund_only = fields.Boolean(string='Technical field to hide filter_refund in case invoice is partially paid', compute='_get_refund_only')
-    filter_refund = fields.Selection([('refund', 'Create a draft credit note'), ('cancel', 'Cancel: create credit note and reconcile'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice')],
+    filter_refund = fields.Selection([('refund', 'Create a draft credit note'), ('cancel', 'Cancel: create credit note and reconcile'), ('modify', 'Modify: create credit note, reconcile and create a new draft invoice'), ('charge', 'Create a draft charge note')],
         default='refund', string='Credit Method', required=True, help='Choose how you want to credit this invoice. You cannot Modify and Cancel if the invoice is already reconciled')
 
     @api.depends('date_invoice')
@@ -58,6 +58,28 @@ class AccountInvoiceRefund(models.TransientModel):
                 date = form.date or False
                 description = form.description or inv.name
                 refund = inv.refund(form.date_invoice, date, description, inv.journal_id.id)
+                if mode == 'charge':
+                    values = inv._prepare_refund(
+                        inv, date=date, description=description,
+                        journal_id=inv.journal_id.id)
+                    values.update({'type': 'out_invoice'})
+                    charge_invoice = self.env['account.invoice'].create(values)
+                    created_inv.append(charge_invoice.id)
+                    invoice_type = {'out_invoice': ('customer invoices charge'),
+                                    'in_invoice': ('vendor bill charge')}
+                    message = _("This %s has been created from: <a href=# "
+                                "data-oe-model=account.invoice data-oe-id=%d>"
+                                "%s</a>") % (
+                                    invoice_type[inv.type], inv.id, inv.number)
+                    charge_invoice.message_post(body=message)
+                    charge_invoice.compute_taxes()
+                    # Put the reason in the chatter
+                    charge_invoice.message_post(body=description,
+                                                subject=_("Invoice charge note"))
+                    if inv.type in ['out_refund', 'out_invoice']:
+                        xml_id = 'action_invoice_tree1'
+                    elif inv.type in ['in_refund', 'in_invoice']:
+                        xml_id = 'action_invoice_tree2'
 
                 created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):
