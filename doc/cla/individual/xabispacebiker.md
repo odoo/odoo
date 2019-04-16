@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Xabi Spacebiker xabispacebiker@gmail.com https://github.com/xabispacebiker
+Xabi Spacebiker xabispacebiker@airean.info https://github.com/xabispacebiker
