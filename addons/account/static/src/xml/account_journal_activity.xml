@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+     <t t-name="accountJournalDashboardActivity">
+        <div class="row">
+            <div class='col-5'>
+                <t t-if="activities and activities.length and activities[0].activity_category == 'tax_report'">
+                    <button class="btn btn-primary o_open_vat_report" t-att-data-id="activities[0].id">View Tax report</button>
+                </t>
+            </div>
+            <div class="col-7">
+                <t t-foreach="activities" t-as="activity">
+                    <div class="row">
+                        <div class="col-6">                            
+                            <a href="#" class="see_all_activities" t-att-data-id="activity.id">
+                                <t t-esc="activity.name"/>
+                            </a>
+                        </div>
+                        <div class="col-6 text-right">
+                            <span>Due on <t t-esc="activity.date"/></span>
+                        </div>
+                    </div>
+                </t>
+                <a t-if="more_activities" class="pull-right see_all_activities" href="#">See all activities</a>
+            </div>
+        </div>
+    </t>
+
+</templates>
