@@ -45,7 +45,7 @@ class StockRule(models.Model):
                 uom_id=procurement.product_uom)
 
             if not supplier:
-                msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (procurement.product_id.display_name,)
+                msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
                 raise UserError(msg)
 
             partner = supplier.name
