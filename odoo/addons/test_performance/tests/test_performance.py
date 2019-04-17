@@ -369,11 +369,6 @@ class TestPerformance(TransactionCase):
             new_recs = records.browse(records.new(origin=record).id for record in records)
             new_recs.mapped('value')
 
-        records.invalidate_cache(['value'])
-        with self.assertQueryCount(__system__=2, demo=2):
-            with self.env.do_in_onchange():
-                records.mapped('value')
-
         # clean up after each pass
         self.env.cr.execute(
             'delete from test_performance_base where id not in %s',
