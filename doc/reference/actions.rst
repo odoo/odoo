@@ -21,16 +21,16 @@ e.g. button methods. All actions share two mandatory attributes:
 
 A client can get actions in 4 forms:
 
-``False``
-    if any action dialog is currently open, close it
-A string
-    if a :ref:`client action <reference/actions/client>` matches, interpret as
-    a client action's tag, otherwise treat as a number
-A number
-    read the corresponding action record from the database, may be a database
-    identifier or an :term:`external id`
-A dictionary
-    treat as a client action descriptor and execute
+*  ``False``
+      if any action dialog is currently open, close it
+*  A string
+      if a :ref:`client action <reference/actions/client>` matches, interpret as
+      a client action's tag, otherwise treat as a number
+*  A number
+      read the corresponding action record from the database, may be a database
+      identifier or an :term:`external id`
+*  A dictionary
+      treat as a client action descriptor and execute
 
 .. _reference/actions/window:
 
@@ -102,12 +102,27 @@ dialog::
 In-database window actions have a few different fields which should be ignored
 by clients, mostly to use in composing the ``views`` list:
 
-``view_mode``
-    comma-separated list of view types as a string. All of these types will be
+``view_mode`` (default= ``tree,form`` )
+    comma-separated list of view types as a string (/!\\ No spaces /!\\). All of these types will be
     present in the generated ``views`` list (with at least a ``False`` view_id)
 ``view_ids``
     M2M\ [#notquitem2m]_ to view objects, defines the initial content of
     ``views``
+
+    .. note:: Act_window views can also be defined cleanly through ``ir.actions.act_window.view``.
+
+        If you plan to allow multiple views for your model, prefer using
+        ir.actions.act_window.view instead of the action ``view_ids``
+
+        .. code-block:: xml
+
+            <record model="ir.actions.act_window.view" id="test_action_tree">
+               <field name="sequence" eval="1"/>
+               <field name="view_mode">tree</field>
+               <field name="view_id" ref="view_test_tree"/>
+               <field name="act_window_id" ref="test_action"/>
+            </record>
+
 ``view_id``
     specific view added to the ``views`` list in case its type is part of the
     ``view_mode`` list and not already filled by one of the views in
