@@ -53,10 +53,16 @@ class Project(models.Model):
             }
         }
 
+        # hours from non-invoiced timesheets that are linked to canceled so
+        canceled_hours_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), ('so_line.state', '=', 'cancel')]
+        total_canceled_hours = sum(self.env['account.analytic.line'].search(canceled_hours_domain).mapped('unit_amount'))
+        dashboard_values['hours']['canceled'] = float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        dashboard_values['hours']['total'] += float_round(total_canceled_hours, precision_rounding=hour_rounding)
+
         # hours (from timesheet) and rates (by billable type)
-        dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False)]  # force billable type
+        dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), '|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')]  # force billable type
         dashboard_data = self.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
-        dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data])
+        dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data]) + total_canceled_hours
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
@@ -65,6 +71,9 @@ class Project(models.Model):
             rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
+
+        # rates from non-invoiced timesheets that are linked to canceled so
+        dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
 
         # profitability, using profitability SQL report
         profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'expense_cost', 'expense_amount_untaxed_invoiced', 'total'], 0.0)
@@ -90,7 +99,11 @@ class Project(models.Model):
         employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
         employees = self.env['hr.employee'].sudo().browse(employee_ids) | self.env['account.analytic.line'].search([('project_id', 'in', self.ids)]).mapped('employee_id')
         repartition_domain = [('project_id', 'in', self.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
-        repartition_data = self.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
+        # repartition data, without timesheet on cancelled so
+        repartition_data = self.env['account.analytic.line'].read_group(repartition_domain + ['|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')], ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
+        # read timesheet on cancelled so
+        cancelled_so_timesheet = self.env['account.analytic.line'].read_group(repartition_domain + [('so_line.state', '=', 'cancel')], ['employee_id', 'unit_amount'], ['employee_id'], lazy=False)
+        repartition_data += [{**canceled, 'timesheet_invoice_type': 'canceled'} for canceled in cancelled_so_timesheet]
 
         # set repartition per type per employee
         repartition_employee = {}
@@ -102,6 +115,7 @@ class Project(models.Model):
                 non_billable=0.0,
                 billable_time=0.0,
                 billable_fixed=0.0,
+                canceled=0.0,
                 total=0.0,
             )
         for data in repartition_data:
@@ -113,14 +127,13 @@ class Project(models.Model):
                 non_billable=0.0,
                 billable_time=0.0,
                 billable_fixed=0.0,
+                canceled=0.0,
                 total=0.0,
             ))[data['timesheet_invoice_type']] = float_round(data.get('unit_amount', 0.0), precision_rounding=hour_rounding)
             repartition_employee[employee_id]['__domain_' + data['timesheet_invoice_type']] = data['__domain']
-
         # compute total
         for employee_id, vals in repartition_employee.items():
-            repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in billable_types])
-
+            repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -158,8 +171,10 @@ class Project(models.Model):
             if row[0]['sale_order_id']:
                 sale_order_ids.add(row[0]['sale_order_id'])
 
+        sale_orders = self.env['sale.order'].sudo().browse(sale_order_ids | empty_order_ids)
         sale_order_lines = self.env['sale.order.line'].sudo().browse(sale_line_ids | empty_line_ids)
-        map_so_names = {so.id: so.name for so in self.env['sale.order'].sudo().browse(sale_order_ids | empty_order_ids)}
+        map_so_names = {so.id: so.name for so in sale_orders}
+        map_so_cancel = {so.id: so.state == 'cancel' for so in sale_orders}
         map_sol = {sol.id: sol for sol in sale_order_lines}
         map_sol_names = {sol.id: sol.name.split('\n')[0] if sol.name else _('No Sales Order Line') for sol in sale_order_lines}
         map_sol_so = {sol.id: sol.order_id.id for sol in sale_order_lines}
@@ -199,7 +214,7 @@ class Project(models.Model):
             sale_order_id = row_key[0]
             # sale order row
             if sale_order_id not in rows_sale_order:
-                rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sales Order')), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+                rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sales Order')), 'canceled': map_so_cancel.get(sale_order_id, False), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
 
             for index in range(len(rows_sale_line[row_key])):
                 if index != 0:
@@ -239,7 +254,7 @@ class Project(models.Model):
             month_index = fields.Date.from_string(date).month
             return babel.dates.get_month_names('abbreviated', locale=self.env.context.get('lang', 'en_US'))[month_index]
 
-        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
+        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Total'), _('Sold'), _('Remaining')]
 
         result = []
         for name in header_names:
