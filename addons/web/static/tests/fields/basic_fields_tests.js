@@ -2658,6 +2658,33 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field dropdown disappears on scroll', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<div class="scrollable" style="height: 2000px;">' +
+                        '<field name="date"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
+
+        form.destroy();
+    });
+
     QUnit.test('date field with warn_future option', async function (assert) {
         assert.expect(2);
 
