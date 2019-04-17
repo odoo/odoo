@@ -443,3 +443,8 @@ class WebsiteBinary(http.Controller):
             if unique:
                 kw['unique'] = unique
         return Binary().content_image(**kw)
+
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True)
+    def favicon(self, **kw):
+        # when opening a pdf in chrome, chrome tries to open the default favicon url
+        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)
