@@ -2689,6 +2689,35 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
+            assert.expect(2);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                    '<form>' +
+                        '<div style="height: 2000px;">' +
+                            '<field name="trululu"/>' +
+                        '</div>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            var $input = form.$('.o_field_many2one input');
+
+            await testUtils.dom.click($input);
+            assert.isVisible($input.autocomplete('widget'), "dropdown should be opened");
+
+            form.el.dispatchEvent(new Event('scroll'));
+            assert.isNotVisible($input.autocomplete('widget'), "dropdown should be closed");
+
+            form.destroy();
+        });
+
         QUnit.test('x2many list sorted by many2one', async function (assert) {
             assert.expect(3);
 

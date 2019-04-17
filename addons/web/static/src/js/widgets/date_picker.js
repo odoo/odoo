@@ -16,6 +16,7 @@ var DateWidget = Widget.extend({
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
         'show.datetimepicker': '_onDateTimePickerShow',
+        'hide.datetimepicker': '_onDateTimePickerHide',
     },
     /**
      * @override
@@ -68,6 +69,9 @@ var DateWidget = Widget.extend({
      * @override
      */
     destroy: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
         this.__libInput++;
         this.$el.datetimepicker('destroy');
         this.__libInput--;
@@ -228,6 +232,17 @@ var DateWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Reacts to the datetimepicker being hidden
+     * Used to unbind the scroll event from the datetimepicker
+     *
+     * @private
+     */
+    _onDateTimePickerHide: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+    },
+    /**
      * Reacts to the datetimepicker being shown
      * Could set/verify our widget value
      * And subsequently update the datetimepicker
@@ -238,6 +253,15 @@ var DateWidget = Widget.extend({
         if (this.$input.val().length !== 0 && this.isValid()) {
             this.$input.select();
         }
+        var self = this;
+        this._onScroll = function (ev) {
+            if (ev.target !== self.$input.get(0)) {
+                self.__libInput++;
+                self.$el.datetimepicker('hide');
+                self.__libInput--;
+            }
+        };
+        window.addEventListener('scroll', this._onScroll, true);
     },
     /**
      * Prevents 'input' events triggered by the library to bubble up, as they

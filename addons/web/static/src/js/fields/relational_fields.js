@@ -163,6 +163,15 @@ var FieldMany2One = AbstractField.extend({
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -288,11 +297,22 @@ var FieldMany2One = AbstractField.extend({
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
             },
+            open: function (event) {
+                self._onScroll = function (ev) {
+                    if (ev.target !== self.$input.get(0) && self.$input.hasClass('ui-autocomplete-input')) {
+                        self.$input.autocomplete('close');
+                    }
+                };
+                window.addEventListener('scroll', self._onScroll, true);
+            },
             close: function (event) {
                 // it is necessary to prevent ESC key from propagating to field
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
                     event.stopPropagation();
+                }
+                if (self._onScroll) {
+                    window.removeEventListener('scroll', self._onScroll, true);
                 }
             },
             autoFocus: true,
