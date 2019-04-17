@@ -250,9 +250,10 @@ return AbstractWebClient.extend({
      * @returns {Object} with keys left and top
      */
     getScrollPosition: function () {
+        var el = this.action_manager.$('.o_content')[0] || this.action_manager.el;
         return {
-            left: this.action_manager.el.scrollLeft,
-            top: this.action_manager.el.scrollTop,
+            left: el.scrollLeft,
+            top: el.scrollTop,
         };
     },
 
@@ -273,13 +274,16 @@ return AbstractWebClient.extend({
      */
     _onScrollTo: function (ev) {
         var offset = {top: ev.data.top, left: ev.data.left || 0};
+        var el = this.action_manager.$('.o_content')[0] || this.action_manager.el;
         if (!offset.top) {
             offset = dom.getPosition(document.querySelector(ev.data.selector));
             // Substract the position of the action_manager as it is the scrolling part
-            offset.top -= dom.getPosition(this.action_manager.el).top;
+            offset.top -= dom.getPosition(el).top;
         }
-        this.action_manager.el.scrollTop = offset.top;
-        this.action_manager.el.scrollLeft = offset.left;
+        if (el) {
+            el.scrollTop = offset.top;
+            el.scrollLeft = offset.left;
+        }
     },
 });
 

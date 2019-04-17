@@ -114,6 +114,9 @@ QUnit.module('ActionManager', {
             'partner,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
                 '</t></templates></kanban>',
+            'partner,2,kanban': '<kanban default_group_by="foo"><templates><t t-name="kanban-box">' +
+                    '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+                '</t></templates></kanban>',
 
             // list views
             'partner,false,list': '<tree><field name="foo"/></tree>',
@@ -465,8 +468,7 @@ QUnit.module('ActionManager', {
     QUnit.test('stores and restores scroll position', function (assert) {
         assert.expect(7);
 
-        var left;
-        var top;
+        this.actions[3].views = [[2, 'kanban'], [false, 'list'], [false, 'form']];
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
@@ -474,7 +476,8 @@ QUnit.module('ActionManager', {
             intercepts: {
                 getScrollPosition: function (ev) {
                     assert.step('getScrollPosition');
-                    ev.data.callback({left: left, top: top});
+                    var el = $('.o_content')[0];
+                    ev.data.callback({left: el.scrollLeft, top: el.scrollTop});
                 },
                 scrollTo: function (ev) {
                     assert.step('scrollTo left ' + ev.data.left + ', top ' + ev.data.top);
@@ -482,27 +485,36 @@ QUnit.module('ActionManager', {
             },
         });
 
-        // execute a first action and simulate a scroll
-        assert.step('execute action 3');
-        actionManager.doAction(3);
-        left = 50;
-        top = 100;
+        // Add few records to sepcific group to have vertical scrollbar
+        // i.e. we will have grouped kanban here and we add all records to gnap group
+        for (var i = 6; i < 40; i++) {
+            var new_record = { id: i, display_name: "Record "+i, foo: "gnap", bar: 1,};
+            this.data.partner.records.push(new_record);
+        }
 
-        // execute a second action (in which we don't scroll)
+        // execute a first action and simulate a scroll
         assert.step('execute action 4');
         actionManager.doAction(4);
 
+        var el = actionManager.$('.o_content')[0];
+        el.scrollTop = 50;
+        el.scrollLeft = 50;
+
+        // execute a second action (in which we don't scroll)
+        assert.step('execute action 3');
+        actionManager.doAction(3);
+
         // go back using the breadcrumbs
-        assert.step('go back to action 3');
+        assert.step('go back to action 4');
         testUtils.dom.click($('.o_control_panel .breadcrumb a'));
 
         assert.verifySteps([
-            'execute action 3',
             'execute action 4',
+            'execute action 3',
             'getScrollPosition', // of action 3, before leaving it
-            'go back to action 3',
+            'go back to action 4',
             'getScrollPosition', // of action 4, before leaving it
-            'scrollTo left 50, top 100', // restore scroll position of action 3
+            'scrollTo left 50, top 50', // restore scroll position of action 3
         ]);
 
         actionManager.destroy();
