@@ -432,7 +432,11 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <tr> element
      */
     _renderGroupRow: function (group, groupLevel) {
-        var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
+        var aggregateValues = _.mapObject(group.aggregateValues, function (value, fieldname) {
+            var field = group.fields[fieldname];
+            if (field && _.contains(['datetime', 'date'], field.type)) {
+                value = field_utils.parse[field.type](value);
+            }
             return { value: value };
         });
         var $cells = this._renderAggregateCells(aggregateValues, true);
