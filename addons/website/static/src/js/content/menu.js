@@ -33,9 +33,9 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         });
         // While scrolling through navbar menus, body should not be scrolled with it
         this.$headerClone.find('div.navbar-collapse').on('show.bs.collapse', function () {
-            $(document.body).addClass('overflow-hidden');
+            $(document.body).addClass('o_overflow_hidden');
         }).on('hide.bs.collapse', function () {
-            $(document.body).removeClass('overflow-hidden');
+            $(document.body).removeClass('o_overflow_hidden');
         });
 
         // Window Handlers

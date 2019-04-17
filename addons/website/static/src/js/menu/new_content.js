@@ -131,7 +131,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _hideMenu: function () {
         this.$newContentMenuChoices.addClass('o_hidden');
-        $('body').removeClass('o_new_content_open');
+        $('body').removeClass('o_overflow_hidden');
     },
     /**
      * Install a module
@@ -166,7 +166,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return def.then((function () {
             this.firstTab = true;
             this.$newContentMenuChoices.removeClass('o_hidden');
-            $('body').addClass('o_new_content_open');
+            $('body').addClass('o_overflow_hidden');
             this.$('> a').focus();
         }).bind(this));
     },
