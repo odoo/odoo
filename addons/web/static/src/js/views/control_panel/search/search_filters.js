@@ -314,6 +314,7 @@ var Float = Field.extend({
     init: function (parent) {
         this._super(parent);
         this.decimal_point = _t.database.parameters.decimal_point;
+        this.title = _.str.sprintf(_t('Number using %s as decimal separator.'), this.decimal_point || '.');
     },
     toString: function () {
         return this.$el.val();

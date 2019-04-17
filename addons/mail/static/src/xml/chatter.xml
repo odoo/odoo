@@ -59,8 +59,9 @@
                 </small>
                 <!-- List of followers -->
                 <div class="o_composer_suggested_partners">
+                    <t t-set="title">Add as recipient and follower (reason:</t>
                     <t t-foreach='widget.suggestedPartners' t-as='recipient'>
-                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
+                        <div t-attf-title="#{title} #{recipient.reason})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
                                        class="custom-control-input"
