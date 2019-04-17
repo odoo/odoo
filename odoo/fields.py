@@ -576,7 +576,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         # copy the cache of draft records into others' cache
-        if records.env.in_onchange and records.env != others.env:
+        if not all(records._ids) and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
         #
         # Traverse fields one by one for all records, in order to take advantage
@@ -1022,7 +1022,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # set value in cache
             record.env.cache.set(record, self, value)
 
-            if not record.id or env.in_onchange:
+            if not record.id:
                 # set inverse fields on new records in the comodel
                 if self.relational:
                     inv_recs = record[self.name].filtered(lambda r: not r.id)
@@ -1083,7 +1083,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
-        if self.store and not (self.compute and env.in_onchange):
+        if self.store:
             # this is a stored field or an old-style function field
             if self.compute:
                 # this is a stored computed field, check for recomputation

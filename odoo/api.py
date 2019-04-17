@@ -893,38 +893,24 @@ class Environment(Mapping):
         return self.context.get('lang')
 
     @contextmanager
-    def _do_in_mode(self, mode):
-        if self.all.mode:
-            yield
-        else:
-            try:
-                self.all.mode = mode
-                yield
-            finally:
-                self.all.mode = False
-                self.dirty.clear()
-
     def do_in_draft(self):
         """ Context-switch to draft mode, where all field updates are done in
             cache only.
         """
-        return self._do_in_mode(True)
+        if self.all.in_draft:
+            yield
+        else:
+            try:
+                self.all.in_draft = True
+                yield
+            finally:
+                self.all.in_draft = False
+                self.dirty.clear()
 
     @property
     def in_draft(self):
         """ Return whether we are in draft mode. """
-        return bool(self.all.mode)
-
-    def do_in_onchange(self):
-        """ Context-switch to 'onchange' draft mode, which is a specialized
-            draft mode used during execution of onchange methods.
-        """
-        return self._do_in_mode('onchange')
-
-    @property
-    def in_onchange(self):
-        """ Return whether we are in 'onchange' draft mode. """
-        return self.all.mode == 'onchange'
+        return self.all.in_draft
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -1038,7 +1024,7 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}
-        self.mode = False               # flag for draft/onchange
+        self.in_draft = False           # flag for draft
         self.recompute = True
 
     def add(self, env):

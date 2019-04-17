@@ -2887,7 +2887,7 @@ Fields:
         records -= self.env.field_todo(field)
 
         # in onchange mode, discard computed fields and fields in cache
-        if self.env.in_onchange:
+        if not self.id:
             for f in list(fs):
                 if f.compute or self.env.cache.contains(self, f):
                     fs.discard(f)
@@ -5535,28 +5535,25 @@ Fields:
                     new_lines.mapped(subname)
 
         # create a new record with values, and attach ``self`` to it
-        with env.do_in_onchange():
-            record = self.new(values, origin=self)
+        record = self.new(values, origin=self)
 
         # make a snapshot based on the initial values of record
-        with env.do_in_onchange():
-            snapshot0 = snapshot1 = Snapshot(record, nametree)
+        snapshot0 = snapshot1 = Snapshot(record, nametree)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names or nametree)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
-        with env.do_in_onchange():
-            for name in todo:
-                if name == 'id':
-                    continue
-                value = record[name]
-                field = self._fields[name]
-                if field.type == 'many2one' and field.delegate and not value:
-                    # do not nullify all fields of parent record for new records
-                    continue
-                record[name] = value
+        for name in todo:
+            if name == 'id':
+                continue
+            value = record[name]
+            field = self._fields[name]
+            if field.type == 'many2one' and field.delegate and not value:
+                # do not nullify all fields of parent record for new records
+                continue
+            record[name] = value
 
         result = {'warnings': OrderedSet()}
 
@@ -5567,18 +5564,17 @@ Fields:
                 continue
             done.add(name)
 
-            with env.do_in_onchange():
-                # apply field-specific onchange methods
-                if field_onchange.get(name):
-                    record._onchange_eval(name, field_onchange[name], result)
+            # apply field-specific onchange methods
+            if field_onchange.get(name):
+                record._onchange_eval(name, field_onchange[name], result)
 
-                # make a snapshot (this forces evaluation of computed fields)
-                snapshot1 = Snapshot(record, nametree)
+            # make a snapshot (this forces evaluation of computed fields)
+            snapshot1 = Snapshot(record, nametree)
 
-                # determine which fields have been modified
-                for name in nametree:
-                    if snapshot1[name] != snapshot0[name]:
-                        todo.append(name)
+            # determine which fields have been modified
+            for name in nametree:
+                if snapshot1[name] != snapshot0[name]:
+                    todo.append(name)
 
         # determine values that have changed by comparing snapshots
         self.invalidate_cache()
