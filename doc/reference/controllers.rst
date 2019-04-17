@@ -1,5 +1,7 @@
 :banner: banners/web_controllers.jpg
 
+.. _reference/controllers:
+
 ===============
 Web Controllers
 ===============

@@ -2,6 +2,8 @@
 
 .. highlight:: xml
 
+.. _reference/reports:
+
 ============
 QWeb Reports
 ============
@@ -305,7 +307,7 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
 Custom fonts
 ============
-If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle. 
+If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle.
 Adding your custom font(s) to ``web.assets_common`` or ``web.assets_backend`` will not make your font available in QWeb reports.
 
 Example::
