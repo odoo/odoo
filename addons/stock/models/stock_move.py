@@ -653,8 +653,9 @@ class StockMove(models.Model):
 
     @api.onchange('date_expected')
     def onchange_date(self):
-        if self.date_expected:
-            self.date = self.date_expected
+        for move in self:
+            if move.date_expected:
+                move.date = move.date_expected
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
