@@ -37,7 +37,7 @@
                 <group>
                     <group>
                         <field name="line_type_id"/>
-                        <field name="sequence" groups="base.group_no_one"/>
+                        <field name="display_type" invisible="1"/>
                     </group>
                     <group>
                         <field name="date_start" required="True"/>
@@ -65,10 +65,10 @@
                                 <tree>
                                     <field name="line_type_id"/>
                                     <field name="name"/>
-                                    <field name="sequence" widget="handle"/>
                                     <field name="description"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
+                                    <field name="display_type" invisible="1"/>
                                 </tree>
                             </field>
                         </div>
@@ -105,10 +105,10 @@
                                 <tree>
                                     <field name="line_type_id"/>
                                     <field name="name"/>
-                                    <field name="sequence" widget="handle"/>
                                     <field name="description"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
+                                    <field name="display_type" invisible="1"/>
                                 </tree>
                             </field>
                         </div>
@@ -158,7 +158,6 @@
         <field name="model">hr.skill.level</field>
         <field name="arch" type="xml">
             <tree string="Skill Levels">
-                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="level_progress" widget="progressbar"/>
             </tree>
