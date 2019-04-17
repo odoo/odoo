@@ -370,15 +370,15 @@ class MrpWorkorder(models.Model):
                 production_move.quantity_done += self.qty_producing
 
         if not self.next_work_order_id:
-            for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):
-                if by_product_move.has_tracking != 'serial':
-                    values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
-                    self.env['stock.move.line'].create(values)
-                elif by_product_move.has_tracking == 'serial':
-                    qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
-                    for i in range(0, int(float_round(qty_todo, precision_digits=0))):
-                        values = self._get_byproduct_move_line(by_product_move, 1)
+            for by_product_move in self._get_byproduct_move_to_update():
+                    if by_product_move.has_tracking != 'serial':
+                        values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
                         self.env['stock.move.line'].create(values)
+                    elif by_product_move.has_tracking == 'serial':
+                        qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
+                        for i in range(0, int(float_round(qty_todo, precision_digits=0))):
+                            values = self._get_byproduct_move_line(by_product_move, 1)
+                            self.env['stock.move.line'].create(values)
 
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
@@ -408,6 +408,9 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
+
+    def _get_byproduct_move_to_update(self):
+        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     @api.multi
     def _start_nextworkorder(self):
