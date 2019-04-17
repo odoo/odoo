@@ -23,6 +23,7 @@ class ProductionLot(models.Model):
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
+    display_complete = fields.Boolean(compute='_compute_display_complete')
 
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
@@ -34,6 +35,16 @@ class ProductionLot(models.Model):
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(_('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
+
+    @api.depends('name')
+    def _compute_display_complete(self):
+        """ Defines if we want to display all fields in the stock.production.lot form view.
+        It will if the record exists (`id` set) or if we precised it into the context.
+        This compute depends on field `name` because as it has always a default value, it'll be
+        always triggered.
+        """
+        for prod_lot in self:
+            prod_lot.display_complete = prod_lot.id or self._context.get('display_complete')
 
     @api.model_create_multi
     def create(self, vals_list):
