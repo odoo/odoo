@@ -15,7 +15,17 @@ var scales = [
     'month'
 ];
 
-function dateToServer (date) {
+/**
+ * Transform moment object in format expected by the server
+ *
+ * @param {Moment} date Date in UTC
+ * @param {string} [fieldType=datetime] Field type of data sent to server
+ * @returns {string} date in format expected by server
+ */
+function dateToServer (date, fieldType) {
+    if (fieldType === "date") {
+        return date.clone().local().locale('en').format('YYYY-MM-DD');
+    }
     return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
 
@@ -142,7 +152,7 @@ return AbstractModel.extend({
         var data = this.calendarEventToRecord(event.data.data);
         for (var k in data) {
             if (data[k] && data[k]._isAMomentObject) {
-                data[k] = dateToServer(data[k]);
+                data[k] = dateToServer(data[k], this.fields[k].type);
             }
         }
         return this._rpc({
@@ -317,7 +327,7 @@ return AbstractModel.extend({
         var data = _.omit(this.calendarEventToRecord(record), 'name');
         for (var k in data) {
             if (data[k] && data[k]._isAMomentObject) {
-                data[k] = dateToServer(data[k]);
+                data[k] = dateToServer(data[k], this.fields[k].type);
             }
         }
         var context = new Context(this.data.context, {from_ui: true});
