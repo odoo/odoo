@@ -17,6 +17,7 @@ class TestTaxBlockDate(AccountingTestCase):
     def setUp(self):
         super(TestTaxBlockDate, self).setUp()
         self.user_id = self.env.user
+        company_id = self.user_id.company_id.id
 
         last_day_month = datetime.now()
         last_day_month = last_day_month.replace(day=monthrange(last_day_month.year, last_day_month.month)[1])
@@ -28,10 +29,10 @@ class TestTaxBlockDate(AccountingTestCase):
         middle_day_month = middle_day_month.replace(day=15)
         self.middle_day_month_str = middle_day_month.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-        self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale')], limit=1)[0]
-        self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable')], limit=1)[0]
-        self.other_account_id = self.env['account.account'].search([('internal_type', '!=', 'receivable')], limit=1)[0]
-        self.tax_id = self.env['account.tax'].search([], limit=1)[0]
+        self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1)[0]
+        self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable'), ('company_id', '=', company_id)], limit=1)[0]
+        self.other_account_id = self.env['account.account'].search([('internal_type', '!=', 'receivable'), ('company_id', '=', company_id)], limit=1)[0]
+        self.tax_id = self.env['account.tax'].search([('company_id', '=', company_id)], limit=1)[0]
 
         self.move = {
             'name': '/',
