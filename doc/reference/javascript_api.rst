@@ -1,3 +1,4 @@
+:orphan:
 :banner: banners/javascript.jpg
 
 .. highlight:: javascript
