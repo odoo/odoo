@@ -491,11 +491,13 @@ class TestAPI(common.TransactionCase):
         """ Check map on recordsets. """
         ps = self.env['res.partner'].search([])
         parents = ps.browse()
-        for p in ps: parents |= p.parent_id
+        for p in ps:
+            parents |= p.parent_id
 
         # map a single field
         self.assertEqual(ps.mapped(lambda p: p.parent_id), parents)
         self.assertEqual(ps.mapped('parent_id'), parents)
+        self.assertEqual(ps.parent_id, parents)
 
         # map a sequence of fields
         self.assertEqual(
@@ -504,6 +506,10 @@ class TestAPI(common.TransactionCase):
         )
         self.assertEqual(
             ps.mapped('parent_id.name'),
+            [p.name for p in parents]
+        )
+        self.assertEqual(
+            ps.parent_id.mapped('name'),
             [p.name for p in parents]
         )
 
