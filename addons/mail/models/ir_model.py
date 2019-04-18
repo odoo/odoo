@@ -78,7 +78,7 @@ class IrModel(models.Model):
         vals = super(IrModel, self)._reflect_model_params(model)
         vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
         vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
-        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.blacklist.mixin'])
+        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.thread.blacklist'])
         return vals
 
     @api.model
@@ -92,8 +92,8 @@ class IrModel(models.Model):
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.activity.mixin']
-        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.blacklist.mixin':
+        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.thread.blacklist':
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
-            model_class._inherit = parents + ['mail.blacklist.mixin']
+            model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class

@@ -6,25 +6,25 @@ from odoo.exceptions import UserError
 
 
 class MailAddressMixin(models.AbstractModel):
-    """ Purpose of this mixing is to store a normalized email based on the primary email field.
-        A normalized email is considered as :
-            - having a left part + @ + a right part (the domain can be without '.something')
-            - being lower case
-            - having no name before the address. Typically, having no 'Name <>'
-            Ex:
-            - Formatted Email : 'Name <NaMe@DoMaIn.CoM>'
-            - Normalized Email : 'name@domain.com'
-        The primary email field can be specified on the parent model, if it differs from the default one ('email')
-        The email_normalized field can than be used on that model to search quickly on emails (by simple comparison
-        and not using time consuming regex anymore).
-        """
+    """ Purpose of this mixin is to store a normalized email based on the primary email field.
+    A normalized email is considered as :
+        - having a left part + @ + a right part (the domain can be without '.something')
+        - being lower case
+        - having no name before the address. Typically, having no 'Name <>'
+    Ex:
+        - Formatted Email : 'Name <NaMe@DoMaIn.CoM>'
+        - Normalized Email : 'name@domain.com'
+    The primary email field can be specified on the parent model, if it differs from the default one ('email')
+    The email_normalized field can than be used on that model to search quickly on emails (by simple comparison
+    and not using time consuming regex anymore). """
     _name = 'mail.address.mixin'
-    _description = 'Email address mixin'
+    _description = 'Email Address Mixin'
     _primary_email = 'email'
 
-    email_normalized = fields.Char(string='Normalized email address', compute="_compute_email_normalized", invisible=True,
-                                  compute_sudo=True, store=True, help="""This field is used to search on email address,
-                                  as the primary email field can contain more than strictly an email address.""")
+    email_normalized = fields.Char(
+        string='Normalized Email', compute="_compute_email_normalized", compute_sudo=True,
+        store=True, invisible=True,
+        help="This field is used to search on email address as the primary email field can contain more than strictly an email address.")
 
     @api.depends(lambda self: [self._primary_email])
     def _compute_email_normalized(self):

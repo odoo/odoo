@@ -305,7 +305,7 @@ class MailComposer(models.TransientModel):
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         blacklisted_rec_ids = []
-        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.blacklist.mixin']):
+        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             BL_sudo = self.env['mail.blacklist'].sudo()
             blacklist = set(BL_sudo.search([]).mapped('email'))
             if blacklist:
