@@ -1136,6 +1136,10 @@ class ReportSaleDetails(models.AbstractModel):
         """
         if not configs:
             configs = self.env['pos.config'].search([])
+        elif isinstance(configs, int):
+            configs = self.env['pos.config'].browse([configs])
+        elif isinstance(configs, list):
+            configs = self.env['pos.config'].browse(configs)
 
         user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))

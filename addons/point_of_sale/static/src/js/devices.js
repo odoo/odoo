@@ -448,9 +448,11 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
 
     print_sale_details: function() {
         var self = this;
+        var config_id = [this.pos.config.id];
         rpc.query({
                 model: 'report.point_of_sale.report_saledetails',
                 method: 'get_sale_details',
+                args: [false, false, config_id],
             })
             .then(function(result){
                 var env = {
