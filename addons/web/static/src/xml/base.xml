@@ -336,17 +336,17 @@
 <t t-name="ListView.buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
         <div class="o_list_buttons">
-            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
-                <button type="button" class="btn btn-primary btn-sm o_list_button_add" accesskey="c">
-                    <t t-esc="widget.options.addable"/>
-                </button>
-            </t>
             <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="s">
                 Save
             </button>
             <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="j">
                 Discard
             </button>
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-primary btn-sm o_list_button_add" accesskey="c">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
         </div>
     </t>
 </t>
