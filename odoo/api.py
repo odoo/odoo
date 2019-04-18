@@ -814,7 +814,7 @@ class Environment(Mapping):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse((), self)
+        return self.registry[model_name]._browse(self, (), ())
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -1064,6 +1064,14 @@ class Cache(object):
         key = record.env.cache_key(field)
         value = self._data[key][field].get(record.id, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
+
+    def get_values(self, records, field, default=None):
+        """ Return the regular values of ``field`` for ``records``. """
+        key = records.env.cache_key(field)
+        field_cache = self._data[key][field]
+        for record_id in records._ids:
+            value = field_cache.get(record_id, SpecialValue(None))
+            yield default if isinstance(value, SpecialValue) else value
 
     def get_special(self, record, field, default=None):
         """ Return the special value of ``field`` for ``record``. """
