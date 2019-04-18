@@ -70,7 +70,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView');
 
     QUnit.test('basic ungrouped rendering', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var kanban = createView({
             View: KanbanView,
@@ -82,6 +82,11 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '</div>' +
                 '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                assert.ok(args.context.bin_size,
+                    "should not request direct binary payload");
+                return this._super(route, args);
+            },
         });
 
         assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_ungrouped'),

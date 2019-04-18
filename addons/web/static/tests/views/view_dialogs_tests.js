@@ -166,7 +166,7 @@ QUnit.module('Views', {
                 if (search === 0 && route === '/web/dataset/search_read') {
                     search++;
                     assert.deepEqual(args, {
-                        context: {},
+                        context: {'bin_size': true},  // not part of the test, may change
                         domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
                         fields:["display_name","foo"],
                         model: "partner",
@@ -175,7 +175,7 @@ QUnit.module('Views', {
                     }, "should search with the complete domain (domain + search)");
                 } else if (search === 1 && route === '/web/dataset/search_read') {
                     assert.deepEqual(args, {
-                        context: {},
+                        context: {'bin_size': true},  // not part of the test, may change
                         domain: [["display_name","like","a"]],
                         fields:["display_name","foo"],
                         model: "partner",
