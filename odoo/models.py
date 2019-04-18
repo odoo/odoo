@@ -2812,14 +2812,10 @@ Fields:
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
-        self = self.with_prefetch(self._prefetch.copy())
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
         for name in (stored + inherited + computed):
             convert = self._fields[name].convert_to_read
-            # restrict the prefetching of self's model to self; this avoids
-            # computing fields on a larger recordset than self
-            self._prefetch[self._name] = set(self._ids)
             for record, vals in data:
                 # missing records have their vals empty
                 if not vals:
@@ -2867,7 +2863,6 @@ Fields:
 
         # fetch records with read()
         assert self in records and field in fs
-        records = records.with_prefetch(self._prefetch)
         result = []
         try:
             result = records.read([f.name for f in fs], load='_classic_write')
@@ -2878,7 +2873,7 @@ Fields:
         # check the cache, and update it if necessary
         if not self.env.cache.contains_value(self, field):
             for values in result:
-                record = self.browse(values.pop('id'), self._prefetch)
+                record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
             if not self.env.cache.contains(self, field):
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
@@ -2954,7 +2949,7 @@ Fields:
                             values[index] = translate(ids[index], values[index])
 
             # store result in cache
-            target = self.browse([], self._prefetch)
+            target = self.browse()
             for field, values in zip(fields_pre, field_values_list):
                 convert = field.convert_to_cache
                 # Note that the target record passed to convert below is empty.
@@ -4690,34 +4685,34 @@ Fields:
     #
 
     @classmethod
-    def _browse(cls, ids, env, prefetch=None, add_prefetch=True):
+    def _browse(cls, env, ids, prefetch_ids):
         """ Create a recordset instance.
 
-        :param ids: a tuple of record ids
         :param env: an environment
-        :param prefetch: an optional prefetch object
+        :param ids: a tuple of record ids
+        :param prefetch_ids: a collection of record ids (for prefetching)
         """
         records = object.__new__(cls)
         records.env = env
         records._ids = ids
-        if prefetch is None:
-            prefetch = defaultdict(set)         # {model_name: set(ids)}
-        records._prefetch = prefetch
-        if add_prefetch:
-            prefetch[cls._name].update(ids)
+        records._prefetch_ids = prefetch_ids
         return records
 
-    def browse(self, arg=None, prefetch=None):
+    def browse(self, ids=None):
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
         environment.
 
-        Can take no ids, a single id or a sequence of ids.
+        Can take no ids, a single id or an iterable of ids.
         """
-        ids = _normalize_ids(arg)
-        #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(ids, self.env, prefetch)
+        if not ids:
+            ids = ()
+        elif ids.__class__ in IdType:
+            ids = (ids,)
+        else:
+            ids = tuple(ids)
+        return self._browse(self.env, ids, ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -4763,7 +4758,7 @@ Fields:
 
         :type env: :class:`~odoo.api.Environment`
         """
-        return self._browse(self._ids, env, self._prefetch)
+        return self._browse(env, self._ids, self._prefetch_ids)
 
     def sudo(self, user=SUPERUSER_ID):
         """ sudo([user=SUPERUSER])
@@ -4819,13 +4814,15 @@ Fields:
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))
 
-    def with_prefetch(self, prefetch=None):
-        """ with_prefetch([prefetch]) -> records
+    def with_prefetch(self, prefetch_ids=None):
+        """ with_prefetch([prefetch_ids]) -> records
 
-        Return a new version of this recordset that uses the given prefetch
-        object, or a new prefetch object if not given.
+        Return a new version of this recordset that uses the given prefetch ids,
+        or ``self``'s ids if not given.
         """
-        return self._browse(self._ids, self.env, prefetch)
+        if prefetch_ids is None:
+            prefetch_ids = self._ids
+        return self._browse(self.env, self._ids, prefetch_ids)
 
     def _convert_to_cache(self, values, update=False, validate=True):
         """ Convert the ``values`` dictionary into cached values.
@@ -4835,7 +4832,7 @@ Fields:
             :param validate: whether values must be checked
         """
         fields = self._fields
-        target = self if update else self.browse([], self._prefetch)
+        target = self if update else self.browse()
         return {
             name: fields[name].convert_to_cache(value, target, validate=validate)
             for name, value in values.items()
@@ -5015,7 +5012,7 @@ Fields:
     def __iter__(self):
         """ Return an iterator over ``self``. """
         for id in self._ids:
-            yield self._browse((id,), self.env, self._prefetch, False)
+            yield self._browse(self.env, (id,), self._prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -5147,9 +5144,9 @@ Fields:
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._browse(self._ids[key], self.env)
+            return self.browse(self._ids[key])
         else:
-            return self._browse((self._ids[key],), self.env)
+            return self.browse((self._ids[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
@@ -5171,7 +5168,7 @@ Fields:
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        recs = self.browse(self._prefetch[self._name])
+        recs = self.browse(self._prefetch_ids)
         ids = [self.id]
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
             if not record_id:
@@ -5710,33 +5707,6 @@ PGERROR_TO_OE = defaultdict(
     '23502': convert_pgerror_not_null,
     '23505': convert_pgerror_unique,
 })
-
-def _normalize_ids(arg, atoms=set(IdType)):
-    """ Normalizes the ids argument for ``browse`` (v7 and v8) to a tuple.
-
-    Various implementations were tested on the corpus of all browse() calls
-    performed during a full crawler run (after having installed all website_*
-    modules) and this one was the most efficient overall.
-
-    A possible bit of correctness was sacrificed by not doing any test on
-    Iterable and just assuming that any non-atomic type was an iterable of
-    some kind.
-
-    :rtype: tuple
-    """
-    # much of the corpus is falsy objects (empty list, tuple or set, None)
-    if not arg:
-        return ()
-
-    # `type in set` is significantly faster (because more restrictive) than
-    # isinstance(arg, set) or issubclass(type, set); and for new-style classes
-    # obj.__class__ is equivalent to but faster than type(obj). Not relevant
-    # (and looks much worse) in most cases, but over millions of calls it
-    # does have a very minor effect.
-    if arg.__class__ in atoms:
-        return arg,
-
-    return tuple(arg)
 
 
 def lazy_name_get(self):
