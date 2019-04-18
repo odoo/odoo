@@ -165,3 +165,11 @@ class TestLeaveRequests(TestHrHolidaysBase):
         leave.action_approve()
         member_ids = self.hr_dept.member_ids.ids
         self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Leave should be created for members of department")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_allocation_request(self):
+        """ Create an allocation request """
+        # employee should be set to current user
+        allocation_form = Form(self.env['hr.leave.allocation'].sudo(self.user_employee))
+        allocation_form.holiday_status_id = self.holidays_type_1
+        allocation = allocation_form.save()
