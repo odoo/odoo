@@ -335,11 +335,12 @@ class HolidaysRequest(models.Model):
             self.employee_id = False
             self.mode_company_id = self.env.user.company_id.id
             self.category_id = False
-        elif self.holiday_type == 'department' and not self.department_id:
+        elif self.holiday_type == 'department':
             self.employee_id = False
             self.mode_company_id = False
-            self.department_id = self.env.user.employee_ids[:1].department_id.id
             self.category_id = False
+            if not self.department_id:
+                self.department_id = self.env.user.employee_ids[:1].department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False
