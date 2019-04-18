@@ -138,7 +138,6 @@
     </record>
      <record model="ir.actions.act_window" id="product_open_quants"> <!-- product_view + python -->
         <field name="name">Stock On Hand</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_locationgroup':1}</field>
        <field name="domain">[('product_id', '=', active_id)]</field>
         <field name="res_model">stock.quant</field>
     </record>

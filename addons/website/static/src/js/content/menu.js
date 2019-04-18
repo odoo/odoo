@@ -34,6 +34,12 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
             $source.attr('data-target', targetIDSelector + '_clone');
             $target.attr('id', targetIDSelector.substr(1) + '_clone');
         });
+        // While scrolling through navbar menus, body should not be scrolled with it
+        this.$headerClone.find('div.navbar-collapse').on('show.bs.collapse', function () {
+            $(document.body).addClass('overflow-hidden');
+        }).on('hide.bs.collapse', function () {
+            $(document.body).removeClass('overflow-hidden');
+        });
 
         // Window Handlers
         $(window).on('resize.affixMenu scroll.affixMenu', _.throttle(this._onWindowUpdate.bind(this), 200));
