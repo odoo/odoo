@@ -465,6 +465,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('basic grouped list rendering with widget="handle" col', async function (assert) {
+        assert.expect(5);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                '</tree>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Foo)').length, 1, "should contain Foo");
+        assert.strictEqual(list.$('th:contains(Bar)').length, 1, "should contain Bar");
+        assert.containsN(list, 'tr.o_group_header', 2, "should have 2 .o_group_header");
+        assert.containsN(list, 'th.o_group_name', 2, "should have 2 .o_group_name");
+        assert.containsNone(list, 'th:contains(int_field)', "Should not have int_field in grouped list");
+        list.destroy();
+    });
+
     QUnit.test('basic grouped list rendering 1 col without selector', async function (assert) {
         assert.expect(2);
 
