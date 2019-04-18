@@ -168,8 +168,12 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_admin.get('tracking_values'), "should have protected tracking values")
 
-    def test_unknown_field(self):
-        self.record.sudo().write({'email_from': 'X'})  # create a tracking value
-        tracking = self.record.sudo().mapped('message_ids.tracking_value_ids')[0]
-        tracking.field = 'I do not exist'
-        self.assertEqual(tracking.groups, 'base.group_system')
+    def test_unlinked_field(self):
+        record_sudo = self.record.sudo()
+        record_sudo.write({'email_from': 'X'})  # create a tracking value
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
+        ir_model_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'mail.test.full'),
+            ('name', '=', 'email_from')])
+        ir_model_field.with_context(_force_unlink=True).unlink()
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
