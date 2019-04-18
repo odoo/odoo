@@ -251,6 +251,9 @@ var ListRenderer = BasicRenderer.extend({
             }
             if (!reject && c.attrs.widget === 'handle') {
                 self.handleField = c.attrs.name;
+                if (self.isGrouped) {
+                    return true;
+                }
             }
             return reject;
         });
