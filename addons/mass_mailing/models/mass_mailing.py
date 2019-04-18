@@ -211,7 +211,7 @@ class MassMailingContact(models.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
-    _inherit = ['mail.thread', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.blacklist']
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'
@@ -226,7 +226,6 @@ class MassMailingContact(models.Model):
         'contact_id', 'list_id', string='Mailing Lists')
     subscription_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel',
         'contact_id', string='Subscription Information')
-    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
     opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',

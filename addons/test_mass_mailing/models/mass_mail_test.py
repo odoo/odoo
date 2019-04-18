@@ -20,7 +20,7 @@ class MassMailTestBlacklist(models.Model):
     """ Model using blacklist mechanism for mass mailing. """
     _description = 'Mass Mailing Model w Blacklist'
     _name = 'mass.mail.test.bl'
-    _inherit = ['mail.thread', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.blacklist']
 
     _primary_email = 'email_from'  # blacklist field to check
 
