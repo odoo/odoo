@@ -373,17 +373,17 @@
 
 <t t-name="ListView.buttons">
     <div class="o_list_buttons" role="toolbar" aria-label="Main actions">
-        <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
-                Create
-            </button>
-        </t>
         <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">
             Save
         </button>
         <button type="button" class="btn btn-secondary o_list_button_discard" accesskey="j">
             Discard
         </button>
+        <t t-if="widget.is_action_enabled('create')">
+            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
+                Create
+            </button>
+        </t>
     </div>
 </t>
 
