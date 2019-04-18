@@ -488,7 +488,15 @@ class Warehouse(models.Model):
                 if not warehouse[location] and location not in vals:
                     location_values['location_id'] = vals.get('view_location_id', warehouse.view_location_id.id)
                     location_values['company_id'] = vals.get('company_id', warehouse.company_id.id)
-                    missing_location[location] = self.env['stock.location'].create(location_values).id
+                    inactive_loc = self.env['stock.location'].with_context(active_test=False).search([
+                        ('barcode', '=', location_values.get('barcode')),
+                        ('company_id', '=', location_values['company_id'])
+                    ])
+                    if not inactive_loc:
+                        missing_location[location] = self.env['stock.location'].create(location_values).id
+                    else:
+                        inactive_loc.write(location_values)
+                        missing_location[location] = inactive_loc.id
             if missing_location:
                 warehouse.write(missing_location)
 
