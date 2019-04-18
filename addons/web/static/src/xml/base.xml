@@ -120,26 +120,6 @@
     </ul>
 </t>
 
-<t t-name="Notification">
-    <div t-attf-class="o_notification #{widget.className}" t-translation="off" role="alertdialog">
-        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
-        <div class="o_notification_title">
-            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
-            <t t-raw="widget.title"/>
-        </div>
-        <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
-        <div t-if="widget.buttons.length" class="o_buttons">
-            <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn #{button.primary ? 'btn-primary' : 'btn-secondary'}" type="button">
-                <t t-if="button.icon">
-                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
-                    <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
-                </t>
-                <span><t t-esc="button.text"/></span>
-            </button>
-        </div>
-    </div>
-</t>
-
 <div t-name="CrashManager.warning" class="o_dialog_warning" role="alert">
     <t t-js="d">
         var message = (d.message !== undefined) ? d.message : d.error.data.message;
