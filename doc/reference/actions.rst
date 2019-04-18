@@ -161,6 +161,9 @@ The server-side composition of the ``views`` sequence is the following:
     * ``groups_id``?
     * ``filter``?
 
+.. [#notquitem2m] technically not an M2M: adds a sequence field and may be
+                  composed of just a view type, without a view id.
+
 .. _reference/actions/url:
 
 URL Actions (``ir.actions.act_url``)
@@ -317,13 +320,15 @@ Triggers the printing of a report
     in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
-``report_type`` (mandatory)
+``report_type`` (default=qweb-pdf)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``report_name``
+``report_name`` (mandatory)
     the name of your report (which will be the name of the PDF output)
 ``groups_id``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report
+``multi``
+    if set to ``True``, the action will not be displayed on a form view.
 ``paperformat_id``
     :class:`~odoo.fields.Many2one` field to the paper format you wish to
     use for this report (if not specified, the company format will be used)
@@ -366,9 +371,6 @@ Triggers an action implemented entirely in the client.
 
 tells the client to start the Point of Sale interface, the server has no idea
 how the POS interface works.
-
-.. [#notquitem2m] technically not an M2M: adds a sequence field and may be
-                  composed of just a view type, without a view id.
 
 .. _reference/actions/cron:
 
