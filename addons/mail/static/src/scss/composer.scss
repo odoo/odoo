@@ -437,6 +437,12 @@
                     box-shadow: 1px 1px 20px 1px #000;
                 }
 
+                @include media-breakpoint-down(sm) {
+                    .o_viewer_pdf, .o_viewer_text {
+                        width: 100%;
+                    }
+                }
+
                 .o_viewer_text {
                     width: 80%;
                     height: 100%;
@@ -452,11 +458,15 @@
         }
 
         .o_viewer_toolbar {
-            @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
-            transform: translate(-50%, -50%);
+            @include o-position-absolute($bottom: $grid-gutter-width*0.5);
+            width: 100%;
             overflow: hidden;
+            justify-content: center;
             border-radius: 4px;
-            background-color: rgba(black, 0.4);
+
+            > .btn-group {
+                background-color: rgba(black, 0.4);
+            }
 
             .o_viewer_toolbar_btn {
                 @include o-viewer-black-btn;
