@@ -562,7 +562,7 @@ QUnit.test('barcode_scanned only trigger error for active view', async function 
     }
     _.each(['O','-','B','T','N','.','c','a','n','c','e','l','Enter'], modalTriggerKeypressEvent);
     await testUtils.nextTick();
-    assert.verifySteps(['warning'], "only one event should be triggered");
+    assert.verifySteps(['danger'], "only one event should be triggered");
     form.destroy();
 });
 });

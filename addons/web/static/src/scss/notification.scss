@@ -1,0 +1,12 @@
+
+.o_notification_manager {
+    @include o-position-absolute($nav-link-height, 0);
+    position: fixed;
+    z-index: ($zindex-modal + $zindex-popover) / 2;
+    width: $toast-max-width;
+    max-width: 100%;
+
+    .o_notification {
+        width: 100%;
+    }
+}

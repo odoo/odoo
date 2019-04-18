@@ -5541,7 +5541,7 @@ QUnit.module('fields', {}, function () {
 
                 "button_disabled_partner_4",
                 "button_warn_partner_4",
-                "warning", // warn btn8
+                "danger", // warn btn8
 
                 "button_disabled_partner_4",
                 "button_warn_partner_4",

@@ -106,7 +106,7 @@ QUnit.module('settings_dashboard', function () {
             'should not have generated any badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), 'x@y',
             'input should not have been cleared');
-        assert.verifySteps(['warning']);
+        assert.verifySteps(['danger']);
 
         // enter an already pending address
         await testUtils.fields.editInput(dashboard.$('.o_user_emails'), 'xyz@odoo.com');
@@ -115,7 +115,7 @@ QUnit.module('settings_dashboard', function () {
             'should not have generated any badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), 'xyz@odoo.com',
             'input should not have been cleared');
-        assert.verifySteps(['warning']);
+        assert.verifySteps(['danger']);
 
         dashboard.destroy();
     });
@@ -185,7 +185,7 @@ QUnit.module('settings_dashboard', function () {
             'should have generated 1 badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), '',
             'input have been cleared');
-        assert.verifySteps(['warning', 'warning'], "should have triggered 2 warnings");
+        assert.verifySteps(['danger', 'danger'], "should have triggered 2 warnings");
 
         dashboard.destroy();
     });

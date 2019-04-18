@@ -1,9 +1,10 @@
 odoo.define('web.NotificationService', function (require) {
-"use strict";
+'use strict';
 
 var AbstractService = require('web.AbstractService');
 var Notification = require('web.Notification');
 var core = require('web.core');
+
 var id = 0;
 
 /**
@@ -16,9 +17,7 @@ var id = 0;
  * by using this file. The proper way is to use the do_warn or do_notify
  * methods on the Widget class.
  */
-
 var NotificationService = AbstractService.extend({
-
     custom_events: {
         close: '_onCloseNotification',
     },
@@ -37,8 +36,8 @@ var NotificationService = AbstractService.extend({
 
     /**
      * It may sometimes be useful to close programmatically a notification. For
-     * example, when there is a sticky notification that warns the user about
-     * some condition (connection lost), but the condition do not apply anymore.
+     * example, when there is a sticky notification warning the user about some
+     * condition (connection lost), but the condition does not apply anymore.
      *
      * @param {number} notificationId
      * @param {boolean} [silent=false] if true, the notification does not call
@@ -105,9 +104,7 @@ var NotificationService = AbstractService.extend({
     },
 });
 
-
 core.serviceRegistry.add('notification', NotificationService);
-
 
 return NotificationService;
 });

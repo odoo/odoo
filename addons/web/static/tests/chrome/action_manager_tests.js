@@ -2014,7 +2014,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
-            'notification',
+            'warning',
             '/report/download',
         ]);
 
@@ -2075,7 +2075,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
-            'notification',
+            'warning',
             'test /report/html/some_report', // report client action's iframe
         ]);
 

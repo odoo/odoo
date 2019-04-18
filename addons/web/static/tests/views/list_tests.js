@@ -2750,7 +2750,7 @@ QUnit.module('Views', {
             services: {
                 notification: NotificationService.extend({
                     notify: function (params) {
-                        if (params.type === 'warning') {
+                        if (params.type === 'danger') {
                             warnings++;
                         }
                     }
