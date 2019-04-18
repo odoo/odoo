@@ -109,10 +109,10 @@ var AttachDocument = Widget.extend({
      */
     _onFileLoaded: function () {
         var self = this;
+        // the first argument isn't a file but the jQuery.Event
+        var files = Array.prototype.slice.call(arguments, 1);
         return new Promise(function (resolve) {
             if (self.node.attrs.action) {
-                // the first argument isn't a file but the jQuery.Event
-                var files = Array.prototype.slice.call(arguments, 1);
                 self._rpc({
                     model: self.res_model,
                     method: self.node.attrs.action,
