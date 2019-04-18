@@ -1472,17 +1472,18 @@ class MailThread(models.AbstractModel):
     def _message_receive_bounce(self, email, partner, mail_id=None):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
-        behavior is to check is an integer  ``message_bounce`` column exists.
+        behavior is to do nothing. This method is meant to be overridden in various
+        modules to add some specific behavior like blacklist management or mass
+        mailing statistics update. check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
 
+        :param record partner: partner matching the bounced email address, if any;
+        :param string email: email that caused the bounce;
         :param mail_id: ID of the sent email that bounced. It may not exist anymore
-                        but it could be usefull if the information was kept. This is
-                        used notably in mass mailing.
-        :param RecordSet partner: partner matching the bounced email address, if any
-        :param string email: email that caused the bounce """
-        if 'message_bounce' in self._fields:
-            for record in self:
-                record.message_bounce = record.message_bounce + 1
+                        but it could be useful if the information was kept. This is
+                        used notably in mass mailing;
+        """
+        pass
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
