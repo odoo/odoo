@@ -222,11 +222,37 @@ var ServicesMixin = {
             });
         });
     },
-    do_notify: function (title, message, sticky, className) {
-        return this.call('notification', 'notify', {title: title, message: message, sticky: sticky, className: className});
+    /**
+     * Displays a notification.
+     *
+     * @param {string} title
+     * @param {string} [message]
+     * @param {string} [type='warning'] 'info', 'success', 'warning', 'danger' or ''
+     * @param {boolean} [sticky=false]
+     * @param {string} [className]
+     */
+    displayNotification: function (title, message, type, sticky, className) {
+        return this.call('notification', 'notify', {
+            type: type,
+            title: title,
+            message: message,
+            sticky: sticky,
+            className: className,
+        });
     },
+    /**
+     * @deprecated will be removed as soon as the notification system is reviewed
+     * @see displayNotification
+     */
+    do_notify: function (title, message, sticky, className) {
+        return this.displayNotification(title, message, 'warning', sticky, className);
+    },
+    /**
+     * @deprecated will be removed as soon as the notification system is reviewed
+     * @see displayNotification
+     */
     do_warn: function (title, message, sticky, className) {
-        return this.call('notification', 'notify', {type: 'warning', title: title, message: message, sticky: sticky, className: className});
+        return this.displayNotification(title, message, 'danger', sticky, className);
     },
 };
 

@@ -6,20 +6,6 @@
         </t>
     </t>
 
-    <t t-name="CalendarNotification" t-extend="Notification">
-        <t t-jquery=".o_notification_title > t" t-operation="replace">
-            <span  t-attf-class="link2event eid_{{widget.eid}}">
-                <t t-esc="widget.title"/>
-            </span>
-        </t>
-        <t t-jquery=".o_notification_content" t-operation="append">
-            <br/><br/>
-            <button type="button" class="btn btn-primary link2showed oe_highlight oe_form oe_button"><span>OK</span></button>
-            <button type="button" class="btn btn-link link2event">Details</button>
-            <button type="button" class="btn btn-link link2recall">Snooze</button>
-        </t>
-    </t>
-
     <t t-extend="mail.systray.ActivityMenu.Previews">
         <t t-jquery="div.o_preview_title" t-operation="after">
             <div t-if="activity and activity.type == 'meeting'">
@@ -44,5 +30,4 @@
             </div>
         </t>
     </t>
-
 </template>
