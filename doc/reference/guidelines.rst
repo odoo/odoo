@@ -2,6 +2,8 @@
 
 .. highlight:: python
 
+.. _reference/guidelines:
+
 ===============
 Odoo Guidelines
 ===============
@@ -53,8 +55,8 @@ File naming
 
 File naming is important to quickly find information through all odoo addons.
 This section explains how to name files in a standard odoo module. As an
-example we use a plant nursery application. It holds two main models plant.nursery
-and plant.order.
+example we use a `plant nursery <https://github.com/tivisse/odoodays-2018/tree/master/plant_nursery>`_ application.
+It holds two main models *plant.nursery* and *plant.order*.
 
 Concerning *models*, split the business logic by sets of models belonging to
 a same main model. Each set lies in a given file named based on its main model.
@@ -236,6 +238,8 @@ The complete tree of our Odoo module therefore looks like
 
 .. warning:: Use correct file permissions : folder 755 and file 644.
 
+.. _reference/guidelines/xml:
+
 XML files
 =========
 
@@ -387,6 +391,8 @@ based upon the first one.
         ...
     </record>
 
+.. _reference/guidelines/python:
+
 Python
 ======
 
@@ -417,18 +423,16 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
     import re
     import time
     from datetime import datetime
-    # 2 :  imports of odoo
+    # 2 : imports of odoo
     import odoo
-    from odoo import api, fields, models # alphabetically ordered
+    from odoo import api, fields, models, _ # alphabetically ordered
     from odoo.tools.safe_eval import safe_eval as eval
-    from odoo.tools.translate import _
-    # 3 :  imports from odoo addons
+    # 3 : imports from odoo addons
     from odoo.addons.website.models.website import slug
     from odoo.addons.web.controllers.main import login_redirect
 
-
-Idiomatics Python Programming
------------------------------
+Idiomatics of Programming (Python)
+----------------------------------
 
 - Each python file should have ``# -*- coding: utf-8 -*-`` as first line.
 - Always favor *readability* over *conciseness* or using the language features or idioms.
@@ -626,12 +630,14 @@ a different context, the ``with_context`` method should be used :
     records.with_context(new_context).do_stuff() # all the context is replaced
     records.with_context(**additionnal_context).do_other_stuff() # additionnal_context values override native context ones
 
-Passing parameter in context can have dangerous side-effects. Since the values
-are propagated automatically, some behavior can appears. Calling ``create()``
-method of a model with *default_my_field* key in context will set the default
-value of *my_field* for the concerned model. But if curing this creation, other
-object (such as sale.order.line, on sale.order creation) having a field
-name *my_field*, their default value will be set too.
+.. warning::
+      Passing parameter in context can have dangerous side-effects.
+
+      Since the values are propagated automatically, some unexpected behavior may appear.
+      Calling ``create()`` method of a model with *default_my_field* key in context
+      will set the default value of *my_field* for the concerned model.
+      But if during this creation, other objects (such as sale.order.line, on sale.order creation)
+      having a field name *my_field* are created, their default value will be set too.
 
 If you need to create a key context influencing the behavior of some object,
 choice a good name, and eventually prefix it by the name of the module to
@@ -708,6 +714,7 @@ online documentation of pyscopg2 to learn of to use it properly:
 
 Think extendable
 ~~~~~~~~~~~~~~~~
+
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
 A good rule of thumb is to split a method as soon as it has more than one
@@ -827,7 +834,7 @@ importing as follows:
 
 .. code-block:: python
 
-    from odoo.tools.translate import _
+    from odoo import _
 
 A few very important rules must be followed when using it, in order for it to
 work and to avoid filling the translations with useless junk.
@@ -1011,6 +1018,7 @@ Symbols and Conventions
         def mail_user_confirm(self):
             ...
 
+.. _reference/guidelines/js:
 
 Javascript and CSS
 ==================
@@ -1029,16 +1037,18 @@ statically available at the url *your-odoo-server.com/web/static/src/js/some_fil
 The convention is to organize the code according to the following structure:
 
 - *static*: all static files in general
-- *static/lib*: this is the place where js libs should be located, in a sub folder.
-  So, for example, all files from the *jquery* library are in *addons/web/static/lib/jquery*
-- *static/src*: the generic static source code folder
-- *static/src/css*: all css files
-- *static/src/fonts*
-- *static/src/img*
-- *static/src/js*
-- *static/src/scss*: scss files
-- *static/src/xml*: all qweb templates that will be rendered in JS
-- *static/tests*: this is where we put all test related files.
+
+  - *static/lib*: this is the place where js libs should be located, in a sub folder.
+    So, for example, all files from the *jquery* library are in *addons/web/static/lib/jquery*
+  - *static/src*: the generic static source code folder
+
+    - *static/src/css*: all css files
+    - *static/src/fonts*
+    - *static/src/img*
+    - *static/src/js*
+    - *static/src/scss*: scss files
+    - *static/src/xml*: all qweb templates that will be rendered in JS
+  - *static/tests*: this is where we put all test related files.
 
 Javascript coding guidelines
 ----------------------------
@@ -1048,7 +1058,7 @@ Javascript coding guidelines
 - Never add minified Javascript Libraries
 - Use camelcase for class declaration
 
-More precise JS guidelines are detailed at https://github.com/odoo/odoo/wiki/Javascript-coding-guidelines.
+More precise JS guidelines are detailed in the `github wiki  <https://github.com/odoo/odoo/wiki/Javascript-coding-guidelines>`_.
 You may also have a look at existing API in Javascript by looking Javascript
 References.
 
@@ -1063,6 +1073,8 @@ CSS coding guidelines
 - Avoid using *id* tag
 - Use Bootstrap native classes
 - Use underscore lowercase notation to name class
+
+.. _reference/guidelines/git:
 
 Git
 ===
