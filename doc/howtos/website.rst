@@ -58,7 +58,7 @@ Although it does absolutely nothing we can install it:
 To the browser
 ==============
 
-:ref:`Controllers <reference/http/controllers>` interpret browser requests and
+:ref:`Controllers <reference/controllers>` interpret browser requests and
 send data back.
 
 Add a simple controller and ensure it is imported by ``__init__.py`` (so

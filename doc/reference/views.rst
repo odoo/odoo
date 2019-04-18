@@ -48,7 +48,7 @@ otherwise.
     a route address to be fetched and prepended to the view.
 
     If this attribute is set, the
-    :ref:`controller route url<reference/http/controllers>` will be fetched and
+    :ref:`controller route url<reference/controllers>` will be fetched and
     displayed above the view. The json response from the controller should
     contain an "html" key.
 
