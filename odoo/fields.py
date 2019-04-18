@@ -24,7 +24,7 @@ import psycopg2
 
 from .sql_db import LazyCursor
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar,\
-    ustr, OrderedSet, pycompat, sql, date_utils, groupby
+    ustr, OrderedSet, pycompat, sql, date_utils, unique
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -568,7 +568,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related[:-1]:
-            record = record[name][:1].with_prefetch(record._prefetch)
+            record = first(record[name])
         return record, self.related_field
 
     def _compute_related(self, records):
@@ -1109,7 +1109,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
-                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
@@ -1995,17 +1994,13 @@ class Reference(Selection):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: (res_model, res_id) or False
-        def process(res_model, res_id):
-            record._prefetch[res_model].add(res_id)
-            return (res_model, res_id)
-
         if isinstance(value, BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
-                return process(value._name, value.id) if value else False
+                return (value._name, value.id) if value else False
         elif isinstance(value, str):
             res_model, res_id = value.split(',')
             if record.env[res_model].browse(int(res_id)).exists():
-                return process(res_model, int(res_id))
+                return (res_model, int(res_id))
             else:
                 return False
         elif not value:
@@ -2013,7 +2008,7 @@ class Reference(Selection):
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_to_record(self, value, record):
-        return value and record.env[value[0]].browse([value[1]], record._prefetch)
+        return value and record.env[value[0]].browse([value[1]])
 
     def convert_to_read(self, value, record, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
@@ -2164,26 +2159,24 @@ class Many2one(_Relational):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
-        def process(ids):
-            return record._prefetch[self.comodel_name].update(ids) or ids
-
         if type(value) in IdType:
-            return process((value,))
+            return (value,)
         elif isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name and len(value) <= 1):
-                return process(value._ids)
+                return value._ids
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
             # value is either a pair (id, name), or a tuple of ids
-            return process(value[:1])
+            return value[:1]
         elif isinstance(value, dict):
-            return process(record.env[self.comodel_name].new(value)._ids)
+            return record.env[self.comodel_name].new(value)._ids
         else:
             return ()
 
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
-        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
+        prefetch_ids = PrefetchValueIds(record, self)
+        return record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -2267,12 +2260,9 @@ class _RelationalMulti(_Relational):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
-        def process(ids):
-            return record._prefetch[self.comodel_name].update(ids) or ids
-
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name):
-                return process(value._ids)
+                return value._ids
         elif isinstance(value, (list, tuple)):
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
@@ -2302,14 +2292,15 @@ class _RelationalMulti(_Relational):
                 else:
                     ids.add(command)
             # return result as a tuple
-            return process(tuple(ids))
+            return tuple(ids)
         elif not value:
             return ()
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
-        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
+        prefetch_ids = PrefetchValueIds(record, self)
+        return record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2500,16 +2491,14 @@ class One2many(_RelationalMulti):
                 comodel.create(to_create)
                 to_create.clear()
             if to_relink:
-                prefetch = comodel.browse(to_relink)._prefetch
-                comodel_sudo = comodel.sudo().with_context(prefetch_fields=False)
-                # group lines by record, and relink them in batch
-                groups = groupby(to_relink, to_relink.get)
-                for record_id, line_ids in groups:
-                    lines = comodel_sudo.browse(line_ids, prefetch).filtered(
-                        lambda line: int(line[inverse]) != record_id
-                    )
-                    if lines:
-                        comodel.browse(lines._ids).write({inverse: record_id})
+                # group line ids to update by record id, and update them
+                groups = defaultdict(list)
+                lines = comodel.browse(to_relink).sudo().with_context(prefetch_fields=False)
+                for line, record_id in zip(lines, to_relink.values()):
+                    if int(line[inverse]) != record_id:
+                        groups[record_id].append(line.id)
+                for record_id, line_ids in groups.items():
+                    comodel.browse(line_ids).write({inverse: record_id})
                 to_relink.clear()
 
         with model.env.norecompute():
@@ -2869,6 +2858,27 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
+
+
+class PrefetchValueIds(object):
+    """ An iterable on the ids of the cached values of a relational field for
+        the prefetch set of a record.
+    """
+    __slots__ = ('_record', '_field')
+
+    def __init__(self, record, field):
+        self._record = record
+        self._field = field
+
+    def __iter__(self):
+        record = self._record
+        records = record.browse(record._prefetch_ids)
+        return unique(
+            id_
+            for ids in record.env.cache.get_values(records, self._field, ())
+            for id_ in ids
+        )
+
 
 # imported here to avoid dependency cycle issues
 from odoo import SUPERUSER_ID
