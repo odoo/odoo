@@ -48,9 +48,6 @@ class TestDropship(common.TransactionCase):
         so.order_line.product_uom_qty = 2.00
         self.assertAlmostEqual(po_line.product_qty, 2.00)
 
-
-class TestDropship(common.TransactionCase):
-
     def test_00_dropship(self):
 
         # Create a vendor
