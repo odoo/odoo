@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class MailTracking(models.Model):
@@ -16,6 +16,7 @@ class MailTracking(models.Model):
     field = fields.Char('Changed Field', required=True, readonly=1)
     field_desc = fields.Char('Field Description', required=True, readonly=1)
     field_type = fields.Char('Field Type')
+    field_groups = fields.Char(compute='_compute_field_groups')
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=1)
     old_value_float = fields.Float('Old Value Float', readonly=1)
@@ -35,14 +36,11 @@ class MailTracking(models.Model):
 
     tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100, oldname='track_sequence')
 
-    groups = fields.Char(compute='_compute_groups')
-
-    def _compute_groups(self):
+    def _compute_field_groups(self):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
             field = model._fields.get(tracking.field)
-            # field may not exist anymore if module has been uninstalled
-            tracking.groups = field.groups if field else 'base.group_system'
+            tracking.field_groups = field.groups
 
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence):
