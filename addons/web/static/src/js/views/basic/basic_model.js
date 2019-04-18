@@ -4572,7 +4572,7 @@ var BasicModel = AbstractModel.extend({
                 route: '/web/dataset/search_read',
                 model: list.model,
                 fields: fieldNames,
-                context: list.getContext(),
+                context: _.extend({}, list.getContext(), {bin_size: true}),
                 domain: list.domain || [],
                 limit: list.limit,
                 offset: list.loadMoreOffset + list.offset,

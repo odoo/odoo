@@ -725,8 +725,8 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_menu_item:contains(AAA)'));
 
         assert.verifySteps([
-            "{}",
-            "{\"coucou_1\":1}",
+            "{\"bin_size\":true}",
+            "{\"coucou_1\":1,\"bin_size\":true}",
         ]);
 
         actionManager.destroy();
@@ -998,10 +998,10 @@ QUnit.module('Search View', {
                 if (route === '/web/dataset/search_read') {
                     if (searchRead === 1) {
                         assert.deepEqual(args.domain, [["bar", "=", 1]]);
-                        assert.deepEqual(args.context, {'bar': [1]});
+                        assert.deepEqual(args.context.bar, [1]);
                     } else if (searchRead === 2) {
                         assert.deepEqual(args.domain, ["|", ["bar", "=", 1], ["bar", "=", 2]]);
-                        assert.deepEqual(args.context, { 'bar': [1, 2] });
+                        assert.deepEqual(args.context.bar, [1, 2]);
                     }
                     searchRead++;
                 }

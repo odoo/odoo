@@ -854,7 +854,7 @@ QUnit.test("Views should be loaded in the user's language", async function (asse
                     'The views should be loaded with the correct context');
             }
             if (route === "/web/dataset/search_read") {
-                assert.deepEqual(args.context, {lang: 'fr_FR'},
+                assert.equal(args.context.lang, 'fr_FR',
                     'The data should be loaded with the correct context');
             }
             if (route === '/web/action/load') {

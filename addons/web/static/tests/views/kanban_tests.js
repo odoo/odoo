@@ -85,7 +85,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView');
 
     QUnit.test('basic ungrouped rendering', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var kanban = await createView({
             View: KanbanView,
@@ -97,6 +97,11 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '</div>' +
                 '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                assert.ok(args.context.bin_size,
+                    "should not request direct binary payload");
+                return this._super(route, args);
+            },
         });
 
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_ungrouped');
