@@ -18,6 +18,10 @@ e.g. button methods. All actions share two mandatory attributes:
 ``name``
     short user-readable description of the action, may be displayed in the
     client's interface
+``binding_model_id``
+    if set, the action is available in the action bar for the given model
+
+    .. note:: For Server Actions, use ``model_id``.
 
 A client can get actions in 4 forms:
 
@@ -186,6 +190,8 @@ will replace the current content section by the Odoo home page.
 Server Actions (``ir.actions.server``)
 ======================================
 
+.. autoclass:: odoo.addons.base.models.ir_actions.IrActionsServer
+
 Allow triggering complex server code from any valid action location. Only
 two fields are relevant to clients:
 
@@ -199,151 +205,90 @@ specific or generic actions based on their ``state``. Some fields (and
 corresponding behaviors) are shared between states:
 
 ``model_id``
-    Odoo model linked to the action, made available in
-    :ref:`evaluation contexts <reference/actions/server/context>`
-``condition`` (optional)
-    evaluated as Python code using the server action's
-    :ref:`evaluation context <reference/actions/server/context>`. If
-    ``False``, prevents the action from running. Default: ``True``
+    Odoo model linked to the action.
 
-Valid action types (``state`` field) are extensible, the default types are:
+``state``
 
-``code``
---------
+* ``code``: Executes python code given through the ``code`` argument.
 
-The default and most flexible server action type, executes arbitrary Python
-code with the action's :ref:`evaluation context
-<reference/actions/server/context>`. Only uses one specific type-specific
-field:
+* ``object_create``: Creates a new record of model ``crud_model_id`` following ``fields_lines`` specifications.
 
-``code``
-    a piece of Python code to execute when the action is called
+* ``object_write``: Updates the current record(s) following ``fields_lines`` specifications
 
-.. code-block:: xml
+* ``multi``: Executes serveral actions given through the ``child_ids`` argument.
 
-    <record model="ir.actions.server" id="print_instance">
-        <field name="name">Res Partner Server Action</field>
-        <field name="model_id" ref="model_res_partner"/>
-        <field name="code">
-            raise Warning(object.name)
-        </field>
-    </record>
+State fields
+------------
 
-.. note::
+Depending on its state, the behavior is defined through different fields.
+The concerned state is given after each field.
 
-    The code segment can define a variable called ``action``, which will be
-    returned to the client as the next action to execute:
+``code`` (code)
+  Specify a piece of Python code to execute when the action is called
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <record model="ir.actions.server" id="print_instance">
-            <field name="name">Res Partner Server Action</field>
-            <field name="model_id" ref="model_res_partner"/>
-            <field name="code">
-                if object.some_condition():
-                    action = {
-                        "type": "ir.actions.act_window",
-                        "view_mode": "form",
-                        "res_model": object._name,
-                        "res_id": object.id,
-                    }
-            </field>
-        </record>
+      <record model="ir.actions.server" id="print_instance">
+          <field name="name">Res Partner Server Action</field>
+          <field name="model_id" ref="model_res_partner"/>
+          <field name="code">
+              raise Warning(record.name)
+          </field>
+      </record>
 
-    will ask the client to open a form for the record if it fulfills some
-    condition
+  .. note::
 
-This tends to be the only action type created from :ref:`data files
-<reference/data>`, other types aside from
-:ref:`reference/actions/server/multi` are simpler than Python code to define
-from the UI, but not from :ref:`data files <reference/data>`.
+      The code segment can define a variable called ``action``, which will be
+      returned to the client as the next action to execute:
 
-.. _reference/actions/server/object_create:
+      .. code-block:: xml
 
-``object_create``
------------------
+          <record model="ir.actions.server" id="print_instance">
+              <field name="name">Res Partner Server Action</field>
+              <field name="model_id" ref="model_res_partner"/>
+              <field name="code">
+                  if record.some_condition():
+                      action = {
+                          "type": "ir.actions.act_window",
+                          "view_mode": "form",
+                          "res_model": record._name,
+                          "res_id": record.id,
+                      }
+              </field>
+          </record>
 
-Creates a new record, from scratch (via :meth:`~odoo.models.Model.create`)
-or by copying an existing record (via :meth:`~odoo.models.Model.copy`)
+      will ask the client to open a form for the record if it fulfills some
+      condition
 
-``use_create``
-    the creation policy, one of:
+  ..  This tends to be the only action type created from :ref:`data files
+      <reference/data>`, other types aside from
+      :ref:`reference/actions/server/multi` are simpler than Python code to define
+      from the UI, but not from :ref:`data files <reference/data>`.
 
-    ``new``
-        creates a record in the model specified by ``model_id``
-    ``new_other``
-        creates a record in the model specified by ``crud_model_id``
-    ``copy_current``
-        copies the record on which the action was invoked
-    ``copy_other``
-        copies an other record, obtained via ``ref_object``
-``fields_lines``
+``crud_model_id`` (create)(required)
+    model in which to create a new record
+``link_field_id`` (create)
+    many2one to ``ir.model.fields``, specifies the current record's m2o field
+    on which the newly created record should be set (models should match)
+
+``fields_lines`` (create/write)
     fields to override when creating or copying the record.
     :class:`~odoo.fields.One2many` with the fields:
 
     ``col1``
-        ``ir.model.fields`` to set in the model implied by ``use_create``
+        ``ir.model.fields`` to set in the concerned model
+        (``crud_model_id`` for creates, ``model_id`` for updates)
     ``value``
         value for the field, interpreted via ``type``
-    ``type``
+    ``type`` (value|reference|equation)
         If ``value``, the ``value`` field is interpreted as a literal value
         (possibly converted), if ``equation`` the ``value`` field is
         interpreted as a Python expression and evaluated
-``crud_model_id``
-    model in which to create a new record, if ``use_create`` is set to
-    ``new_other``
-``ref_object``
-    :class:`~odoo.fields.Reference` to an arbitrary record to copy, used if
-    ``use_create`` is set to ``copy_other``
-``link_new_record``
-    boolean flag linking the newly created record to the current one via a
-    many2one field specified through ``link_field_id``, defaults to ``False``
-``link_field_id``
-    many2one to ``ir.model.fields``, specifies the current record's m2o field
-    on which the newly created record should be set (models should match)
 
-``object_write``
-----------------
-
-Similar to :ref:`reference/actions/server/object_create` but alters an
-existing records instead of creating one
-
-``use_write``
-    write policy, one of:
-
-    ``current``
-        write to the current record
-    ``other``
-        write to an other record selected via ``crud_model_id`` and
-        ``ref_object``
-    ``expression``
-        write to an other record whose model is selected via ``crud_model_id``
-        and whose id is selected by evaluating ``write_expression``
-``write_expression``
-    Python expression returning a record or an object id, used when
-    ``use_write`` is set to ``expression`` in order to decide which record
-    should be modified
-``fields_lines``
-    see :ref:`reference/actions/server/object_create`
-``crud_model_id``
-    see :ref:`reference/actions/server/object_create`
-``ref_object``
-    see :ref:`reference/actions/server/object_create`
-
-.. _reference/actions/server/multi:
-
-``multi``
----------
-
-Executes multiple actions one after the other. Actions to execute are defined
-via the ``child_ids`` m2m. If sub-actions themselves return actions, the last
-one will be returned to the client as the multi's own next action
-
-``client_action``
------------------
-
-Indirection for directly returning an other action defined using
-``action_id``. Simply returns that action to the client for execution.
+``child_ids`` (multi)
+    Specify the multiple sub-actions (``ir.actions.server``) to enact in state multi.
+    If sub-actions themselves return actions, the last
+    one will be returned to the client as the multi's own next action
 
 .. _reference/actions/server/context:
 
@@ -353,23 +298,12 @@ Evaluation context
 A number of keys are available in the evaluation context of or surrounding
 server actions:
 
-``model``
-    the model object linked to the action via ``model_id``
-``object``, ``obj``
-    only available if ``active_model`` and ``active_id`` are provided (via
-    context) otherwise ``None``. The actual record selected by ``active_id``
-``pool``
-    the current database registry
-``datetime``, ``dateutil``, ``time``
-    corresponding Python modules
-``cr``
-    the current cursor
-``user``
-    the current user record
-``context``
-    execution context
-``Warning``
-    constructor for the ``Warning`` exception
+* ``model`` model object linked to the action via ``model_id``
+* ``record``/``records`` record/recorset on which the action is triggered, can be void.
+* ``env`` Odoo Environment
+* ``datetime``, ``dateutil``, ``time``, ``timezone`` corresponding Python modules
+* ``log: log(message, level='info')`` logging function to record debug information in ir.logging table
+* ``Warning`` constructor for the ``Warning`` exception
 
 .. _reference/actions/report:
 
