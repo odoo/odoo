@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import hashlib
 import json
 
 from odoo import models
 from odoo.http import request
+from odoo.tools import ustr
+
+from odoo.addons.web.controllers.main import concat_xml, manifest_glob, module_boot
 
 import odoo
 
@@ -21,6 +24,19 @@ class Http(models.AbstractModel):
     def session_info(self):
         user = request.env.user
         version_info = odoo.service.common.exp_version()
+
+        user_context = request.session.get_context() if request.session.uid else {}
+
+        mods = ','.join(module_boot())
+        files = [f[0] for f in manifest_glob('qweb', addons=mods)]
+        _, qweb_checksum = concat_xml(files)
+
+        lang = user_context.get("lang")
+        translations_per_module, _ = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
+
+        menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.debug), default=ustr, sort_keys=True).encode()
+        translations_json_utf8 = json.dumps(translations_per_module,  sort_keys=True).encode()
+
         return {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
@@ -41,7 +57,11 @@ class Http(models.AbstractModel):
             "show_effect": True,
             "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
             "toggle_company": user.has_group('base.group_toggle_company'),
-
+            "cache_hashes": {
+                "load_menus": hashlib.sha1(menu_json_utf8).hexdigest(),
+                "qweb": qweb_checksum,
+                "translations": hashlib.sha1(translations_json_utf8).hexdigest(),
+            },
         }
 
     def get_currencies(self):
