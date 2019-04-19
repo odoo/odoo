@@ -492,12 +492,12 @@ class Warehouse(models.Model):
             else:
                 existing_rule.write({'active': True})
 
-    def _get_locations_values(self, vals):
+    def _get_locations_values(self, vals, code=False):
         """ Update the warehouse locations. """
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        code = vals.get('code') or self.code
+        code = vals.get('code') or code
         code = code.replace(' ', '').upper()
         sub_locations = {
             'lot_stock_id': {
@@ -539,8 +539,8 @@ class Warehouse(models.Model):
         In this case, this function will create missing locations in order to
         avoid mistakes during picking types and rules creation.
         """
-        sub_locations = self._get_locations_values(vals)
         for warehouse in self:
+            sub_locations = self._get_locations_values(vals, warehouse.code)
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
