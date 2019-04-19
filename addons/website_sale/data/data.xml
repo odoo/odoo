@@ -53,8 +53,9 @@
         </function>
 
         <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_key">create_customer</field>
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Customer</field>
+            <field name="website_form_label">Create a Customer</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>res.partner</value>
