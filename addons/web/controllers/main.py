@@ -613,6 +613,8 @@ class WebClient(http.Controller):
         """
         request.disable_db = False
 
+        if mods:
+            mods = mods.split(',')
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
