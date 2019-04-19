@@ -35,7 +35,7 @@ import unicodedata
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
-from odoo.modules import get_resource_path
+from odoo.modules import get_module_path, get_resource_path
 from odoo.tools import limited_image_resize, topological_sort, html_escape, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
@@ -1184,12 +1184,16 @@ class Binary(http.Controller):
 
         fonts = []
         if fontname:
-            font_path = get_resource_path('web', 'static/src/fonts/sign', fontname)
-            if not font_path:
-                return []
-            font_file = open(font_path, 'rb')
-            font = base64.b64encode(font_file.read())
-            fonts.append(font)
+            module_path = get_module_path('web')
+            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
+            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
+            if fonts_folder_path and module_resource_path:
+                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
+                module_resource_path = os.path.normpath(module_resource_path)
+                if module_resource_path.startswith(fonts_folder_path):
+                    with file_open(module_resource_path, 'rb') as font_file:
+                        font = base64.b64encode(font_file.read())
+                        fonts.append(font)
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
