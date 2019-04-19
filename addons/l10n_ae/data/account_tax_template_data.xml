@@ -5,17 +5,61 @@
         <field name="name">Tax 10%</field>
         <field name="amount">10</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="uae_account_3785"/>
-        <field name="refund_account_id" ref="uae_account_3785"/>
         <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+            }),
+        ]"/>
     </record>
     <record id="purchase_tax_template" model="account.tax.template">
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
         <field name="name">Purchase Tax 10%</field>
         <field name="amount">10</field>
         <field name="type_tax_use">purchase</field>
-        <field name="account_id" ref="uae_account_3726"/>
-        <field name="refund_account_id" ref="uae_account_3726"/>
         <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+            }),
+        ]"/>
     </record>
 </odoo>

@@ -8,11 +8,31 @@
         <field name="description">税收17％</field>
         <field name="amount">17</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_included_11" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -20,11 +40,31 @@
         <field name="description">税收11％</field>
         <field name="amount">11</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_included_6" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -32,11 +72,31 @@
         <field name="description">税收6％</field>
         <field name="amount">6</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_included_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -44,11 +104,31 @@
         <field name="description">税收3％</field>
         <field name="amount">3</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="1"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
 
     <!-- sales tax excluded -->
@@ -58,11 +138,31 @@
         <field name="description">税收17％</field>
         <field name="amount">17</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_excluded_11" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -70,11 +170,31 @@
         <field name="description">税收11％</field>
         <field name="amount">11</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_excluded_6" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -82,11 +202,31 @@
         <field name="description">税收6％</field>
         <field name="amount">6</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_sales_excluded_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -94,11 +234,31 @@
         <field name="description">税收3％</field>
         <field name="amount">3</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">sale</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
 
 
@@ -109,11 +269,31 @@
         <field name="description">税收17％</field>
         <field name="amount">17</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">purchase</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_purchase_excluded_11" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -121,11 +301,31 @@
         <field name="description">税收11％</field>
         <field name="amount">11</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">purchase</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_11"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_purchase_excluded_6" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -133,11 +333,31 @@
         <field name="description">税收6％</field>
         <field name="amount">6</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">purchase</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_6"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
     <record id="l10n_cn_small_business_purchase_excluded_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
@@ -145,10 +365,30 @@
         <field name="description">税收3％</field>
         <field name="amount">3</field>
         <field name="amount_type">percent</field>
-        <field name="refund_account_id" ref="l10n_cn_2221"/>
-        <field name="account_id" ref="l10n_cn_2221"/>
         <field name="type_tax_use">purchase</field>
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="l10n_cn.l10n_cn_tax_group_vat_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_cn_2221'),
+            }),
+        ]"/>
     </record>
 </odoo>

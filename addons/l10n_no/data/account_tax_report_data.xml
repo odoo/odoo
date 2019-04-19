@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tax_report_line_sum_avgiftsgrunnlag" model="account.tax.report.line">
+        <field name="name">Sum avgiftsgrunnlag</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_ikke_momspliktig_omsetning" model="account.tax.report.line">
+        <field name="name">Ikke momspliktig omsetning</field>
+        <field name="tag_name">Ikke momspliktig omsetning</field>
+        <field name="code">NOTAX_0100</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_avgiftsgrunnlag"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_utgaende_avgift_hoy_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for utgående avgift, høy sats</field>
+        <field name="tag_name">Grunnlag for utgående avgift, høy sats</field>
+        <field name="code">NOTAX_0101</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_avgiftsgrunnlag"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_utgaende_avgift_mellom_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for utgående avgift, mellom sats</field>
+        <field name="tag_name">Grunnlag for utgående avgift, mellom sats</field>
+        <field name="code">NOTAX_0102</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_avgiftsgrunnlag"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_utgaende_avgift_lav_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for utgående avgift, lav sats</field>
+        <field name="tag_name">Grunnlag for utgående avgift, lav sats</field>
+        <field name="code">NOTAX_0103</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_avgiftsgrunnlag"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_sum_innkjop" model="account.tax.report.line">
+        <field name="name">Sum innkjøp</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_inngaende_avgift_hoy_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for inngående avgift, høy sats</field>
+        <field name="tag_name">Grunnlag for inngående avgift, høy sats</field>
+        <field name="code">NOTAX_0104</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_innkjop"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_inngaende_avgift_mellom_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for inngående avgift, mellom sats</field>
+        <field name="tag_name">Grunnlag for inngående avgift, mellom sats</field>
+        <field name="code">NOTAX_0105</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_innkjop"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_grunnlag_for_inngaende_avgift_lav_sats" model="account.tax.report.line">
+        <field name="name">Grunnlag for inngående avgift, lav sats</field>
+        <field name="tag_name">Grunnlag for inngående avgift, lav sats</field>
+        <field name="code">NOTAX_0106</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_sum_innkjop"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_netto_beregnet_avgift" model="account.tax.report.line">
+        <field name="name">Netto beregnet avgift</field>
+        <field name="sequence" eval="3"/>
+        <field name="formula">- NOTAX_0201 - NOTAX_0202 - NOTAX_0203 + NOTAX_0204 + NOTAX_0205 + NOTAX_0206</field>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_inngaende_avgift_hoy_sats" model="account.tax.report.line">
+        <field name="name">Beregnet inngående avgift, høy sats</field>
+        <field name="tag_name">Beregnet inngående avgift, høy sats</field>
+        <field name="code">NOTAX_0201</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_inngaende_avgift_lav_sats" model="account.tax.report.line">
+        <field name="name">Beregnet inngående avgift, lav sats</field>
+        <field name="tag_name">Beregnet inngående avgift, lav sats</field>
+        <field name="code">NOTAX_0202</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_inngaende_avgift_mellom_sats" model="account.tax.report.line">
+        <field name="name">Beregnet inngående avgift, mellom sats</field>
+        <field name="tag_name">Beregnet inngående avgift, mellom sats</field>
+        <field name="code">NOTAX_0203</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_utgaende_avgift_hoy_sats" model="account.tax.report.line">
+        <field name="name">Beregnet utgående avgift, høy sats</field>
+        <field name="tag_name">Beregnet utgående avgift, høy sats</field>
+        <field name="code">NOTAX_0204</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_utgaende_avgift_lav_sats" model="account.tax.report.line">
+        <field name="name">Beregnet utgående avgift, lav sats</field>
+        <field name="tag_name">Beregnet utgående avgift, lav sats</field>
+        <field name="code">NOTAX_0205</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="account_tax_report_line_beregnet_utgaende_avgift_mellom_sats" model="account.tax.report.line">
+        <field name="name">Beregnet utgående avgift, mellom sats</field>
+        <field name="tag_name">Beregnet utgående avgift, mellom sats</field>
+        <field name="code">NOTAX_0206</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_netto_beregnet_avgift"/>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+</odoo>
