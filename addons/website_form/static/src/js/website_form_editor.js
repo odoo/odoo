@@ -333,6 +333,16 @@ odoo.define('website_form_editor', function (require) {
             this.website_form_model_modal('click', null, null);
         },
 
+        /**
+         * Hide change form parameters option for forms
+         * e.g. User should not be enable to change existing job application form to opportunity form in 'Apply job' page.
+         *
+         * @override
+         */
+        onFocus: function () {
+            this.$el.filter('[data-website_form_model_modal]').toggleClass('d-none', this.$target.attr('hide-change-model') !== undefined);
+        },
+
         init_form: function () {
             var self = this;
             var modelName = this.activeForm.model;
