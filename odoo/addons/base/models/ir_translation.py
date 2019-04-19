@@ -855,12 +855,10 @@ class IrTranslation(models.Model):
 
     @api.model
     def get_translations_for_webclient(self, mods, lang):
-        if mods is None:
+        if not mods:
             mods = [x['name'] for x in self.env['ir.module.module'].sudo().search_read(
                 [('state', '=', 'installed')], ['name'])]
-        else:
-            mods = mods.split(',')
-        if lang is None:
+        if not lang:
             lang = self._context["lang"]
         langs = self.env['res.lang'].sudo().search([("code", "=", lang)])
         lang_params = None

@@ -27,8 +27,8 @@ class Http(models.AbstractModel):
 
         user_context = request.session.get_context() if request.session.uid else {}
 
-        mods = ','.join(module_boot())
-        files = [f[0] for f in manifest_glob('qweb', addons=mods)]
+        mods = module_boot()
+        files = [f[0] for f in manifest_glob('qweb', addons=','.join(mods))]
         _, qweb_checksum = concat_xml(files)
 
         lang = user_context.get("lang")
