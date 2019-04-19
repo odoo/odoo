@@ -274,4 +274,5 @@ class BlogPost(models.Model):
         blog_post_cover_properties = json.loads(self.cover_properties)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_meta_description'] = self.subtitle
         return res

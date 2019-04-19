@@ -60,6 +60,7 @@ class ChannelUsersRelation(models.Model):
             result = super(ChannelUsersRelation, (self - to_complete))._write(values)
             completion_values = dict(values, completed=True)
             super(ChannelUsersRelation, to_complete)._write(completion_values)
+            to_complete._post_completion_hook()
         else:
             result = super(ChannelUsersRelation, self)._write(values)
 
@@ -69,6 +70,8 @@ class ChannelUsersRelation(models.Model):
                 users.add_karma(partner_karma[user.partner_id.id])
         return result
 
+    def _post_completion_hook(self):
+        pass
 
 class Channel(models.Model):
     """ A channel is a container of slides. """

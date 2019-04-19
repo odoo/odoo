@@ -24,7 +24,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             type="action"
-                            groups="hr.group_hr_manager">
+                            groups="hr_contract.group_hr_contract_manager">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
                     </xpath>
@@ -131,6 +131,7 @@
                                     </div>
                                     <field name="trial_date_end"/>
                                     <field name="resource_calendar_id"/>
+                                    <field name="hr_responsible_id"/>
                                 </group>
                             </group>
                             <group string="Notes">

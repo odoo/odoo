@@ -214,7 +214,7 @@ class ProductTemplate(models.Model):
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
 
-    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Images", copy=True)
+    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
     @api.multi
     def _has_no_variant_attributes(self):
@@ -376,6 +376,7 @@ class ProductTemplate(models.Model):
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        res['default_meta_description'] = self.description_sale
         return res
 
     @api.multi

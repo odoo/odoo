@@ -3,6 +3,7 @@
     <!-- Layout and common templates -->
     <template id="assets_backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_video_field_preview.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_backend.js"></script>
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_dashboard.scss"/>
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_backend.scss"/>
@@ -487,7 +488,8 @@
                                     </t>
                                     <t t-call="website_sale.product_price" />
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
+                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"/> Add to Cart</a>
+                                    <div id="product_option_block"/>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
@@ -593,6 +595,12 @@
             </div>
         </div>
       </xpath>
+    </template>
+
+    <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <a role="button" id="buy_now" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block" href="#"><i class="fa fa-bolt"/> Buy Now</a>
+        </xpath>
     </template>
 
     <template id="product_price">
@@ -1686,7 +1694,10 @@
                 <div class="carousel-inner h-100">
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
-                            <div t-field="product_image.image" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_be_zoomed and "image_original"}'/>
+                            <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
+                                <t t-raw="product_image.embed_code"/>
+                            </div>
+                            <div  t-else="" t-field="product_image.image" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_be_zoomed and "image_original"}'/>
                         </div>
                     </t>
                 </div>
@@ -1703,6 +1714,7 @@
                 <ol t-if="len(product_images) > 1" class="carousel-indicators d-inline-block position-static mx-auto my-0 p-1 text-left">
                     <t t-foreach="product_images" t-as="product_image"><li t-attf-class="d-inline-block m-1 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
                         <div t-field="product_image.image_small" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "alt-field": "name"}'/>
+                        <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
                     </li></t>
                 </ol>
             </div>

@@ -16,10 +16,10 @@
     </template>
 
     <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
-        <xpath expr="//a[@id='add_to_cart']" position="after">
+        <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active">
                 <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-lg mt8 o_add_compare_dyn" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-link mt16 o_add_compare_dyn" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span> Add to compare</button>
             </t>
         </xpath>
     </template>

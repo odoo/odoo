@@ -69,7 +69,7 @@ class Partner(models.Model):
 
         tracking = []
         for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
-            groups = tracking_value.groups
+            groups = tracking_value.field_groups
             if not groups or self.user_has_groups(groups):
                 tracking.append((tracking_value.field_desc,
                                 tracking_value.get_old_display_value()[0],

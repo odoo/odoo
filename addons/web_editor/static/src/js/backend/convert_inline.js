@@ -396,7 +396,7 @@ FieldHtml.include({
      * @override
      */
     commitChanges: function () {
-        if (this.nodeOptions['style-inline']) {
+        if (this.nodeOptions['style-inline'] && this.isRendered) {
             this._toInline();
         }
         return this._super();

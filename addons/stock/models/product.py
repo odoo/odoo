@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -230,8 +231,13 @@ class Product(models.Model):
             loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
             dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
+        usage = self._context.get('quantity_available_locations_domain')
+        if usage:
+            stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
+        else:
+            stock_loc_domain = domain + loc_domain
         return (
-            domain + loc_domain,
+            stock_loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
             domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
@@ -393,8 +399,8 @@ class Product(models.Model):
         self.ensure_one()
         self.env['stock.quant']._quant_tasks()
         action = self.env.ref('stock.product_open_quants').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {'search_default_internal_loc': 1}
+        location_domain = self._get_domain_locations()[0]
+        action['domain'] = expression.AND([[('product_id', '=', self.id)], location_domain])
         return action
 
     @api.model
@@ -619,8 +625,8 @@ class ProductTemplate(models.Model):
         self.env['stock.quant']._quant_tasks()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
-        action['domain'] = [('product_id', 'in', products.ids)]
-        action['context'] = {'search_default_internal_loc': 1}
+        location_domain = products._get_domain_locations()[0]
+        action['domain'] = expression.AND([[('product_id', 'in', products.ids)], location_domain])
         return action
 
     def action_view_related_putaway_rules(self):

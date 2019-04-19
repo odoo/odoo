@@ -41,8 +41,7 @@
         <field name="res_model">account.journal</field>
         <field name="view_mode">tree,form,kanban</field>
         <field name="search_view_id" ref="view_account_journal_search_inherit_point_of_sale"/>
-        <field name="domain">[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]</field>
-        <field name="context">{'search_default_available_in_pos': 1, 'default_type': 'cash'}</field>
+        <field name="context">{'search_default_available_in_pos': True, 'default_journal_user': True, 'default_type': 'cash'}</field>
     </record>
 
 

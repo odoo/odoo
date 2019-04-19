@@ -571,7 +571,7 @@
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
-                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item">Set Cover Image</a>
+                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
                                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>

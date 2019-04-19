@@ -10,10 +10,11 @@ class ResConfigSettings(models.TransientModel):
     inventory_availability = fields.Selection([
         ('never', 'Sell regardless of inventory'),
         ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
+        ('threshold', 'Show inventory when below the threshold and prevent sales if not enough stock'),
         ('custom', 'Show product-specific notifications'),
     ], string='Inventory Availability', default='never')
     available_threshold = fields.Float(string='Availability Threshold')
+    website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
 
     @api.multi
     def set_values(self):
@@ -29,3 +30,8 @@ class ResConfigSettings(models.TransientModel):
         res.update(inventory_availability=IrDefault.get('product.template', 'inventory_availability') or 'never',
                    available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0)
         return res
+
+    @api.onchange('website_company_id')
+    def _onchange_website_company_id(self):
+        if self.website_warehouse_id.company_id != self.website_company_id:
+            return {'value': {'website_warehouse_id': False}}
