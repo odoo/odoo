@@ -225,14 +225,7 @@
             </t>
 
             <script type="text/javascript">
-                odoo.session_info = {
-                    is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
-                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
-                    is_frontend: true,
-                    translationURL: '/website/translations',
-                    is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
-                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
-                };
+                odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_website_session_info())"/>;
                 <t groups="website.group_website_publisher">
                     odoo.session_info.website_id = <t t-esc="json.dumps(request.website.id)" />;
                     odoo.session_info.website_company_id = <t t-esc="json.dumps(request.website.company_id.id)" />;
