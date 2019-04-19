@@ -181,31 +181,31 @@ database
 
     .. code-block:: bash
 
-        odoo-bin --db-filter ^11.*$
+        $ odoo-bin --db-filter ^11.*$
 
     Restrict access to databases whose name starts with 11
 
     .. code-block:: bash
 
-        odoo-bin --database 11firstdatabase,11seconddatabase
+        $ odoo-bin --database 11firstdatabase,11seconddatabase
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase
 
     .. code-block:: bash
 
-        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+        $ odoo-bin --database 11firstdatabase,11seconddatabase -u base
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
-    and update base module on one database: 11firstdatabase
+    and update base module on one database: 11firstdatabase.
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
 
     .. code-block:: bash
 
-        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        $ odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
 
     Restrict access to databases whose name starts with 11,
-    and update base module on one database: 11firstdatabase
+    and update base module on one database: 11firstdatabase.
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
 
@@ -321,7 +321,7 @@ customize the amount of logging output
 
     logs to the ``ir.logging`` model (``ir_logging`` table) of the specified
     database. The database can be the name of a database in the "current"
-    PostgreSQL, or `a PostgreSQL URI`_ for e.g. log aggregation
+    PostgreSQL, or `a PostgreSQL URI`_ for e.g. log aggregation.
 
 .. option:: --log-handler <handler-spec>
 
@@ -428,20 +428,26 @@ starting requirements are.
 
 Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
+.. option:: name (required)
+
+    the name of the module to create, may munged in various manners to
+    generate programmatic names (e.g. module directory name, model names, …)
+
+.. option:: destination (default=current directory)
+
+    directory in which to create the new module, defaults to the current
+    directory
+
 .. option:: -t <template>
 
     a template directory, files are passed through jinja2_ then copied to
     the ``destination`` directory
 
-.. option:: name
+.. code-block:: console
 
-    the name of the module to create, may munged in various manners to
-    generate programmatic names (e.g. module directory name, model names, …)
+    $ odoo_bin scaffold my_module /addons/
 
-.. option:: destination
-
-    directory in which to create the new module, defaults to the current
-    directory
+This will create module *my_module* in directory */addons/*.
 
 .. _reference/cmdline/config:
 
