@@ -51,6 +51,7 @@ var ListView = BasicView.extend({
                 'hasSelectors' in params ? params.hasSelectors : true;
         this.rendererParams.editable = params.readonly ? false : this.arch.attrs.editable;
         this.rendererParams.selectedRecords = selectedRecords;
+        this.rendererParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.type = 'list';

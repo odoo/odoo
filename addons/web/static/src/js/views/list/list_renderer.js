@@ -67,6 +67,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
+        this.noLeaf = params.noLeaf;
     },
 
     //--------------------------------------------------------------------------
@@ -451,7 +452,7 @@ var ListRenderer = BasicRenderer.extend({
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
             .addClass('fa');
-        if (group.count > 0) {
+        if (group.count > 0 && !(this.noLeaf && _.isEmpty(group.groupedBy))) {
             $arrow.toggleClass('fa-caret-right', !group.isOpen)
                 .toggleClass('fa-caret-down', group.isOpen);
         }
@@ -804,8 +805,9 @@ var ListRenderer = BasicRenderer.extend({
      * @param {MouseEvent} event
      */
     _onToggleGroup: function (event) {
+        var self = this;
         var group = $(event.currentTarget).data('group');
-        if (group.count) {
+        if (group.count && !(self.noLeaf && _.isEmpty(group.groupedBy))) {
             this.trigger_up('toggle_group', { group: group });
         }
     },

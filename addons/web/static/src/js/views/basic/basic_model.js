@@ -4165,6 +4165,7 @@ var BasicModel = AbstractModel.extend({
                 list.count = 0;
                 var defs = [];
                 var openGroupCount = 0;
+                var noLeaf = list.context && !!list.context.group_by_no_leaf;
 
                 _.each(groups, function (group) {
                     var aggregateValues = {};
@@ -4184,7 +4185,7 @@ var BasicModel = AbstractModel.extend({
                     }
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
-                        count: group[rawGroupBy + '_count'],
+                        count: noLeaf ? group['__count'] : group[rawGroupBy + '_count'],
                         domain: group.__domain,
                         context: list.context,
                         fields: list.fields,

@@ -840,8 +840,8 @@ var MockServer = Class.extend({
 
             // compute count key to match dumb server logic...
             var countKey;
-            if (kwargs.lazy) {
-                countKey = groupBy[0].split(':')[0] + "_count";
+            if (kwargs.lazy && (groupBy.length >= 2 || !(kwargs.context || {}).group_by_no_leaf)) {
+                countKey = (groupBy.length >= 1 ? groupBy[0].split(':')[0] : "_") + "_count";
             } else {
                 countKey = "__count";
             }

@@ -2331,6 +2331,45 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('grouped list with group_by_no_leaf in context', function (assert) {
+        assert.expect(6);
+
+        this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1});
+        this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 2});
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="id"/><field name="int_field"/></tree>',
+            groupBy: ['m2o', 'foo'],
+            context: {'group_by_no_leaf': 1},
+        });
+
+        assert.strictEqual(list.$('tr.o_group_header').length, 2,
+            "should have 2 .o_group_header");
+        assert.strictEqual(list.$('th.o_group_name').length, 2,
+            "should have 2 .o_group_name");
+        assert.strictEqual(list.$('th.o_group_name > span.fa-caret-right').length, 2,
+            "should have caret on first level group");
+
+        // open the first group
+        list.$('.o_group_header:first').click();
+
+        var $openGroup = list.$('tbody:nth(1)');
+        assert.strictEqual($openGroup.find('tr').length, 3,
+            "should have 3 subgroups");
+        assert.strictEqual($openGroup.find('th.o_group_name > span.fa-caret-right').length, 0,
+            "should have no caret on last level group");
+
+        // try opening the first group on second (and last) level
+        $openGroup.find('.o_group_header:first').click();
+        assert.strictEqual(list.$('.o_data_row').length, 0,
+            "should have no data row displayed");
+
+        list.destroy();
+    });
+
     QUnit.test('edition: create new line, then discard', function (assert) {
         assert.expect(8);
 
