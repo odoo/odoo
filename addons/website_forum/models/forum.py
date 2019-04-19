@@ -174,7 +174,6 @@ class Post(models.Model):
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Number of Views', default=0)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -189,6 +188,10 @@ class Post(models.Model):
                                      "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
+
+    #views
+    view_ids = fields.One2many('forum.post.view', 'post_id', string='Views')
+    views = fields.Integer('Number of Views', compute='_get_views_count', store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -939,3 +942,11 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
+
+class PostViews(models.Model):
+    _name = "forum.post.view"
+    _description = "Post Views"
+
+    post_id = fields.Many2one('forum.post', string='Post')
+    views_count = fields.Integer(string='Number of Views')
+    view_time = fields.Date(string='Viewed on')
