@@ -52,6 +52,23 @@ odoo.define('website_form.animation', function (require) {
             datepickers_options.format = time.getLangDateFormat();
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
 
+            // Display form values from tag having data-for attribute
+            // It's necessary to handle field values generated on server-side
+            // Because, using t-att- inside form make it non-editable
+            var $values = $('[data-for=' + this.$target.attr('id') + ']');
+            if ($values.length) {
+                var values = JSON.parse($values.data('values').replace(/'/g, '"'));
+                var fields = _.pluck(this.$target.serializeArray(), 'name');
+                _.each(fields, function (field) {
+                    if (_.has(values, field)) {
+                        var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
+                        if (!$field.val()) {
+                            $field.val(values[field]);
+                        }
+                    }
+                });
+            }
+
             return this._super.apply(this, arguments);
         },
 
@@ -104,15 +121,6 @@ odoo.define('website_form.animation', function (require) {
                     }
                 }
             });
-
-            // Overwrite form_values array with values from the form tag
-            // Necessary to handle field values generated server-side, since
-            // using t-att- inside a snippet makes it non-editable !
-            for (var key in this.$target.data()) {
-                if (_.str.startsWith(key, 'form_field_')){
-                    form_values[key.replace('form_field_', '')] = this.$target.data(key);
-                }
-            }
 
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
