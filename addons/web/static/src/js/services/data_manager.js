@@ -4,6 +4,7 @@ odoo.define('web.DataManager', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var rpc = require('web.rpc');
+var session = require('web.session');
 var utils = require('web.utils');
 
 return core.Class.extend({
@@ -26,6 +27,7 @@ return core.Class.extend({
      * Suggestion: could be refined to invalidate some part of the cache
      */
     invalidate: function () {
+        session.invalidateCacheKey('load_menus');
         this._init_cache();
     },
 
@@ -45,7 +47,7 @@ return core.Class.extend({
                 route: "/web/action/load",
                 params: {
                     action_id: action_id,
-                    additional_context : additional_context,
+                    additional_context: additional_context,
                 },
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
