@@ -79,4 +79,6 @@ class ProductProduct(models.Model):
             'tax_ids': line.get('tax_ids', False),
             'tax_line_id': line.get('tax_line_id', False),
             'analytic_tag_ids': line.get('analytic_tag_ids', False),
+            'tax_repartition_line_id': line.get('tax_repartition_line_id'),
+            'tag_ids': line.get('tag_ids'),
         }
