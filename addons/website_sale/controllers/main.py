@@ -536,6 +536,9 @@ class WebsiteSale(http.Controller):
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
 
+        if mode[0] == 'new':
+            new_values['company_id'] = request.website.company_id.id
+
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
