@@ -14,6 +14,7 @@
         'views/ir_model_views.xml',
         'views/res_config_view.xml',
         'views/snippets.xml',
+        'views/website_form_templates.xml',
     ],
     'installable': True,
     'auto_install': True,
