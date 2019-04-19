@@ -283,7 +283,7 @@ var KanbanModel = BasicModel.extend({
             args: [domain, vals],
             kwargs: {'record_ids': _.pluck(records, 'res_id'), 'related_model': relatedModelName},
             context: column.data.context,
-        }).done(function () {
+        }).then(function () {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
                 self.reload(parentID);

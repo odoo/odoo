@@ -429,8 +429,8 @@ var KanbanController = BasicController.extend({
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
             .onWriteByDomain(column, false, column.db_id, relatedModelName)
-            .done(function() {
-                self.reload();
+            .then(function() {
+                self.update({}, {reload: true});
             });
     },
     /**
@@ -447,8 +447,8 @@ var KanbanController = BasicController.extend({
         vals[groupedField] = event.data.move_to;
         this.model
             .onWriteByDomain(column, vals, column.db_id, relatedModelName)
-            .done(function() {
-                self.reload();
+            .then(function() {
+                self.update({}, {reload: true});
             });
     },
     /**
