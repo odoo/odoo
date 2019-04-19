@@ -19,6 +19,8 @@ Running the server
     Providing a comma-separated list restrict access to databases provided in
     list.
 
+    For advanced database options, take a look :ref:`below <reference/cmdline/server/database>`.
+
 .. option:: -i <modules>, --init <modules>
 
     comma-separated list of modules to install before running the server
@@ -32,82 +34,24 @@ Running the server
 .. option:: --addons-path <directories>
 
     comma-separated list of directories in which modules are stored. These
-    directories are scanned for modules (nb: when and why?)
+    directories are scanned for modules.
 
-.. option:: --workers <count>
-
-    if ``count`` is not 0 (the default), enables multiprocessing and sets up
-    the specified number of HTTP workers (sub-processes processing HTTP
-    and RPC requests).
-
-    .. note:: multiprocessing mode is only available on Unix-based systems
-
-    A number of options allow limiting and recycling workers:
-
-    .. option:: --limit-request <limit>
-
-        Number of requests a worker will process before being recycled and
-        restarted.
-
-        Defaults to 8196.
-
-    .. option:: --limit-memory-soft <limit>
-
-        Maximum allowed virtual memory per worker. If the limit is exceeded,
-        the worker is killed and recycled at the end of the current request.
-
-        Defaults to 2048MiB.
-
-    .. option:: --limit-memory-hard <limit>
-
-        Hard limit on virtual memory, any worker exceeding the limit will be
-        immediately killed without waiting for the end of the current request
-        processing.
-
-        Defaults to 2560MiB.
-
-    .. option:: --limit-time-cpu <limit>
-
-        Prevents the worker from using more than <limit> CPU seconds for each
-        request. If the limit is exceeded, the worker is killed.
-
-        Defaults to 60.
-
-    .. option:: --limit-time-real <limit>
-
-        Prevents the worker from taking longer than <limit> seconds to process
-        a request. If the limit is exceeded, the worker is killed.
-
-        Differs from :option:`--limit-time-cpu` in that this is a "wall time"
-        limit including e.g. SQL queries.
-
-        Defaults to 120.
-
-.. option:: --max-cron-threads <count>
-
-    number of workers dedicated to :ref:`cron <reference/actions/cron>` jobs. Defaults to 2.
-    The workers are threads in multi-threading mode and processes in multi-processing mode.
-
-    For multi-processing mode, this is in addition to the HTTP worker
-    processes.
+    .. (nb: when and why?)
 
 .. option:: -c <config>, --config <config>
 
-    provide an alternate configuration file
+    provide an alternate :ref:`configuration file <reference/cmdline/config>`
 
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
     (:file:`{$HOME}/.odoorc` by default, and can be overridden using
-    :option:`-c`)
+    :option:`-c`).
 
-.. option:: --proxy-mode
+.. option:: --without-demo
 
-    enables the use of ``X-Forwarded-*`` headers through `Werkzeug's proxy
-    support`_.
-
-    .. warning:: proxy mode *must not* be enabled outside of a reverse proxy
-                 scenario
+    disables demo data loading for modules installed
+    comma-separated, use ``all`` for all modules.
 
 .. option:: --test-enable
 
@@ -117,25 +61,9 @@ Running the server
 
     select the tests to run by using tags.
 
-.. option:: --dev <feature,feature,...,feature>
-
-    * ``all``: all the features below are activated
-
-    * ``xml``: read template qweb from xml file directly instead of database.
-      Once a template has been modified in database, it will be not be read from
-      the xml file until the next update/init.
-
-    * ``reload``: restart server when python file are updated (may not be detected
-      depending on the text editor used)
-
-    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
-
-    * ``(i)p(u)db``: start the chosen python debugger in the code when an
-      unexpected error is raised before logging and returning the error.
-
 .. _reference/cmdline/server/database:
 
-database
+Database
 --------
 
 .. option:: -r <user>, --db_user <user>
@@ -231,6 +159,33 @@ database
     'verify-ca' or 'verify-full'
     Default value is 'prefer'
 
+.. _reference/cmdline/server/emails:
+
+Emails
+------
+
+.. option:: --email-from <address>
+
+    Email address used as <FROM> when Odoo needs to send mails
+
+.. option:: --smtp <server>
+
+    Address of the SMTP server to connect to in order to send mails
+
+.. option:: --smtp-port <port>
+
+.. option:: --smtp-ssl
+
+    If set, odoo should use SSL/STARTSSL SMTP connections
+
+.. option:: --smtp-user <name>
+
+    Username to connect to the SMTP server
+
+.. option:: --smtp-password <password>
+
+    Password to connect to the SMTP server
+
 .. _reference/cmdline/server/internationalisation:
 
 Internationalisation
@@ -269,9 +224,37 @@ of importation
 
     specify modules to export. Use in combination with --i18n-export
 
+.. _reference/cmdline/advanced:
 
-built-in HTTP
--------------
+Advanced Options
+----------------
+
+.. _reference/cmdline/dev:
+
+Developer features
+''''''''''''''''''
+
+.. option:: --dev <feature,feature,...,feature>
+
+    * ``all``: all the features below are activated
+
+    * ``xml``: read template qweb from xml file directly instead of database.
+      Once a template has been modified in database, it will be not be read from
+      the xml file until the next update/init.
+
+    * ``reload``: restart server when python file are updated (may not be detected
+      depending on the text editor used)
+
+    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+
+    * ``(i)p(u)db``: start the chosen python debugger in the code when an
+      unexpected error is raised before logging and returning the error.
+
+
+.. _reference/cmdline/server/http:
+
+HTTP
+''''
 
 .. option:: --no-http
 
@@ -295,13 +278,23 @@ built-in HTTP
     TCP port for long-polling connections in multiprocessing or gevent mode,
     defaults to 8072. Not used in default (threaded) mode.
 
-logging
--------
+.. option:: --proxy-mode
+
+    enables the use of ``X-Forwarded-*`` headers through `Werkzeug's proxy
+    support`_.
+
+    .. warning:: proxy mode *must not* be enabled outside of a reverse proxy
+                 scenario
+
+.. _reference/cmdline/server/logging:
+
+Logging
+'''''''
 
 By default, Odoo displays all logging of level_ ``info`` except for workflow
 logging (``warning`` only), and log output is sent to ``stdout``. Various
 options are available to redirect logging to other destinations and to
-customize the amount of logging output
+customize the amount of logging output.
 
 .. option:: --logfile <file>
 
@@ -388,31 +381,66 @@ customize the amount of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
-emails
-------
+.. _reference/cdmline/workers:
 
-.. option:: --email-from <address>
+Multiprocessing
+'''''''''''''''
 
-    Email address used as <FROM> when Odoo needs to send mails
+.. option:: --workers <count>
 
-.. option:: --smtp <server>
+    if ``count`` is not 0 (the default), enables multiprocessing and sets up
+    the specified number of HTTP workers (sub-processes processing HTTP
+    and RPC requests).
 
-    Address of the SMTP server to connect to in order to send mails
+    .. note:: multiprocessing mode is only available on Unix-based systems
 
-.. option:: --smtp-port <port>
+    A number of options allow limiting and recycling workers:
 
-.. option:: --smtp-ssl
+    .. option:: --limit-request <limit>
 
-    If set, odoo should use SSL/STARTSSL SMTP connections
+        Number of requests a worker will process before being recycled and
+        restarted.
 
-.. option:: --smtp-user <name>
+        Defaults to *8196*.
 
-    Username to connect to the SMTP server
+    .. option:: --limit-memory-soft <limit>
 
-.. option:: --smtp-password <password>
+        Maximum allowed virtual memory per worker. If the limit is exceeded,
+        the worker is killed and recycled at the end of the current request.
 
-    Password to connect to the SMTP server
+        Defaults to *2048MiB*.
 
+    .. option:: --limit-memory-hard <limit>
+
+        Hard limit on virtual memory, any worker exceeding the limit will be
+        immediately killed without waiting for the end of the current request
+        processing.
+
+        Defaults to *2560MiB*.
+
+    .. option:: --limit-time-cpu <limit>
+
+        Prevents the worker from using more than <limit> CPU seconds for each
+        request. If the limit is exceeded, the worker is killed.
+
+        Defaults to *60*.
+
+    .. option:: --limit-time-real <limit>
+
+        Prevents the worker from taking longer than <limit> seconds to process
+        a request. If the limit is exceeded, the worker is killed.
+
+        Differs from :option:`--limit-time-cpu` in that this is a "wall time"
+        limit including e.g. SQL queries.
+
+        Defaults to *120*.
+
+.. option:: --max-cron-threads <count>
+
+    number of workers dedicated to :ref:`cron <reference/actions/cron>` jobs. Defaults to *2*.
+    The workers are threads in multi-threading mode and processes in multi-processing mode.
+
+    For multi-processing mode, this is in addition to the HTTP worker processes.
 
 .. _reference/cmdline/scaffold:
 
@@ -448,6 +476,21 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
     $ odoo_bin scaffold my_module /addons/
 
 This will create module *my_module* in directory */addons/*.
+
+Shell
+=====
+
+Odoo command-line also allows to launch odoo as a python console environment.
+This enables direct interaction with the :ref:`orm <reference/orm>` and its functionalities.
+
+
+.. code-block:: console
+
+   $ odoo_bin shell
+
+.. option:: --shell-interface (ipython|ptpython|bpython|python)
+
+    Specify a preferred REPL to use in shell mode.
 
 .. _reference/cmdline/config:
 
