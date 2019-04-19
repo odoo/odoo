@@ -63,6 +63,34 @@ from odoo.service import security
 
 _logger = logging.getLogger(__name__)
 
+# handle colors
+stream_handlers = [h for h in logging.getLogger().handlers if isinstance(h, logging.StreamHandler)]
+logger_handler = next(iter(stream_handlers), None)
+
+def is_a_tty():
+    if os.name == 'posix' and\
+        isinstance(logger_handler, logging.StreamHandler) and\
+        hasattr(logger_handler.stream, 'fileno') and\
+        os.isatty(logger_handler.stream.fileno()):
+
+        return True
+    else:
+        return False
+
+def get_color_formater(escape_number):
+    '''
+    :param esace_number: string. The ANSI escape color code
+    '''
+    if is_a_tty():
+        return lambda string: '\033['+escape_number+'m' + str(string) + '\033[0m'
+    else:
+        return lambda string: str(string)
+
+blue = get_color_formater('34')
+green = get_color_formater('32')
+red = get_color_formater('31')
+
+
 # The odoo library is supposed already configured.
 ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
@@ -306,7 +334,18 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         '''
 
         def _compare_candidate(record, candidate):
-            ''' Return True if the candidate matches the given record '''
+            '''
+            Compare all the values in `candidate` with a record.
+
+            :param record:      record being compared
+            :param candidate:   dict of values to compare
+            :return:            a list of triplets representing the different values.
+                Triplet format: (field_name, record_value, candidate_value)
+
+                If this list is empty, it means that there is no difference between
+                `candidate` and `record`.
+            '''
+            different_values = []
             for field_name in candidate.keys():
                 record_value = record[field_name]
                 candidate_value = candidate[field_name]
@@ -317,38 +356,67 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     record_currency = record[currency_field_name]
                     if record_currency.compare_amounts(candidate_value, record_value)\
                             if record_currency else candidate_value != record_value:
-                        return False
+                        different_values.append((field_name, record_value, candidate_value))
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
                     if set(record_value.ids) != set(candidate_value):
-                        return False
+                        different_values.append((field_name, record_value.ids, candidate_value))
                 elif field_type == 'many2one':
                     # Compare many2one relational fields.
                     # Every falsy value is allowed to compare with an empty record.
                     if (record_value or candidate_value) and record_value.id != candidate_value:
-                        return False
+                        different_values.append((field_name, record_value.id, candidate_value))
                 elif (candidate_value or record_value) and record_value != candidate_value:
                     # Compare others fields if not both interpreted as falsy values.
-                    return False
-            return True
+                    different_values.append((field_name, record_value, candidate_value))
+            return different_values
 
-        def _format_message(records, expected_values):
-            ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = records.read(list(expected_values[0].keys()), load=False)
-            msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
-            msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
-            return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
 
-        # if the length or both things to compare is different, we can already tell they're not equal
-        if len(records) != len(expected_values):
-            msg = 'Wrong number of records to compare: %d != %d.\n\n' % (len(records), len(expected_values))
-            self.fail(msg + _format_message(records, expected_values))
-
+        error_msg = ""
+        errors = {}
         for index, record in enumerate(records):
-            if not _compare_candidate(record, expected_values[index]):
-                msg = 'Record doesn\'t match expected values at index %d.\n\n' % index
-                self.fail(msg + _format_message(records, expected_values))
+            if len(expected_values) - 1 < index:
+                break
+            different_values = _compare_candidate(record, expected_values[index])
+            for values in different_values:
+                errors[(index, values[0])] = (values[1], values[2])
+
+        # fail the lists and the errors if there is at least one error
+        len_records = len(records)
+        len_expected_values = len(expected_values)
+        if len(errors) > 0 or len_records != len_expected_values:
+            all_msg = 'The records and expected_values does not match.\n'
+            all_msg +='The differents keys are:\n'
+            dict_keys = list(expected_values[0].keys() if len(expected_values)>0 else [])
+            all_records_values = records.read(dict_keys, load=False)
+            for index, record in enumerate(all_records_values):
+                all_msg += "\n" + green("records[%s]" % index) + "\n"
+                all_msg += "    'id': %s\n" % record['id']
+                for key in dict_keys:
+                    different_value = errors.get((index, key))
+                    if different_value:
+                        all_msg += "    '%s': %s (!= %s)\n" %\
+                                    (blue(key), green(record[key]), red(different_value[1]))
+                        error_msg += "index %s, key '%s': %s != %s\n" %\
+                                    (index, blue(key), green(record[key]), red(different_value[1]))
+                    else:
+                        all_msg += "    '%s': %s\n" % (key, record[key])
+            for index, value in enumerate(expected_values):
+                all_msg += "\n" + red("expected_values[%s]" % index) + "\n"
+                for key in expected_values[index].keys():
+                    different_value = errors.get((index, key))
+                    if different_value:
+                        all_msg += "    '%s': %s (!= %s)\n" % (blue(key), red(value[key]), green(different_value[0]))
+                    else:
+                        all_msg += "    '%s': %s\n" % (key, value[key])
+            all_msg += "\n\nIn summary, the following keys are differents:\n" + error_msg
+            if len_records != len_expected_values:
+                all_msg += '\nAlso, the lists are not the same length\n'
+                all_msg += green('len(record)=%d' % len_records) + "\n"
+                all_msg += red('len(expected_values)=%d' % len_expected_values) + "\n"
+
+            self.fail(all_msg)
 
     def shortDescription(self):
         doc = self._testMethodDoc
