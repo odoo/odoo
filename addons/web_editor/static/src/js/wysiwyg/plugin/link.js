@@ -358,12 +358,12 @@ var LinkPopover = Plugins.linkPopover.extend({
 
 
         var $target = $(anchor);
-        if (!$target.data('show_tooltip')) {
+        if (!$target.data('show_tooltip') && this.context.options.tooltip) {
             $target.data('show_tooltip', true);
             setTimeout(function () {
                 $target.tooltip({
                     title: _t('Double-click to edit'),
-                    trigger: 'manuel',
+                    trigger: 'manual',
                     container: this.document.body,
                     placement: 'top'
                 }).tooltip('show');
