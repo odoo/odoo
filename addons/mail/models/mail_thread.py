@@ -675,8 +675,7 @@ class MailThread(models.AbstractModel):
     @api.model
     def message_route_verify(self, message, message_dict, route,
                              update_author=True, assert_model=True,
-                             create_fallback=True, allow_private=False,
-                             drop_alias=False):
+                             create_fallback=True, drop_alias=False):
         """ Verify route validity. Check and rules:
             1 - if thread_id -> check that document effectively exists; otherwise
                 fallback on a message_new by resetting thread_id
@@ -704,8 +703,6 @@ class MailThread(models.AbstractModel):
                                 record does not exists or does not support update
                                 either fallback on creating a new record in the
                                 same model or raise / warn
-        :param allow_private: allow void model / thread_id routes, aka private
-                              discussions
         """
 
         assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
@@ -724,25 +721,13 @@ class MailThread(models.AbstractModel):
 </div><blockquote>%s</blockquote>""" % (message.get('to'), message_dict.get('body'))
 
         # Wrong model
-        if model and model not in self.env:
+        if not model:
+            self._routing_warn(_('target model unspecified'), '', message_id, route, assert_model)
+            return ()
+        elif model not in self.env:
             self._routing_warn(_('unknown target model %s') % model, '', message_id, route, assert_model)
             return ()
-
-        # Private message
-        if not model:
-            # should not contain any thread_id
-            if thread_id:
-                self._routing_warn(_('posting a message without model should be with a null res_id (private message), received %s') % thread_id, _('resetting thread_id'), message_id, route, assert_model)
-                thread_id = 0
-            # should have a parent_id (only answers)
-            if not message_dict.get('parent_id'):
-                self._routing_warn(_('posting a message without model should be with a parent_id (private message)'), _('skipping'), message_id, route, assert_model)
-                return False
-
-        if model and thread_id:
-            record_set = self.env[model].browse(thread_id)
-        elif model:
-            record_set = self.env[model]
+        record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
@@ -778,7 +763,7 @@ class MailThread(models.AbstractModel):
                 obj = record_set[0]
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            elif model:
+            else:
                 obj = self.env[model]
             if hasattr(obj, '_alias_check_contact'):
                 check_result = obj._alias_check_contact(message, message_dict, alias)
@@ -788,9 +773,6 @@ class MailThread(models.AbstractModel):
                 self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
                 self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
                 return False
-
-        if not model and not thread_id and not alias and not allow_private:
-            return False
 
         return (model, thread_id, route[2], route[3], None if drop_alias else route[4])
 
@@ -937,14 +919,13 @@ class MailThread(models.AbstractModel):
 
         if is_a_reply:
             model, thread_id = mail_messages.model, mail_messages.res_id
-            if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
+            dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
             route = self.message_route_verify(
                 message, message_dict,
                 (model, thread_id, custom_values, self._uid, dest_aliases),
-                update_author=True, assert_model=reply_private, create_fallback=True,
-                allow_private=reply_private, drop_alias=True)
+                update_author=True, assert_model=False, create_fallback=True,
+                drop_alias=True)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
@@ -1020,31 +1001,26 @@ class MailThread(models.AbstractModel):
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
             subtype_id = False
-            if model:
-                Model = self.env[model]
-                if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):
-                    raise ValueError(
-                        "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" %
-                        (message_dict['message_id'], model)
-                    )
+            Model = self.env[model]
+            if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):
+                raise ValueError(
+                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" %
+                    (message_dict['message_id'], model)
+                )
 
-                # disabled subscriptions during message_new/update to avoid having the system user running the
-                # email gateway become a follower of all inbound messages
-                MessageModel = Model.with_user(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
-                if thread_id and hasattr(MessageModel, 'message_update'):
-                    thread = MessageModel.browse(thread_id)
-                    thread.message_update(message_dict)
-                else:
-                    # if a new thread is created, parent is irrelevant
-                    message_dict.pop('parent_id', None)
-                    thread = MessageModel.message_new(message_dict, custom_values)
-                    thread_id = thread.id
-                    subtype = thread._creation_subtype()
-                    subtype_id = subtype.id if subtype else False
+            # disabled subscriptions during message_new/update to avoid having the system user running the
+            # email gateway become a follower of all inbound messages
+            MessageModel = Model.with_user(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
+            if thread_id and hasattr(MessageModel, 'message_update'):
+                thread = MessageModel.browse(thread_id)
+                thread.message_update(message_dict)
             else:
-                if thread_id:
-                    raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
-                thread = self.env['mail.thread']
+                # if a new thread is created, parent is irrelevant
+                message_dict.pop('parent_id', None)
+                thread = MessageModel.message_new(message_dict, custom_values)
+                thread_id = thread.id
+                subtype = thread._creation_subtype()
+                subtype_id = subtype.id if subtype else False
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
@@ -1084,11 +1060,6 @@ class MailThread(models.AbstractModel):
             Once the target model is known, its ``message_new`` method
             is called with the new message (if the thread record did not exist)
             or its ``message_update`` method (if it did).
-
-            There is a special case where the target model is False: a reply
-            to a private message. In this case, we skip the message_new /
-            message_update step, to just post a new message using mail_thread
-            message_post.
 
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
@@ -1667,8 +1638,7 @@ class MailThread(models.AbstractModel):
             :param str subject: subject of the message
             :param str message_type: see mail_message.message_type field. Can be anything but 
                 user_notification, reserved for message_notify
-            :param int parent_id: handle reply to a previous message by adding the
-                parent partners to the message in case of private discussion
+            :param int parent_id: handle thread formation
             :param int subtype_id: subtype_id of the message, mainly use fore
                 followers mechanism
             :param int subtype: xmlid that will be used to compute subtype_id
@@ -1706,7 +1676,7 @@ class MailThread(models.AbstractModel):
         if any(not isinstance(pc_id, int) for pc_id in partner_ids | channel_ids):
             raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
-        # Find the message's author, because we need it for private discussion
+        # Find the message's author
         if author_id is None:  # keep False values
             author_id = self.env.user.partner_id.id
         if not email_from:
@@ -1864,13 +1834,6 @@ class MailThread(models.AbstractModel):
         email_from = author.email_formatted
 
         partner_ids = partner_ids or set()
-        if parent_id:  # looks like no test case are going throug this condition. Linked to private discussion. This may be removed soon.
-            parent_message = self.env['mail.message'].browse(parent_id)
-            private_followers = set([partner.id for partner in parent_message.partner_ids])
-            if parent_message.author_id:
-                private_followers.add(parent_message.author.id)
-            private_followers -= set([author.id])
-            partner_ids |= private_followers
 
         if not partner_ids:
             _logger.warning('Message notify called without recipient_ids, skipping')
