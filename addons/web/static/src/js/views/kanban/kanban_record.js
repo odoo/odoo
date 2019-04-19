@@ -8,6 +8,7 @@ odoo.define('web.KanbanRecord', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
+var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -369,6 +370,105 @@ var KanbanRecord = Widget.extend({
         return Promise.all(this.defs);
     },
     /**
+     * Sets cover image on a kanban card through an attachment dialog.
+     *
+     * @private
+     * @param {string} fieldName field used to set cover image
+     */
+    _setCoverImage: function (fieldName) {
+        var self = this;
+        this._rpc({
+            model: 'ir.attachment',
+            method: 'search_read',
+            domain: [
+                ['res_model', '=', this.modelName],
+                ['res_id', '=', this.id],
+                ['mimetype', 'ilike', 'image']
+            ],
+            fields: ['id', 'name'],
+        }).then(function (attachmentIds) {
+            self.imageUploadID = _.uniqueId('o_cover_image_upload');
+            self.image_only = true;  // prevent uploading of other file types
+            var coverId = self.record[fieldName] && self.record[fieldName].raw_value;
+            var $content = $(QWeb.render('KanbanView.SetCoverModal', {
+                coverId: coverId,
+                attachmentIds: attachmentIds,
+                widget: self,
+            }));
+            var $imgs = $content.find('.o_kanban_cover_image');
+            var dialog = new Dialog(self, {
+                title: _t("Set a Cover Image"),
+                $content: $content,
+                buttons: [{
+                    text: _t("Select"),
+                    classes: attachmentIds.length ? 'btn-primary' : 'd-none',
+                    close: true,
+                    disabled: !coverId,
+                    click: function () {
+                        var $img = $imgs.filter('.o_selected').find('img');
+                        var data = {};
+                        data[fieldName] = {
+                            id: $img.data('id'),
+                            display_name: $img.data('name')
+                        };
+                        self.trigger_up('kanban_record_update', data);
+                    },
+                }, {
+                    text: _t('Upload and Set'),
+                    classes: attachmentIds.length ? '' : 'btn-primary',
+                    close: false,
+                    click: function () {
+                        $content.find('input.o_input_file').click();
+                    },
+                }, {
+                    text: _t("Remove Cover Image"),
+                    classes: coverId ? '' : 'd-none',
+                    close: true,
+                    click: function () {
+                        var data = {};
+                        data[fieldName] = false;
+                        self.trigger_up('kanban_record_update', data);
+                    },
+                }, {
+                    text: _t("Discard"),
+                    close: true,
+                }],
+            });
+            dialog.opened().then(function () {
+                var $selectBtn = dialog.$footer.find('.btn-primary');
+                $content.on('click', '.o_kanban_cover_image', function (ev) {
+                    $imgs.not(ev.currentTarget).removeClass('o_selected');
+                    $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
+                });
+
+                $content.on('dblclick', '.o_kanban_cover_image', function (ev) {
+                    var $img  = $(ev.currentTarget).find('img');
+                    var data = {};
+                    data[fieldName] = {
+                        id: $img.data('id'),
+                        display_name: $img.data('name')
+                    };
+                    self.trigger_up('kanban_record_update', data);
+                    dialog.close();
+                });
+                $content.on('change', 'input.o_input_file', function () {
+                    $content.find('form.o_form_binary_form').submit();
+                });
+                $(window).on(self.imageUploadID, function () {
+                    var images = Array.prototype.slice.call(arguments, 1);
+                    var data = {};
+                    data[fieldName] = {
+                        id: images[0].id,
+                        display_name: images[0].filename
+                    };
+                    self.trigger_up('kanban_record_update', data);
+                    dialog.close();
+                });
+            });
+            dialog.open();
+        });
+    },
+    /**
      * Sets particular classnames on a field $el according to the
      * field's attrs (display or bold attributes)
      *
@@ -575,6 +675,17 @@ var KanbanRecord = Widget.extend({
                     attrs: $action.data(),
                     record: this.state,
                 });
+                break;
+            case 'set_cover':
+                var fieldName = $action.data('field');
+                if (this.fields[fieldName].type === 'many2one' &&
+                    this.fields[fieldName].relation === 'ir.attachment' &&
+                    this.fieldsInfo[fieldName].widget === 'attachment_image') {
+                    this._setCoverImage(fieldName);
+                } else {
+                    var warning = _.str.sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
+                    this.do_warn(warning);
+                }
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
