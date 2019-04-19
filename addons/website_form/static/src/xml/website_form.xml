@@ -22,4 +22,55 @@
         </span>
     </t>
 
+    <t t-name="website_form.default_contactus_form">
+        <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="Name">Your Name</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
+            </div>
+        </div>
+        <div class="form-group row form-field o_website_form_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="Phone">Phone Number</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <input type="text" class="form-control o_website_form_input" name="Phone"/>
+            </div>
+        </div>
+        <div class="form-group row form-field o_website_form_required_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="email_from">Email</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
+            </div>
+        </div>
+        <div class="form-group row form-field o_website_form_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="Partner Name">Your Company</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
+            </div>
+        </div>
+        <div class="form-group row form-field o_website_form_required_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="subject">Subject</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
+            </div>
+        </div>
+        <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" for="Description">Your Question</label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
+            </div>
+        </div>
+    </t>
+
 </templates>
