@@ -164,6 +164,8 @@ class IrMailServer(models.Model):
                 if not email_from:
                     raise UserError(_('Please configure an email on the current user to simulate '
                                       'sending an email message via this outgoing server'))
+                # First send EHLO, because we don't use sendmail() which calls this method implicitly
+                smtp.ehlo()
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
