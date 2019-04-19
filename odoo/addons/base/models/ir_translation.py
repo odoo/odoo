@@ -135,6 +135,21 @@ class IrTranslationImport(object):
         count = 0
         # Step 2: insert new or upsert non-noupdate translations
         if self._overwrite:
+            # After external id resolution, remove duplicated entries
+            cr.execute("""DELETE FROM %s
+                          WHERE id IN (
+                            SELECT id FROM (
+                                SELECT id, ROW_NUMBER() OVER (
+                                    PARTITION BY type, lang, name, res_id
+                                    ORDER BY id
+                                ) as rnum
+                                FROM %s
+                                WHERE type in ('model', 'selection')
+                            ) t
+                            WHERE t.rnum > 1
+                          )
+                """ % (self._table, self._table))
+
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
                            FROM %s
