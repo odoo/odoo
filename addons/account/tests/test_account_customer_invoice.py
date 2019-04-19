@@ -166,7 +166,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             invoice_line_ids=invoice_line_data
         ))
 
-        self.assertEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
+        self.assertAlmostEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
 
     def test_customer_invoice_tax_refund(self):
         company = self.env.user.company_id
@@ -193,8 +193,32 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             'amount': 15.0,
             'amount_type': 'percent',
             'type_tax_use': 'sale',
-            'account_id': tax_account.id,
-            'refund_account_id': tax_refund_account.id
+            'invoice_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': tax_account.id,
+                    }),
+
+                ],
+            'refund_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': tax_refund_account.id,
+                    }),
+
+                ],
         })
 
         invoice_line_data = [

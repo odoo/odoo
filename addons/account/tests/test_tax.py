@@ -79,10 +79,32 @@ class TestTax(AccountTestUsers):
         self.tax_with_account = self.tax_model.create({
             'name': "Tax with account",
             'amount_type': 'fixed',
-            'account_id': some_account.id,
-            'refund_account_id': some_account.id,
             'amount': 0,
             'sequence': 8,
+            'invoice_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': some_account.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': some_account.id,
+                }),
+            ],
         })
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
