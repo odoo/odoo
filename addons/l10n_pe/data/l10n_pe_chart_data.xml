@@ -1,31 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- Account Types -->
-    <record id="account_account_type_EGP_NA_080" model="account.account.type"><field name="name">(+/-) Variación de Envases y Embalajes</field></record>
-    <record id="account_account_type_EGP_NA_050" model="account.account.type"><field name="name">Compras de Envases y Emabalajes</field></record>
-    <record id="account_account_type_BG_ACN_70" model="account.account.type"><field name="name">Impuesto a la Renta y Participaciones Diferidos Activo</field></record>
-    <record id="account_account_type_EGP_NA_020" model="account.account.type"><field name="name">(+/-) Variación de Mercaderías</field></record>
-    <record id="account_account_type_EGP_NA_060" model="account.account.type"><field name="name">(+/-) Variación de Materias Primas</field></record>
-    <record id="account_account_type_BG_PTN_70" model="account.account.type"><field name="name">Resultados Acumulados</field></record>
-    <record id="account_account_type_EGP_FU_150" model="account.account.type"><field name="name">Interés Minoritario</field></record>
-    <record id="account_account_type_ORD" model="account.account.type"><field name="name">Cuentas de Orden</field></record>
-    <record id="account_account_type_EGP_NA_090" model="account.account.type"><field name="name">Gastos por Servicios Prestados por Terceros</field></record>
-    <record id="account_account_type_EGP_NA_040" model="account.account.type"><field name="name">Compras de Materiales Auxiliares, Suministros y Repuestos</field></record>
-    <record id="account_account_type_EGP_NA_070" model="account.account.type"><field name="name">(+/-)Variación de Materiales Auxiliares, Suministros y Repuestos</field></record>
-    <record id="account_account_type_EGP_NA_130" model="account.account.type"><field name="name">Pérdida por Medición de Activos No Financieros a Valor Razonable</field></record>
-    <record id="account_account_type_EGP_NA_100" model="account.account.type"><field name="name">Gastos de Personal, Directores y Gerentes</field></record>
-    <record id="account_account_type_EGP_NA_150" model="account.account.type"><field name="name">Gastos Financieros por Naturaleza</field></record>
-    <record id="account_account_type_EGP_NA_110" model="account.account.type"><field name="name">Gastos por Tributos</field></record>
-    <record id="account_account_type_EGP_NA_140" model="account.account.type"><field name="name">Valuación y Deterioro de Activos y Provisiones</field></record>
-
+<odoo noupdate="1">
     <!--Account Chart Templaes-->
     <record id="pe_chart_template" model="account.chart.template">
-        <field name="name">Peru - Plan de Cuentas 2011</field>
-        <field name="bank_account_code_prefix">104</field>
-        <field name="cash_account_code_prefix">101</field>
-        <field name="transfer_account_code_prefix">103000</field>
-        <field name="code_digits">6</field>
+        <field name="name">Peru - PCGE</field>
+        <field name="bank_account_code_prefix">10410</field>
+        <field name="cash_account_code_prefix">10100</field>
+        <field name="transfer_account_code_prefix">10300</field>
+        <field name="code_digits">7</field>
         <field name="currency_id" ref="base.PEN"/>
     </record>
-
 </odoo>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
     <record id="pe_chart_template" model="account.chart.template">
-        <field name="property_account_receivable_id" ref="l10n_pe.121100"/>
-        <field name="property_account_payable_id" ref="l10n_pe.421100"/>
-        <field name="property_account_expense_categ_id" ref="l10n_pe.6011_01"/>
-        <field name="property_account_income_categ_id" ref="l10n_pe.70111_01"/>
-        <field name="income_currency_exchange_account_id" ref="l10n_pe.676000"/>
-        <field name="expense_currency_exchange_account_id" ref="l10n_pe.676000"/>
+        <field name="property_account_receivable_id" ref="chart12131"/>
+        <field name="property_account_payable_id" ref="chart42121"/>
+        <field name="property_account_expense_categ_id" ref="chart63291"/>
+        <field name="property_account_expense_id" ref="chart60111"/>
+        <field name="property_account_income_categ_id" ref="chart701111"/>
+        <field name="property_stock_account_input_categ_id" ref="chart61111"/>
+        <field name="property_stock_account_output_categ_id" ref="chart691111"/>
+        <field name="property_stock_valuation_account_id" ref="chart201111"/>
+        <field name="income_currency_exchange_account_id" ref="chart6761"/>
+        <field name="expense_currency_exchange_account_id" ref="chart7761"/>
     </record>
 </odoo>
