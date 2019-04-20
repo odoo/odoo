@@ -28,17 +28,17 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr "# Fatturati"
+msgstr "Totali con fattura"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
 msgid "# Paid"
-msgstr "# Pagati"
+msgstr "Totali con pagamento"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr "# In attesa"
+msgstr "Totali in attesa"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -46,11 +46,13 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> From: </strong>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Periodo\"/><strong> Da: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Prezzo\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -70,17 +72,17 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr "Riga Contabilità Fattura"
+msgstr "Riga contabile fattura"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Add a description..."
-msgstr "Aggiungi una descrizione..."
+msgstr "Aggiungere una descrizione..."
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid "Add a new member"
-msgstr ""
+msgstr "Aggiungi un nuovo socio"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -237,7 +239,7 @@ msgstr "Nome visualizzato"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr "Importo guadagnato"
+msgstr "Importo ottenuto"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
@@ -526,7 +528,7 @@ msgstr "Prodotti iscrizione"
 #: model:ir.cron,cron_name:membership.ir_cron_update_membership
 #: model:ir.cron,name:membership.ir_cron_update_membership
 msgid "Membership: update memberships"
-msgstr "Iscrizione: aggiorna iscrizione"
+msgstr "Iscrizione: aggiorna iscrizioni"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -556,8 +558,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
-"Odoo consente di tenere traccia delle attività relative a un socio: \n"
-"                 Stato corrente dell'iscrizione, discussioni, cronologia delle iscrizioni ecc."
+"Odoo consente di tenere traccia facilmente delle attività di un socio: \n"
+"                 stato corrente dell'iscrizione, discussioni, cronologia delle iscrizioni ecc."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -638,7 +640,7 @@ msgstr "Data inizio"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
-msgstr ""
+msgstr "Data di partenza dell'iscrizione"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form

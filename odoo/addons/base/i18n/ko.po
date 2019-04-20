@@ -321,7 +321,7 @@ msgstr ""
 "수익 인식\n"
 "====================\n"
 "제품 판매에 대한 수익 인식 관리.\n"
-"수익 인식 분할을 추적하고 해당 분개장을 작성합니다.\n"
+"수익 인식 분할을 추적하고 해당 분개를 작성합니다.\n"
 "\n"
 "    "
 
@@ -684,7 +684,7 @@ msgstr ""
 "\n"
 "        전자 회계보고서\n"
 "            - COA\n"
-"            - 시산표(試算表)\n"
+"            - 시산표\n"
 "        DIOT 보고서\n"
 "    "
 
@@ -1049,10 +1049,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    * 회계 계통도(會計系統圖),세금, 세법, 계정과목,\n"
-"      회계 양식, 분석 차트 및 분석 저널에 대한 다국어 지원.\n"
+"    * 계정과목 일람표, 세금, 세법, 분개장,\n"
+"      회계 양식, 계정과목 일람표 분석 및 분개장 분석에 대한 다국어 지원.\n"
 "    * 설치 마법사 변경\n"
-"        - COA, 세금, 세법 및 Fiscal Position(회계연도회계감사)에 대한\n"
+"        - COA, 세금, 세법 및 회계연도회계감사에 대한\n"
 "          대한 번역을 서식에서 대상 객체로 복사합니다.\n"
 "    "
 
@@ -1153,7 +1153,7 @@ msgstr ""
 "\n"
 "    인도의 PayuMoney 결제 매입사.\n"
 "\n"
-"    PayUmoney PG(payment gateway)는 INR 통화만 지원합니다.\n"
+"    PayUmoney PG는 INR 통화만 지원합니다.\n"
 "    "
 
 #. module: base
@@ -1166,7 +1166,7 @@ msgid ""
 msgstr ""
 "\n"
 "    외화를 사용할 때 세금을 결제일로 설정해야 한다면 현금 세금 기준으로\n"
-"    분개 항목을 정확하게 작성하십시오.\n"
+"    분개를 정확하게 작성하십시오.\n"
 "    "
 
 #. module: base
@@ -1323,7 +1323,7 @@ msgid ""
 "    file can then be uploaded to the bank.\n"
 msgstr ""
 "\n"
-"ABA(호주은행연합) 신용 이체\n"
+"ABA 신용 이체\n"
 "===================\n"
 "\n"
 "This module allows the generation of payment batches as ABA (Australian\n"
@@ -1433,9 +1433,9 @@ msgid ""
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
 "\n"
-"회계 접근 권한\n"
+"회계 사용 권한\n"
 "========================\n"
-"관리자는 분개 항목 및 계정과목 일람표와 같은 모든 회계 기능에 접근할 수 있습니다.\n"
+"관리자는 분개장 항목 및 계정과목 일람표와 같은 모든 회계 기능에 접근할 수 있습니다.\n"
 "\n"
 "데모 사용자는 사용자 권한만 가질 수 있는 반면, 관리자는 계정 응용 프로그램에 대한 관리자 권한과 사용자 권한을 가집니다.\n"
 
@@ -1762,7 +1762,7 @@ msgid ""
 msgstr ""
 "\n"
 "문서 모듈에 서명을 만드는 기능을 추가합니다.\n"
-"DRM에 있는 첫 번째 선택 영역의 요소가 서명 파일로 사용됩니다.\n"
+"(DRM에 있는) 첫 번째 선택 영역의 요소가 서명 파일로 사용됩니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1923,11 +1923,11 @@ msgstr ""
 "회계 기재항목 취소를 허용합니다.\n"
 "====================================\n"
 "\n"
-"이 모듈은 회계 분개에 체크 박스를 추가하여 분개 기입 항목 취소를 지원합니다.\n"
+"이 모듈은 회계 분개장에 체크 박스를 추가하여 분개  취소를 지원합니다.\n"
 "\n"
-"이 확인란은 디버그 모드일 때 회계 분개에서만 볼 수 있습니다.\n"
+"이 확인란은 디버그 모드일 때 회계 분개장에서만 볼 수 있습니다.\n"
 "\n"
-"이 확인란을 TRUE로 설정하면 사용자가 분개 기입 항목을 취소할 수 있습니다.\n"
+"이 확인란을 TRUE로 설정하면 사용자가 분개를 취소할 수 있습니다.\n"
 "\n"
 "확인한 후에는 취소한 회계 기재항목을 수정, 전달 또는 삭제할 수 있습니다.\n"
 "\n"
@@ -2106,7 +2106,7 @@ msgstr ""
 "자산 관리\n"
 "=================\n"
 "회사 또는 사람이 소유한 자산을 관리합니다.\n"
-"감가 상각을 추적하고 분개 기입 항목을 생성합니다.\n"
+"감가 상각을 추적하고 해당 분개를 생성합니다.\n"
 "\n"
 "    "
 
@@ -2210,8 +2210,8 @@ msgstr ""
 "바코드 스캐너 하드웨어 드라이버\n"
 "================================\n"
 "\n"
-"이 모듈을 사용하면 웹 클라이언트가 원격으로 설치된 바코드 스캐너에\n"
-"액세스할 수 있도록 하며, IoTBox에서 POS 모듈에 바코드 스캐너 지원을\n"
+"이 모듈을 사용하면 웹 클라이언트가 원격으로 설치된 바코드 스캐너를\n"
+"사용할 수 있도록 하며, IoTBox에서 POS 모듈에 바코드 스캐너 지원을\n"
 "제공하는 데 사용됩니다. \n"
 "\n"
 
@@ -3746,8 +3746,8 @@ msgstr ""
 "iotbox가 무엇인지 설명하고 상태를 표시하며 \n"
 "설명서를 찾을 수 있는 간단한 홈페이지를 표시합니다.\n"
 "\n"
-"이 모듈을 활성화하면 더 이상 일반 Odoo 인터페이스에 \n"
-"액세스할 수 없습니다.\n"
+"이 모듈을 활성화하면 더 이상 일반 Odoo 인터페이스를 \n"
+"사용할 수 없습니다.\n"
 "\n"
 
 #. module: base
@@ -4251,7 +4251,7 @@ msgstr ""
 "기초로 하는 것입니다.\n"
 "\n"
 "보고서에 추가할 제품을 선택하십시오.  당신은 보고서의 기간을 \n"
-"(일, 주, 월...) 선택할 수 있습니다.  또는 안전 재고,\n"
+"일, 주, 월...중에 선택할 수 있습니다.  또는 안전 재고,\n"
 "최소/최대 공급량을 정의하고 조달할 금액을 수동으로\n"
 "무시할 수도 있습니다.\n"
 
@@ -4934,7 +4934,7 @@ msgstr ""
 "\n"
 "주요 기능\n"
 "------------\n"
-"* 직원 평가 항목을 작성하는 기능.\n"
+"* 직원 평가 항목을 작성하는 기능().\n"
 "* 평가는 관리자가 정하거나 직원 양식에 정의된 일정에 따라 자동으로 수행될 수 있습니다.\n"
 "* 평가는 다양한 설문조사를 이용해 계획에 따라 수행됩니다. 각 설문 조사는 직원 계층에서 특정 레벨로 응답할 수 있습니다. 최종 검토 및 평가는 관리자가 수행합니다.\n"
 "* 관리자, 동료, 협업자 및 직원은 정기적인 평가를 위해 메일을 받게 됩니다.\n"
@@ -5016,7 +5016,7 @@ msgstr ""
 "제품 수명 관리\n"
 "=======================\n"
 "\n"
-"* 자재명세서(Bill Of Materials) 및 이동 관리\n"
+"* 자재명세서-Bill Of Materials 및 이동 관리\n"
 "* 주문 변경 유형에 따라 다른 승인 절차 가능\n"
 "\n"
 
@@ -5191,7 +5191,7 @@ msgstr ""
 "============================================\n"
 "\n"
 "POP/IMAP 계정의 매개 변수를 입력하면 해당 계정의 수신 메일이  \n"
-"자동으로 Odoo 시스템에 다운로드됩니다.\n"
+"자동으로 Odoo 시스템에 다운로드됩니다().\n"
 "암호화된 SSL/TLS 연결이 필요한 서버를 포함하여 \n"
 "모든 POP3/IMAP 호환 서버가 지원됩니다.\n"
 "\n"
@@ -6479,7 +6479,7 @@ msgstr ""
 "\n"
 "모듈에는 다음과 같은 기능이 추가됩니다 :\n"
 "\n"
-"    스토리지 : 기간 및 누적 총계(일별, 월별, 연간)를 계산하여 자동 판매 마감합니다.)\n"
+"    스토리지 : 기간 및 누적 총계(일별, 월별, 연간)를 계산하여 자동 판매 마감합니다.\n"
 "\n"
 
 #. module: base
@@ -6865,7 +6865,7 @@ msgid ""
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
 "\n"
-"이 모듈을 사용하면 홈페이지에서 접근할 수 있는 연락처 디렉토리를 빠르게 볼 수 있습니다.\n"
+"이 모듈을 사용하면 홈페이지에서 사용할 수 있는 연락처 디렉토리를 빠르게 볼 수 있습니다.\n"
 "공급업체, 고객 및 기타 연락처를 추적할 수 있습니다.\n"
 
 #. module: base
@@ -7402,7 +7402,7 @@ msgstr ""
 "* 보험계약이 만료일에 도달하면 알림\n"
 "* 모든 차량에 대한 서비스, 연료 기록, 주행 거리 값 추가\n"
 "* 차량 또는 서비스 유형과 관련된 모든 비용 표시\n"
-"* 비용 분석 그래프\n"
+"* 비용 분석 그래프()\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_link_tracker
@@ -7594,7 +7594,7 @@ msgstr "%A - 긴 요일 이름(월요일,화요일)."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr "%B - 긴 월 이름(한글은 관계 없임).\""
+msgstr "%B - 긴 월 이름 : 한글은 관계 없임.\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -8757,7 +8757,7 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
-"그룹은 시스템 내에서 특정 응용 프로그램과 과제의 접근과 권한을 사용자에게 부여하기 위하여 사용자들에게 할당된 기능적 영역의 집합입니다."
+"그룹은 시스템 내에서 특정 응용 프로그램과 과제의 사용과 권한을 사용자에게 부여하기 위하여 사용자들에게 할당된 기능적 영역의 집합입니다."
 " 사용자가 볼 수 있도록 메뉴의 화면을 꾸미기 위해 사용자 지정 그룹을 생성하거나 이미 기본으로 존재하는 그룹을 편집할 수 있습니다. "
 "그룹이 보유한 읽기, 쓰기, 생성 및 삭제 접근 권한이 여기에서 관리될 수 있습니다."
 
@@ -8897,22 +8897,22 @@ msgstr "허용된 사용자"
 #: model:ir.model.fields,field_description:base.field_ir_model__access_ids
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
 msgid "Access"
-msgstr "접근"
+msgstr "사용 권한"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr "접근 제어"
+msgstr "사용 권한 제어"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr "접근 그룹"
+msgstr "사용가능 그룹"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__menu_access
 msgid "Access Menu"
-msgstr "접근 메뉴"
+msgstr "사용 메뉴"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_access_act
@@ -8930,17 +8930,17 @@ msgstr "접근 메뉴"
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #: model:res.groups,name:base.group_erp_manager
 msgid "Access Rights"
-msgstr "접근 권한"
+msgstr "사용 권한"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
-msgstr "접근 토큰"
+msgstr "사용 권한 토큰"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr "개인 주소에 접근"
+msgstr "개인 주소 사용"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -9434,7 +9434,7 @@ msgstr ""
 "**경고:** 사용자 서식에 암호를 설정하면 이 암호가 새 LDAP 사용자의 로컬 암호로 할당되므로 \n"
 "         이러한 사용자에 대해 *master password*를 효과적으로 설정합니다(수동으로 변경될 때까지).\n"
 "         보통은 이것을 원하지 않으므로 서식 사용자를 설정하는 한 가지 쉬운 방법은 \n"
-"         유효한 LDAP 사용자와 한 번 로그인한 후, Odoo가 동일한 로그인 및 빈 암호를 사용하여 \n"
+"         유효한 LDAP 사용자와 한 번 로그인한 후, Odoo가 동일한 로그인(및 빈 암호를 사용하여)으로 \n"
 "         빈 로컬 사용자를 만든 다음, 이 새 사용자의 이름을 LDAP에 없는 사용자 이름으로 변경하고 \n"
 "         해당 그룹을 설정하는 것입니다.\n"
 
@@ -9460,7 +9460,7 @@ msgstr "국가의 행정 구역. 예를 들어 도, 시, 군"
 #: code:addons/base/models/ir_model.py:1525
 #, python-format
 msgid "Administrator access is required to uninstall a module"
-msgstr "모듈을 제거하려면 관리자로 접근해야 합니다."
+msgstr "모듈을 제거하려면 관리자 사용 권한이 있어야 합니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -9487,7 +9487,7 @@ msgstr "고급 속성"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_enterprise
 msgid "Advanced features for CRM"
-msgstr "고객 관계 관리(CRM)를 위한 고급 기능"
+msgstr "고객 관계 관리-CRM를 위한 고급 기능"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_enterprise
@@ -9734,7 +9734,7 @@ msgstr "응용 프로그램"
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
-msgstr "응용 프로그램 접근"
+msgstr "응용 프로그램 사용"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -10758,7 +10758,7 @@ msgstr "설치 취소"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cancel
 msgid "Cancel Journal Entries"
-msgstr "분개 기입 항목 취소"
+msgstr "분개 취소"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -11323,7 +11323,7 @@ msgstr "회사 속성"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
-msgstr "사업자번호"
+msgstr "법인등록번호"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -11722,12 +11722,12 @@ msgstr "전자 상거래를 위한 쿠폰 및 프로모션"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_create
 msgid "Create Access"
-msgstr "접근 만들기"
+msgstr "사용하게 만들기"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Create Access Right"
-msgstr "접근 권한 만들기"
+msgstr "사용 권한 작성"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11843,7 +11843,7 @@ msgid ""
 "specific access to the applications they need to use in the system."
 msgstr ""
 "시스템에 연결될 사용자를 생성하고 관리합니다. 사용자는 시스템에 연결되었거나 연결되지 않은 기간 동안 비활성화될 수 있습니다. 사용자가 "
-"시스템을 사용 시 필요한 응용 프로그램에 대해 특정 접근 권한을 부여하도록 그룹을 지정할 수 있습니다."
+"시스템을 사용 시 필요한 응용 프로그램에 대해 특정 사용 권한을 부여하도록 그룹을 지정할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -12487,12 +12487,12 @@ msgstr "정의"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
 msgid "Delete Access"
-msgstr "접근 권한 삭제"
+msgstr "사용 권한 삭제"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete Access Right"
-msgstr "접근 권한 삭제"
+msgstr "사용 권한 삭제"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -12647,7 +12647,7 @@ msgstr "통화 기호를 배치 할 위치를 금액 앞 또는 뒤로 결정합
 msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
-msgstr "고객/회사 이름을 배치할 위치를 결정합니다(예: 주소 전후)."
+msgstr "고객/회사 이름을 배치할 위치를 결정합니다. 예: 주소 전후"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -13151,7 +13151,7 @@ msgid ""
 "partner is a customer without access or with a limited access created for "
 "sharing data."
 msgstr ""
-"고객(사용자가 아님) 또는 공유 사용자입니다. 현재 협력사는접근 권한이 없거나 데이터 공유를 위해 만들어진 제한된 접근 권한을 가진 "
+"고객(사용자가 아님) 또는 공유 사용자입니다. 현재 협력사는사용 권한이 없거나 데이터 공유를 위해 만들어진 제한된 사용 권한을 가진 "
 "고객임을 나타냅니다."
 
 #. module: base
@@ -13961,7 +13961,7 @@ msgstr ""
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr "제한된 접근 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
+msgstr "제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -14155,7 +14155,7 @@ msgstr "\"Type\" 필드는 모델에서 수정할 수 없습니다."
 #: code:addons/base/models/ir_ui_view.py:1090
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
-msgstr "속성에 사용된 필드 %r이(가) 보기에 있어야 하지만 누락되어 있습니다 :"
+msgstr "속성에 사용된 필드 %r이 보기에 있어야 하지만 누락되어 있습니다 :"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
@@ -14408,7 +14408,7 @@ msgstr "해당 언어로 된 Odoo 번역에 대한 자세한 내용은"
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr "일대다 필드와 반대되는 다대일 관계를 구현하는 대상 모델의 필드"
+msgstr "일대다_one2many 필드와 반대되는 다대일 관계를 구현하는 대상 모델의 필드"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
@@ -14437,7 +14437,7 @@ msgid ""
 "\n"
 "(Document type: %s)"
 msgstr ""
-"이러한 종류의 문서의 경우 직접 작성한 기록에만 접근할 수 있습니다.\n"
+"이러한 종류의 문서의 경우 직접 작성한 기록만 사용할 수 있습니다.\n"
 "\n"
 "(문서 유형 : %s)"
 
@@ -14496,7 +14496,7 @@ msgstr "게시판"
 #: code:addons/base/models/ir_fields.py:348
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
-msgstr "'%%필드' (%d 일치)에 일치하는 항목이 여러 개 있습니다"
+msgstr "'%%(필드)' (%d 일치)에 일치하는 항목이 여러 개 있습니다"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -14574,12 +14574,12 @@ msgstr "견적에서 송장까지"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Full Access"
-msgstr "전체 접근"
+msgstr "전체 사용"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Full Access Right"
-msgstr "전체 접근 권한"
+msgstr "전체 사용 권한"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -14837,7 +14837,7 @@ msgid ""
 "                         Group-specific rules grant additional permissions, but are constrained within the bounds of global ones.\n"
 "                         The first group rules restrict further the global rules, but can be relaxed by additional group rules."
 msgstr ""
-"그룹 규칙이 아닌 전역 규칙은 제한 사항이므로 무시할 수 없습니다.\n"
+"전역 규칙(그룹 규칙이 아닌)은 제한 사항이므로 무시할 수 없습니다.\n"
 "                          그룹 별 규칙은 추가 사용 권한을 부여하지만 전역 사용 권한의 범위 내에서 제한됩니다.\n"
 "                         첫 번째 그룹 규칙은 전역 규칙을 추가로 제한하지만 추가 그룹 규칙을 사용하여 완화할 수 있습니다."
 
@@ -15062,7 +15062,7 @@ msgstr "그룹명"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__share
 msgid "Group created to set access rights for sharing data with some users."
-msgstr "일부 사용자와 데이터를 공유하기 위한 접근 권한을 설정하기 위해 생성된 그룹입니다."
+msgstr "일부 사용자와 데이터를 공유하기 위한 사용 권한을 설정하기 위해 생성된 그룹입니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
@@ -16555,7 +16555,7 @@ msgstr "요르단"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "연락처와 관련된 분개 항목"
+msgstr "연락처와 관련된 분개장 항목"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement_jit
@@ -16575,7 +16575,7 @@ msgstr "K 금융 및 보안 활동"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
-msgstr "KPI 다이제스트"
+msgstr "KPI 요약"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -17597,7 +17597,7 @@ msgid ""
 "Manage the contact titles you want to have available in your system and the "
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs."
-msgstr "시스템에서 사용할 수 있는 연락처 제목을 관리하여 문자 또는 기타 문서에서 사용할 수 있도록 합니다 (예 : Mr., Ms."
+msgstr "시스템에서 사용할 수 있는 연락처 제목을 관리하여 문자 또는 기타 문서에서 사용할 수 있도록 합니다. 예 : Mr., Ms."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -17639,13 +17639,13 @@ msgstr "제조 주문서 및 재료 명세서"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Many2One"
-msgstr "다대일"
+msgstr "다대일_Many2One"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:672
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
-msgstr "다대일 %s이 없는 %s 모델!"
+msgstr "다대일_Many2one %s이 없는 %s 모델!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -17733,7 +17733,7 @@ msgstr "판매 주문에 일괄적으로 메일 보내기"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
 msgid "Mass mailing on track speakers"
-msgstr "연사 그룹에 일괄 메일 보내기"
+msgstr "강연자 그룹에 일괄 메일 보내기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -17955,7 +17955,7 @@ msgstr "누락된 SMTP 서버"
 #: code:addons/models.py:3028
 #, python-format
 msgid "Missing document(s)"
-msgstr "누락된 문서"
+msgstr "누락된 문서()"
 
 #. module: base
 #: code:addons/models.py:5505
@@ -18027,7 +18027,7 @@ msgstr "'%s' 모델은 모델 데이터가 들어 있어 제거할 수 없습니
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr "모델 접근"
+msgstr "모델 사용"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
@@ -18283,7 +18283,7 @@ msgstr "내 연락처"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "My Document(s)"
-msgstr "내 문서"
+msgstr "내 문서()"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -18620,7 +18620,7 @@ msgstr "아직 완료되지 않았습니다."
 #: code:addons/base/models/ir_model.py:1407
 #, python-format
 msgid "Not enough access rights on the external ID:"
-msgstr "외부 ID에 대한 접근 권한이 부족합니다 :"
+msgstr "외부 ID에 대한 사용 권한이 부족합니다 :"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -18801,7 +18801,7 @@ msgstr ""
 "Odoo 블로그\n"
 "----------\n"
 "\n"
-"<a href=\"https\\://www.odoo.com/page/blog-engine\">Odoo 블로그</a> 작성, 디자인, 홍보 및 참여.\n"
+"<a href=\"https://www.odoo.com/page/blog-engine\">Odoo 블로그</a> 작성, 디자인, 홍보 및 참여.\n"
 "\n"
 "Odoo 엔터프라이즈 급 블로깅 플랫폼으로 자신을 표현하십시오. \n"
 "아름다운 블로그 게시물 작성, 방문자 참여, \n"
@@ -18817,12 +18817,12 @@ msgstr ""
 "이미지, 동영상, 클릭 유도 문안, 인용문, 배너 등을 완벽하게 통합 한 \n"
 "아름다운 블로그 게시물을 만들 수 있습니다.\n"
 "\n"
-"독창적 인 '인라인 편집'방식을 사용하면 멋지고 보기 좋은 컨텐츠를 \n"
+"독창적 인 *'인라인 편집'*방식을 사용하면 멋지고 보기 좋은 컨텐츠를 \n"
 "제작하는 데 디자이너가 될 필요가 없습니다. 각 블로그 게시물은 \n"
 "전문 디자이너가 디자인한 것처럼 보입니다.\n"
 "\n"
 "\n"
-"전문가의 자동화 된 번역\n"
+"전문가의 자동화된 번역\n"
 "--------------------------------------\n"
 "\n"
 "블로그 게시물을 여러 언어로 번역 해보십시오. \n"
@@ -18852,11 +18852,11 @@ msgstr ""
 "----------------------------\n"
 "\n"
 "판매 유입 경로를 명확하게 파악할 수 있습니다. \n"
-"Odoo의 Google 웹 로그 분석 추적기는 기본적으로 쇼핑 카트, 클릭 유도 문안 (call-to-actions)과 \n"
+"Odoo의 Google 웹 로그 분석 추적기는 기본적으로 쇼핑 카트, 클릭 유도 문안과 \n"
 "관련된 모든 종류의 이벤트를 추적하도록 구성됩니다.\n"
 "\n"
 "\n"
-"Odoo 마케팅 도구 (대량 메일 링, 캠페인 등)도 Google 웹 로그 분석과 연결되어 있기 때문에 \n"
+"Odoo 마케팅 도구 (일괄 메일 보내기, 캠페인 등)도 Google 웹 로그 분석과 연결되어 있기 때문에 \n"
 "비즈니스를 360 도로 볼 수 있습니다.\n"
 "\n"
 "SEO 최적화된 블로그 게시물\n"
@@ -18882,17 +18882,17 @@ msgstr ""
 "웹 사이트가 깨끗하게 유지되도록 합니다.\n"
 ".\n"
 "\n"
-"쉬운 접근 권한 설정\n"
+"쉬운 사용 권한 설정\n"
 "------------------\n"
 "\n"
-"모든 사람들이 귀하의 웹 사이트에 동일한 액세스 권한을 요구하는 것은 아닙니다. \n"
+"모든 사람들이 귀하의 웹 사이트에 동일한 사용 권한을 요구하는 것은 아닙니다. \n"
 "디자이너는 사이트의 레이아웃을 관리하고 편집자는 콘텐츠를 승인하며 \n"
 "작성자는 해당 콘텐츠를 작성합니다.\n"
 "이를 통해 필요에 따라 게시 프로세스를 구성 할 수 있습니다.\n"
 "\n"
 "\n"
-"다른 액세스 권한은 비즈니스 객체 (제품, 사람, 이벤트 등)와 관련이 있으며 \n"
-"Odoo의 표준 액세스 권한 관리를 직접 수행하므로 \n"
+"다른 사용 권한은 비즈니스 객체 (제품, 사람, 이벤트 등)와 관련이 있으며 \n"
+"Odoo의 표준 사용 권한 관리를 직접 수행하므로 \n"
 "직접 두 번 구성하지 않아도 됩니다.\n"
 
 #. module: base
@@ -18999,7 +18999,7 @@ msgstr ""
 "Odoo CRM\n"
 "--------\n"
 "\n"
-"Odoo <a href=\"https\\://www.odoo.com/page/crm\">Open Source CRM</a>을 사용하여 판매 생산성을 높이고 승리율을 높이고 매출을 높일 수 있습니다.\n"
+"Odoo <a href=\"https://www.odoo.com/page/crm\">Open Source CRM</a>을 사용하여 판매 생산성을 높이고 승리율을 높이고 매출을 높일 수 있습니다.\n"
 "\n"
 "노력없이 판매 유입 경로를 관리하십시오. \n"
 "리드 유도, 전화 통화 및 회의 후속 조치. 전자 메일을 응용 프로그램에 직접 통합하여 \n"
@@ -19027,7 +19027,7 @@ msgstr ""
 "최고의 거래에 집중하기 위해 조직 된 기회를 얻으십시오. \n"
 "이메일, 전화 통화, 내부 메모, 회의 및 견적과 같은 기회에서 모든 고객 상호 작용을 관리하십시오.\n"
 "\n"
-"특정 이벤트 (예 : 원 / 분실, 무대 변경, 신규 고객 수요 등)에 대한 알림을 받으려면 \n"
+"특정 이벤트, 예를 들면 거래 성사/실패, 무대 변경, 신규 고객 수요 등에 대한 알림을 받으려면 \n"
 "관심있는 기회를 따르십시오.\n"
 "\n"
 "이메일 통합 및 자동화\n"
@@ -19048,7 +19048,7 @@ msgstr ""
 "\n"
 "통합 캘린더를 사용하여 회의 및 전화 예약을 예약하십시오. \n"
 "의제와 동료를 한 눈에 볼 수 있습니다. \n"
-"관리자는 팀원들이 무엇을보고 있는지 쉽게 알 수 있습니다.\n"
+"관리자는 팀원들이 무엇을 보고 있는지 쉽게 알 수 있습니다.\n"
 "\n"
 "리드 자동화 및 마케팅 캠페인\n"
 "---------------------------------------\n"
@@ -20859,7 +20859,7 @@ msgstr "여러 문서에서"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__on_delete
 msgid "On delete property for many2one fields"
-msgstr "다대일(many2one) 필드의 속성 삭제 시"
+msgstr "다대일_many2one 필드의 속성 삭제 시"
 
 #. module: base
 #: code:addons/models.py:3028
@@ -20867,7 +20867,7 @@ msgstr "다대일(many2one) 필드의 속성 삭제 시"
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr "액세스하려는 문서 중 하나가 삭제되었습니다. 새로 고침 후 다시 시도하십시오."
+msgstr "사용하려는 문서 중 하나가 삭제되었습니다. 새로 고침 후 다시 시도하십시오."
 
 #. module: base
 #: code:addons/models.py:3363
@@ -20883,7 +20883,8 @@ msgstr "수정하려는 레코드 중 하나가 이미 삭제되었습니다(문
 msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
-msgstr "일대다 필드는 \"commercial_fields\"또는 \"address 필드\"의 일부로 동기화 할 수 없습니다."
+msgstr ""
+"일대다_one2many 필드는 'commercial_fields' 또는 'address 필드'의 일부로 동기화 할 수 없습니다."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
@@ -20966,14 +20967,14 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"대상 연락처만 분개 항목에 연결할 수 있습니다. 기존 분개 항목에 연결된 여러 연락처를 병합하려면 관리자에게 문의하시기 바랍니다."
+"대상 연락처만 분개장 항목에 연결할 수 있습니다. 기존 분개장 항목에 연결된 여러 연락처를 병합하려면 관리자에게 문의하시기 바랍니다."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1228
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
-msgstr "현재 다음 접근 수준을 가진 사용자만 이 작업을 수행할 수 있습니다."
+msgstr "현재 다음 사용 권한을 가진 사용자만 이 작업을 수행할 수 있습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -21029,7 +21030,7 @@ msgstr "Python 표현식으로 대상 데이터의 선택적인 도메인 필터
 msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
-msgstr "대상 보기에 대한 설명(예 : 사용 및 용도)이 있는 사용자를 위한 선택적 도움말."
+msgstr "대상 보기에 대한 설명, 예를 들면 사용 및 용도가 있는 사용자를 위한 선택적 도움말."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__src_model
@@ -21448,7 +21449,7 @@ msgid ""
 "                                                <code>self.env</code>, etc."
 msgstr ""
 "<code>self.env</code> 등과 같은 다른 기능도 <code>self</code>를 통해 \n"
-"                                       액세스할 수 있습니다."
+"                                       사용할 수 있습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -21457,7 +21458,7 @@ msgid ""
 "                                    <code>self.env</code>, etc."
 msgstr ""
 "<code>self.env</code> 등과 같은 다른 기능도 <code>self</code>를 통해 \n"
-"                                       액세스할 수 있습니다."
+"                                       사용할 수 있습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -21482,7 +21483,7 @@ msgstr "출력 DPI"
 #: code:addons/models.py:2132
 #, python-format
 msgid "Output name %r is used twice."
-msgstr "출력 이름 %r이(가) 두 번 사용됩니다."
+msgstr "출력 이름 %r이 두 번 사용됩니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
@@ -21934,7 +21935,7 @@ msgstr "암호를 변경하려면 암호 변경 마법사(사용자 프로필 �
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "점포판매시스템(POS)"
+msgstr "점포판매시스템"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -21972,7 +21973,7 @@ msgid ""
 "Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"포털 회원들 특정 접근 권한(기록 규칙과 제한된 메뉴와 같은)을 가지고 있습니다.\n"
+"포털 회원은 특정 사용 권한(기록 규칙과 제한된 메뉴와 같은)을 가지고 있습니다.\n"
 "                그들은 보통 평소 Odoo 그룹에 속해 있지 않습니다."
 
 #. module: base
@@ -22003,7 +22004,7 @@ msgstr "PostgreSQL 제약 조건 또는 외래 키 이름"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_relation__name
 msgid "PostgreSQL table name implementing a many2many relation."
-msgstr "다대다 관계를 구현하는 PostgreSQL 테이블 이름"
+msgstr "다대다_many2many 관계를 구현하는 PostgreSQL 테이블 이름"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_predictive_bills
@@ -22233,7 +22234,7 @@ msgstr ""
 "### 무한 유연합니다. 놀라울 정도로 사용하기 쉽습니다.\n"
 "\n"
 "\n"
-"Odoo의 협업 및 실시간 오픈 소스 프로젝트 관리입니다.\n"
+"Odoo의 협업 및 실시간 <a href=\"https://www.odoo.com/page/project-management\">오픈 소스 프로젝트 관리</a>입니다.\n"
 "여러분의 팀이 일을 끝낼 수 있도록 도와줍니다. \n"
 "큰 그림에서 상세한 내용, 고객 계약서부터 청구서까지 모든 것을 추적할 수 있습니다.\n"
 "\n"
@@ -22353,7 +22354,7 @@ msgid ""
 "Public users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"공용 사용자에게는 특정 액세스 권한 (예 : 레코드 규칙 및 제한된 메뉴)이 있습니다.\n"
+"공용 사용자에게는 특정 사용 권한 (예 : 레코드 규칙 및 제한된 메뉴)이 있습니다.\n"
 "                그들은 보통 평소에 Odoo 그룹에 속하지 않습니다."
 
 #. module: base
@@ -22617,7 +22618,7 @@ msgstr "Qweb qweb 필드"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr "Qweb 다대다 필드"
+msgstr "Qweb 다대다_many2many 필드"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:362
@@ -22657,12 +22658,12 @@ msgstr "비율"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr "읽기 접근"
+msgstr "읽기 사용"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read Access Right"
-msgstr "읽기 접근 권한"
+msgstr "읽기 사용 권한"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
@@ -23060,7 +23061,7 @@ msgstr "규칙 정의 (도메인 필터)"
 #. module: base
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
-msgstr "규칙에는 적어도 하나 이상의 확인된 접근 권한이 있어야 합니다."
+msgstr "규칙에는 적어도 하나 이상의 확인된 사용 권한이 있어야 합니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
@@ -23748,7 +23749,7 @@ msgstr "보안상의 이유로 빈 암호를 설정할 수 없습니다!"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "매개 변수 설정"
+msgstr "환경 설정"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -23954,7 +23955,7 @@ msgstr "BIC 또는 Swift라고도 합니다."
 #: code:addons/base/models/ir_model.py:1222
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
-msgstr "죄송합니다. 이 문서에 접근할 수 있는 권한이 없습니다."
+msgstr "죄송합니다. 이 문서를 사용할 수 있는 권한이 없습니다."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1224
@@ -23998,12 +23999,12 @@ msgstr "원본 객체"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
 msgid "Source Term"
-msgstr "근원 기간"
+msgstr "소스 용어"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__source
 msgid "Source term"
-msgstr "근원 기간"
+msgstr "소스 용어"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -24125,7 +24126,7 @@ msgstr "팔레스타인의 주"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr "회사 현황"
+msgstr "온보딩 회사 현황 상태"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -24251,7 +24252,7 @@ msgstr "구조화된 모델 필드"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr "스튜디오(온라인 개발 도구)"
+msgstr "스튜디오"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -25047,7 +25048,7 @@ msgid ""
 "* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
 "* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
 msgstr ""
-"지불 일에 세금 현금 기초 항목\n"
+"지불 일에 세금 현금주의 항목\n"
 "======================================\n"
 "\n"
 "Allow to create the Journal Entries for Taxes at date of payment.\n"
@@ -25647,13 +25648,13 @@ msgstr "기술 이름"
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
 msgid "Technical Settings"
-msgstr "기술 설정"
+msgstr "설정 관리"
 
 #. module: base
 #: code:addons/base/models/ir_translation.py:794
 #, python-format
 msgid "Technical Translations"
-msgstr "기술 번역"
+msgstr "번역 관리"
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -25703,7 +25704,7 @@ msgstr "테스트 도구 테스트"
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
 msgid "Testing of access restrictions"
-msgstr "접근 제한 테스트"
+msgstr "사용 제한 테스트"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tests
@@ -25863,7 +25864,7 @@ msgstr ""
 msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
-msgstr "해당 관련 필드(있는 경우). 점으로 구분된 필드 이름 목록이어야 합니다."
+msgstr "해당 관련 필드가 있는 경우. 점으로 구분된 필드 이름 목록이어야 합니다."
 
 #. module: base
 #: sql_constraint:res.currency:0
@@ -26089,7 +26090,7 @@ msgstr "주 보고서 파일의 경로(보고서 유형에 따라 다름) 또는
 msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
-msgstr "작업의 우선 순위 (정수) : 0은 높은 우선 순위를 의미하고 10은 낮은 우선 순위를 의미합니다."
+msgstr "작업의 우선 순위로 정수임 : 0은 높은 우선 순위를 의미하고 10은 낮은 우선 순위를 의미합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
@@ -26099,7 +26100,7 @@ msgstr "환율과 환율의 비율 1"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
 msgid "The rate of the currency to the currency of rate 1."
-msgstr "환율과 통화 비율"
+msgstr "환율 1에 대한 통화 비율"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__res_id
@@ -26665,7 +26666,7 @@ msgstr "번역하기"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__value
 msgid "Translation Value"
-msgstr "번역 값"
+msgstr "번역된 값"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__comments
@@ -27026,7 +27027,7 @@ msgstr "가져 오는 중에 알 수 없는 오류가 발생했습니다 :"
 #: code:addons/base/models/ir_model.py:469
 #, python-format
 msgid "Unknown field %r in dependency %r"
-msgstr "%r 의존성에 알 수 없는 필드 %r이(가) 있습니다."
+msgstr "%r 의존성에 알 수 없는 필드 %r이 있습니다."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:426
@@ -27256,7 +27257,7 @@ msgstr "상황에 따라 관련 주소를 선택하기 위해 판매 및 구매 
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
 msgid ""
 "Used for custom many2many fields to define a custom relation table name"
-msgstr "사용자 정의 관계형 테이블 이름을 정의하기 위해 다대다 필드를 사용자 정의하는 데 사용됩니다."
+msgstr "사용자 정의 관계형 테이블 이름을 정의하기 위해 다대다_many2many 필드를 사용자 정의하는 데 사용됩니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__usage
@@ -27955,12 +27956,12 @@ msgstr "Worldline SIPS"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "쓰기 접근 권한"
+msgstr "쓰기 사용"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Write Access Right"
-msgstr "쓰기 접근 권한"
+msgstr "쓰기 사용 권한"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -28142,7 +28143,7 @@ msgstr ""
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr "설정 / 사용자 메뉴에서 새로 생성된 사용자를 편집하여 추가 접근 권한을 정의할 수 있습니다."
+msgstr "설정 / 사용자 메뉴에서 새로 생성된 사용자를 편집하여 추가 사용 권한을 정의할 수 있습니다."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:248
@@ -28452,17 +28453,17 @@ msgstr "l10n_es_real_estates"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr "다대다"
+msgstr "다대다_many2many"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr "다대일"
+msgstr "다대일__many2one"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr "모듈을 설치하지 못하여 비활성화되었습니다."
+msgstr "모듈()을 설치하지 못하여 비활성화되었습니다."
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -28500,7 +28501,7 @@ msgstr "있음"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr "일대다"
+msgstr "일대다_one2many"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -28545,7 +28546,7 @@ msgstr "mimetypes-guessing 테스트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr "접근 권한 및 규칙 테스트"
+msgstr "사용 권한 및 규칙 테스트"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group

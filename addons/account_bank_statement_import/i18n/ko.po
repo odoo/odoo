@@ -29,19 +29,19 @@ msgstr ""
 #: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
 #, python-format
 msgid " Import Template for Bank Statements"
-msgstr ""
+msgstr "예금거래 명세서 서식 가져오기"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d개 거래를 가져왔고 해당 거래가 무시되었습니다."
+msgstr "%d개 거래를 가져왔고 해당 거래는 무시되었습니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr "1개 거래를 가져왔고 해당 거래가 무시되었습니다."
+msgstr "1개 거래를 가져왔고 해당 거래는 무시되었습니다."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
@@ -81,7 +81,7 @@ msgstr "별칭"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgstr "공급업체 청구서의 별칭"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
@@ -102,12 +102,12 @@ msgstr "이미 가져온 항목"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr "하나 이상 인바운드"
+msgstr "1건 이상의 반입"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr "하나 이상 아웃바운드"
+msgstr "1건 이상의 반출"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
@@ -139,12 +139,12 @@ msgstr "예금거래 명세서 파일"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "예금거래 명세서 라인"
+msgstr "예금거래 명세서 내역"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "은행 설정 수동 구성"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
@@ -224,12 +224,12 @@ msgstr "작성일"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "신용 전표 항목 순서"
+msgstr "대변 전표 항목 순서"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "신용 전표: 다음 번호"
+msgstr "대변 전표 : 다음 번호"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -239,7 +239,7 @@ msgstr "환율"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "지정된 신용 전표 순서"
+msgstr "지정된 대변 전표 순서"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -254,7 +254,7 @@ msgstr "기본 차변 계정"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "은행 거래 명세서를 등록하는 방법을 정의합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -267,7 +267,7 @@ msgstr "이름 표시"
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr "은행에서 예금거래 명세서를 다운로드하고 여기로 가져옵니다. 지원 형식:"
+msgstr "은행에서 예금거래 명세서를 다운로드하고 여기로 가져옵니다. 지원 형식 :"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -282,12 +282,12 @@ msgstr "파일명"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr ""
+msgstr "입금"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
 msgid "For Outgoing Payments"
-msgstr ""
+msgstr "출금"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__data_file
@@ -299,7 +299,7 @@ msgstr "은행에서 예금거래 명세서를 전자 형식으로 가져오고 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr "그룹 청구서 라인"
+msgstr "그룹 송장 내역"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -312,7 +312,7 @@ msgstr "ID"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "이 상자에 표시하면 청구서에서 회계 라인을 생성할 때 그룹화를 시도합니다."
+msgstr "이 상자에 표시하면 송장에서 회계 내역을 생성할 때 그룹화를 시도합니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:20
@@ -345,7 +345,7 @@ msgstr "명세서 가져오기"
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
 msgid "Install Import Format"
-msgstr ""
+msgstr "가져오기 형식 설치"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -360,7 +360,7 @@ msgstr "차변 금액의 기본 계정 역할을 합니다."
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
-msgstr ""
+msgstr "이메일 전송식으로 공급업체 청구서 초안을 작성합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -378,7 +378,7 @@ msgstr "분개장 생성"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Journal Creation on Bank Statement Import"
-msgstr ""
+msgstr "예금거래 명세서 가져오기용 분개장 생성"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
@@ -467,7 +467,7 @@ msgstr "OK"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr ""
+msgstr "은행 조정 전기"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -482,9 +482,9 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"고객 청구서 분개장은 '매출'을 선택합니다.\n"
+"고객 송장 분개장은 '매출'을 선택합니다.\n"
 "공급업체 청구 분개장은 '매입'을 선택합니다.\n"
-"고객 또는 공급업체 지급에 사용하는 분개장은 '현금' 또는 '은행'을 선택합니다.\n"
+"고객 또는 공급업체 지불에 사용하는 분개장은 '현금' 또는 '은행'을 선택합니다.\n"
 "기타 운영 분개장은 '일반'을 선택합니다."
 
 #. module: account_bank_statement_import
@@ -534,7 +534,7 @@ msgstr "이 명세서의 계정(%s)이 분개장(%s)과 동일하지 않습니�
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
-msgstr ""
+msgstr "예금거래 명세서의 통화(%s)가 분개장 통화(%s)와 동일하지 않습니다!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -544,24 +544,24 @@ msgstr "명세서 입력에 사용하는 통화"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "이 분개장의 분개는 이 프리픽스를 사용하여 이름을 지정합니다."
+msgstr "이 분개장의 분개는 이 접두사를 사용하여 이름을 지정합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr "다음 순번은 다음 신용 전표에 사용합니다."
+msgstr "다음 순번은 다음 대변 전표에 사용합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr "다음 순번은 다음 청구서에 사용합니다."
+msgstr "다음 순번은 다음 송장에 사용합니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
-msgstr "이 필드는 이 분개장의 신용 전표 항목에 번호를 지정하는 작업과 관련된 정보가 포함되어 있습니다."
+msgstr "이 필드는 이 분개장의 대변 전표 항목에 번호를 지정하는 작업과 관련된 정보가 포함되어 있습니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -612,7 +612,7 @@ msgid ""
 "Whether or not the payments made in this journal should be generated in "
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
-msgstr ""
+msgstr "은행 조정을 수행할 때에만 관련 분개가 게시되도록 이 분개장에서 지급된 지불이 초안 상태로 생성되어야 하는지 여부입니다."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
@@ -623,12 +623,12 @@ msgstr "이 분개장을 대시보드에 표시할지 여부"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "해당 파일은 이미 가져왔습니다."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
-msgstr ""
+msgstr "다음을 통해 더 많은 파일 형식을 설치할 수 있습니다."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
@@ -646,7 +646,7 @@ msgstr "_가져오기"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
-msgstr ""
+msgstr "관련 모듈을 설치합니다."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
