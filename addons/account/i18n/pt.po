@@ -157,6 +157,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Car@ ${object.partner_id.name}<br/><br/>\n"
+"        Obrigado pelo seu pagamento.\n"
+"        Segue em anexo o seu recibo <strong>${(object.name or '').replace('/','-')}</strong> no valor\n"
+"        de <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Se tiver alguma questão, por favor não hesite em contactar-nos.\n"
+"        <br/><br/>\n"
+"        Os nossos melhores cumprimentos,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -4103,7 +4119,7 @@ msgstr "Diferença entre o saldo final calculado e o saldo final especificado."
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Resumo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__group_products_in_bills
@@ -11951,6 +11967,22 @@ msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
 "Não pode colocar/retirar dinheiro num/de um extrato bancário que se encontra"
 " fechado."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:99
+#, python-format
+msgid ""
+"You cannot register payments for customer invoices and credit notes at the "
+"same time."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:96
+#, python-format
+msgid ""
+"You cannot register payments for vendor bills and supplier refunds at the "
+"same time."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:644

@@ -857,6 +857,10 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"הודעות אימייל שהתקבלו לכתובת זו מפיקות הפניות חדשות שלא הוקצו עדיין לצוות "
+"המכירות. זה יכול להיעשות בעת המרתם לתוך הזדמנויות. הודעות דוא\"ל נכנסות "
+"יכולות להיות מוקצות באופן אוטומטי לצוותי מכירות ספציפיים. לשם כך, הגדר כינוי"
+" דוא\"ל לצוות המכירות."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -864,6 +868,8 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
+"הזן כאן את הדרישות הפנימיות בשלב זה (לדוגמה: ההצעה נשלחה ללקוח). הוא יופיע "
+"ככלי הסבר על שם הבמה."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
@@ -924,6 +930,8 @@ msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
+"טקסט הסברתי שיעזור למשתמשים להשתמש במנגנון הכוכבים והעדיפות בשלבים או בבעיות"
+" שנמצאים בשלב זה."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1284,6 +1292,9 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
+"ניתוח ההזדמנויות מאפשר לך לבדוק מידע הקשור ב CRM השונים כמו עיכובים טיפול או"
+" מספר מוביל לכל מדינה. אתה יכול למיין את ניתוח מוביל שלך על ידי קבוצות שונות"
+" כדי לקבל מדויק גרגר ניתוח."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1536,7 +1547,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "My Opportunities"
-msgstr ""
+msgstr "ההזדמנויות שלי "
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -1563,7 +1574,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr ""
+msgstr "ההזדמנות שלי "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -1589,12 +1600,12 @@ msgstr "סוג הפעילות הבאה"
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity is planned"
-msgstr ""
+msgstr "הפעולה הבאה  מתוכננת "
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity late"
-msgstr ""
+msgstr "הפעולה הבאה מאחרת"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1190
@@ -1620,7 +1631,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
 msgid "Not enough stock"
-msgstr ""
+msgstr "אין מספיק מלאי"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -1650,7 +1661,7 @@ msgstr "מספר הודעות עם שגיאת משלוח"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
 msgid "Number of open opportunities"
-msgstr ""
+msgstr "מספר ההזדמנויות הפתוחות"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread_counter
@@ -1667,12 +1678,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
-msgstr ""
+msgstr "הזדמנויות פתוחות"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
-msgstr ""
+msgstr "הזדמנות פתוחה"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -1701,7 +1712,7 @@ msgstr "הזדמנויות"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Opportunities Analysis"
-msgstr ""
+msgstr "ניתוח הזדמנויות"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
@@ -1746,13 +1757,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Opportunity"
-msgstr ""
+msgstr "הזדמנות"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
-msgstr ""
+msgstr "נוצרה הזדמנות"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
@@ -1915,13 +1926,13 @@ msgstr "עדיפות"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "ניהול סדרי עדיפויות"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
 msgid "Probability"
-msgstr ""
+msgstr "הסתברות"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__probability
@@ -1946,7 +1957,7 @@ msgstr ""
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
 msgid "Qualified"
-msgstr ""
+msgstr "מוסמך"
 
 #. module: crm
 #. openerp-web
@@ -2001,12 +2012,12 @@ msgstr "מכירות"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Sales Channel"
-msgstr ""
+msgstr "ערוץ מכירות"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
 msgid "Sales Channels"
-msgstr ""
+msgstr "ערוצי מכירות"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__team_id
@@ -2036,7 +2047,7 @@ msgstr "צוותי מכירות"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
 msgid "Salesmen"
-msgstr ""
+msgstr "איש מכירות"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
@@ -2070,7 +2081,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send an email"
-msgstr ""
+msgstr "משלח דוא\"ל"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2092,7 +2103,7 @@ msgstr ""
 msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
-msgstr ""
+msgstr "הגדרת שלב זה תשנה את ההסתברות באופן אוטומטי על ההזדמנות."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -2109,7 +2120,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
-msgstr ""
+msgstr "הצג את כל ההזדמנויות שעבורן תאריך הפעולה הבא הוא לפני היום"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2121,7 +2132,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
-msgstr ""
+msgstr "הצג רק הזדמנות"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
@@ -2133,7 +2144,7 @@ msgstr "תוכנה"
 msgid ""
 "Some examples of lost reasons: \"We don't have people/skill\", \"Price too "
 "high\""
-msgstr ""
+msgstr "כמה דוגמאות של סיבות האובדן: \"אין לנו אנשים / מיומנות\", \"מחיר גבוה מדי\""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__source_id
@@ -2148,6 +2159,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
+"קבוצה ספציפית המשתמשת בשלב זה. צוותים אחרים לא יוכלו לראות או להשתמש בשלב "
+"זה."
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
@@ -2194,6 +2207,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"שלבים לאפשר לאיש המכירות בקלות לעקוב אחר הזדמנות ספציפית\n"
+"            ממוקמת במחזור המכירות."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
@@ -2240,7 +2255,7 @@ msgstr "רחוב2"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Submit"
-msgstr ""
+msgstr "שלח"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -2281,11 +2296,13 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"כתובת האימייל המשויכת לערוץ זה. הודעות אימייל חדשות יקבלו באופן אוטומטי "
+"יצירת הפניות חדשות שהוקצו לערוץ."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "הגרף בערוץ זה יוצג בלוח המכוונים.\n"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -2297,7 +2314,7 @@ msgstr ""
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr ""
+msgstr "ההסתברות של סגירת העסקה צריך להיות בין 0% ל 100%!"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_period_pipeline
@@ -2316,7 +2333,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr ""
+msgstr "סרגל זה מאפשר לסנן את ההזדמנויות בהתבסס על פעילויות מתוזמנות."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2328,14 +2345,14 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "זוהי שיטת המסירה, למשל גלויה, אימייל או מודעת באנר"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
+msgstr "זהו מקור הקישור, למשל מנוע חיפוש, תחום אחר או שם של רשימת דוא\"ל"
 
 #. module: crm
 #. openerp-web
@@ -2350,6 +2367,7 @@ msgid ""
 "This percentage depicts the default/average probability of the Case for this"
 " stage to be a success"
 msgstr ""
+"אחוז זה מתאר את ההסתברות של ברירת המחדל / הממוצע של המקרה עבור שלב זה להצלחה"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
@@ -2405,7 +2423,7 @@ msgstr "הדרכה"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
-msgstr ""
+msgstr "נסה עכשיו"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2535,7 +2553,7 @@ msgstr "גובה מאוד"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr ""
+msgstr "אין לנו אנשים / מיומנויות"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website
@@ -2668,7 +2686,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Product Pricing"
-msgstr ""
+msgstr "לדוגמה: תמחור מוצרים"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads

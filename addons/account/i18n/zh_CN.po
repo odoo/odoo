@@ -440,7 +440,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">财务本地化</span>\n"
+"<span class=\"o_form_label\">会计制度</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -1937,7 +1937,7 @@ msgstr "已归档"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask for a Credit Note"
-msgstr "要求提供红字发票"
+msgstr "红字发票"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -5448,7 +5448,7 @@ msgstr "库存计价的入库科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Install More Packages"
-msgstr "安装更多软件包"
+msgstr "安装更多会计制度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
@@ -11703,6 +11703,22 @@ msgstr "科目已经使用过，不允许删除的相关提示"
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr "你不能从从已经关闭的银行对账单中存/取款."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:99
+#, python-format
+msgid ""
+"You cannot register payments for customer invoices and credit notes at the "
+"same time."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:96
+#, python-format
+msgid ""
+"You cannot register payments for vendor bills and supplier refunds at the "
+"same time."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:644
