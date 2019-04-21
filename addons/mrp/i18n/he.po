@@ -136,7 +136,7 @@ msgstr "<span class=\"o_stat_text\">השמדות</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">זמן<br/> ניתוח</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -200,7 +200,7 @@ msgstr "<strong>קטגוריה אפקטיבית: </strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Is a Blocking Reason? </strong>"
-msgstr ""
+msgstr "<strong>האם קיימת סיבה לחסימה? </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -215,7 +215,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr ""
+msgstr "<strong>תאריך הדפסה:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -245,7 +245,7 @@ msgstr "<strong>כמות</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Reason: </strong>"
-msgstr ""
+msgstr "<strong>סיבה: </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -312,6 +312,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"הוסף תוצרי לוואי לחשבונות של חומרים. זה יכול לשמש כדי לקבל כמה מוצרים "
+"מוגמרים גם כן. ללא אפשרות זו אתה עושה רק: A + B = C. עם אפשרות: A + B = C + "
+"D."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -330,16 +333,19 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"כל כמויות המוצר חייבות להיות גדולות או שוות ל 0.\n"
+"קווים עם 0 כמויות יכול לשמש קווים אופציונליים. \n"
+"אתה צריך להתקין את המודול mrp_byproduct אם אתה רוצה לנהל עצי מוצרים נוספים!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Allowed to Post Inventory"
-msgstr ""
+msgstr "מותר לפרסם מלאי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
 msgid "Allowed to Unreserve Inventory"
-msgstr ""
+msgstr "מותר מלאי ללא שמירה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -466,7 +472,7 @@ msgstr "חשבון חומרי הגלם"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr ""
+msgstr "שורת עץ מוצר "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -485,12 +491,14 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
+"עץ המוצר מאפשר לך להגדיר את רשימת חומרי הגלם הנדרשים כדי להפוך את המוצר "
+"המוגמר."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr ""
+msgstr "עץ מוצר "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -526,49 +534,49 @@ msgstr "זמן חסימה"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "שעות חסומות במהלך החודש האחרון"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "רכיבי עץ המוצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
 msgid "BoM Line"
-msgstr ""
+msgstr "שורת עץ המוצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
 msgid "BoM Lines"
-msgstr ""
+msgstr "שורות עץ המוצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
-msgstr ""
+msgstr "סוג עץ המוצר"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr ""
+msgstr "פרטי עץ המוצר"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
-msgstr ""
+msgstr "שורת עץ המוצר%s לא צריך להיות זהה לעץ המוצר."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
-msgstr ""
+msgstr "מודגש"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_byproduct
 msgid "By-Products"
-msgstr ""
+msgstr "לפי-מוצרים"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
@@ -593,13 +601,13 @@ msgstr "בוטלה"
 #: code:addons/mrp/models/mrp_production.py:329
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
-msgstr ""
+msgstr "לא ניתן למחוק הזמנת ייצור שאינה במצב ביטול"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_capacity
 msgid "Capacity"
-msgstr ""
+msgstr "קיבולת"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -609,7 +617,7 @@ msgstr "שנה כמות מוצר"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
-msgstr ""
+msgstr "שינוי כמות לייצר"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
@@ -727,7 +735,7 @@ msgstr "רכיבים"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Compute based on real time"
-msgstr ""
+msgstr "חישוב מבוסס בזמן אמת"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -744,7 +752,7 @@ msgstr "מאושר"
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Consumed"
-msgstr ""
+msgstr "נצרך"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
@@ -759,22 +767,22 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
 msgid "Consumed Less Than Planned"
-msgstr ""
+msgstr "נצרך פחות מהמתוכנן"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed Materials"
-msgstr ""
+msgstr "חומרים נצרכים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
 msgid "Consumed in Operation"
-msgstr ""
+msgstr "נצרך בפעילות"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Continue Production"
-msgstr ""
+msgstr "המשך ייצור"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -834,17 +842,17 @@ msgstr "נוצר ב-"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Production"
-msgstr ""
+msgstr "ייצור נוכחי"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Qty"
-msgstr ""
+msgstr "כמות נוכחית"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
 msgid "Currently Produced Quantity"
-msgstr ""
+msgstr "כמות נוכחית מיוצרת "
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -864,17 +872,17 @@ msgstr "תאריך"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "מועד סיום"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
 msgid "Deadline Start"
-msgstr ""
+msgstr "מועד התחלה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
-msgstr ""
+msgstr "משך ברירת מחדל"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_use_manufacturing_lead
@@ -885,7 +893,7 @@ msgstr "ברירת מחדל ליצור זמן הספקה "
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "ברירת מחדל של יחידת מידה "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_description
@@ -988,7 +996,7 @@ msgstr "חישוב משך זמן"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_percent
 msgid "Duration Deviation (%)"
-msgstr ""
+msgstr "סטיית משך (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_unit
@@ -1008,7 +1016,7 @@ msgstr "תאריך סופי אפקטיבי"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_start
 msgid "Effective Start Date"
-msgstr ""
+msgstr "תאריך התחלה אפקטיבי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_loss_type
@@ -1030,12 +1038,12 @@ msgstr "תאריך סיום"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_expected
 msgid "Expected Duration"
-msgstr ""
+msgstr "משך הזמן הצפוי"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_duration_expected
 msgid "Expected duration (in minutes)"
-msgstr ""
+msgstr "משך הזמן הצפוי (בדקות)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_datas
@@ -1060,7 +1068,7 @@ msgstr "מסננים"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Finish Order"
-msgstr ""
+msgstr "סיים הזמנה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1093,7 +1101,7 @@ msgstr "מוצרים מוגמרים"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_dest_id
 msgid "Finished Products Location"
-msgstr ""
+msgstr "מיקום מוצרים מוגמרים"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -1170,12 +1178,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "יש קבצים מצורפים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Has Been Produced"
-msgstr ""
+msgstr "הופק"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
@@ -1213,7 +1221,7 @@ msgstr "מזהה"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "אם הוגדר גרסת מוצר,עץ המוצר זמין רק עבור מוצר זה."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_propagate
@@ -1222,6 +1230,8 @@ msgid ""
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
 msgstr ""
+"אם מסומן, כאשר המהלך הקודם של המהלך (שנוצר על ידי רכש הבא) מבוטל או מפוצל, "
+"המהלך שנוצר על ידי מהלך זה יכול אליו גם "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_active
@@ -1229,6 +1239,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"אם השדה הפעיל מוגדר ל- False, הוא יאפשר לך להסתיר את חשבונות החומר מבלי "
+"להסיר אותו."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
@@ -1236,6 +1248,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"אם השדה הפעיל מוגדר ל- False, הוא יאפשר לך להסתיר את רשומת המשאבים מבלי "
+"להסיר אותה."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
@@ -1243,6 +1257,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
+"אם השדה הפעיל מוגדר ל- False, הוא יאפשר לך להסתיר את הניתוב מבלי להסיר אותו."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1251,6 +1266,9 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"אם המוצר הוא מוצר מוגמר: בעת עיבוד מכירות\n"
+"                                    כדי להזמין מוצר זה, סדר המשלוח יכיל את חומר\n"
+"                                    הגלם, במקום את המוצר המוגמר."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1260,6 +1278,10 @@ msgid ""
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
 msgstr ""
+"אם המוצר הוא מוצר מוגמר למחצה: בעת עיבוד \n"
+"                                    הוראות ייצור מכילה את המוצר כרכיב,\n"
+"                                    חומרי הגלם של אותו מוצר יתווספו ל\n"
+"                                    הוראות הייצור של המוצר הסופי."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1280,7 +1302,7 @@ msgstr "תוכן אינדקס"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_lot_produced_qty
 msgid "Informative, not used in matching"
-msgstr ""
+msgstr "אינפורמטיבי, לא בשימוש בהתאמות"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:210
@@ -1299,13 +1321,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Inventory Moves"
-msgstr ""
+msgstr "תנועות מלאי"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_line_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
-msgstr ""
+msgstr "מהלכים מלאי שעבורם עליך לסרוק מספר אצווה בהזמנת עבודה זו"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
@@ -1315,22 +1337,22 @@ msgstr "זה נעול"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
 msgid "Is a Blocking Reason"
-msgstr ""
+msgstr "היא סיבה חסימה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr ""
+msgstr "היא סיבה חסימה?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
 msgid "Is public document"
-msgstr ""
+msgstr "האם מסמך ציבורי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
 msgid "Is the Current User Working"
-msgstr ""
+msgstr "האם המשתמש הנוכחי עובד"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:162
@@ -1345,11 +1367,14 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"שמור ריק אם אתה מייצר במקום שבו אתה מוצא את חומרי הגלם. הגדר מיקום אם אתה "
+"מייצר במיקום קבוע. זה יכול להיות מיקום שותף אם פעולות הייצור מבוצעות ע\"י "
+"בקבלן משנה."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
 msgid "Kit"
-msgstr ""
+msgstr "ערכה"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_laptop_charger
@@ -1455,6 +1480,7 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
+"שורות צריכות להימחק, אבל לא ניתן עדיין מאחר ויש מספר כמויות שנדרש לצרוך מהם."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1464,7 +1490,7 @@ msgstr "מיקום"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "מיקום שבו המערכת תחפש רכיבים."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
@@ -1480,7 +1506,7 @@ msgstr "נעל"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8257
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr ""
+msgstr "סיבה הפסד"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
@@ -1502,13 +1528,13 @@ msgstr "מספר סידורי/אצווה"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "אצווה/ מספר סידרתי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_line_ids
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Lots"
-msgstr ""
+msgstr "אצוות"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -1523,7 +1549,7 @@ msgstr "תחזוקה"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "ניהול פעולות הזמנת עבודה"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1545,7 +1571,7 @@ msgstr "ייצור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "כלל ייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
@@ -1555,7 +1581,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Manufacture this product"
-msgstr ""
+msgstr "ייצור מוצר זה"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:64
@@ -1579,7 +1605,7 @@ msgstr "זמן ייצור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr ""
+msgstr "סוג פעולות הייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1623,13 +1649,13 @@ msgstr "הזמנות ייצור אשר כרגע בייצור"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr ""
+msgstr "הזמנות ייצור אשר נמצאים במצב מאושר."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_ready_to_produce
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr ""
+msgstr "מוכנות הייצור"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1643,6 +1669,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"פעולות הייצור מעובדות בתחנות עבודה. ניתן ליצור תחנת עבודה\n"
+"                של עובדים ו / או מכונות, הם משמשים עבור תמחיר, תזמון, תכנון קיבולת, וכו '.\n"
+"                תחנות העבודה מוגדרים לפי פעילות הניתוב."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1651,6 +1680,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"פעולות הייצור מעובדות בתחנות עבודה. ניתן ליצור תחנת עבודה\n"
+"           של עובדים ו / או מכונות, הם משמשים עבור תמחיר, תזמון, תכנון קיבולת, וכו '.\n"
+"           תחנות העבודה מוגדרים לפי פעילות הניתוב."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1664,7 +1696,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Done"
-msgstr ""
+msgstr "סמן כבוצע"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
@@ -1674,13 +1706,13 @@ msgstr "קובץ מקור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "מאסטר תכנית הייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_availability
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_availability
 msgid "Materials Availability"
-msgstr ""
+msgstr "זמינות חומרים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_message
@@ -1708,12 +1740,12 @@ msgstr "העבר"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_move
 msgid "Move Done"
-msgstr ""
+msgstr "תנועה בוצע"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Move forward deadline start dates by"
-msgstr ""
+msgstr "העבר תאריכי סיום לתאריך ההתחלה על ידי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_raw_ids
@@ -1728,12 +1760,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Mrp תחנת עבודה"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: תכנית הזמנות ייצור "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1775,12 +1807,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr ""
+msgstr "הפעולה הבאה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
 msgid "Next Work Order"
-msgstr ""
+msgstr "הזמנת עבודה הבאה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1809,7 +1841,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
-msgstr ""
+msgstr "אין כרגע הזמנת עבודה בתהליך. לחץ כדי לסמן את תחנת העבודה כחסומה."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -1841,38 +1873,38 @@ msgstr "הערות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr ""
+msgstr "מספר הזמנות ייצור מאוחרות"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr ""
+msgstr "מספר הזמנות ייצור ממתינות"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
 msgid "Number of Manufacturing Orders to Process"
-msgstr ""
+msgstr "מספר הזמנות ייצור לביצוע"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_capacity
 msgid "Number of pieces that can be produced in parallel."
-msgstr ""
+msgstr "מספר יחידות שניתן לייצר במקביל."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr ""
+msgstr "יעילות ציוד כוללת"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target"
-msgstr ""
+msgstr "יעד יעילות ציוד כוללת"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target in percentage"
-msgstr ""
+msgstr "יעד יעילות ציוד כוללת באחוזים"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1884,7 +1916,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
 msgid "Oee"
-msgstr ""
+msgstr "יעילות ציוד כוללת"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_19
@@ -1895,19 +1927,19 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "לאחר עיבוד מספר מינימלי של מוצרים"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr ""
+msgstr "לאחר עיבוד כל המוצרים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_operation_id
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Operation"
-msgstr ""
+msgstr "אופרציה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
@@ -1937,7 +1969,7 @@ msgstr "פעולות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_order_finished_lot_ids
 msgid "Order Finished Lot"
-msgstr ""
+msgstr "ההזמנה אצווה הסתיימה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_order_ids
@@ -1947,19 +1979,19 @@ msgstr "הזמנות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
 msgid "Original Production Quantity"
-msgstr ""
+msgstr "כמות ייצור מקורית"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr ""
+msgstr "יעילות ציוד כוללת"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr ""
+msgstr "יעילות ציוד כוללת, על בסיס החודש האחרון"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
@@ -1990,7 +2022,7 @@ msgstr "זמין חלקית"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Pause"
-msgstr ""
+msgstr "השהה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -2004,7 +2036,7 @@ msgstr "ממתינה"
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Performance"
-msgstr ""
+msgstr "ביצועים"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2014,17 +2046,17 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_performance
 msgid "Performance over the last month"
-msgstr ""
+msgstr "ביצועים בחודש האחרון"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr ""
+msgstr "תכנון הזמנות "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
+msgstr "תכנון הזמנות ייצור או רכש על בסיס תחזיות"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -2036,7 +2068,7 @@ msgstr "תכנן"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Planned Date"
-msgstr ""
+msgstr "תאריך תכנון "
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -2048,7 +2080,7 @@ msgstr "תכנון"
 #: code:addons/mrp/wizard/mrp_product_produce.py:150
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
-msgstr ""
+msgstr "נא הכנס מספר אצווה או מספר סידורי  %s !"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:304
@@ -2056,12 +2088,12 @@ msgstr ""
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
-msgstr ""
+msgstr "נא הגדר את הכמות המופקת כרגע. זה צריך להיות שונה מאפס."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Post Inventory"
-msgstr ""
+msgstr "מלאי רשום"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_priority
@@ -2096,7 +2128,7 @@ msgstr "כלל רכש"
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Produce"
-msgstr ""
+msgstr "ליצר"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2106,7 +2138,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Produced"
-msgstr ""
+msgstr "מיוצר"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -2140,7 +2172,7 @@ msgstr "תנועות פריט"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_produce_id
 msgid "Product Produce"
-msgstr ""
+msgstr "לייצר מוצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
@@ -2187,7 +2219,7 @@ msgstr "ייצור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
 msgid "Production Date"
-msgstr ""
+msgstr "תאריך ייצור"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_document
@@ -2231,7 +2263,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Production Workcenter"
-msgstr ""
+msgstr "תחנת עבודה לייצור"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2287,7 +2319,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_quality_mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
-msgstr ""
+msgstr "איכות"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2311,13 +2343,13 @@ msgstr "כמות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_lot_produced_qty
 msgid "Quantity Finished Product"
-msgstr ""
+msgstr "כמות מוצר מוגמר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Quantity Produced"
-msgstr ""
+msgstr "כמות מיוצרת"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_remaining
@@ -2328,7 +2360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Quantity To Produce"
-msgstr ""
+msgstr "כמות לייצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
@@ -2338,18 +2370,18 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr ""
+msgstr "חומר גלם"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Raw Materials"
-msgstr ""
+msgstr "חמרי גלם"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "מיקום חומרי הגלם"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -2363,7 +2395,7 @@ msgstr "מוכן"
 #: code:addons/mrp/static/src/js/mrp.js:147
 #, python-format
 msgid "Ready to produce"
-msgstr ""
+msgstr "מוכן לייצר"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration
@@ -2437,7 +2469,7 @@ msgstr "דיווח"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
 msgid "Requires Serial"
-msgstr ""
+msgstr "נדרש מספר סידורי"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2448,7 +2480,7 @@ msgstr "שמורות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "שדה משאבים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_id
@@ -2490,7 +2522,7 @@ msgstr "אחראי"
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "ניתוב"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
@@ -2516,7 +2548,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
-msgstr ""
+msgstr "ניתובים"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2535,7 +2567,7 @@ msgstr "שמור"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr ""
+msgstr "תזמן הזמנות ייצור מוקדם יותר, כדי למנוע עיכובים"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2545,18 +2577,18 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_finished
 msgid "Scheduled Date Finished"
-msgstr ""
+msgstr "תאריך סיום מתוזמן "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_start
 msgid "Scheduled Date Start"
-msgstr ""
+msgstr "תאריך התחלה מתוזמן "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "תאריך מתוזמן לפי חודש"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2605,7 +2637,7 @@ msgstr "חיפוש"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "חיפוש עצי מוצר"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
@@ -2620,7 +2652,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr ""
+msgstr "חיפוש הזמנות עבודה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -2636,7 +2668,7 @@ msgstr "אבטח את זמן האספקה"
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_config_settings_manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "ימי ביטחון עבור כל פעולת ייצור."
 
 #. module: mrp
 #. openerp-web
@@ -2674,11 +2706,13 @@ msgid ""
 "to produce after the quantity set in 'Quantity To Process' has been "
 "produced."
 msgstr ""
+"הגדר 'לא' כדי לתזמן את סדר העבודה הבא לאחר הקודם. הגדר 'כן' כדי לייצר לאחר "
+"כמות מוגדר ב 'כמות נדרשת לתהליך' הופק."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Set duration manually"
-msgstr ""
+msgstr "הגדר את משך הזמן באופן ידני"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2726,7 +2760,7 @@ msgstr "מקור"
 #: model:product.product,description:mrp.product_product_computer_desk_screw
 #: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
-msgstr ""
+msgstr "בורג נירוסטה"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
@@ -2769,12 +2803,12 @@ msgstr "תנועת מלאי"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_dest_ids
 msgid "Stock Movements of Produced Goods"
-msgstr ""
+msgstr "תנועות מלאי של מוצרים מיוצרים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "שם הקובץ המאוחסן"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
@@ -2813,33 +2847,33 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_move_is_done
 #: model:ir.model.fields,help:mrp.field_stock_move_line_done_move
 msgid "Technical Field to order moves"
-msgstr ""
+msgstr "שדה טכני להורות על מהלכים"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
-msgstr ""
+msgstr "שדה טכני כדי לראות אם אנחנו יכולים להראות 'סמן כבוצע' כפתור"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_done_wo
 msgid ""
 "Technical Field which is False when temporarily filled in in work order"
-msgstr ""
+msgstr "שדה טכני שהוא False כאשר ממולא זמנית בהזמנת עבודה"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_is_user_working
 msgid "Technical field indicating whether the current user is working. "
-msgstr ""
+msgstr "שדה טכני המציין אם המשתמש הנוכחי פועל."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
-msgstr ""
+msgstr "שדה טכני לבדוק מתי נוכל לפרסם"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "שדה טכני כדי לבדוק מתי אנחנו יכולים לשמור"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_consumed_less_than_planned
@@ -2847,16 +2881,17 @@ msgid ""
 "Technical field used to see if we have to display a warning or not when "
 "confirming an order."
 msgstr ""
+"שדה טכני השתמש כדי לראות אם נדרש להציג אזהרה או לא כאשר קיים אישור ההזמנה."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
 msgid "Technical: used in views and domains only."
-msgstr ""
+msgstr "טכני: משמש לצפיות ודומיינים בלבד."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_working_state
 msgid "Technical: used in views only"
-msgstr ""
+msgstr "טכני: משמש בתצוגות בלבד"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_id
@@ -2864,12 +2899,12 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_uom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_state
 msgid "Technical: used in views only."
-msgstr ""
+msgstr "טכני: משמש בתצוגות בלבד."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_production_lot_use_next_on_work_order_id
 msgid "Technical: used to figure out default serial number on work orders"
-msgstr ""
+msgstr "טכני: משמש כדי להבין את המספר הסידורי ברירת המחדל של הזמנות עבודה"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
@@ -2877,13 +2912,13 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "ביחידת המדידה של המוצר שבחרת יש קטגוריה שונה מזו שבטופס המוצר."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:156
 #, python-format
 msgid "The capacity must be strictly positive."
-msgstr ""
+msgstr "הקיבולת חייבת להיות חיובית לחלוטין."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
@@ -2893,7 +2928,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "אובייקט מסד הנתונים המצורף אליו יצורף."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2903,6 +2938,9 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
+"רשימת פעולות (רשימה של מרכזי עבודה) כדי לייצר את המוצר המוגמר. הניתוב משמש "
+"בעיקר לחישוב עלויות מרכז העבודה במהלך הפעילות ולתכנון עומסים עתידיים במרכזי "
+"עבודה על בסיס תכנון הייצור."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
@@ -2911,11 +2949,14 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"רשימת הפעולות לייצור המוצר המוגמר. הניתוב משמש בעיקר לחישוב עלויות מרכז "
+"העבודה במהלך הפעילות ולתכנון עומסים עתידיים במרכזי עבודה על בסיס תכנון "
+"הייצור."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
 msgid "The number of products already handled by this work order"
-msgstr ""
+msgstr "מספר המוצרים שכבר טופלו בהזמנת עבודה זו"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
@@ -2927,7 +2968,7 @@ msgstr ""
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
-msgstr ""
+msgstr "הפעולה שבה המרכיבים נצרכים, או המוצרים המוגמרים שנוצרו."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -2936,6 +2977,8 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"פעולות לייצור עץ מוצר זה. כאשר צוין ניתוב, הזמנות הייצור יבוצעו באמצעות "
+"הזמנות עבודה, אחרת הכל יעובד בפקודת הייצור עצמו."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:95
@@ -2946,12 +2989,12 @@ msgstr ""
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "The quantity to produce must be positive!"
-msgstr ""
+msgstr "כמות לייצור חייב להיות חיובית!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "הקוד המזהה של רשומה זו מצורף."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -2960,6 +3003,8 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"הניתוב מכיל את כל מרכזי העבודה המשמשים ובמשך כמה זמן. זה ייצור הזמנות עבודה "
+"לאחר מכן אשר משנה את ביצוע צו הייצור."
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:20
@@ -2967,7 +3012,7 @@ msgstr ""
 msgid ""
 "There is no Bill of Material found for the product %s. Please define a Bill "
 "of Material for this product."
-msgstr ""
+msgstr "לא נמצא עץ מוצר עבור מוצר%s. הגדר עץ מוצר עבור מוצר זה."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2990,6 +3035,9 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"שדה זה משמש לחישוב משך הזמן הצפוי של הזמנת עבודה בתחנת עבודה זו. לדוגמה, אם "
+"הזמנת עבודה לוקחת שעה אחת וגורם היעילות הוא 100%, אזי משך הזמן הצפוי יהיה "
+"שעה אחת. אם גורם ההתייעלות הוא 200%, אזי משך הזמן הצפוי יהיה 30 דקות."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_production_location_id
@@ -3008,7 +3056,7 @@ msgstr "זמן"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
 msgid "Time Efficiency"
-msgstr ""
+msgstr "זמן יעילות"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_ids
@@ -3024,7 +3072,7 @@ msgstr "מעקב זמן"
 #: code:addons/mrp/models/mrp_workorder.py:439
 #, python-format
 msgid "Time Tracking: "
-msgstr ""
+msgstr "מעקב זמן:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
@@ -3039,12 +3087,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
 msgid "Time in minutes for the cleaning."
-msgstr ""
+msgstr "זמן ניקיון בדקות"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
 msgid "Time in minutes for the setup."
-msgstr ""
+msgstr "זמן סט-אפ בדקות"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
@@ -3052,18 +3100,20 @@ msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
 msgstr ""
+"זמן בדקות. האם הזמן בשימוש במצב ידני, או בפעם הראשונה אמור בזמן אמת, כאשר "
+"אין כל הזמנות עבודה עדיין."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Time the currently logged user spent on this workorder."
-msgstr ""
+msgstr "זמן עריכה של המשתמש עבור הזמנת עבודה זו "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_qty_to_consume
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "To Consume"
-msgstr ""
+msgstr "לצרוך"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3074,12 +3124,12 @@ msgstr "מטלה לביצוע"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr ""
+msgstr "להתחיל לעבוד"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "To Produce"
-msgstr ""
+msgstr "לייצור"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3116,23 +3166,23 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count
 msgid "Total Late Orders"
-msgstr ""
+msgstr "סך כל ההזמנות מאחרות"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Qty"
-msgstr ""
+msgstr "סה\"כ כמות"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_pending_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_progress_count
 msgid "Total Running Orders"
-msgstr ""
+msgstr "סה\"כ הזמנות בביצוע"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Total duration"
-msgstr ""
+msgstr "משך כולל"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
@@ -3156,7 +3206,7 @@ msgstr "סוג"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Unblock"
-msgstr ""
+msgstr "בטל חסימה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild_unbuild_id
@@ -3215,7 +3265,7 @@ msgstr "יחידת מידה"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "יחידת מידה (יחידת מידה) היא יחידת המדידה של בקרת המלאי"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3227,7 +3277,7 @@ msgstr "לא נעול"
 msgid ""
 "Unlock the manufacturing order to correct what has been consumed or "
 "produced."
-msgstr ""
+msgstr "נעילת סדר הייצור כדי לתקן מה נצרך או מיוצר."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3273,13 +3323,13 @@ msgstr ""
 msgid ""
 "Use the Produce button or process the work orders to create some finished "
 "products."
-msgstr ""
+msgstr "השתמש בלחצן הפקודות או בצע את הוראות העבודה כדי ליצור מוצרים מוגמרים."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
-msgstr ""
+msgstr "משמש ב"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3295,6 +3345,8 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"באמצעות דוח MPS עוזר בקביעת תזמן מחודש וגם בקביעת פעולות הייצור הוא שימושי "
+"אם יש לך זמן הספקה ארוך ואם אתה מייצר על בסיס תחזיות מכירות."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
@@ -3371,7 +3423,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "כאשר המוצרים מיוצרים, הם יכולים להיות מיוצרים במחסן זה."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3389,18 +3441,18 @@ msgstr "מרכז עבודה"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workcenter_load
 msgid "Work Center Load"
-msgstr ""
+msgstr "עומס בתחנת עבודה"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_report_graph
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Work Center Loads"
-msgstr ""
+msgstr "עומסים בתחנת עבודה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
-msgstr ""
+msgstr "שם בתחנת עבודה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -3410,12 +3462,12 @@ msgstr "פעולות מרכז עבודה"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "שימוש בתחנת עבודה"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 msgid "Work Center load"
-msgstr ""
+msgstr "עומס בתחנות עבודה"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -3437,11 +3489,15 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"תחנות עבודה מאפשרים לך ליצור ולנהל את יחידות\n"
+"               הייצור. הם מורכבים מעובדים ו / או מכונות, אשר\n"
+"               נחשבים כיחידות הקצאה לביצוע פעולת הייצור, כמו גם קיבולת\n"
+"                ותחזית התכנון."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Work Instruction"
-msgstr ""
+msgstr "הוראות עבודה"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder
@@ -3473,11 +3529,14 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"פעולות הזמנת עבודה מאפשרות לך ליצור ולנהל את פעולות הייצור שיש לעקוב אחר "
+"תחנות העבודה שלך כדי לייצר מוצר. הם מחוברים לחשבונות חומרים שיגדירו את חומרי"
+" הגלם הנדרשים."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
 msgid "Work Order To Consume"
-msgstr ""
+msgstr "סדר עבודה לצריכה"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -3492,7 +3551,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_tree_view_inherit
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Work Orders"
-msgstr ""
+msgstr "הזמנות עבודה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_group_mrp_routings
@@ -3502,18 +3561,18 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
 msgid "Work Orders Deviation"
-msgstr ""
+msgstr "סטיית הזמנות עבודה"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr ""
+msgstr "ביצועי הזמנות העבודה"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "תכנון הזמנות עבודה"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
@@ -3522,6 +3581,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"הזמנות עבודה הן פעולות שיש לעבד בתחנות העבודה כדי לממש את\n"
+"            הזמנת ייצור. הזמנות עבודה מופעלות על ידי הזמנות ייצור,\n"
+"           הם מבוססים על ניתוב מוגדר על-פני אלה"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3548,12 +3610,12 @@ msgstr "גיליון"
 #: code:addons/mrp/models/mrp_production.py:586
 #, python-format
 msgid "Work order %s is still running"
-msgstr ""
+msgstr "הזמנת עבודה %s עדיין פועלת"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr ""
+msgstr "הזמנות עבודה בתהליך. לחץ כדי לחסום את תחנת העבודה."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3567,12 +3629,12 @@ msgstr "מרכז עבודה"
 #: model:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Workcenter Productivity"
-msgstr ""
+msgstr "פרודוקטיביות בתחנת בעבודה "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "יומן פרודוקטיביות של תחנת בעבודה "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_loss_form_view
@@ -3583,7 +3645,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr ""
+msgstr "עמדת עבודה חסום, לחץ כדי לבטל את החסימה."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -3612,19 +3674,19 @@ msgstr "ניתן להעלות קובץ מהמחשב או להעתיק / להדב
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
-msgstr ""
+msgstr "לא ניתן לבטל הזמנת ייצור, הזמנת עבודה עדיין בעיצומה."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:244
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "לא ניתן לשנות את סדר העבודה המוגמר."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:572
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
-msgstr ""
+msgstr "אתה לא יכול לצרוך בלי לספח לאצווה ממנה אתה צורך "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:98
@@ -3633,6 +3695,8 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
+"לא ניתן למחוק את עץ המוצר עם הזמנות ייצור.\n"
+"אנא סגור או בטל תחילה."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:203
@@ -3648,6 +3712,8 @@ msgid ""
 "material.             If you want to cancel this MO, please change the "
 "consumed quantities to 0."
 msgstr ""
+"לא ניתן לבטל הזמנת ייצור אם כבר נצרך חומר. אם אתה רוצה לבטל את הזמנת העבודה,"
+" נדרש לשנות את הכמות הנצרך ל 0."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:209
@@ -3656,12 +3722,13 @@ msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"אתה לא יכול לצרוך את אותו מספר הסידורי פעמיים. תקן את המספר הסידורי המקודד."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:130
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr ""
+msgstr "אתה לא יכול לייצר את אותו מספר הסידורי פעמיים."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:93
@@ -3673,14 +3740,14 @@ msgstr ""
 #: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
 msgid "You have already processed %s. Please input a quantity higher than %s "
-msgstr ""
+msgstr "לך יש כבר עיבוד קיים %s. הזן כמות גבוהה מ %s "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "You have consumed less material than what was planned. Are you sure you want"
 " to close this MO?"
-msgstr ""
+msgstr "אתה צריך פחות חומר ממה שהיה מתוכנן. האם אתה בטוח שברצונך לסגור את MO?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:429
@@ -3690,6 +3757,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"עליך להגדיר לפחות הפסד פרודוקטיבי אחד בקטגוריה 'ביצועים'. יצירת אחד מתוך "
+"יישום ייצור, תפריט: תצורה / פרודוקטיביות הפסדים."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:425
@@ -3699,6 +3768,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"עליך להגדיר לפחות הפסד פרודוקטיבי אחד בקטגוריה 'פרודוקטיביות'. יצירת אחד "
+"מתוך יישום ייצור, תפריט: תצורה / פרודוקטיביות הפסדים."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:483
@@ -3708,6 +3779,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"אתה צריך להגדיר לפחות הפסד אחד פרודוקטיביות unactive בקטגוריה 'ביצועים'. "
+"יצירת אחד מתוך יישום ייצור, תפריט: תצורה / פרודוקטיביות הפסדים."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:126
