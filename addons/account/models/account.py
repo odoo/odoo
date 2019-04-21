@@ -769,6 +769,7 @@ class AccountJournal(models.Model):
                 company = self.env['res.company'].browse(company_id)
                 account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
                 default_account = self.env['account.account'].create(account_vals)
+                default_account.onchange_code()
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
 

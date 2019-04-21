@@ -232,6 +232,7 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
         account_vals = self.company_id.chart_template_id._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
         account = self.env['account.account'].create(account_vals)
+        account.onchange_code()
         inbound_payment_method_ids = []
         if self.token_implemented and self.payment_flow == 's2s':
             inbound_payment_method_ids.append((4, self.env.ref('payment.account_payment_method_electronic_in').id))
