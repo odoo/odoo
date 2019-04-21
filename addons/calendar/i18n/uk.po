@@ -420,7 +420,7 @@ msgstr ""
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        Вітаємо ${object.common_name},<br/><br/>\n"
-"        Це нагадування про подію :\n"
+"        Це нагадування про подію:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -505,7 +505,7 @@ msgstr "Прийнято"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
@@ -526,7 +526,7 @@ msgstr "Дія"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Тип діяльності"
+msgstr "Тип дії"
 
 #. module: calendar
 #. openerp-web
@@ -560,7 +560,7 @@ msgstr "Підрахунок прикріплення"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
 msgid "Attendee"
-msgstr "Гість"
+msgstr "Учасник"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
@@ -573,7 +573,7 @@ msgstr "Статус учасників"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr "Гості"
+msgstr "Учасники"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -591,7 +591,7 @@ msgstr "Зайнято"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "By day"
-msgstr "По днях"
+msgstr "За днем"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -615,7 +615,7 @@ msgstr "Інформація календаря учасника"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
-msgstr "Календар Контакти"
+msgstr "Контакти календаря"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -640,6 +640,9 @@ msgid ""
 "Categories may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Категорії можуть запускати особливу поведінку, наприклад, відкривати "
+"перегляд календаря або автоматично позначати як виконано, коли документ "
+"завантажується"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -787,12 +790,12 @@ msgstr "Ел. пошта"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hour(s)"
-msgstr ""
+msgstr "Email - 3 Години"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hour(s)"
-msgstr ""
+msgstr "Email - 6 Годин"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -934,7 +937,7 @@ msgstr "Групувати за"
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
-"Групування по даті не підтримується, використовуйте календарний вигляд."
+"Групування за датою не підтримується, використовуйте перегляд календаря."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -964,7 +967,7 @@ msgstr "Якщо позначено, то повідомленя потребу�
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
@@ -988,7 +991,7 @@ msgstr "Запрошення"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 msgid "Invitation Token"
-msgstr "Знак запрошення"
+msgstr "Токен запрошення"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1158,7 +1161,7 @@ msgstr "Повідомлення"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr "Хвилина (хвилини)"
+msgstr "Хвилина(и)"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1210,27 +1213,27 @@ msgstr "Сповіщення"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Day(s)"
-msgstr ""
+msgstr "Сповіщення - 1 День"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hour(s)"
-msgstr ""
+msgstr "Сповіщення - 1 Година"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minute(s)"
-msgstr ""
+msgstr "Сповіщення - 15 Хвилин"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hour(s)"
-msgstr ""
+msgstr "Сповіщення - 2 Години"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minute(s)"
-msgstr ""
+msgstr "Сповіщення - 30 Хвилин"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1453,7 +1456,7 @@ msgstr "Показати час як"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #, python-format
 msgid "Snooze"
-msgstr "Вздрімнути"
+msgstr "Відкласти"
 
 #. module: calendar
 #: selection:mail.activity.type,category:0
@@ -1536,7 +1539,7 @@ msgstr "Мітки"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr "В"
+msgstr "Цей"
 
 #. module: calendar
 #. openerp-web
@@ -1546,7 +1549,7 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
-"Діяльність пов'язана з нарадою. Видалення його також призведе до видалення "
+"Дія пов'язана із зустріччю. Видалення її також призведе до видалення "
 "зустрічі. Ви хочете продовжити?"
 
 #. module: calendar
@@ -1586,7 +1589,7 @@ msgstr "Ця подія приєднана до повторення...<br/>"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr "по"
+msgstr "Чт"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1649,12 +1652,12 @@ msgstr "До"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr "Оновити тільки цей інстанс"
+msgstr "Оновити тільки цю версію"
 
 #. module: calendar
 #: selection:mail.activity.type,category:0
 msgid "Upload Document"
-msgstr ""
+msgstr "Завантажити документ"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -1695,7 +1698,7 @@ msgstr "Так, я піду."
 #: code:addons/calendar/models/calendar.py:159
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Ви не можете створити одинакових учасників."
+msgstr "Ви не можете створити однакових учасників."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
