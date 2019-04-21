@@ -1300,7 +1300,7 @@ msgstr "계정"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr ""
+msgstr "회계사 계정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1788,7 +1788,7 @@ msgstr "조정 세금"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "조정 유형"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2214,12 +2214,12 @@ msgstr "적용성"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "대변 분개 항목에 적용됨"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "차변 분개 항목에 적용됨"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -2505,7 +2505,7 @@ msgstr "예금거래 명세서"
 #: code:addons/account/models/account_bank_statement.py:937
 #, python-format
 msgid "Bank Statement %s"
-msgstr ""
+msgstr "예금 거래 명세서 %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3092,7 +3092,7 @@ msgstr "회계 템플릿 선택"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "상대편 선택 또는 쓰기금지 생성"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -6024,12 +6024,12 @@ msgstr "1월"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Journal"
-msgstr "분개장"
+msgstr "분개"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "분개장 & 협력사"
+msgstr "분개 & 협력사"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:254
@@ -6042,19 +6042,19 @@ msgstr "분개장 & 협력사"
 #: model:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "분개"
+msgstr "분개 기입 항목"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "월별 분개"
+msgstr "월별 분개 기재"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr "분개"
+msgstr "분개 기입 항목"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_move_name
@@ -9984,7 +9984,7 @@ msgstr "마지막 라인의 계산 유형은 \"잔액\"이 되어야 전체 금�
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "조언자의 잠금 날짜는 되돌릴 수 없으며 제거할 수 없습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -10012,7 +10012,7 @@ msgstr "계정 이동 라인에 사용할 이름입니다."
 #, python-format
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
-msgstr ""
+msgstr "새 조언자의 잠금 날짜는 이전 잠금 날짜 이후에 설정해야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -10062,7 +10062,7 @@ msgstr "청구서 협력사 참조"
 #, python-format
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
-msgstr ""
+msgstr "회사 분개장의 협력사와 관련 은행 계정이 일치하지 않습니다."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:60
@@ -11370,7 +11370,7 @@ msgstr "부분 지불된 청구서 대금을 취소할 수 없습니다. 먼저 
 msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
-msgstr ""
+msgstr "일부 분개 항목이 이미 있으므로 회사의 통화를 변경할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account.py:235
@@ -11403,6 +11403,7 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"사용자보다 엄격한 자문 조건을 정의할 수 없습니다. 사용자의 잠금 날짜 이전에 조언자의 잠금 날짜가 설정되어 있는지 확인합니다."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11476,6 +11477,7 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"아직 완료되지 않은 기간은 잠글 수 없습니다. 조언자의 잠금 날짜가 전월의 마지막 날 이후로 설정되지 않았는지 확인해 주세요."
 
 #. module: account
 #. openerp-web
@@ -11522,7 +11524,7 @@ msgstr "고객 또는 공급업체에 설정된 계정을 제거/비활성화할
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
-msgstr ""
+msgstr "일부 분개 항목이 이미 다른 통화를 가지고 있기 때문에 이 계정에 통화를 설정할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368

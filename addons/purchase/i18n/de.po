@@ -28,12 +28,13 @@
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Andi, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
-# DE R1 <e2fes1@hotmail.com>, 2017
+# 4e7311735ad180fde514b5b19202d965, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Jan Meyer, 2018
 # Bülent Tiknas <btiknas@googlemail.com>, 2018
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
+# Flo Bieringer <github@fl0.eu>, 2019
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2019\n"
+"Last-Translator: Flo Bieringer <github@fl0.eu>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,6 +80,32 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Sehr geehrte/r\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Anbei finden Sie die ${object.state in ('draft', 'sent') and 'Angebotsanfrage' or 'Bestellbestätigung'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    mit Referenz: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (Angebotsanfragenursprung: ${object.origin})\n"
+"% endif\n"
+"in Höhe von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Bei Fragen antworten Sie einfach auf diese E-Mail.</p>\n"
+"<p>Vielen Dank,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -109,6 +136,31 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Sehr geehrte/r ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Anbei finden Sie die <strong>${object.state in ('draft', 'sent') and 'Angebotsanfrage' or 'Bestellbestätigung'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    mit Referenz: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (Angebotsanfragenursprung: ${object.origin})\n"
+"% endif\n"
+"in Höhe von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"von ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Bei Fragen antworten Sie einfach auf diese E-Mail.</p>\n"
+"<p>Vielen Dank,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:98
