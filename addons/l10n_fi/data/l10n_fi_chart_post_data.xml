@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Chart template -->
+    <menuitem id="account_reports_fi_statements_menu" name="Finland" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
     <record id="fi_chart_template" model="account.chart.template">
         <field name="property_account_receivable_id" ref="chart1700"/>
         <field name="property_account_payable_id" ref="chart2700"/>
