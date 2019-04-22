@@ -277,13 +277,13 @@ class StockQuant(models.Model):
                 if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)
-                quant.reserved_quantity += max_quantity_on_quant
+                quant._safe_reserved_qty_upd(max_quantity_on_quant)
                 reserved_quants.append((quant, max_quantity_on_quant))
                 quantity -= max_quantity_on_quant
                 available_quantity -= max_quantity_on_quant
             else:
                 max_quantity_on_quant = min(quant.reserved_quantity, abs(quantity))
-                quant.reserved_quantity -= max_quantity_on_quant
+                quant._safe_reserved_qty_upd(-1 * max_quantity_on_quant)
                 reserved_quants.append((quant, -max_quantity_on_quant))
                 quantity += max_quantity_on_quant
                 available_quantity += max_quantity_on_quant
@@ -291,6 +291,29 @@ class StockQuant(models.Model):
             if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
                 break
         return reserved_quants
+
+    @api.multi
+    def _safe_reserved_qty_upd(self, qty):
+        for quant in self:
+            try:
+                with self._cr.savepoint():
+                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
+                    quant.write({'reserved_quantity': quant.reserved_quantity + qty})
+                    break
+            except OperationalError as e:
+                if e.pgcode == '55P03':  # could not obtain the lock
+                    self.create({
+                        'product_id': quant.product_id.id,
+                        'location_id': quant.location_id.id,
+                        'quantity': 0,
+                        'reserved_quantity': qty,
+                        'lot_id': quant.lot_id and quant.lot_id.id,
+                        'package_id': quant.package_id and quant.package_id.id,
+                        'owner_id': quant.owner_id and quant.owner_id.id,
+                        'in_date': quant.in_date,
+                    })
+                else:
+                    raise
 
     @api.model
     def _merge_quants(self):
