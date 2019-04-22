@@ -90,10 +90,15 @@ KanbanRenderer.include({
         var index = _.findIndex(this.widgets, {db_id: localID});
         var $column = this.widgets[index].$el;
         var left = $column.css('left');
+        var right = $column.css('right');
         var scrollTop = $column.scrollTop();
         return this._super.apply(this, arguments).then(function () {
             $column = self.widgets[index].$el;
-            $column.css({left: left});
+            if (_t.database.parameters.direction === 'rtl') {
+                $column.css({right: right});
+            } else {
+                $column.css({left: left});
+            }
             $column.scrollTop(scrollTop); // required when clicking on 'Load More'
             self._enableSwipe();
         });
@@ -137,6 +142,8 @@ KanbanRenderer.include({
         }
         var def = $.Deferred();
         this.activeColumnIndex = moveToIndex;
+        var isRTL = _t.database.parameters.direction === 'rtl';
+        var direction = isRTL ? 'right' : 'left';
         var column = this.widgets[this.activeColumnIndex];
         this.trigger_up('kanban_load_records', {
             columnID: column.db_id,
@@ -144,26 +151,32 @@ KanbanRenderer.include({
                 // update the columns and tabs positions (optionally with an animation)
                 var updateFunc = animate ? 'animate' : 'css';
                 self.$('.o_kanban_mobile_tab').removeClass('o_current');
+                var updateColumn = function ($column, val) {
+                    isRTL ? $column[updateFunc]({right: val}) : $column[updateFunc]({left: val});
+                };
+                var updateTab = function ($tab, val) {
+                    isRTL ? $tab[updateFunc]({right: val}) : $tab[updateFunc]({left: val});
+                };
                 _.each(self.widgets, function (column, index) {
                     var columnID = column.id || column.db_id;
                     var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
                     var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
                     if (index === moveToIndex - 1) {
-                        $column[updateFunc]({left: '-100%'});
-                        $tab[updateFunc]({left: '0%'});
+                        updateColumn($column, '-100%');
+                        updateTab($tab, '0%');
                     } else if (index === moveToIndex + 1) {
-                        $column[updateFunc]({left: '100%'});
-                        $tab[updateFunc]({left: '100%'});
+                        updateColumn($column, '100%');
+                        updateTab($tab, '100%');
                     } else if (index === moveToIndex) {
-                        $column[updateFunc]({left: '0%'});
-                        $tab[updateFunc]({left: '50%'});
+                        updateColumn($column, '0%');
+                        updateTab($tab, '50%');
                         $tab.addClass('o_current');
                     } else if (index < moveToIndex) {
-                        $column.css({left: '-100%'});
-                        $tab[updateFunc]({left: '-100%'});
+                        $column.css(direction, '-100%');
+                        updateTab($tab, '-100%');
                     } else if (index > moveToIndex) {
-                        $column.css({left: '100%'});
-                        $tab[updateFunc]({left: '200%'});
+                        $column.css(direction, '100%');
+                        updateTab($tab, '200%');
                     }
                 });
                 def.resolve();
