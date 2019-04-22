@@ -28,7 +28,7 @@ gui.Gui.include({
         });
 
         var prom = new Promise(function (resolve, reject) {
-            this.show_popup('selection', {
+            self.show_popup('selection', {
                 title: options.title || _t('Select User'),
                 list: list,
                 confirm: resolve,
