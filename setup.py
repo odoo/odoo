@@ -153,7 +153,8 @@ setup(
         'python-openid',
         'pytz',
         'pyusb >= 1.0.0b1',
-        'pyyaml',
+        "PyYAML==3.12 ; python_version < '3.7'",
+        "PyYAML==3.13 ; python_version >= '3.7'",
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
