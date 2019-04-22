@@ -695,9 +695,11 @@ var KanbanRecord = Widget.extend({
     _onKeyDownCard: function (event) {
         switch (event.keyCode) {
             case $.ui.keyCode.ENTER:
-                event.preventDefault();
-                this._onGlobalClick(event);
-                break;
+                if ($(event.target).hasClass('oe_kanban_global_click')) {
+                    event.preventDefault();
+                    this._onGlobalClick(event);
+                    break;
+                }
         }
     },
     /**
