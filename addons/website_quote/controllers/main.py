@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
+from functools import partial
 
 from odoo import fields, http, _
+from odoo.tools import formatLang
 from odoo.http import request
 from odoo.addons.website_mail.controllers.main import _message_post_helper
 
@@ -104,8 +106,17 @@ class sale_quote(http.Controller):
             _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token, 'token_field': 'access_token'} if token else {})
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
+    # Deprecated because override opportunities are **really** limited
+    # In fact it should be removed in master ASAP
     @http.route(['/quote/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
+        values = self.update_line_dict(line_id, remove, unlink, order_id, token, **post)
+        if values:
+            return [values['order_line_product_uom_qty'], values['order_amount_total']]
+        return values
+
+    @http.route(['/quote/update_line_dict'], type='json', auth="public", website=True)
+    def update_line_dict(self, line_id, remove=False, unlink=False, order_id=None, token=None, input_quantity=False, **kwargs):
         Order = request.env['sale.order'].sudo().browse(int(order_id))
         if token != Order.access_token:
             return request.render('website.404')
@@ -115,10 +126,27 @@ class sale_quote(http.Controller):
         if unlink:
             OrderLine.unlink()
             return False
-        number = -1 if remove else 1
-        quantity = OrderLine.product_uom_qty + number
+
+        if input_quantity is not False:
+            quantity = input_quantity
+        else:
+            number = -1 if remove else 1
+            quantity = OrderLine.product_uom_qty + number
+
+        if quantity < 0:
+            quantity = 0.0
         OrderLine.write({'product_uom_qty': quantity})
-        return [str(quantity), str(Order.amount_total)]
+        currency = Order.currency_id
+        format_price = partial(formatLang, request.env, digits=currency.decimal_places)
+
+        return {
+            'order_line_product_uom_qty': str(quantity),
+            'order_line_price_total': format_price(OrderLine.price_total),
+            'order_line_price_subtotal': format_price(OrderLine.price_subtotal),
+            'order_amount_total': format_price(Order.amount_total),
+            'order_amount_untaxed': format_price(Order.amount_untaxed),
+            'order_amount_tax': format_price(Order.amount_tax),
+        }
 
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
