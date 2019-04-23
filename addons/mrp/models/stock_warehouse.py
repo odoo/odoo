@@ -172,18 +172,19 @@ class StockWarehouse(models.Model):
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
         code = vals.get('code') or self.code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         values.update({
             'pbm_loc_id': {
                 'name': _('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
-                'barcode': code + '-PREPRODUCTION'
+                'barcode': self._valid_barcode(code + '-PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
                 'name': _('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
-                'barcode': code + '-POSTPRODUCTION'
+                'barcode': self._valid_barcode(code + '-POSTPRODUCTION', company_id)
             },
         })
         return values
