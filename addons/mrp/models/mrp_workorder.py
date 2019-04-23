@@ -232,11 +232,7 @@ class MrpWorkorder(models.Model):
             lambda move: move.state not in ('done', 'cancel')
         )
         for move in moves:
-            qty_to_consume = move.product_uom._compute_quantity(
-                self.qty_producing * move.unit_factor,
-                move.product_id.uom_id,
-                round=False
-            )
+            qty_to_consume = self._prepare_component_quantity(move, self.qty_producing)
             line_values = self._generate_lines_values(move, qty_to_consume)
             self.env['mrp.workorder.line'].create(line_values)
 
@@ -273,11 +269,7 @@ class MrpWorkorder(models.Model):
                         continue
 
                     qty_already_consumed += wl.qty_done
-                qty_to_consume = move.product_uom._compute_quantity(
-                    workorder.qty_producing * move.unit_factor,
-                    move.product_id.uom_id,
-                    round=False
-                )
+                qty_to_consume = self._prepare_component_quantity(move, workorder.qty_producing)
                 wl_to_unlink.unlink()
                 if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
