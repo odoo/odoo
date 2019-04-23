@@ -84,6 +84,7 @@
 
     <!-- Edit Profile Page -->
     <template id="user_profile_edit_main" name="Edit Profile">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
         <t t-call="website.layout">
             <div id="wrap" class="o_wprofile_wrap">
                 <div class="container pt-4 pb-5">
@@ -185,8 +186,9 @@
 
     <!-- Profile Page -->
     <template id="user_profile_main" name="Profile Page">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
         <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap">
+            <div id="wrap" class="o_wprofile_wrap mt-0">
                 <t t-call="website_profile.user_profile_header"/>
                 <t t-call="website_profile.user_profile_content"/>
             </div>
@@ -203,7 +205,7 @@
                 <div class="row">
                     <!-- ==== Header Left ==== -->
                     <div class="col-12 col-md-4 col-lg-3">
-                        <div t-attf-class="d-flex align-items-start #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
+                        <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
                             <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
@@ -246,8 +248,8 @@
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
-                    <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
-                        <div class="d-flex justify-content-between">
+                    <div class="o_wprofile_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+                        <div class="o_wprofile_sidebar_top d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="font-weight-bold mr-2">Current rank:</small>
                                 <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
@@ -320,7 +322,10 @@
                     <t t-set="user_points" t-value="0"/>
                 </t>
                 <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" />
+                <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
+                <mask id="mask">
+                    <polygon points="0,0 17.2,0 17.2,10 18,10 18,0 36,0 36,36 0,36" fill="white"/>
+                </mask>
                 <linearGradient id="gradient">
                     <stop offset="0%" stop-color="var(--o-pc-color-stop-1)"/>
                     <stop offset="100%" stop-color="var(--o-pc-color-stop-2)"/>
@@ -448,8 +453,9 @@
     All Users Page
     -->
     <template id="users_page_main" name="Users Page">
+        <t t-set="body_classname" t-value="'o_wprofile_body'"/>
          <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap pb-5">
+            <div id="wrap" class="o_wprofile_wrap mt-0 pb-5">
                 <t t-call="website_profile.users_page_header"/>
                 <t t-call="website_profile.users_page_content"/>
             </div>

@@ -6,27 +6,26 @@
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <t t-if="not channel.is_member and channel.enroll == 'payment'">
             <t t-if="channel.product_id.website_published">
-                <h4>
-                    <!-- original discounted price, if any -->
-                    <span t-att-class="'text-danger oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
-                        style="text-decoration: line-through; white-space: nowrap;"
-                        t-esc="product_info['list_price']"
-                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
-                        <!-- real price -->
-                    <b class="oe_price" style="white-space: nowrap;"
+                <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
+                    <!-- real price -->
+                    <div class="oe_price font-weight-bold text-nowrap h2 my-2"
                         t-esc="product_info['price']"
                         t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
                     <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
                     <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
-                </h4>
-                <a role="button" class="col-10 btn btn-primary" t-att-href="channel.product_id.website_url">
+                    <!-- original discounted price, if any -->
+                    <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
+                        t-esc="product_info['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                </div>
+                <a role="button" class="btn btn-primary btn-block" t-att-href="channel.product_id.website_url">
                     <span class="cta-title text_small_caps">Buy Course</span>
                 </a>
             </t>
             <t t-else="">
-                <a role="button" class="col-10 btn btn-light" href="#">
-                    <span class="cta-title text_small_caps">Course Not Buyable</span>
-                </a>
+                <div class="alert my-0 bg-200 text-center">
+                    Course Not Buyable
+                </div>
             </t>
         </t>
     </xpath>

@@ -3,6 +3,7 @@
 
 <!-- Slide: main template: detailed view -->
 <template id="slide_main" name="Slide Detailed View">
+    <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <t t-set="main_object" t-value="slide"/>
         <div class="wrap o_wslides_wrap">
@@ -225,7 +226,7 @@
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
         <t t-foreach="slide.tag_ids" t-as="tag">
-            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light py-1 px-2" t-esc="tag.name"/>
+            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-info py-1 px-2" t-esc="tag.name"/>
         </t>
     </div>
     <div class="o_wslides_lesson_content_type">
