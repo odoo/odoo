@@ -26,8 +26,8 @@ class ResConfigSettings(models.TransientModel):
             ], default='basic', string="Pricelists Method", config_parameter='product.product_pricelist_setting',
             help="Multiple prices: Pricelists with fixed price rules by product,\nAdvanced rules: enables advanced price rules for pricelists.")
     product_weight_in_lbs = fields.Selection([
-        ('0', 'Kilogram'),
-        ('1', 'Pound'),
+        ('0', 'Kilograms'),
+        ('1', 'Pounds'),
     ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
     product_volume_volume_in_cubic_feet = fields.Selection([
         ('0', 'Cubic Meters'),
