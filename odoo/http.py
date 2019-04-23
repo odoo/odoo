@@ -707,6 +707,8 @@ def serialize_exception(e):
         tmp["exception_type"] = "access_denied"
     elif isinstance(e, odoo.exceptions.ValidationError):
         tmp["exception_type"] = "validation_error"
+    elif isinstance(e, odoo.exceptions.ViewError):
+        tmp["exception_type"] = "view_error"
     elif isinstance(e, odoo.exceptions.except_orm):
         tmp["exception_type"] = "except_orm"
     return tmp

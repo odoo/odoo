@@ -109,3 +109,9 @@ class DeferredException(Exception):
 
 class QWebException(Exception):
     pass
+
+
+class ViewError(except_orm, ValueError):
+
+    def __init__(self, msg, actions=None):
+        except_orm.__init__(self, msg, actions=actions)

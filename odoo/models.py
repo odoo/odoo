@@ -1385,6 +1385,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param options['action_id']: id of the action to get the filters
         :return: dictionary with fields_views, fields and optionally filters
         """
+        # populate the context with essential information for debugging problematic views
+        # all the way up the stack
+        self = self.with_context(load_view_args=(self, views, options))
+
         options = options or {}
         result = {}
 

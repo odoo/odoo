@@ -24,7 +24,7 @@ from lxml.etree import LxmlError
 from lxml.builder import E
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, ViewError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
@@ -178,6 +178,21 @@ def remove_element(node):
     add_text_before(node, node.tail)
     node.tail = None
     node.getparent().remove(node)
+
+
+def log_view_error(message, view):
+    not_avail = _('n/a')
+    log = (
+        "%(message)s\n\n"
+        "Error context:\nView `%(view_name)s`"
+        "\n[view_id: %(viewid)s, xml_id: %(xmlid)s, "
+        "model: %(model)s, parent_id: %(parent)s]"
+    )
+    _logger.debug(log,
+        view_name=view.name or not_avail, viewid=view.id or not_avail,
+        xmlid=view.xml_id or not_avail, model=view.model or not_avail,
+        parent=view.inherit_id.id or not_avail, message=message,
+    )
 
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
@@ -337,7 +352,7 @@ actual arch.
             if node.tag == 'xpath':
                 match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
                 if match:
-                    message = "View inheritance may not use attribute %r as a selector." % match.group(1)
+                    message = _("View inheritance may not use attribute %r as a selector.") % match.group(1)
                     self.raise_view_error(message, self.id)
                 if WRONGCLASS.search(node.get('expr', '')):
                     _logger.warn(
@@ -348,7 +363,7 @@ actual arch.
             else:
                 for attr in TRANSLATED_ATTRS:
                     if node.get(attr):
-                        message = "View inheritance may not use attribute %r as a selector." % attr
+                        message = _("View inheritance may not use attribute %r as a selector.") % attr
                         self.raise_view_error(message, self.id)
         return True
 
@@ -555,25 +570,34 @@ actual arch.
                 for view in views.sudo()
                 if not view.groups_id or (view.groups_id & user_groups)]
 
-    @api.model
     def raise_view_error(self, message, view_id):
-        view = self.browse(view_id)
-        not_avail = _('n/a')
-        message = (
-            "%(msg)s\n\n" +
-            _("Error context:\nView `%(view_name)s`") +
-            "\n[view_id: %(viewid)s, xml_id: %(xmlid)s, "
-            "model: %(model)s, parent_id: %(parent)s]"
-        ) % {
-            'view_name': view.name or not_avail,
-            'viewid': view_id or not_avail,
-            'xmlid': view.xml_id or not_avail,
-            'model': view.model or not_avail,
-            'parent': view.inherit_id.id or not_avail,
-            'msg': message,
-        }
-        _logger.info(message)
-        raise ValueError(message)
+        self = self.browse(view_id)
+        log_view_error(message, self)
+        actions = []
+        if self.user_has_groups('base.group_system'):
+            if not self and not self.env.context.get('inherit_branding'):
+                # an error occurred when loading a default view, find out especifically which one broke
+                loaded_view = self.env.context.get('load_view_args', False)
+                if loaded_view:
+                    # reload the views to retrigger a ViewError, this time with debug information
+                    # to properly find the view id that causes the error
+                    loaded_view[0].with_context(inherit_branding=True).load_views(*loaded_view[1:])
+            elif self:
+                actions = [{
+                    'label': _('Go to view'),
+                    'action': {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'ir.ui.view',
+                        'res_id': self.id,
+                        'views': [[False, 'form']],
+                        },
+                    'description': _(
+                        "You may click on the 'Go to view' button to open the problematic view "
+                        "to modify and fix it and/or disable it."
+                        ),
+                }]
+        raise ViewError(message, actions=actions)
+
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -647,15 +671,15 @@ actual arch.
             it from the source and returns it.
             """
             if len(spec):
-                self.raise_view_error(_("Invalid specification for moved nodes: '%s'") %
-                                      etree.tostring(spec), inherit_id)
+                message = _("Invalid specification for moved nodes: '%s'") % etree.tostring(spec)
+                self.raise_view_error(message, inherit_id)
             to_extract = self.locate_node(source, spec)
             if to_extract is not None:
                 remove_element(to_extract)
                 return to_extract
             else:
-                self.raise_view_error(_("Element '%s' cannot be located in parent view") %
-                                      etree.tostring(spec), inherit_id)
+                message = _("Element '%s' cannot be located in parent view") % etree.tostring(spec)
+                self.raise_view_error(message, inherit_id)
 
         while len(specs):
             spec = specs.pop(0)
@@ -726,7 +750,8 @@ actual arch.
                             child = extract(child)
                         node.addprevious(child)
                 else:
-                    self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)
+                    message = _("Invalid position attribute: '%s'") % pos
+                    self.raise_view_error(message, inherit_id)
 
             else:
                 attrs = ''.join([
@@ -735,7 +760,8 @@ actual arch.
                     if attr != 'position'
                 ])
                 tag = "<%s%s>" % (spec.tag, attrs)
-                self.raise_view_error(_("Element '%s' cannot be located in parent view") % tag, inherit_id)
+                message = _("Element '%s' cannot be located in parent view") % tag
+                self.raise_view_error(message, inherit_id)
 
         return source
 
@@ -866,7 +892,8 @@ actual arch.
 
         modifiers = {}
         if model not in self.env:
-            self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
+            message = _('Model not found: %(model)s') % dict(model=model)
+            self.raise_view_error(message, view_id)
         Model = self.env[model]
 
         if node.tag in ('field', 'node', 'arrow'):
@@ -916,7 +943,8 @@ actual arch.
             field = Model._fields.get(node.get('name'))
             if field:
                 if field.type != 'many2one':
-                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                    message = _('groupby can only target many2one (%(field)s') % dict(field=field.name)
+                    self.raise_view_error(message, view_id)
                 attrs = fields.setdefault(node.get('name'), {})
                 children = False
                 # move all children nodes into a new node <groupby>
@@ -1114,7 +1142,8 @@ actual arch.
         """
         fields = {}
         if model not in self.env:
-            self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
+            message = _('Model not found: %(model)s') % dict(model=model)
+            self.raise_view_error(message, view_id)
         Model = self.env[model]
 
         if node.tag == 'diagram':
@@ -1147,7 +1176,8 @@ actual arch.
                 fields[field].update(fields_def[field])
             else:
                 message = _("Field `%(field_name)s` does not exist") % dict(field_name=field)
-                self.raise_view_error(message, view_id)
+                element = node.find('field[@name="%s"]' % field)
+                self.raise_view_error(message, view_id or int(element.get('data-oe-id', False)))
 
         missing = [item for item in attrs_fields if item[0] not in fields]
         if missing:
@@ -1160,7 +1190,9 @@ actual arch.
                 msg_lines.append(msg_fmt % name)
                 for line in lines:
                     msg_lines.append(line_fmt % line)
-            self.raise_view_error("\n".join(msg_lines), view_id)
+            message = "\n".join(msg_lines)
+            element = node.find('field[@name="%s"]' % missing[0][0])
+            self.raise_view_error(message, view_id or int(element.get('data-oe-id', False)))
 
         return arch, fields
 
@@ -1501,7 +1533,8 @@ actual arch.
             try:
                 view._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+                message = _("Can't validate view:\n%s") % e
+                self.raise_view_error(message, view.id)
 
 
 class ResetViewArchWizard(models.TransientModel):
