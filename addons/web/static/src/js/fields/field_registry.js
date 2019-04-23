@@ -78,8 +78,7 @@ registry
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
-    .add('reference', relational_fields.FieldReference)
-    .add('one2many_list', relational_fields.FieldOne2Many);
+    .add('reference', relational_fields.FieldReference);
 
 // Special fields
 registry

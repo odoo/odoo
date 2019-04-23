@@ -26,7 +26,7 @@
                 </group>
                 <group name="values_ids">
                     <label for="value_ids" string="Attribute Values"/>
-                    <field name="value_ids" widget="one2many_list" nolabel="1">
+                    <field name="value_ids" widget="one2many" nolabel="1">
                         <tree string="Values" editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
@@ -75,7 +75,7 @@
                 <group name="main_field">
                     <label for="attribute_id" string="Attribute Name"/>
                     <field name="attribute_id" nolabel="1"/>
-                    <field name="value_ids" widget="one2many_list">
+                    <field name="value_ids" widget="one2many">
                         <tree string="Values">
                             <field name="name"/>
                         </tree>
@@ -110,7 +110,7 @@
                 <group>
                     <field name="name" />
                     <field name="price_extra" />
-                    <field name="exclude_for" widget="one2many_list" mode="tree">
+                    <field name="exclude_for" widget="one2many" mode="tree">
                         <tree editable="top">
                             <field name="product_tmpl_id" />
                             <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />

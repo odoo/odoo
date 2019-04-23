@@ -284,7 +284,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form>' +
                      '<field name="name"/>' +
-                     '<field name="partner" widget="one2many_list" >' +
+                     '<field name="partner" widget="one2many" >' +
                         '<tree editable="top">' +
                             '<field name="display_name"/>' +
                             '<field name="instrument"/>' +
@@ -295,7 +295,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,form': '<form>' +
                                            '<field name="name"/>' +
-                                           '<field name="instrument" widget="one2many_list" mode="tree"/>' +
+                                           '<field name="instrument" widget="one2many" mode="tree"/>' +
                                         '</form>',
 
                 'instrument,false,form': '<form>'+

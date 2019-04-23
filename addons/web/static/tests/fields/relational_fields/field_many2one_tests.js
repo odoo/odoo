@@ -1805,7 +1805,7 @@ QUnit.module('fields', {}, function () {
                 data: this.data,
                 arch: '<form>' +
                     '<field name="name"/>' +
-                    '<field name="turtle_ids" widget="one2many_list">' +
+                    '<field name="turtle_ids" widget="one2many">' +
                     '<tree string="Turtles" editable="bottom">' +
                     '<field name="type_id"/>' +
                     '</tree>' +
