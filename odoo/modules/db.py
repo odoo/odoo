@@ -108,8 +108,8 @@ def create_categories(cr, categories):
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
-            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
-                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
+            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model, noupdate) \
+                       VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category', True))
         else:
             c_id = c_id[0]
         p_id = c_id

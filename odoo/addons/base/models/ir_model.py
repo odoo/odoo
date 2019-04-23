@@ -280,14 +280,8 @@ class IrModel(models.Model):
 
         if model._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
-            xmlid = 'model_' + model._name.replace('.', '_')
-            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
-                       (xmlid, self._context['module']))
-            if not cr.rowcount:
-                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
-                           (self._context['module'], xmlid, record._name, record.id))
-
+            xmlid = '%s.model_%s' % (model._module, model._name.replace('.', '_'))
+            self.env['ir.model.data']._update_xmlids([{'xml_id': xmlid, 'record': record}])
         return record
 
     @api.model
@@ -1656,9 +1650,9 @@ class IrModelData(models.Model):
         loaded_xmlids = self.pool.loaded_xmlids
 
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
-                    WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC
+                    WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
                 """
-        self._cr.execute(query, (tuple(modules), False))
+        self._cr.execute(query, (tuple(modules), True))
         for (id, xmlid, model, res_id) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if model in self.env:
