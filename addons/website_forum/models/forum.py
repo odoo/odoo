@@ -191,7 +191,7 @@ class Post(models.Model):
 
     #views
     view_ids = fields.One2many('forum.post.view', 'post_id', string='Views')
-    views = fields.Integer('Number of Views', compute='_get_views_count', store=True)
+    views = fields.Integer('Number of Vieeeeeeeeeeeeeeeeeeeeews', compute='_get_views_count', store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -304,6 +304,18 @@ class Post(models.Model):
         result = dict.fromkeys(self._ids, 0)
         for data in read_group_res:
             result[data['post_id'][0]] += data['__count'] * int(data['vote'])
+        for post in self:
+            post.vote_count = result[post.id]
+
+
+    # TODO mar fix read_group
+    @api.multi
+    @api.depends('view_ids.views_count')
+    def _get_views_count(self):
+        read_group_res = self.env['forum.post.view'].read_group([('post_id', 'in', self._ids)], ['post_id', 'views_count'], ['post_id'], lazy=False)
+        result = dict.fromkeys(self._ids, 0)
+        for data in read_group_res:
+            result[data['post_id'][0]] += data['views_count']
         for post in self:
             post.vote_count = result[post.id]
 
@@ -757,7 +769,22 @@ class Post(models.Model):
 
     @api.multi
     def set_viewed(self):
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
+        for rec in self:
+            today_views = rec.env['forum.post.view'].search([('post_id', '=', rec.id), ('view_date_day', '=', datetime.today().day)])
+            if today_views :
+                today_views.write({
+                    'views_count': today_views.views_count+1,
+                    })
+            else:
+                test = rec.env['forum.post.view'].create({
+                    'post_id':rec.id,
+                    'views_count':1,
+                    'view_date_day':datetime.today().day,
+                    })
+            import ipdb; ipdb.set_trace()
+
+
+        # self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
     @api.multi
@@ -949,4 +976,5 @@ class PostViews(models.Model):
 
     post_id = fields.Many2one('forum.post', string='Post')
     views_count = fields.Integer(string='Number of Views')
-    view_time = fields.Date(string='Viewed on')
+    view_date = fields.Date(string='Viewed on')
+    view_date_day = fields.Integer()

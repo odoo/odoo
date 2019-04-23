@@ -142,7 +142,14 @@ class WebsiteForum(WebsiteProfile):
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
 
-        question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
+        if sorting == 'most_view_this_month':
+            post_views = self.env['forum.post.view'].read_group([('post_id', 'in', self._ids)], ['post_id', 'views_count'], lazy=False)
+
+
+
+            question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
+        else:
+            question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
