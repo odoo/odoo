@@ -151,14 +151,7 @@ var SearchPanel = Widget.extend({
 
         // set active value
         var validValues = _.pluck(category.values, 'id').concat([false]);
-        // set active value from context
-        var value = this.defaultValues[category.fieldName];
-        // if not set in context, or set to an unknown value, set active value
-        // from localStorage
-        if (!_.contains(validValues, value)) {
-            var storageKey = this._getLocalStorageKey(category);
-            value = this.call('local_storage', 'getItem', storageKey);
-        }
+        var value = this._getCategoryDefaultValue(category, validValues);
         // if not set in localStorage either, select 'All'
         category.activeValueId = _.contains(validValues, value) ? value : false;
 
@@ -295,6 +288,23 @@ var SearchPanel = Widget.extend({
             });
         });
         return Promise.all(proms);
+    },
+    /**
+     * @private
+     * @param {Object} category
+     * @param {Array} validValues
+     * @returns id of the default item of the category or false
+     */
+    _getCategoryDefaultValue: function (category, validValues) {
+        // set active value from context
+        var value = this.defaultValues[category.fieldName];
+        // if not set in context, or set to an unknown value, set active value
+        // from localStorage
+        if (!_.contains(validValues, value)) {
+            var storageKey = this._getLocalStorageKey(category);
+            return this.call('local_storage', 'getItem', storageKey);
+        }
+        return value;
     },
     /**
      * Compute and return the domain based on the current active categories.
