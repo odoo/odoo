@@ -343,9 +343,21 @@ Possible children elements of the list view are:
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
 
-    .. note:: if the list view is ``editable``, any field attribute from the
-              :ref:`form view <reference/views/form>` is also valid and will
-              be used when setting up the inline form view
+    .. note::
+
+        if the list view is ``editable``, any field attribute from the
+        :ref:`form view <reference/views/form>` is also valid and will
+        be used when setting up the inline form view.
+
+    .. note::
+
+        In case of list sub-views (One2many/Many2many display in a form view),
+        The attribute ``column_invisible`` can be useful to hide a column
+        depending on the parent object.
+
+        .. code-block:: xml
+
+           <field name="product_is_late" attrs="{'column_invisible': [('parent.has_late_products', '=', False)]}"/>
 
 ``control``
   defines custom controls for the current view.
