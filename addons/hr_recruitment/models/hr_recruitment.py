@@ -360,6 +360,17 @@ class Applicant(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+
+        # Check if already exists an application for the email address
+        # and post a message to every application found matching the email
+        existing = self.search([
+            '|',
+            ('email_from', 'ilike', '<' + msg.get('from') + '>'),
+            ('email_from', '=', msg.get('from'))])
+        if existing:
+            return existing.message_post(subtype='mail.mt_note', **msg).ids
+
+        # Otherwise create candidate application:
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
