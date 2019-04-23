@@ -519,8 +519,17 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="probability" class="oe_edit_only"/>
-                                    <div class="o_row d-flex">
+                                    <field name="manual_probability" invisible="True"/>
+                                    <span class="oe_edit_only" >
+                                        <label for="probability"/>
+                                        <button class="btn btn-link" name="action_unset_manual_probability" type="object" style="font-size: 1.5rem;"
+                                                onMouseOver="$(this).find('i').removeClass('fa-lock').addClass('fa-unlock-alt');"
+                                                onMouseOut="$(this).find('i').removeClass('fa-unlock-alt').addClass('fa-lock');"
+                                                attrs="{'invisible': [('manual_probability', '=', False)]}">
+                                            <i class="fa fa-lock" role="img" title="Unset manual probability" aria-label="Unset manual probability"></i>
+                                        </button>
+                                    </span>
+                                    <div id="probability" class="o_row d-flex">
                                         <field name="probability" widget="integer" class="oe_inline"/>
                                         <span class="oe_grey"> %%</span>
                                     </div>

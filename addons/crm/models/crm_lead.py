@@ -98,6 +98,7 @@ class Lead(models.Model):
 
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
+    manual_probability = fields.Boolean('Manual Probability', default=False)
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
@@ -259,6 +260,15 @@ class Lead(models.Model):
             values = self._onchange_user_values(self.user_id.id)
             self.update(values)
 
+    def _onchange_probability_get_manual_probability(self):
+        return True
+
+    @api.onchange('probability')
+    def _onchange_probability(self):
+        manual_proba = self._onchange_probability_get_manual_probability()
+        if self.manual_probability != manual_proba:
+            self.manual_probability = manual_proba
+
     @api.constrains('user_id')
     @api.multi
     def _valid_team(self):
@@ -358,6 +368,12 @@ class Lead(models.Model):
     # ----------------------------------------
     # Actions Methods
     # ----------------------------------------
+
+    def action_unset_manual_probability(self):
+        self.write({
+            'manual_probability': False,
+            'probability': self._get_automated_probability(),
+        })
 
     @api.multi
     def action_set_lost(self):
@@ -472,6 +488,8 @@ class Lead(models.Model):
     # ----------------------------------------
     # Business Methods
     # ----------------------------------------
+    def _get_automated_probability(self):
+        return self.stage_id.probability
 
     def _stage_find(self, team_id=False, domain=None, order='sequence'):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
