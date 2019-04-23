@@ -24,4 +24,9 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('group_mrp_routings')
     def _onchange_group_mrp_routings(self):
-        self.module_mrp_workorder = self.group_mrp_routings
+        module_wo_installed = self.env['ir.module.module'].search_count([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')])
+        # We want to avoid spontaneous uninstall of the mrp_workorder module, the onchange
+        # behaviour should adapt to the actual module state
+        # Read the commit message for these lines before removing this
+        if not module_wo_installed:
+            self.module_mrp_workorder = self.group_mrp_routings
