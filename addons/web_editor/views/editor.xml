@@ -173,14 +173,14 @@
 -->
 <template id="web_editor.colorpicker" name="Color-Picker">
     <colorpicker>
-        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+        <div class="o_colorpicker_section" id="theme_colors" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
             <button data-color="alpha"></button>
             <button data-color="beta"></button>
             <button data-color="gamma"></button>
             <button data-color="delta"></button>
             <button data-color="epsilon"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+        <div class="o_colorpicker_section" id="transparent_colors" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
             <button class="o_btn_transparent"></button>
             <button data-color="black-25"></button>
             <button data-color="black-50"></button>
@@ -189,7 +189,7 @@
             <button data-color="white-50"></button>
             <button data-color="white-75"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+        <div class="o_colorpicker_section" id="common_colors" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
             <button data-color="black"></button>
             <button data-color="white"></button>
             <div class="clearfix"/>
