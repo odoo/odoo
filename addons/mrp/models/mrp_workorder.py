@@ -453,6 +453,9 @@ class MrpWorkorder(models.Model):
                 'date_start': datetime.now(),
                 'user_id': self.env.user.id
             })
+        previous_wo = self.search([('next_work_order_id', '=', self.id), ('operation_id.batch', '=', 'no'), ('state', 'in', ('draft', 'ready', 'pending'))])
+        if previous_wo:
+            raise UserError(_("You need to process the workorder order %s - %s before processing this one.") % (previous_wo.production_id.name, previous_wo.name))
         return self.write({'state': 'progress',
                     'date_start': datetime.now(),
         })
