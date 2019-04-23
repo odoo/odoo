@@ -36,17 +36,18 @@
             groups="group_hr_manager"
             sequence="100"/>
 
-        <record id="search_view_plan" model="ir.ui.view">
-            <field name="name">hr.plan.search</field>
+        <record id="hr_plan_view_search" model="ir.ui.view">
+            <field name="name">hr.plan.view.search</field>
             <field name="model">hr.plan</field>
             <field name="arch" type="xml">
                 <search string="Plan">
+                    <field name="name"/>
                 </search>
             </field>
         </record>
 
-        <record id="view_plan_tree" model="ir.ui.view">
-            <field name="name">hr.plan.tree</field>
+        <record id="hr_plan_view_tree" model="ir.ui.view">
+            <field name="name">hr.plan.view.tree</field>
             <field name="model">hr.plan</field>
             <field name="arch" type="xml">
                 <tree string="Planning">
@@ -55,8 +56,8 @@
             </field>
         </record>
 
-        <record id="view_plan_form" model="ir.ui.view">
-            <field name="name">hr.plan.form</field>
+        <record id="hr_plan_view_form" model="ir.ui.view">
+            <field name="name">hr.plan.view.form</field>
             <field name="model">hr.plan</field>
             <field name="arch" type="xml">
                 <form string="Planning">
@@ -76,7 +77,8 @@
                         <group string="Activities">
                             <field name="plan_activity_type_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="name"/>
+                                    <field name="activity_type_id"/>
+                                    <field name="summary"/>
                                     <field name="responsible"/>
                                     <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
                                 </tree>
@@ -87,15 +89,27 @@
             </field>
         </record>
 
-        <record id="view_plan_activity_form" model="ir.ui.view">
-            <field name="name">hr.plan.activity.type.form</field>
+        <record id="hr_plan_activity_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.plan.activity.type.view.tree</field>
             <field name="model">hr.plan.activity.type</field>
             <field name="arch" type="xml">
-                <form string="Planning">
+                <tree string="Activities">
+                    <field name="activity_type_id"/>
+                    <field name="summary"/>
+                    <field name="responsible"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_plan_activity_type_view_form" model="ir.ui.view">
+            <field name="name">hr.plan.activity.type.view.form</field>
+            <field name="model">hr.plan.activity.type</field>
+            <field name="arch" type="xml">
+                <form string="Activity">
                     <sheet>
                         <group>
-                            <field name="name"/>
                             <field name="activity_type_id"/>
+                            <field name="summary"/>
                             <field name="responsible"/>
                             <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
                         </group>
@@ -104,16 +118,16 @@
             </field>
         </record>
 
-        <record id="plan_listing" model="ir.actions.act_window">
+        <record id="hr_plan_action" model="ir.actions.act_window">
             <field name="name">Planning</field>
             <field name="res_model">hr.plan</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="search_view_plan"/>
+            <field name="search_view_id" ref="hr_plan_view_search"/>
         </record>
 
-        <record id="plan_type_listing" model="ir.actions.act_window">
-            <field name="name">Planning type</field>
+        <record id="hr_plan_activity_type_action" model="ir.actions.act_window">
+            <field name="name">Planning Types</field>
             <field name="res_model">hr.plan.activity.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -129,7 +143,7 @@
         <menuitem
             id="menu_config_plan_types"
             name="Planning Types"
-            action="plan_type_listing"
+            action="hr_plan_activity_type_action"
             parent="menu_config_plan"
             groups="base.group_no_one"
             sequence="99"/>
@@ -137,7 +151,7 @@
         <menuitem
             id="menu_config_plan_plan"
             name="Plans"
-            action="plan_listing"
+            action="hr_plan_action"
             parent="menu_config_plan"
             groups="group_hr_manager"
             sequence="100"/>

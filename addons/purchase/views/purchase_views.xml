@@ -214,10 +214,9 @@
                                                        widget="many2one_barcode"
                                                 />
                                                 <label for="product_qty"/>
-                                                <div>
-                                                    <field name="product_qty" class="oe_inline"/>
-                                                    <span class="oe_inline">&#160;</span>
-                                                    <field name="product_uom" groups="uom.group_uom" class="oe_inline"/>
+                                                <div class="o_row">
+                                                    <field name="product_qty"/>
+                                                    <field name="product_uom" groups="uom.group_uom"/>
                                                 </div>
                                                 <field name="price_unit"/>
                                             </group>
@@ -466,9 +465,9 @@
                             <group>
                                 <field name="product_id" readonly="1"/>
                                 <label for="product_qty"/>
-                                <div>
-                                    <field name="product_qty" readonly="1" class="oe_inline"/>
-                                    <field name="product_uom" readonly="1" groups="uom.group_uom" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="product_qty" readonly="1"/>
+                                    <field name="product_uom" readonly="1" groups="uom.group_uom"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>

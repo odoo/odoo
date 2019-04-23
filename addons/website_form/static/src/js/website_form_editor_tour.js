@@ -37,7 +37,9 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Change the action to Send an E-mail",
             trigger:  ".modal-body select",
-            run:      "text mail.mail"
+            run: function (actions) {
+                actions.text($('select[name="model_selection"] option:contains("Send an E-mail")').val());
+            }
         },
         {
             content:  "Complete Recipient E-mail",
@@ -49,7 +51,7 @@ odoo.define('website_form_editor.tour', function(require) {
             content:  "Click on Save",
             trigger:  ".modal-footer #modal-save"
         },
-        // Add the subject field
+        // Add the date field
         {
             content:  "Click on Form snippet",
             trigger:  ".s_website_form[data-model_name]"
@@ -63,20 +65,20 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_modal]"
         },
         {
-            content:  "Select the subject field",
+            content:  "Select the date field",
             trigger:  "select[name='field_selection']",
-            run:      "text subject"
+            run:      "text date"
         },
         {
             content:  "Click on Save",
             trigger:  ".modal-footer #modal-save"
         },
 
-        // Customize subject field
+        // Customize date field
         {
             content:  "Change the label",
-            trigger:  ".col-form-label[for='subject']",
-            run:      "text Name"
+            trigger:  ".col-form-label[for='date']",
+            run:      "text Test Date"
         },
         {
             content:  "Click on Customize",
@@ -89,8 +91,8 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check the resulting field",
             trigger:  ".form-field.o_website_form_required_custom" +
-                            ":has(input[type=text][name=subject][required])" +
-                            ":has(label:contains('Name'))",
+                            ":has(input[type=text][name=date][required])" +
+                            ":has(label:contains('Test Date'))",
             run:      function () {},
         },
 
@@ -512,8 +514,12 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Try to send empty form",
             extra_trigger:  "form[data-model_name='mail.mail']" +
-                            "[data-success_page='']" +
-                            ":has(.form-field:has(label:contains('Name')):has(input[type='text'][name='subject'][required]))" +
+                            "[data-success_page='/contactus-thank-you']" +
+                            ":has(.form-field:has(label:contains('Your Name')):has(input[type='text'][name='Your Name'][required]))" +
+                            ":has(.form-field:has(label:contains('Email')):has(input[type='email'][name='email_from'][required]))" +
+                            ":has(.form-field:has(label:contains('Your Question')):has(textarea[name='Your Question'][required]))" +
+                            ":has(.form-field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
+                            ":has(.form-field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
                             ":has(.form-field:has(label:contains('Awesome Label')):hidden)" +
                             ":has(.form-field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
                             ":has(.form-field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
@@ -528,13 +534,17 @@ odoo.define('website_form_editor.tour', function(require) {
                             ":has(.form-field.o_website_form_required_custom:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
                             ":has(.form-field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
                             ":has(.form-field:has(label:contains('Invoice Scan')))" +
-                            ":has(input.form-field[name='email_to'][value='test@test.test'])",
+                            ":has(.form-field:has(input[name='email_to'][value='test@test.test']))",
             trigger:  ".o_website_form_send"
         },
         {
-            content:  "Check if required fields were detected and complete the Name field",
+            content:  "Check if required fields were detected and complete the Subject field",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Email')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Your Question')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Subject')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Test Date')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Your Message')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Products')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
@@ -550,7 +560,11 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if required fields were detected and complete the Message field",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Email')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Your Question')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Subject')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Test Date')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Your Message')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Products')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
@@ -566,13 +580,21 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Email')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Your Question')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Subject')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Test Date')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Your Message')):not(.o_has_error))" +
                             ":has(.form-field:has(label:contains('Products')).o_has_error)" +
                             ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
                             ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
                             ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))",
             trigger:  "input[name=Products][value='Wiko Stairway']"
+        },
+        {
+            content:  "Complete Date field",
+            trigger:  ".o_website_form_datetime [data-toggle='datetimepicker']",
         },
         {
             content:  "Check another product",
@@ -583,18 +605,27 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  "input[name='Service'][value='Development Service']"
         },
         {
+            content:  "Complete Your Name field",
+            trigger:  "input[name='Your Name']",
+            run:      "text chhagan"
+        },
+        {
+            content:  "Complete Email field",
+            trigger:  "input[name=email_from]",
+            run:      "text test@mail.com"
+        },
+        {
+            content:  "Complete Your Question field",
+            trigger:  "textarea[name='Your Question']",
+            run:      "text magan"
+        },
+        {
             content:  "Send the form",
             trigger:  ".o_website_form_send"
         },
         {
             content:  "Check form is submitted without errors",
-            trigger:  "form:has(#o_website_form_result.text-success)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
-                            ":has(.form-field:has(label:contains('Your Message')):not(.o_has_error))" +
-                            ":has(.form-field:has(label:contains('Products')):not(.o_has_error))" +
-                            ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
-                            ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
-                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))"
+            trigger:  ".alert-success:contains('Your message has been sent successfully.')"
         }
     ]);
 

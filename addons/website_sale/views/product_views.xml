@@ -12,22 +12,6 @@
         </field>
     </record>
 
-    <record id="product_template_action_website" model="ir.actions.act_window">
-        <field name="name">Products</field>
-        <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new product
-            </p><p>
-                A product can be either a physical product or a service that you sell to your customers.
-            </p>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
@@ -50,14 +34,45 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_website_tree_view">
-        <field name="name">product.template.website.tree</field>
+    <!-- We want website_id to be shown outside of website module like other models -->
+    <record model="ir.ui.view" id="product_template_view_tree">
+        <field name="name">product.template.view.tree.inherit.website_sale</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="website_id" groups="website.group_multi_website"/>
             </field>
+        </field>
+    </record>
+
+    <!-- only website module template view should use the website_sequence -->
+    <record model="ir.ui.view" id="product_template_view_tree_website_sale">
+        <field name="name">product.template.view.tree.website_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="replace">
+                <field name="website_sequence" widget="handle"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_action_website" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_id" ref="product_template_view_tree_website_sale"/>
+        <field name="search_view_id" ref="product_template_search_view_website"/>
+        <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                A product can be either a physical product or a service that you sell to your customers.
+            </p>
         </field>
     </record>
 
@@ -96,6 +111,7 @@
                         <group string="Shop">
                             <field name="website_url" invisible="1"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            <field name="website_sequence" groups="base.group_no_one"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>

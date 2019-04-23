@@ -118,7 +118,8 @@
 
             <div class="row mt-3">
                 <section id="forms" class="col">
-                    <form action="/website_form/" method="post" class="s_website_form" enctype="multipart/form-data" data-model_name="hr.applicant" data-success_page="/job-thank-you" t-att-data-form_field_department_id="job and job.department_id.id or False" t-att-data-form_field_job_id="job and job.id or False">
+                    <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or False, 'job_id': job and job.id or False}" />
+                    <form id="hr_recruitment_form" action="/website_form/" method="post" class="s_website_form" enctype="multipart/form-data" data-model_name="hr.applicant" data-success_page="/job-thank-you" hide-change-model="true">
                         <div class="form-group row form-field o_website_form_required_custom">
                             <div class="col-lg-3 col-md-4 text-right">
                                 <label class="col-form-label" for="partner_name">Your Name</label>
@@ -166,6 +167,22 @@
                           <div class="col-lg-7 col-md-8">
                             <input type="file" class="form-control o_website_form_input" name="Resume"/>
                           </div>
+                        </div>
+                        <div class="form-group row form-field d-none">
+                            <div class="col-lg-3 col-md-4">
+                                <label class="col-form-label" for="job_id">Job</label>
+                            </div>
+                            <div class="col-lg-7 col-md-8">
+                                <input type="hidden" class="form-control o_website_form_input" name="job_id"/>
+                            </div>
+                        </div>
+                        <div class="form-group row form-field d-none">
+                            <div class="col-lg-3 col-md-4">
+                                <label class="col-form-label" for="department_id">Department</label>
+                            </div>
+                            <div class="col-lg-7 col-md-8">
+                                <input type="hidden" class="form-control o_website_form_input" name="department_id"/>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
@@ -523,6 +540,12 @@
         <attribute name="t-att-data-module-id"/>
         <attribute name="t-att-data-module-shortdesc"/>
         <attribute name="groups">hr_recruitment.group_hr_recruitment_manager</attribute>
+    </xpath>
+</template>
+
+<template id="website_hr_recuitment_assets_editor" name="Website HR Recruitment Assets Editor" inherit_id="website.assets_editor">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js"></script>
     </xpath>
 </template>
 

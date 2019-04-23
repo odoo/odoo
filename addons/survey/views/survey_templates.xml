@@ -222,12 +222,12 @@
     <!-- The survey header -->
     <template id="survey_header" name="Header">
         <div class="o_page_header o_survey_header">
-            <div class="container">
-                <div class="row m-0">
-                    <div class="col-lg-8 p-0"><h1 t-esc="survey.title"></h1></div>
+            <div class="container m-0 p-0">
+                <div class="row">
+                    <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
                     <div
                         t-if="survey.is_time_limited"
-                        class="js_survey_timer col-lg-4 p-0"
+                        class="js_survey_timer col-lg-4"
                         t-att-data-timer="answer.start_datetime.isoformat()"
                         t-att-data-time_limit_minutes="survey.time_limit">
                         <h1 class="timer text-right">00:00</h1>
@@ -278,7 +278,7 @@
                 </t>
 
                 <div class="text-center mt16 mb256">
-                    <button type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    <button type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
                 </div>
             </t>
 
@@ -294,7 +294,7 @@
                 <div class="text-center mt16 mb256">
                     <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
                     <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
-                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
                 </div>
             </t>
 
@@ -305,7 +305,7 @@
                 <div class="text-center mt16 mb256">
                     <button t-if="survey.users_can_go_back and question != answer.question_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous question</button>
                     <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next question</button>
-                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                    <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Survey</button>
                 </div>
             </t>
         </form>
@@ -399,11 +399,11 @@
                 </select>
             </div>
             <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
                 <span t-field="question.comments_message"/>
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
         </div>
         <div t-if="question.display_mode == 'columns' or not answer.token" class="row js_radio">
@@ -418,11 +418,11 @@
                     <input type="radio" t-att-name="prefix" value="-1"/>
                     <span t-field="question.comments_message" />
                 </label>
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
         </div>
     </template>
@@ -440,11 +440,11 @@
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
                     <span t-field="question.comments_message" />
                 </label>
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
-                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+                <textarea type="text" class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
         </div>
     </template>
@@ -469,7 +469,7 @@
         </table>
         <div t-if='question.comments_allowed'>
             <span t-field="question.comments_message"/>
-            <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" />
+            <textarea class="form-control" rows="1" t-att-name="'%s_%s' % (prefix, 'comment')" />
         </div>
     </template>
 

@@ -63,6 +63,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{
+                'pivot_row_groupby': ['user_id'],
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
             }</field>
@@ -134,9 +135,10 @@
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
-                                    <field name="user_id" string="Project Manager"
-                                        attrs="{'readonly':[('active','=',False)]}"/>
+                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                </group>
+                                <group>
                                     <field name="partner_id" string="Customer"/>
                                     <label for="rating_status" groups="project.group_project_rating"/>
                                     <div groups="project.group_project_rating">
@@ -471,7 +473,7 @@
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
-                                    <field name="email_from" attrs="{'readonly': [('parent_id', '!=', False)]}" groups="base.group_no_one"/>
+                                    <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
                                     <field name="child_ids" invisible="1" />

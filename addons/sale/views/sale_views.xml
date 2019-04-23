@@ -313,15 +313,15 @@
                                             <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty"/>
-                                            <div>
+                                            <div class="o_row">
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
-                                                    name="product_uom_qty" class="oe_inline"/>
+                                                    name="product_uom_qty"/>
                                                 <field
                                                     name="product_uom"
                                                     force_save="1"
                                                     groups="uom.group_uom"
-                                                    class="oe_inline oe_no_button"
+                                                    class="oe_no_button"
                                                     attrs="{
                                                         'readonly': [('state', 'in', ('sale', 'done', 'cancel'))],
                                                         'required': [('display_type', '=', False)],
