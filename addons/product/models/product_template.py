@@ -275,30 +275,53 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
         and "1" as value.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
             return self.env.ref('uom.product_uom_lb')
         else:
             return self.env.ref('uom.product_uom_kgm')
 
     @api.model
-    def _get_weight_uom_name_from_ir_config_parameter(self):
-        return self._get_weight_uom_id_from_ir_config_parameter().display_name
-
-    def _compute_weight_uom_name(self):
-        for template in self:
-            template.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
+    def _get_length_uom_id_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `length`, 'width', 'height' field.
+        By default, we considerer that length are expressed in meters. Users can configure
+        to express them in feet by adding an ir.config_parameter record with "product.volume_in_cubic_feet"
+        as key and "1" as value.
+        """
+        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
+        if product_length_in_feet_param == '1':
+            return self.env.ref('uom.product_uom_foot')
+        else:
+            return self.env.ref('uom.product_uom_meter')
 
     @api.model
-    def _get_volume_uom_name_from_ir_config_parameter(self):
+    def _get_volume_uom_id_from_ir_config_parameter(self):
         """ Get the unit of measure to interpret the `volume` field. By default, we consider
         that volumes are expressed in cubic meters. Users can configure to express them in cubic feet
         by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
         and "1" as value.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        return "ft³" if get_param('product.volume_in_cubic_feet') == '1' else "m³"
+        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
+        if product_length_in_feet_param == '1':
+            return self.env.ref('uom.product_uom_cubic_foot')
+        else:
+            return self.env.ref('uom.product_uom_cubic_meter')
+
+    @api.model
+    def _get_weight_uom_name_from_ir_config_parameter(self):
+        return self._get_weight_uom_id_from_ir_config_parameter().display_name
+
+    @api.model
+    def _get_length_uom_name_from_ir_config_parameter(self):
+        return self._get_length_uom_id_from_ir_config_parameter().display_name
+
+    @api.model
+    def _get_volume_uom_name_from_ir_config_parameter(self):
+        return self._get_volume_uom_id_from_ir_config_parameter().display_name
+
+    def _compute_weight_uom_name(self):
+        for template in self:
+            template.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_volume_uom_name(self):
         for template in self:
