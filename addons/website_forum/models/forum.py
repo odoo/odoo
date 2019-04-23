@@ -191,7 +191,7 @@ class Post(models.Model):
 
     #views
     view_ids = fields.One2many('forum.post.view', 'post_id', string='Views')
-    views = fields.Integer('Number of Vieeeeeeeeeeeeeeeeeeeeews', compute='_get_views_count', store=True)
+    views = fields.Integer('Number of Views', compute='_get_views_count', store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -307,8 +307,6 @@ class Post(models.Model):
         for post in self:
             post.vote_count = result[post.id]
 
-
-    # TODO mar fix read_group
     @api.multi
     @api.depends('view_ids.views_count')
     def _get_views_count(self):
@@ -317,7 +315,7 @@ class Post(models.Model):
         for data in read_group_res:
             result[data['post_id'][0]] += data['views_count']
         for post in self:
-            post.vote_count = result[post.id]
+            post.views = result[post.id]
 
     @api.one
     def _get_user_favourite(self):
@@ -770,7 +768,7 @@ class Post(models.Model):
     @api.multi
     def set_viewed(self):
         for rec in self:
-            today_views = rec.env['forum.post.view'].search([('post_id', '=', rec.id), ('view_date_day', '=', datetime.today().day)])
+            today_views = rec.env['forum.post.view'].search([('post_id', '=', rec.id), ('view_date_day', '=', datetime.today().day)], limit=1)
             if today_views :
                 today_views.write({
                     'views_count': today_views.views_count+1,
@@ -779,10 +777,8 @@ class Post(models.Model):
                 test = rec.env['forum.post.view'].create({
                     'post_id':rec.id,
                     'views_count':1,
-                    'view_date_day':datetime.today().day,
+                    'view_date':datetime.today().date(),
                     })
-            import ipdb; ipdb.set_trace()
-
 
         # self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
@@ -977,4 +973,51 @@ class PostViews(models.Model):
     post_id = fields.Many2one('forum.post', string='Post')
     views_count = fields.Integer(string='Number of Views')
     view_date = fields.Date(string='Viewed on')
-    view_date_day = fields.Integer()
+    view_date_day = fields.Integer(compute='_compute_date_day', store=True)
+
+    @api.depends('view_date')
+    def _compute_date_day(self):
+        for rec in self:
+            rec.view_date_day = rec.view_date.day
+
+    @api.model
+    def _cron_agregate_views(self):
+        """
+            Cron to agregate all views of all days from a month.
+        """
+        first_day_prev_year = datetime.today().replace(year=datetime.today().year-1)
+        first_day_prev_month = datetime.today().replace(month=datetime.today().month-1)
+
+        if(datetime.today().month == 1):
+            query = """
+                INSERT INTO forum_post_view (views_count, post_id, view_date)
+                SELECT
+                    sum(views_count),
+                    post_id,
+                    date_trunc('year', view_date) AS date_year
+                FROM forum_post_view
+                WHERE view_date >= '%s'
+                GROUP BY post_id, date_year
+                RETURNING id;
+            """ % (first_day_prev_year.date())
+
+        else:
+            query = """
+                INSERT INTO forum_post_view (views_count, post_id, view_date)
+                SELECT
+                    sum(views_count),
+                    post_id,
+                    date_trunc('month', view_date) AS date_month
+                FROM forum_post_view
+                WHERE view_date >= '%s'
+                GROUP BY post_id, date_month
+                RETURNING id;
+            """ % (first_day_prev_month.date())
+
+        self._cr.execute(query)
+        created_ids = [resp[0] for resp in self._cr.fetchall()]
+
+        if(datetime.today().month == 1):
+            self.env['forum.post.view'].search([('view_date', '>=', first_day_prev_year.date()), ('id', 'not in', created_ids)]).unlink()
+        else:
+            self.env['forum.post.view'].search([('view_date', '>=', first_day_prev_month.date()), ('id', 'not in', created_ids)]).unlink()
