@@ -26,7 +26,7 @@
                             <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
+                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many"
                             attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
                             <tree string="Analytic Distribution" editable="bottom">
                                 <field name="account_id"/>

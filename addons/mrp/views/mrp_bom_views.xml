@@ -53,7 +53,7 @@
                     </group>
                     <notebook>
                         <page string="Components">
-                            <field name="bom_line_ids" widget="one2many_list" context="{'default_parent_product_tmpl_id': product_tmpl_id}">
+                            <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_type': 'product'}"/>

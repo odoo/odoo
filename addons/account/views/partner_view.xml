@@ -40,7 +40,7 @@
                     <notebook>
                         <page name="tax_mapping" string="Tax Mapping">
                         <group>
-                            <field name="tax_ids" widget="one2many_list" nolabel="1">
+                            <field name="tax_ids" widget="one2many" nolabel="1">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
                                     <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
@@ -56,7 +56,7 @@
                         </page>
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_user">
                         <group>
-                            <field name="account_ids" widget="one2many_list" nolabel="1">
+                            <field name="account_ids" widget="one2many" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
                                     <field name="account_src_id"/>
                                     <field name="account_dest_id"/>

@@ -2144,10 +2144,6 @@ Relational fields
 
     - Supported field types: *char, reference*
 
-- one2many_list (FieldOne2Many)
-    This widget is exactly the same as a FieldOne2Many.  It is registered at this
-    key only for backward compatibility reasons.  Please avoid using this.
-
 
 Client actions
 ==============
