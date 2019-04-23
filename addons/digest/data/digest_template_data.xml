@@ -4,7 +4,7 @@
         <field name="name">Digest: Default main template</field>
         <field name="model_id" ref="digest.model_digest_digest"/>
         <field name="auto_delete" eval="True" />
-        <field name="email_from">${user.email}</field>
+        <field name="email_from">${user.email_formatted | safe}</field>
         <field name="lang">${user.lang}</field>
         <field name="body_html"><![CDATA[
 <table style="width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;">

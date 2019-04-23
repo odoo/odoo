@@ -64,7 +64,7 @@
             <field name="name">HR: mailgateway unknown employee bounce</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="subject">Your document has not been created</field>
-            <field name="email_from">${user.email}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
             <field name="email_to">${ctx['email_to']|safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">

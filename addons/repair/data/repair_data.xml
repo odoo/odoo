@@ -5,7 +5,7 @@
             <field name="name">Repair Quotation: Send by email</field>
             <field name="model_id" ref="repair.model_repair_order"/>
             <field name="subject">${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })</field>
-            <field name="email_from">${(object.create_uid.email and '%s &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
+            <field name="email_from">${(object.create_uid.email_formatted or user.email_formatted) | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="xml">
 <div style="margin: 0px; padding: 0px;">

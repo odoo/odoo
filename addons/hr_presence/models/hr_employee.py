@@ -160,8 +160,6 @@ Do not hesitate to contact your manager or the human resource department.""")
             default_composition_mode='comment',
             default_is_log=True,
             custom_layout='mail.mail_notification_light',
-            email_from=self.env.user.email,
-            email_to=self.work_email,
         )
         return {
             'name': _('Compose Email'),

@@ -5,6 +5,7 @@
             <field name="name">Survey: Send by email</field>
             <field name="model_id" ref="model_survey_user_input" />
             <field name="subject">Participate to ${object.survey_id.title} survey</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -39,8 +40,8 @@
         <record id="mail_template_certification" model="mail.template">
             <field name="name">Certification: Send by email</field>
             <field name="model_id" ref="survey.model_survey_user_input"/>
-            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
             <field name="subject">Certification: ${object.survey_id.display_name}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
             <field name="report_template" ref="certification_report"/>
             <field name="report_name">Certification Document</field>
             <field name="lang">${object.partner_id.lang}</field>
