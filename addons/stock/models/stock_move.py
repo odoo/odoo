@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
+from re import search as regex_search, split as regex_split
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -164,11 +165,22 @@ class StockMove(models.Model):
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
+    display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
+    next_serial = fields.Char('Next Serial Number')
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
         if self.product_id:
             self.description_picking = self.product_id._get_description(self.picking_type_id)
+
+    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots')
+    def _compute_display_assign_serial(self):
+        for move in self:
+            move.display_assign_serial = (
+                move.has_tracking == 'serial' and
+                move.picking_type_id.use_create_lots and
+                not move.picking_type_id.use_existing_lots
+            )
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
@@ -471,6 +483,27 @@ class StockMove(models.Model):
             ),
         }
 
+    def action_assign_serial_show_details(self):
+        """ On `self.move_line_ids`, assign `lot_name` according to
+        `self.next_serial` before returning `self.action_show_details`.
+        """
+        self.ensure_one()
+        if not self.next_serial:
+            raise UserError(_("You need to set a Serial Number before generating more."))
+        self._generate_serial_numbers()
+        return self.action_show_details()
+
+    def action_assign_serial(self):
+        """ Opens a wizard to assign SN's name on each move lines.
+        """
+        self.ensure_one()
+        action = self.env.ref('stock.act_assign_serial_numbers').read()[0]
+        action['context'] = {
+            'default_product_id': self.product_id.id,
+            'default_move_id': self.id,
+        }
+        return action
+
     def _do_unreserve(self):
         moves_to_unreserve = self.env['stock.move']
         for move in self:
@@ -485,6 +518,41 @@ class StockMove(models.Model):
                     raise UserError(_('You cannot unreserve a stock move that has been set to \'Done\'.'))
             moves_to_unreserve |= move
         moves_to_unreserve.mapped('move_line_ids').unlink()
+        return True
+
+    def _generate_serial_numbers(self):
+        """ This method will generate `lot_name` from a string (field
+        `next_serial`) and assign each `lot_name` to a move line.
+        """
+        self.ensure_one()
+        # We look if the serial number contains at least one digit.
+        caught_initial_number = regex_search("\d+", self.next_serial)
+        if not caught_initial_number:
+            raise UserError(_('The serial number must contain at least one digit.'))
+        initial_number = caught_initial_number.group()
+        padding = len(initial_number)
+        # We split the serial number to get the prefix and suffix.
+        splitted = regex_split(initial_number, self.next_serial)
+        prefix = splitted[0]
+        suffix = splitted[1]
+        initial_number = int(initial_number)
+
+        # Then, for each move line without `lot_id` and `lot_name`, we compute
+        # and assign the `lot_name` and set the `qty_done` to one.
+        move_lines_commands = []
+        for move_line in self.move_line_ids:
+            if not move_line.lot_id and not move_line.lot_name:
+                lot_name = '%s%s%s' % (
+                    prefix,
+                    str(initial_number).zfill(padding),
+                    suffix
+                )
+                initial_number += 1
+                move_lines_commands.append((1, move_line.id, {
+                    'lot_name': lot_name,
+                    'qty_done': 1
+                }))
+        self.write({'move_line_ids': move_lines_commands})
         return True
 
     def _push_apply(self):
