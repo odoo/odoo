@@ -1,6 +1,12 @@
 $MAX-Z-INDEX : 2147483647 !default;
-$o-wslides-tabs-height: 36px;
-$o-wslides-color-bg: desaturate(map-get($grays, "200"), 80%);
+
+// Retrive the tab's height by summ its properties
+$o-wslides-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
+
+// Overal page bg-color: Blend it 'over' the color choosen by the user
+// ($body-bg), rather than force it replacing the variable's value.
+$o-wslides-color-bg: mix($body-bg, #efeff4);
+
 $o-wslides-color-dark1: #47525f;
 $o-wslides-color-dark2: #1f262d;
 $o-wslides-color-dark3: #101216;
@@ -14,18 +20,19 @@ $o-wslides-fs-side-width: 300px;
 }
 
 .o_wslides_course_pict {
-    @include size(100%, 30%);
+    @include size(100%);
     padding-top: 30%;
     background-size: cover;
     background-position: center;
 
     @include media-breakpoint-up(md)  {
-        @include size(100%);
-        padding-top: 100%;
+        padding-top: 70%;
+        border: 1px solid darken(#875A7B, 10%);
+        border-bottom-width: 0;
     }
 }
 
-.o_wslides_wrap {
+.o_wslides_body {
     background-color: $o-wslides-color-bg;
 
     .o_wslides_home_nav {
@@ -40,11 +47,6 @@ $o-wslides-fs-side-width: 300px;
                 border-left: 1px solid $border-color;
             }
         }
-    }
-
-    .o_wslides_course_card,
-    .o_wslides_lesson_card {
-        border-width: 0 0 3px 0;
     }
 
     .o_wslides_js_slide_like_up,
@@ -80,10 +82,16 @@ $o-wslides-fs-side-width: 300px;
         opacity: 0.5;
     }
 
+    // Solve an overfow issue caused in some
+    // circumstances by flex containers.
+    hr {
+        min-height: 1px;
+    }
+
     // Truncate text descriptions to a specific number of lines.
     // If '-webkit-line-clamp' is not supported, a less effective
     // 'line-height' fallback will be used instead.
-    $truncate-limits: 2, 3, 5, 10;
+    $truncate-limits: 2, 3, 10;
 
     @each $limit in $truncate-limits {
         .o_wslides_desc_truncate_#{$limit} {
@@ -109,18 +117,33 @@ $o-wslides-fs-side-width: 300px;
             border: none;
         }
     }
+
+    .o_wprofile_progress_circle {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 200px;
+    }
 }
 
 // New course page
 // **************************************************
 
+.o_wslides_course_sidebar {
+    border: 1px solid $border-color;
+
+    @include media-breakpoint-up(md) {
+        border-top-width: 0;
+    }
+}
+
 @mixin o-wslides-tabs($tab-active-color: $o-wslides-color-bg) {
-    margin-top: $o-wslides-tabs-height * -1;
+    margin-top: ($o-wslides-tabs-height * -1) + 0.05rem;
     border-bottom: 0;
 
     .nav-link {
         border-radius: 0;
         border-width: 0 1px;
+        line-height: $line-height-base;
         @include o-hover-text-color(rgba(white, 0.8), white);
 
         &, &:hover {
