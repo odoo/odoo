@@ -44,13 +44,14 @@
                     </div>
                     <group>
                         <group>
-                            <field name="on_change"/>
-                            <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
+                            <field name="won_stage" attrs="{'invisible': [('on_change', '=', False)]}"/>
+                            <field name="fold"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
                         </group>
                         <field name="team_count" invisible="1"/>
                         <group>
-                            <field name="fold"/>
-                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
+                            <field name="on_change"/>
+                            <field name="probability" attrs="{'invisible': [('on_change', '=', False)], 'readonly': [('won_stage', '=', True)]}"/>
                         </group>
                     </group>
                     <separator string="Requirements"/>

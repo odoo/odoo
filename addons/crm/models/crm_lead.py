@@ -326,6 +326,9 @@ class Lead(models.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
+            stage_id = self.env['crm.stage'].browse(vals['stage_id'])
+            if stage_id.won_stage:
+                vals.update({'probability': 100, 'manual_probability': True})
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
         # stage change with new stage: update probability and date_closed
@@ -378,15 +381,20 @@ class Lead(models.Model):
     @api.multi
     def action_set_lost(self):
         """ Lost semantic: probability = 0, active = False """
-        return self.write({'probability': 0, 'active': False})
+        for lead in self:
+            lead.write({
+                'probability': 0,
+                'active': False,
+                'manual_probability': True
+            })
+        return True
 
     @api.multi
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
-            stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
-            lead.write({'stage_id': stage_id.id, 'probability': 100})
-
+            stage_id = lead._stage_find(domain=[('won_stage', '=', True), ('on_change', '=', True)])
+            lead.write({'stage_id': stage_id.id})
         return True
 
     @api.multi

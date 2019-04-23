@@ -178,3 +178,39 @@ class TestCRMLead(TestCrmCases):
         self.assertEqual(merged_opportunity.partner_id.id, self.env.ref("base.res_partner_3").id, 'Partner mismatch')
         self.assertEqual(merged_opportunity.type, 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merged_opportunity.type)
         self.assertFalse(test_crm_opp_03.exists(), 'This tailing opp (id %s) should not exist anymore' % test_crm_opp_03.id)
+
+    def test_lead_won(self):
+        """
+        As there are multiple ways to set a lead as won (by action_set_won or moving the lead to a won stage)
+        The logic behind the set as won is now in the write override to be executed
+        each time the new stage is a won stage.
+        As the final stage id may be different for each updated lead (especially in a batch update), the write override
+        splits the leads to update into groups by previous stage_id and each group is updated separately.
+
+        This test checks if the final stage id is correct
+        after running a batch update on many leads with different stages.
+        """
+        # Create leads at different stage
+        lead_ids = []
+        for i in range(3):
+            for x in range(3):
+                lead = self.env['crm.lead'].create({
+                    'type': "lead",
+                    'name': "Test lead new",
+                    'partner_id': self.env.ref("base.res_partner_1").id,
+                    'description': "This is the description of the test new lead.",
+                    'team_id': self.env.ref("sales_team.team_sales_department").id,
+                    'stage_id': self.env.ref("crm.stage_lead%s" % (str(i+1))).id,
+                })
+                lead_ids.append(lead.id)
+        # Set leads as won (stage = won)
+        self.env['crm.lead'].browse(lead_ids).write({'stage_id': self.env.ref("crm.stage_lead4").id})
+        # Check if every single lead has the correct final stage id + probability
+        index = 0
+        for i in range(3):
+            for x in range(3):
+                lead = self.env['crm.lead'].browse(lead_ids[index])
+                self.assertEqual(lead.stage_id.id, self.env.ref("crm.stage_lead4").id, 'Stage must be "Won"')
+                self.assertEqual(lead.probability, 100, 'Probability of a won lead must be = 100%')
+                self.assertEqual(lead.manual_probability, True, 'Probability of a won lead must be set to manual to avoid to be recomputed')
+                index += 1
