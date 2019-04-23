@@ -341,9 +341,21 @@ Possible children elements of the list view are:
         the list, we let the browser automatically adapt the column's widths
         according to their content, and this attribute is thus ignored.
 
-    .. note:: if the list view is ``editable``, any field attribute from the
-              :ref:`form view <reference/views/form>` is also valid and will
-              be used when setting up the inline form view
+    .. note::
+
+        if the list view is ``editable``, any field attribute from the
+        :ref:`form view <reference/views/form>` is also valid and will
+        be used when setting up the inline form view.
+
+    .. note::
+
+        In case of list sub-views (One2many/Many2many display in a form view),
+        The attribute ``column_invisible`` can be useful to hide a column
+        depending on the parent object.
+
+        .. code-block:: xml
+
+           <field name="product_is_late" attrs="{'column_invisible': [('parent.has_late_products', '=', False)]}"/>
 
     .. note:: When a list view is grouped, numeric fields are aggregated and
               displayed for each group.  Also, if there are too many records in
