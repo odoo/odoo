@@ -40,6 +40,7 @@
         'report/product_templates.xml',
         'report/product_packaging.xml',
 
+        'wizard/stock_assign_serial_views.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/stock_scheduler_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',

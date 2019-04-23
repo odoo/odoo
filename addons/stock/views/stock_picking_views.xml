@@ -321,6 +321,8 @@
                                     <field name="has_move_lines" invisible="1"/>
                                     <field name="is_locked" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="has_tracking" invisible="1"/>
+                                    <field name="display_assign_serial" invisible="1"/>
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                     <field name="description_picking" string="Description"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
@@ -330,6 +332,13 @@
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                    <button name="action_assign_serial" type="object"
+                                            class="btn-sm btn-primary fa fa-plus-square-o"
+                                            style="line-height: 1;"
+                                            role="img" title="Assign Serial Numbers"
+                                            attrs="{'invisible': ['|',
+                                                ('display_assign_serial', '=', False),
+                                                ('parent.show_operations', '=', False)]}"/>
                                 </tree>
                             </field>
                             <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', True)]}" />
