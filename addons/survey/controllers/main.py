@@ -405,20 +405,18 @@ class Survey(http.Controller):
 
             if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
                 go_back = False
-                answer_sudo._send_certification()
-                vals = {'state': 'done'}
+                answer_sudo._mark_done()
             else:
                 go_back = post['button_submit'] == 'previous'
                 next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
                 vals = {'last_displayed_page_id': page_or_question_id}
 
                 if next_page is None and not go_back:
-                    answer_sudo._send_certification()
-                    vals.update({'state': 'done'})
+                    answer_sudo._mark_done()
                 else:
                     vals.update({'state': 'skip'})
+                answer_sudo.write(vals)
 
-            answer_sudo.write(vals)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
             if go_back:
                 ret['redirect'] += '?prev=prev'
