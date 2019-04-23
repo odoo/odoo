@@ -7,16 +7,14 @@
             <field name="email_to">iap@odoo.com</field>
             <field name="subject">IAP Lead Generation Notification</field>
             <field name="model_id" ref="iap.model_iap_account"/>
-            <field name="body_html">
-                <![CDATA[
-                    <p>Dear,</p>
-                    <p>There is no more credits on your IAP Lead Generation account.<br/>
-                    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/>
-
-                    <p>Best regards,</p>
-                    <p>Odoo S.A.</p>
-                ]]>
-            </field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Dear,</p>
+    <p>There is no more credits on your IAP Lead Generation account.<br/>
+    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>
+    <p>Best regards,</p>
+    <p>Odoo S.A.</p>
+</div></field>
         </record>
     </data>
 </odoo>

@@ -37,7 +37,6 @@
             <field name="subject">New badge ${object.badge_id.name} granted</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
             <field name="partner_to">${object.user_id.partner_id.id}</field>
-            <field name="lang">${object.user_id.lang}</field>
             <field name="body_html" type="xml">
 <table border="0" cellpadding="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" width="590" cellpadding="0" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;" summary="o_mail_notification">
@@ -134,10 +133,10 @@
       </td></tr>
     </table>
 </td></tr>
-</table>
-
-
-</field>
+</table></field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
         </record>
     </data>
 </odoo>
