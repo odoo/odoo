@@ -26,6 +26,20 @@ class MrpAbstractWorkorder(models.AbstractModel):
     )
     use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
 
+    @api.model
+    def _prepare_component_quantity(self, move, qty_producing):
+        """ helper that computes quantity to consume (or to create in case of byproduct)
+        depending on the quantity producing and the move's unit factor"""
+        if move.product_id.tracking == 'serial':
+            uom = move.product_id.uom_id
+        else:
+            uom = move.product_uom
+        return move.product_uom._compute_quantity(
+            qty_producing * move.unit_factor,
+            uom,
+            round=False
+        )
+
     def _workorder_line_ids(self):
         self.ensure_one()
         return self.raw_workorder_line_ids | self.finished_workorder_line_ids
@@ -63,15 +77,8 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
             # Compute the new quantity for the current component
             rounding = move.product_uom.rounding
-            if move.product_id.tracking == 'serial':
-                uom = move.product_id.uom_id
-            else:
-                uom = move.product_uom
-            new_qty = move.product_uom._compute_quantity(
-                self.qty_producing * move.unit_factor,
-                uom,
-                round=False
-            )
+            new_qty = self._prepare_component_quantity(move, self.qty_producing)
+
             # In case the production uom is different than the workorder uom
             # it means the product is serial and production uom is not the reference
             new_qty = self.product_uom_id._compute_quantity(
