@@ -654,6 +654,7 @@ class PosOrder(models.Model):
             # set name based on the sequence specified on the config
             session = self.env['pos.session'].browse(values['session_id'])
             values['name'] = session.config_id.sequence_id._next()
+            values['company_id'] = session.config_id.company_id.id
             values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         else:
             # fallback on any pos.order sequence
@@ -1047,7 +1048,9 @@ class PosOrderLine(models.Model):
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one(
+        'res.company', string='Company',
+        related='order_id.company_id', store=True, readonly=True)
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
