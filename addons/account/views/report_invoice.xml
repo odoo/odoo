@@ -40,10 +40,6 @@
                             <strong>Customer Code:</strong>
                             <p class="m-0" t-field="o.partner_id.ref"/>
                         </div>
-                        <div name="reference" class="col-auto mw-100 mb-2" t-if="o.reference">
-                            <strong>Reference:</strong>
-                            <p class="m-0" t-field="o.reference"/>
-                        </div>
                     </div>
 
                     <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>

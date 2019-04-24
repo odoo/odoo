@@ -27,9 +27,9 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
-            <field name="fiscal_position_id" position="after">
+            <xpath expr="//page[@name='other_info']//field[@name='company_id']" position="after">
                 <field name="website_id" groups="website.group_multi_website"/>
-            </field>
+            </xpath>
         </field>
     </record>
 </odoo>
