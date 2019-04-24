@@ -19,18 +19,25 @@ class CalendarEvent(models.Model):
 
     def _do_sms_reminder(self):
         """ Send an SMS text reminder to attendees that haven't declined the event """
+        all_sms = self.env['sms.sms']
         for event in self:
-            sms_msg = _("Event reminder: %s on %s.") % (event.name, event.start_datetime or event.start_date)
+            template = self.env.ref('calendar_sms.sms_reminder_template', False)
+            if template:
+                content = template._render_template(template.body, self._name, event.id)
+            else:
+                content = _("Event reminder: %s on %s.") % (event.name, event.start_datetime or event.start_date)
             note_msg = _("SMS text message reminder sent !")
             values = [{
-                'name': partner.display_name,
-                'number': partner.mobile if partner.mobile else partner.phone,
-                'content': sms_msg,
-                'country_id': partner.country_id.id if partner.country_id else False
-            } for partner in self._get_default_sms_recipients()]
+                'name': recipient['partner_id'].display_name,
+                'number': recipient['number'],
+                'content': content,
+                'country_id': recipient['partner_id'].country_id.id,
+                'user_id': event.user_id.id
+            } for recipient in self.env.get['sms.sms']._get_sms_recipients(self._name, event.id)]
             sms_ids = self.env['sms.sms'].create(values)
-            sms_ids._send()
+            all_sms |= sms_ids
             event.message_post_send_sms(note_msg, sms_ids)
+        all_sms._send()
 
 
 class CalendarAlarm(models.Model):

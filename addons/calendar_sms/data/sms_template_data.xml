@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <!-- SMS template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="sms_reminder_template" model="sms.template">
+            <field name="name">Calendar SMS: SMS Reminder</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="body">Event reminder: ${object.name} on ${object.start_datetime or object.start_date}</field>
+        </record>
+    </data>
+</odoo>
