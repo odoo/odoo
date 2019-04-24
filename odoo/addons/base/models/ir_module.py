@@ -409,7 +409,7 @@ class Module(models.Model):
             todo = result = module
             while todo:
                 result |= todo
-                todo = todo.mapped('dependencies_id.depend_id')
+                todo = todo.dependencies_id.depend_id
             return result
 
         exclusives = self.env['ir.module.category'].search([('exclusive', '=', True)])

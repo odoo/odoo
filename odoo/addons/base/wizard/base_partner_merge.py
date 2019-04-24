@@ -302,7 +302,7 @@ class MergePartnerAutomatic(models.TransientModel):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
         # Make the company of all related users consistent
-        for user in partner_ids.mapped('user_ids'):
+        for user in partner_ids.user_ids:
             user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
                         'company_id': dst_partner.company_id.id})
 
