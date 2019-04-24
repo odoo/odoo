@@ -110,7 +110,7 @@ class Groups(models.Model):
     @api.multi
     @api.constrains('users')
     def _check_one_user_type(self):
-        self.mapped('users')._check_one_user_type()
+        self.users._check_one_user_type()
 
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
@@ -367,8 +367,8 @@ class Users(models.Model):
     def _compute_accesses_count(self):
         for user in self:
             groups = user.groups_id
-            user.accesses_count = len(groups.mapped('model_access'))
-            user.rules_count = len(groups.mapped('rule_groups'))
+            user.accesses_count = len(groups.model_access)
+            user.rules_count = len(groups.rule_groups)
             user.groups_count = len(groups)
 
     @api.onchange('login')
@@ -378,7 +378,7 @@ class Users(models.Model):
 
     @api.onchange('parent_id')
     def onchange_parent_id(self):
-        return self.mapped('partner_id').onchange_parent_id()
+        return self.partner_id.onchange_parent_id()
 
     def _read_from_database(self, field_names, inherited_field_names=[]):
         super(Users, self)._read_from_database(field_names, inherited_field_names)
@@ -748,7 +748,7 @@ class Users(models.Model):
             'res_model': 'ir.model.access',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.mapped('groups_id.model_access').ids)],
+            'domain': [('id', 'in', self.groups_id.model_access.ids)],
             'target': 'current',
         }
 
@@ -761,7 +761,7 @@ class Users(models.Model):
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.mapped('groups_id.rule_groups').ids)],
+            'domain': [('id', 'in', self.groups_id.rule_groups.ids)],
             'target': 'current',
         }
 
@@ -917,7 +917,7 @@ class GroupsImplied(models.Model):
         # is good, because the record cache behaves as a memo (the field is
         # never computed twice on a given group.)
         for g in self:
-            g.trans_implied_ids = g.implied_ids | g.mapped('implied_ids.trans_implied_ids')
+            g.trans_implied_ids = g.implied_ids | g.implied_ids.trans_implied_ids
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -973,7 +973,7 @@ class UsersImplied(models.Model):
                 elif group_portal and group_portal in user.groups_id:
                     gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
                 else:
-                    gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+                    gs = user.groups_id | user.groups_id.trans_implied_ids
                 values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
         return super(UsersImplied, self).create(vals_list)
 
@@ -1329,7 +1329,7 @@ class ChangePasswordWizard(models.TransientModel):
     def change_password_button(self):
         self.ensure_one()
         self.user_ids.change_password_button()
-        if self.env.user in self.mapped('user_ids.user_id'):
+        if self.env.user in self.user_ids.user_id:
             return {'type': 'ir.actions.client', 'tag': 'reload'}
         return {'type': 'ir.actions.act_window_close'}
 
