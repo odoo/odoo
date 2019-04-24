@@ -637,7 +637,7 @@ class Contact(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        if not value.exists():
+        if not value:
             return False
 
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
