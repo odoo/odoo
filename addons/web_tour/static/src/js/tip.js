@@ -297,7 +297,9 @@ var Tip = Widget.extend({
 });
 
 Tip.getConsumeEventType = function ($element) {
-    if ($element.is("textarea") || $element.filter("input").is(function () {
+    if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
+        return 'autocompleteselect';
+    } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
