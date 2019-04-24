@@ -1957,12 +1957,16 @@ exports.Paymentline = Backbone.Model.extend({
     // returns the associated cashregister
     //exports as JSON for server communication
     export_as_JSON: function(){
+        var amount = this.get_amount();
+        if(this.get_type() === 'cash' && amount > 0) {
+            amount = amount - this.order.get_change();
+        }
         return {
             name: time.datetime_to_str(new Date()),
             statement_id: this.cashregister.id,
             account_id: this.cashregister.account_id[0],
             journal_id: this.cashregister.journal_id[0],
-            amount: this.get_amount()
+            amount: amount
         };
     },
     //exports as JSON for receipt printing
@@ -2105,6 +2109,7 @@ exports.Order = Backbone.Model.extend({
     },
     export_as_JSON: function() {
         var orderLines, paymentLines;
+        var change = 0;
         orderLines = [];
         this.orderlines.each(_.bind( function(item) {
             return orderLines.push([0, 0, item.export_as_JSON()]);
@@ -2113,12 +2118,15 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.each(_.bind( function(item) {
             return paymentLines.push([0, 0, item.export_as_JSON()]);
         }, this));
+        if(!(this.is_paid_with_cash() && this.get_total_paid() > 0)) {
+            change = this.get_change();
+        }
         return {
             name: this.get_name(),
             amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
             amount_tax: this.get_total_tax(),
-            amount_return: this.get_change(),
+            amount_return: change,
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
