@@ -9,7 +9,7 @@ from collections import defaultdict
 from operator import itemgetter
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -27,14 +27,17 @@ class Message(models.Model):
     _rec_name = 'record_name'
 
     @api.model
-    def _get_default_from(self):
-        if self.env.user.email:
-            return tools.formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
-    def _get_default_author(self):
-        return self.env.user.partner_id
+    def default_get(self, fields):
+        res = super(Message, self).default_get(fields)
+        missing_author = 'author_id' in fields and 'author_id' not in res
+        missing_email_from = 'email_from' in fields and 'email_from' not in res
+        if missing_author or missing_email_from:
+            author_id, email_from = self.env['mail.thread']._message_compute_author(res.get('author_id'), res.get('email_from'), raise_exception=False)
+            if missing_email_from:
+                res['email_from'] = email_from
+            if missing_author:
+                res['author_id'] = author_id
+        return res
 
     # content
     subject = fields.Char('Subject')
@@ -69,12 +72,9 @@ class Message(models.Model):
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')
     # origin
-    email_from = fields.Char(
-        'From', default=_get_default_from,
-        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
-        'res.partner', 'Author', index=True,
-        ondelete='set null', default=_get_default_author,
+        'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', readonly=False)
     # recipients: include inactive partners (they may have been archived after
@@ -574,7 +574,8 @@ class Message(models.Model):
         tracking_values_list = []
         for values in values_list:
             if 'email_from' not in values:  # needed to compute reply_to
-                values['email_from'] = self._get_default_from()
+                author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_exception=False)
+                values['email_from'] = email_from
             if not values.get('message_id'):
                 values['message_id'] = self._get_message_id(values)
             if 'reply_to' not in values:
@@ -833,16 +834,12 @@ class Message(models.Model):
         for msg in self:
             if not msg.email_from:
                 continue
-            if self.env.user.partner_id.email:
-                email_from = tools.formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
-            else:
-                email_from = self.env.company.catchall_formatted
-
             body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body, plaintext=False)
             vals = {
                 'subject': subject,
                 'body_html': body_html,
-                'email_from': email_from,
+                'author_id': self.env.user.partner_id.id,
+                'email_from': self.env.user.email_formatted or self.env.company_id.catchall_formatted,
                 'email_to': msg.email_from,
                 'auto_delete': True,
                 'state': 'outgoing'
@@ -924,7 +921,7 @@ class Message(models.Model):
                 partner_ids=moderator.partner_id.ids,
                 subject=_('Message are pending moderation'),  # tocheck: target language
                 body=template.render({'record': moderator.partner_id}, engine='ir.qweb', minimal_qcontext=True),
-                email_from=moderator.company_id.catchall_formatted or moderator.company_id.email,
+                email_from=moderator.company_id.catchall_formatted or moderator.company_id.email_formatted,
             )
 
     # ------------------------------------------------------

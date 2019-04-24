@@ -54,14 +54,14 @@ class MailComposer(models.TransientModel):
         result = super(MailComposer, self).default_get(fields)
 
         # author
-        if 'author_id' not in result:
-            result['author_id'] = self.env.user.partner_id.id
-            if 'email_from' not in result and self.env.user.email:
-                result['email_from'] = self.env.user.email_formatted
-        elif 'email_from' not in result:
-            author = self.env['res.partner'].browse(result['author_id'])
-            if author.email:
-                result['email_from'] = tools.formataddr((author.name, author.email))
+        missing_author = 'author_id' in fields and 'author_id' not in result
+        missing_email_from = 'email_from' in fields and 'email_from' not in result
+        if missing_author or missing_email_from:
+            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_exception=False)
+            if missing_email_from:
+                result['email_from'] = email_from
+            if missing_author:
+                result['author_id'] = author_id
 
         result['composition_mode'] = result.get('composition_mode', 'comment')
         result['model'] = result.get('model', self._context.get('active_model'))
