@@ -953,6 +953,7 @@ registry.socialShare = publicWidget.Widget.extend({
 
 registry.facebookPage = publicWidget.Widget.extend({
     selector: '.o_facebook_page',
+    disabledInEditableMode: false,
 
     /**
      * @override
