@@ -30,7 +30,18 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:642
 #, python-format
 msgid " REFUND"
-msgstr ""
+msgstr " RIMBORSO"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
+msgid "# of Lines"
+msgstr "Numero di righe"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
+#: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+msgid "$ 3.12"
+msgstr "3,12 €"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_supplier_invoice_count
@@ -411,7 +422,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr ""
+msgstr "Stampa automatica della ricevuta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
@@ -1746,7 +1757,7 @@ msgstr "Caricamento"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_location_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_location_id
 msgid "Location"
-msgstr "Ubicazione"
+msgstr "Posizione"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
@@ -1805,6 +1816,17 @@ msgstr ""
 #: model:product.template,name:point_of_sale.martini_product_template
 msgid "Martini"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
+#: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
+msgid "Malibu Drink"
+msgstr "Drink Malibu"
+
+#. module: point_of_sale
+#: model:res.groups,name:point_of_sale.group_pos_manager
+msgid "Manager"
+msgstr "Responsabile"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
@@ -2539,7 +2561,12 @@ msgstr "Patate"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr ""
+msgstr "Pagamento contanti precompilato"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Prefill amount paid with the exact due amount"
+msgstr "Precompila l'importo da pagare con l'esatto importo dovuto"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2754,6 +2781,11 @@ msgid "Restaurant: activate table management"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Restrict price modification to managers"
+msgstr "Limita le modifiche dei prezzi ai supervisori"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
 msgstr "Riavvia"
@@ -2804,13 +2836,13 @@ msgstr "Ordini di Vendita"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Salesman"
-msgstr "Venditore"
+msgstr "Addetto vendite"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Salesperson"
-msgstr "Commerciale"
+msgstr "Addetto vendite"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2863,12 +2895,12 @@ msgstr "Ricerca Clienti"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:191
 #, python-format
 msgid "Search Products"
-msgstr "Cerca Prodotti"
+msgstr "Ricerca prodotti"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
-msgstr "Cerca ordine di vendita"
+msgstr "Ricerca ordine di vendita"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_security_pin
@@ -2974,7 +3006,12 @@ msgstr "Sessioni"
 #: code:addons/point_of_sale/static/src/js/screens.js:1114
 #, python-format
 msgid "Set Customer"
-msgstr "Imposta Cliente"
+msgstr "Imposta cliente"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_start_category
+msgid "Set Start Category"
+msgstr "Impostazione categoria iniziale"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3548,6 +3585,17 @@ msgstr ""
 "per personalizzare i numeri di riferimento all'interno degli ordini."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:699
+#, python-format
+msgid ""
+"This transfer has been created from the point of sale session: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
+msgstr ""
+"Questo trasferimento è stato creato dalla sessione del punto vendita <a "
+"href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
@@ -3995,7 +4043,7 @@ msgstr "Zucchine"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1097
 #, python-format
 msgid "at"
-msgstr "di"
+msgstr "a"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule

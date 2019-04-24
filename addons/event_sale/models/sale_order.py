@@ -43,11 +43,11 @@ class SaleOrderLine(models.Model):
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
         Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids), ('state', '!=', 'cancel')])
+        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
-                existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
+                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).confirm_registration()
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').do_draft()
 
