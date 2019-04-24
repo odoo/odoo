@@ -52,16 +52,16 @@ class HrExpense(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Unit of Measure'), default=1)
-    tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
+    tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes')
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', digits=dp.get_precision('Account'))
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', oldname='analytic_account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
-    account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=_default_account_id, help="An expense account is expected")
+    account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -78,6 +78,9 @@ class HrExpense(models.Model):
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitely Refused by manager or acccountant", readonly=True, copy=False)
+
+    is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
+    is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -118,6 +121,26 @@ class HrExpense(models.Model):
         for expense in self:
             expense.attachment_number = attachment.get(expense.id, 0)
 
+    @api.depends('employee_id')
+    def _compute_is_editable(self):
+        is_account_manager = self.env.user.has_group('account.group_account_user') or self.env.user.has_group('account.group_account_manager')
+        for expense in self:
+            if expense.state == 'draft' or expense.sheet_id.state in ['draft', 'submit']:
+                expense.is_editable = True
+            elif expense.sheet_id.state == 'approve':
+                expense.is_editable = is_account_manager
+            else:
+                expense.is_editable = False
+
+    @api.depends('employee_id')
+    def _compute_is_ref_editable(self):
+        is_account_manager = self.env.user.has_group('account.group_account_user') or self.env.user.has_group('account.group_account_manager')
+        for expense in self:
+            if expense.state == 'draft' or expense.sheet_id.state in ['draft', 'submit']:
+                expense.is_ref_editable = True
+            else:
+                expense.is_ref_editable = is_account_manager
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
@@ -148,6 +171,16 @@ class HrExpense(models.Model):
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
         return super(HrExpense, self).unlink()
+
+    @api.multi
+    def write(self, vals):
+        if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
+            if any(not expense.is_editable for expense in self):
+                raise UserError(_('You are not autorized to edit this expense report.'))
+        if 'reference' in vals:
+            if any(not expense.is_ref_editable for expense in self):
+                raise UserError(_('You are not autorized to edit the reference of this expense report.'))
+        return super(HrExpense, self).write(vals)
 
     @api.model
     def get_empty_list_help(self, help_message):
