@@ -257,3 +257,8 @@ All ``cr.commit()`` calls outside of the server framework from now on must
 have an **explicit comment** explaining why they are absolutely necessary, why
 they are indeed correct, and why they do not break the transactions. Otherwise
 they can and will be removed !
+
+Further information
+-------------------
+
+Take a look at `Odoo's 10 rules <https://www.odoo.com/r/h3s>`_ for safer code.
