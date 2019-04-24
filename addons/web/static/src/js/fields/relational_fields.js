@@ -1752,7 +1752,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     },
     events: {
         'click .o_attach': '_onAttach',
-        'click .oe_delete': '_onDelete',
+        'click .o_attachment_delete': '_onDelete',
         'change .o_input_file': '_onFileChanged',
     },
     /**
@@ -1817,7 +1817,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         // render the attachments ; as the attachments will changes after each
         // _setValue, we put the rendering here to ensure they will be updated
         this._generatedMetadata();
-        this.$('.oe_placeholder_files, .oe_attachments')
+        this.$('.oe_placeholder_files, .o_attachments')
             .replaceWith($(qweb.render(this.template_files, {
                 widget: this,
             })));
