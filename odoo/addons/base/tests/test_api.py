@@ -311,7 +311,7 @@ class TestAPI(common.TransactionCase):
                 partner.state_id.name
                 break
         state_ids_with_field = [state.id
-                                  for state in partners.mapped('state_id')
+                                  for state in partners.state_id
                                   if 'name' in state._cache]
         self.assertItemsEqual(state_ids_with_field, state_ids)
 

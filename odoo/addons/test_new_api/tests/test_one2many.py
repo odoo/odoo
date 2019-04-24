@@ -104,7 +104,7 @@ class One2manyCase(TransactionCase):
         movies = self.Movie.search([])
         movies_without_edition = movies.filtered(lambda r: not r.editions)
         movies_with_edition = movies.filtered(lambda r: r.editions)
-        movie_editions = movies_with_edition.mapped('editions')
+        movie_editions = movies_with_edition.editions
         one_movie_edition = movie_editions[0]
 
         res_movies_without_edition = self.Movie.search([('editions', '=', False)])
