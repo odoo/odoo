@@ -317,6 +317,16 @@ class Post(models.Model):
         for post in self:
             post.views = result[post.id]
 
+    @api.multi
+    @api.depends('view_ids.views_count')
+    def _get_views_count_last_month(self):
+        read_group_res = self.env['forum.post.view'].read_group([('post_id', 'in', self._ids),('view_date', '>=', datetime.today().replace(month=datetime.today().month-1))], ['post_id', 'views_count'], ['post_id'], lazy=False)
+        result = dict.fromkeys(self._ids, 0)
+        for data in read_group_res:
+            result[data['post_id'][0]] += data['views_count']
+        for post in self:
+            post.views_last_month = result[post.id]
+
     @api.one
     def _get_user_favourite(self):
         self.user_favourite = self._uid in self.favourite_ids.ids
