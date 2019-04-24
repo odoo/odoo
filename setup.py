@@ -112,7 +112,7 @@ def py2exe_options():
                         'xml', 'xml.dom',
                         'yaml',
                     ],
-                    'excludes': ['Tkconstants', 'Tkinter', 'tcl'],
+                    'excludes': ['jinja2.asyncsupport', 'Tkconstants', 'Tkinter', 'tcl'],  # do not forward-port 11.0 does not use py2exe
                 }
             },
             'data_files': py2exe_datafiles()
