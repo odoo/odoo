@@ -173,7 +173,8 @@ class MailChannel(models.Model):
         mail_body = self.env['mail.thread']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].create({
             'subject': _('Conversation with %s') % self.livechat_operator_id.name,
-            'email_from': self.env.company.email,
+            'email_from': company.catchall_formatted or company.email_formatted,
+            'author_id': self.env.user.partner_id.id,
             'email_to': email,
             'body_html': mail_body,
         })

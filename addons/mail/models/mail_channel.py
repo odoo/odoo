@@ -368,6 +368,8 @@ class Channel(models.Model):
         # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
         if self.moderation_notify and self.moderation_notify_msg and message_type == 'email' and moderation_status == 'pending_moderation':
             self.env['mail.mail'].create({
+                'author_id': self.env.user.partner_id.id,
+                'email_from': self.env.user.company_id.catchall_formatted or self.env.user.company_id.email_formatted,
                 'body_html': self.moderation_notify_msg,
                 'subject': 'Re: %s' % (kwargs.get('subject', '')),
                 'email_to': email,
@@ -418,9 +420,10 @@ class Channel(models.Model):
         ]).mapped('email')
         for partner in partners.filtered(lambda p: p.email and not (p.email in banned_emails)):
             create_values = {
+                'email_from': partner.company_id.catchall_formatted or partner.company_id.email_formatted,
+                'author_id': self.env.user.partner_id.id,
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
-                'email_from': partner.company_id.catchall_formatted or partner.company_id.email,
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].create(create_values)

@@ -617,6 +617,8 @@ class HrExpense(models.Model):
             )
         else:
             self.env['mail.mail'].create({
+                'email_from': self.env.user.email_formatted,
+                'author_id': self.env.user.partner_id.id,
                 'body_html': body,
                 'subject': 'Re: %s' % msg_dict.get('subject', ''),
                 'email_to': msg_dict.get('email_from', False),
