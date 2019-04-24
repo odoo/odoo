@@ -76,6 +76,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="is_editable" invisible="1"/>
+                            <field name="is_ref_editable" invisible="1"/>
                             <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
                                    widget="many2one_barcode"
                             />
@@ -85,16 +87,16 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
-                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user"/>
+                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                         </group><group>
-                            <field name="reference"/>
+                            <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
                             <field name="date"/>
-                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group><group>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
