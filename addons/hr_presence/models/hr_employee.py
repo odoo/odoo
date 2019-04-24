@@ -122,26 +122,24 @@ class ResCompany(models.Model):
             "context": {'default_employee_id': self.id},
         }
 
+    def _get_default_sms_recipients(self):
+        return self.mapped('user_partner_id')
+
     def action_send_sms(self):
         self.ensure_one()
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
         if not self.mobile_phone:
             raise UserError(_("There is no professional phone for this employee."))
-        body = _("""Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.
-Please, take appropriate measures in order to carry out this work absence.
-Do not hesitate to contact your manager or the human resource department.""")
+        template = self.env.ref('hr_presence.sms_template_presence', False)
         return {
             "type": "ir.actions.act_window",
             "res_model": "sms.compose.message",
             "view_mode": 'form',
             "context": {
                 'active_id': self.id,
-                'default_content': body,
-                'default_recipient_ids': [(0, False, {
-                    'partner_id': self.user_partner_id.id if self.user_partner_id else False,
-                    'number': self.mobile_phone
-                })]
+                'default_template_id': template.id if template else False,
+                'field_name': 'mobile_phone'
             },
             "name": "Send SMS",
             "target": "new",
