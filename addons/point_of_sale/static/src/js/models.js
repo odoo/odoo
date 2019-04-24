@@ -621,6 +621,7 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
+        this.send_current_order_to_customer_facing_display();
         return order;
     },
     /**
@@ -2113,9 +2114,6 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
 
         if (this.pos.config.iface_customer_facing_display) {
-            this.orderlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
-            // removing last orderline does not trigger change event
-            this.orderlines.on('remove',   this.pos.send_current_order_to_customer_facing_display, this.pos);
             this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
             // removing last paymentline does not trigger change event
             this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
@@ -2504,6 +2502,8 @@ exports.Order = Backbone.Model.extend({
         if(line.has_product_lot){
             this.display_lot_popup();
         }
+
+        this.pos.send_current_order_to_customer_facing_display();
     },
     get_selected_orderline: function(){
         return this.selected_orderline;
