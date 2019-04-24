@@ -280,7 +280,7 @@ class AccountBankStatement(models.Model):
                     st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
-            
+
     @api.multi
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
@@ -636,9 +636,13 @@ class AccountBankStatementLine(models.Model):
             # Create the move
             self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
             move_vals = self._prepare_reconciliation_move(self.statement_id.name)
-            if edition_mode:
-                self.button_cancel_reconciliation()
             move = self.env['account.move'].create(move_vals)
+            if edition_mode:
+                try:
+                    move.manage_before_delete(self.journal_entry_ids.mapped('move_id'))
+                except AttributeError:  # documents_account not installed
+                    pass
+                self.button_cancel_reconciliation()
             counterpart_moves = (counterpart_moves | move)
 
             # Create The payment
