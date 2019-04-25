@@ -127,7 +127,10 @@ class SaleOrder(models.Model):
                     pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
                 discount = (pu - price) / pu * 100
                 if discount < 0:
+                    # In case the discount is negative, we don't want to show it to the customer,
+                    # but we still want to use the price defined on the pricelist
                     discount = 0
+                    pu = price
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:

@@ -60,6 +60,19 @@ class SaleOrderLine(models.Model):
             return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement()
 
+    @api.multi
+    @api.depends('product_id', 'move_ids.state')
+    def _compute_qty_delivered_method(self):
+        lines = self.env['sale.order.line']
+        for line in self:
+            bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
+            if bom and bom.type == 'phantom' and line.order_id.state == 'sale':
+                bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                if not bom_delivered:
+                    line.qty_delivered_method = 'manual'
+                    lines |= line
+        super(SaleOrderLine, self - lines)._compute_qty_delivered_method()
+
 
 class AccountInvoiceLine(models.Model):
     # TDE FIXME: what is this code ??
