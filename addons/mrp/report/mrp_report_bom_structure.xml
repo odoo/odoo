@@ -37,7 +37,7 @@
                                             <span><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['product'].id" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="data['bom_prod_name']"/></a><t t-else="" t-esc="data['bom_prod_name']"/></span>
                                         </td>
                                         <td name="td_mrp_bom">
-                                            <span><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['bom'].id" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="data['code']"/></a><t t-else="" t-esc="data['code']"/></span>
+                                            <div><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['bom'].id" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="data['code']"/></a><t t-else="" t-esc="data['code']"/></div>
                                         </td>
                                         <td class="text-right"><span><t t-esc="data['bom_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
                                         <td groups="uom.group_uom"><span><t t-esc="data['bom'].product_uom_id.name"/></span></td>
@@ -89,21 +89,22 @@
             <t t-set="space_td" t-value="'margin-left: '+ str(l['level'] * 20) + 'px;'"/>
             <tr class="o_mrp_bom_report_line" t-att-data-id="l['child_bom']" t-att-parent_id="l['parent_id']" t-att-data-line="l['line_id']" t-att-data-product_id="l['prod_id']" t-att-data-qty="l['prod_qty']" t-att-data-level="l['level']">
                 <td>
-                    <span t-att-style="space_td"/>
-                    <t t-if="l['child_bom']">
-                        <span t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" role="img" aria-label="Unfold" title="Unfold"/>
-                    </t>
-                    <span t-att-class="None if l['child_bom'] else 'o_mrp_bom_no_fold'">
-                        <a href="#" t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="l['prod_name']"/></a>
-                    </span>
-                    <t t-if="l['phantom_bom']">
-                        <span class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
-                    </t>
+                    <div t-att-style="space_td">
+                        <t t-if="l['child_bom']">
+                            <div t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" style="display:inline-block;" role="img" aria-label="Unfold" title="Unfold"/>
+                        </t>
+                        <div t-att-class="None if l['child_bom'] else 'o_mrp_bom_no_fold'" style="display:inline-block;">
+                            <a href="#" t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="l['prod_name']"/></a>
+                        </div>
+                        <t t-if="l['phantom_bom']">
+                            <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
+                        </t>
+                    </div>
                 </td>
                 <td name="td_mrp_bom">
-                    <span>
+                    <div>
                         <a href="#" t-att-data-res-id="l['child_bom']" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="l['code']"/></a>
-                  </span>
+                  </div>
                 </td>
                 <td class="text-right"><span><t t-esc="l['prod_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
                 <td groups="uom.group_uom"><span><t t-esc="l['prod_uom']"/></span></td>
@@ -180,11 +181,12 @@
           <t t-set="space_td" t-value="'margin-left: '+ str(l['level'] * 20) + 'px;'"/>
           <tr t-if="data['report_structure'] != 'bom_structure' or l['type'] != 'operation'">
               <td>
-                  <span t-att-style="space_td"/>
-                  <span><t t-esc="l['name']"/></span>
+                  <div t-att-style="space_td">
+                    <div><t t-esc="l['name']"/></div>
+                  </div>
               </td>
               <td>
-                  <span t-if="l.get('code')" t-esc="l['code']" />
+                  <div t-if="l.get('code')" t-esc="l['code']" />
               </td>
               <td class="text-right">
                   <span>
