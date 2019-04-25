@@ -103,7 +103,14 @@ class Website(models.Model):
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
         is_public = self.user_id.id == self.env.user.id
         if not is_public:
-            pricelists |= pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl))
+            # keep partner_pl only if website compliant
+            partner_pl = pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl))
+            if country_code:
+                # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
+                partner_pl = partner_pl.filtered(
+                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code')
+                )
+            pricelists |= partner_pl
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
