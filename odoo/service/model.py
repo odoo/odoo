@@ -118,22 +118,28 @@ def check(f):
                     if key in inst.pgerror:
                         raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst.pgerror)
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
-                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
+                    msg = _('The operation cannot be completed.\n\n')
                     _logger.debug("IntegrityError", exc_info=True)
                     try:
-                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
-                        if '"public".' in errortxt:
-                            context = errortxt.split('"public".')[1]
-                            model_name = table = context.split('"')[1]
-                        else:
-                            last_quote_end = errortxt.rfind('"')
-                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                        model = table.replace("_",".")
+                        rmodel_name = inst.diag.table_name
+                        rmodel = rmodel_name.replace("_", ".")
+                        model_name = model = kwargs.get('model')
+                        field = field_name = inst.diag.column_name
                         if model in registry:
                             model_class = registry[model]
                             model_name = model_class._description or model_class._name
-                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
+                            if field and field in model_class._fields:
+                                field_name = model_class._fields.get(field).string
+                        if rmodel in registry:
+                            rmodel_class = registry[rmodel]
+                            rmodel_name = rmodel_class._description or rmodel_class._name
+
+                        if inst.pgcode == errorcodes.NOT_NULL_VIOLATION:
+                            msg += _('A record of model %s (%s) cannot be created/updated because some of its required fields are not set: \n %s (%s)') % (model_name, model, field_name, field)
+                        if inst.pgcode == errorcodes.FOREIGN_KEY_VIOLATION:
+                            msg += _('A record of %s (%s) cannot be found and therefore referenced.\n If you are trying to save a record, this record is probably referencing another from model %s (%s) that does not exist anymore.') % (model_name, model, rmodel_name, rmodel)
+                        if inst.pgcode == errorcodes.RESTRICT_VIOLATION:
+                            msg += _('You may be trying to delete a record that is referenced by others from model "%s" (%s).\nIf possible, you should archive the record instead of deleting it.\n If you have to delete the record, make sure to unlink it from the records referencing it first.') % (rmodel_name, rmodel)
                     except Exception:
                         pass
                     raise ValidationError(msg)
