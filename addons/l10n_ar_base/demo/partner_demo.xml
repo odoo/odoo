@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- New Partners -->
+
+    <!-- ADHOC -->
+    <record id="res_partner_adhoc" model="res.partner">
+        <field name="name">ADHOC SA</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>
+        <field eval="1" name="supplier"/>
+        <field eval="1" name="customer"/>
+        <field name="is_company">1</field>
+        <field name="city">Rosario</field>
+        <field name="zip">2000</field>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Ovidio Lagos 41 bis</field>
+        <field name="email">info@adhoc.com.ar</field>
+        <field name="phone">(+54) (341) 208 0203</field>
+        <field name="website">http://www.adhoc.com.ar</field>
+        <field name='l10n_ar_identification_type_id' ref="dt_CUIT"/>
+        <field name='l10n_ar_id_number'>30714295698</field>
+        <field name="image" type="base64" file="l10n_ar_base/demo/adhoc_logo.png"/>
+    </record>
+
+    <record id="res_partner_adhoc_jjs" model="res.partner">
+        <field name="name">Juan José Scarafía</field>
+        <field name="type">contact</field>
+        <field name="parent_id" ref="res_partner_adhoc"/>
+        <field name="image" type="base64" file="l10n_ar_base/demo/adhoc_jjs.jpeg"/>
+    </record>
+
+</odoo>
