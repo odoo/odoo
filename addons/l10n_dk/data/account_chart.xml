@@ -1,0 +1,1748 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+created by Odoo House ApS - odoohouse.dk
+(c) 2018 Odoo House ApS
+ -->
+<!--
+Account types:
+Resultat opgørelse:
++ account.data_account_type_revenue                      Indtægter
+- account.data_account_type_direct_costs                Direkte omkostninger
+= GROSS PROFIT                                          Bruttofortjeneste
+
++ account.data_account_type_other_income                Andre indtægter (Kurs gevinster m.m.)
+- account.data_account_type_expenses                    Udgifter
+- account.data_account_type_depreciation                Afskrivninger
+= NET PROFIT                                            ?
+
+Balance:
+Aktiver:
++ account.data_account_type_current_assets              Kortfristede aktiver / Omsætningsaktiver (lager)
++ account.data_account_type_receivable                  Debitore / Omsætningsaktiver
++ Accounts ???
++ account.data_account_type_prepayments         Forudbetalinger / Omsætningsaktiver
++ account.data_account_type_liquidity                   Bank og kasse / Omsætningsaktiver
+
++ account.data_account_type_fixed_assets                Materielle anlægsaktiver 
++ account.data_account_type_non_current_assets          Finansielle / Immaterielle anlægsaktiver
+= Aktiver ialt
+
+Passiver:
+- account.data_account_type_current_liabilities         Kortfristede gældsforpligtelser
+- account.data_account_type_payable                     Kreditore / Kortfristede gældsforpligtelser
+- account.data_account_type_non_current_liabilities     Langfristede gældsforpligtelser
+= NET ASSETS
+
+Egenkapital:
+account.data_account_type_equity                        Egenkapital
+account.data_account_type_current_year_ernings          Årets overskud
+= Egenkabital ialt
+-->
+<odoo>
+    <data noupdate="1">
+        <!-- Account Template -->
+        <record id="dk_chart_template" model="account.chart.template">
+            <field name="name">Denmark - Chart of Accounts (v. 1.0)</field>
+            <field name="code_digits">4</field>
+            <field name="currency_id" ref="base.DKK"/>
+            <field name="use_anglo_saxon" eval="True"/>
+            <field name="spoken_languages" eval="'da_DK'"/>
+            <field name="cash_account_code_prefix">681</field> 
+            <field name="bank_account_code_prefix">682</field>                          
+            <field name="transfer_account_code_prefix">682</field>  
+        </record>
+
+        <!--Resultatopgørelse-->
+        <record id="a1010" model="account.account.template" >
+          <field name="code">1010</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af vare, m/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1011" model="account.account.template" >
+          <field name="code">1011</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af ydelser, m/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1012" model="account.account.template" >
+          <field name="code">1012</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="chart_template_id" ref="dk_chart_template"/>
+          <field name="name">Salg af vare, u/moms</field>
+        </record>
+        <record id="a10113" model="account.account.template" >
+          <field name="code">1013</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af ydelser, u/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1020" model="account.account.template" >
+          <field name="code">1020</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af vare, EU</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1021" model="account.account.template" >
+          <field name="code">1021</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af ydelser, EU</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1030" model="account.account.template" >
+          <field name="code">1030</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af vare, 3. lande</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a1031" model="account.account.template" >
+          <field name="code">1031</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="group_id" ref="l10n_dk.account_group_revenue" />
+          <field name="name">Salg af ydelser, 3. lande</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2010" model="account.account.template" >
+          <field name="code">2010</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger vare, m/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2011" model="account.account.template" >
+          <field name="code">2011</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger ydelser, m/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2012" model="account.account.template" >
+          <field name="code">2012</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger vare, u/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2013" model="account.account.template" >
+          <field name="code">2013</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger ydelser, u/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>  
+        <record id="a2020" model="account.account.template" >
+          <field name="code">2020</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger vare, EU</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2021" model="account.account.template" >
+          <field name="code">2021</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger ydelser, EU</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2030" model="account.account.template" >
+          <field name="code">2030</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger vare, 3. lande</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2031" model="account.account.template" >
+          <field name="code">2031</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Direkte omkostninger ydelser, 3. lande</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2100" model="account.account.template" >
+          <field name="code">2100</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Vareforbrug, lagermodul</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2110" model="account.account.template" >
+          <field name="code">2110</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Prisdifferencer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>   
+       <record id="a2600" model="account.account.template" >
+          <field name="code">2600</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Lager, primo</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2605" model="account.account.template" >
+          <field name="code">2605</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Lager, ultimo</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a2610" model="account.account.template" >
+          <field name="code">2610</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_direct_costs" />
+          <field name="group_id" ref="l10n_dk.account_group_direct_costs" />
+          <field name="name">Lagerændring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3010" model="account.account.template" >
+          <field name="code">3010</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Produktionsløn</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3020" model="account.account.template" >
+          <field name="code">3020</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Gager</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3610" model="account.account.template" >
+          <field name="code">3610</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Arbejdskadeforsikring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3620" model="account.account.template" >
+          <field name="code">3620</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Ansvarsforsikring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3630" model="account.account.template" >
+          <field name="code">3630</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Dagpengeforsikring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3640" model="account.account.template" >
+          <field name="code">3640</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Gruppelivsforsikring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3655" model="account.account.template" >
+          <field name="code">3655</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">ATP-bidrag</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3680" model="account.account.template" >
+          <field name="code">3680</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Kursusudgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3690" model="account.account.template" >
+          <field name="code">3690</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Personaleudgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3695" model="account.account.template" >
+          <field name="code">3695</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Fortæring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3700" model="account.account.template" >
+          <field name="code">3700</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Befordringsgodtgørelse</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3710" model="account.account.template" >
+          <field name="code">3710</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Skattefrie godtgørelser</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3740" model="account.account.template" >
+          <field name="code">3740</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Arbejdstøj</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3810" model="account.account.template" >
+          <field name="code">3810</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Refunderet sygedagpenge</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3820" model="account.account.template" >
+          <field name="code">3820</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Løntilskud</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a3840" model="account.account.template" >
+          <field name="code">3840</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_staff_costs" />
+          <field name="name">Godtgørelse ATP</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4010" model="account.account.template" >
+          <field name="code">4010</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Restaurationsbesøg</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4020" model="account.account.template" >
+          <field name="code">4020</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Anden repræsentation</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4036" model="account.account.template" >
+          <field name="code">4036</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Rejseudgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4040" model="account.account.template" >
+          <field name="code">4040</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Hotelophold</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4060" model="account.account.template" >
+          <field name="code">4060</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Annoncer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4065" model="account.account.template" >
+          <field name="code">4065</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Erhvervsnetværk</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4070" model="account.account.template" >
+          <field name="code">4070</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Dekoration/skilte</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4071" model="account.account.template" >
+          <field name="code">4071</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Udstillinger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4073" model="account.account.template" >
+          <field name="code">4073</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Tryksager/brochurer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4074" model="account.account.template" >
+          <field name="code">4074</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Reklame-emballage</field>
+         <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4076" model="account.account.template" >
+          <field name="code">4076</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Emballage,salgsomkostninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4080" model="account.account.template" >
+          <field name="code">4080</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Fragt, porto</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4081" model="account.account.template" >
+          <field name="code">4081</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_sales_promotions_costs" />
+          <field name="name">Fragt, porto u/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4102" model="account.account.template" >
+          <field name="code">4102</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Brændstof vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4103" model="account.account.template" >
+          <field name="code">4103</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Vægtafgift vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4104" model="account.account.template" >
+          <field name="code">4104</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Forsikring vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4105" model="account.account.template" >
+          <field name="code">4105</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Vedligeholdelse vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4108" model="account.account.template" >
+          <field name="code">4108</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Redningskorps vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4120" model="account.account.template" >
+          <field name="code">4120</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Leje vare/lastbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4152" model="account.account.template" >
+          <field name="code">4152</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Brændstof personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4153" model="account.account.template" >
+          <field name="code">4153</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Vægtafgift personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4154" model="account.account.template" >
+          <field name="code">4154</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Forsikring personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4155" model="account.account.template" >
+          <field name="code">4155</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Vedligeholdelse personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4158" model="account.account.template" >
+          <field name="code">4158</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Redningskorps personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4170" model="account.account.template" >
+          <field name="code">4170</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Leje af personbil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4189" model="account.account.template" >
+          <field name="code">4189</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Privat andel af bil, drift af biler</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4190" model="account.account.template" >
+          <field name="code">4190</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_cars_equipment_costs" />
+          <field name="name">Kørsel i privat bil</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4205" model="account.account.template" >
+          <field name="code">4205</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Leje/leasing af driftsmidler</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4235" model="account.account.template" >
+          <field name="code">4235</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Vedligeholdelse, driftsmiddelomkostninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4240" model="account.account.template" >
+          <field name="code">4240</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Småanskaffelser</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4241" model="account.account.template" >
+          <field name="code">4241</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Småanskaffelser o/11.000</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4255" model="account.account.template" >
+          <field name="code">4255</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Husleje m/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4256" model="account.account.template" >
+          <field name="code">4256</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Husleje u/moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4260" model="account.account.template" >
+          <field name="code">4260</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Lagerleje</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4265" model="account.account.template" >
+          <field name="code">4265</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Garageleje</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4271" model="account.account.template" >
+          <field name="code">4271</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Varme</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4275" model="account.account.template" >
+          <field name="code">4275</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">El og vand</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4276" model="account.account.template" >
+          <field name="code">4276</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Refunderet energiafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4285" model="account.account.template" >
+          <field name="code">4285</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Privat andel el, vand</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4291" model="account.account.template" >
+          <field name="code">4291</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Vedligeholdelse, lokaleomkostninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4295" model="account.account.template" >
+          <field name="code">4295</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Rengøring</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4296" model="account.account.template" >
+          <field name="code">4296</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_rooms_costs" />
+          <field name="name">Renovation</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4302" model="account.account.template" >
+          <field name="code">4302</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Kontorartikler/tryksager</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4307" model="account.account.template" >
+          <field name="code">4307</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Inkassoomkostninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4308" model="account.account.template" >
+          <field name="code">4308</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Vedligeholdelse inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4310" model="account.account.template" >
+          <field name="code">4310</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">EDB-udgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4311" model="account.account.template" >
+          <field name="code">4311</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Mail/Webhotel</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4312" model="account.account.template" >
+          <field name="code">4312</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Løbende backup</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4316" model="account.account.template" >
+          <field name="code">4316</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Telefon</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4322" model="account.account.template" >
+          <field name="code">4322</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Privat andel telefon</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4325" model="account.account.template" >
+          <field name="code">4325</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Internet</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4327" model="account.account.template" >
+          <field name="code">4327</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Porto</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4335" model="account.account.template" >
+          <field name="code">4335</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Regnskabsassistance</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4338" model="account.account.template" >
+          <field name="code">4338</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Databehandling</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4340" model="account.account.template" >
+          <field name="code">4340</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Advokathonorar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4343" model="account.account.template" >
+          <field name="code">4343</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Konsulentbistand</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4350" model="account.account.template" >
+          <field name="code">4350</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Forsikringer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4351" model="account.account.template" >
+          <field name="code">4351</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Vagtværn/alarmsystem</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4360" model="account.account.template" >
+          <field name="code">4360</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Faglitteratur/tidsskrifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4370" model="account.account.template" >
+          <field name="code">4370</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Kontingenter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4381" model="account.account.template" >
+          <field name="code">4381</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Tab på debitorer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4392" model="account.account.template" >
+          <field name="code">4392</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_administration_costs" />
+          <field name="name">Øvrige kapacitetsudgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+         <record id="a4451" model="account.account.template" >
+          <field name="code">4451</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_depreciation" />
+          <field name="group_id" ref="l10n_dk.account_group_depreciation" />
+          <field name="name">Driftsafskrivninger, grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4454" model="account.account.template" >
+          <field name="code">4454</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_depreciation" />
+          <field name="group_id" ref="l10n_dk.account_group_depreciation" />
+          <field name="name">Driftsafskrivninger, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4651" model="account.account.template" >
+          <field name="code">4651</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_income" />
+          <field name="name">Renteindtægter, bank</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4664" model="account.account.template" >
+          <field name="code">4664</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_income" />
+          <field name="name">Renteindtægter, debitorer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4670" model="account.account.template" >
+          <field name="code">4670</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_income" />
+          <field name="name">Kursgevinster</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4680" model="account.account.template" >
+          <field name="code">4680</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_income" />
+          <field name="name">Gebyrer, indtægter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4730" model="account.account.template" >
+          <field name="code">4730</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, bank</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4740" model="account.account.template" >
+          <field name="code">4740</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, realkredit</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4743" model="account.account.template" >
+          <field name="code">4743</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, kreditorer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4744" model="account.account.template" >
+          <field name="code">4744</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, kontrakter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4745" model="account.account.template" >
+          <field name="code">4745</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, pantebreve</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4746" model="account.account.template" >
+          <field name="code">4746</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Renteudgifter, ej fradrag</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4750" model="account.account.template" >
+          <field name="code">4750</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Garantiprovision</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4755" model="account.account.template" >
+          <field name="code">4755</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Gebyrer, udgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4760" model="account.account.template" >
+          <field name="code">4760</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Kasserabat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4766" model="account.account.template" >
+          <field name="code">4766</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Låneomkostninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4770" model="account.account.template" >
+          <field name="code">4770</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_financial_expenses" />
+          <field name="name">Kurstab</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4805" model="account.account.template" >
+          <field name="code">4805</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_income" />
+          <field name="name">Fortjeneste, salg anlæg</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4819" model="account.account.template" >
+          <field name="code">4819</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_income" />
+          <field name="name">Indtægter vedr. tidl. år</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4847" model="account.account.template" >
+          <field name="code">4847</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_income" />
+          <field name="name">Andre ekstraordinære indtægter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4854" model="account.account.template" >
+          <field name="code">4854</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_expenses" />
+          <field name="name">Tab, salg anlæg</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4890" model="account.account.template" >
+          <field name="code">4890</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_expenses" />
+          <field name="name">Udgifter vedr. tidl. år</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a4895" model="account.account.template" >
+          <field name="code">4895</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="group_id" ref="l10n_dk.account_group_extraordinary_expenses" />
+          <field name="name">Andre ekstraordinære udgifter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+
+        <!--Aktiver-->
+        <record id="a5201" model="account.account.template" >
+          <field name="code">5201</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Kostpris, primo,goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5202" model="account.account.template" >
+          <field name="code">5202</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Tilgang i årets løb, goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5203" model="account.account.template" >
+          <field name="code">5203</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Afgang i årets løb,goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5204" model="account.account.template" >
+          <field name="code">5204</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Afskrivninger primo, goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5205" model="account.account.template" >
+          <field name="code">5205</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Afskrivninger på afgang, goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5206" model="account.account.template" >
+          <field name="code">5206</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_Goodwill_licenses_etc" />
+          <field name="name">Årsafskrivning, goodwill, licenser mm.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5511" model="account.account.template" >
+          <field name="code">5511</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Kostpris, primo, grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5512" model="account.account.template" >
+          <field name="code">5512</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Tilgang i årets løb,grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5513" model="account.account.template" >
+          <field name="code">5513</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Afgang i årets løb,grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5514" model="account.account.template" >
+          <field name="code">5514</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Afskrivninger primo, grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5515" model="account.account.template" >
+          <field name="code">5515</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Afskrivninger på afgang, grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5516" model="account.account.template" >
+          <field name="code">5516</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_land_buildings" />
+          <field name="name">Årsafskrivning, grunde og bygninger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5701" model="account.account.template" >
+          <field name="code">5701</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Kostpris, primo, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5702" model="account.account.template" >
+          <field name="code">5702</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Tilgang i årets løb, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5703" model="account.account.template" >
+          <field name="code">5703</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Afgang i årets løb, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5704" model="account.account.template" >
+          <field name="code">5704</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Afskrivninger primo, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5705" model="account.account.template" >
+          <field name="code">5705</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Afskrivninger på afgang, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a5706" model="account.account.template" >
+          <field name="code">5706</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_equipment_tools_inventory" />
+          <field name="name">Årsafskrivning, andre anlæg, driftsmateriel og inventar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6510" model="account.account.template" >
+          <field name="code">6510</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_inventories" />
+          <field name="name">Råvarer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6520" model="account.account.template" >
+          <field name="code">6520</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_inventories" />
+          <field name="name">Varer under fremstilling</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6525" model="account.account.template" >
+          <field name="code">6525</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_inventories" />
+          <field name="name">Fremstillede færdigvarer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6530" model="account.account.template" >
+          <field name="code">6530</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_inventories" />
+          <field name="name">Varelager</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6540" model="account.account.template" >
+          <field name="code">6540</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_work_in_progress" />
+          <field name="name">Igangværende arbejder</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6580" model="account.account.template" >
+          <field name="code">6580</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_prepayments" />
+          <field name="group_id" ref="l10n_dk.account_group_prepayments" />
+          <field name="name">Forudbetaling for varer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6610" model="account.account.template" >
+          <field name="code">6610</field>
+          <field name="reconcile" eval="True" />
+          <field name="user_type_id" ref="account.data_account_type_receivable" />
+          <field name="group_id" ref="l10n_dk.account_group_receivable" />
+          <field name="name">Debitorer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6640" model="account.account.template" >
+          <field name="code">6640</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
+          <field name="name">Andre tilgodehavender</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6650" model="account.account.template" >
+          <field name="code">6650</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
+          <field name="name">Kundekort/Kreditkort</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6655" model="account.account.template" >
+          <field name="code">6655</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
+          <field name="name">Depositum</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6670" model="account.account.template" >
+          <field name="code">6670</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
+          <field name="name">Varer leveret, faktura ikke sendt</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6680" model="account.account.template" >
+          <field name="code">6680</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
+          <field name="name">Periodeafgrænsningsposter, tilgodehavender</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <!-- Oprettes automatisk af odoo:
+        <record id="a6810" model="account.account.template" >
+          <field name="code">6810</field>
+          <field name="reconcile" eval="True" />
+          <field name="user_type_id" ref="account.data_account_type_liquidity" />
+          <field name="name">Kasse</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6820" model="account.account.template" >
+          <field name="code">6820</field>
+          <field name="reconcile" eval="True" />
+          <field name="user_type_id" ref="account.data_account_type_liquidity" />
+          <field name="name">Bank</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        -->
+        <record id="a6830" model="account.account.template">
+            <field name="code">6830</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_liquidity" />
+            <field name="group_id" ref="l10n_dk.account_group_liquidity" />
+            <field name="name">Bank i transfer</field>
+            <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a6860" model="account.account.template" >
+          <field name="code">6860</field>
+          <field name="reconcile" eval="True" />
+          <field name="user_type_id" ref="account.data_account_type_liquidity" />
+          <field name="group_id" ref="l10n_dk.account_group_liquidity" />
+          <field name="name">Bundne likvider</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+
+        <!--Passiver-->
+        <record id="a7210" model="account.account.template" >
+          <field name="code">7210</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Egenkapital, primo</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7220" model="account.account.template" >
+          <field name="code">7220</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Indskud</field>
+          <field name="chart_template_id" ref="dk_chart_template"/></record>
+        <record id="a7230" model="account.account.template" >
+          <field name="code">7230</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Hævet privat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7240" model="account.account.template" >
+          <field name="code">7240</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">B-skatter og AM-bidrag</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7245" model="account.account.template" >
+          <field name="code">7245</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Restskat og overskydende skat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7250" model="account.account.template" >
+          <field name="code">7250</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Forbrug af egne varer, egenkapital</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7260" model="account.account.template" >
+          <field name="code">7260</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Privat andel af bil, egenkapital</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7280" model="account.account.template" >
+          <field name="code">7280</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Privat andel, telefon, egenkapital</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7290" model="account.account.template" >
+          <field name="code">7290</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Privat andel i øvrigt, egenkapital</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7299" model="account.account.template" >
+          <field name="code">7299</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_individual_enterprices" />
+          <field name="name">Overført resultat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7410" model="account.account.template" >
+          <field name="code">7410</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Virksomhedskapital</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7420" model="account.account.template" >
+          <field name="code">7420</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Overkurs ved emission</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7430" model="account.account.template" >
+          <field name="code">7430</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Reserve for opskrivning</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7440" model="account.account.template" >
+          <field name="code">7440</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Andre reserver</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7450" model="account.account.template" >
+          <field name="code">7450</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Overført resultat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7460" model="account.account.template" >
+          <field name="code">7460</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="group_id" ref="l10n_dk.account_group_equity_corporations" />
+          <field name="name">Forslag til udbytte</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7705" model="account.account.template" >
+          <field name="code">7705</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_credit_institutions" />
+          <field name="name">Realkreditinstitutter</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7710" model="account.account.template" >
+          <field name="code">7710</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_credit_institutions" />
+          <field name="name">Private pantebreve</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a7720" model="account.account.template" >
+          <field name="code">7720</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_credit_institutions" />
+          <field name="name">Langfristede banklån</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8400" model="account.account.template" >
+          <field name="code">8400</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_credit_institutions" />
+          <field name="name">Kassekredit</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8410" model="account.account.template" >
+          <field name="code">8410</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_bank_loans" />
+          <field name="name">Anden bankgæld</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8430" model="account.account.template" >
+          <field name="code">8430</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_bank_loans" />
+          <field name="name">Modtagne forudbetalinger</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8440" model="account.account.template" >
+          <field name="code">8440</field>
+          <field name="reconcile" eval="True" />
+          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="group_id" ref="l10n_dk.account_group_payable" />
+          <field name="name">Kreditorer</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8450" model="account.account.template" >
+          <field name="code">8450</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_payable" />
+          <field name="name">Vare modtaget, faktura ikke modtaget</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8475" model="account.account.template" >
+          <field name="code">8475</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_payable" />
+          <field name="name">Revisorhonorar</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8720" model="account.account.template" >
+          <field name="code">8720</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Salgsmoms (udgående moms)</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8725" model="account.account.template" >
+          <field name="code">8725</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Erhvervelsesmoms med omvendt betlingspligt</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8730" model="account.account.template" >
+          <field name="code">8730</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Moms af varekøb i udlandet (Både EU og 3. lande)</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8731" model="account.account.template" >
+          <field name="code">8731</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>  
+        <record id="a8739" model="account.account.template" >
+          <field name="code">8739</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Importmoms, modkonto</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>  
+        <record id="a8740" model="account.account.template" >
+          <field name="code">8740</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Købsmoms (indgående moms)</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>   
+        <record id="a8750" model="account.account.template" >
+          <field name="code">8750</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">EU købsværdi, Rubrik A - vare</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8751" model="account.account.template" >
+          <field name="code">8751</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">EU købsværdi, Rubrik A - ydelser</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>   
+        <record id="a8754" model="account.account.template" >
+          <field name="code">8754</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">EU salgsværdi, Rubrik B - vare</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8755" model="account.account.template" >
+          <field name="code">8755</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">EU salgsværdi, Rubrik B - ydelser</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8758" model="account.account.template" >
+          <field name="code">8758</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Salgsværdier 3.lande - Rubrik C</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>   
+        <record id="a8759" model="account.account.template" >
+          <field name="code">8759</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Salgsværdier med omvendt betalingspligt - Rubrik C</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>   
+        <record id="a8769" model="account.account.template" >
+          <field name="code">8769</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Værdier, modkonto</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>       
+        <record id="a8770" model="account.account.template" >
+          <field name="code">8770</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Olie- og flaskegasafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8775" model="account.account.template" >
+          <field name="code">8775</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Elafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8780" model="account.account.template" >
+          <field name="code">8780</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Naturgas- og bygasafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8785" model="account.account.template" >
+          <field name="code">8785</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Kulafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8790" model="account.account.template" >
+          <field name="code">8790</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">CO-2 afgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8795" model="account.account.template" >
+          <field name="code">8795</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Vandafgift</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8798" model="account.account.template" >
+          <field name="code">8798</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_vat_taxes" />
+          <field name="name">Afregning af moms</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8801" model="account.account.template" >
+          <field name="code">8801</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Skyldig A-skat</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8805" model="account.account.template" >
+          <field name="code">8805</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Skyldig AM-bidrag</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8810" model="account.account.template" >
+          <field name="code">8810</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Skyldig ATP</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8815" model="account.account.template" >
+          <field name="code">8815</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Skyldige feriepenge</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8820" model="account.account.template" >
+          <field name="code">8820</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Afsat skyldige feriepenge</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8840" model="account.account.template" >
+          <field name="code">8840</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_Payroll_related_liabilities" />
+          <field name="name">Skyldig lån</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8855" model="account.account.template" >
+          <field name="code">8855</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_other_current_liabilities" />
+          <field name="name">Periodeafgrænsningsposter, gæld</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+        <record id="a8860" model="account.account.template">
+          <field name="code">8860</field>
+          <field name="reconcile" eval="False" />
+          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="group_id" ref="l10n_dk.account_group_other_current_liabilities" />
+          <field name="name">Andre skyldige omk.</field>
+          <field name="chart_template_id" ref="dk_chart_template"/>
+        </record>
+
+        <!-- Chart template -->
+        <record id="dk_chart_template" model="account.chart.template">
+            <field name="transfer_account_id" ref="a6830"/>
+            <field name="property_account_receivable_id" ref="a6610"/>
+            <field name="property_account_payable_id" ref="a8440"/>
+            <field name="property_account_expense_categ_id" ref="a2010"/>
+            <field name="property_account_income_categ_id" ref="a1010"/>
+            <field name="property_account_expense_id" ref="a2010"/>
+            <field name="property_account_income_id" ref="a1010"/>
+            <field name="property_stock_account_input_categ_id" ref="a8450"/>
+            <field name="property_stock_account_output_categ_id" ref="a6670"/>
+            <field name="property_stock_valuation_account_id" ref="a6530"/>
+            <field name="income_currency_exchange_account_id" ref="a4670"/>
+            <field name="expense_currency_exchange_account_id" ref="a4770"/>
+        </record>
+    </data>
+</odoo>

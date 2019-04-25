@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+     (c) 2018 Odoo House ApS
+     <field name="type">receivable</field>
+     <field name="type">payable</field>
+     <field name="type">liquidity</field>
+     <field name="type">other</field>
+    -->
+    <data noupdate="True">
+        <!--Resultatopgørelse indtægter-->
+        
+        <record id="account_group_revenue" model="account.group">
+            <field name="name">Omsætning</field>
+        </record>
+        
+        <!--Resultatopgørelse udgifer-->
+        
+        <record id="account_group_direct_costs" model="account.group">
+            <field name="name">Direkte omkostninger</field>
+        </record>
+        
+        <record id="account_group_staff_costs" model="account.group">
+            <field name="name">Personaleomkostninger</field>
+        </record>
+        <record id="account_group_sales_promotions_costs" model="account.group">
+            <field name="name">Salgsfremmende omkostninger</field>
+        </record>
+        <record id="account_group_cars_equipment_costs" model="account.group">
+            <field name="name">Biler og driftmidler</field>
+        </record>
+        <record id="account_group_rooms_costs" model="account.group">
+            <field name="name">Lokaleomkostninger</field>
+        </record>
+        <record id="account_group_administration_costs" model="account.group">
+            <field name="name">Administrationsomkostninger</field>
+        </record>
+        <record id="account_group_depreciation" model="account.group">
+            <field name="name">Af- og nedskrivninger</field>
+        </record>
+        <record id="account_group_financial_income" model="account.group">
+            <field name="name">Finansielle indtægter</field>
+        </record>
+        <record id="account_group_financial_expenses" model="account.group">
+            <field name="name">Finansielle udgifter</field>
+        </record>
+        <record id="account_group_extraordinary_income" model="account.group">
+            <field name="name">Ekstraordinære indtægter</field>
+        </record>
+        <record id="account_group_extraordinary_expenses" model="account.group">
+            <field name="name">Ekstraordinære udgifter</field>
+        </record>
+        
+        <!--Assets Aktiver-->
+        <record id="account_group_Goodwill_licenses_etc" model="account.group">
+            <field name="name">Goodwill, licenser mm.</field>
+        </record>
+        <record id="account_group_land_buildings" model="account.group">
+            <field name="name">Grunde og bygninger</field>
+        </record>
+        <record id="account_group_other_equipment_tools_inventory" model="account.group">
+            <field name="name">Andre anlæg, driftsmateriel og inventar</field>
+        </record>
+        <record id="account_group_inventories" model="account.group">
+            <field name="name">Varebeholdninger</field>
+        </record>
+        <record id="account_group_work_in_progress" model="account.group">
+            <field name="name">Igangværende arbejder</field>
+        </record>
+        <record id="account_group_prepayments" model="account.group">
+            <field name="name">Forudbetaling til leverandører</field>
+        </record>        
+        <record id="account_group_receivable" model="account.group">
+            <field name="name">Tilgodehavender</field>
+        </record>        
+        <record id="account_group_other_receivables" model="account.group">
+            <field name="name">Andre tilgodehavender</field>
+        </record>
+        <record id="account_group_liquidity" model="account.group">
+            <field name="name">Likvide beholdninger</field>
+        </record>
+        
+        <!--Liabilities Passiver-->
+         <record id="account_group_equity_individual_enterprices" model="account.group">
+            <field name="name">Egenkapital enkeltmandsvirksomheder</field>
+         </record>          
+         <record id="account_group_equity_corporations" model="account.group">
+            <field name="name">Egenkapital selskaber</field>
+        </record> 
+        <record id="account_group_credit_institutions" model="account.group">
+            <field name="name">Kreditinstitutter</field>
+        </record> 
+        <record id="account_group_bank_loans" model="account.group">
+            <field name="name">Bankgæld</field>
+        </record>
+        <record id="account_group_prepayments_from_customers" model="account.group">
+            <field name="name">Forudbetalinger fra kunder</field>
+        </record>
+        <record id="account_group_payable" model="account.group">
+            <field name="name">Leverandørgæld</field>
+        </record>
+        <record id="account_group_vat_taxes" model="account.group">
+            <field name="name">Moms og afgifter</field>
+        </record>
+        <record id="account_group_Payroll_related_liabilities" model="account.group">
+            <field name="name">Løn relateret gæld</field>
+        </record>
+        <record id="account_group_other_current_liabilities" model="account.group">
+            <field name="name">Anden kortfristet gæld</field>
+        </record>
+    </data>
+</odoo>
