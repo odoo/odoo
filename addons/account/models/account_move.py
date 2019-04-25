@@ -205,16 +205,18 @@ class AccountMove(models.Model):
             }
 
         def _find_existing_tax_line(line_ids, tax_repartition_line_id, analytic_tag_ids, analytic_account_id):
+            # tax_repartition_line_id, tag_ids and analytic_account_id are real ids
             if tax.analytic:
                 return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_repartition_line_id and x.analytic_tag_ids.ids == analytic_tag_ids and x.analytic_account_id.id == analytic_account_id)
             return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_repartition_line_id)
 
         def _get_lines_to_sum(line_ids, tax, tag_ids, analytic_account_id):
+            # tax is a real record; tag_ids and analytic_account_id are real ids
             if tax.analytic:
-                return line_ids.filtered(lambda x: tax in x.tax_ids and x.analytic_tag_ids.ids == tag_ids and x.analytic_account_id.id == analytic_account_id)
-            return line_ids.filtered(lambda x: tax in x.tax_ids)
+                return line_ids.filtered(lambda x: tax in x.tax_ids._origin and x.analytic_tag_ids.ids == tag_ids and x.analytic_account_id.id == analytic_account_id)
+            return line_ids.filtered(lambda x: tax in x.tax_ids._origin)
 
-        # Cache the already computed tax to avoid useless recalculation.
+        # Cache the already computed tax to avoid useless recalculation (real records)
         processed_taxes = self.env['account.tax']
 
         self.ensure_one()
@@ -225,25 +227,25 @@ class AccountMove(models.Model):
             # Unmark the line.
             line.recompute_tax_line = False
 
-            # Manage group of taxes.
+            # Manage group of taxes (new records)
             group_taxes = line.tax_ids.filtered(lambda t: t.amount_type == 'group')
             children_taxes = group_taxes.mapped('children_tax_ids')
             if children_taxes:
-                line.tax_ids += children_taxes - line.tax_ids
+                line.tax_ids |= children_taxes
                 # Because the taxes on the line changed, we need to recompute them.
-                processed_taxes -= children_taxes
+                processed_taxes -= children_taxes._origin
 
-            # Get the taxes to process.
+            # Get the taxes to process (actual records)
             taxes = self.env['account.tax'].browse(parsed_key['tax_ids'])
-            taxes += line.tax_ids.filtered(lambda t: t not in taxes)
-            taxes += children_taxes.filtered(lambda t: t not in taxes)
+            taxes |= line.tax_ids._origin
+            taxes |= children_taxes._origin
             to_process_taxes = (taxes - processed_taxes).filtered(lambda t: t.amount_type != 'group')
             processed_taxes += to_process_taxes
 
             # Apply tags on base line
             line.tag_ids = taxes.mapped('invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
 
-            # Process taxes.
+            # Process taxes (real records)
             for tax in to_process_taxes:
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
 
@@ -272,8 +274,7 @@ class AccountMove(models.Model):
                                 # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
                                 tax_line.debit = tax_line.credit = 0.0
                         else:
-                             # Create a new tax_line.
-
+                            # Create a new tax_line.
                             amount = line_vals['amount']
                             to_create_vals = {
                                 'account_id': line_vals['account_id'] or line.account_id.id,
@@ -695,14 +696,16 @@ class AccountMoveLine(models.Model):
         rec = super(AccountMoveLine, self).default_get(fields)
         if 'line_ids' not in self._context:
             return rec
-
+        if {'debit', 'credit', 'partner_id', 'account_id'}.isdisjoint(fields):
+            return rec
         #compute the default credit/debit of the next line in case of a manual entry
+        AccountMove = self.env['account.move']
         balance = 0
-        for line in self.move_id.resolve_2many_commands(
+        for line in AccountMove.resolve_2many_commands(
                 'line_ids', self._context['line_ids'], fields=['credit', 'debit']):
             balance += line.get('debit', 0) - line.get('credit', 0)
         if len(self._context['line_ids']) > 1:
-            lines = self.move_id.resolve_2many_commands('line_ids', self._context['line_ids'][-2:], fields=['partner_id', 'account_id'])
+            lines = AccountMove.resolve_2many_commands('line_ids', self._context['line_ids'][-2:], fields=['partner_id', 'account_id'])
             if lines[0].get('partner_id', False) == lines[1].get('partner_id', False):
                 rec.update({'partner_id': lines[0].get('partner_id', False)})
             if lines[0].get('account_id', False) == lines[1].get('account_id', False):
