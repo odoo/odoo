@@ -49,7 +49,7 @@ class Project(models.Model):
         if allow_timesheets and not values.get('analytic_account_id'):
             analytic_account = self.env['account.analytic.account'].create({
                 'name': values.get('name', _('Unknown Analytic Account')),
-                'company_id': values.get('company_id', self.env.user.company_id.id),
+                'company_id': values.get('company_id', self.env.company_id.id),
                 'partner_id': values.get('partner_id'),
                 'active': True,
             })

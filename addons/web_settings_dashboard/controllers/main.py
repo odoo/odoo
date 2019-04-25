@@ -77,7 +77,7 @@ class WebSettingsDashboard(http.Controller):
                 'demo_active': demo_active,
             },
             'company': {
-                'company_id': request.env.user.company_id.id,
-                'company_name': request.env.user.company_id.name
+                'company_id': request.env.company_id.id,
+                'company_name': request.env.company_id.name
             }
         }

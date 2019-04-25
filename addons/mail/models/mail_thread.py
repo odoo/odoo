@@ -867,7 +867,7 @@ class MailThread(models.AbstractModel):
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
             # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.user.company_id.name
+            company_name = company.name if company else self.env.company_id.name
             for res_id in result_email.keys():
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
                 result[res_id] = formataddr((name, result_email[res_id]))
@@ -1260,7 +1260,7 @@ class MailThread(models.AbstractModel):
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
                 }, engine='ir.qweb')
-                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
+                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.company_id.email)
                 return []
 
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
@@ -2435,3 +2435,17 @@ class MailThread(models.AbstractModel):
             self._message_auto_subscribe_notify(pids, template)
 
         return True
+
+    def _get_mail_redirect_suggested_company(self):
+        """ Return the suggested company to be set on the context
+        in case of a mail redirection to the record. To avoid multi
+        company issues when clicking on a link sent by email, this
+        could be called to try setting the most suited company on
+        the allowed_company_ids in the context. This method can be 
+        overriden, for example on the hr.leave model, where the
+        most suited company is the company of the leave type, as
+        specified by the ir.rule.
+        """
+        if 'company_id' in self:
+            return self.company_id
+        return False

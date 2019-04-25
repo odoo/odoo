@@ -34,10 +34,10 @@ class TestEquipmentMulticompany(TransactionCase):
         company_b = ResCompany.create({
             'name': 'Company B',
             'currency_id': self.env.ref('base.USD').id,
-            'parent_id': company_a.id,
         })
 
         # Create equipment manager.
+        cids = [company_a.id, company_b.id] 
         equipment_manager = ResUsers.create({
             'name': 'Equipment Manager',
             'company_id': company_a.id,
@@ -63,7 +63,7 @@ class TestEquipmentMulticompany(TransactionCase):
             'company_id': company_a.id,
         })
         # create a maintenance team for company B user
-        teamb = MaintenanceTeam.sudo(equipment_manager).create({
+        teamb = MaintenanceTeam.sudo(equipment_manager).with_context(allowed_company_ids=cids).create({
             'name': 'Subcontractor',
             'company_id': company_b.id,
         })
@@ -77,14 +77,14 @@ class TestEquipmentMulticompany(TransactionCase):
             })
 
         # create equipment category for equipment manager
-        category_1 = Category.sudo(equipment_manager).create({
+        category_1 = Category.sudo(equipment_manager).with_context(allowed_company_ids=cids).create({
             'name': 'Monitors',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
         })
 
         # create equipment category for equipment manager
-        Category.sudo(equipment_manager).create({
+        Category.sudo(equipment_manager).with_context(allowed_company_ids=cids).create({
             'name': 'Computers',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
@@ -98,7 +98,7 @@ class TestEquipmentMulticompany(TransactionCase):
         })
 
         # Check category for user equipment_manager and user
-        self.assertEquals(Category.sudo(equipment_manager).search_count([]), 3)
+        self.assertEquals(Category.sudo(equipment_manager).with_context(allowed_company_ids=cids).search_count([]), 3)
         self.assertEquals(Category.sudo(user).search_count([]), 2)
 
         # User should not able to create equipment.
@@ -111,16 +111,16 @@ class TestEquipmentMulticompany(TransactionCase):
                 'owner_user_id': user.id,
             })
 
-        Equipment.sudo(equipment_manager).create({
-                'name': 'Acer Laptop',
-                'category_id': category_1.id,
-                'assign_date': time.strftime('%Y-%m-%d'),
-                'company_id': company_b.id,
-                'owner_user_id': user.id,
-            })
+        Equipment.sudo(equipment_manager).with_context(allowed_company_ids=cids).create({
+            'name': 'Acer Laptop',
+            'category_id': category_1.id,
+            'assign_date': time.strftime('%Y-%m-%d'),
+            'company_id': company_b.id,
+            'owner_user_id': user.id,
+        })
 
         # create an equipment for user
-        Equipment.sudo(equipment_manager).create({
+        Equipment.sudo(equipment_manager).with_context(allowed_company_ids=cids).create({
             'name': 'HP Laptop',
             'category_id': category_1.id,
             'assign_date': time.strftime('%Y-%m-%d'),
@@ -128,7 +128,7 @@ class TestEquipmentMulticompany(TransactionCase):
             'owner_user_id': equipment_manager.id,
         })
         # Now there are total 2 equipments created and can view by equipment_manager user
-        self.assertEquals(Equipment.sudo(equipment_manager).search_count([]), 2)
+        self.assertEquals(Equipment.sudo(equipment_manager).with_context(allowed_company_ids=cids).search_count([]), 2)
 
         # And there is total 1 equipment can be view by Normal User ( Which user is followers)
         self.assertEquals(Equipment.sudo(user).search_count([]), 1)
@@ -171,5 +171,5 @@ class TestEquipmentMulticompany(TransactionCase):
         })
 
         # Now here is total 1 maintenance request can be view by Normal User
-        self.assertEquals(MaintenanceRequest.sudo(equipment_manager).search_count([]), 2)
+        self.assertEquals(MaintenanceRequest.sudo(equipment_manager).with_context(allowed_company_ids=cids).search_count([]), 2)
         self.assertEquals(MaintenanceRequest.sudo(user).search_count([]), 1)

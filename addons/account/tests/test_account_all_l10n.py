@@ -40,5 +40,5 @@ class TestAllL10n(SingleTransactionCase):
             comp = self.env['res.company'].create({
                 'name': cname,
             })
-            self.env.user.company_id = comp
+            self.env.company_id = comp
             coa.try_loading_for_current_company()

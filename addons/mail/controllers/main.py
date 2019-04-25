@@ -52,6 +52,7 @@ class MailController(http.Controller):
         # access_token and kwargs are used in the portal controller override for the Send by email or Share Link
         # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
+        user = request.env['res.users'].sudo().browse(uid)
 
         # no model / res_id, meaning no possible record -> redirect to login
         if not model or not res_id or model not in request.env:
@@ -69,7 +70,33 @@ class MailController(http.Controller):
             if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
                 return cls._redirect_to_messaging()
             try:
-                record_sudo.sudo(uid).check_access_rule('read')
+                # We need here to extend the "allowed_company_ids" to allow a redirection
+                # to any record that the user can access, regardless of currently visible
+                # records based on the "currently allowed companies".
+                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id))
+                cids = [int(cid) for cid in cids.split(',')]
+                try:
+                    record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
+                except AccessError:
+                    # In case the allowed_company_ids from the cookies (i.e. the last user configuration
+                    # on his browser) is not sufficient to avoid an ir.rule access error, try to following
+                    # heuristic:
+                    # - Guess the supposed necessary company to access the record via the method
+                    #   _get_mail_redirect_suggested_company
+                    #   - If no company, then redirect to the messaging
+                    #   - If the multi company per tag group is activated, merge the suggested company
+                    #     withe the companies on the cookie
+                    #   - else, use this company as enabled company
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    #   redirect to the messaging.
+                    suggested_company = record_sudo._get_mail_redirect_suggested_company()
+                    if not suggested_company:
+                        raise AccessError()
+                    if user.has_group('base.group_toggle_company'):
+                        cids += [suggested_company]
+                    else:
+                        cids = [suggested_company]
+                    record_sudo.sudo(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
             else:
@@ -98,6 +125,7 @@ class MailController(http.Controller):
         if view_id:
             url_params['view_id'] = view_id
 
+        url_params['cids'] = ','.join([str(cid) for cid in cids])
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 

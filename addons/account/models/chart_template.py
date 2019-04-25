@@ -165,13 +165,10 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and request.session.uid:
-            current_user = self.env['res.users'].browse(request.uid)
-            company = current_user.company_id
+        if request and 'allowed_company_ids' in dir(request):
+            company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            # fallback to company of current user, most likely __system__
-            # (won't work well for multi-company)
-            company = self.env.user.company_id
+            company = self.env.company_id
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
@@ -186,13 +183,10 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
-        if request and request.session.uid:
-            current_user = self.env['res.users'].browse(request.uid)
-            company = current_user.company_id
+        if request and 'allowed_company_ids' in dir(request):
+            company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            # fallback to company of current user, most likely __system__
-            # (won't work well for multi-company)
-            company = self.env.user.company_id
+            company = self.env.company_id
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():

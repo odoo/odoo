@@ -157,8 +157,8 @@
         <record id="res_company_1" model="res.company">
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
-            <field name="parent_id" ref="base.main_company"/>
             <field name="name">My Company (Chicago)</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin')), (4, ref('base.user_demo'))]"/>
         </record>
 
         <record id="base.main_company" model="res.company">

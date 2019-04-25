@@ -13,7 +13,7 @@ class LunchProductCategory(models.Model):
     _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     topping_label_1 = fields.Char('Topping Label 1', required=True, default='Supplements')
     topping_label_2 = fields.Char('Topping Label 2', required=True, default='Beverages')
@@ -60,14 +60,14 @@ class LunchTopping(models.Model):
     _description = 'Lunch Toppings'
 
     name = fields.Char('Name', required=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
     category_id = fields.Many2one('lunch.product.category')
     topping_category = fields.Integer('Topping Category', help="This field is a technical field", required=True, default=1)
 
     def name_get(self):
-        currency_id = self.env.user.company_id.currency_id
+        currency_id = self.env.company_id.currency_id
         res = dict(super(LunchTopping, self).name_get())
         for topping in self:
             price = formatLang(self.env, topping.price, currency_obj=currency_id)
@@ -88,7 +88,7 @@ class LunchProduct(models.Model):
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
 
-    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     # image: all image fields are base64 encoded and PIL-supported

@@ -15,7 +15,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'click .js_multi_website_switch': '_onWebsiteSwitch',
-        'click .js_multi_company_switch': '_onCompanySwitch',
         'shown.bs.modal': '_onModalShown',
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
@@ -166,19 +165,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             url.hostname = websiteDomain;
         }
         window.location.href = url;
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCompanySwitch: function (ev) {
-        var companyID = parseInt(ev.currentTarget.getAttribute('company-id'), 10);
-        this._rpc({model: 'res.users',
-            method: 'write',
-            args: [odoo.session_info.user_id, {'company_id': companyID}],
-        }).then(function () {
-            window.location.reload(true);
-        });
     },
     /**
      * @private

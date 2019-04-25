@@ -87,7 +87,8 @@ return AbstractWebClient.extend({
 
             // If the url's state is empty, we execute the user's home action if there is one (we
             // show the first app if not)
-            if (_.isEmpty($.bbq.getState(true))) {
+            var state = $.bbq.getState(true);
+            if (_.keys(state).length === 1 && _.keys(state)[0] === "cids") {
                 return self._rpc({
                         model: 'res.users',
                         method: 'read',

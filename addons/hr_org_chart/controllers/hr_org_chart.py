@@ -9,12 +9,17 @@ from odoo.http import request
 class HrOrgChartController(http.Controller):
     _managers_level = 5  # FP request
 
-    def _check_employee(self, employee_id):
+    def _check_employee(self, employee_id, **kw):
         if not employee_id:  # to check
             return None
         employee_id = int(employee_id)
 
-        Employee = request.env['hr.employee']
+        if ('context' in kw and 'allowed_company_ids' in kw['context']):
+            cids = kw['context']['allowed_company_ids']
+        else:
+            cids = [request.env.company_id.id]
+
+        Employee = request.env['hr.employee'].with_context(allowed_company_ids=cids)
         # check and raise
         if not Employee.check_access_rights('read', raise_exception=False):
             return None
@@ -38,9 +43,9 @@ class HrOrgChartController(http.Controller):
         )
 
     @http.route('/hr/get_org_chart', type='json', auth='user')
-    def get_org_chart(self, employee_id):
+    def get_org_chart(self, employee_id, **kw):
 
-        employee = self._check_employee(employee_id)
+        employee = self._check_employee(employee_id, **kw)
         if not employee:  # to check
             return {}
 
@@ -64,15 +69,14 @@ class HrOrgChartController(http.Controller):
         return values
 
     @http.route('/hr/get_subordinates', type='json', auth='user')
-    def get_subordinates(self, employee_id, subordinates_type=None):
+    def get_subordinates(self, employee_id, subordinates_type=None, **kw):
         """
         Get employee subordinates.
         Possible values for 'subordinates_type':
             - 'indirect'
             - 'direct'
         """
-
-        employee = self._check_employee(employee_id)
+        employee = self._check_employee(employee_id, **kw)
         if not employee:  # to check
             return {}
 

@@ -127,9 +127,6 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
                 });
             }
 
-            self._setOne2ManyField('child_ids', data.company.child_ids);
-            delete data.company.child_ids;
-
             self._setOne2ManyField('bank_ids', data.company.bank_ids);
             delete data.company.bank_ids;
 

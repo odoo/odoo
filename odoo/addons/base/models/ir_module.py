@@ -439,6 +439,13 @@ class Module(models.Model):
         :rtype: dict[str, object]
         """
         _logger.info('User #%d triggered module installation', self.env.uid)
+        # We use here the request object (which is thread-local) as a kind of
+        # "global" env because the env is not usable in the following use case.
+        # When installing a Chart of Account, I would like to send the
+        # allowed companies to configure it on the correct company.
+        # Otherwise, the SUPERUSER won't be aware of that and will try to
+        # configure the CoA on his own company, which makes no sense.
+        request.allowed_company_ids = self.env.company_ids.ids
         return self._button_immediate_function(type(self).button_install)
 
     @assert_log_admin_access

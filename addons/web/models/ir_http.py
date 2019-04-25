@@ -20,7 +20,6 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         user = request.env.user
-        display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
         version_info = odoo.service.common.exp_version()
         return {
             "uid": request.session.uid,
@@ -33,12 +32,16 @@ class Http(models.AbstractModel):
             "name": user.name,
             "username": user.login,
             "partner_display_name": user.partner_id.display_name,
-            "company_id": user.company_id.id if request.session.uid else None,
+            "company_id": user.company_id.id if request.session.uid else None,  # YTI TODO: Remove this from the user context
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
-            "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
+            # current_company should be default_company
+            "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]},
             "currencies": self.get_currencies() if request.session.uid else {},
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
-            "show_effect": True
+            "show_effect": True,
+            "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
+            "toggle_company": user.has_group('base.group_toggle_company'),
+
         }
 
     def get_currencies(self):

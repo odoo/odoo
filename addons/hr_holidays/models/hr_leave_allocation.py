@@ -365,6 +365,9 @@ class HolidaysAllocation(models.Model):
     def copy_data(self, default=None):
         raise UserError(_('A time off cannot be duplicated.'))
 
+    def _get_mail_redirect_suggested_company(self):
+        return self.holiday_status_id.company_id
+
     ####################################################
     # Business methods
     ####################################################

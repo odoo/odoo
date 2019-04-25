@@ -178,10 +178,8 @@ class Property(models.Model):
         return False
 
     # only cache Property.get(res_id=False) as that's
-    # sub-optimally, we can only call _company_default_get without a field
-    # unless we want to create a more complete helper which does the
-    # returning-a-company-id-from-a-model-and-name
-    COMPANY_KEY = "self.env.context.get('force_company') or self.env['res.company']._company_default_get(model).id"
+    # sub-optimally.
+    COMPANY_KEY = "self.env.context.get('force_company') or self.env.company_id.id"
     @ormcache(COMPANY_KEY, 'name', 'model')
     def _get_default_property(self, name, model):
         prop = self._get_property(name, model, res_id=False)
@@ -205,7 +203,7 @@ class Property(models.Model):
         res = self._cr.fetchone()
         if not res:
             return None
-        company_id = self._context.get('force_company') or self.env['res.company']._company_default_get(model, res[0]).id
+        company_id = self._context.get('force_company') or self.env.company_id.id
         return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
 
     @api.model
@@ -221,7 +219,7 @@ class Property(models.Model):
         field_id = self.env['ir.model.fields']._get(model, name).id
         company_id = (
             self._context.get('force_company')
-            or self.env['res.company']._company_default_get(model, field_id).id
+            or self.env.company_id.id
         )
 
         if field.type == 'many2one':
@@ -301,7 +299,7 @@ class Property(models.Model):
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
-        company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id).id
+        company_id = self.env.context.get('force_company') or self.env.company_id.id
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),

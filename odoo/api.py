@@ -855,6 +855,39 @@ class Environment(Mapping):
         return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
+    def company_id(self):
+        """ return the company in which the user is logged in (as an instance) """
+        try:
+            company_id = int(self.context.get('allowed_company_ids')[0])
+            if company_id in self.user.company_ids.ids:
+                return self['res.company'].browse(company_id)
+            return self.user.company_id
+        except Exception:
+            return self.user.company_id
+
+    @property
+    def company_ids(self):
+        """ return a recordset of the enabled companies by the user """
+        try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
+            allowed_company_ids = self.context.get('allowed_company_ids')
+            # Prevent the user to enable companies for which he doesn't have any access
+            users_company_ids = self.user.company_ids.ids
+            allowed_company_ids = [company_id for company_id in allowed_company_ids if company_id in users_company_ids]
+        except Exception:
+            # By setting the default companies to all user companies instead of the main one
+            # we save a lot of potential trouble in all "out of context" calls, such as
+            # /mail/redirect or /web/image, etc. And it is not unsafe because the user does
+            # have access to these other companies. The risk of exposing foreign records
+            # (wrt to the context) is low because all normal RPCs will have a proper
+            # allowed_company_ids.
+            # Examples:
+            #   - when printing a report for several records from several companies
+            #   - when accessing to a record from the notification email template
+            #   - when loading an binary image on a template
+            allowed_company_ids = self.user.company_ids.ids
+        return self['res.company'].browse(allowed_company_ids)
+
+    @property
     def lang(self):
         """ return the current language code """
         return self.context.get('lang')

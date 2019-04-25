@@ -1929,6 +1929,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 active_model: "partner",
                 bar: 1,
                 category: [12],
+                current_company_id: false,
                 current_date: moment().format('YYYY-MM-DD'),
                 date: "2017-01-25",
                 display_name: "first partner",

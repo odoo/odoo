@@ -80,6 +80,7 @@ The kernel of Odoo, needed for all installation.
         'data/res_bank_demo.xml',
         'data/res_partner_demo.xml',
         'data/res_partner_image_demo.xml',
+        'data/res_groups_demo.xml',
     ],
     'test': [],
     'installable': True,
