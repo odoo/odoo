@@ -1118,7 +1118,7 @@ class AccountInvoice(models.Model):
             return (tax.amount_type not in ('group', 'division') and tax.include_base_amount and tax.price_include)\
                    or (tax.amount_type == 'division' and tax.include_base_amount and not tax.price_include)
         # Avoid redundant browsing.
-        tax_map = dict((t.id, t) for t in self.invoice_line_ids.mapped('invoice_line_tax_ids'))
+        tax_map = dict((t.id, t) for t in self.invoice_line_ids.invoice_line_tax_ids._origin)
         default_tax_group_fields = set(['amount', 'base'])
         if tax_group_fields:
             default_tax_group_fields |= set(tax_group_fields)
@@ -1129,7 +1129,7 @@ class AccountInvoice(models.Model):
                 continue
 
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id, is_refund=self.type in ('in_refund', 'out_refund'))['taxes']
+            taxes = line.invoice_line_tax_ids._origin.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id, is_refund=self.type in ('in_refund', 'out_refund'))['taxes']
 
             affecting_base_tax_ids = []
             for tax_vals in taxes:
@@ -2033,7 +2033,7 @@ class AccountInvoiceLine(models.Model):
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
             default_tax = self.invoice_id.type in ('out_invoice', 'out_refund') and self.invoice_id.company_id.account_sale_tax_id or self.invoice_id.company_id.account_purchase_tax_id
-            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id).ids
+            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id)
         elif not self.price_unit:
             self._set_taxes()
 
