@@ -307,7 +307,7 @@ class ProductProduct(models.Model):
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
-            to_uom = self.env['uom.uom'].browse([self._context['uom']])
+            to_uom = self.env['uom.uom'].browse(self._context['uom'])
 
         for product in self:
             if to_uom:
