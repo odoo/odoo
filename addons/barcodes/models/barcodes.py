@@ -174,14 +174,14 @@ class BarcodeRule(models.Model):
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
     sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
     encoding = fields.Selection([
-                ('any', _('Any')),
+                ('any', 'Any'),
                 ('ean13', 'EAN-13'),
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),
         ], string='Encoding', required=True, default='any', help='This rule will apply only if the barcode is encoded with the specified encoding')
     type = fields.Selection([
-            ('alias', _('Alias')),
-            ('product', _('Unit Product'))
+            ('alias', 'Alias'),
+            ('product', 'Unit Product')
         ], string='Type', required=True, default='product')
     pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
     alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)

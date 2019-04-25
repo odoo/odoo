@@ -63,7 +63,18 @@ class MailMail(models.Model):
             values['notification'] = True
         if not values.get('mail_message_id'):
             self = self.with_context(message_create_from_mail_mail=True)
-        return super(MailMail, self).create(values)
+        new_mail = super(MailMail, self).create(values)
+        if values.get('attachment_ids'):
+            new_mail.attachment_ids.check(mode='read')
+        return new_mail
+
+    @api.multi
+    def write(self, vals):
+        res = super(MailMail, self).write(vals)
+        if vals.get('attachment_ids'):
+            for mail in self:
+                mail.attachment_ids.check(mode='read')
+        return res
 
     @api.multi
     def unlink(self):
@@ -104,16 +115,21 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        if not self.ids:
-            filters = ['&',
-                       ('state', '=', 'outgoing'),
-                       '|',
-                       ('scheduled_date', '<', datetime.datetime.now()),
-                       ('scheduled_date', '=', False)]
-            if 'filters' in self._context:
-                filters.extend(self._context['filters'])
-            # TODO: make limit configurable
-            ids = self.search(filters, limit=10000).ids
+        filters = ['&',
+                   ('state', '=', 'outgoing'),
+                   '|',
+                   ('scheduled_date', '<', datetime.datetime.now()),
+                   ('scheduled_date', '=', False)]
+        if 'filters' in self._context:
+            filters.extend(self._context['filters'])
+        # TODO: make limit configurable
+        filtered_ids = self.search(filters, limit=10000).ids
+        if not ids:
+            ids = filtered_ids
+        else:
+            ids = list(set(filtered_ids) & set(ids))
+        ids.sort()
+
         res = None
         try:
             # auto-commit except in testing mode

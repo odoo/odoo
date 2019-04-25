@@ -3,20 +3,21 @@
 # * website_event_sale
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Talway <9010446@qq.com>, 2017
+# fausthuang, 2017
+# v2exerer <9010446@qq.com>, 2017
 # SHOM <shanmuxin@yeah.net>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: SHOM <shanmuxin@yeah.net>, 2017\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +41,30 @@ msgid "<span>left</span>"
 msgstr "<span>离开</span>"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:16
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:13
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "仅"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "价格表项目"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -89,6 +111,12 @@ msgstr "对不起，只有%(remaining_seats)d席位仍然可用于%(ticket)s的�
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "这张票不符合这个产品。"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:20
+#, python-format
+msgid "Warning"
+msgstr "警告"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

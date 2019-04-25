@@ -359,13 +359,13 @@
             }
         }
 
-        :not(.o_row) > .o_field_widget,
+        :not(.o_row):not(.o_data_cell) > .o_field_widget,
         .o_row > .o_field_widget:last-child { // Note: this does not take care
                                               // of an invisible last-child but
                                               // it does not really matter
             // Makes extra buttons (e.g. m2o external button) overflow on the
             // right padding of the parent element
-            .o_input_dropdown {
+            > .o_input_dropdown {
                 .o-flex(1, 0, auto);
             }
         }
@@ -590,6 +590,9 @@
     }
     &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
+    }
+    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+        display: none;  // Hide the handler on readonly fields
     }
 
     // Attachments

@@ -3,21 +3,25 @@
 # * website_event_track
 # 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# Martin Trigaux, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
+# Yihya Hugirat <hugirat@gmail.com>, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
@@ -177,7 +181,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr ""
+msgstr "יישום"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -192,7 +196,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
 msgid "Bronze"
-msgstr ""
+msgstr "ברונזה"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -325,7 +329,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "תבנית דוא\"ל"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -420,17 +424,17 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Future Activities"
-msgstr ""
+msgstr "פעילויות עתידיות"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
-msgstr ""
+msgstr "זהב"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Green"
-msgstr ""
+msgstr "ירוק"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -445,12 +449,12 @@ msgstr "קבץ לפי"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "High"
-msgstr ""
+msgstr "גבוה"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Highest"
-msgstr ""
+msgstr "גבוהה ביותר"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
@@ -516,7 +520,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "מצב קנבן "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -556,27 +560,27 @@ msgstr "תאריך עדכון אחרון"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Late Activities"
-msgstr ""
+msgstr "פעילויות מאוחרות"
 
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
-msgstr ""
+msgstr "אתרים"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_image_medium
 msgid "Logo"
-msgstr ""
+msgstr "לוגו"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Low"
-msgstr ""
+msgstr "נמוך"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
 msgid "Lunch"
-msgstr ""
+msgstr "ארוחת צהריים"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
@@ -591,7 +595,7 @@ msgstr ""
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr ""
+msgstr "בינוני"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor_image_medium
@@ -601,6 +605,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"תמונה בגודל בינוני של איש קשר זה. הוא משתנה באופן אוטומטי כתמונה בגודל "
+"128x128 פיקסלים, עם יחס גובה-רוחב נשמר. השתמש בשדה זה בתצוגות טופס או תצוגות"
+" קנבן מסוימות"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -710,7 +717,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 msgid "Published"
-msgstr ""
+msgstr "פורסם"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -733,7 +740,7 @@ msgstr ""
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Red"
-msgstr ""
+msgstr "אדום"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
@@ -750,7 +757,7 @@ msgstr "אחראי"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10951
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
-msgstr ""
+msgstr "חדר"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_sequence
@@ -762,7 +769,7 @@ msgstr "רצף"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "הצג את כל הרשומות שתאריך הפעולה הבא שלהם הוא לפני היום"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -1109,7 +1116,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Name"
-msgstr ""
+msgstr "שם מלא"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1125,7 +1132,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
-msgstr ""
+msgstr "שעות"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda

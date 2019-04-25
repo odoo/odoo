@@ -5,13 +5,14 @@ import os.path
 import re
 import traceback
 
-from collections import OrderedDict, Sized, Mapping, defaultdict
+from collections import OrderedDict, Sized, Mapping
 from functools import reduce
 from itertools import tee, count
 from textwrap import dedent
 
 import itertools
 from lxml import etree, html
+from psycopg2.extensions import TransactionRollbackError
 import werkzeug
 from werkzeug.utils import escape as _escape
 
@@ -29,6 +30,8 @@ try:
     import astor
 except ImportError:
     astor = None
+
+from odoo.tools.parse_version import parse_version
 
 unsafe_eval = eval
 
@@ -175,7 +178,7 @@ class QWebException(Exception):
         return str(self)
 
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-escape = (lambda text: _escape(text, quote=True)) if getattr(werkzeug, '__version__', '0.0') < '0.9.0' else _escape
+escape = (lambda text: _escape(text, quote=True)) if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0') else _escape
 
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()
@@ -308,8 +311,9 @@ class QWeb(object):
             raise e
         except Exception as e:
             path = _options['last_path_node']
-            node = element.getroottree().xpath(path)
-            raise QWebException("Error when compiling AST", e, path, etree.tostring(node[0], encoding='unicode'), name)
+            element, document = self.get_template(template, options)
+            node = element.getroottree().xpath(path) if ':' not in path else None
+            raise QWebException("Error when compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
         astmod.body.extend(_options['ast_calls'])
 
         if 'profile' in options:
@@ -339,12 +343,12 @@ class QWeb(object):
             new.update(values)
             try:
                 return compiled(self, append, new, options, log)
-            except QWebException as e:
+            except (QWebException, TransactionRollbackError) as e:
                 raise e
             except Exception as e:
                 path = log['last_path_node']
                 element, document = self.get_template(template, options)
-                node = element.getroottree().xpath(path)
+                node = element.getroottree().xpath(path) if ':' not in path else None
                 raise QWebException("Error to render compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
         return _compiled_fn
@@ -694,6 +698,80 @@ class QWeb(object):
             ctx=ctx
         )
 
+    def _append_attributes(self):
+        # t_attrs = self._post_processing_att(tagName, t_attrs, options)
+        # for name, value in t_attrs.items():
+        #     if value or isinstance(value, string_types)):
+        #         append(u' ')
+        #         append(name)
+        #         append(u'="')
+        #         append(escape(pycompat.to_text((value)))
+        #         append(u'"')
+        return [
+            ast.Assign(
+                targets=[ast.Name(id='t_attrs', ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='_post_processing_att',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        ast.Name(id='tagName', ctx=ast.Load()),
+                        ast.Name(id='t_attrs', ctx=ast.Load()),
+                        ast.Name(id='options', ctx=ast.Load()),
+                    ], keywords=[],
+                    starargs=None, kwargs=None
+                )
+            ),
+            ast.For(
+                target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
+                iter=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
+                        attr='items',
+                        ctx=ast.Load()
+                        ),
+                    args=[], keywords=[],
+                    starargs=None, kwargs=None
+                ),
+                body=[ast.If(
+                    test=ast.BoolOp(
+                        op=ast.Or(),
+                        values=[
+                            ast.Name(id='value', ctx=ast.Load()),
+                            ast.Call(
+                                func=ast.Name(id='isinstance', ctx=ast.Load()),
+                                args=[
+                                    ast.Name(id='value', ctx=ast.Load()),
+                                    ast.Name(id='string_types', ctx=ast.Load())
+                                ],
+                                keywords=[],
+                                starargs=None, kwargs=None
+                            )
+                        ]
+                    ),
+                    body=[
+                        self._append(ast.Str(u' ')),
+                        self._append(ast.Name(id='name', ctx=ast.Load())),
+                        self._append(ast.Str(u'="')),
+                        self._append(ast.Call(
+                            func=ast.Name(id='escape', ctx=ast.Load()),
+                            args=[ast.Call(
+                                func=ast.Name(id='to_text', ctx=ast.Load()),
+                                args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
+                                starargs=None, kwargs=None
+                            )], keywords=[],
+                            starargs=None, kwargs=None
+                        )),
+                        self._append(ast.Str(u'"')),
+                    ],
+                    orelse=[]
+                )],
+                orelse=[]
+            )
+        ]
+
     # order
 
     def _directives_eval_order(self):
@@ -732,7 +810,7 @@ class QWeb(object):
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
             content = self._compile_directive_content(el, options)
-            attrib = el.attrib
+            attrib = self._post_processing_att(el.tag, el.attrib, options)
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -761,6 +839,8 @@ class QWeb(object):
                     attrib['%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)] = value
                 else:
                     attrib[key] = value
+
+            attrib = self._post_processing_att(el.tag, attrib, options)
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -870,59 +950,12 @@ class QWeb(object):
                     )))
 
         if attr_already_created:
-            # for name, value in t_attrs.items():
-            #     if value or isinstance(value, basestring)):
-            #         append(u' ')
-            #         append(name)
-            #         append(u'="')
-            #         append(escape(to_text((value)))
-            #         append(u'"')
-            body.append(ast.For(
-                target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
-                iter=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
-                        attr='items',
-                        ctx=ast.Load()
-                        ),
-                    args=[], keywords=[],
-                    starargs=None, kwargs=None
-                ),
-                body=[ast.If(
-                    test=ast.BoolOp(
-                        op=ast.Or(),
-                        values=[
-                            ast.Name(id='value', ctx=ast.Load()),
-                            ast.Call(
-                                func=ast.Name(id='isinstance', ctx=ast.Load()),
-                                args=[
-                                    ast.Name(id='value', ctx=ast.Load()),
-                                    ast.Name(id='string_types', ctx=ast.Load())
-                                ],
-                                keywords=[],
-                                starargs=None, kwargs=None
-                            )
-                        ]
-                    ),
-                    body=[
-                        self._append(ast.Str(u' ')),
-                        self._append(ast.Name(id='name', ctx=ast.Load())),
-                        self._append(ast.Str(u'="')),
-                        self._append(ast.Call(
-                            func=ast.Name(id='escape', ctx=ast.Load()),
-                            args=[ast.Call(
-                                func=ast.Name(id='to_text', ctx=ast.Load()),
-                                args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
-                                starargs=None, kwargs=None
-                            )], keywords=[],
-                            starargs=None, kwargs=None
-                        )),
-                        self._append(ast.Str(u'"')),
-                    ],
-                    orelse=[]
-                )],
-                orelse=[]
-            ))
+            # tagName = $el.tag
+            body.append(ast.Assign(
+                targets=[ast.Name(id='tagName', ctx=ast.Store())],
+                value=ast.Str(el.tag))
+            )
+            body.extend(self._append_attributes())
 
         return body
 
@@ -1427,7 +1460,7 @@ class QWeb(object):
             )
 
             if call_options:
-            # update this dict with the content of `t-call-options`
+                # update this dict with the content of `t-call-options`
                 content.extend([
                     # options_.update(template options)
                     ast.Expr(ast.Call(
@@ -1438,7 +1471,56 @@ class QWeb(object):
                         ),
                         args=[self._compile_expr(call_options)],
                         keywords=[], starargs=None, kwargs=None
-                    ))
+                    )),
+
+                    # if options.get('lang') != options_.get('lang'):
+                    #   self = self.with_context(lang=options.get('lang'))
+                    ast.If(
+                        test=ast.Compare(
+                            left=ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id='options', ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            ),
+                            ops=[ast.NotEq()],
+                            comparators=[ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id=name_options, ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            )]
+                        ),
+                        body=[
+                            ast.Assign(
+                                targets=[ast.Name(id='self', ctx=ast.Store())],
+                                value=ast.Call(
+                                    func=ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='with_context',
+                                        ctx=ast.Load()
+                                    ),
+                                    args=[],
+                                    keywords=[ast.keyword('lang', ast.Call(
+                                        func=ast.Attribute(
+                                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                                            attr='get',
+                                            ctx=ast.Load()
+                                        ),
+                                        args=[ast.Str("lang")], keywords=[],
+                                        starargs=None, kwargs=None
+                                    ))],
+                                    starargs=None, kwargs=None
+                                )
+                            )],
+                        orelse=[],
+                    )
                 ])
 
             if nsmap:
@@ -1510,6 +1592,14 @@ class QWeb(object):
             atts = [atts]
         if isinstance(atts, (list, tuple)):
             atts = OrderedDict(atts)
+        return atts
+
+    def _post_processing_att(self, tagName, atts, options):
+        """ Method called by the compiled code. This method may be overwrited
+            to filter or modify the attributes after they are compiled.
+
+            @returns OrderedDict
+        """
         return atts
 
     def _get_field(self, record, field_name, expression, tagName, field_options, options, values):

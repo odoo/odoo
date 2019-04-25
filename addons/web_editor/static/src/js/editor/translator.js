@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
@@ -26,6 +27,7 @@ var RTETranslatorWidget = rte.Class.extend({
      * @override
      */
     _saveElement: function ($el, context, withLang) {
+        var self = this;
         if ($el.data('oe-translation-id')) {
             return this._rpc({
                 model: 'ir.translation',
@@ -35,7 +37,9 @@ var RTETranslatorWidget = rte.Class.extend({
                     this._getEscapedElement($el).html(),
                     context || weContext.get()
                 ],
-            });
+            }).fail(function (error) {
+                   Dialog.alert(null, error.data.message);
+               });
         }
         return this._super($el, context, withLang === undefined ? true : withLang);
     },

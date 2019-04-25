@@ -38,3 +38,4 @@ Raúl Martín raul.martin@braintec-group.com https://github.com/BT-rmartin
 Silvan Wyden silvan.wyden@braintec-group.com https://github.com/BT-swyden
 Timka Piric Muratovic timka.piric@braintec-group.com https://github.com/BT-tpiric
 Pascal Zenklusen pascal.zenklusen@braintec-group.com https://github.com/BT-pzenklusen
+Nadal Francisco Garcia nadal.francisco@braintec-group.com https://github.com/BT-nfrancisco

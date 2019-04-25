@@ -3,21 +3,26 @@
 # * website_event
 # 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
+# Yihya Hugirat <hugirat@gmail.com>, 2018
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -154,13 +159,13 @@ msgstr ""
 #: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
-msgstr ""
+msgstr "כל הקטגוריות "
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "כל המדינות"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.layout
@@ -220,7 +225,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Continue"
-msgstr ""
+msgstr "המשך"
 
 #. module: website_event
 #. openerp-web
@@ -258,11 +263,6 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Edit Badges"
 msgstr ""
 
 #. module: website_event
@@ -331,7 +331,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
-msgstr ""
+msgstr "אירועים"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -432,7 +432,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Online"
-msgstr ""
+msgstr "מחובר"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -442,7 +442,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
-msgstr ""
+msgstr "מארגן"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -471,6 +471,17 @@ msgid "Photos of Past Events"
 msgstr ""
 
 #. module: website_event
+#: code:addons/website_event/static/src/js/website_event.js:37
+#, python-format
+msgid "Please select at least one ticket."
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Preview Badges"
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "מחיר"
@@ -495,7 +506,7 @@ msgstr "הפניה"
 #: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
-msgstr ""
+msgstr "הרשמה"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -536,7 +547,7 @@ msgstr ""
 #: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "שבוע נוכחי"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:47
@@ -583,17 +594,17 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
-msgstr ""
+msgstr "תפריט אתר"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "When"
-msgstr ""
+msgstr "מתי"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Where"
-msgstr ""
+msgstr "איפה"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_quotes
@@ -611,7 +622,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
-msgstr ""
+msgstr "אל"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index

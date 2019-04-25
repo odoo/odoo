@@ -3,25 +3,28 @@
 # * hr
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Collex100, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
 # OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
+# Sergey Vilizhanin, 2018
 # Andrey Samorukov <andrey.samorukov@me.com>, 2018
+# Gennady Marchenko <gennadym@gmail.com>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Collex100, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Martin Trigaux, 2018
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +74,15 @@ msgstr "<i>Вы самостоятельно и быстро учитесь</i>"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
 msgstr "<i>Вы легко управляете ими</i>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Значения относятся к "
+"конкретной компании.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -246,7 +258,7 @@ msgstr "Близко к совершенству..."
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
-msgstr "Тренер"
+msgstr "Коуч"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
@@ -271,7 +283,7 @@ msgstr "Компания"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "Рабочие часы компании"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
@@ -447,15 +459,16 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Сюда следует вводить личный адрес сотрудника, не связанный с компанией."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Ошибка! Вы не можете создавать рекурсивную иерархию сотрудника(ов)."
@@ -613,8 +626,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса,"
-" не удаляя ее."
+"Если снята галка(значение поля Ложь), запись ресурса будет скрыта без "
+"удаления."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -653,12 +666,12 @@ msgstr "Увеличьте видимость продукта"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_tree
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
-msgstr "Работа"
+msgstr "Должность"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_description
 msgid "Job Description"
-msgstr "Описание работы"
+msgstr "Описание долджности"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
@@ -718,7 +731,7 @@ msgstr "Последнее обновление"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr "Рекрутинговое мероприятие"
+msgstr "Запустить поиск сотрудников"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -734,6 +747,11 @@ msgstr "Запуск новых продуктов, людских ресурс�
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
 msgstr "Запуск новых продуктов, маркетинговые кампании и предложения"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr "Законный сожитель"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -760,8 +778,8 @@ msgstr "Маркетинг и менеджер сообщества"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr ""
+msgid "Married"
+msgstr "В браке"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -782,9 +800,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
-"Фотография сотрудника среднего размера. Автоматически принимает размер "
-"128x128px, с сохранением соотношения сторон. Используйте это поле в форме "
-"просмотра или некоторых видах канбан."
+"Фотография сотрудника среднего размера. Автоматически уменьшается до "
+"128x128px, с сохранением пропорций. Используется в режиме просмотра или "
+"некоторых видах Kanban."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -831,7 +849,7 @@ msgstr "Хорошо иметь"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr "Не наема"
+msgstr "Не ищем"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -869,6 +887,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"В Odoo структура отдела используется, чтобы управлять всеми документами,\n"
+"                относящимися к сотрудникам отдела: расходыми, табелями,\n"
+"                отгулами, рекрутиногом и т.п."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -942,12 +963,12 @@ msgstr "Предпочтительно 1 год опыта"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Личный адрес"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Личная информация"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -967,7 +988,7 @@ msgstr "Найм"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr "Идет набор кадров"
+msgstr "Ищем сотрудников"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1028,14 +1049,14 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Выберите календарь по умолчанию, который используется для распределения "
+"рабочего времени табелях, отуглах и т.д."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr ""
-"Установите, является ли процесс набора открытым или закрытым для этой "
-"должности."
+msgstr "Выберите, проходит ли сейчас поиск кандидатов на эту должность."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -1047,17 +1068,17 @@ msgstr "Настройки"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "Показать организационную структуру"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Показать организационную структуру в карточке сотрудника"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Показать организационную структуру в карточке сотрудника."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1087,9 +1108,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Маленькая фотография сотрудника. Изображение автоматически уменьшено до "
-"64x64 пикселей с сохранением соотношения сторон. Используйте данное поле "
-"везде, где требуется маленькое изображение."
+"Маленькая фотография сотрудника. Изображение автоматически уменьшается до "
+"64x64 пикселей с сохранением пропорций. Используется там, где требуется "
+"маленькое изображение."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1111,7 +1132,7 @@ msgstr "Статус"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr "Прекращение набора кадров"
+msgstr "Прекратить поиск кадров"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
@@ -1146,7 +1167,7 @@ msgstr "Командный дух и хорошее общение"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Адрес сотрудника привязан к адресу компании"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1160,8 +1181,8 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
-"Данное поле содержит изображение, используемое в качестве фотографии "
-"сотрудника, ограничение размера 1024x1024 пикселей."
+"В данном поле хранится фотография сотрудника, ограничение размера 1024x1024 "
+"пикселей."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
@@ -1194,6 +1215,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Введите личный(домашний) адрес сотрудника.\n"
+"                                            Они используется в документах по возмещениям расходов и пр.\n"
+"                                            Должен отличаться от рабочего адреса."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1208,17 +1232,17 @@ msgstr "Пользователи"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Вакансии :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
 msgid "Visa Expire Date"
-msgstr "Срок действия карты Visa"
+msgstr "Срок действия визы"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
 msgid "Visa No"
-msgstr "№ карты Visa"
+msgstr "Номер визы"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1316,8 +1340,8 @@ msgid ""
 "                contact data, job position, availability, etc."
 msgstr ""
 "Бросив лишь беглый взгляд на экран сотрудников Odoo, Вы \n"
-"                можете легко найти все необходимую информацию по каждому человеку;\n"
-"                контактные данные, должность, наличие и т.д."
+"                легко найдете все необходимую информацию по каждому человеку:\n"
+"                контактные данные, должность, присутствие и т.д."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1340,7 +1364,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Рабочий адрес"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1350,7 +1374,7 @@ msgstr "Рабочая эл. почта"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Информация по работе"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1365,7 +1389,7 @@ msgstr "Рабочий сотовый телефон"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Организация работы"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1586,10 +1610,10 @@ msgid ""
 "recognized. Please send emails with the email address recorded on your "
 "employee information, or contact your HR manager."
 msgstr ""
-"Ваш документ не был создан потому, что ваш адрес электронной почты не "
-"распознается. Пожалуйста, присылайте письма с адреса электронной почты, "
-"зарегистрированного на вашего информационного сотрудника, или обратитесь к "
-"менеджеру по персоналу."
+"Ваш документ не был создан потому, что мы не распознали ваш адрес "
+"электронной почты. Пожалуйста, присылайте письма с адреса электронной почты,"
+" указанного в вашей каротчке сотрудника или обратитесь к менеджеру по "
+"персоналу."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
@@ -1604,7 +1628,7 @@ msgstr "т.е. частичная занятость"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr "нап. Менеджер Продаж"
+msgstr "нап. Менеджер по продажам"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin

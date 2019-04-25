@@ -10,9 +10,6 @@ case "${1}" in
     remove)
         deluser --quiet --system $ODOO_USER || true
         delgroup --quiet --system --only-if-empty $ODOO_GROUP || true
-        if [ -d "$ODOO_LIB_DIR" ]; then
-            rm -rf $ODOO_LIB_DIR
-        fi
         ;;
 
     purge)

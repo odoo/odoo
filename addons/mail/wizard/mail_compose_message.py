@@ -209,7 +209,7 @@ class MailComposer(models.TransientModel):
                         new_attachment_ids.append(attachment.copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
                     else:
                         new_attachment_ids.append(attachment.id)
-                    wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
+                wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')

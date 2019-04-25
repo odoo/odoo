@@ -12,6 +12,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -35,6 +36,8 @@ var KanbanController = BasicController.extend({
     /**
      * @override
      * @param {Object} params
+     * @param {boolean} params.quickCreateEnabled set to false to disable the
+     *   quick create feature
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
@@ -43,6 +46,7 @@ var KanbanController = BasicController.extend({
         this.hasButtons = params.hasButtons;
 
         this.createColumnEnabled = this._isCreateColumnEnabled();
+        this.quickCreateEnabled = params.quickCreateEnabled;
     },
 
     //--------------------------------------------------------------------------
@@ -108,6 +112,16 @@ var KanbanController = BasicController.extend({
         return groupedByM2o;
     },
     /**
+     * @param {number[]} ids
+     * @private
+     * @returns {Deferred}
+     */
+    _resequenceColumns: function (ids) {
+        var state = this.model.get(this.handle, {raw: true});
+        var model = state.fields[state.groupedBy[0]].relation;
+        return this.model.resequence(model, ids, this.handle);
+    },
+    /**
      * This method calls the server to ask for a resequence.  Note that this
      * does not rerender the user interface, because in most case, the
      * resequencing operation has already been displayed by the renderer.
@@ -156,6 +170,10 @@ var KanbanController = BasicController.extend({
     _onAddColumn: function (event) {
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
+            var state = self.model.get(self.handle, {raw: true});
+            var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
+            return self._resequenceColumns(ids);
+        }).then(function () {
             return self.update({}, {reload: false});
         }).then(function () {
             self._updateButtons();
@@ -289,8 +307,8 @@ var KanbanController = BasicController.extend({
      */
     _onButtonNew: function () {
         var state = this.model.get(this.handle, {raw: true});
-        var hasColumns = state.groupedBy.length > 0 && state.data.length > 0;
-        if (hasColumns && this.on_create === 'quick_create') {
+        var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
+        if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {
@@ -428,9 +446,7 @@ var KanbanController = BasicController.extend({
      */
     _onResequenceColumn: function (event) {
         var self = this;
-        var state = this.model.get(this.handle, {raw: true});
-        var model = state.fields[state.groupedBy[0]].relation;
-        this.model.resequence(model, event.data.ids, this.handle).then(function () {
+        this._resequenceColumns(event.data.ids).then(function () {
             self._updateEnv();
         });
     },

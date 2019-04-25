@@ -4,11 +4,12 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_is_zero, pycompat
 from odoo.tools import float_compare, float_round, float_repr
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
+import copy
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
@@ -233,13 +234,17 @@ class AccountBankStatement(models.Model):
         statements = self.filtered(lambda r: r.state == 'open')
         for statement in statements:
             moves = self.env['account.move']
+            # `line.journal_entry_ids` gets invalidated from the cache during the loop
+            # because new move lines are being created at each iteration.
+            # The below dict is to prevent the ORM to permanently refetch `line.journal_entry_ids`
+            line_journal_entries = {line: line.journal_entry_ids for line in statement.line_ids}
             for st_line in statement.line_ids:
-                if st_line.account_id and not st_line.journal_entry_ids.ids:
+                journal_entries = line_journal_entries[st_line]
+                if st_line.account_id and not journal_entries.ids:
                     st_line.fast_counterpart_creation()
-                elif not st_line.journal_entry_ids.ids and not statement.currency_id.is_zero(st_line.amount):
+                elif not journal_entries.ids and not statement.currency_id.is_zero(st_line.amount):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
-                for aml in st_line.journal_entry_ids:
-                    moves |= aml.move_id
+            moves = statement.mapped('line_ids.journal_entry_ids.move_id')
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
@@ -512,7 +517,7 @@ class AccountBankStatementLine(models.Model):
             'ref': self.ref,
             'note': self.note or "",
             'name': self.name,
-            'date': self.date,
+            'date': format_date(self.env, self.date),
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': self.currency_id.id or statement_currency.id,
@@ -569,7 +574,7 @@ class AccountBankStatementLine(models.Model):
         # Black lines = unreconciled & (not linked to a payment or open balance created by statement
         domain_matching = [('reconciled', '=', False)]
         if partner_id or overlook_partner:
-            domain_matching = expression.AND([domain_matching, [('account_id.internal_type', 'in', ['payable', 'receivable'])]])
+            domain_matching = expression.AND([domain_matching, ['|', ('account_id.internal_type', 'in', ['payable', 'receivable']), '&', ('account_id.internal_type', '=', 'other'), ('account_id.reconcile', '=', True)]])
         else:
             # TODO : find out what use case this permits (match a check payment, registered on a journal whose account type is other instead of liquidity)
             domain_matching = expression.AND([domain_matching, [('account_id.reconcile', '=', True)]])
@@ -653,7 +658,7 @@ class AccountBankStatementLine(models.Model):
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
                 " AND ("+field+" = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
-                ORDER BY date_maturity desc, aml.id desc LIMIT 1"
+                ORDER BY date_maturity asc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
         if results:
@@ -811,9 +816,10 @@ class AccountBankStatementLine(models.Model):
             :param list of dicts data: must contains the keys 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
+        data_copy = copy.deepcopy(data)
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
-        for st_line, datum in pycompat.izip(self, data):
+        for st_line, datum in pycompat.izip(self, data_copy):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
@@ -864,6 +870,8 @@ class AccountBankStatementLine(models.Model):
             :returns: The journal entries with which the transaction was matched. If there was at least an entry in counterpart_aml_dicts or new_aml_dicts, this list contains
                 the move created by the reconciliation, containing entries for the statement.line (1), the counterpart move lines (0..*) and the new move lines (0..*).
         """
+        payable_account_type = self.env.ref('account.data_account_type_payable')
+        receivable_account_type = self.env.ref('account.data_account_type_receivable')
         counterpart_aml_dicts = counterpart_aml_dicts or []
         payment_aml_rec = payment_aml_rec or self.env['account.move.line']
         new_aml_dicts = new_aml_dicts or []
@@ -884,10 +892,16 @@ class AccountBankStatementLine(models.Model):
                 raise UserError(_('A selected move line was already reconciled.'))
             if isinstance(aml_dict['move_line'], pycompat.integer_types):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
+
+        account_types = self.env['account.account.type']
         for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
+
+            user_type_id = self.env['account.account'].browse(aml_dict.get('account_id')).user_type_id
+            if user_type_id in [payable_account_type, receivable_account_type] and user_type_id not in account_types:
+                account_types |= user_type_id
         if any(line.journal_entry_ids for line in self):
             raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
@@ -912,10 +926,12 @@ class AccountBankStatementLine(models.Model):
 
             # Create The payment
             payment = self.env['account.payment']
+            partner_id = self.partner_id or (aml_dict.get('move_line') and aml_dict['move_line'].partner_id) or self.env['res.partner']
             if abs(total)>0.00001:
-                partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
-                if partner_id:
+                if partner_id and len(account_types) == 1:
+                    partner_type = 'customer' if account_types == receivable_account_type else 'supplier'
+                if partner_id and not partner_type:
                     if total < 0:
                         partner_type = 'supplier'
                     else:
@@ -926,7 +942,7 @@ class AccountBankStatementLine(models.Model):
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
-                    'partner_id': self.partner_id and self.partner_id.id or False,
+                    'partner_id': partner_id.id,
                     'partner_type': partner_type,
                     'journal_id': self.statement_id.journal_id.id,
                     'payment_date': self.date,

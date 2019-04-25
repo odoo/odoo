@@ -9,10 +9,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_order_mail_template(self):
-        if self.env['ir.module.module'].search([('name', '=', 'website_quote')]).state in ('installed', 'to upgrade'):
-            return self.env.ref('website_quote.confirmation_mail').id
-        else:
-            return self.env.ref('sale.email_template_edi_sale').id
+        return self.env.ref('sale.email_template_edi_sale').id
 
     def _default_recovery_mail_template(self):
         try:
@@ -43,9 +40,14 @@ class ResConfigSettings(models.TransientModel):
 
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
-        help="Email sent to customer at the end of the checkout process")
+        help="Email sent to customer at the end of the checkout process", readonly=True)
 
-    automatic_invoice = fields.Boolean("Automatic Invoice")
+    automatic_invoice = fields.Boolean("Automatic Invoice",
+                                       help="The invoice is generated automatically and available in the customer portal "
+                                       "when the transaction is confirmed by the payment acquirer.\n"
+                                       "The invoice is marked as paid and the payment is registered in the payment journal "
+                                       "defined in the configuration of the payment acquirer.\n"
+                                       "This mode is advised if you issue the final invoice at the order and not after the delivery.")
 
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 

@@ -21,47 +21,55 @@ class MrpStockReport(models.TransientModel):
 
     @api.model
     def get_move_lines_upstream(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
+        lines_seen = move_lines
+        lines_todo = list(move_lines)
+        while lines_todo:
+            move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_orig_ids:
-                res |= move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
+                lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
+                    lambda m: m.lot_id == move_line.lot_id
+                ) - lines_seen
             # if MTS
+            elif move_line.location_id.usage == 'internal':
+                lines = self.env['stock.move.line'].search([
+                    ('product_id', '=', move_line.product_id.id),
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('location_dest_id', '=', move_line.location_id.id),
+                    ('id', 'not in', lines_seen.ids),
+                    ('date', '<', move_line.date),
+                ])
             else:
-                if move_line.location_id.usage == 'internal':
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('location_dest_id', '=', move_line.location_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '<', move_line.date),
-                    ])
-        if res:
-            res |= self.get_move_lines_upstream(res)
-        return res
+                continue
+            lines_todo += list(lines)
+            lines_seen |= lines
+        return lines_seen - move_lines
 
     @api.model
     def get_move_lines_downstream(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
+        lines_seen = move_lines
+        lines_todo = list(move_lines)
+        while lines_todo:
+            move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_dest_ids:
-                res |= move_line.move_id.move_dest_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
+                lines = move_line.move_id.move_dest_ids.mapped('move_line_ids').filtered(
+                    lambda m: m.lot_id == move_line.lot_id
+                ) - lines_seen
             # if MTS
+            elif move_line.location_dest_id.usage == 'internal':
+                lines = self.env['stock.move.line'].search([
+                    ('product_id', '=', move_line.product_id.id),
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('location_id', '=', move_line.location_dest_id.id),
+                    ('id', 'not in', lines_seen.ids),
+                    ('date', '>', move_line.date),
+                ])
             else:
-                if move_line.location_dest_id.usage == 'internal':
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('location_id', '=', move_line.location_dest_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '>', move_line.date),
-                    ])
-        if res:
-            res |= self.get_move_lines_downstream(res)
-        return res
+                continue
+            lines_todo += list(lines)
+            lines_seen |= lines
+        return lines_seen - move_lines
 
     @api.model
     def get_lines(self, line_id=None, **kw):
@@ -84,8 +92,7 @@ class MrpStockReport(models.TransientModel):
                     ('lot_id', '=', context.get('active_id')),
                     ('location_id.usage', '!=', 'internal'),
                     ('state', '=', 'done'),
-                    ('move_id.returned_move_ids', '=', False),
-                ])
+                ]).filtered(lambda s: not s.move_id.returned_move_ids)
                 res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, parent_quant=parent_quant,
                                   stream=stream, obj_ids=move_ids)
                 quant_ids = self.env['stock.quant'].search([
@@ -100,8 +107,7 @@ class MrpStockReport(models.TransientModel):
                     ('lot_id', '=', context.get('active_id')),
                     ('location_dest_id.usage', '!=', 'internal'),
                     ('state', '=', 'done'),
-                    ('move_id.returned_move_ids', '=', False),
-                ])
+                ]).filtered(lambda s: not s.move_id.returned_move_ids)
                 res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, parent_quant=parent_quant,
                                   stream=stream, obj_ids=move_ids)
                 quant_ids = self.env['stock.quant'].search([
@@ -131,10 +137,11 @@ class MrpStockReport(models.TransientModel):
         res_model = ''
         ref = ''
         res_id = False
-        if move_line.picking_id:
+        picking_id = move_line.picking_id or move_line.move_id.picking_id
+        if picking_id:
             res_model = 'stock.picking'
-            res_id = move_line.picking_id.id
-            ref = move_line.picking_id.name
+            res_id = picking_id.id
+            ref = picking_id.name
         elif move_line.move_id.inventory_id:
             res_model = 'stock.inventory'
             res_id = move_line.move_id.inventory_id.id

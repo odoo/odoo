@@ -125,35 +125,122 @@ class IrQWeb(models.AbstractModel, QWeb):
         if len(el):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
-        # self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        # nodes = self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        #
+        # for index, (tagName, t_attrs, content) in enumerate(nodes):
+        #     if index:
+        #         append('\n        ')
+        #     append('<')
+        #     append(tagName)
+        #
+        #     self._post_processing_att(tagName, t_attrs, options)
+        #     for name, value in t_attrs.items():
+        #         if value or isinstance(value, string_types)):
+        #             append(u' ')
+        #             append(name)
+        #             append(u'="')
+        #             append(escape(pycompat.to_text((value)))
+        #             append(u'"')
+        #
+        #     if not content and tagName in self._void_elements:
+        #         append('/>')
+        #     else:
+        #         append('>')
+        #         if content:
+        #           append(content)
+        #         append('</')
+        #         append(tagName)
+        #         append('>')
+        #
+        space = el.getprevious() is not None and el.getprevious().tail or el.getparent().text
+        sep = u'\n' + space.rsplit('\n').pop()
         return [
-            self._append(ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id='self', ctx=ast.Load()),
-                    attr='_get_asset',
-                    ctx=ast.Load()
+            ast.Assign(
+                targets=[ast.Name(id='nodes', ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='_get_asset_nodes',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        ast.Str(el.get('t-call-assets')),
+                        ast.Name(id='options', ctx=ast.Load()),
+                    ],
+                    keywords=[
+                        ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
+                        ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
+                        ast.keyword('debug', ast.Call(
+                            func=ast.Attribute(
+                                value=ast.Name(id='values', ctx=ast.Load()),
+                                attr='get',
+                                ctx=ast.Load()
+                            ),
+                            args=[ast.Str('debug')],
+                            keywords=[], starargs=None, kwargs=None
+                        )),
+                        ast.keyword('async', self._get_attr_bool(el.get('async', False))),
+                        ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
+                    ],
+                    starargs=None, kwargs=None
+                )
+            ),
+            ast.For(
+                target=ast.Tuple(elts=[
+                    ast.Name(id='index', ctx=ast.Store()),
+                    ast.Tuple(elts=[
+                        ast.Name(id='tagName', ctx=ast.Store()),
+                        ast.Name(id='t_attrs', ctx=ast.Store()),
+                        ast.Name(id='content', ctx=ast.Store())
+                    ], ctx=ast.Store())
+                ], ctx=ast.Store()),
+                iter=ast.Call(
+                    func=ast.Name(id='enumerate', ctx=ast.Load()),
+                    args=[ast.Name(id='nodes', ctx=ast.Load())],
+                    keywords=[],
+                    starargs=None, kwargs=None
                 ),
-                args=[
-                    ast.Str(el.get('t-call-assets')),
-                    ast.Name(id='options', ctx=ast.Load()),
-                ],
-                keywords=[
-                    ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
-                    ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
-                    ast.keyword('debug', ast.Call(
-                        func=ast.Attribute(
-                            value=ast.Name(id='values', ctx=ast.Load()),
-                            attr='get',
-                            ctx=ast.Load()
+                body=[
+                    ast.If(
+                        test=ast.Name(id='index', ctx=ast.Load()),
+                        body=[self._append(ast.Str(sep))],
+                        orelse=[]
+                    ),
+                    self._append(ast.Str(u'<')),
+                    self._append(ast.Name(id='tagName', ctx=ast.Load())),
+                ] + self._append_attributes() + [
+                    ast.If(
+                        test=ast.BoolOp(
+                            op=ast.And(),
+                            values=[
+                                ast.UnaryOp(ast.Not(), ast.Name(id='content', ctx=ast.Load()), lineno=0, col_offset=0),
+                                ast.Compare(
+                                    left=ast.Name(id='tagName', ctx=ast.Load()),
+                                    ops=[ast.In()],
+                                    comparators=[ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='_void_elements',
+                                        ctx=ast.Load()
+                                    )]
+                                ),
+                            ]
                         ),
-                        args=[ast.Str('debug')],
-                        keywords=[], starargs=None, kwargs=None
-                    )),
-                    ast.keyword('async', self._get_attr_bool(el.get('async', False))),
-                    ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
+                        body=[self._append(ast.Str(u'/>'))],
+                        orelse=[
+                            self._append(ast.Str(u'>')),
+                            ast.If(
+                                test=ast.Name(id='content', ctx=ast.Load()),
+                                body=[self._append(ast.Name(id='content', ctx=ast.Load()))],
+                                orelse=[]
+                            ),
+                            self._append(ast.Str(u'</')),
+                            self._append(ast.Name(id='tagName', ctx=ast.Load())),
+                            self._append(ast.Str(u'>')),
+                        ]
+                    )
                 ],
-                starargs=None, kwargs=None
-            ))
+                orelse=[]
+            )
         ]
 
     # for backward compatibility to remove after v10
@@ -185,16 +272,34 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
+    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
+        return AssetsBundle(xmlid, files, remains=remains, env=env)
+
+    # compatibility to remove after v11 - DEPRECATED
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'kw.get("async")', 'async_load', keys=("website_id",)),
+    )
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None, **kw):
+        if 'async' in kw:
+            async_load = kw['async']
+        files, remains = self._get_asset_content(xmlid, options)
+        asset = self.get_asset_bundle(xmlid, files, remains, env=self.env)
+        return asset.to_html(css=css, js=js, debug=debug, async_load=async_load, url_for=(values or {}).get('url_for', lambda url: url))
+
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', keys=("website_id",)),
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'kw.get("async")', 'async_load', keys=("website_id",)),
     )
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
+    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None, **kw):
+        if 'async' in kw:
+            async_load = kw['async']
         files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, remains, env=self.env)
-        return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
+        asset = self.get_asset_bundle(xmlid, files, env=self.env)
+        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
+        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load)
 
     @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
     def _get_asset_content(self, xmlid, options):
@@ -204,6 +309,9 @@ class IrQWeb(models.AbstractModel, QWeb):
             rendering_bundle=True)
 
         env = self.env(context=options)
+
+        def can_aggregate(url):
+            return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/content')
 
         # TODO: This helper can be used by any template that wants to embedd the backend.
         #       It is currently necessary because the ir.ui.view bundle inheritance does not
@@ -218,16 +326,13 @@ class IrQWeb(models.AbstractModel, QWeb):
         files = []
         remains = []
         for el in html.fragments_fromstring(template):
-            if isinstance(el, pycompat.string_types):
-                remains.append(pycompat.to_text(el))
-            elif isinstance(el, html.HtmlElement):
+            if isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
                 src = el.get('src', '')
                 atype = el.get('type')
                 media = el.get('media')
 
-                can_aggregate = not urls.url_parse(href).netloc and not href.startswith('/web/content')
-                if el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet' and can_aggregate):
+                if can_aggregate(href) and (el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet')):
                     if href.endswith('.sass'):
                         atype = 'text/sass'
                     elif href.endswith('.less'):
@@ -237,25 +342,26 @@ class IrQWeb(models.AbstractModel, QWeb):
                     path = [segment for segment in href.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
-                elif el.tag == 'script':
+                elif can_aggregate(src) and el.tag == 'script':
                     atype = 'text/javascript'
                     path = [segment for segment in src.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
-                    remains.append(html.tostring(el, encoding='unicode'))
+                    remains.append((el.tag, OrderedDict(el.attrib), el.text))
             else:
-                try:
-                    remains.append(html.tostring(el, encoding='unicode'))
-                except Exception:
-                    # notYETimplementederror
-                    raise NotImplementedError
+                # the other cases are ignored
+                pass
 
         return (files, remains)
 
     def _get_field(self, record, field_name, expression, tagName, field_options, options, values):
         field = record._fields[field_name]
 
+        # adds template compile options for rendering fields
+        field_options['template_options'] = options
+
+        # adds generic field options
         field_options['tagName'] = tagName
         field_options['expression'] = expression
         field_options['type'] = field_options.get('widget', field.type)
@@ -275,6 +381,9 @@ class IrQWeb(models.AbstractModel, QWeb):
         return (attributes, content, inherit_branding or translate)
 
     def _get_widget(self, value, expression, tagName, field_options, options, values):
+        # adds template compile options for rendering fields
+        field_options['template_options'] = options
+
         field_options['type'] = field_options['widget']
         field_options['tagName'] = tagName
         field_options['expression'] = expression

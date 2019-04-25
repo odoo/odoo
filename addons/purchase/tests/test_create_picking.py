@@ -119,6 +119,7 @@ class TestCreatePicking(common.TestProductCommon):
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
+            'supplier_taxes_id': [(6, 0, [])],
         })
 
         customer_move = self.env['stock.move'].create({

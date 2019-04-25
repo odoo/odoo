@@ -8,7 +8,7 @@ from odoo.tools import float_compare
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True, compute_sudo=True)
 
     def _compute_qty_received(self):
         super(PurchaseOrderLine, self)._compute_qty_received()
@@ -23,7 +23,8 @@ class PurchaseOrderLine(models.Model):
         # In the case of a kit, we need to check if all components are shipped. Since the BOM might
         # have changed, we don't compute the quantities but verify the move state.
         if bom:
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
+            moves = self.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
+            bom_delivered = all([move.state == 'done' for move in moves])
             if bom_delivered:
                 return self.product_qty
             else:

@@ -213,6 +213,16 @@ var FormController = BasicController.extend({
             return changedFields;
         });
     },
+    /**
+     * Overrides to force the viewType to 'form', so that we ensure that the
+     * correct fields are reloaded (this is only useful for one2many form views).
+     *
+     * @override
+     */
+    update: function (params, options) {
+        params = _.extend({viewType: 'form'}, params);
+        return this._super(params, options);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -298,6 +308,19 @@ var FormController = BasicController.extend({
         var env = this.model.get(this.handle, {env: true});
         state.id = env.currentId;
         this._super(state);
+    },
+    /**
+     * Overrides to reload the form when saving failed in readonly (e.g. after
+     * a change on a widget like priority or statusbar).
+     *
+     * @override
+     * @private
+     */
+    _rejectSave: function () {
+        if (this.mode === 'readonly') {
+            return this.reload();
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Calls unfreezeOrder when changing the mode.

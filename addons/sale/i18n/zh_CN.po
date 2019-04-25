@@ -3,38 +3,42 @@
 # * sale
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# guohuadeng <guohuadeng@hotmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# Luke <cialuo@qq.com>, 2017
-# Yuan Xulei <hi@yxl.name>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
 # Li Xiang <lvx5013@foxmail.com>, 2017
-# Martin Trigaux, 2017
-# waveyeung <waveyeung@qq.com>, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Skyy rao <raozhangshun@163.com>, 2017
+# Skyy <raozhangshun@163.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Luke <cialuo@qq.com>, 2017
+# guohuadeng <guohuadeng@hotmail.com>, 2017
+# Yuan Xulei <hi@yxl.name>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# 石家庄_老刘 <liuaiqun@sina.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# Henry Zhou <zhouhenry@live.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Martin Trigaux, 2019
+# snow wang <147156565@qq.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +72,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -105,17 +109,17 @@ msgstr ""
 "% endif\n"
 ",</p>\n"
 "<p>\n"
-"本邮件的\n"
+"这是\n"
 "% if ctx.get('proforma')\n"
-"附件 是给您的形式发票\n"
+"在附件中，您的形式发票\n"
 "% else\n"
-"文档为 ${doc_name} <strong>${object.name}</strong>\n"
+"此 ${doc_name} <strong>${object.name}</strong>\n"
 "% endif\n"
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"价款为 <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
-"来源： ${object.company_id.name}.\n"
+"金额 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"来自 ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "% if is_online and not ctx.get('proforma'):\n"
@@ -123,13 +127,13 @@ msgstr ""
 "    <center>\n"
 "        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
 "        <br/><br/><br/>\n"
-"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"        <span style=\"color:#888888\">(或查看 PDF 附件)</span>\n"
 "    </center>\n"
 "    <br/>\n"
 "% endif\n"
 "\n"
-"<p>如有任何问题， 请回复本邮件.</p>\n"
-"<p>顺祝商祺,</p>\n"
+"<p>如您有任何问题请直接回复本邮件。</p>\n"
+"<p>谢谢,</p>\n"
 "\n"
 "<p style=\"color:#888888;\">\n"
 "% if object.user_id and object.user_id.signature:\n"
@@ -170,8 +174,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
-"${(object.name or ‘’).replace(‘/‘,’_’)}${object.state == ‘draft’ and "
-"‘_draft’ or ‘’}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and '_草稿' "
+"or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -210,7 +214,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -283,7 +287,7 @@ msgstr ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -344,7 +348,7 @@ msgstr ""
 "                      </tr>\n"
 "                      <tr>\n"
 "                        <td align=\"center\">\n"
-"                            Powered by <a target=“_blank” href=“https://www.odoo.com”>Odoo</a>.\n"
+"                            版权所有 <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
 "                        </td>\n"
 "                      </tr>\n"
 "                    </tbody>\n"
@@ -372,6 +376,15 @@ msgid ""
 msgstr "<i>示例：预付费服务提供给那些不得不购买额外时间包的客户，由于他之前的所有支持。</i>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"hidden-xs\">Sales Order #</span>\n"
@@ -386,15 +399,6 @@ msgid ""
 msgstr ""
 "<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/><span "
 "class=\"hidden-xs\">问题</span></span>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\">完成</span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -418,15 +422,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Done</span>"
-msgstr ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
-"remove\"/>完成</span>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
@@ -443,6 +438,15 @@ msgstr ""
 "class=\"hidden-xs\">发票</span></span>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> 完成</span></span>"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
@@ -450,6 +454,15 @@ msgid ""
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> 付款</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Done</span>"
+msgstr ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"完成</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -473,6 +486,7 @@ msgstr "<strong>日期:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
 msgstr "<STRONG>到期日期：</STRONG>"
 
@@ -598,7 +612,7 @@ msgid "Addresses in Sales Orders"
 msgstr "在销售订单中的地址"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:159
 #, python-format
 msgid "Advance: %s"
 msgstr "预收: %s"
@@ -636,6 +650,7 @@ msgid "Allows you to send pro-forma invoice."
 msgstr "允许你发送形式发票."
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
 msgstr "金额"
@@ -860,7 +875,7 @@ msgstr "创建发票"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "创建一个报价，新的销售的第一步。"
+msgstr "创建一个报价，新销售的第一步。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -963,7 +978,7 @@ msgid "Delivered"
 msgstr "已送货"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:824
+#: code:addons/sale/models/sale.py:844
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -1066,7 +1081,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
 #, python-format
 msgid "Down Payment"
 msgstr "预付定金"
@@ -1097,7 +1112,7 @@ msgid "Down payment (percentage)"
 msgstr "预付定金(百分比)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "%s%%预付定金"
@@ -1135,10 +1150,15 @@ msgid "Extended Filters"
 msgstr "扩展筛选"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:827
 #, python-format
 msgid "Extra line with %s "
 msgstr "更多明细 %s"
+
+#. module: sale
+#: model:ir.model,name:sale.model_ir_model_fields
+msgid "Fields"
+msgstr "字段"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -1235,7 +1255,7 @@ msgid "Invoice"
 msgstr "发票"
 
 #. module: sale
-#: code:addons/sale/models/account_invoice.py:52
+#: code:addons/sale/models/account_invoice.py:55
 #, python-format
 msgid "Invoice %s paid"
 msgstr "发票 %s 已付"
@@ -1320,7 +1340,7 @@ msgid "Invoiced"
 msgstr "已开票"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:825
+#: code:addons/sale/models/sale.py:845
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1404,7 +1424,7 @@ msgid "Is expired"
 msgstr "过期了"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:861
+#: code:addons/sale/models/sale.py:864
 #, python-format
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
@@ -1412,6 +1432,12 @@ msgid ""
 msgstr ""
 "禁止在锁定订单中修改以下字段：\n"
 "%s"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:551
+#, python-format
+msgid "It is not allowed to confirm an order in the following states: %s"
+msgstr "不允许在以下状态确认订单：%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1594,32 +1620,6 @@ msgid "No longer edit orders once confirmed"
 msgstr "一旦确认，不能再编辑订单"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"                from the Quotations list to the Sales Order list."
-msgstr ""
-"请注意一旦报价成为销售订单，它将\n"
-"                 从报价清单移动到销售订单清单。"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
-msgstr ""
-"请注意，一旦报价成为销售订单，它将被\n"
-"从报价单移动到销售订单列表。"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved from the "
-"Quotations list to the Sales Order list."
-msgstr "请注意，一旦报价成为销售订单，它将从报价单转到销售订单清单。"
-
-#. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
@@ -1759,7 +1759,7 @@ msgid "Ordered Qty"
 msgstr "订购数量"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:821
+#: code:addons/sale/models/sale.py:841
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1845,11 +1845,6 @@ msgid "Payment"
 msgstr "付款"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Payment Acquirers"
-msgstr "付款收单机构"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
 msgid "Payment Terms"
 msgstr "付款条件"
@@ -1866,17 +1861,12 @@ msgid "Please define an accounting sales journal for this company."
 msgstr "请为该公司定义一个会计销售日记帐。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:916
+#: code:addons/sale/models/sale.py:949
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr "请为这个产品定义应收科目: \"%s\" (id:%d) - 或为它的类别: \"%s\"."
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-msgid "Price"
-msgstr "价格"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
@@ -1963,6 +1953,11 @@ msgstr "产品"
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
 msgstr "产品目录"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_category_config_sale
+msgid "Product Categories"
+msgstr "产品类别"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
@@ -2611,13 +2606,29 @@ msgid "Terms and conditions"
 msgstr "条款和条件"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:128
-#: code:addons/sale/models/analytic.py:140
+#: code:addons/sale/models/analytic.py:134
 #, python-format
 msgid ""
-"The Sales Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
-msgstr "销售订单%s关联的分析帐户之前必须验证注册费用。"
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
+msgstr "销售订单%s关联的分析账户%s被取消。你不能在取消的销售订单上登记费用。"
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:133
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:129
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr "销售订单%s关联的分析账户%s在登记费用前必须被验证。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2637,7 +2648,7 @@ msgid ""
 msgstr "利润率计算为产品销售价格减去其详细表格中的成本集之和。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2645,7 +2656,7 @@ msgid ""
 msgstr "此产品用于开具预付定金发票，应该为“服务”类型。请使用其它产品或更新本产品。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2686,7 +2697,7 @@ msgid ""
 msgstr "本产品：“%s” 未定义应收科目。你可能需要从会计应用程序的设置菜单中安装一个科目表。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
+#: code:addons/sale/models/sale.py:438 code:addons/sale/models/sale.py:442
 #, python-format
 msgid "There is no invoiceable line."
 msgstr "不存在可开票的明细。"
@@ -2795,6 +2806,12 @@ msgid "Track Service"
 msgstr "跟踪服务"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:578
+#, python-format
+msgid "Uncategorized"
+msgstr "未归类"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2873,7 +2890,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1006
+#: code:addons/sale/models/sale.py:1037
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -2915,7 +2932,7 @@ msgid ""
 msgstr "你不能删除一个已发送的报价单或销售订单！请先进行取消。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1069
+#: code:addons/sale/models/sale.py:1098
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"
@@ -2949,9 +2966,7 @@ msgstr "您的订单已经确认。"
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-"你的下一步行动应该有效：确认报价\n"
-"一个销售订单，然后创建发票和付款方式。"
+msgstr "你接下来的操作应为：确认此报价为销售订单，然后创建发票和收款。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations

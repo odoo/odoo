@@ -161,13 +161,13 @@ class GamificationBadge(models.Model):
 
         for badge in self:
             owners = badge.owner_ids
-            badge.stats_my = sum(o.user_id == self.env.user for o in owners)
-            badge.stats_this_month = sum(o.create_date >= first_month_day for o in owners)
-            badge.stats_my_this_month = sum(
+            badge.stat_my = sum(o.user_id == self.env.user for o in owners)
+            badge.stat_this_month = sum(o.create_date >= first_month_day for o in owners)
+            badge.stat_my_this_month = sum(
                 o.user_id == self.env.user and o.create_date >= first_month_day
                 for o in owners
             )
-            badge.stats_my_monthly_sending = sum(
+            badge.stat_my_monthly_sending = sum(
                 o.create_uid == self.env.user and o.create_date >= first_month_day
                 for o in owners
             )
@@ -233,7 +233,7 @@ class GamificationBadge(models.Model):
         elif self.rule_auth == 'users' and self.env.user not in self.rule_auth_user_ids:
             return self.USER_NOT_VIP
         elif self.rule_auth == 'having':
-            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)])
+            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)]).mapped('badge_id')
             if self.rule_auth_badge_ids - all_user_badges:
                 return self.BADGE_REQUIRED
 

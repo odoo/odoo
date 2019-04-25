@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -120,7 +120,10 @@ class HolidaysType(models.Model):
             if not record.limit:
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0)
+                    'count': _('%g remaining out of %g') % (
+                        float_round(record.virtual_remaining_leaves or 0.0, precision_digits=2) + 0.0,
+                        record.max_leaves or 0.0
+                    )
                 }
             res.append((record.id, name))
         return res
@@ -171,7 +174,7 @@ class Holidays(models.Model):
     payslip_status = fields.Boolean('Reported in last payslips',
         help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
-    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date_to = fields.Datetime('End Date', readonly=True, copy=False,
@@ -195,7 +198,7 @@ class Holidays(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="Choose 'Leave Request' if someone wants to take an off-day. "
              "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
-    parent_id = fields.Many2one('hr.holidays', string='Parent')
+    parent_id = fields.Many2one('hr.holidays', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
@@ -212,11 +215,6 @@ class Holidays(models.Model):
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
-
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id.department_id
 
     @api.multi
     @api.depends('number_of_days_temp', 'type')
@@ -253,7 +251,7 @@ class Holidays(models.Model):
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
 
-    @api.constrains('state', 'number_of_days_temp')
+    @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
             if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
@@ -279,7 +277,8 @@ class Holidays(models.Model):
             self.employee_id = None
 
     @api.onchange('employee_id')
-    def _onchange_employee(self):
+    def _onchange_employee_id(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
         self.department_id = self.employee_id.department_id
 
     def _get_number_of_days(self, date_from, date_to, employee_id):

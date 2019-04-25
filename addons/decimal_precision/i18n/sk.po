@@ -3,20 +3,24 @@
 # * decimal_precision
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
@@ -34,18 +38,18 @@ msgstr "Vytvorené"
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr ""
+msgstr "Presnosť čísiel"
 
 #. module: decimal_precision
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
-msgstr ""
+msgstr "Presnosť čísiel"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
 msgid "Digits"
-msgstr ""
+msgstr "Desatinné miesta"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
@@ -56,17 +60,17 @@ msgstr "Zobraziť meno"
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
 msgid "Float"
-msgstr ""
+msgstr "Float"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
 msgid "Float 2"
-msgstr ""
+msgstr "Float 2"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
 msgid "Float 4"
-msgstr ""
+msgstr "Float 4"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
@@ -95,24 +99,24 @@ msgstr "Naposledy upravované"
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr ""
+msgstr "Iba jedna hodnota môže byť zadaná pre každé použitie!"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
 msgid "Usage"
-msgstr ""
+msgstr "Použitie"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "presnosť (desatinná.čiarka)"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision_test
 msgid "decimal.precision.test"
-msgstr ""
+msgstr "presnosť.test"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
 msgid "ir.qweb.field.float"
-msgstr ""
+msgstr "ir.qweb.field.float"

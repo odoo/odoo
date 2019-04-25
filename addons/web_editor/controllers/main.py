@@ -50,11 +50,16 @@ class Web_Editor(http.Controller):
 
         kwargs.update(trans)
 
-        record = None
-        if model and kwargs.get('res_id'):
-            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
+        content = None
+        if model:
+            Model = request.env[model].with_context(trans)
+            if kwargs.get('res_id'):
+                record = Model.browse(kwargs.get('res_id'))
+                content = record and getattr(record, field)
+            else:
+                content = Model.default_get([field]).get(field)
 
-        kwargs.update(content=record and getattr(record, field) or "")
+        kwargs.update(content=content or '')
 
         return request.render(kwargs.get("template") or "web_editor.FieldTextHtml", kwargs, uid=request.uid)
 
@@ -160,7 +165,7 @@ class Web_Editor(http.Controller):
                 'name': name,
                 'type': 'url',
                 'url': url,
-                'public': True,
+                'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,
             })
@@ -187,7 +192,7 @@ class Web_Editor(http.Controller):
                         'name': c_file.filename,
                         'datas': base64.b64encode(data),
                         'datas_fname': c_file.filename,
-                        'public': True,
+                        'public': res_model == 'ir.ui.view',
                         'res_id': res_id,
                         'res_model': res_model,
                     })
@@ -244,7 +249,7 @@ class Web_Editor(http.Controller):
     ## @param bundles - True if the bundles views must be fetched (default to False)
     ## @param bundles_restriction - Names of the bundle in which to look for less files (if empty, search in all of them)
     ## @returns a dictionary with views info in the views key and style info in the less key
-    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user")
+    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_less=True, bundles=False, bundles_restriction=[]):
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
@@ -361,16 +366,17 @@ class Web_Editor(http.Controller):
 
         # Check if the file to save had already been modified
         custom_attachment = IrAttachment.search([("url", "=", custom_url)])
+        datas = base64.b64encode((content or "\n").encode("utf-8"))
         if custom_attachment:
             # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": base64.b64encode(content.encode("utf-8"))})
+            custom_attachment.write({"datas": datas})
         else:
             # If not, create a new attachment to copy the original LESS file content, with its modifications
             IrAttachment.create(dict(
                 name = custom_url,
                 type = "binary",
                 mimetype = "text/less",
-                datas = base64.b64encode(content.encode("utf-8")),
+                datas = datas,
                 datas_fname = url.split("/")[-1],
                 url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
                                   # is quite of an hack. This allows to fetch the "datas" field by adding
@@ -379,7 +385,17 @@ class Web_Editor(http.Controller):
 
             # Create a view to extend the template which adds the original file to link the new modified version instead
             IrUiView = request.env["ir.ui.view"]
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
+
+            def views_linking_url(view):
+                """
+                Returns whether the view arch has some html link tag linked to the url.
+
+                (note: searching for the URL string is not enough as it could appear in a comment or an xpath expression.)
+                """
+                return bool(etree.XML(view.arch).xpath("//link[@href='{}']".format(url)))
+
+            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(views_linking_url)
+
             IrUiView.create(dict(
                 name = custom_url,
                 mode = "extension",

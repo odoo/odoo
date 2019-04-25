@@ -29,7 +29,7 @@ class ReturnPicking(models.TransientModel):
     parent_location_id = fields.Many2one('stock.location')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
+        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
 
     @api.model
     def default_get(self, fields):

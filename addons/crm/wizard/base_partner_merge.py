@@ -127,14 +127,14 @@ class MergePartnerAutomatic(models.TransientModel):
                 # unique key treated
                 query = """
                     UPDATE "%(table)s" as ___tu
-                    SET %(column)s = %%s
+                    SET "%(column)s" = %%s
                     WHERE
-                        %(column)s = %%s AND
+                        "%(column)s" = %%s AND
                         NOT EXISTS (
                             SELECT 1
                             FROM "%(table)s" as ___tw
                             WHERE
-                                %(column)s = %%s AND
+                                "%(column)s" = %%s AND
                                 ___tu.%(value)s = ___tw.%(value)s
                         )""" % query_dic
                 for partner in src_partners:
@@ -142,7 +142,7 @@ class MergePartnerAutomatic(models.TransientModel):
             else:
                 try:
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
-                        query = 'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s' % query_dic
+                        query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
                         self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
 
                         # handle the recursivity with parent relation
@@ -223,7 +223,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
 
-        model_fields = dst_partner._fields
+        model_fields = dst_partner.fields_get().keys()
 
         def write_serializer(item):
             if isinstance(item, models.BaseModel):
@@ -232,7 +232,8 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item
         # get all fields that are not computed or x2many
         values = dict()
-        for column, field in model_fields.items():
+        for column in model_fields:
+            field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:

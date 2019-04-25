@@ -42,7 +42,10 @@ var History = function History($editable) {
             $editable.removeAttr('contentEditable').removeProp('contentEditable');
         }
 
+        $editable.trigger('content_will_be_destroyed');
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
+        $editable.trigger('content_was_recreated');
+
         $('.oe_overlay').remove();
         $('.note-control-selection').hide();
 
@@ -157,7 +160,7 @@ var History = function History($editable) {
 
         if (aUndo[pos]) {
             pos = Math.min(pos, aUndo.length);
-            aUndo.splice(Math.max(pos,1), aUndo.length);
+            aUndo.splice(pos, aUndo.length);
         }
 
         // => make a snap when the user change editable zone (because: don't make snap for each keydown)
@@ -276,6 +279,20 @@ var RTEWidget = Widget.extend({
 
         var $editable = this.editable();
 
+        // When a undo/redo is performed, the whole DOM is changed so we have
+        // to prepare for it (website will restart animations for example)
+        // TODO should be better handled
+        $editable.on('content_will_be_destroyed', function (ev) {
+            self.trigger_up('content_will_be_destroyed', {
+                $target: $(ev.currentTarget),
+            });
+        });
+        $editable.on('content_was_recreated', function (ev) {
+            self.trigger_up('content_was_recreated', {
+                $target: $(ev.currentTarget),
+            });
+        });
+
         $editable.addClass('o_editable')
         .data('rte', this)
         .each(function () {
@@ -290,9 +307,12 @@ var RTEWidget = Widget.extend({
         });
 
         // start element observation
-        $(document).on('content_changed', '.o_editable', function (event) {
-            self.trigger_up('rte_change', {target: event.target});
-            $(this).addClass('o_dirty');
+        $(document).on('content_changed', '.o_editable', function (ev) {
+            self.trigger_up('rte_change', {target: ev.target});
+            if (!ev.__isDirtyHandled) {
+                $(this).addClass('o_dirty');
+                ev.__isDirtyHandled = true;
+            }
         });
 
         $('#wrapwrap, .o_editable').on('click.rte', '*', this, this._onClick.bind(this));
@@ -407,6 +427,10 @@ var RTEWidget = Widget.extend({
      */
     save: function (context) {
         var self = this;
+
+        $('.o_editable')
+            .destroy()
+            .removeClass('o_editable o_is_inline_editable');
 
         var $dirty = $('.o_dirty');
         $dirty
@@ -583,6 +607,14 @@ var RTEWidget = Widget.extend({
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
+
+        // Removes strange _moz_abspos attribute when it appears. Cannot
+        // find another solution which works in all cases. A grabber still
+        // appears at the same time which I did not manage to remove.
+        // TODO find a complete and better solution
+        _.defer(function () {
+            $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
+        });
 
         if ($target.is('a')) {
             /**

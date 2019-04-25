@@ -168,9 +168,12 @@ var FormViewDialog = ViewDialog.extend({
             if (self.recordID) {
                 self.model.addFieldsInfo(self.recordID, viewInfo);
             }
+            var refinedContext = _.pick(self.context, function (value, key) {
+                return key.indexOf('_view_ref') === -1;
+            });
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
-                context: self.context,
+                context: refinedContext,
                 ids: self.res_id ? [self.res_id] : [],
                 currentId: self.res_id || undefined,
                 index: 0,
@@ -261,7 +264,7 @@ var SelectCreateDialog = ViewDialog.extend({
             event.stopPropagation(); // prevent this event from bubbling up to the view manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
-            this.list_controller.reload(searchData);
+            this.list_controller.reload(_.extend({offset: 0}, searchData));
         },
         get_controller_context: '_onGetControllerContext',
     }),

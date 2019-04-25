@@ -3,35 +3,38 @@
 # * product
 # 
 # Translators:
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
-# Martin Trigaux, 2017
-# Ted Wang <feiyuwang2012@gmail.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# Yuan Xulei <hi@yxl.name>, 2017
+# Si Ling Lau <happy8645@hotmail.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# liyes <bodetools@gmail.com>, 2017
+# Yaorong Li <55yaorong.li@gmail.com>, 2017
+# Ted Wang <feiyuwang2012@gmail.com>, 2017
+# THL <wt39181819@gmail.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
+# Maie <m@maie.name>, 2017
+# glovebx <ruinning@163.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # zhining wu <wzn63@21cn.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# fausthuang, 2017
-# Yuan Xulei <hi@yxl.name>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# Si Ling Lau <happy8645@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
-# liyes <bodetools@gmail.com>, 2017
-# glovebx <ruinning@163.com>, 2017
-# THL <wt39181819@gmail.com>, 2017
-# Maie <m@maie.name>, 2017
-# Yaorong Li <55yaorong.li@gmail.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
+# fausthuang, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Martin Trigaux, 2018
+# keecome <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# diaojiaolou <124412206@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: diaojiaolou <124412206@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +71,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% 折扣 和 %s 附加费"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -741,9 +744,7 @@ msgid "Computer SC234"
 msgstr "电脑 SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "可消耗"
 
@@ -774,6 +775,12 @@ msgstr "产品单位 %s 与默认单位 %s 无法转换，二者属于不同的�
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr "成本"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -946,6 +953,11 @@ msgid "Description for Customers"
 msgstr "客户描述"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr "内部描述"
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -1025,19 +1037,19 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "终结有效的价格表项验证"
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "错误！你不能创建循环类别。"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr "错误！您不能将此属性与以下值配合使用。"
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1059,7 +1071,7 @@ msgid ""
 msgstr "错误！不能在价格表项目里指派这个主价格表作为其它价格表"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1453,6 +1465,16 @@ msgstr "国际物品编码用于产品标识"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "库存"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr "是产品变体"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "是产品变体"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2076,7 +2098,7 @@ msgid "Products Price Search"
 msgstr "产品价格搜索"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "产品： "
@@ -2298,9 +2320,7 @@ msgid "Server"
 msgstr "服务器"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "服务"
 
@@ -2609,7 +2629,7 @@ msgid ""
 msgstr "此类别下的产品数量 (不考虑子类别)"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2763,6 +2783,11 @@ msgstr "该字段保存产品的图像，限制到  1024x1024px."
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "这是所有属性额外价格的总和"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr "这张备注只用于内部用途。"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view

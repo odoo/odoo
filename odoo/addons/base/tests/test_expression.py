@@ -611,6 +611,36 @@ class TestExpression(TransactionCase):
         not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
         self.assertNotIn(agrolait, not_be)
 
+    def test_proper_combine_unit_leaves(self):
+        # test that unit leaves (TRUE_LEAF, FALSE_LEAF) are properly handled in specific cases
+        false = expression.FALSE_DOMAIN
+        true = expression.TRUE_DOMAIN
+        normal = [('foo', '=', 'bar')]
+        # OR with single FALSE_LEAF
+        expr = expression.OR([false])
+        self.assertEqual(expr, false)
+        # OR with multiple FALSE_LEAF
+        expr = expression.OR([false, false])
+        self.assertEqual(expr, false)
+        # OR with FALSE_LEAF and a normal leaf
+        expr = expression.OR([false, normal])
+        self.assertEqual(expr, normal)
+        # OR with AND of single TRUE_LEAF and normal leaf
+        expr = expression.OR([expression.AND([true]), normal])
+        self.assertEqual(expr, true)
+        # AND with single TRUE_LEAF
+        expr = expression.AND([true])
+        self.assertEqual(expr, true)
+        # AND with multiple TRUE_LEAF
+        expr = expression.AND([true, true])
+        self.assertEqual(expr, true)
+        # AND with TRUE_LEAF and normal leaves
+        expr = expression.AND([true, normal])
+        self.assertEqual(expr, normal)
+        # AND with OR with single FALSE_LEAF and normal leaf
+        expr = expression.AND([expression.OR([false]), normal])
+        self.assertEqual(expr, false)
+
 
 class TestAutoJoin(TransactionCase):
 

@@ -178,6 +178,8 @@ class AccountAccount(models.Model):
     def onchange_internal_type(self):
         if self.internal_type in ('receivable', 'payable'):
             self.reconcile = True
+        if self.internal_type == 'liquidity':
+            self.reconcile = False
 
     @api.onchange('code')
     def onchange_code(self):
@@ -240,6 +242,12 @@ class AccountAccount(models.Model):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             if len(move_lines):
                 raise UserError(_('You cannot change the value of the reconciliation on this account as it already has some moves'))
+
+        if vals.get('currency_id'):
+            for account in self:
+                if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):
+                    raise UserError(_('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
+
         return super(AccountAccount, self).write(vals)
 
     @api.multi
@@ -439,6 +447,8 @@ class AccountJournal(models.Model):
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
         if self.currency_id:
+            if self.currency_id == self.company_id.currency_id:
+                raise ValidationError(_("Currency field should only be set if the journal's currency is different from the company's. Leave the field blank to use company currency."))
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency_id.id:
                 raise ValidationError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency_id.id:
@@ -767,7 +777,7 @@ class AccountTax(models.Model):
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
     # Technical field to make the 'tax_exigibility' field invisible if the same named field is set to false in 'res.company' model
-    hide_tax_exigibility = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.tax_exigibility')
+    hide_tax_exigibility = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.tax_exigibility', readonly=True)
     tax_exigibility = fields.Selection(
         [('on_invoice', 'Based on Invoice'),
          ('on_payment', 'Based on Payment'),
@@ -843,6 +853,11 @@ class AccountTax(models.Model):
     def onchange_amount(self):
         if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.description:
             self.description = "{0:.4g}%".format(self.amount)
+
+    @api.onchange('amount_type')
+    def onchange_amount_type(self):
+        if self.amount_type is not 'group':
+            self.children_tax_ids = [(5,)]
 
     @api.onchange('account_id')
     def onchange_account_id(self):
@@ -994,6 +1009,7 @@ class AccountTax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
                 'price_include': tax.price_include,
+                'tax_exigibility': tax.tax_exigibility,
             })
 
         return {

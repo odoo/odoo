@@ -83,6 +83,21 @@ class Location(models.Model):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+        if 'usage' in values or 'scrap_location' in values:
+
+            modified_locations = self.filtered(
+                lambda l: any(l[f] != values[f] if f in values else False
+                              for f in {'usage', 'scrap_location'}))
+            reserved_quantities = self.env['stock.move.line'].search_count([
+                ('location_id', 'in', modified_locations.ids),
+                ('product_qty', '>', 0),
+            ])
+            if reserved_quantities:
+                raise UserError(_(
+                    "You cannot change the location type or its use as a scrap"
+                    " location as there are products reserved in this location."
+                    " Please unreserve the products first."
+                ))
         return super(Location, self).write(values)
 
     def name_get(self):
@@ -154,6 +169,11 @@ class Route(models.Model):
     product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products')
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
+
+    @api.onchange('warehouse_selectable')
+    def _onchange_warehouse_selectable(self):
+        if not self.warehouse_selectable:
+            self.warehouse_ids = []
 
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''

@@ -3,20 +3,29 @@
 # * base_vat
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018\n"
 "Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -26,7 +35,7 @@ msgstr "Компании"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -42,6 +51,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"Даночниот број [%s] за партнер [%s] изгледа не е валиден. \n"
+"Забелешка: очекуваниот формат е %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -50,12 +61,14 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"Даночниот број [%s] за партнер [%s] или неуспешно бил спроведен од VIES VAT "
+"валидациската проверка или не го исполнил условот на форматирање %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 #: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
-msgstr ""
+msgstr "ДДВ"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies

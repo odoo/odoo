@@ -42,9 +42,8 @@ class AuthSignupHome(Home):
                         template.sudo().with_context(
                             lang=user_sudo.lang,
                             auth_login=werkzeug.url_encode({'auth_login': user_sudo.email}),
-                            password=request.params.get('password')
                         ).send_mail(user_sudo.id, force_send=True)
-                return super(AuthSignupHome, self).web_login(*args, **kw)
+                return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.name or e.value
             except (SignupError, AssertionError) as e:
@@ -69,7 +68,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                    return self.web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")
@@ -78,6 +77,8 @@ class AuthSignupHome(Home):
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
+            except UserError as e:
+                qcontext['error'] = e.name or e.value
             except SignupError:
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')

@@ -113,6 +113,16 @@
             <field name="chart_template_id" ref="account_chart_template_common"/>
         </record>
 
+        <record id="fp_reagyp_a" model="account.fiscal.position.template">
+            <field name="name">REAGYP - Agricultura</field>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        </record>
+
+       <record id="fp_reagyp_gp" model="account.fiscal.position.template">
+           <field name="name">REAGYP - Ganadería y pesca</field>
+           <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+       </record>
+
         <!-- ************************************************************* -->
         <!-- Fiscal Position Tax Templates -->
         <!-- ************************************************************* -->
@@ -2887,6 +2897,28 @@
             <field name="position_id" ref="fp_rnrisp"/>
             <field name="tax_src_id" ref="account_tax_template_s_iva21isp"/>
             <field name="tax_dest_id" ref="account_tax_template_s_iva0_isp"/>
+        </record>
+
+        <!-- Régimen especial de Agricultura, Ganaderia y Pesca -->
+        <record id="fptt_reagyp_a_4b_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_reagyp_a"/>
+            <field name="tax_src_id" ref="l10n_es.account_tax_template_p_iva4_bc"/>
+            <field name="tax_dest_id" ref="l10n_es.account_tax_template_p_iva12_agr"/>
+        </record>
+        <record id="fptt_reagyp_a_4b_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_reagyp_a"/>
+            <field name="tax_src_id" ref="l10n_es.account_tax_template_p_iva4_bc"/>
+            <field name="tax_dest_id" ref="l10n_es.account_tax_template_p_irpf2"/>
+        </record>
+        <record id="fptt_reagyp_gp_4b_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_reagyp_gp"/>
+            <field name="tax_src_id" ref="l10n_es.account_tax_template_p_iva4_bc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva105_gan"/>
+        </record>
+        <record id="fptt_reagyp_gp_4b_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_reagyp_gp"/>
+            <field name="tax_src_id" ref="l10n_es.account_tax_template_p_iva4_bc"/>
+            <field name="tax_dest_id" ref="l10n_es.account_tax_template_p_irpf2"/>
         </record>
 
         <!-- ************************************************************* -->

@@ -47,8 +47,8 @@ class ProductTemplate(models.Model):
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
-        ('consu', _('Consumable')),
-        ('service', _('Service'))], string='Product Type', default='consu', required=True,
+        ('consu', 'Consumable'),
+        ('service', 'Service')], string='Product Type', default='consu', required=True,
         help='A stockable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
              'A consumable product, on the other hand, is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.\n'
@@ -62,6 +62,8 @@ class ProductTemplate(models.Model):
 
     currency_id = fields.Many2one(
         'res.currency', 'Currency', compute='_compute_currency_id')
+    cost_currency_id = fields.Many2one(
+        'res.currency', 'Cost Currency', compute='_compute_cost_currency_id')
 
     # price fields
     price = fields.Float(
@@ -163,6 +165,10 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
+    def _compute_cost_currency_id(self):
+        for template in self:
+            template.cost_currency_id = self.env.user.company_id.currency_id.id
+
     @api.multi
     def _compute_template_price(self):
         prices = {}
@@ -237,10 +243,7 @@ class ProductTemplate(models.Model):
 
     def _compute_is_product_variant(self):
         for template in self:
-            if template._name == 'product.template':
-                template.is_product_variant = False
-            else:
-                template.is_product_variant = True
+            template.is_product_variant = False
 
     @api.one
     def _set_weight(self):
@@ -250,7 +253,8 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
-        self.product_variant_count = len(self.product_variant_ids)
+        # do not pollute variants to be prefetched when counting variants
+        self.product_variant_count = len(self.with_prefetch().product_variant_ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
@@ -308,6 +312,9 @@ class ProductTemplate(models.Model):
             related_vals['volume'] = vals['volume']
         if vals.get('weight'):
             related_vals['weight'] = vals['weight']
+        # Please do forward port
+        if vals.get('packaging_ids'):
+            related_vals['packaging_ids'] = vals['packaging_ids']
         if related_vals:
             template.write(related_vals)
         return template
@@ -334,6 +341,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def name_get(self):
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        self.read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 

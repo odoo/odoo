@@ -17,6 +17,7 @@ odoo.define('web.PivotModel', function (require) {
  */
 
 var AbstractModel = require('web.AbstractModel');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -32,6 +33,7 @@ var PivotModel = AbstractModel.extend({
         this._super.apply(this, arguments);
         this.numbering = {};
         this.data = null;
+        this._loadDataDropPrevious = new concurrency.DropPrevious();
     },
 
     //--------------------------------------------------------------------------
@@ -189,7 +191,7 @@ var PivotModel = AbstractModel.extend({
             return {has_data: false};
         }
         return {
-            colGroupBys: this.data.main_col.groupbys,
+            colGroupBys: this.data.main_col.root.groupbys,
             context: this.data.context,
             domain: this.data.domain,
             fields: this.fields,
@@ -198,7 +200,7 @@ var PivotModel = AbstractModel.extend({
             mainColWidth: this.data.main_col.width,
             measures: this.data.measures,
             rows: !isRaw && this._computeRows(),
-            rowGroupBys: this.data.main_row.groupbys,
+            rowGroupBys: this.data.main_row.root.groupbys,
             sortedColumn: this.data.sorted_column,
         };
     },
@@ -250,6 +252,7 @@ var PivotModel = AbstractModel.extend({
             this.data.colGroupBys = params.context.pivot_column_groupby || this.data.colGroupBys;
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
+            this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
@@ -263,22 +266,19 @@ var PivotModel = AbstractModel.extend({
             return this._loadData();
         }
 
-        var old_row_root = this.data.main_row.root;
-        var old_col_root = this.data.main_col.root;
+        var old_row = this.data.main_row;
+        var old_col = this.data.main_col;
         return this._loadData().then(function () {
-            var new_groupby_length;
             if (!('groupBy' in params) && !('pivot_row_groupby' in (params.context || {}))) {
                 // we only update the row groupbys according to the old groupbys
                 // if we don't have the key 'groupBy' in params.  In that case,
                 // we want to have the full open state for the groupbys.
-                self._updateTree(old_row_root, self.data.main_row.root);
-                new_groupby_length = self._getHeaderDepth(self.data.main_row.root) - 1;
-                self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+                self._updateTree(old_row.root, self.data.main_row.root);
             }
 
-            self._updateTree(old_col_root, self.data.main_col.root);
-            new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
-            self.data.main_row.groupbys = old_col_root.groupbys.slice(0, new_groupby_length);
+            if (!('pivot_column_groupby' in (params.context || {}))) {
+                self._updateTree(old_col.root, self.data.main_col.root);
+            }
         });
     },
     /**
@@ -521,7 +521,7 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
         var groupBys = [];
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
 
@@ -531,7 +531,7 @@ var PivotModel = AbstractModel.extend({
             }
         }
 
-        return $.when.apply(null, groupBys.map(function (groupBy) {
+        return this._loadDataDropPrevious.add($.when.apply(null, groupBys.map(function (groupBy) {
             return self._rpc({
                     model: self.modelName,
                     method: 'read_group',
@@ -541,7 +541,7 @@ var PivotModel = AbstractModel.extend({
                     groupBy: groupBy,
                     lazy: false,
                 });
-        })).then(function () {
+        }))).then(function () {
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {
                 self.data.has_data = false;
@@ -597,13 +597,13 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
+        this.data.groupedBy = rowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var datapt, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
         var m;
-
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -640,9 +640,6 @@ var PivotModel = AbstractModel.extend({
                 index++;
             }
         }
-
-        this.data.main_row.groupbys = rowGroupBys;
-        this.data.main_col.groupbys = colGroupBys;
 
         main_row_header.other_root = main_col_header;
         main_col_header.other_root = main_row_header;

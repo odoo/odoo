@@ -3,18 +3,19 @@
 # * project
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
-# Martin Trigaux, 2017
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
 # sharkutz <sharkutz4life@yahoo.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: sharkutz <sharkutz4life@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
@@ -166,7 +167,7 @@ msgstr "# de Sarcini"
 
 #. module: project
 #: code:addons/project/models/project.py:244
-#: code:addons/project/models/project.py:533
+#: code:addons/project/models/project.py:542
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -542,7 +543,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Facturare</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -920,6 +921,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
+"Adăugați coloane pentru a configura <b>etapele sarcinilor</b>. <i>de ex. "
+"Specificație &gt Dezvoltare &gt Realizat"
 
 #. module: project
 #. openerp-web
@@ -959,7 +962,7 @@ msgid "Aliased Model"
 msgstr "Model de Alias"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:89
+#: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "All"
 msgstr "Tot"
@@ -1057,11 +1060,14 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"În fiecare etapă, angajații pot bloca sau pot face pregătirea pentru etapa "
+"următoare. Puteți defini aici etichete care vor fi afișate pentru stare în "
+"locul etichetelor implicite."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachment"
-msgstr "Ataşament"
+msgstr "Atașament"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
@@ -1117,10 +1123,11 @@ msgid ""
 "Be aware of the team’s productivity and time: try to keep meetings to one "
 "hour or less."
 msgstr ""
-"Fii conștient de productivitatea echipeiȘ încearcă să ții întâlniri de o oră"
-" sau mai puțin"
+"Fii conștient de productivitatea echipei încearcă să ții întâlniri de o oră "
+"sau mai puțin"
 
 #. module: project
+#: code:addons/project/models/project.py:29
 #: model:project.task,legend_blocked:project.project_task_15
 #: model:project.task,legend_blocked:project.project_task_16
 #: model:project.task,legend_blocked:project.project_task_18
@@ -1147,6 +1154,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "Blocked"
 msgstr "Blocat(ă)"
 
@@ -1368,7 +1376,7 @@ msgstr "Creează"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "Creează și editează"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1482,7 +1490,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1491,7 +1499,8 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
+#: code:addons/project/models/project.py:839
 #, python-format
 msgid "Customer Email"
 msgstr "E-mail client"
@@ -1753,6 +1762,12 @@ msgid "Ending Date"
 msgstr "Dată sfârșit"
 
 #. module: project
+#: code:addons/project/models/project.py:556
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of task(s)."
+msgstr ""
+
+#. module: project
 #: sql_constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
@@ -1842,7 +1857,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "Pliat în Kanban"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2019,7 +2034,7 @@ msgid "Hours"
 msgstr "Ore"
 
 #. module: project
-#: code:addons/project/models/project.py:730
+#: code:addons/project/models/project.py:745
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2128,6 +2143,7 @@ msgid "Improve collaboration with customers"
 msgstr "Îmbunătățește colaborarea cu clienții"
 
 #. module: project
+#: code:addons/project/models/project.py:35
 #: model:project.task,legend_normal:project.project_task_1
 #: model:project.task,legend_normal:project.project_task_10
 #: model:project.task,legend_normal:project.project_task_11
@@ -2176,6 +2192,7 @@ msgstr "Îmbunătățește colaborarea cu clienții"
 #: model:project.task.type,legend_normal:project.project_stage_data_2
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "In Progress"
 msgstr "În desfășurare"
 
@@ -2330,7 +2347,7 @@ msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:86
+#: code:addons/project/controllers/portal.py:89
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 #, python-format
@@ -2460,7 +2477,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Unește sarcini"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
@@ -2485,7 +2502,7 @@ msgstr "Favorite"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Sarcinile mele urmărite"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -2498,9 +2515,10 @@ msgid "My Tasks"
 msgstr "Sarcinile mele"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:31
+#: code:addons/project/controllers/portal.py:35
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #, python-format
 msgid "Name"
 msgstr "Nume"
@@ -2508,7 +2526,7 @@ msgstr "Nume"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Denumirea sarcinilor:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2550,8 +2568,8 @@ msgid "New task name"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:30
-#: code:addons/project/controllers/portal.py:83
+#: code:addons/project/controllers/portal.py:34
+#: code:addons/project/controllers/portal.py:86
 #, python-format
 msgid "Newest"
 msgstr "Cele mai noi"
@@ -2563,10 +2581,16 @@ msgid "Next Activities"
 msgstr "Următoarele activități"
 
 #. module: project
-#: code:addons/project/models/project.py:775
+#: code:addons/project/models/project.py:792
 #, python-format
 msgid "No Subject"
 msgstr "Fără subiect"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:102
+#, python-format
+msgid "None"
+msgstr "Fără"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2672,6 +2696,8 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
+"Organizați-vă activitățile (planificați sarcini, urmăriți problemele, "
+"facturați pontajul) pentru proiecte interne, personale sau pentru clienți."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2724,12 +2750,12 @@ msgid "Parent Record Thread ID"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:861
+#: code:addons/project/models/project.py:878
 #: model:ir.model.fields,field_description:project.field_project_task_parent_id
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Sarcină părinte"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2750,7 +2776,7 @@ msgid "Planner"
 msgstr "Planificator"
 
 #. module: project
-#: code:addons/project/models/project.py:887
+#: code:addons/project/models/project.py:918
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2788,7 +2814,8 @@ msgid "Product or software version"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:346
+#: code:addons/project/controllers/portal.py:103
+#: code:addons/project/models/project.py:355
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task_project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
@@ -2836,7 +2863,7 @@ msgstr "Nume proiect"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr "Setari Proiect"
+msgstr "Setări Proiect"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2851,6 +2878,7 @@ msgstr "Sarcini Proiect"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Project Time Unit"
 msgstr "Unitate de timp Proiect"
@@ -2897,6 +2925,7 @@ msgid "Rating on Tasks"
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:32
 #: model:project.task,legend_done:project.project_task_1
 #: model:project.task,legend_done:project.project_task_12
 #: model:project.task,legend_done:project.project_task_15
@@ -2926,8 +2955,9 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
+#, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Pregătit pentru etapa următoare"
 
 #. module: project
 #. openerp-web
@@ -3006,6 +3036,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
 msgstr "Roșu: sarcina este blocată (există o problemă)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "Ref"
+msgstr "Ref"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -3089,7 +3124,7 @@ msgid "Search"
 msgstr "Caută"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:92
+#: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
 msgstr ""
@@ -3100,25 +3135,25 @@ msgid "Search Project"
 msgstr "Caută proiect"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:96
+#: code:addons/project/controllers/portal.py:99
 #, python-format
 msgid "Search in All"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:94
+#: code:addons/project/controllers/portal.py:97
 #, python-format
 msgid "Search in Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:93
+#: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in Messages"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:95
+#: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
 msgstr ""
@@ -3240,7 +3275,7 @@ msgid "Sprint"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:85
+#: code:addons/project/controllers/portal.py:88
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3258,7 +3293,7 @@ msgstr "Etapă schimbată"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Descrierea etapei și sfaturi ecran"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -3318,7 +3353,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Subsarcini"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3346,7 +3381,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -3372,7 +3406,7 @@ msgstr "Sarcină blocată"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Gestionare sarcini"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3678,6 +3712,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
@@ -3699,12 +3734,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Programarea timpului"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
 msgid "Timesheets"
-msgstr "Fise de pontaj"
+msgstr "Fișe de pontaj"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3725,7 +3760,7 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Programul orelor lucrate pentru a regla raportul diagramei Gantt"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:84
+#: code:addons/project/controllers/portal.py:87
 #, python-format
 msgid "Title"
 msgstr "Titlu"
@@ -3947,6 +3982,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
+msgid "Website Messages"
+msgstr "Mesaje Website"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_website_message_ids
+msgid "Website communication history"
+msgstr "Istoric comunicare website"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
 msgstr "Bine ați venit"
@@ -4045,6 +4090,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
+"De asemenea, puteți adăuga o descriere pentru a ajuta colegii dvs. să "
+"înțeleagă sensul și scopul etapei."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4052,6 +4099,8 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
+"Puteți, de asemenea, să oferiți un sfat despre utilizarea stărilor "
+"disponibile în vizualizările kanban și formularul."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4086,7 +4135,7 @@ msgid "You can save your reports to easily reuse it later"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:547
+#: code:addons/project/models/project.py:562
 #, python-format
 msgid ""
 "You can't define a parent task if its project is not correctly configured. "
@@ -4134,7 +4183,7 @@ msgstr "Proiectele taleȘ"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "activați un proiect de probă"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4150,6 +4199,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
 msgstr "etc.."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "for project:"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -4172,7 +4226,7 @@ msgid "send us an email"
 msgstr "trimiți un email"
 
 #. module: project
-#: code:addons/project/models/project.py:595
+#: code:addons/project/models/project.py:610
 #, python-format
 msgid "tasks"
 msgstr "sarcini"
@@ -4186,7 +4240,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "pentru teste."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

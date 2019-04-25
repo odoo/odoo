@@ -127,6 +127,13 @@ def get_view_arch_from_file(filename, xmlid):
         if node.tag in ('template', 'record'):
             if node.tag == 'record':
                 field = node.find('field[@name="arch"]')
+                if field is None:
+                    if node.find('field[@name="view_id"]') is not None:
+                        view_id = node.find('field[@name="view_id"]').attrib.get('ref')
+                        ref_id = '%s%s' % ('.' not in view_id and xmlid.split('.')[0] + '.' or '', view_id)
+                        return get_view_arch_from_file(filename, ref_id)
+                    else:
+                        return None
                 _fix_multiple_roots(field)
                 inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
                 return field.text + inner
@@ -372,7 +379,10 @@ actual arch.
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:
-            values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
+            # Do not automatically change the mode if the view already has an inherit_id,
+            # and the user change it to another.
+            if not values['inherit_id'] or all(not view.inherit_id for view in self):
+                values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
     @api.model
@@ -412,6 +422,12 @@ actual arch.
 
         self.clear_caches()
         return super(View, self).write(self._compute_defaults(vals))
+
+    def unlink(self):
+        # if in uninstall mode and has children views, emulate an ondelete cascade
+        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
+            self.mapped('inherit_children_ids').unlink()
+        super(View, self).unlink()
 
     @api.multi
     def toggle(self):
@@ -899,6 +915,12 @@ actual arch.
             'datetime',
             'relativedelta',
             'current_date',
+            'abs',
+            'len',
+            'bool',
+            'float',
+            'str',
+            'unicode',
         }
 
     def get_attrs_field_names(self, arch, model, editable):
@@ -1309,7 +1331,7 @@ actual arch.
         query = """SELECT max(v.id)
                      FROM ir_ui_view v
                 LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module NOT IN (SELECT name FROM ir_module_module)
+                    WHERE md.module IN (SELECT name FROM ir_module_module) IS NOT TRUE
                       AND v.model = %s
                       AND v.active = true
                  GROUP BY coalesce(v.inherit_id, v.id)"""

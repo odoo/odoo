@@ -67,6 +67,11 @@
                         </t>
                     </div>
                 </div>
+                <div class="panel-body" t-if="existing_token">
+                    <div class="col-md-offset-3 col-md-6">
+                        <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.
+                    </div>
+                </div>
             </div>
         </xpath>
         <xpath expr="//t[@t-if='invoices']" position="before">

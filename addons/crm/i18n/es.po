@@ -7,16 +7,18 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Gelo Joga Landoo <gj@landoo.es>, 2017
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # Martin Trigaux, 2018
+# Carlos Vásquez <carlos.vasquez@clearcorp.co.cr>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-04-20 11:58+0000\n"
+"PO-Revision-Date: 2018-04-20 11:58+0000\n"
+"Last-Translator: Carlos Vásquez <carlos.vasquez@clearcorp.co.cr>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -630,7 +632,7 @@ msgid ""
 "                                    <span>(Salesperson)</span>"
 msgstr ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Ejercicio 3</strong></span>\n"
-"                                    <span>(Vendedor)</span>"
+"                                    <span>(comercial)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1060,7 +1062,7 @@ msgstr ""
 "forma continua el rendimiento de las ventas."
 
 #. module: crm
-#: code:addons/crm/wizard/base_partner_merge.py:274
+#: code:addons/crm/wizard/base_partner_merge.py:273
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
@@ -1070,7 +1072,7 @@ msgstr ""
 "Sólo el administrador puede combinar contactos con diferentes direcciones."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:905
+#: code:addons/crm/models/crm_lead.py:916
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
@@ -2176,8 +2178,8 @@ msgstr "Forzar asignación"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Formats phone numbers"
-msgstr ""
+msgid "Format phone numbers based on national conventions"
+msgstr "Dar formato a los números telefónicos basado en estándares nacionales"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:588
@@ -2666,7 +2668,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_salesperson
 msgid "Leads By Salespersons"
-msgstr "Iniciativas por vendedores"
+msgstr "Iniciativas por comerciales"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -2797,12 +2799,12 @@ msgstr "Asignación manual de correos electrónicos entrantes"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
 msgid "Mark All Activities as Done"
-msgstr ""
+msgstr "Marcar Todas las Actividades como Hechas"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_late_activities_done
 msgid "Mark Late Activities as Done"
-msgstr ""
+msgstr "Marcar Actividades Atrasadas como Hechas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3078,7 +3080,7 @@ msgstr "Ninguna actividad siguiente planeada"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
-msgstr "Sin vendedor"
+msgstr "Sin comercial"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -3244,7 +3246,7 @@ msgid ""
 " channels of the sales pipeline."
 msgstr ""
 "El Análisis de Oportunidades le brinda acceso instantáneo a sus "
-"oportunidades con informaciones tales como los ingresos esperados, el costo "
+"oportunidades con informaciones tales como los ingresos esperados, el coste "
 "planificado, los plazos perdidos o el número de interacciones por "
 "oportunidad. Este informe es utilizado principalmente por el gerente de "
 "ventas para realizar la revisión periódica con los canales del flujo de "
@@ -3438,8 +3440,8 @@ msgstr "Teléfono"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
-msgid "Phone Validation"
-msgstr "Validación de teléfono"
+msgid "Phone Formatting"
+msgstr "Formateo de Números Telefónicos"
 
 #. module: crm
 #. openerp-web
@@ -3484,7 +3486,7 @@ msgid ""
 "teams of the sales pipeline."
 msgstr ""
 "El análisis del canal le da acceso instantáneo a sus oportunidades con "
-"información como el ingreso previsto, costo planeado, fechas límite "
+"información como el ingreso previsto, coste planificado, fechas límite "
 "incumplidas o el número de iteraciones por oportunidad. Este informe utiliza"
 " principalmente el responsable de ventas para hacer una revisión periódica "
 "del proceso de ventas con los equipos."
@@ -3499,7 +3501,7 @@ msgid ""
 "with the the sales channel."
 msgstr ""
 "El análisis de oportunidades le brinda acceso instantáneo a\n"
-"sus oportunidades con informaciones tales como el ingreso esperado, el costo planificado,\n"
+"sus oportunidades con informaciones tales como el ingreso esperado, el coste planificado,\n"
 "las fechas límite perdidas o el número de interacciones por oportunidad. Este informe es\n"
 "utilizado principalmente por el gerente de ventas para revisar periódicamente el flujo\n"
 "con el canal de ventas."
@@ -3789,7 +3791,7 @@ msgstr "Vendedores"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
-msgstr "Vendedor"
+msgstr "Comercial"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4418,7 +4420,7 @@ msgstr "Actividades de Hoy"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
 msgid "Too expensive"
-msgstr "Demasiado costoso"
+msgstr "Demasiado caro"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue

@@ -1,8 +1,12 @@
-'use strict';
 odoo.define('website_sale_delivery.checkout', function (require) {
+    'use strict';
 
     require('web.dom_ready');
     var ajax = require('web.ajax');
+    var core = require('web.core');
+    var _t = core._t;
+    var concurrency = require('web.concurrency');
+    var dp = new concurrency.DropPrevious();
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
@@ -14,6 +18,17 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_total = $('#order_total span.oe_currency_value');
         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+        var $discount = $('#order_discounted');
+
+        if ($discount && result.new_amount_order_discounted) {
+            // Cross module without bridge
+            // Update discount of the order
+            $discount.find('.oe_currency_value').text(result.new_amount_order_discounted);
+
+            // We are in freeshipping, so every carrier is Free
+            $('#delivery_carrier .badge').text(_t('Free'));
+        }
+
         if (result.status === true) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
@@ -27,6 +42,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         else {
             console.error(result.error_message);
             $compute_badge.text(result.error_message);
+            $amount_delivery.text(result.new_amount_delivery);
+            $amount_untaxed.text(result.new_amount_untaxed);
+            $amount_tax.text(result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
         }
     };
 
@@ -34,12 +53,18 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         var values = {'carrier_id': carrier_id};
-        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+        dp.add(ajax.jsonRpc('/shop/update_carrier', 'call', values))
           .then(_onCarrierUpdateAnswer);
     };
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
+    // Workaround to:
+    // - update the amount/error on the label at first rendering
+    // - prevent clicking on 'Pay Now' if the shipper rating fails
+    if ($carriers.length > 0) {
+        $carriers.filter(':checked').click();
+    }
 
     /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {

@@ -34,6 +34,7 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -175,6 +176,61 @@ var ScreenWidget = PosBaseWidget.extend({
             if(this.$el){
                 this.$el.addClass('oe_hidden');
             }
+        }
+    },
+    /**
+     * Handles the error response from the server when we push
+     * an invoiceable order
+     * Displays appropriates warnings and errors and
+     * proposes subsequent actions
+     *
+     * @private
+     * @param {PosModel} order: the order to consider, defaults to current order
+     * @param {Boolean} refresh_screens: whether or not displayed screens should refresh
+     * @param {Object} error: the error provided by Ajax
+     */
+    _handleFailedPushForInvoice: function (order, refresh_screen, error) {
+        var self = this;
+        order = order || this.pos.get_order();
+        this.invoicing = false;
+        order.finalized = false;
+        if (error.message === 'Missing Customer') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please select the Customer'),
+                'body': _t('You need to select the customer before you can invoice an order.'),
+                confirm: function(){
+                    self.gui.show_screen('clientlist', null, refresh_screen);
+                },
+            });
+        } else if (error.message === 'Backend Invoice') {
+            this.gui.show_popup('confirm',{
+                'title': _t('Please print the invoice from the backend'),
+                'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                confirm: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+                cancel: function () {
+                    this.gui.show_screen('receipt', null, refresh_screen);
+                },
+            });
+        } else if (error.code < 0) {        // XmlHttpRequest Errors
+            this.gui.show_popup('error',{
+                'title': _t('The order could not be sent'),
+                'body': _t('Check your internet connection and try again.'),
+                cancel: function () {
+                    this.gui.show_screen('receipt', {button_print_invoice: true}, refresh_screen); // refresh if necessary
+                },
+            });
+        } else if (error.code === 200) {    // OpenERP Server Errors
+            this.gui.show_popup('error-traceback',{
+                'title': error.data.message || _t("Server Error"),
+                'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
+            });
+        } else {                            // ???
+            this.gui.show_popup('error',{
+                'title': _t("Unknown Error"),
+                'body':  _t("The order could not be sent to the server due to an unknown error"),
+            });
         }
     },
 });
@@ -394,10 +450,14 @@ var NumpadWidget = PosBaseWidget.extend({
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
     },
     applyAccessRights: function() {
-        var has_price_control_rights = !this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager';
+        var cashier = this.pos.get('cashier') || this.pos.get_cashier();
+        var has_price_control_rights = !this.pos.config.restrict_price_control || cashier.role == 'manager';
         this.$el.find('.mode-button[data-mode="price"]')
             .toggleClass('disabled-mode', !has_price_control_rights)
             .prop('disabled', !has_price_control_rights);
+        if (!has_price_control_rights && this.state.get('mode')=='price'){
+            this.state.changeMode('quantity');
+        }
     },
     clickDeleteLastChar: function() {
         return this.state.deleteLastChar();
@@ -1172,9 +1232,11 @@ var ClientListScreenWidget = ScreenWidget.extend({
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
             var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
-            if ( this.new_client && this.new_client.property_account_position_id ) {
-                var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
-                order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
+            if ( this.new_client ) {
+                if (this.new_client.property_account_position_id ){
+                  var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+                  order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
+                }
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
                 order.fiscal_position = default_fiscal_position_id;
@@ -1271,6 +1333,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         } else {
             fields.property_product_pricelist = false;
         }
+        var contents = this.$(".client-details-contents");
+        contents.off("click", ".button.save");
+
 
         rpc.query({
                 model: 'res.partner',
@@ -1279,7 +1344,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
             })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
-            },function(type,err){
+            },function(err,ev){
+                ev.preventDefault();
                 var error_body = _t('Your Internet connection is probably down.');
                 if (err.data) {
                     var except = err.data;
@@ -1289,13 +1355,14 @@ var ClientListScreenWidget = ScreenWidget.extend({
                     'title': _t('Error: Could not Save Changes'),
                     'body': error_body,
                 });
+                contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
     
     // what happens when we've just pushed modifications for a partner of id partner_id
     saved_client_details: function(partner_id){
         var self = this;
-        this.reload_partners().then(function(){
+        return this.reload_partners().then(function(){
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;
@@ -1306,6 +1373,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 // has created, and reload_partner() must have loaded the newly created partner. 
                 self.display_client_details('hide');
             }
+        }).always(function(){
+            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
 
@@ -1369,6 +1438,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     reload_partners: function(){
         var self = this;
         return this.pos.load_new_partners().then(function(){
+            // partners may have changed in the backend
+            self.partner_cache = new DomCache();
+
             self.render_list(self.pos.db.get_partners_sorted(1000));
             
             // update the currently assigned client if it has been changed in db.
@@ -1519,7 +1591,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
     },
     should_close_immediately: function() {
-        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen;
+        var order = this.pos.get_order();
+        var invoiced_finalized = order.is_to_invoice() ? order.finalized : true;
+        return this.pos.config.iface_print_via_proxy && this.pos.config.iface_print_skip_screen && invoiced_finalized;
     },
     lock_screen: function(locked) {
         this._locked = locked;
@@ -1541,7 +1615,22 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        window.print();
+        if ($.browser.safari) {
+            document.execCommand('print', false, null);
+        } else {
+            try {
+                window.print();
+            } catch(err) {
+                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                    this.gui.show_popup('error',{
+                        'title':_t('Printing is not supported on some android browsers'),
+                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
+                    });
+                } else {
+                    throw err;
+                }
+            }
+        }
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
@@ -1608,9 +1697,32 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 self.print();
             }
         });
+        var button_print_invoice = this.$('.button.print_invoice');
+        button_print_invoice.click(function () {
+            var order = self.pos.get_order();
+            var invoiced = self.pos.push_and_invoice_order(order);
+            self.invoicing = true;
+
+            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
+
+            invoiced.done(function(){
+                self.invoicing = false;
+                self.gui.show_screen('receipt', {button_print_invoice: false}, true); // refresh
+            });
+        });
+
     },
     render_change: function() {
+        var self = this;
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
+        var order = this.pos.get_order();
+        var order_screen_params = order.get_screen_data('params');
+        var button_print_invoice = this.$('.button.print_invoice');
+        if (order_screen_params && order_screen_params.button_print_invoice) {
+            button_print_invoice.show();
+        } else {
+            button_print_invoice.hide();
+        }
     },
     render_receipt: function() {
         this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
@@ -1663,6 +1775,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // also called explicitly to handle some keydown events that
         // do not generate keypress events.
         this.keyboard_handler = function(event){
+            // On mobile Chrome BarcodeEvents relies on an invisible
+            // input being filled by a barcode device. Let events go
+            // through when this input is focused.
+            if (BarcodeEvents.$barcodeInput && BarcodeEvents.$barcodeInput.is(":focus")) {
+                return;
+            }
+
             var key = '';
 
             if (event.type === "keypress") {
@@ -1920,16 +2039,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
         $('body').keypress(this.keyboard_handler);
         // that one comes from the pos, but we prefer to cover all the basis
         $('body').keydown(this.keyboard_keydown_handler);
-        // legacy vanilla JS listeners
-        window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
         $('body').off('keypress', this.keyboard_handler);
         $('body').off('keydown', this.keyboard_keydown_handler);
-        window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -2033,34 +2147,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.fail(function(error){
-                self.invoicing = false;
-                order.finalized = false;
-                if (error.message === 'Missing Customer') {
-                    self.gui.show_popup('confirm',{
-                        'title': _t('Please select the Customer'),
-                        'body': _t('You need to select the customer before you can invoice an order.'),
-                        confirm: function(){
-                            self.gui.show_screen('clientlist');
-                        },
-                    });
-                } else if (error.code < 0) {        // XmlHttpRequest Errors
-                    self.gui.show_popup('error',{
-                        'title': _t('The order could not be sent'),
-                        'body': _t('Check your internet connection and try again.'),
-                    });
-                } else if (error.code === 200) {    // OpenERP Server Errors
-                    self.gui.show_popup('error-traceback',{
-                        'title': error.data.message || _t("Server Error"),
-                        'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
-                    });
-                } else {                            // ???
-                    self.gui.show_popup('error',{
-                        'title': _t("Unknown Error"),
-                        'body':  _t("The order could not be sent to the server due to an unknown error"),
-                    });
-                }
-            });
+            invoiced.fail(this._handleFailedPushForInvoice.bind(this, order, false));
 
             invoiced.done(function(){
                 self.invoicing = false;

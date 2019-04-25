@@ -47,8 +47,8 @@ var EditorMenuBar = Widget.extend({
         var self = this;
         var defs = [this._super.apply(this, arguments)];
 
-        core.bus.on('editor_save_request', this, this._onSaveRequest);
-        core.bus.on('editor_discard_request', this, this._onDiscardRequest);
+        core.bus.on('editor_save_request', this, this.save);
+        core.bus.on('editor_discard_request', this, this.cancel);
 
         $('.dropdown-toggle').dropdown();
 

@@ -98,13 +98,13 @@ class Product(models.Model):
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
-        if lot_id:
+        if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
-        if owner_id:
+        if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
             domain_move_out += [('restrict_partner_id', '=', owner_id)]
-        if package_id:
+        if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
             domain_move_in_done = list(domain_move_in)
@@ -132,17 +132,19 @@ class Product(models.Model):
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
-            res[product.id] = {}
+            product_id = product.id
+            rounding = product.uom_id.rounding
+            res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(product.id, 0.0) - moves_in_res_past.get(product.id, 0.0) + moves_out_res_past.get(product.id, 0.0)
+                qty_available = quants_res.get(product_id, 0.0) - moves_in_res_past.get(product_id, 0.0) + moves_out_res_past.get(product_id, 0.0)
             else:
-                qty_available = quants_res.get(product.id, 0.0)
-            res[product.id]['qty_available'] = float_round(qty_available, precision_rounding=product.uom_id.rounding)
-            res[product.id]['incoming_qty'] = float_round(moves_in_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['outgoing_qty'] = float_round(moves_out_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['virtual_available'] = float_round(
-                qty_available + res[product.id]['incoming_qty'] - res[product.id]['outgoing_qty'],
-                precision_rounding=product.uom_id.rounding)
+                qty_available = quants_res.get(product_id, 0.0)
+            res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
+            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['virtual_available'] = float_round(
+                qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
+                precision_rounding=rounding)
 
         return res
 
@@ -157,7 +159,7 @@ class Product(models.Model):
         if self.env.context.get('company_owned', False):
             company_id = self.env.user.company_id.id
             return (
-                [('location_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
@@ -221,6 +223,19 @@ class Product(models.Model):
             domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
 
+    def _search_qty_available(self, operator, value):
+        # In the very specific case we want to retrieve products with stock available, we only need
+        # to use the quants, not the stock moves. Therefore, we bypass the usual
+        # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
+        # allows better performances.
+        if value == 0.0 and operator == '>' and not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+            product_ids = self._search_qty_available_new(
+                operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
+                self.env.context.get('package_id')
+            )
+            return [('id', 'in', product_ids)]
+        return self._search_product_quantity(operator, value, 'qty_available')
+
     def _search_virtual_available(self, operator, value):
         # TDE FIXME: should probably clean the search methods
         return self._search_product_quantity(operator, value, 'virtual_available')
@@ -245,24 +260,15 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.search([]):
+        # Order the search on `id` to prevent the default order on the product name which slows
+        # down the search because of the join on the translation table to get the translated names.
+        for product in self.with_context(prefetch_fields=False).search([], order='id'):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
 
-    def _search_qty_available(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        if value == 0.0 and operator in ('=', '>=', '<='):
-            return self._search_product_quantity(operator, value, 'qty_available')
-        product_ids = self._search_qty_available_new(operator, value, self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'))
-        if (value > 0 and operator in ('<=', '<')) or (value < 0 and operator in ('>=', '>')):
-            # include also unavailable products
-            domain = self._search_product_quantity(operator, value, 'qty_available')
-            product_ids += domain[0][2]
-        return [('id', 'in', product_ids)]
-
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
-        # TDE FIXME: should probably clean the search methods
+        ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -410,8 +416,11 @@ class ProductTemplate(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'))
-    location_id = fields.Many2one('stock.location', 'Location')
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
+    # The goal of these fields is not to be able to search a location_id/warehouse_id but
+    # to properly make these fields "dummy": only used to put some keys in context from
+    # the search view in order to influence computed field
+    location_id = fields.Many2one('stock.location', 'Location', store=False, search=lambda operator, operand, vals: [])
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False, search=lambda operator, operand, vals: [])
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -503,7 +512,7 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['product.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
@@ -578,3 +587,29 @@ class ProductCategory(models.Model):
             category = category.parent_id
             routes |= category.route_ids
         self.total_route_ids = routes
+
+
+class ProductUoM(models.Model):
+    _inherit = 'product.uom'
+
+    def write(self, values):
+        # Users can not update the factor if open stock moves are based on it
+        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
+            changed = self.filtered(
+                lambda u: any(u[f] != values[f] if f in values else False
+                              for f in {'factor', 'factor_inv'})) + self.filtered(
+                lambda u: any(u[f].id != int(values[f]) if f in values else False
+                              for f in {'category_id'}))
+            if changed:
+                stock_move_lines = self.env['stock.move.line'].search_count([
+                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
+                    ('state', '!=', 'cancel'),
+                ])
+
+                if stock_move_lines:
+                    raise UserError(_(
+                        "You cannot change the ratio of this unit of mesure as some"
+                        " products with this UoM have already been moved or are "
+                        "currently reserved."
+                    ))
+        return super(ProductUoM, self).write(values)

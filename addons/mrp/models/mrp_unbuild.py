@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare
 
 
@@ -13,10 +13,20 @@ class MrpUnbuild(models.Model):
     _order = 'id desc'
 
     def _get_default_location_id(self):
-        return self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        stock_location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        try:
+            stock_location.check_access_rule('read')
+            return stock_location.id
+        except (AttributeError, AccessError):
+            return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id.id
 
     def _get_default_location_dest_id(self):
-        return self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        stock_location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        try:
+            stock_location.check_access_rule('read')
+            return stock_location.id
+        except (AttributeError, AccessError):
+            return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id.id
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
@@ -117,7 +127,7 @@ class MrpUnbuild(models.Model):
             if produce_move.has_tracking != 'none':
                 original_move = self.mo_id.move_raw_ids.filtered(lambda move: move.product_id == produce_move.product_id)
                 needed_quantity = produce_move.product_qty
-                for move_lines in original_move.mapped('move_line_ids'):
+                for move_lines in original_move.mapped('move_line_ids').filtered(lambda ml: ml.lot_produced_id == self.lot_id):
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_lines.qty_done)
                     if taken_quantity:

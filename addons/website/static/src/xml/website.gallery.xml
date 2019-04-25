@@ -20,11 +20,11 @@
             </div>
 
             <ul class="carousel-indicators">
-                <li class="fa fa-chevron-left o_indicators_left" style="overflow: hidden; padding: 12px; border: 0;"></li>
+                <li class="fa fa-chevron-left o_indicators_left" style="overflow: hidden; padding: 12px; border: 0; visibility: hidden;"></li>
                 <t t-foreach="srcs" t-as="src">
-                    <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
+                    <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="'hidden ' + (src_index == index and 'active')" t-attf-style="background-image: url(#{src})"></li>
                 </t>
-                <li class="fa fa-chevron-right o_indicators_right" style="overflow: hidden; padding: 12px; border: 0;"></li>
+                <li class="fa fa-chevron-right o_indicators_right" style="overflow: hidden; padding: 12px; border: 0; visibility: hidden;"></li>
             </ul>
 
             <a class="carousel-control left" t-attf-href="##{id}" data-slide="prev"><span class="fa fa-chevron-left" /></a>

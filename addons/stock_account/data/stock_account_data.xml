@@ -26,17 +26,6 @@
             <field name="value">manual_periodic</field>
             <field name="type">selection</field>
         </record>
-        <record id="action_stock_account_valuation_report" model="ir.actions.server">
-            <field name="name">Stock Valuation Report</field>
-            <field name="type">ir.actions.server</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="product.model_product_product"></field>
-            <field name="binding_model_id" ref="product.model_product_product"></field>
-            <field name="code">
-env['stock.move']._run_fifo_vacuum()
-action = env.ref('stock_account.product_valuation_action').read()[0]
-            </field>
-        </record>
     </data>
 </odoo>
 

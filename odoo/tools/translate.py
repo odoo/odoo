@@ -159,7 +159,7 @@ def translate_xml_node(node, callback, parse, serialize):
     """
 
     def nonspace(text):
-        return bool(text) and not text.isspace()
+        return bool(text) and len(re.sub(r'\W+', '', text)) > 1
 
     def concat(text1, text2):
         return text2 if text1 is None else text1 + (text2 or "")
@@ -251,7 +251,10 @@ def translate_xml_node(node, callback, parse, serialize):
             # complete result and return it
             append_content(result, todo)
             result.tail = node.tail
-            has_text = todo_has_text or nonspace(result.text) or nonspace(result.tail)
+            has_text = (
+                todo_has_text or nonspace(result.text) or nonspace(result.tail)
+                or any(name in TRANSLATED_ATTRS for name in result.attrib)
+            )
             return (has_text, result)
 
         # translate the content of todo and append it to result
@@ -584,8 +587,11 @@ class PoFile(object):
                 # end of this next() call), and keep the others to generate
                 # additional entries (returned the next next() calls).
                 trans_type, name, res_id = targets.pop(0)
+                code = trans_type == 'code'
                 for t, n, r in targets:
-                    if t == trans_type == 'code': continue
+                    if t == 'code' and code: continue
+                    if t == 'code':
+                        code = True
                     self.extra_lines.append((t, n, r, source, trad, comments))
 
         if name is None:
@@ -804,14 +810,6 @@ def trans_generate(lang, modules, cr):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
-        try:
-            # verify the minimal size without eventual xml tags
-            # wrap to make sure html content like '<a>b</a><c>d</c>' is accepted by lxml
-            wrapped = u"<div>%s</div>" % sanitized_term
-            node = etree.fromstring(wrapped)
-            sanitized_term = etree.tostring(node, encoding='unicode', method='text')
-        except etree.ParseError:
-            pass
         # remove non-alphanumeric chars
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
@@ -1076,7 +1074,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         for type, name, res_id, src, _ignored, comments in pot_reader:
             if type is not None:
                 target = pot_targets[src]
-                target.targets.add((type, name, res_id))
+                target.targets.add((type, name, type != 'code' and res_id or 0))
                 target.comments = comments
 
         # read the rest of the file
@@ -1097,11 +1095,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if src in pot_targets:
                 target = pot_targets[src]
                 target.value = dic['value']
-                target.targets.discard((dic['type'], dic['name'], dic['res_id']))
+                target.targets.discard((dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0))
 
             # This would skip terms that fail to specify a res_id
             res_id = dic['res_id']
-            if not res_id:
+            if not res_id and dic['type'] != 'code':
                 return
 
             if isinstance(res_id, pycompat.integer_types) or \

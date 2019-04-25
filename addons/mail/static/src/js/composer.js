@@ -389,7 +389,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         // Attachments
         this.AttachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileupload_id = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachment_ids || []);
 
         // Mention
         this.mention_manager = new MentionManager(this);
@@ -449,6 +449,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         dom.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
 
         // Attachments
+        this.render_attachments();
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.on("change:attachment_ids", this, this.render_attachments);
 
@@ -514,6 +515,9 @@ var BasicComposer = Widget.extend(chat_mixin, {
     on_click_add_attachment: function () {
         this.$('input.o_input_file').click();
         this.$input.focus();
+        // set ignoreEscape to avoid escape_pressed event when file selector dialog is opened
+        // when user press escape to cancel file selector dialog then escape_pressed event should not be trigerred
+        this.ignoreEscape = true;
     },
 
     setState: function (state) {
@@ -565,6 +569,8 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 if (this.mention_manager.is_open()) {
                     event.stopPropagation();
                     this.mention_manager.reset_suggestions();
+                } else if (this.ignoreEscape) {
+                    this.ignoreEscape = false;
                 } else {
                     this.trigger_up("escape_pressed");
                 }
@@ -654,6 +660,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 }
             });
             this.set('attachment_ids', attachments);
+            this.$('input.o_input_file').val('');
         }
     },
     do_check_attachment_upload: function () {
@@ -789,6 +796,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
      * @param {MouseEvent} event
      */
     _onAttachmentView: function (event) {
+        event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
         var attachments = this.get('attachment_ids');
         if (activeAttachmentID) {

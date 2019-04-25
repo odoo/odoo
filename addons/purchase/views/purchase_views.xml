@@ -184,8 +184,8 @@
                         </button> 
                     </div>
                     <div class="oe_title">
-                        <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent','bid'))]}"/>
-                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent','bid'))]}"/>
+                        <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
@@ -227,6 +227,7 @@
                                 </tree>
                                 <form string="Purchase Order Line">
                                     <sheet>
+                                        <field name="state" invisible="1"/>
                                         <group>
                                             <group>
                                                 <field name="product_id"
@@ -243,6 +244,7 @@
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                             </group>
                                         </group>
@@ -252,6 +254,7 @@
                                         </page><page string="Invoices and Incoming Shipments">
                                             <field name="invoice_lines"/>
                                             <field name="move_ids"/>
+                                            <field name="move_dest_ids" invisible="1"/>
                                         </page>
                                         </notebook>
                                     </sheet>
@@ -412,7 +415,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_todo':1, 'show_purchase': False}</field>
-            <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
+            <field name="domain">[('state','in',('draft','sent','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
@@ -438,7 +441,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
-            <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
+            <field name="domain">[('state','not in',('draft','sent', 'confirmed'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

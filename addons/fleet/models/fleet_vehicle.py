@@ -14,7 +14,7 @@ class FleetVehicle(models.Model):
 
     def _get_default_state(self):
         state = self.env.ref('fleet.vehicle_state_active', raise_if_not_found=False)
-        return state and state.id or False
+        return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, track_visibility="onchange")
@@ -22,7 +22,7 @@ class FleetVehicle(models.Model):
     license_plate = fields.Char(required=True, track_visibility="onchange",
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle', copy=False)
+    driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
@@ -51,6 +51,7 @@ class FleetVehicle(models.Model):
     fuel_type = fields.Selection([
         ('gasoline', 'Gasoline'),
         ('diesel', 'Diesel'),
+        ('lpg', 'LPG'),
         ('electric', 'Electric'),
         ('hybrid', 'Hybrid')
         ], 'Fuel Type', help='Fuel Used by the vehicle')

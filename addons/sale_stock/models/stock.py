@@ -28,7 +28,7 @@ class StockMove(models.Model):
 
     def _action_done(self):
         result = super(StockMove, self)._action_done()
-        for line in result.mapped('sale_line_id'):
+        for line in result.mapped('sale_line_id').sudo():
             line.qty_delivered = line._get_delivered_qty()
         return result
 
@@ -38,10 +38,18 @@ class StockMove(models.Model):
         if 'product_uom_qty' in vals:
             for move in self:
                 if move.state == 'done':
-                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
-                    for line in sale_order_lines:
+                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy in [False, 'no']).mapped('sale_line_id')
+                    for line in sale_order_lines.sudo():
                         line.qty_delivered = line._get_delivered_qty()
         return res
+
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        if new and self.sale_line_id and self.sale_line_id.order_id:
+            self.picking_id.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
 
 
 class ProcurementGroup(models.Model):

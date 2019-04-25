@@ -3,22 +3,23 @@
 # * hr
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
-# Tina Milas, 2017
+# Jasmina Otročak <jasmina@uvid.hr>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2017
-# Jasmina Otročak <jasmina@uvid.hr>, 2017
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
+# Tina Milas, 2018
+# Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2018
+# Bole <bole@dajmi5.com>, 2018
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,13 @@ msgstr "<i>Samostalno i brzo učite</i>"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
 msgstr "<i>Možete jednostavno upravljati njima</i>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -444,13 +452,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Pogreška! Ne možete kreirati rekurzivne odjele."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Pogreška! Ne možete kreirati rekurzivnu hijerarhiju radnika."
@@ -731,6 +739,11 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr "Lansiranje novih proizvoda , marketinške kampanje"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Muško"
@@ -755,8 +768,8 @@ msgstr "Voditelj marketinga i komunikacija"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr ""
+msgid "Married"
+msgstr "U braku"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto

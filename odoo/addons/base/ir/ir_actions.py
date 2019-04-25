@@ -5,19 +5,28 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools import pycompat
+from odoo.tools import pycompat, wrap_module
 from odoo.http import request
 
 import base64
 from collections import defaultdict
 import datetime
-import dateutil
 import logging
 import time
 
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
+
+# build dateutil helper, starting with the relevant *lazy* imports
+import dateutil
+import dateutil.parser
+import dateutil.relativedelta
+import dateutil.rrule
+import dateutil.tz
+mods = {'parser', 'relativedelta', 'rrule', 'tz'}
+attribs = {atr for m in mods for atr in getattr(dateutil, m).__all__}
+dateutil = wrap_module(dateutil, mods | attribs)
 
 
 class IrActions(models.Model):
@@ -34,6 +43,7 @@ class IrActions(models.Model):
     binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
                                        help="Setting a value makes this action available in the sidebar for the given model.")
     binding_type = fields.Selection([('action', 'Action'),
+                                     ('action_form_only', "Form-only"),
                                      ('report', 'Report')],
                                     required=True, default='action')
 
@@ -324,7 +334,7 @@ class IrActionsServer(models.Model):
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the action is triggered
 #  - model: Odoo Model of the record on which the action is triggered; is a void recordset
-#  - record: record on which the action is triggered; may be be void
+#  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
@@ -373,7 +383,7 @@ class IrActionsServer(models.Model):
     # Create
     crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
+    crud_model_name = fields.Char(related='crud_model_id.model', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
@@ -547,6 +557,9 @@ class IrActionsServer(models.Model):
                 active_id = self._context.get('active_id')
                 if not active_id and self._context.get('onchange_self'):
                     active_id = self._context['onchange_self']._origin.id
+                    if not active_id:  # onchange on new record
+                        func = getattr(self, 'run_action_%s' % action.state)
+                        res = func(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id

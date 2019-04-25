@@ -5,12 +5,13 @@
 # Translators:
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Mustafa Rawi <mustafa@cubexco.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Majeed Alsamarraie <majeed.hatim@gmail.com>, 2017
 msgid ""
@@ -95,7 +96,7 @@ msgstr "الحضور"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
-msgstr "رقم الباج"
+msgstr "رقم الشارة"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -132,6 +133,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"لا يمكن تسجل خروجك يا %(empl_name)s، لا يمكن العثور على تسجل دخول. من "
+"المحتمل أن تم تعديل حضورك يدويًا بواسطة الموارد البشرية."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -366,7 +369,7 @@ msgstr "صباح الخير"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good night"
-msgstr "تصبح على خير"
+msgstr "ليلة سعيدة"
 
 #. module: hr_attendance
 #. openerp-web
@@ -512,7 +515,7 @@ msgstr "لايوجد موظف يحمل الباركود %(barcode)s"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Officer"
+msgstr "قائد"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
@@ -531,14 +534,14 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr "رجاءاً أدخل رمزك الخاص لتسجيل الحضور"
+msgstr "الرجاء إدخل رمزك الخاص لتسجيل الحضور"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr "رجاءاً أدخل رمزك الخاص لتسجيل الخروج"
+msgstr "الرجاء إدخل رمزك الخاص لتسجيل الخروج"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -556,7 +559,7 @@ msgstr "يرجى العودة للقائمة الرئيسية"
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
-msgstr "إطبع الباج"
+msgstr "إطبع الشارة"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -581,7 +584,7 @@ msgstr "اختر الموظف"
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
-"استخدم رموز سرية في حقل تفاصيل الموظف ( في شريط اعدادات الموارد البشرية)"
+"استخدم رموز سرية في نموذج تفاصيل الموظف ( في شريط اعدادات الموارد البشرية)"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -604,7 +607,7 @@ msgstr "الرمز يجب أن يكون تسلسل أرقام"
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "سجل الحضور للموظفين الخاصين بك سيظهر هنا."
 
 #. module: hr_attendance
 #. openerp-web
@@ -618,7 +621,7 @@ msgstr "الطير المبكر يفوز بالدودة "
 msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
-msgstr ""
+msgstr "الموظف سيمنح الصلاحية على صفحة \"حضوري\" لتسجيل الحضور والخروج."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -626,6 +629,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"المستخدم سيمنح الصلاحية للدخول على قائمة الموارد البشرية الخاصة بالحضور، مما"
+" سيمكنه من إدارة حضوره."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -633,6 +638,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"يتوجب على المستخدم إدخال رمزه السري لتسجيل الحضور والخروج يدويًا من خلال "
+"شاشة الحضور."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -647,7 +654,7 @@ msgstr "اليوم"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "استخدم الرمز السري لتسجيل الحضور في وضع الكشك"
 
 #. module: hr_attendance
 #. openerp-web
@@ -715,4 +722,4 @@ msgstr "أو"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
 msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"
+msgstr "res.config.settings"

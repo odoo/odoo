@@ -4,7 +4,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
+from odoo.tools import exception_to_unicode
+from odoo.tools.translate import _
 
+import random
+import logging
+_logger = logging.getLogger(__name__)
 
 _INTERVALS = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -115,12 +120,51 @@ class EventMailScheduler(models.Model):
         return True
 
     @api.model
+    def _warn_template_error(self, scheduler, exception):
+        # We warn ~ once by hour ~ instead of every 10 min if the interval unit is more than 'hours'.
+        if random.random() < 0.1666 or scheduler.interval_unit in ('now', 'hours'):
+            ex_s = exception_to_unicode(exception)
+            try:
+                event, template = scheduler.event_id, scheduler.template_id
+                emails = list(set([event.organizer_id.email, event.user_id.email, template.write_uid.email]))
+                subject = _("WARNING: Event Scheduler Error for event: %s" % event.name)
+                body = _("""Event Scheduler for:
+                              - Event: %s (%s)
+                              - Scheduled: %s
+                              - Template: %s (%s)
+
+                            Failed with error:
+                              - %s
+
+                            You receive this email because you are:
+                              - the organizer of the event,
+                              - or the responsible of the event,
+                              - or the last writer of the template."""
+                         % (event.name, event.id, scheduler.scheduled_date, template.name, template.id, ex_s))
+                email = self.env['ir.mail_server'].build_email(
+                    email_from=self.env.user.email,
+                    email_to=emails,
+                    subject=subject, body=body,
+                )
+                self.env['ir.mail_server'].send_email(email)
+            except Exception as e:
+                _logger.error("Exception while sending traceback by email: %s.\n Original Traceback:\n%s", e, exception)
+                pass
+
+    @api.model
     def run(self, autocommit=False):
         schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])
         for scheduler in schedulers:
-            scheduler.execute()
-            if autocommit:
-                self.env.cr.commit()
+            try:
+                with self.env.cr.savepoint():
+                    scheduler.execute()
+            except Exception as e:
+                _logger.exception(e)
+                self.invalidate_cache()
+                self._warn_template_error(scheduler, e)
+            else:
+                if autocommit:
+                    self.env.cr.commit()
         return True
 
 

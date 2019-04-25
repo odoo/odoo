@@ -6,7 +6,7 @@ import math
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare
 
 class MrpProduction(models.Model):
@@ -31,6 +31,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_src_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     @api.model
@@ -40,6 +44,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_dest_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     name = fields.Char(
@@ -53,7 +61,7 @@ class MrpProduction(models.Model):
         domain=[('type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=True)
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
@@ -296,6 +304,10 @@ class MrpProduction(models.Model):
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
+        try:
+            location.check_access_rule('read')
+        except (AttributeError, AccessError):
+            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
@@ -389,7 +401,7 @@ class MrpProduction(models.Model):
             source_location = routing.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.product_qty - self.qty_produced
+        original_quantity = (self.product_qty - self.qty_produced) or 1.0
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
@@ -439,7 +451,11 @@ class MrpProduction(models.Model):
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
             if quantity > 0:
-                move[0].write({'product_uom_qty': quantity})
+                move[0]._decrease_reserved_quanity(quantity)
+                move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
+                move[0]._recompute_state()
+                move[0]._action_assign()
+                move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
             elif quantity < 0:  # Do not remove 0 lines
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
@@ -474,10 +490,16 @@ class MrpProduction(models.Model):
     @api.multi
     def _generate_workorders(self, exploded_boms):
         workorders = self.env['mrp.workorder']
+        original_one = False
         for bom, bom_data in exploded_boms:
             # If the routing of the parent BoM and phantom BoM are the same, don't recreate work orders, but use one master routing
             if bom.routing_id.id and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.routing_id.id != bom.routing_id.id):
-                workorders += self._workorders_create(bom, bom_data)
+                temp_workorders = self._workorders_create(bom, bom_data)
+                workorders += temp_workorders
+                if temp_workorders: # In order to avoid two "ending work orders"
+                    if original_one:
+                        temp_workorders[-1].next_work_order_id = original_one
+                    original_one = temp_workorders[0]
         return workorders
 
     def _workorders_create(self, bom, bom_data):
@@ -558,7 +580,7 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish._action_done()
-            #order.action_assign()
+            order.action_assign()
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
                 if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':

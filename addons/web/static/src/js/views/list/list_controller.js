@@ -42,7 +42,7 @@ var ListController = BasicController.extend({
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
-        this.selectedRecords = []; // there is no selected record by default
+        this.selectedRecords = params.selectedRecords || [];
     },
 
     //--------------------------------------------------------------------------
@@ -77,6 +77,14 @@ var ListController = BasicController.extend({
         } else {
             return $.Deferred().resolve();
         }
+    },
+    /*
+     * @override
+     */
+    getContext: function () {
+        var context = this._super.apply(this, arguments);
+        context.orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
+        return context;
     },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on
@@ -162,6 +170,26 @@ var ListController = BasicController.extend({
 
             this._toggleSidebar();
         }
+    },
+    /**
+     * Overrides to update the list of selected records
+     *
+     * @override
+     */
+    update: function (params, options) {
+        var self = this;
+        if (options && options.keepSelection) {
+            // filter out removed records from selection
+            var res_ids = this.model.get(this.handle).res_ids;
+            this.selectedRecords = _.filter(this.selectedRecords, function (id) {
+                return _.contains(res_ids, self.model.get(id).res_id);
+            });
+        } else {
+            this.selectedRecords = [];
+        }
+
+        params.selectedRecords = this.selectedRecords;
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -298,7 +326,6 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function () {
-        this.selectedRecords = [];
         this._toggleSidebar();
         return this._super.apply(this, arguments);
     },
@@ -501,7 +528,7 @@ var ListController = BasicController.extend({
     _onToggleGroup: function (event) {
         this.model
             .toggleGroup(event.data.group.id)
-            .then(this.update.bind(this, {}, {reload: false}));
+            .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));
     },
 });
 

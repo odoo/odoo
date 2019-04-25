@@ -6,6 +6,9 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+from lxml import etree
+import math
+
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
 import logging
@@ -123,7 +126,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
+        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 
 class FloatConverter(models.AbstractModel):
@@ -143,7 +146,7 @@ class FloatConverter(models.AbstractModel):
             value = float_utils.float_round(value, precision_digits=precision)
             fmt = '%.{precision}f'.format(precision=precision)
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'\u2011')
+        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -252,7 +255,17 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(value)
+        irQweb = self.env['ir.qweb']
+        # wrap value inside a body and parse it as HTML
+        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
+        # use pos processing for all nodes with attributes
+        for element in body.iter():
+            if element.attrib:
+                attrib = OrderedDict(element.attrib)
+                attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
+                element.attrib.clear()
+                element.attrib.update(attrib)
+        return etree.tostring(body, encoding='unicode', method='html')[6:-7]
 
 
 class ImageConverter(models.AbstractModel):
@@ -313,7 +326,7 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
+                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -355,8 +368,13 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        hours, minutes = divmod(value * 60, 60)
-        return '%02d:%02d' % (hours, minutes)
+        sign = math.copysign(1.0, value)
+        hours, minutes = divmod(abs(value) * 60, 60)
+        minutes = round(minutes)
+        if minutes == 60:
+            minutes = 0
+            hours += 1
+        return '%02d:%02d' % (sign * hours, minutes)
 
 
 class DurationConverter(models.AbstractModel):
@@ -476,7 +494,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val)
+        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options'))
 
 
 class QwebView(models.AbstractModel):

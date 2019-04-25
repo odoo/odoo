@@ -257,7 +257,6 @@ var ModelFieldSelector = Widget.extend({
 
         if (this.dirty) {
             this.dirty = false;
-            this.pages = this.pages.slice(0, this.chain.length || 1);
             this.trigger_up("field_chain_changed", {chain: this.chain});
         }
     },

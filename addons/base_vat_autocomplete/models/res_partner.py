@@ -12,6 +12,9 @@ _logger = logging.getLogger(__name__)
 
 try:
     import stdnum.eu.vat as stdnum_vat
+    if not hasattr(stdnum_vat, "country_codes"):
+        # stdnum version >= 1.9
+        stdnum_vat.country_codes = stdnum_vat._country_codes
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
     stdnum_vat = None
@@ -29,6 +32,11 @@ class ResPartner(models.Model):
                     cp = lines.pop()
                     city = lines.pop()
                     return (cp, city)
+            elif country == 'SE':
+                result = re.match('([0-9]{3}\s?[0-9]{2})\s?([A-Z]+)', lines[-1])
+                if result:
+                    lines.pop()
+                    return (result.group(1), result.group(2))
             else:
                 result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
                 if result:
@@ -46,7 +54,7 @@ class ResPartner(models.Model):
         for partner in self:
             # If a field is non set in this algorithm
             # wipe it anyway
-            non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
+            non_set_address_fields = set(['street2', 'city', 'zip', 'state_id', 'country_id'])
             if not partner.vat:
                 return {}
             if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
@@ -76,7 +84,8 @@ class ResPartner(models.Model):
                 if len(lines) == 1:
                     lines = [x.strip() for x in lines[0].split('   ') if x]
 
-                _set_address_field(partner, 'street', lines.pop(0))
+                vals = partner._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
+                partner.update(vals)
 
                 if len(lines) > 0:
                     res = _check_city(lines, result['countryCode'])

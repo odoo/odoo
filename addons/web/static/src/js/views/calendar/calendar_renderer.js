@@ -73,7 +73,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     self.model.get(recordID),
                     {
                         mode: 'edit',
-                        can_create: false,
+                        attrs: {can_create: false},
                     });
             });
             defs.push(def);
@@ -317,6 +317,11 @@ return AbstractRenderer.extend({
 
         this.$calendar = this.$(".o_calendar_widget");
 
+        // This seems like a workaround but apparently passing the locale
+        // in the options is not enough. We should initialize it beforehand
+        var locale = moment.locale();
+        $.fullCalendar.locale(locale);
+
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
             eventDrop: function (event) {
@@ -346,7 +351,8 @@ return AbstractRenderer.extend({
                 if (!event.allDay) {
                     var start = event.r_start || event.start;
                     var end = event.r_end || event.end;
-                    display_hour = start.format('HH:mm') + ' - ' + end.format('HH:mm');
+                    var timeFormat = _t.database.parameters.time_format.search("%H") != -1 ? 'HH:mm': 'h:mma';
+                    display_hour = start.format(timeFormat) + ' - ' + end.format(timeFormat);
                     if (display_hour === '00:00 - 00:00') {
                         display_hour = _t('All day');
                     }
@@ -369,6 +375,7 @@ return AbstractRenderer.extend({
             },
             height: 'parent',
             unselectAuto: false,
+            locale: locale, // reset locale when fullcalendar has already been instanciated before now
         });
 
         this.$calendar.fullCalendar(fc_options);

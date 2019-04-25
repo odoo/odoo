@@ -51,6 +51,7 @@ class ResourceMixin(models.AbstractModel):
         days_count = 0.0
         total_work_time = timedelta()
         calendar = calendar or self.resource_calendar_id
+        calendar = calendar.with_context(no_tz_convert=self.env.context.get('no_tz_convert', False))
         for day_intervals in calendar._iter_work_intervals(
                 from_datetime, to_datetime, self.resource_id.id,
                 compute_leaves=True):

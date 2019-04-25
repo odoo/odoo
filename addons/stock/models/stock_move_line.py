@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
-        help="Change to a better name")
+        help="Change to a better name", index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -52,7 +52,6 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
-    @api.one
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
@@ -142,7 +141,7 @@ class StockMoveLine(models.Model):
         """
         res = {}
         if self.qty_done and self.product_id.tracking == 'serial':
-            if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
+            if float_compare(self.qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
@@ -186,6 +185,8 @@ class StockMoveLine(models.Model):
 
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
+            if 'qty_done' in vals:
+                ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -269,7 +270,7 @@ class StockMoveLine(models.Model):
                             except UserError:
                                 pass
                     if new_product_qty != ml.product_qty:
-                        new_product_uom_qty = self.product_id.uom_id._compute_quantity(new_product_qty, self.product_uom_id, rounding_method='HALF-UP')
+                        new_product_uom_qty = ml.product_id.uom_id._compute_quantity(new_product_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
@@ -370,6 +371,15 @@ class StockMoveLine(models.Model):
         # `action_done` on the next move lines.
         ml_to_delete = self.env['stock.move.line']
         for ml in self:
+            # Check here if `ml.qty_done` respects the rounding of `ml.product_uom_id`.
+            uom_qty = float_round(ml.qty_done, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            qty_done = float_round(ml.qty_done, precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(uom_qty, qty_done, precision_digits=precision_digits) != 0:
+                raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision \
+                                  defined on the unit of measure "%s". Please change the quantity done or the \
+                                  rounding precision of your unit of measure.') % (ml.product_id.display_name, ml.product_uom_id.name))
+
             qty_done_float_compared = float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)
             if qty_done_float_compared > 0:
                 if ml.product_id.tracking != 'none':
@@ -500,6 +510,8 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
+                    if float_is_zero(quantity, precision_rounding=rounding):
+                        break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
@@ -507,8 +519,6 @@ class StockMoveLine(models.Model):
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()

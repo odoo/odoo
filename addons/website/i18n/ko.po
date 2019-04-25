@@ -3,19 +3,23 @@
 # * website
 # 
 # Translators:
-# Martin Trigaux, 2017
-# 최재호 <hwangtog@gmail.com>, 2017
-# Up Link <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2018
+# heejun lee <tkm01b@gmail.com>, 2018
+# Spike Lee <rurouni24@gmail.com>, 2018
+# Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:25+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,14 +29,20 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:724
+#: code:addons/website/static/src/js/editor/snippets.options.js:726
 #, python-format
 msgid " Add Images"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:233
-#: code:addons/website/models/website.py:302
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:315
 #, python-format
 msgid "%s (id:%s)"
 msgstr ""
@@ -58,7 +68,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:40
 #, python-format
 msgid "&nbsp;"
-msgstr ""
+msgstr "&nbsp;"
 
 #. module: website
 #. openerp-web
@@ -78,7 +88,7 @@ msgstr ""
 #: code:addons/website/models/website.py:743
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(복사)"
 
 #. module: website
 #. openerp-web
@@ -115,12 +125,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid ", author:"
-msgstr ""
+msgstr ", 작성자 :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid ", updated:"
-msgstr ""
+msgstr ", 갱신됨 :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -157,6 +167,12 @@ msgid "1s"
 msgstr "1s"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"sr-only\">(current)</span>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "24x7 toll-free support"
 msgstr "24 / 7 무료 전화 지원"
@@ -174,12 +190,12 @@ msgstr "3s"
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "403: Forbidden"
-msgstr ""
+msgstr "403: 접근 금지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
 msgid "404: Page not found!"
-msgstr ""
+msgstr "404: 페이지를 찾을 수 없습니다!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -189,7 +205,7 @@ msgstr "5s"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "<b>A Small Subtitle</b>"
-msgstr ""
+msgstr "<b>소제목</b>"
 
 #. module: website
 #. openerp-web
@@ -258,12 +274,12 @@ msgstr ""
 #. module: website
 #: model:ir.actions.act_window,help:website.action_module_theme
 msgid "<b>No theme module found!</b>"
-msgstr ""
+msgstr "<b>테마 모듈을 찾을 수 없습니다!</b>"
 
 #. module: website
 #: model:ir.actions.act_window,help:website.action_module_website
 msgid "<b>No website module found!</b>"
-msgstr ""
+msgstr "<b>웹사이트 모듈을 찾을 수 없습니다!</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -355,6 +371,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "                Add a language..."
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"언어추가..."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -395,6 +413,25 @@ msgstr "<i class=\"fa fa-trash\"></i>모든 이미지를 제거"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr "<i class=\"fa fa-trash-o\"></i>슬라이드를 제거"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid ""
+"<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\" "
+"aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\" aria-hidden=\"true\"/>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -466,6 +503,14 @@ msgstr ""
 " 쓰는 모든 것을 스토리로 들려 줄 수 있습니다. </ small>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"help-block text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid "<small>Author of this quote</small>"
 msgstr "<small>이 인용문 작성자 </ small>"
@@ -474,6 +519,12 @@ msgstr "<small>이 인용문 작성자 </ small>"
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid "<small>John Doe, CEO</small>"
 msgstr "<small>John Doe, CEO</small>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "<span class=\"badge mb4\">This is a badge</span>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -485,7 +536,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 지금설치"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -493,6 +544,8 @@ msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
 "                                <strong>Tips for a good domain:</strong>"
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
+"                                <strong>좋은 도메인 팁:</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -538,12 +591,18 @@ msgstr ""
 "                                    </span>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
 msgid ""
 "<span class=\"sr-only\">Toggle navigation</span>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "<span title=\"Mobile preview\" class=\"fa fa-mobile\"/>"
 msgstr ""
 
 #. module: website
@@ -832,18 +891,18 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid "A Great Headline"
-msgstr ""
+msgstr "훌륭한 제목"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "A Punchy Headline"
-msgstr ""
+msgstr "펀치 제목"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
 #: model:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
-msgstr ""
+msgstr "영역 소제목"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_published
@@ -860,7 +919,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid "A good subtitle"
-msgstr ""
+msgstr "좋은 소제목"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
@@ -892,12 +951,18 @@ msgstr "API 키"
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.page,arch_db:website.aboutus_page
 msgid "About us"
-msgstr ""
+msgstr "회사 소개"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "계정 &amp; 영업 관리"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Action"
+msgstr "조치"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_cdn_activated
@@ -933,19 +998,19 @@ msgstr "추가"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:49
 #, python-format
 msgid "Add Menu Entry"
-msgstr ""
+msgstr "메뉴 항목 추가"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Add a great slogan"
-msgstr ""
+msgstr "멋진 슬로건 추가"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/new_content.js:49
 #, python-format
 msgid "Add page in menu"
-msgstr ""
+msgstr "메뉴에서 페이지 추가"
 
 #. module: website
 #. openerp-web
@@ -989,6 +1054,12 @@ msgid "Aim for a .com and/or your country extension"
 msgstr ".com 및 / 또는 귀하의 국가 확장을 목표로 하십시오."
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
+msgstr "경고"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
 msgstr ""
@@ -1006,7 +1077,7 @@ msgstr ""
 msgid ""
 "All these icons are licensed under creative commons so that you can use "
 "them."
-msgstr ""
+msgstr "이 아이콘들은 모두 창의적인 공유지에서 사용 허가를 받아 사용할 수 있습니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1025,12 +1096,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "An error occured while rendering the template"
-msgstr ""
+msgstr "서식 파일을 만드는 동안 오류가 발생 했습니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
 msgid "And a great subtitle too"
-msgstr ""
+msgstr "그리고 멋진 소제목도"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1041,7 +1112,7 @@ msgstr "Twitter, Facebook, LinkedIn, Youtube 등 소셜 미디어에 알리기."
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Apply"
-msgstr ""
+msgstr "적용"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1051,12 +1122,12 @@ msgstr "데이터베이스 관리 페이지에서 웹 사이트에 적용하십�
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "보관용 파일명"
 
 #. module: website
 #. openerp-web
@@ -1068,7 +1139,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
 msgid "Attachment URL"
-msgstr ""
+msgstr "첨부 파일 URL"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1081,9 +1152,15 @@ msgid "Autoredirect Language"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_published
 msgid "Available on the Website"
-msgstr ""
+msgstr "웹 사이트에서 사용 가능"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1104,7 +1181,13 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Back"
-msgstr ""
+msgstr "뒤로"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
+msgstr "뱃지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1119,7 +1202,7 @@ msgstr "모바일 가능"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Beginner"
-msgstr ""
+msgstr "초보자"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1139,6 +1222,12 @@ msgid "Big"
 msgstr "Big"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Breadcrumb"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Build awareness and credibility"
 msgstr "인식과 신뢰 구축"
@@ -1147,6 +1236,12 @@ msgstr "인식과 신뢰 구축"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Building Profile"
 msgstr "프로필 만들기"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Button"
+msgstr "버튼"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1181,14 +1276,38 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Change Background"
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
+msgid "Change Background"
+msgstr "배경을 바꾸다"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Change Icons"
-msgstr ""
+msgstr "아이콘 변경"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1203,12 +1322,12 @@ msgstr "당신과 일하기로 결정하기 전에 참고 문헌을 확인하십
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_field_parent
 msgid "Child Field"
-msgstr ""
+msgstr "하위 필드"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_child_id
 msgid "Child Menus"
-msgstr ""
+msgstr "하위 메뉴"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
@@ -1224,7 +1343,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Circle"
-msgstr ""
+msgstr "원형"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1244,7 +1363,7 @@ msgstr "좋은 홈페이지를 펼치려면 여기를 클릭하십시오."
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Click on the icon to adapt it to your feature"
-msgstr ""
+msgstr "귀하의 기능에 맞게 아이콘을 클릭하십시오"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
@@ -1252,7 +1371,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website2_homepage_page_ir_ui_view
 #: model:website.page,arch_db:website.website2_homepage_page
 msgid "Click to customize this text"
-msgstr ""
+msgstr "이 텍스트를 커스터마이즈 하려면 클릭하십시오.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1262,7 +1381,7 @@ msgstr "고객 ID"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "고객 비밀키"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
@@ -1274,7 +1393,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.gallery.xml:51
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "닫기"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1301,12 +1420,18 @@ msgstr "회사"
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Company name"
-msgstr ""
+msgstr "회사명"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
 msgstr "모든 규모의 팀을 위한 완벽한 CRM"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Components"
+msgstr "구성 요소"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -1318,17 +1443,17 @@ msgstr "환경 설정"
 #: code:addons/website/static/src/js/editor/snippets.options.js:24
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "확정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "축하합니다, 완료했습니다!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
 msgid "Connect with us"
-msgstr ""
+msgstr "우리와 연결"
 
 #. module: website
 #: model:ir.model,name:website.model_res_partner
@@ -1339,7 +1464,7 @@ msgstr "연락처"
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
-msgstr ""
+msgstr "문의하기"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1358,7 +1483,7 @@ msgstr ""
 #: model:website.page,arch_db:website.website2_contactus_page
 #: model:website.page,arch_db:website.website2_homepage_page
 msgid "Contact us"
-msgstr ""
+msgstr "문의하기"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1368,12 +1493,12 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "Contact us about anything related to our company or services."
-msgstr ""
+msgstr "우리 회사 또는 서비스와 관련된 무엇이든 문의."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "Contact us »"
-msgstr ""
+msgstr "문의하기 »"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1391,7 +1516,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:26
 #, python-format
 msgid "Continue"
-msgstr ""
+msgstr "계속"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -1403,12 +1528,12 @@ msgstr "저작권 &amp; 사본;"
 #: code:addons/website/static/src/js/menu/content.js:328
 #, python-format
 msgid "Create Menu"
-msgstr ""
+msgstr "메뉴 작성"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid "Create Page"
-msgstr ""
+msgstr "페이지 작성"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1449,7 +1574,7 @@ msgstr "큐브"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
-msgstr ""
+msgstr "사용자 지정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1463,13 +1588,19 @@ msgstr "테마 사용자 정의"
 msgid ""
 "Customize any block through this menu. Try to change the background of the "
 "banner."
-msgstr ""
+msgstr "이 메뉴를 통해 블록을 커스터마이즈 하십시오. 배너의 배경을 변경하십시오."
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
 msgstr "알림"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Data"
+msgstr "데이터"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1489,13 +1620,13 @@ msgstr "기본 언어"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_id
 msgid "Default language"
-msgstr ""
+msgstr "기본 언어"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_code
 #: model:ir.model.fields,field_description:website.field_website_default_lang_code
 msgid "Default language code"
-msgstr ""
+msgstr "기본 언어 코드"
 
 #. module: website
 #. openerp-web
@@ -1507,7 +1638,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Delete Blocks"
-msgstr ""
+msgstr "블록 삭제"
 
 #. module: website
 #. openerp-web
@@ -1540,7 +1671,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.pageProperties.xml:32
 #, python-format
 msgid "Dependencies"
-msgstr ""
+msgstr "의존성"
 
 #. module: website
 #. openerp-web
@@ -1552,7 +1683,7 @@ msgstr "설명"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "디자인"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1560,9 +1691,15 @@ msgid "Disable autoplay"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Disabled"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/content.js:45
-#: code:addons/website/static/src/js/menu/seo.js:343
+#: code:addons/website/static/src/js/menu/seo.js:344
 #, python-format
 msgid "Discard"
 msgstr "폐기"
@@ -1570,12 +1707,12 @@ msgstr "폐기"
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Discuss and Comments"
-msgstr ""
+msgstr "토론 및 의견"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
 msgid "Discussion Group"
-msgstr ""
+msgstr "토론 그룹"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_display_name
@@ -1597,7 +1734,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Domain"
-msgstr ""
+msgstr "도메인"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1637,7 +1774,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:45
 #, python-format
 msgid "Drag a menu to the right to create a sub-menu"
-msgstr ""
+msgstr "하위 메뉴로 만들려면 메뉴를 오른쪽으로 끌기"
 
 #. module: website
 #. openerp-web
@@ -1654,14 +1791,20 @@ msgid "Drag the <i>Cover</i> block and drop it in your page."
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Duplicate"
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Dropdown"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
+msgid "Duplicate"
+msgstr "사본 생성"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Duplicate blocks to add more features."
-msgstr ""
+msgstr "더 많은 기능을 추가하기 위해 블록 복제."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1679,7 +1822,7 @@ msgstr "편집"
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
-msgstr ""
+msgstr "메뉴 편집"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1695,7 +1838,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.publish_management
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Edit in backend"
-msgstr ""
+msgstr "백엔드에서 편집"
 
 #. module: website
 #. openerp-web
@@ -1709,7 +1852,7 @@ msgstr ""
 msgid ""
 "Edit the content below this line to adapt the default \"page not found\" "
 "page."
-msgstr ""
+msgstr "\"페이지를 찾을 수 없음\" 기본 페이지에 적용하려면 이 라인 아래의 내용 편집."
 
 #. module: website
 #. openerp-web
@@ -1724,6 +1867,12 @@ msgid "Editor and Designer"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr ""
@@ -1731,17 +1880,23 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "End"
+msgstr "종료"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Enterprise package"
-msgstr ""
+msgstr "기업 패키지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Error"
-msgstr ""
+msgstr "오류"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1758,7 +1913,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Expert"
-msgstr ""
+msgstr "전문가"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_well
@@ -1766,26 +1921,34 @@ msgid ""
 "Explain the benefits you offer. Don't write about products or\n"
 "            services here, write about solutions."
 msgstr ""
+"귀하가 제공하는 이점을 설명합니다. 여기에 제품이나\n"
+"          서비스에 대해 쓰지 마시고 솔루션에 대해 쓰십시오."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_xml_id
 msgid "External ID"
-msgstr ""
+msgstr "외부 ID"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Extra Small"
+msgstr "매우 작은"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Extra-Large"
-msgstr ""
+msgstr "아주 크게"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_facebook
 msgid "Facebook Account"
-msgstr ""
+msgstr "페이스북 계정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
-msgstr ""
+msgstr "빠르게"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_favicon
@@ -1795,22 +1958,22 @@ msgstr "파비콘"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature One"
-msgstr ""
+msgstr "기능 1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature Three"
-msgstr ""
+msgstr "기능 3"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
 msgid "Feature Title"
-msgstr ""
+msgstr "기능 제목"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature Two"
-msgstr ""
+msgstr "기능 2"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model_fields
@@ -1832,17 +1995,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "First Feature"
-msgstr ""
+msgstr "첫 번째 기능"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fixed"
-msgstr ""
+msgstr "고정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Float"
-msgstr ""
+msgstr "부동 소수"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1859,7 +2022,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Footer"
-msgstr ""
+msgstr "꼬리말"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1874,6 +2037,14 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"Odoo 팀의 경우,<br/>\n"
+"                            Fabien Pinckaers, 설립자"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Form"
+msgstr "양식"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -1886,14 +2057,14 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Free"
-msgstr ""
+msgstr "무료"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid ""
 "From the main container, you can change the background to highlight "
 "features."
-msgstr ""
+msgstr "주요 컨테이너에서 기능을 강조하기 위해 배경을 변경할 수 있습니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -1903,7 +2074,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Gengo"
-msgstr ""
+msgstr "Gengo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1937,7 +2108,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_github
 msgid "GitHub Account"
-msgstr ""
+msgstr "GitHub 계정"
 
 #. module: website
 #. openerp-web
@@ -1991,13 +2162,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics
 #, python-format
 msgid "Google Analytics"
-msgstr ""
+msgstr "구글 웹로그 분석"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website_google_analytics_key
 msgid "Google Analytics Key"
-msgstr ""
+msgstr "Google 웹 로그 분석 키"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics_dashboard
@@ -2022,19 +2193,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_id
 #: model:ir.model.fields,field_description:website.field_website_google_management_client_id
 msgid "Google Client ID"
-msgstr ""
+msgstr "구글 고객 ID"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_secret
 #: model:ir.model.fields,field_description:website.field_website_google_management_client_secret
 msgid "Google Client Secret"
-msgstr ""
+msgstr "구글 고객 비밀키"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_maps
 #: model:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "구글 맵"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_google_maps_api_key
@@ -2049,19 +2220,19 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_googleplus
 msgid "Google+ Account"
-msgstr ""
+msgstr "Google+ 계정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Great Value"
-msgstr ""
+msgstr "훌륭한 가치"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
 #: model:website.page,arch_db:website.aboutus_page
 msgid "Great products for great people"
-msgstr ""
+msgstr "좋은 사람들을 위한 훌륭한 제품"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2076,7 +2247,7 @@ msgstr "그룹화"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_groups_id
 msgid "Groups"
-msgstr ""
+msgstr "그룹"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2092,6 +2263,48 @@ msgstr ""
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP routing"
 msgstr "HTTP 라우팅"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 1"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 2"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 3"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 4"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 5"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 6"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
@@ -2113,10 +2326,18 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
 #: model:website.menu,name:website.website2_menu_homepage
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Home"
+msgstr "홈"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"sr-only\">(current)</span>"
 msgstr ""
 
 #. module: website
@@ -2129,7 +2350,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 #, python-format
 msgid "Homepage"
-msgstr ""
+msgstr "홈페이지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website2_homepage
@@ -2167,7 +2388,7 @@ msgstr "ID"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_xml_id
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "xml 파일에 정의된 보기의 ID"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -2182,7 +2403,7 @@ msgstr ""
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
-msgstr ""
+msgstr "이 필드가 비어 있으면 보기가 모든 사용자에게 적용됩니다. 그렇지 않으면 보기가 해당 그룹의 사용자에게만 적용됩니다."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_active
@@ -2192,6 +2413,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"이 보기를 상속하면 다음과 같습니다.\n"
+"* True면 보기는 항상 상위 항목을 확장합니다.\n"
+"* False면 보기가 현재 상위 항목을 확장하지 않지만 활성화할 수 있습니다.\n"
+"         "
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2225,17 +2450,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.index_management
 #, python-format
 msgid "Indexed"
-msgstr ""
+msgstr "색인화"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Information about the"
-msgstr ""
+msgstr "정보"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_inherit_id
 msgid "Inherited View"
-msgstr ""
+msgstr "상속된 화면"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2245,7 +2470,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "언어 설치"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2260,12 +2485,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Applications"
-msgstr ""
+msgstr "설치된 응용프로그램"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Modules"
-msgstr ""
+msgstr "설치된 모듈"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2325,6 +2550,18 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "It’s time to grow your traffic!"
 msgstr ""
@@ -2332,12 +2569,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_button
 msgid "Join us and make your company a better place."
-msgstr ""
+msgstr "우리와 함께 귀하의 회사를 더 발전시키기."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_key
 msgid "Key"
-msgstr ""
+msgstr "키"
 
 #. module: website
 #. openerp-web
@@ -2347,10 +2584,16 @@ msgid "Keyword"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Label"
+msgstr "라벨"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
 #: model:ir.model.fields,field_description:website.field_website_language_ids
 msgid "Languages"
-msgstr ""
+msgstr "언어"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2358,9 +2601,11 @@ msgid "Languages available on your website"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.snippet_options
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Large"
-msgstr ""
+msgstr "크게"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website___last_update
@@ -2407,12 +2652,12 @@ msgstr "지난 주"
 #: code:addons/website/static/src/xml/website.backend.xml:111
 #, python-format
 msgid "Last Year"
-msgstr ""
+msgstr "지난 해"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Launch"
-msgstr ""
+msgstr "시작"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2422,7 +2667,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Left"
-msgstr ""
+msgstr "왼쪽"
 
 #. module: website
 #. openerp-web
@@ -2434,13 +2679,19 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "고객이 로그인하여 문서를 확인할 수 있습니다."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:5
 #, python-format
 msgid "Let's start designing."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Library"
 msgstr ""
 
 #. module: website
@@ -2451,9 +2702,17 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:55
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Link"
 msgstr "링크"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2465,7 +2724,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_linkedin
 msgid "LinkedIn Account"
-msgstr ""
+msgstr "링크드인 계정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -2475,14 +2734,14 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "List of Features"
-msgstr ""
+msgstr "기능 목록"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/seo.js:82
 #, python-format
 msgid "Loading..."
-msgstr ""
+msgstr "불러오는 중..."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
@@ -2493,7 +2752,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_id
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Main Menu"
-msgstr ""
+msgstr "주 메뉴"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2528,7 +2787,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 msgid "Maybe you were looking for one of these popular pages ?"
-msgstr ""
+msgstr "아마도 이 인기있는 페이지 중 하나를 찾고 있나요?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2545,20 +2804,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #, python-format
 msgid "Menu"
-msgstr ""
+msgstr "메뉴"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/content.js:338
 #, python-format
 msgid "Menu Label"
-msgstr ""
+msgstr "메뉴 이름표"
 
 #. module: website
 #: code:addons/website/models/website.py:243
 #, python-format
 msgid "Menus"
-msgstr ""
+msgstr "메뉴"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
@@ -2583,7 +2842,7 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/mobile_view.js:54
 #, python-format
 msgid "Mobile preview"
-msgstr ""
+msgstr "모바일 미리 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_model
@@ -2594,7 +2853,7 @@ msgstr "모델"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_model_data_id
 msgid "Model Data"
-msgstr ""
+msgstr "모델 데이터"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model
@@ -2606,7 +2865,7 @@ msgstr "모델"
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
 msgid "Most searched topics related to your keywords, ordered by importance:"
-msgstr ""
+msgstr "중요도로 정렬된 키워드와 관련된 대부분의 검색 주제 :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2663,38 +2922,46 @@ msgid "Namecheap"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Navbar"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:41
+#: code:addons/website/static/src/js/menu/new_content.js:42
 #: code:addons/website/static/src/xml/website.contentMenu.xml:58
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
-msgstr ""
+msgstr "새 페이지"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_new_window
 msgid "New Window"
-msgstr ""
+msgstr "새 창"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter"
-msgstr ""
+msgstr "뉴스레터"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.kanban_contain
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Next"
 msgstr "다음"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "No customization"
-msgstr ""
+msgstr "사용자화 없음"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "No support"
-msgstr ""
+msgstr "지원 없음"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2704,7 +2971,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #. module: website
 #. openerp-web
@@ -2716,7 +2983,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Note: To hide this page, uncheck it from the top Customize menu."
-msgstr ""
+msgstr "참고 : 이 페이지를 숨기려면 상단 사용자 지정 메뉴에서 이 페이지 선택을 해제하십시오."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_count
@@ -2731,12 +2998,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Objectives"
-msgstr ""
+msgstr "목표"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -2766,7 +3033,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
-msgstr ""
+msgstr "Odoo 버전"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -2819,11 +3086,17 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"이 보기가 다른 보기에서 상속된 경우에만 적용됩니다(inherit_id는 False/Null이 아님).\n"
+"\n"
+"* 확장자(기본값)가 요청된 경우, 이 보기가 가장 가까운 주 보기를 조회할 경우(상속자_id를 통해), 이 보기에서 상속하는 모든 보기가 적용됩니다.\n"
+"* 기본 보기가 완전히 해결된 경우(이 보기와 다른 모형을 사용하더라도) \n"
+"이 보기의 상속 사양(<xpath/>)이 적용되고\n"
+" 결과는 이 보기의 실제 아치인 것처럼 사용됩니다.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Open Source ERP"
-msgstr ""
+msgstr "ERP 소스 열기"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -2838,7 +3111,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Order now"
-msgstr ""
+msgstr "지금 주문"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2848,12 +3121,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Other Info"
-msgstr ""
+msgstr "기타 정보"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Our Offers"
-msgstr ""
+msgstr "우리의 제공 상품"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
@@ -2887,6 +3160,8 @@ msgid ""
 "Our products are designed for small to medium size companies willing to optimize\n"
 "                            their performance."
 msgstr ""
+"당사 제품은 성능을 최적화하고자 하는 작은 크기에서 중간 크기 정도의 회사를 위해 \n"
+"                           설계되었습니다."
 
 #. module: website
 #: code:addons/website/models/website.py:206
@@ -2896,7 +3171,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_page_ids
 #, python-format
 msgid "Page"
-msgstr ""
+msgstr "페이지"
 
 #. module: website
 #: code:addons/website/models/website.py:213
@@ -2947,11 +3222,17 @@ msgid "Page URL"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:208
-#: code:addons/website/models/website.py:277
+#: code:addons/website/models/website.py:221
+#: code:addons/website/models/website.py:290
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #, python-format
 msgid "Pages"
+msgstr "페이지"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
 msgstr ""
 
 #. module: website
@@ -2965,16 +3246,26 @@ msgid ""
 "Panels are a great tool to compare offers or to emphasize on\n"
 "                key features. To compare products, use the inside columns."
 msgstr ""
+"패널은 주문을 비교하거나 키 기능을 강조할 수 있는 훌륭한 도구입니다.\n"
+"               상품을 비교하기 위해 내부 열을 사용합니다."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_left
 msgid "Parent Left"
-msgstr ""
+msgstr "왼쪽 상위 요소"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_id
 msgid "Parent Menu"
-msgstr ""
+msgstr "상위 메뉴"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_right
@@ -2984,12 +3275,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_post
 msgid "Partner Detail"
-msgstr ""
+msgstr "파트너 정보"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "사용자의 협력사 관련 데이터"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
@@ -3009,12 +3300,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "People"
-msgstr ""
+msgstr "사용자"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
-msgstr ""
+msgstr "계획"
 
 #. module: website
 #: model:web.planner,tooltip_planner:website.planner_website
@@ -3026,7 +3317,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "기획자"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.theme_customize
@@ -3048,25 +3339,31 @@ msgstr "Powered by"
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
 msgid "Prev"
-msgstr ""
+msgstr "이전"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
 msgid "Preview"
-msgstr ""
+msgstr "미리 보기"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Previous"
+msgstr "이전"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Professional"
-msgstr ""
+msgstr "전문용"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Promote"
-msgstr ""
+msgstr "촉진"
 
 #. module: website
 #. openerp-web
@@ -3078,7 +3375,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote page on the web"
-msgstr ""
+msgstr "웹페이지에 홍보 페이지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3093,12 +3390,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_partner_id
 msgid "Public Partner"
-msgstr ""
+msgstr "일반 파트너"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_user_id
 msgid "Public User"
-msgstr ""
+msgstr "일반 사용자"
 
 #. module: website
 #. openerp-web
@@ -3106,7 +3403,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.pageProperties.xml:122
 #, python-format
 msgid "Publish"
-msgstr ""
+msgstr "발행"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3134,7 +3431,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.publish_short
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "게시됨"
 
 #. module: website
 #. openerp-web
@@ -3147,7 +3444,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3168,7 +3465,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Recipient"
-msgstr ""
+msgstr "수신인"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3246,12 +3543,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Reset selected templates"
-msgstr ""
+msgstr "선택한 서식 초기화"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Reset templates"
-msgstr ""
+msgstr "서식 초기화"
 
 #. module: website
 #: model:res.groups,name:website.group_website_publisher
@@ -3261,17 +3558,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Right"
-msgstr ""
+msgstr "오른쪽"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Rounded corners"
-msgstr ""
+msgstr "둥근 모서리"
 
 #. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
 msgid "SEO metadata"
-msgstr ""
+msgstr "검색 엔진 최적화 메타 데이터"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3281,16 +3578,22 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Sample images"
-msgstr ""
+msgstr "예제 이미지"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:96
 #: code:addons/website/static/src/js/menu/content.js:44
-#: code:addons/website/static/src/js/menu/seo.js:342
+#: code:addons/website/static/src/js/menu/seo.js:343
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "저장"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Search"
+msgstr "검색"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
@@ -3300,17 +3603,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_search_box
 msgid "Search..."
-msgstr ""
+msgstr "검색..."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
-msgstr ""
+msgstr "두 번째 기능"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Second List"
-msgstr ""
+msgstr "두 번째 목록"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3337,12 +3640,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Select and delete blocks to remove some features."
-msgstr ""
+msgstr "일부 기능을 제거하기 위해 블록을 선택하고 삭제하기."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
 msgid "Sell Online. Easily."
-msgstr ""
+msgstr "온라인 판매. 쉽게."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3357,7 +3660,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Send a Message to our Partners"
-msgstr ""
+msgstr "파트너에게 메시지 보내기"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3372,6 +3675,12 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "Send us an email"
+msgstr "이메일 보내기"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
 msgstr ""
 
 #. module: website
@@ -3407,7 +3716,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_ir_ui_view_customize_show
 #: model:ir.model.fields,field_description:website.field_website_page_customize_show
 msgid "Show As Optional Inherit"
-msgstr ""
+msgstr "선택사항으로 상속 보기"
 
 #. module: website
 #. openerp-web
@@ -3439,27 +3748,35 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Slow"
-msgstr ""
+msgstr "천천히"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.snippet_options
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Small"
-msgstr ""
+msgstr "작게"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_company_form_inherit_website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Social Media"
+msgstr "소셜 미디어"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: code:addons/website/controllers/main.py:219
 #, python-format
 msgid "Sort by Name"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:217
+#: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Url"
 msgstr ""
@@ -3480,7 +3797,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Starter package"
-msgstr ""
+msgstr "시작 패키지"
 
 #. module: website
 #. openerp-web
@@ -3492,17 +3809,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle"
-msgstr ""
+msgstr "소제목"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle 2"
-msgstr ""
+msgstr "소제목 2"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle 3"
-msgstr ""
+msgstr "소제목 3"
 
 #. module: website
 #. openerp-web
@@ -3519,13 +3836,13 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Technical name:"
-msgstr ""
+msgstr "기술적 명칭 :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid ""
 "Tell features the visitor would like to know, not what you'd like to say."
-msgstr ""
+msgstr "말하고 싶지 않지만 방문자가 알고 싶어하는 기능 말하기."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -3554,14 +3871,14 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Template fallback"
-msgstr ""
+msgstr "서식 대체"
 
 #. module: website
 #: code:addons/website/models/website.py:227
 #: code:addons/website/models/website.py:297
 #, python-format
 msgid "Templates"
-msgstr ""
+msgstr "서식"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3571,7 +3888,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_post
 msgid "Thank you for posting a message !"
-msgstr ""
+msgstr "메시지를 게시해 주셔서 감사합니다!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3581,12 +3898,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The error occured while rendering the template"
-msgstr ""
+msgstr "서식 파일을 만드는 동안 오류가 발생 했습니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The following error was raised in the website controller"
-msgstr ""
+msgstr "웹사이트 컨트롤러에서 다음과 같은 오류 발생"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_blog_post_website_url
@@ -3610,12 +3927,12 @@ msgstr "웹사이트를 통해 문서에 접근 하는 전체 URL입니다."
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_url
 msgid "The full URL to access the server action through the website."
-msgstr ""
+msgstr "웹사이트를 통해 서버 작업에 접근하는 전체 URL입니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "The page you were looking for could not be authorized."
-msgstr ""
+msgstr "당신이 찾는 페이지에 권한을 부여 할 수 없습니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
@@ -3628,7 +3945,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "The selected templates will be reset to their factory settings."
-msgstr ""
+msgstr "선택한 서식을 최초 설정으로 초기화합니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3665,7 +3982,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Third Feature"
-msgstr ""
+msgstr "제 3의 기능"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3684,6 +4001,12 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_config_settings_default_lang_code
 #: model:ir.model.fields,help:website.field_website_default_lang_code
 msgid "This field is used to set/get locales for user"
+msgstr "이 필드는 사용자에 대한 로컬 설정을 설정하거나 가져 오는 데 사용됩니다."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
 msgstr ""
 
 #. module: website
@@ -3694,7 +4017,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:259
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr ""
@@ -3725,6 +4048,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Toggle <span class=\"caret\"/>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
 msgstr ""
@@ -3736,12 +4065,12 @@ msgstr ""
 #: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
-msgstr ""
+msgstr "상단 메뉴"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Traceback"
-msgstr ""
+msgstr "역 추적"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3763,7 +4092,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Translate"
-msgstr ""
+msgstr "번역"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3775,7 +4104,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_twitter
 msgid "Twitter Account"
-msgstr ""
+msgstr "트위터 계정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
@@ -3788,7 +4117,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.snippet_options
 #, python-format
 msgid "Type"
-msgstr ""
+msgstr "유형"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -3804,7 +4133,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "UA-XXXXXXXX-Y"
-msgstr ""
+msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings_cdn_filters
@@ -3839,7 +4168,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.publish_short
 #, python-format
 msgid "Unpublished"
-msgstr ""
+msgstr "게시 안 함"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3852,7 +4181,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_url
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3891,45 +4220,51 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Fast"
-msgstr ""
+msgstr "매우 빠르게"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Slow"
-msgstr ""
+msgstr "매우 느리게"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_view_id
 msgid "View"
-msgstr ""
+msgstr "화면"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch
 #: model:ir.model.fields,field_description:website.field_website_page_arch_base
 msgid "View Architecture"
-msgstr ""
+msgstr "구조 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_name
 msgid "View Name"
-msgstr ""
+msgstr "보기 이름"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_type
 msgid "View Type"
-msgstr ""
+msgstr "유형 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "상속 모드 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "이것을 상속한 보기"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_published
@@ -3979,6 +4314,9 @@ msgid ""
 "                            life through disruptive products. We build great products to solve your\n"
 "                            business problems."
 msgstr ""
+"우리는 혁신적인 제품을 통해 사람들의 삶을 개선하고자 하는 열정적인 사람들의 팀입니다.\n"
+"                           우리는 귀하의 비즈니스 문제를 해결하는 훌륭한 제품을 \n"
+"                           구축할 수 있습니다."
 
 #. module: website
 #. openerp-web
@@ -4000,7 +4338,7 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "We'll do our best to get back to you as soon as possible."
-msgstr ""
+msgstr "우리는 가능한 한 빨리 다시 연락하기 위해 최선을 다하겠습니다."
 
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website
@@ -4018,7 +4356,7 @@ msgstr "웹사이트"
 #. module: website
 #: model:ir.actions.act_window,name:website.action_module_website
 msgid "Website Apps"
-msgstr ""
+msgstr "웹사이트 앱"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
@@ -4033,19 +4371,19 @@ msgstr ""
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_homepage
 msgid "Website Homepage"
-msgstr ""
+msgstr "웹사이트 홈페이지"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
 #: model:ir.model,name:website.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "웹사이트 메뉴"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_website_name
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
-msgstr ""
+msgstr "웹사이트 이름"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
@@ -4061,7 +4399,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
 msgid "Website Path"
-msgstr ""
+msgstr "웹사이트 경로"
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
@@ -4082,7 +4420,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Website Settings"
-msgstr ""
+msgstr "웹사이트 설정"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_module_theme
@@ -4111,12 +4449,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_url
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "웹 사이트 URL"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
 msgid "Website Url"
-msgstr ""
+msgstr "웹사이트 URL"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4129,7 +4467,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr ""
+msgstr "웹사이트 메뉴"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_description
@@ -4151,7 +4489,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "웹사이트 메타 설명"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_keywords
@@ -4173,7 +4511,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "웹사이트 메타 핵심어"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_title
@@ -4195,7 +4533,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "웹사이트 메타 제목"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
@@ -4216,12 +4554,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_ids
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
-msgstr ""
+msgstr "웹사이트"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
 msgid "Websites to translate"
-msgstr ""
+msgstr "웹사이트 번역"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4293,7 +4631,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
 msgid "Write one sentence to convince visitor about your message."
-msgstr ""
+msgstr "귀하의 메시지에 대해 방문자를 설득할 문장을 작성합니다."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -4350,7 +4688,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:website.action_module_theme
 #: model:ir.actions.act_window,help:website.action_module_website
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "다른 검색 기준을 시도해 볼 수 있습니다."
 
 #. module: website
 #. openerp-web
@@ -4374,7 +4712,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
 msgid "Your Website Title"
-msgstr ""
+msgstr "귀하의 웹사이트 제목"
 
 #. module: website
 #. openerp-web
@@ -4414,7 +4752,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_youtube
 msgid "Youtube Account"
-msgstr ""
+msgstr "유튜브 계정"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4431,7 +4769,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "and evaluating the following expression:"
-msgstr ""
+msgstr "및 다음 식을 평가 :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4448,7 +4786,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
 msgid "describing your page content"
-msgstr ""
+msgstr "페이지 내용 설명"
 
 #. module: website
 #. openerp-web
@@ -4499,12 +4837,12 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
 msgid "how your page will be listed on Google"
-msgstr ""
+msgstr "어떻게 귀하의 페이지가 Google에 나열될까요"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://plus.google.com/+Odooapps"
-msgstr ""
+msgstr "https://plus.google.com/+Odooapps"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -4529,7 +4867,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://youraccount.github.io"
-msgstr ""
+msgstr "https://youraccount.github.io"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4539,12 +4877,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "instance of Odoo, the"
-msgstr ""
+msgstr "Odoo의 경우, "
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_attachment
@@ -4567,6 +4905,12 @@ msgid "learn how people find your website,"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "make optimizations for Google referencing."
 msgstr ""
@@ -4574,17 +4918,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "name"
-msgstr ""
+msgstr "이름"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "or Edit Master"
-msgstr ""
+msgstr "또는 마스터 편집"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "page"
-msgstr ""
+msgstr "페이지"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4611,7 +4955,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
 msgid "sitemap.xml"
-msgstr ""
+msgstr "sitemap.xml"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4656,7 +5000,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings_website_id
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "website"
-msgstr ""
+msgstr "웹 사이트"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
@@ -4671,4 +5015,4 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "yes"
-msgstr ""
+msgstr "예"

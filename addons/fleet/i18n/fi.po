@@ -3,25 +3,26 @@
 # * fleet
 # 
 # Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Miku Laitinen <miku.laitinen@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
 # Jussi Lehto <jussi@gulfeo.com>, 2017
-# Mikko Salmela <salmemik@gmail.com>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
-# Timo Koukkari <ti.ko@netikka.fi>, 2017
+# Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Tommi Rintala <tommi.rintala@gmail.com>, 2017
+# Timo Koukkari <ti.ko@netikka.fi>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Martin Trigaux, 2017
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
+#: code:addons/fleet/models/fleet_vehicle.py:199
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s on lisätty kalustoon!"
@@ -633,7 +634,7 @@ msgid "Driver of the vehicle"
 msgstr "Ajoneuvon kuljettaja"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:217
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Kuljettaja: kohteesta '%s' kohteeseen '%s'"
@@ -896,10 +897,10 @@ msgstr "Hybridi"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3068
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3057
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3082
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3071
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2903
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2917
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "Tunniste (ID)"
@@ -995,6 +996,11 @@ msgid "Km"
 msgstr ""
 
 #. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost___last_update
@@ -1055,7 +1061,7 @@ msgid "License Plate"
 msgstr "Rekisterikilpi"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
+#: code:addons/fleet/models/fleet_vehicle.py:224
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr ""
@@ -1195,7 +1201,7 @@ msgid "Model of the vehicle"
 msgstr "Ajoneuvon malli"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:213
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Malli: kohteesta '%s' kohteeseen '%s'"
@@ -1239,10 +1245,16 @@ msgid "No"
 msgstr "Ei"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:81
+#, python-format
+msgid "No Plate"
+msgstr ""
+
+#. module: fleet
+#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:223
 #, python-format
 msgid "None"
 msgstr "Ei mitään"
@@ -1677,7 +1689,7 @@ msgid "State name already exists"
 msgstr "Tilan nimi on jo olemassa"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:221
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Tila: kohteesta '%s' kohteeseen '%s'"
@@ -1828,7 +1840,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2906
 msgid "Unit"
 msgstr "Yksikkö"
 
@@ -1838,7 +1850,7 @@ msgstr "Yksikkö"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2906
 msgid "Unit of the odometer "
 msgstr ""
 

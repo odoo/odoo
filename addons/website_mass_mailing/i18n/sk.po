@@ -4,24 +4,28 @@
 # 
 # Translators:
 # gebri <gebri@inmail.sk>, 2018
+# Matus Krnac <matus.krnac@gmail.com>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Stefan Stieranka <stieranka@itec.sk>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:27+0000\n"
+"Last-Translator: Stefan Stieranka <stieranka@itec.sk>, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -29,30 +33,32 @@ msgid ""
 "<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
 "active on this page. Click"
 msgstr ""
+"<strong>Informačný leták!</strong> Náhľad informačného letáku je aktívny na "
+"tejto stránke. Klik"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr ""
+msgstr "Pridať Tlačidlo pre informačný leták"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr ""
+msgstr "Pridať náhľad informačného letáku"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
-msgstr ""
+msgstr "Zmeniť informačný leták"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "Choose your mailing subscriptions."
-msgstr ""
+msgstr "Vybrať Váš odber správ."
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
@@ -68,17 +74,22 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
-msgstr ""
+msgstr "Editovať obsah dialógu"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
 msgid "Mailing List"
-msgstr ""
+msgstr "Poštový adresár"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 msgid "Mailing Subscriptions"
+msgstr "Odber správ"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
+msgid "Update my subscriptions"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -86,28 +97,28 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
-msgstr ""
+msgstr "Informačný leták"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
 msgid "Popup Content"
-msgstr ""
+msgstr "Vyskakovací obsah"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
-msgstr ""
+msgstr "Odoberať"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
-msgstr ""
+msgstr "Ďakujem"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
-msgstr ""
+msgstr "Ďakujeme za prihlásenie sa k odberu!"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
@@ -122,12 +133,13 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
 msgid "Type Here ..."
-msgstr ""
+msgstr "Napíšte tu ..."
 
 #. module: website_mass_mailing
 #: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
 msgid "Use subscription pop up on the website"
 msgstr ""
+"Použiť vyskakovacie okno prihlásenia sa na odber na webových stránkach"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
@@ -137,17 +149,17 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
 msgid "Website Popup Content"
-msgstr ""
+msgstr "Obsah vyskakovacieho okna webovej stránky"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
 msgid "Website Popup Redirect URL"
-msgstr ""
+msgstr "Presmerovanie URL vyskakovacieho okna webovej stránky"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
-msgstr ""
+msgstr "Nie ste prihlásený k žiadnemu odberu v nášho mailing listu."
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
@@ -159,22 +171,22 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
 #, python-format
 msgid "Your changes have been saved."
-msgstr ""
+msgstr "Vaše zmeny boli uložené."
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
 #, python-format
 msgid "Your changes have not been saved, try again later."
-msgstr ""
+msgstr "Vaše zmenu nemôžu byť uložené, skúste to neskôr."
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr ""
+msgstr "Váš email..."

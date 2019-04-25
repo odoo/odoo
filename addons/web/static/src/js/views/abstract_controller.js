@@ -12,6 +12,7 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
+var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
 
 
@@ -41,6 +42,9 @@ var AbstractController = Widget.extend({
         this.handle = params.handle;
         this.activeActions = params.activeActions;
         this.initialState = params.initialState;
+
+        // use a DropPrevious to correctly handle concurrent updates
+        this.dp = new concurrency.DropPrevious();
     },
     /**
      * Simply renders and updates the url.
@@ -206,11 +210,11 @@ var AbstractController = Widget.extend({
         var self = this;
         var shouldReload = (options && 'reload' in options) ? options.reload : true;
         var def = shouldReload ? this.model.reload(this.handle, params) : $.when();
-        return def.then(function (handle) {
+        return this.dp.add(def).then(function (handle) {
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
-            return self.renderer.updateState(state, params).then(function () {
+            return self.dp.add(self.renderer.updateState(state, params)).then(function () {
                 self.renderer.setLocalState(localState);
                 self._update(state);
             });

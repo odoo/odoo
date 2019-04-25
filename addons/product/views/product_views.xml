@@ -51,13 +51,14 @@
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>
@@ -86,10 +87,15 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                             </group>
                         </page>
                         <page string="Notes" name="notes">
+                            <group name="description_internal">
+                                <group string="Description for Internal">
+                                    <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
+                                </group>
+                            </group>
                             <group name="description">
                                 <group string="Description for Customers" attrs="{'invisible': [('sale_ok','=',False)]}">
                                     <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders."/>
@@ -224,8 +230,9 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                 <field name="currency_id" invisible='1'/>
+                                <field name="cost_currency_id" invisible="1"/>
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
@@ -498,6 +505,18 @@
             </field>
         </record>
 
+        <!-- Don't forward port in V >= saas-11.5 -->
+        <record id="product_packaging_form_view2" model="ir.ui.view">
+            <field name="name">product.packaging.form.view2</field>
+            <field name="model">product.packaging</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="replace"/>
+                <xpath expr="//field[@name='id']" position="replace"/>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_packaging_view">
             <field name="name">Product Packages</field>
             <field name="res_model">product.packaging</field>
@@ -515,7 +534,7 @@
                     <group>
                         <group string="Vendor">
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
+                            <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>

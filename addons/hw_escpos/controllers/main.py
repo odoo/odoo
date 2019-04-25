@@ -8,6 +8,7 @@ import os
 import os.path
 import subprocess
 import time
+import netifaces as ni
 import traceback
 
 try: 
@@ -29,8 +30,9 @@ except ImportError:
     usb = None
 
 from odoo import http, _
-
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
+
+from uuid import getnode as get_mac
 
 _logger = logging.getLogger(__name__)
 
@@ -196,10 +198,18 @@ class EscposDriver(Thread):
     def print_status(self,eprint):
         localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
         hosting_ap = os.system('pgrep hostapd') == 0
-        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
-        mac = subprocess.check_output('ifconfig | grep -B 1 \'inet addr\' | grep -o \'HWaddr .*\' | sed \'s/HWaddr //\'', shell=True).rstrip()
-        ips =  [ c.split(':')[1].split(' ')[0] for c in subprocess.check_output("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
-        ips =  [ ip for ip in ips if ip not in localips ] 
+        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
+        mac = get_mac()
+        h = iter(hex(mac)[2:].zfill(12))
+        mac = ":".join(i + next(h) for i in h)
+        interfaces = ni.interfaces()
+        ips = []
+        for iface_id in interfaces:
+            iface_obj = ni.ifaddresses(iface_id)
+            ifconfigs = iface_obj.get(ni.AF_INET, [])
+            for conf in ifconfigs:
+                if conf.get('addr'):
+                    ips.append(conf.get('addr'))
         eprint.text('\n\n')
         eprint.set(align='center',type='b',height=2,width=2)
         eprint.text('PosBox Status\n')
@@ -221,8 +231,10 @@ class EscposDriver(Thread):
                 eprint.text(ip+'\n')
 
         if len(ips) >= 1:
-            eprint.text('\nMAC Address:\n' + mac + '\n')
-            eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
+            ips_filtered = [i for i in ips if i != '127.0.0.1']
+            main_ips = ips_filtered and ips_filtered[0] or '127.0.0.1'
+            eprint.text('\nMAC Address:\n' + str(mac) + '\n')
+            eprint.text('\nHomepage:\nhttp://' + main_ips + ':8069\n')
 
         eprint.text('\n\n')
         eprint.cut()

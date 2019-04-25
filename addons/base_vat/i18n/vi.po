@@ -3,21 +3,33 @@
 # * base_vat
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
+# Martin Trigaux, 2017
+# Duy BQ <duybq86@gmail.com>, 2018
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -35,6 +47,9 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Nếu ô này được đánh dấu, bạn sẽ không thể lưu các liên hệ mà có mã số thuế "
+"không thể thẩm định được bởi dịch vụ European VIES (một hệ thống trao đổi "
+"thông tin VAT của châu Âu)"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:134
@@ -43,6 +58,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] dường như không hợp lệ.\n"
+"Lưu ý: định dạng được mong đợi là %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -51,6 +68,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] hoặc không thẩm định thành công được "
+"với VIES hoặc không thoả mãn định dạng mong đợi %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -62,14 +81,14 @@ msgstr "Thuế GTGT"
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Thẩm định Mã số Thuế GTGT"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Thẩm định Mã số Thuế GTGT sử dụng dịch vụ European VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

@@ -159,6 +159,9 @@
         }
 
         /* info popover */
+        .popover {
+            max-width: none;
+        }
 
         table.details {
             vertical-align: top;
@@ -209,6 +212,7 @@
         }
         &[data-mode="match"] > .match {
             max-height: none;
+            overflow: visible;
             .o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {
@@ -268,6 +272,10 @@
             overflow: auto;
             border: 1px solid #ddd;
             border-radius: 5px;
+            > div.quick_add > .o_reconcile_models {
+                max-height: 54px;
+                overflow: auto;
+            }
         }
         table {
             width: 49%;

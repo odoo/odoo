@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -197,9 +197,9 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', _('On invitation only')),
-            ('employees', _('Visible by all employees')),
-            ('portal', _('Visible by following customers')),
+            ('followers', 'On invitation only'),
+            ('employees', 'Visible by all employees'),
+            ('portal', 'Visible by following customers'),
         ],
         string='Privacy', required=True,
         default='employees',
@@ -228,7 +228,9 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
-        for task in self.tasks:
+        # We want to copy archived task, but do not propagate an active_test context key
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
                         'name': task.name}
@@ -239,7 +241,6 @@ class Project(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        self = self.with_context(active_test=False)
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
@@ -456,7 +457,7 @@ class Task(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
@@ -473,7 +474,7 @@ class Task(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
-            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
@@ -548,6 +549,12 @@ class Task(models.Model):
     def _compute_subtask_count(self):
         for task in self:
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
+
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        for task in self:
+            if not task._check_recursion():
+                raise ValidationError(_('Error! You cannot create recursive hierarchy of task(s).'))
 
     @api.constrains('parent_id')
     def _check_subtask_project(self):
@@ -747,7 +754,7 @@ class Task(models.Model):
 
         groups = [new_group] + groups
         for group_name, group_method, group_data in groups:
-            if group_name in ['customer', 'portal']:
+            if group_name == 'customer':
                 continue
             group_data['has_button_access'] = True
 
@@ -825,12 +832,12 @@ class Task(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(Task, self).message_get_suggested_recipients()
-        for task in self.filtered('partner_id'):
-            reason = _('Customer Email') if task.partner_id.email else _('Customer')
+        for task in self:
             if task.partner_id:
+                reason = _('Customer Email') if task.partner_id.email else _('Customer')
                 task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
             elif task.email_from:
-                task._message_add_suggested_recipient(recipients, partner=task.email_from, reason=reason)
+                task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
     @api.multi
@@ -876,6 +883,20 @@ class Task(models.Model):
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window'
         }
+
+    def action_subtask(self):
+        action = self.env.ref('project.project_task_action_sub_task').read()[0]
+        ctx = self.env.context.copy()
+        ctx.update({
+            'default_parent_id' : self.id,
+            'default_project_id' : self.env.context.get('project_id', self.subtask_project_id.id),
+            'default_name' : self.env.context.get('name', self.name) + ':',
+            'default_partner_id' : self.env.context.get('partner_id', self.partner_id.id),
+            'search_default_project_id': self.env.context.get('project_id', self.subtask_project_id.id),
+        })
+        action['context'] = ctx
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        return action
 
 
 class AccountAnalyticAccount(models.Model):

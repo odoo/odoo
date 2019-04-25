@@ -6,13 +6,16 @@
 # Martin Trigaux, 2017
 # Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
+# Mari Løken <inactive+mari123@transifex.com>, 2018
+# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
+# Aleksander, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Viktor Basso <viktor@voit.no>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Aleksander, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -834,6 +837,9 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Tillegg som blir vist når kunden ser på handlevognen før betaling (kryssalg "
+"strategi, for eksempel for datamaskiner: mus, tastatur etc). En algoritme "
+"finner tillegg basert på alle produktene som blir lagt i handlevognen."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1880,7 +1886,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr "Installerer *Lagerbeholdning for nettbutikk*"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:502
+#: code:addons/website_sale/controllers/main.py:518
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Ugyldig epostadresse! Vennligst legg inn en gyldig adresse."
@@ -1907,7 +1913,7 @@ msgid "Issue invoices to customers"
 msgstr "Utsted fakturaer til kunder"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:146
+#: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr "Det er forbudt å endre en salgsordre som ikke har status som utkast"
@@ -2062,11 +2068,6 @@ msgid "Manage promotion &amp; coupon programs"
 msgstr "Administrer kampanje- og kupong-programmer"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
-msgid "Mark as Paid"
-msgstr "Sett til betalt"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "Mellomstort bilde"
@@ -2146,7 +2147,7 @@ msgstr "Nettverk"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:968
+#: code:addons/website_sale/controllers/main.py:988
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2258,6 +2259,8 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr ""
+"Ordrelinjer som skal vises på nettsiden. De bør ikke benyttes til "
+"beregninger."
 
 #. module: website_sale
 #. openerp-web
@@ -2295,7 +2298,7 @@ msgid "Parent Category"
 msgstr "Underkategori av"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:756
+#: code:addons/website_sale/controllers/main.py:774
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
@@ -3048,7 +3051,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:520
+#: code:addons/website_sale/controllers/main.py:536
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Noen påkrevde felt er tomme."
@@ -3127,6 +3130,8 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Foreslå dyrere alternativer til dine kunder (oppsalgsstrategi). Disse "
+"produktene blir vist på produktsiden."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3170,7 +3175,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Tax ID"
-msgstr ""
+msgstr "MVA-nummer"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3244,6 +3249,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings_automatic_invoice
+msgid ""
+"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
+"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
+"This mode is advised if you issue the final invoice at the order and not after the delivery."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
@@ -3251,7 +3264,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:247
+#: code:addons/website_sale/models/sale_order.py:258
 #, python-format
 msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "

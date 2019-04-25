@@ -32,14 +32,14 @@ class AccountChartTemplate(models.Model):
             for element in in_ids.with_context(lang=None):
                 if value[element.id]:
                     #copy Translation from Source to Destination object
-                    xlat_obj.create({
-                        'name': out_ids._name + ',' + in_field,
-                        'type': 'model',
-                        'res_id': out_ids[counter].id,
-                        'lang': lang,
-                        'src': element[in_field],
-                        'value': value[element.id],
-                    })
+                    xlat_obj._set_ids(
+                        out_ids._name + ',' + in_field,
+                        'model',
+                        lang,
+                        out_ids[counter].ids,
+                        value[element.id],
+                        element[in_field]
+                    )
                 else:
                     _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, element[in_field]))
                 counter += 1

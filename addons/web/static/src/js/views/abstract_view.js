@@ -98,6 +98,7 @@ var AbstractView = Class.extend({
             modelName: params.modelName,
             res_id: params.currentId,
             res_ids: params.ids,
+            orderedBy: params.context ? params.context.orderedBy : [],
         };
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;
@@ -224,6 +225,14 @@ var AbstractView = Class.extend({
 
             _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
                 var field = fields[fieldName];
+                if (!field) {
+                    // when a one2many record is opened in a form view, the fields
+                    // of the main one2many view (list or kanban) are added to the
+                    // fieldsInfo of its form view, but those fields aren't in the
+                    // loadParams.fields, as they are not displayed in the view, so
+                    // we can ignore them.
+                    return;
+                }
                 if (field.type !== 'one2many' && field.type !== 'many2many') {
                     return;
                 }
@@ -270,5 +279,37 @@ var AbstractView = Class.extend({
 });
 
 return AbstractView;
+
+});
+
+odoo.define('web.viewUtils', function () {
+"use strict";
+
+/**
+ * FIXME: move this module to its own file in master
+ */
+
+var utils = {
+    /**
+     * States whether or not the quick create feature is available for the given
+     * datapoint, depending on its groupBy field.
+     *
+     * @param {Object} list dataPoint of type list
+     * @returns {Boolean} true iff the kanban quick create feature is available
+     */
+    isQuickCreateEnabled: function (list) {
+        var groupByField = list.groupedBy[0] && list.groupedBy[0].split(':')[0];
+        if (!groupByField) {
+            return false;
+        }
+        var availableTypes = ['char', 'boolean', 'many2one'];
+        if (!_.contains(availableTypes, list.fields[groupByField].type)) {
+            return false;
+        }
+        return true;
+    },
+};
+
+return utils;
 
 });

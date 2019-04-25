@@ -23,6 +23,7 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from collections import OrderedDict
 
 
 _logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ def _get_wkhtmltopdf_bin():
 
 # Check the presence of Wkhtmltopdf and return its version at Odoo start-up
 wkhtmltopdf_state = 'install'
+wkhtmltopdf_dpi_zoom_ratio = False
 try:
     process = subprocess.Popen(
         [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -61,6 +63,8 @@ else:
             wkhtmltopdf_state = 'upgrade'
         else:
             wkhtmltopdf_state = 'ok'
+        if LooseVersion(version) >= LooseVersion('0.12.2'):
+            wkhtmltopdf_dpi_zoom_ratio = True
 
         if config['workers'] == 1:
             _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
@@ -206,7 +210,7 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: A list of string representing the wkhtmltopdf process command args.
         '''
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
@@ -234,14 +238,19 @@ class IrActionsReport(models.Model):
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
 
+            dpi = None
             if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+                dpi = int(specific_paperformat_args['data-report-dpi'])
             elif paperformat_id.dpi:
                 if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
                     _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    command_args.extend(['--dpi', '96'])
+                    dpi = 96
                 else:
-                    command_args.extend(['--dpi', str(paperformat_id.dpi)])
+                    dpi = paperformat_id.dpi
+            if dpi:
+                command_args.extend(['--dpi', str(dpi)])
+                if wkhtmltopdf_dpi_zoom_ratio:
+                    command_args.extend(['--zoom', str(96.0 / dpi)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
@@ -519,20 +528,24 @@ class IrActionsReport(models.Model):
                     # we look on the pdf structure using pypdf to compute the outlines_pages that is
                     # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
                     reader = PdfFileReader(pdf_content_stream)
-                    outlines_pages = sorted(
-                        [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
-                    assert len(outlines_pages) == len(res_ids)
-                    for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                        attachment_writer = PdfFileWriter()
-                        for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
-                        stream = io.BytesIO()
-                        attachment_writer.write(stream)
-                        if res_ids[i] and res_ids[i] not in save_in_attachment:
-                            self.postprocess_pdf_report(record_map[res_ids[i]], stream)
-                        streams.append(stream)
-                    close_streams([pdf_content_stream])
+                    if reader.trailer['/Root'].get('/Dests'):
+                        outlines_pages = sorted(
+                            [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                        assert len(outlines_pages) == len(res_ids)
+                        for i, num in enumerate(outlines_pages):
+                            to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                            attachment_writer = PdfFileWriter()
+                            for j in range(num, to):
+                                attachment_writer.addPage(reader.getPage(j))
+                            stream = io.BytesIO()
+                            attachment_writer.write(stream)
+                            if res_ids[i] and res_ids[i] not in save_in_attachment:
+                                self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                            streams.append(stream)
+                        close_streams([pdf_content_stream])
+                    else:
+                        # If no outlines available, do not save each record
+                        streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
@@ -589,7 +602,7 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        save_in_attachment = {}
+        save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.

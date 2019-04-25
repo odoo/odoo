@@ -3,21 +3,23 @@
 # * auth_signup
 # 
 # Translators:
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
 # mohamed zezo <net_66@yahoo.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: mohamed zezo <net_66@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,7 +117,6 @@ msgid ""
 "    <p>\n"
 "        Your login: ${object.email}\n"
 "        <br/>\n"
-"        Your password: ${ctx['password']}\n"
 "    </p>\n"
 "    <p>\n"
 "        To gain access to your account, you can use the following link:\n"
@@ -154,22 +155,22 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "ألديك حساب بالفعل؟"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "تم إرسالة بريد بالبيانات اللازمة لإعادة تعيين كلمة المرور الخاصة بك."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "هذا البريد الالكتروني مستخدم بالفعل."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "فشل المصادقة."
@@ -208,18 +209,13 @@ msgid "Contact"
 msgstr "جهة الاتصال"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "لا يمكن انشاء حساب جديد."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "لم يمكن إعادة تعيين كلمة مرورك"
@@ -227,23 +223,28 @@ msgstr "لم يمكن إعادة تعيين كلمة مرورك"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "حساب العميل"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "صلاحيات الوصول الافتراضية"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "لا تملك حسابًا؟"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "السماح باسترداد كلمة المرور في صفحة تسجيل الدخول"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "الحقول"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -261,7 +262,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "إذا ألغيت تحديد هذا الاختيار، لن يمكن التسجيل إلا بإرسال دعوة مسبقة."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "رمز التفعيل غير صالح"
@@ -269,7 +270,7 @@ msgstr "رمز التفعيل غير صالح"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "السماح لعملائك بتسجيل الدخول لرؤية مستنداتهم"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -277,10 +278,10 @@ msgid "Never Connected"
 msgstr "لم يسجل الدخول أبداً"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "لم يتم تسجيل الدخول."
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -295,7 +296,7 @@ msgstr "كلمة المرور"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "إعادة تعيين كلمة المرور"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -303,10 +304,10 @@ msgid "Password reset"
 msgstr "استعادة كلمة المرور"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "خانتي كلمة المرور غير متطابقتين، يُرجى إعادة ملأهما."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -368,19 +369,19 @@ msgstr "رابط التسجيل"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "لا يسمح بإنشاء حساب للمستخدمين غير المدعوين"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "لم تعد كلمة سر التسجيل '%s' صالحة"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "كلمة السر '%s' غير صالحة"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -393,10 +394,10 @@ msgid "Template user for new users created through signup"
 msgstr "قالب المستخدم عندما يقوم أحدهم بالتسجيل بنفسه"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "لم يتم ملأ النموذج بشكل صحيح."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -406,7 +407,7 @@ msgstr "المستخدمون"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "مرحبًا في ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

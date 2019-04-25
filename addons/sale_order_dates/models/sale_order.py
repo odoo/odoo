@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
         for order in self:
             dates_list = []
             order_datetime = fields.Datetime.from_string(order.date_order)
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:

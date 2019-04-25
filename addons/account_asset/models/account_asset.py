@@ -217,7 +217,14 @@ class AccountAssetAsset(models.Model):
                 # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
                 # purchase month in other cases
                 if self.method_period >= 12:
-                    asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
+                    if self.company_id.fiscalyear_last_month:
+                        asset_date = date(year=int(self.date[:4]),
+                                                   month=self.company_id.fiscalyear_last_month,
+                                                   day=self.company_id.fiscalyear_last_day) + \
+                                     relativedelta(days=1) + \
+                                     relativedelta(year=int(self.date[:4]))  # e.g. 2018-12-31 +1 -> 2019
+                    else:
+                        asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
                 else:
                     asset_date = datetime.strptime(self.date[:7] + '-01', DF).date()
                 # if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
@@ -338,6 +345,8 @@ class AccountAssetAsset(models.Model):
                 'target': 'current',
                 'res_id': move_ids[0],
             }
+        # Fallback, as if we just clicked on the smartbutton
+        return self.open_entries()
 
     @api.multi
     def set_to_draft(self):
@@ -416,7 +425,7 @@ class AccountAssetAsset(models.Model):
     @api.model
     def create(self, vals):
         asset = super(AccountAssetAsset, self.with_context(mail_create_nolog=True)).create(vals)
-        asset.compute_depreciation_board()
+        asset.sudo().compute_depreciation_board()
         return asset
 
     @api.multi
@@ -477,8 +486,12 @@ class AccountAssetDepreciationLine(models.Model):
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
+        # `line.move_id` was invalidated from the cache at each iteration
+        # To prevent to refetch `move_id` of all lines at each iteration just to check a UserError,
+        # we use an intermediar dict which stores the information the UserError check requires.
+        line_moves = {line: line.move_id for line in self}
         for line in self:
-            if line.move_id:
+            if line_moves[line]:
                 raise UserError(_('This depreciation is already linked to a journal entry! Please post or delete it.'))
             category_id = line.asset_id.category_id
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
@@ -516,6 +529,7 @@ class AccountAssetDepreciationLine(models.Model):
             }
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
+            line_moves[line] = move
             created_moves |= move
 
         if post_move and created_moves:
@@ -572,12 +586,19 @@ class AccountAssetDepreciationLine(models.Model):
     @api.multi
     def post_lines_and_close_asset(self):
         # we re-evaluate the assets to determine whether we can close them
+        # `message_post` invalidates the (whole) cache
+        # preprocess the assets and lines in which a message should be posted,
+        # and then post in batch will prevent the re-fetch of the same data over and over.
+        assets_to_close = self.env['account.asset.asset']
         for line in self:
-            line.log_message_when_posted()
             asset = line.asset_id
             if asset.currency_id.is_zero(asset.value_residual):
-                asset.message_post(body=_("Document closed."))
-                asset.write({'state': 'close'})
+                assets_to_close |= asset
+        self.log_message_when_posted()
+        assets_to_close.write({'state': 'close'})
+        for asset in assets_to_close:
+            asset.message_post(body=_("Document closed."))
+
 
     @api.multi
     def log_message_when_posted(self):
@@ -590,6 +611,10 @@ class AccountAssetDepreciationLine(models.Model):
                 message += '%s</div>' % values
             return message
 
+        # `message_post` invalidates the (whole) cache
+        # preprocess the assets in which messages should be posted,
+        # and then post in batch will prevent the re-fetch of the same data over and over.
+        assets_to_post = {}
         for line in self:
             if line.move_id and line.move_id.state == 'draft':
                 partner_name = line.asset_id.partner_id.name
@@ -598,7 +623,10 @@ class AccountAssetDepreciationLine(models.Model):
                 if partner_name:
                     msg_values[_('Partner')] = partner_name
                 msg = _format_message(_('Depreciation line posted.'), msg_values)
-                line.asset_id.message_post(body=msg)
+                assets_to_post.setdefault(line.asset_id, []).append(msg)
+        for asset, messages in assets_to_post.items():
+            for msg in messages:
+                asset.message_post(body=msg)
 
     @api.multi
     def unlink(self):

@@ -465,6 +465,71 @@ class TestQWebNS(TransactionCase):
             expected_result
         )
 
+    def test_render_dynamic_xml_with_code_error(self):
+        """ Test that, when rendering a template containing a namespaced node
+            that evaluates code with errors, the proper exception is raised
+        """
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <Invoice xmlns:od="http://odoo.com/od">
+                        <od:name t-att-test="'a' + 1"/>
+                    </Invoice>
+                </t>
+            """
+        })
+
+        try:
+            "" + 0
+        except TypeError as e:
+            error_msg = e.args[0]
+
+        with self.assertRaises(QWebException, msg=error_msg):
+            view1.render()
+
+    def test_render_t_call_propagates_t_lang(self):
+        current_lang = 'en_US'
+        other_lang = 'fr_FR'
+
+        self.env['res.lang'].load_lang(lang=other_lang)
+
+        self.env['res.lang'].search([('code', '=', other_lang)], limit=1).write({
+            'active': True,
+            'decimal_point': '*',
+            'thousands_sep': '/'
+        })
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.callee">
+                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                </t>
+            """
+        })
+        self.env['ir.model.data'].create({
+            'name': 'callee',
+            'model': 'ir.ui.view',
+            'module': 'base',
+            'res_id': view1.id,
+        })
+
+        view2 = self.env['ir.ui.view'].create({
+            'name': "calling",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.calling">
+                    <t t-call="base.callee" t-lang="'%s'" />
+                </t>
+            """ % other_lang
+        })
+
+        rendered = view2.with_context(lang=current_lang).render().strip()
+        self.assertEqual(rendered, b'9/000/000*00')
+
 
 from copy import deepcopy
 class FileSystemLoader(object):

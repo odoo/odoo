@@ -3,21 +3,25 @@
 # * portal
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Saban Yildiz <sabany@projetgrup.com>, 2017
 # Levent Karakaş <levent@mektup.at>, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Martin Trigaux, 2017
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,11 +56,47 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Sayın ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Portalına erişim izni verildi ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Giriş bilgileriniz:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Kullanıcı adı: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Veritabanı: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Aşağıdaki url üzerinden şifrenizi oluşturabilir yada değiştirebilirsiniz::\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
-msgstr "<b>Portal</b>"
+msgstr "<b>Giriş</b>"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Gezinti navigasyonu</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
@@ -100,7 +140,7 @@ msgstr "Temizle"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Dokümanınızı görmek için buraya tıklayınız."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -113,6 +153,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Onayla\n"
+"                 <span class=\"fa fa-long-arrow-right\"/>               "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -153,7 +195,7 @@ msgstr "Oluşturulma"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Müşteri Portal URL"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -167,7 +209,7 @@ msgstr "Görünüm Adı"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "İmzanızı atın"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -187,6 +229,11 @@ msgid "Group %s is not a portal"
 msgstr "Şu grup %s portal değil"
 
 #. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP yönlendirme"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
@@ -199,7 +246,7 @@ msgid "In Portal"
 msgstr "Portalda"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Geçersiz Eposta! Lütfen geçerli eposta adresi girin."
@@ -266,6 +313,8 @@ msgstr "Sonraki"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Oops! Birşey ters gitti. Sayfayı tekrar yüklemeyi deneyin ve yeniden giriş "
+"yapın."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -291,7 +340,7 @@ msgstr "Portal Giriş Yönetimi"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portal Erişim URL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -305,10 +354,10 @@ msgstr "Önceki"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Yayınla %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -347,7 +396,7 @@ msgid "Some contacts have the same email as an existing portal user:"
 msgstr "Bazı kişiler mevcut portal kullanıcısı ile aynı epostaya sahip:"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Bazı zorunlu alanlar boş."
@@ -367,7 +416,7 @@ msgstr "Sokak/Cadde"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "Teşekkürler !"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -379,7 +428,7 @@ msgstr "Portal kullanıcıları eklenip çıkarılabilir."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Burada şimdilik hiç yorum yok."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -460,7 +509,6 @@ msgstr "Vergi No"
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -522,7 +570,6 @@ msgstr "Websitesi Mesajları"
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -555,7 +602,7 @@ msgstr "Bir mesaj yaz..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Olmalısın"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
@@ -569,7 +616,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Bağlantı Detayları"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -580,7 +627,7 @@ msgstr "Detaylarınız"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Dokumanlarınız"
 
 #. module: portal
 #. openerp-web
@@ -605,7 +652,7 @@ msgstr "Posta Kodu"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -626,12 +673,12 @@ msgstr "Yorumlar"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "oturum açıldı"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -643,4 +690,4 @@ msgstr "Seçin ..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "bir yorum gönder"

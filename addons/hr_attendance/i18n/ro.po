@@ -3,16 +3,17 @@
 # * hr_attendance
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
 # Martin Trigaux, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +98,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Nu se poate crea o nouă prezență pentru %(empl_name)s, angajatul nu a ieșit "
+"după %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -106,6 +109,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Nu se poate crea o nouă prezență pentru %(empl_name)s , angajatul este deja "
+"intrat de la %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:108
@@ -125,7 +130,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr "Intră"
+msgstr "Intrare"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
@@ -142,7 +147,7 @@ msgstr "Ieșire"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:53
 #, python-format
 msgid "Check in"
-msgstr "Intră"
+msgstr "Intrare"
 
 #. module: hr_attendance
 #. openerp-web
@@ -154,19 +159,19 @@ msgstr "Ieșire"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Intrare/Ieșire"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked in"
-msgstr ""
+msgstr "Intrat"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:109
 #, python-format
 msgid "Checked in at"
-msgstr "Intrat"
+msgstr "Intrat la"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -200,7 +205,7 @@ msgstr "Clic pentru a ieși"
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
-msgstr ""
+msgstr "Siglă comanie"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -227,7 +232,7 @@ msgstr "Creat în"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Current Month"
-msgstr ""
+msgstr "Luna curentă"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_department_id
@@ -263,7 +268,7 @@ msgstr "Angajat"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 msgid "Employee Image"
-msgstr ""
+msgstr "Poză angajat"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
@@ -355,7 +360,7 @@ msgstr "Bună dimineața"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good night"
-msgstr ""
+msgstr "Noapte bună"
 
 #. module: hr_attendance
 #. openerp-web
@@ -429,12 +434,12 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
 msgid "Kiosk Mode"
-msgstr ""
+msgstr "Mod chioșc"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Ultima pezență"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -465,7 +470,7 @@ msgstr "Manager"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "Prezență manuală"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -501,7 +506,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Director"
+msgstr "Ofițer"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
@@ -532,6 +537,7 @@ msgstr "Vă rog sa introduceți PIN-ul pentru ieșire"
 msgid ""
 "Please make sure you're using the correct filter if you expected to see any."
 msgstr ""
+"Asigurați-vă că utilizați filtrul corect dacă vă așteptați să vedeți vreuna."
 
 #. module: hr_attendance
 #. openerp-web
@@ -543,7 +549,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
-msgstr ""
+msgstr "Tipărire ecuson"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -590,7 +596,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "Prezențele angajaților dvs. vor fi afișate aici."
 
 #. module: hr_attendance
 #. openerp-web

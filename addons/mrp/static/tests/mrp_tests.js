@@ -1,6 +1,7 @@
 odoo.define('mrp.tests', function (require) {
 "use strict";
 
+var field_registry = require('web.field_registry');
 var FormView = require('web.FormView');
 var testUtils = require("web.test_utils");
 
@@ -83,6 +84,49 @@ QUnit.module('mrp', {
             '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
             "the src attribute should be correctly set on the iframe");
 
+        form.destroy();
+    });
+
+    QUnit.test("pdf_viewer: upload rendering", function (assert) {
+        assert.expect(6);
+
+        testUtils.patch(field_registry.map.pdf_viewer, {
+            on_file_change: function (ev) {
+                ev.target = {files: [new Blob()]};
+                this._super.apply(this, arguments);
+            },
+            _getURI: function (fileURI) {
+                var res = this._super.apply(this, arguments);
+                assert.step('_getURI');
+                assert.ok(_.str.startsWith(fileURI, 'blob:'));
+                this.PDFViewerApplication = {
+                    open: function (URI) {
+                        assert.step('open');
+                        assert.ok(_.str.startsWith(URI, 'blob:'));
+                    },
+                };
+                return 'about:blank';
+            },
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="document" widget="pdf_viewer"/>' +
+                '</form>',
+        });
+
+        // first upload initialize iframe
+        form.$('input[type="file"]').trigger('change');
+        assert.verifySteps(['_getURI']);
+        // second upload call pdfjs method inside iframe
+        form.$('input[type="file"]').trigger('change');
+        assert.verifySteps(['_getURI', 'open']);
+
+        testUtils.unpatch(field_registry.map.pdf_viewer);
         form.destroy();
     });
 

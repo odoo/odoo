@@ -219,6 +219,7 @@ class MrpWorkorder(models.Model):
                             'done_wo': False,
                             'location_id': move.location_id.id,
                             'location_dest_id': move.location_dest_id.id,
+                            'date': move.date,
                         })
                         qty_todo -= 1
                 elif float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
@@ -239,7 +240,7 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def write(self, values):
-        if ('date_planned_start' in values or 'date_planned_finished' in values) and any(workorder.state == 'done' for workorder in self):
+        if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
         return super(MrpWorkorder, self).write(values)
 
@@ -284,6 +285,18 @@ class MrpWorkorder(models.Model):
         self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
                                                                     order='create_date, id', limit=1)
 
+    def _get_byproduct_move_line(self, by_product_move, quantity):
+        return {
+            'move_id': by_product_move.id,
+            'product_id': by_product_move.product_id.id,
+            'product_uom_qty': quantity,
+            'product_uom_id': by_product_move.product_uom.id,
+            'qty_done': quantity,
+            'workorder_id': self.id,
+            'location_id': by_product_move.location_id.id,
+            'location_dest_id': by_product_move.location_dest_id.id,
+        }
+
     @api.multi
     def record_production(self):
         self.ensure_one()
@@ -304,8 +317,10 @@ class MrpWorkorder(models.Model):
                 if self.product_id.tracking != 'none':
                     qty_to_add = float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
                     move._generate_consumed_move_line(qty_to_add, self.final_lot_id)
-                else:
+                elif len(move._get_move_lines()) < 2:
                     move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
+                else:
+                    move._set_quantity_done(move.quantity_done + float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding))
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_line in self.active_move_line_ids:
@@ -339,33 +354,38 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            production_moves = self.production_id.move_finished_ids.filtered(lambda x: (x.state not in ('done', 'cancel')))
-            for production_move in production_moves:
-                if production_move.product_id.id == self.production_id.product_id.id and production_move.has_tracking != 'none':
-                    move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                    if move_line:
-                        move_line.product_uom_qty += self.qty_producing
-                    else:
-                        move_line.create({'move_id': production_move.id,
-                                 'product_id': production_move.product_id.id,
-                                 'lot_id': self.final_lot_id.id,
-                                 'product_uom_qty': self.qty_producing,
-                                 'product_uom_id': production_move.product_uom.id,
-                                 'qty_done': self.qty_producing,
-                                 'workorder_id': self.id,
-                                 'location_id': production_move.location_id.id, 
-                                 'location_dest_id': production_move.location_dest_id.id,
-                        })
-                elif production_move.unit_factor:
-                    rounding = production_move.product_uom.rounding
-                    production_move.quantity_done += float_round(self.qty_producing * production_move.unit_factor, precision_rounding=rounding)
+            production_move = self.production_id.move_finished_ids.filtered(
+                                lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
+            if production_move.product_id.tracking != 'none':
+                move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                if move_line:
+                    move_line.product_uom_qty += self.qty_producing
+                    move_line.qty_done += self.qty_producing
                 else:
-                    production_move.quantity_done += self.qty_producing
+                    location_dest_id = production_move.location_dest_id.get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
+                    move_line.create({'move_id': production_move.id,
+                             'product_id': production_move.product_id.id,
+                             'lot_id': self.final_lot_id.id,
+                             'product_uom_qty': self.qty_producing,
+                             'product_uom_id': production_move.product_uom.id,
+                             'qty_done': self.qty_producing,
+                             'workorder_id': self.id,
+                             'location_id': production_move.location_id.id,
+                             'location_dest_id': location_dest_id,
+                    })
+            else:
+                production_move.quantity_done += self.qty_producing
 
         if not self.next_work_order_id:
             for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):
-                if by_product_move.has_tracking == 'none':
-                    by_product_move.quantity_done += self.qty_producing * by_product_move.unit_factor
+                if by_product_move.has_tracking != 'serial':
+                    values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
+                    self.env['stock.move.line'].create(values)
+                elif by_product_move.has_tracking == 'serial':
+                    qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
+                    for i in range(0, int(float_round(qty_todo, precision_digits=0))):
+                        values = self._get_byproduct_move_line(by_product_move, 1)
+                        self.env['stock.move.line'].create(values)
 
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
@@ -395,7 +415,12 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def button_start(self):
-        # TDE CLEANME
+        self.ensure_one()
+        # As button_start is automatically called in the new view
+        if self.state in ('done', 'cancel'):
+            return True
+
+        # Need a loss in case of the real time exceeding the expected
         timeline = self.env['mrp.workcenter.productivity']
         if self.duration < self.duration_expected:
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)

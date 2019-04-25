@@ -436,6 +436,8 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
+    max-width: -moz-available;
+    max-width: -webkit-fill-available;
 }
 .pos .orders {
     display: -webkit-flex;
@@ -1475,6 +1477,8 @@ td {
     body {
         margin: 0;
         color: white !important;
+        /* avoid black background if backgrounds are printed */
+        background: initial;
     }
     .oe_leftbar,
     .oe_loading,
@@ -2151,6 +2155,19 @@ td {
 .pos .popup-confirm .body {
     overflow: auto;
     height: 120px;
+}
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
 }
 .pos .popup .title {
     background: rgba(255,255,255,0.5);

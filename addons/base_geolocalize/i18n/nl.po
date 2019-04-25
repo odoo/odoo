@@ -3,17 +3,19 @@
 # * base_geolocalize
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Martin Trigaux, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +39,23 @@ msgid "<span> ;  Long:  </span>"
 msgstr "<span> ;  Lengte :  </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:18
+#: code:addons/base_geolocalize/models/res_partner.py:19
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+"API key voor GeoCoding (Plaatsen) benodigd.\n"
+"\n"
+"                          Sla deze key op in de Systeem Parameters met key: google.api_key_geocode, value: <your api key>\n"
+"                          Bezoek https://developers.google.com/maps/documentation/geocoding/get-api-key voor meer informatie.\n"
+"                          "
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:28
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "

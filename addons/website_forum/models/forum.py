@@ -53,6 +53,7 @@ class Forum(models.Model):
                             'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
+        translate=True,
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
                             <div class="col-md-12">
@@ -422,6 +423,11 @@ class Post(models.Model):
                 raise KarmaError('User karma not sufficient to post an image or link.')
         return content
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('You cannot create recursive forum posts.'))
+
     @api.model
     def create(self, vals):
         if 'content' in vals and vals.get('forum_id'):
@@ -492,7 +498,7 @@ class Post(models.Model):
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
         if 'tag_ids' in vals:
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
-            if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+            if any(set(post.tag_ids.ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
         if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')

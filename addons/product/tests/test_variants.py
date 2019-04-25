@@ -40,6 +40,15 @@ class TestVariantsSearch(TransactionCase):
         self.assertIn(self.product_shirt_template, search_value,
                       'Shirt should be found searching L')
 
+    def test_name_search(self):
+        self.product_slip_template = self.env['product.template'].create({
+            'name': 'Slip',
+        })
+        res = self.env['product.product'].name_search('Shirt', [], 'not ilike', None)
+        res_ids = [r[0] for r in res]
+        self.assertIn(self.product_slip_template.product_variant_ids.id, res_ids,
+                      'Slip should be found searching \'not ilike\'')
+
 
 class TestVariants(common.TestProductCommon):
 
@@ -50,6 +59,14 @@ class TestVariants(common.TestProductCommon):
         self.size_attr_value_m = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': self.size_attr.id})
         self.size_attr_value_l = self.env['product.attribute.value'].create({'name': 'L', 'attribute_id': self.size_attr.id})
         return res
+
+    def test_variants_is_product_variant(self):
+        template = self.product_7_template
+        variants = template.product_variant_ids
+        self.assertFalse(template.is_product_variant,
+                         'Product template is not a variant')
+        self.assertEqual({True}, set(v.is_product_variant for v in variants),
+                         'Product variants are variants')
 
     def test_variants_creation_mono(self):
         test_template = self.env['product.template'].create({

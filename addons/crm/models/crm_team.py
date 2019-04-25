@@ -50,13 +50,18 @@ class Team(models.Model):
             team.unassigned_leads_count = counts.get(team.id, 0)
 
     def _compute_opportunities(self):
-        opportunity_data = self.env['crm.lead'].read_group([
+        opportunity_data = self.env['crm.lead'].search([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ], ['planned_revenue', 'probability', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['planned_revenue'] * datum['probability'] / 100) for datum in opportunity_data}
+        ]).read(['planned_revenue', 'probability', 'team_id'])
+        counts = {}
+        amounts = {}
+        for datum in opportunity_data:
+            counts.setdefault(datum['team_id'][0], 0)
+            amounts.setdefault(datum['team_id'][0], 0)
+            counts[datum['team_id'][0]] += 1
+            amounts[datum['team_id'][0]] += (datum.get('planned_revenue', 0) * datum.get('probability', 0) / 100.0)
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
@@ -149,14 +154,22 @@ class Team(models.Model):
         tree_view_id = self.env.ref('crm.crm_case_tree_view_oppor').id
         form_view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         kanb_view_id = self.env.ref('crm.crm_case_kanban_view_leads').id
-        action['views'] = [
-                [kanb_view_id, 'kanban'],
-                [tree_view_id, 'tree'],
-                [form_view_id, 'form'],
-                [False, 'graph'],
-                [False, 'calendar'],
-                [False, 'pivot']
-            ]
+
+        mode_string = action.get('view_mode', '')
+        view_mode = mode_string.split(',') if mode_string else ['kanban', 'tree', 'form', 'graph', 'calendar', 'pivot']
+        dict_views = {
+            'kanban': kanb_view_id,
+            'tree': tree_view_id,
+            'form': form_view_id,
+            'graph': False,
+            'calendar': False,
+            'pivot': False,
+        }
+
+        # Sort the views according to the view mode of the action
+        # which can be modified via studio, or technical menu for that matter
+        action['views'] = [[dict_views.get(view_type, False), view_type] for view_type in view_mode]
+
         action['context'] = action_context
         return action
 

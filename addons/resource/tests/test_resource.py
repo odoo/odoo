@@ -233,6 +233,15 @@ class ResourceWorkingHours(TestResourceCommon):
             compute_leaves=False)
         self.assertEqual(res, 40.0)
 
+    def test_calendar_working_hours_count(self):
+        calendar = self.env.ref('resource.resource_calendar_std_35h')
+        res = calendar.get_work_hours_count(
+            Datetime.from_string('2017-05-03 14:03:00'),  # Wednesday (8:00-12:00, 13:00-16:00)
+            Datetime.from_string('2017-05-04 11:03:00'),  # Thursday (8:00-12:00, 13:00-16:00)
+            resource_id=None,
+            compute_leaves=False)
+        self.assertEqual(res, 5.0)
+
     def test_calendar_working_hours_leaves(self):
         # new API: resource and leaves
         # res: 2 weeks -> 40 hours - (3+4) leave hours
@@ -242,6 +251,21 @@ class ResourceWorkingHours(TestResourceCommon):
             self.resource1_id,
             compute_leaves=True)
         self.assertEqual(res, 33.0)
+
+    def test_calendar_working_hours_24(self):
+        self.att_4 = self.env['resource.calendar.attendance'].create({
+            'name': 'Att4',
+            'calendar_id': self.calendar.id,
+            'dayofweek': '2',
+            'hour_from': 0,
+            'hour_to': 24
+        })
+        res = self.calendar.get_work_hours_count(
+            Datetime.from_string('2018-06-19 23:00:00'),
+            Datetime.from_string('2018-06-21 01:00:00'),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertAlmostEqual(res, 24.0)
 
     def test_calendar_timezone(self):
         # user in timezone UTC-9 asks for work hours

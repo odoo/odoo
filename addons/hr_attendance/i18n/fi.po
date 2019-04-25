@@ -3,20 +3,22 @@
 # * hr_attendance
 # 
 # Translators:
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Kari Lindgren <karisatu@gmail.com>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Martin Trigaux, 2017
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Simo Suurla <simo@suurla.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Svante Suominen <svante.suominen@web-veistamo.fi>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,18 +36,18 @@ msgstr "\"Uloskirjautumisaika\" ei voi olla ennen \"Sisäänkirjautumisaikaa\"."
 #: code:addons/hr_attendance/models/hr_attendance.py:29
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s sisään %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:34
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s sisään %(check_in)s ulos %(check_out)s"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "Läsnäolo"
 
 #. module: hr_attendance
 #. openerp-web
@@ -101,6 +103,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Et voi luoda läsnäoloa työntekijälle %(empl_name)s, työntekijä ei ole "
+"kirjautunut ulos %(datetime)själkeen."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -110,12 +114,14 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Et voi luoda läsnäoloa työntekijälle työntekijälle %(empl_name)s, työntekijä"
+" on edelleen kirjautuneena sisälle (%(datetime)s)."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
-msgstr ""
+msgstr "Et voi kirjata useata työntekijää sisään tai ulos."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:122
@@ -125,21 +131,24 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"Et voi kirjata työntekijää %(empl_name)s ulos, koska tyntekijälle ei löydy "
+"sisäänkirautumista. Läsnäoloasi on saatettu muuttaa käsin "
+"henkilöstöhallinnan toimesta."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr ""
+msgstr "Kirjaudu sisään"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "Kirjaudu sisään / ulos"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
 msgid "Check Out"
-msgstr ""
+msgstr "Kirjaudu ulos"
 
 #. module: hr_attendance
 #. openerp-web
@@ -158,31 +167,31 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Kirjaudu sisään / ulos"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked in"
-msgstr ""
+msgstr " Kirjautunut sisään"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:109
 #, python-format
 msgid "Checked in at"
-msgstr ""
+msgstr "Kirjauduit sisään"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked out"
-msgstr ""
+msgstr " Kirjautunut ulos"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:97
 #, python-format
 msgid "Checked out at"
-msgstr ""
+msgstr " Kirjauduit ulos"
 
 #. module: hr_attendance
 #. openerp-web
@@ -204,7 +213,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
-msgstr ""
+msgstr "Yrityksen logo"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -267,13 +276,13 @@ msgstr "Työntekijä"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 msgid "Employee Image"
-msgstr ""
+msgstr "Työntekijä kuva"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
-msgstr ""
+msgstr "Työntekijän PIN"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -295,7 +304,7 @@ msgstr "Työntekijät"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
+msgstr "Käytä PIN-koodia"
 
 #. module: hr_attendance
 #. openerp-web
@@ -316,7 +325,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:81
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr ""
+msgstr "Virhe: työntekijää ei löytynyt."
 
 #. module: hr_attendance
 #. openerp-web
@@ -414,7 +423,7 @@ msgstr "Tunniste (ID)"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "Tunniste jota käytetään työntekijän tunnistamiseen."
 
 #. module: hr_attendance
 #. openerp-web
@@ -428,17 +437,17 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Invalid request, please return to the main menu."
-msgstr ""
+msgstr "Virheellinen pyyntö, palaa päävalikkoon."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
 msgid "Kiosk Mode"
-msgstr ""
+msgstr "Kioskitila"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Viimeisin läsnäolo"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -458,7 +467,7 @@ msgstr "Viimeksi päivitetty"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
-msgstr ""
+msgstr "Hallitse läsnäoloja"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -469,7 +478,7 @@ msgstr "Päällikkö"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "Läsnäolojen käsinsyöttö"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -484,12 +493,12 @@ msgstr "Kuukausi"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr ""
+msgstr "Omat läsnäolot"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "Ei uloskirjausta"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
@@ -500,7 +509,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_employee.py:72
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
-msgstr ""
+msgstr "Työntekijää ei löytynyt koodilla %(barcode)s"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -516,6 +525,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"PIN-koodi jolla kirjaudutaan sisään ja ulos kioski-tilassa (edellyttää "
+"toiminnallisuuden käyttöönottoa asetuksista)."
 
 #. module: hr_attendance
 #. openerp-web
@@ -542,7 +553,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:82
 #, python-format
 msgid "Please return to the main menu."
-msgstr ""
+msgstr "Palaa takaisin päävalikkoon."
 
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
@@ -566,12 +577,12 @@ msgstr "Skannaa tunnuskortti"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:15
 #, python-format
 msgid "Select Employee"
-msgstr ""
+msgstr "Valitse työntekijä"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr ""
+msgstr "Aseta PIN-koodit työntekijän tietoihin (HR-asetukset välilehti)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -589,12 +600,12 @@ msgstr "Tunnuskortin ID voi olla käytössä vain yhdellä työntekijällä."
 #: code:addons/hr_attendance/models/hr_employee.py:63
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "The PIN-koodin pitää olla merkkijono."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "Työntekijän läsnäolotiedot näytetään tässä."
 
 #. module: hr_attendance
 #. openerp-web
@@ -637,7 +648,7 @@ msgstr "Tänään"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "Käytä PIN-koodia sisään- ja uloskirjautumiseen kioski-tilassa."
 
 #. module: hr_attendance
 #. openerp-web
@@ -662,7 +673,7 @@ msgstr "Tervetuloa"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:11
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Tervetuloa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -673,18 +684,18 @@ msgstr "Tehdyt tunnit"
 #: code:addons/hr_attendance/models/hr_employee.py:79
 #, python-format
 msgid "Wrong PIN"
-msgstr ""
+msgstr "Väärä PIN-koodi"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:105
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
+msgstr "Et voi kopioida läsnäoloa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "lista työntekijän läsnäoloista"
 
 #. module: hr_attendance
 #. openerp-web

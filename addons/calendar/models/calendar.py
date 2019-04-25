@@ -4,7 +4,7 @@ import base64
 
 import babel.dates
 import collections
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, MAXYEAR
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -609,22 +609,38 @@ class Meeting(models.Model):
             event_date = datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
-        if use_naive_datetime:
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
-        else:
+        if not use_naive_datetime:
             # Convert the event date to saved timezone (or context tz) as it'll
             # define the correct hour/day asked by the user to repeat for recurrence.
-            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
+            event_date = event_date.astimezone(timezone)
+
+        # The start date is naive
+        # the timezone will be applied, if necessary, at the very end of the process
+        # to allow for DST timezone reevaluation
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
-        for meeting in recurring_meetings:
-            recurring_date = fields.Datetime.from_string(meeting.recurrent_id_date)
-            if use_naive_datetime:
-                recurring_date = recurring_date.replace(tzinfo=None)
-            else:
-                recurring_date = todate(meeting.recurrent_id_date)
-            rset1.exdate(recurring_date)
-        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
+
+        # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
+        # control the memory usage.
+        invalidate = False
+        for meetings in self.env.cr.split_for_in_conditions(recurring_meetings, size=50000):
+            if invalidate:
+                self.invalidate_cache()
+            for meeting in meetings:
+                recurring_date = fields.Datetime.from_string(meeting.recurrent_id_date)
+                if use_naive_datetime:
+                    recurring_date = recurring_date.replace(tzinfo=None)
+                else:
+                    recurring_date = todate(meeting.recurrent_id_date).replace(tzinfo=None)
+                if date_field == "stop":
+                    recurring_date += timedelta(hours=self.duration)
+                rset1.exdate(recurring_date)
+            invalidate = True
+
+        def naive_tz_to_utc(d):
+            return timezone.localize(d).astimezone(pytz.UTC)
+        return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
     def _get_recurrency_end_date(self):
@@ -647,7 +663,13 @@ class Meeting(models.Model):
             }[data['rrule_type']]
 
             deadline = fields.Datetime.from_string(data['stop'])
-            return deadline + relativedelta(**{delay: count * mult})
+            computed_final_date = False
+            while not computed_final_date and count > 0:
+                try:  # may crash if year > 9999 (in case of recurring events)
+                    computed_final_date = deadline + relativedelta(**{delay: count * mult})
+                except ValueError:
+                    count -= data['interval']
+            return computed_final_date or deadline
         return final_date
 
     @api.multi
@@ -874,22 +896,22 @@ class Meeting(models.Model):
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
-                tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
 
+                # Convention break:
+                # stop and start are NOT in UTC in allday event
+                # in this case, they actually represent a date
+                # i.e. Christmas is on 25/12 for everyone
+                # even if people don't celebrate it simultaneously
                 enddate = fields.Datetime.from_string(meeting.stop_date)
-                enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
-                enddate = enddate.astimezone(pytz.utc)
                 meeting.stop = fields.Datetime.to_string(enddate)
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
-                startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
+                startdate = startdate.replace(hour=8)  # Set 8 AM
                 meeting.start = fields.Datetime.to_string(startdate)
             else:
-                meeting.start = meeting.start_datetime
-                meeting.stop = meeting.stop_datetime
+                meeting.write({'start': meeting.start_datetime,
+                               'stop': meeting.stop_datetime})
 
     @api.depends('byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list')
     def _compute_rrule(self):
@@ -915,9 +937,13 @@ class Meeting(models.Model):
     def _check_closing_date(self):
         for meeting in self:
             if meeting.start_datetime and meeting.stop_datetime and meeting.stop_datetime < meeting.start_datetime:
-                raise ValidationError(_('Ending datetime cannot be set before starting datetime.'))
+                raise ValidationError(_('Ending datetime cannot be set before starting datetime.') + "\n" +
+                                      _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_datetime, meeting.stop_datetime)
+                    )
             if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
-                raise ValidationError(_('Ending date cannot be set before starting date.'))
+                raise ValidationError(_('Ending date cannot be set before starting date.') + "\n" +
+                                      _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_date, meeting.stop_date)
+                    )
 
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
@@ -925,6 +951,16 @@ class Meeting(models.Model):
             start = fields.Datetime.from_string(self.start_datetime)
             self.start = self.start_datetime
             self.stop = fields.Datetime.to_string(start + timedelta(hours=self.duration))
+
+    @api.onchange('start_date')
+    def _onchange_start_date(self):
+        if self.start_date:
+            self.start = self.start_date
+
+    @api.onchange('stop_date')
+    def _onchange_stop_date(self):
+        if self.stop_date:
+            self.stop = self.stop_date
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1051,9 +1087,8 @@ class Meeting(models.Model):
             else:
                 sort_fields[field] = self[field]
                 if isinstance(self[field], models.BaseModel):
-                    name_get = self[field].name_get()
-                    if len(name_get) and len(name_get[0]) >= 2:
-                        sort_fields[field] = name_get[0][1]
+                    name_get = self[field].mapped('display_name')
+                    sort_fields[field] = name_get and name_get[0] or ''
         if r_date:
             sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:
@@ -1148,6 +1183,7 @@ class Meeting(models.Model):
         def key(record):
             # we need to deal with undefined fields, as sorted requires an homogeneous iterable
             def boolean_product(x):
+                x = False if (isinstance(x, models.Model) and not x) else x
                 if isinstance(x, bool):
                     return (x, x)
                 return (True, x)
@@ -1228,7 +1264,12 @@ class Meeting(models.Model):
     def _rrule_parse(self, rule_str, data, date_start):
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
-        rule = rrule.rrulestr(rule_str, dtstart=fields.Datetime.from_string(date_start))
+        ddate = fields.Datetime.from_string(date_start)
+        if 'Z' in rule_str and not ddate.tzinfo:
+            ddate = ddate.replace(tzinfo=pytz.timezone('UTC'))
+            rule = rrule.rrulestr(rule_str, dtstart=ddate)
+        else:
+            rule = rrule.rrulestr(rule_str, dtstart=ddate)
 
         if rule._freq > 0 and rule._freq < 4:
             data['rrule_type'] = rrule_type[rule._freq]
@@ -1330,7 +1371,8 @@ class Meeting(models.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=False,
+                end_type=False
             )
 
             # do not copy the id
@@ -1438,6 +1480,10 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         # compute duration, only if start and stop are modified
         if not 'duration' in values and 'start' in values and 'stop' in values:
             values['duration'] = self._get_duration(values['start'], values['stop'])
@@ -1506,6 +1552,10 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
 
@@ -1705,8 +1755,24 @@ class Meeting(models.Model):
             if values.get('description'):
                 activity_values['note'] = values['description']
             if values.get('start'):
-                activity_values['date_deadline'] = fields.Datetime.from_string(values['start']).date()
+                # self.start is a datetime UTC *only when the event is not allday*
+                # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
+                # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
+                deadline = fields.Datetime.from_string(values['start'])
+                user_tz = self.env.context.get('tz')
+                if user_tz and not self.allday:
+                    deadline = pytz.UTC.localize(deadline)
+                    deadline = deadline.astimezone(pytz.timezone(user_tz))
+                activity_values['date_deadline'] = deadline.date()
             if values.get('user_id'):
                 activity_values['user_id'] = values['user_id']
             if activity_values.keys():
                 self.mapped('activity_ids').write(activity_values)
+
+    @api.model
+    def _fix_rrule(self, values):
+        rule_str = values.get('rrule')
+        if rule_str:
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
+        return rule_str

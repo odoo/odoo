@@ -23,6 +23,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.Inventory = self.env['stock.inventory']
         self.InventoryLine = self.env['stock.inventory.line']
         self.ProductProduce = self.env['mrp.product.produce']
+        self.ProductCategory = self.env['product.category']
 
         self.partner_agrolite = self.env.ref('base.res_partner_2')
         self.categ_unit = self.env.ref('product.product_uom_categ_unit')
@@ -375,3 +376,107 @@ class TestSaleMrpFlow(common.TransactionCase):
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
+
+    def test_02_sale_mrp_anglo_saxon(self):
+        """Test the price unit of a kit"""
+        # This test will check that the correct journal entries are created when a stockable product in real time valuation
+        # and in fifo cost method is sold in a company using anglo-saxon.
+        # For this test, let's consider a product category called Test category in real-time valuation and real price costing method
+        # Let's  also consider a finished product with a bom with two components: component1(cost = 20) and component2(cost = 10)
+        # These products are in the Test category
+        # The bom consists of 2 component1 and 1 component2
+        # The invoice policy of the finished product is based on delivered quantities
+        self.uom_unit = self.ProductUom.create({
+            'name': 'Test-Unit',
+            'category_id': self.categ_unit.id,
+            'factor': 1,
+            'uom_type': 'reference',
+            'rounding': 1.0})
+        self.company = self.env.ref('base.main_company')
+        self.company.anglo_saxon_accounting = True
+        self.partner = self.env.ref('base.res_partner_1')
+        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})
+        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
+        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
+        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.partner.property_account_receivable_id = self.account_receiv
+        self.category.property_account_income_categ_id = self.account_receiv
+        self.category.property_account_expense_categ_id = account_expense
+        self.category.property_stock_account_input_categ_id = self.account_receiv
+        self.category.property_stock_account_output_categ_id = account_output
+        self.category.property_stock_valuation_account_id = self.account_receiv
+        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        self.finished_product = self.Product.create({
+                'name': 'Finished product',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'invoice_policy': 'delivery',
+                'categ_id': self.category.id})
+        self.component1 = self.Product.create({
+                'name': 'Component 1',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 20})
+        self.component2 = self.Product.create({
+                'name': 'Component 2',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 10})
+        self.env['stock.quant'].create({
+            'product_id': self.component1.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 6.0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': self.component2.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 3.0,
+        })
+        self.bom = self.MrpBom.create({
+                'product_tmpl_id': self.finished_product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom'})
+        self.MrpBomLine.create({
+                'product_id': self.component1.id,
+                'product_qty': 2.0,
+                'bom_id': self.bom.id})
+        self.MrpBomLine.create({
+                'product_id': self.component2.id,
+                'product_qty': 1.0,
+                'bom_id': self.bom.id})
+
+        # Create a SO for a specific partner for three units of the finished product
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.finished_product.name, 'product_id': self.finished_product.id, 'product_uom_qty': 3, 'product_uom': self.finished_product.uom_id.id, 'price_unit': self.finished_product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+            'company_id': self.company.id,
+        }
+        self.so = self.SaleOrder.create(so_vals)
+        # Validate the SO
+        self.so.action_confirm()
+        # Deliver the three finished products
+        pick = self.so.picking_ids
+        # To check the products on the picking
+        self.assertEqual(pick.move_lines.mapped('product_id'), self.component1 | self.component2)
+        pick.force_assign()
+        wiz_act = pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+        # Create the invoice
+        self.so.action_invoice_create()
+        self.invoice = self.so.invoice_ids
+        # Changed the invoiced quantity of the finished product to 2
+        self.invoice.invoice_line_ids.write({'quantity': 2.0})
+        self.invoice.action_invoice_open()
+        aml = self.invoice.move_id.line_ids
+        aml_expense = aml.filtered(lambda l: l.account_id.id == account_expense.id)
+        aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
+        # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
+        self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")

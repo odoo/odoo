@@ -10,8 +10,12 @@ from odoo.tools.misc import mod10r
 def _is_l10n_ch_postal(account_ref):
     """ Returns True iff the string account_ref is a valid postal account number,
     i.e. it only contains ciphers and is last cipher is the result of a recursive
-    modulo 10 operation ran over the rest of it.
+    modulo 10 operation ran over the rest of it. Shorten form with - is also accepted.
     """
+    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', account_ref or ''):
+        ref_subparts = account_ref.split('-')
+        account_ref = ref_subparts[0] + ref_subparts[1].rjust(6,'0') + ref_subparts[2]
+
     if re.match('\d+$', account_ref or ''):
         account_ref_without_check = account_ref[:-1]
         return mod10r(account_ref_without_check) == account_ref

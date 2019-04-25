@@ -3,25 +3,26 @@
 # * website_event
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Niki Waibel, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
+# Wolfgang Taferner, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
+# Martin Trigaux, 2017
 # David Vidal <david.vidal@trespinos.es>, 2017
 # e2f <projects@e2f.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr "<b>Preis</b>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Quantity</b>"
-msgstr "<b>Menge</b>"
+msgstr "<b>Anzahl</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -122,7 +123,7 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span itemprop=\"price\" content=\"0\">\n"
-"                        Kostenfrei\n"
+"                        Eintritt frei\n"
 "                    </span>"
 
 #. module: website_event
@@ -285,11 +286,6 @@ msgstr "Verschieben Sie diesen Block in Ihre Seite."
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "E-Mail"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Edit Badges"
-msgstr "Ausweise bearbeiten"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -470,7 +466,7 @@ msgstr "Organisiert durch:"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
-msgstr "Termine und Notizen"
+msgstr "Organisator"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -497,6 +493,17 @@ msgstr "Telefon"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Photos of Past Events"
 msgstr "Fotos der vorherigen Veranstaltungen"
+
+#. module: website_event
+#: code:addons/website_event/static/src/js/website_event.js:37
+#, python-format
+msgid "Please select at least one ticket."
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Preview Badges"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -597,7 +604,7 @@ msgstr "Sichtbar in Website"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr "Auf Google Maps visualisieren"
+msgstr "Auf Google Maps anzeigen"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete

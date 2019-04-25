@@ -510,7 +510,7 @@ REMOVE_CLASS = u"""
 </div>
 """
 REMOVE_CLASS_IN = [
-    u'<div style="font-size: 12pt; font-family: \'Times New Roman\'; color: #000000">',
+    u'<div style="font-size:12pt; font-family:\'Times New Roman\'; color:#000000">',
     u'An error occured in a modal and I will send you back the html to try opening one on your end']
 REMOVE_CLASS_OUT = [
     u'<div class="modal-backdrop in">',

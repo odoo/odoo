@@ -157,6 +157,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         :param compute_sudo: whether the field should be recomputed as superuser
             to bypass access rights (boolean, by default ``False``)
+            Note that this has no effects on non-stored computed fields
 
         The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::
@@ -277,6 +278,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'inherited_field': None,        # the corresponding inherited field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -611,7 +613,7 @@ class Field(MetaField('DummyField', (object,), {})):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
-        return self.related_field.base_field if self.inherited else self
+        return self.inherited_field.base_field if self.inherited_field else self
 
     #
     # Company-dependent fields
@@ -621,13 +623,25 @@ class Field(MetaField('DummyField', (object,), {})):
         return model.env['ir.property'].get(self.name, self.model_name)
 
     def _compute_company_dependent(self, records):
-        Property = records.env['ir.property']
+        # read property as superuser, as the current user may not have access
+        context = records.env.context
+        if 'force_company' not in context:
+            field_id = records.env['ir.model.fields']._get_id(self.model_name, self.name)
+            company = records.env['res.company']._company_default_get(self.model_name, field_id)
+            context = dict(context, force_company=company.id)
+        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
     def _inverse_company_dependent(self, records):
-        Property = records.env['ir.property']
+        # update property as superuser, as the current user may not have access
+        context = records.env.context
+        if 'force_company' not in context:
+            field_id = records.env['ir.model.fields']._get_id(self.model_name, self.name)
+            company = records.env['res.company']._company_default_get(self.model_name, field_id)
+            context = dict(context, force_company=company.id)
+        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -746,16 +760,6 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Conversion of values
     #
-
-    def cache_key(self, record):
-        """ Return the key to get/set the value of ``self`` on ``record`` in
-            cache, the full cache key being ``(self, record.id, key)``.
-        """
-        env = record.env
-        # IMPORTANT: odoo.api.Cache.get_records() depends on the fact that the
-        # result does not depend on record.id. If you ever make the following
-        # dependent on record.id, don't forget to fix the other method!
-        return env if self.context_dependent else (env.cr, env.uid)
 
     def null(self, record):
         """ Return the null value for this field in the record format. """
@@ -897,7 +901,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
-            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            try:
+                with model._cr.savepoint():
+                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
         else:
             sql.drop_index(model._cr, indexname, model._table)
 
@@ -1629,7 +1637,8 @@ class Datetime(Field):
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
 _BINARY = memoryview
 if pycompat.PY2:
-    _BINARY = buffer #pylint: disable=buffer-builtin
+    #pylint: disable=buffer-builtin,undefined-variable
+    _BINARY = buffer
 
 class Binary(Field):
     type = 'binary'
@@ -1797,6 +1806,8 @@ class Selection(Field):
     def convert_to_cache(self, value, record, validate=True):
         if not validate:
             return value or False
+        if value and self.column_type[0] == 'int4':
+            value = int(value)
         if value in self.get_values(record.env):
             return value
         elif not value:
@@ -1984,7 +1995,8 @@ class Many2one(_Relational):
             return ()
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -2015,6 +2027,26 @@ class Many2one(_Relational):
         return super(Many2one, self).convert_to_onchange(value, record, names)
 
 
+class _RelationalMultiUpdate(object):
+    """ A getter to update the value of an x2many field, without reading its
+        value until necessary.
+    """
+    __slots__ = ['record', 'field', 'value']
+
+    def __init__(self, record, field, value):
+        self.record = record
+        self.field = field
+        self.value = value
+
+    def __call__(self):
+        # determine the current field's value, and update it in cache only
+        record, field, value = self.record, self.field, self.value
+        cache = record.env.cache
+        cache.remove(record, field)
+        val = field.convert_to_cache(record[field.name] | value, record, validate=False)
+        cache.set(record, field, val)
+        return val
+
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
@@ -2026,21 +2058,16 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         cache = records.env.cache
         for record in records:
-            if cache.contains(record, self):
+            special = cache.get_special(record, self)
+            if isinstance(special, _RelationalMultiUpdate):
+                # include 'value' in the existing _RelationalMultiUpdate; this
+                # avoids reading the field's value (which may be large)
+                special.value |= value
+            elif cache.contains(record, self):
                 val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                 cache.set(record, self, val)
             else:
-                cache.set_special(record, self, self._update_getter(record, value))
-
-    def _update_getter(self, record, value):
-        def getter():
-            # determine the current field's value, and update it in cache only
-            cache = record.env.cache
-            cache.remove(record, self)
-            val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-            cache.set(record, self, val)
-            return val
-        return getter
+                cache.set_special(record, self, _RelationalMultiUpdate(record, self, value))
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -2085,7 +2112,8 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2359,6 +2387,8 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)
@@ -2508,6 +2538,7 @@ class Id(Field):
         'string': 'ID',
         'store': True,
         'readonly': True,
+        'prefetch': False,
     }
 
     def update_db(self, model, columns):
@@ -2516,9 +2547,15 @@ class Id(Field):
     def __get__(self, record, owner):
         if record is None:
             return self         # the field is accessed through the class owner
-        if not record:
+
+        # the code below is written to make record.id as quick as possible
+        ids = record._ids
+        size = len(ids)
+        if size is 0:
             return False
-        return record.ensure_one()._ids[0]
+        elif size is 1:
+            return ids[0]
+        raise ValueError("Expected singleton: %s" % record)
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")

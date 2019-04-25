@@ -28,6 +28,23 @@ class CreatorCase(common.TransactionCase):
         record.invalidate_cache()
         return record._export_rows([f.split('/') for f in fields])
 
+class test_xids(CreatorCase):
+    model_name = 'export.boolean'
+
+    def test_no_module(self):
+        record = self.make(True)
+        # add existing xid without module
+        self.env['ir.model.data'].create({
+            'module': '',
+            'name': 'x',
+            'model': self.model_name,
+            'res_id': record.id,
+        })
+        record.invalidate_cache()
+        self.assertEqual(
+            record._export_rows([['id'], ['value']]),
+            [[u'x', u'True']]
+        )
 
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'

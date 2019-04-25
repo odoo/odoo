@@ -19,6 +19,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
     init: function () {
         this._super.apply(this, arguments);
         this.msgIDs = this.value.res_ids;
+        this._markAsReadOnRender = true; // DO NOT FORWARD-PORT
     },
     willStart: function () {
         return this.alive(this._chatReady());
@@ -67,6 +68,7 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         this.msgIDs = this.value.res_ids;
         // the mail widgets being persistent, one need to update the res_id on reset
         this.res_id = record.res_id;
+        this._markAsReadOnRender = true; // DO NOT FORWARD-PORT
     },
 
     // public
@@ -89,6 +91,10 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         var self = this;
         options = options || {};
         options.ids = ids;
+        if (this._markAsReadOnRender) { // DO NOT FORWARD-PORT
+            options.shouldMarkAsRead = true; // DO NOT FORWARD-PORT
+            this._markAsReadOnRender = false; // DO NOT FORWARD-PORT
+        }
         var fetch_def = this.dp.add(this._getMessages(options));
         return fetch_def.then(function (raw_messages) {
             self.thread.render(raw_messages, {display_load_more: raw_messages.length < ids.length});

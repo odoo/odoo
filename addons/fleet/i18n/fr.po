@@ -3,43 +3,44 @@
 # * fleet
 # 
 # Translators:
-# Maxime Solinas <msolinas@t2o.ca>, 2017
-# Martin Trigaux, 2017
 # ShevAbam, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Agathe Mollé <molleagathe@gmail.com>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
 # Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Florian Hatat, 2017
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
+# Agathe Mollé <molleagathe@gmail.com>, 2017
 # Aline Preillon <apr@odoo.com>, 2017
-# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2017
-# Olivier Dony <odo@odoo.com>, 2017
 # Nicolas Roussey <nro@odoo.com>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # Lionel Sausin <ls@numerigraphe.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Hamid Darabi, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Olivier Dony <odo@odoo.com>, 2017
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
 # Clo <clo@odoo.com>, 2017
+# Xavier Symons <xsy@openerp.com>, 2017
+# Maxime Solinas <msolinas@t2o.ca>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
+# Florian Hatat, 2017
 # bob dupont <tropnul@hotmail.fr>, 2017
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
+#: code:addons/fleet/models/fleet_vehicle.py:199
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s a été ajouté à la flotte !"
@@ -657,7 +658,7 @@ msgid "Driver of the vehicle"
 msgstr "Conducteur du véhicule"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:217
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Conducteur= du '%s' au '%s'"
@@ -931,10 +932,10 @@ msgstr "Hybride"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3068
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3057
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3082
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3071
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2903
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2917
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "ID"
@@ -1030,6 +1031,11 @@ msgid "Km"
 msgstr "Km"
 
 #. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost___last_update
@@ -1090,7 +1096,7 @@ msgid "License Plate"
 msgstr "Plaque d'immatriculatin"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
+#: code:addons/fleet/models/fleet_vehicle.py:224
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Plaque d'immatriculation: du %s au %s"
@@ -1236,7 +1242,7 @@ msgid "Model of the vehicle"
 msgstr "Modele de véhicule"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:213
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modèle: du '%s' au '%s'"
@@ -1280,10 +1286,16 @@ msgid "No"
 msgstr "Non"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:81
+#, python-format
+msgid "No Plate"
+msgstr "Pas de Plaque"
+
+#. module: fleet
+#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:223
 #, python-format
 msgid "None"
 msgstr "Aucun"
@@ -1731,7 +1743,7 @@ msgid "State name already exists"
 msgstr "Cet état existe déjà"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:221
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Etat: du '%s' au '%s'"
@@ -1886,7 +1898,7 @@ msgstr "Numéro de série du moteur (VIN / SN)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2906
 msgid "Unit"
 msgstr "Unité"
 
@@ -1896,7 +1908,7 @@ msgstr "Unité"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2906
 msgid "Unit of the odometer "
 msgstr "Unité de distance "
 

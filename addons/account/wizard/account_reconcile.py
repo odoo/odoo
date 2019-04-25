@@ -39,7 +39,7 @@ class AccountMoveLineReconcile(models.TransientModel):
                 credit += line.credit
                 debit += line.debit
         precision = self.env.user.company_id.currency_id.decimal_places
-        writeoff = float_round(debit - credit, precision_digits=precision)
+        writeoff = float_round(debit - credit, precision_digits=precision) + 0.0 #remove -0.0 result
         credit = float_round(credit, precision_digits=precision)
         debit = float_round(debit, precision_digits=precision)
         return {'trans_nbr': len(lines), 'credit': credit, 'debit': debit, 'writeoff': writeoff}
