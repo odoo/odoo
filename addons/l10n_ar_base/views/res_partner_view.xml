@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">partner_documents.view_partner_form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="model">res.partner</field>
+        <field type="xml" name="arch">
+            <form>
+                <field name="l10n_ar_cuit" invisible="1"/>
+            </form>
+            <field name="vat" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="vat" position="after">
+                <label for="l10n_ar_id_number" string="Identification"/>
+                <div>
+                    <field name="l10n_ar_id_category_id" options="{'no_open': True, 'no_create': True}" placeholder="Category" class="oe_inline"/> - 
+                    <field name="l10n_ar_id_number" placeholder="Number" class="oe_inline"/>
+                </div>
+            </field>
+
+        </field>
+    </record>
+</odoo>

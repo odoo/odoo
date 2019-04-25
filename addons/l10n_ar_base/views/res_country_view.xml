@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_country_form" model="ir.ui.view">
+        <field name="name">res.country.form</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="l10n_ar_cuit_fisica"/>
+                <field name="l10n_ar_cuit_juridica"/>
+                <field name="l10n_ar_cuit_otro"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_country_tree" model="ir.ui.view">
+        <field name="name">res.country.tree</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_tree"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="l10n_ar_cuit_fisica"/>
+                <field name="l10n_ar_cuit_juridica"/>
+                <field name="l10n_ar_cuit_otro"/>
+            </field>
+        </field>
+    </record>
+</odoo>

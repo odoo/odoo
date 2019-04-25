@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <field name="vat" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="vat" position="before">
+                <label for="l10n_ar_id_number" string="Identification"/>
+                <div class="address_format">
+                    <field name="l10n_ar_id_category_id" options="{'no_open': True, 'no_create': True}" placeholder="Category" style="width: 45%"/>
+                    <field name="l10n_ar_id_number" placeholder="Number" style="width: 53%"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
