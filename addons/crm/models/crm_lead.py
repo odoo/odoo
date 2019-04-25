@@ -124,7 +124,7 @@ class Lead(models.Model):
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company_id.id)
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
     lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
 
@@ -1082,7 +1082,7 @@ class Lead(models.Model):
 
         result['done']['target'] = self.env.user.target_sales_done
         result['won']['target'] = self.env.user.target_sales_won
-        result['currency_id'] = self.env.user.company_id.currency_id.id
+        result['currency_id'] = self.env.company_id.currency_id.id
 
         return result
 

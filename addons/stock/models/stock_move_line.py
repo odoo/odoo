@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
         help="Change to a better name", index=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.users']._get_company(), readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id, readonly=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -188,7 +188,7 @@ class StockMoveLine(models.Model):
                         'picking_id': picking.id,
                     })
                     vals['move_id'] = new_move.id
-
+        
         mls = super(StockMoveLine, self).create(vals_list)
 
         for ml in mls:

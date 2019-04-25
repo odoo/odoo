@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
+var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 
@@ -305,6 +306,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
+        // we add here the user context for ALL queries, mainly to pass
+        // the allowed_company_ids key
+        if (params && params.kwargs) {
+            params.kwargs.context = _.extend(params.kwargs.context || {}, this.user_context);
+        }
+
         // TODO: remove
         if (! _.isString(url)) {
             _.extend(options, url);
@@ -357,6 +364,22 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return this.rpc('/web/session/get_session_info').then(function (result) {
             self.currencies = result.currencies;
         });
+    },
+
+    setCompanies: function (main_company_id, company_ids) {
+        var hash = $.bbq.getState()
+        hash.cids = company_ids.sort(function(a, b) {
+            if (a === main_company_id) {
+                return -1;
+            } else if (b === main_company_id) {
+                return 1;
+            } else {
+                return a - b;
+            }
+        }).join(',');
+        utils.set_cookie('cids', hash.cids || String(main_company_id));
+        $.bbq.pushState({'cids': hash.cids}, 0);
+        location.reload();
     },
 
     //--------------------------------------------------------------------------

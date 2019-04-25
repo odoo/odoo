@@ -24,10 +24,9 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        company_id = self.sudo(user_id).env.user.company_id.id
         team_id = self.env['crm.team'].sudo().search([
             '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
-            '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
+            '|', ('company_id', '=', False), ('company_id', '=', self.env.company_id.id)
         ], limit=1)
         if not team_id and 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
@@ -49,7 +48,7 @@ class CrmTeam(models.Model):
     name = fields.Char('Sales Team', required=True, translate=True)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env['res.company']._company_default_get('crm.team'))
+                                 default=lambda self: self.env.company_id)
     currency_id = fields.Many2one(
         "res.currency", related='company_id.currency_id',
         string="Currency", readonly=True)

@@ -43,8 +43,16 @@ class IrRule(models.Model):
     @api.model
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
-           ir.rule domains."""
-        return {'user': self.env.user, 'time': time}
+           ir.rule domains.
+           Note: company_ids contains the ids of the activated companies
+           by the user with the switch company menu. These companies are
+           filtered and trusted.
+        """
+        return {
+            'user': self.env.user,
+            'time': time,
+            'company_ids': self.env.company_ids.ids,
+        }
 
     @api.depends('groups')
     def _compute_global(self):
@@ -64,7 +72,7 @@ class IrRule(models.Model):
 
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
-        return []
+        return ['allowed_company_ids']
 
     def _get_failing(self, for_records, mode='read'):
         """ Returns the rules for the mode for the current user which fail on
@@ -196,22 +204,26 @@ class IrRule(models.Model):
                 'document_kind': description,
                 'document_model': model,
                 'operation': operation,
-             })
+            })
 
-        # debug mode, provide more info
+        # This extended AccessError is only displayed in debug mode.
+        # Note that by default, public and portal users do not have
+        # the group "base.group_no_one", even if debug mode is enabled,
+        # so it is relatively safe here to include the list of rules and
+        # record names.
         rules = self._get_failing(records, mode=operation).sudo()
         return AccessError(_("""The requested operation ("%(operation)s" on "%(document_kind)s" (%(document_model)s)) was rejected because of the following rules:
 %(rules_list)s
 %(multi_company_warning)s
-(records: %(example_records)s, uid: %(user_id)d)""") % {
+(Records: %(example_records)s, User: %(user_id)s)""") % {
             'operation': operation,
             'document_kind': description,
             'document_model': model,
             'rules_list': '\n'.join('- %s' % rule.name for rule in rules),
             'multi_company_warning': ('\n' + _('Note: this might be a multi-company issue.') + '\n') if any(
                 'company_id' in r.domain_force for r in rules) else '',
-            'example_records': list(records.ids[:6]),
-            'user_id': self.env.user.id,
+            'example_records': ' - '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()]),
+            'user_id': '%s (id=%s)' % (self.env.user.name, self.env.user.id),
         })
 
 #

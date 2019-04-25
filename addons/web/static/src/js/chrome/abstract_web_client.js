@@ -21,9 +21,11 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
+var local_storage = require('web.local_storage');
 var RainbowMan = require('web.RainbowMan');
 var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -112,6 +114,26 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
+        var state = $.bbq.getState();
+        // If not set on the url, retrieve cids from the local storage
+        // of from the default company on the user
+        var current_company_id = session.user_companies.current_company[0]
+        if (!state.cids) {
+            state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
+        }
+        var stateCompanyIDS = _.map(state.cids.split(','), function (cid) { return parseInt(cid) });
+        var userCompanyIDS = _.map(session.user_companies.allowed_companies, function(company) {return company[0]});
+        // Check that the user has access to all the companies
+        if (!_.isEmpty(_.difference(stateCompanyIDS, userCompanyIDS))) {
+            state.cids = String(current_company_id);
+            stateCompanyIDS = [current_company_id]
+        }
+        // Update the user context with this configuration
+        session.user_context.allowed_company_ids = stateCompanyIDS;
+        $.bbq.pushState(state);
+        // Update favicon
+        $("link[type='image/x-icon'").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
+
         return session.is_bound
             .then(function () {
                 self.$el.toggleClass('o_rtl', _t.database.parameters.direction === "rtl");
@@ -167,7 +189,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 }
             }, 0);
         });
-        window.addEventListener('blur', function (e) { self._hideAccessKeyOverlay(); });
+        window.addEventListener('blur', function (e) {self._hideAccessKeyOverlay(); });
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
@@ -437,7 +459,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
      * @param {OdooEvent} e
      */
     _onPushState: function (e) {
-        this.do_push_state(e.data.state);
+        this.do_push_state(_.extend(e.data.state, {'cids': $.bbq.getState().cids}));
     },
     /**
      * This function must be implemented by actual webclient to scroll either to

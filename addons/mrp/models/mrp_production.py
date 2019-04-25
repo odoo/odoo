@@ -23,7 +23,7 @@ class MrpProduction(models.Model):
     def _get_default_picking_type(self):
         return self.env['stock.picking.type'].search([
             ('code', '=', 'mrp_operation'),
-            ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.user.company_id.id), False])],
+            ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.company_id.id), False])],
             limit=1).id
 
     @api.model
@@ -36,7 +36,7 @@ class MrpProduction(models.Model):
             try:
                 location.check_access_rule('read')
             except (AttributeError, AccessError):
-                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     @api.model
@@ -49,7 +49,7 @@ class MrpProduction(models.Model):
             try:
                 location.check_access_rule('read')
             except (AttributeError, AccessError):
-                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     name = fields.Char(
@@ -180,7 +180,7 @@ class MrpProduction(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self._uid)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
+        default=lambda self: self.env.company_id,
         required=True)
 
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
@@ -420,7 +420,7 @@ class MrpProduction(models.Model):
         try:
             location.check_access_rule('read')
         except (AttributeError, AccessError):
-            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1).lot_stock_id
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id

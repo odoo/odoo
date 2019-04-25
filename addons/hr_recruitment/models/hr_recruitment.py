@@ -110,7 +110,7 @@ class Applicant(models.Model):
             department = self.env['hr.department'].browse(self._context['default_department_id'])
             company_id = department.company_id.id
         if not company_id:
-            company_id = self.env['res.company']._company_default_get('hr.applicant')
+            company_id = self.env.company_id
         return company_id
 
     name = fields.Char("Subject / Application Name", required=True)

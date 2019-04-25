@@ -38,6 +38,7 @@
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
+                                    <field name="favicon" widget="image" class="float-left oe_avatar"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>
@@ -50,7 +51,6 @@
         <record id="view_company_tree" model="ir.ui.view">
             <field name="name">res.company.tree</field>
             <field name="model">res.company</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
                     <field name="sequence" widget="handle"/>
@@ -137,7 +137,7 @@
                     <field name="name"/>
                 </h2>
               </xpath>
-                <field name="parent_id" groups="base.group_multi_company" position="replace" invisible="1"/>
+              <field name="parent_id" position="replace"/>
               <xpath expr="//sheet" position="inside">
                     <hr />
                     <div class="row mt16">
@@ -147,7 +147,7 @@
                         }"/>
                     </div>
                     <footer>
-                        <button string="Save" type="object" class="oe_highlight" name="write"/>
+                        <button string="Save" type="object" class="oe_highlight" special="save"/>
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </xpath>
@@ -161,7 +161,7 @@
             <field name="inherit_id" ref="base.view_company_report_form" />
             <field name="priority">1024</field>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='write']" position="before" >
+                <xpath expr="//button[@special='save']" position="before" >
                     <button string="Save and Print" type="object" class="oe_highlight" name="write_company_and_print_report"/>
                 </xpath>
             </field>

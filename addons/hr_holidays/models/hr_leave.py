@@ -278,7 +278,7 @@ class HolidaysRequest(models.Model):
             self.date_to = False
             return
 
-        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env.user.company_id.resource_calendar_id.id)]
+        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env.company_id.resource_calendar_id.id)]
         attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
 
         # find first attendance coming after first_day
@@ -341,7 +341,7 @@ class HolidaysRequest(models.Model):
             self.category_id = False
         elif self.holiday_type == 'company' and not self.mode_company_id:
             self.employee_id = False
-            self.mode_company_id = self.env.user.company_id.id
+            self.mode_company_id = self.env.company_id.id
             self.category_id = False
         elif self.holiday_type == 'department' and not self.department_id:
             self.employee_id = False
@@ -376,7 +376,7 @@ class HolidaysRequest(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for holiday in self:
-            calendar = holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+            calendar = holiday.employee_id.resource_calendar_id or self.env.company_id.resource_calendar_id
             if holiday.date_from and holiday.date_to:
                 number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
@@ -438,12 +438,12 @@ class HolidaysRequest(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             return employee._get_work_days_data(date_from, date_to)['days']
 
-        today_hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(
+        today_hours = self.env.company_id.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
             datetime.combine(date_from.date(), time.max),
             False)
 
-        return self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
+        return self.env.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
 
     ####################################################
     # ORM Overrides methods
@@ -563,6 +563,9 @@ class HolidaysRequest(models.Model):
     def copy_data(self, default=None):
         raise UserError(_('A leave cannot be duplicated.'))
 
+    def _get_mail_redirect_suggested_company(self):
+        return self.holiday_status_id.company_id
+
     ####################################################
     # Business methods
     ####################################################
@@ -606,7 +609,7 @@ class HolidaysRequest(models.Model):
     @api.multi
     def _prepare_holidays_meeting_values(self):
         self.ensure_one()
-        calendar = self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+        calendar = self.employee_id.resource_calendar_id or self.env.company_id.resource_calendar_id
         meeting_values = {
             'name': self.display_name,
             'categ_ids': [(6, 0, [

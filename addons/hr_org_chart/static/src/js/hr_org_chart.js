@@ -5,6 +5,7 @@ var AbstractField = require('web.AbstractField');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
+var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -41,7 +42,8 @@ var FieldOrgChart = AbstractField.extend({
         return this.dm.add(this._rpc({
             route: '/hr/get_org_chart',
             params: {
-                employee_id: employee_id
+                employee_id: employee_id,
+                context: session.user_context,
             },
         })).then(function (data) {
             self.orgData = data;
@@ -59,7 +61,8 @@ var FieldOrgChart = AbstractField.extend({
             route: '/hr/get_subordinates',
             params: {
                 employee_id: employee_id,
-                subordinates_type: type
+                subordinates_type: type,
+                context: session.user_context,
             },
         }));
     },

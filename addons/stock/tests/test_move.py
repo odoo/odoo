@@ -14,7 +14,7 @@ class StockMove(TransactionCase):
         self.pack_location = self.env.ref('stock.location_pack_zone')
         self.pack_location.active = True
         self.transit_location = self.env['stock.location'].search([
-            ('company_id', '=', self.env.user.company_id.id),
+            ('company_id', '=', self.env.company_id.id),
             ('usage', '=', 'transit'),
         ], limit=1)
         self.uom_unit = self.env.ref('uom.product_uom_unit')
