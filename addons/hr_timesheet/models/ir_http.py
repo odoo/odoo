@@ -13,7 +13,7 @@ class Http(models.AbstractModel):
         """
         result = super(Http, self).session_info()
 
-        company = self.env.user.company_id
+        company = self.env.company_id
         encoding_uom = company.timesheet_encode_uom_id
 
         result['timesheet_uom'] = encoding_uom.read(['name', 'rounding', 'timesheet_widget'])[0]

@@ -49,7 +49,7 @@ class ResPartner(models.Model):
 
     def write(self, vals):
         if vals.get('type') == 'subcontractor':
-            subcontracting_location = self.env.user.company_id.subcontracting_location_id
+            subcontracting_location = self.env.company_id.subcontracting_location_id
             if not vals.get('property_stock_supplier') and not vals.get('property_stock_customer'):
                 vals['property_stock_supplier'] = subcontracting_location.id
                 vals['property_stock_customer'] = subcontracting_location.id

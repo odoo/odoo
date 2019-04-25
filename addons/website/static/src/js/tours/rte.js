@@ -14,6 +14,7 @@ var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 tour.register('rte_translator', {
     test: true,
     wait_for: ready,
+    url: '/',
 }, [{
     content: "click on Add a language",
     trigger: '.js_language_selector a:has(i.fa)',

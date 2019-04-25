@@ -771,8 +771,8 @@ class TestFields(common.TransactionCase):
         """ test company-dependent fields. """
         # consider three companies
         company0 = self.env.ref('base.main_company')
-        company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
-        company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+        company1 = self.env['res.company'].create({'name': 'A'})
+        company2 = self.env['res.company'].create({'name': 'B'})
 
         # create one user per company
         user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',

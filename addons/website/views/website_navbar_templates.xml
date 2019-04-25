@@ -76,27 +76,6 @@
                     <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
-                    <li t-if="user_id.has_group('base.group_multi_company') and user_id.has_group('website.group_multi_website') and len(multi_website_companies)">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-building d-lg-none"/>
-                            <span class="d-none d-lg-inline-block">
-                                <t t-esc="multi_website_companies_current['name']"/>
-                            </span>
-                        </a>
-                        <div class="dropdown-menu" role="menu">
-                            <div class="d-lg-none dropdown-item active">
-                                <span t-esc="multi_website_companies_current['name']"/>
-                            </div>
-                            <t t-foreach="multi_website_companies" t-as="multi_website_company">
-                                <a role="menuitem" href="#"
-                                    class="dropdown-item oe_menu_text js_multi_company_switch"
-                                    t-att-company-id="str(multi_website_company['company_id'])"
-                                >
-                                    <span t-esc="multi_website_company['name']" />
-                                </a>
-                            </t>
-                        </div>
-                    </li>
                     <li groups="website.group_multi_website" t-if="multi_website_websites">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-globe d-lg-none"/>

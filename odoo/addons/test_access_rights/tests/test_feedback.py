@@ -115,7 +115,7 @@ class TestIRRuleFeedback(Feedback):
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
 
@@ -140,7 +140,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 0
 - rule 1
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_all(self):
@@ -156,7 +156,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 0
 - rule 1
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_any(self):
@@ -174,7 +174,7 @@ class TestIRRuleFeedback(Feedback):
             """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
 - rule 0
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_combination(self):
@@ -193,7 +193,7 @@ class TestIRRuleFeedback(Feedback):
 - rule 2
 - rule 3
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_warn_company(self):
@@ -202,7 +202,7 @@ class TestIRRuleFeedback(Feedback):
         """
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})
-        self._make_rule('rule 0', "[('company_id', 'child_of', user.company_id.id)]")
+        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
@@ -213,7 +213,7 @@ class TestIRRuleFeedback(Feedback):
 
 Note: this might be a multi-company issue.
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_read(self):
@@ -222,7 +222,7 @@ Note: this might be a multi-company issue.
         """
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})
-        self._make_rule('rule 0', "[('company_id', 'child_of', user.company_id.id)]", attr='read')
+        self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
         self._make_rule('rule 1', '[("val", "=", 1)]', global_=True, attr='read')
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.val
@@ -234,7 +234,7 @@ Note: this might be a multi-company issue.
 
 Note: this might be a multi-company issue.
 
-(records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})

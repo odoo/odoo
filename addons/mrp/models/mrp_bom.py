@@ -59,7 +59,7 @@ class MrpBom(models.Model):
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
+        default=lambda self: self.env.company_id,
         required=True)
     consumption = fields.Selection([
         ('strict', 'Strict'),
