@@ -98,7 +98,7 @@ class WebsiteProfile(http.Controller):
         image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
-        headers.append(('Content-Length', len(content)))
+        headers = http.set_safe_image_headers(headers, content)
         response = request.make_response(content, headers)
         response.status_code = status
         return response
