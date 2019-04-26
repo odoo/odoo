@@ -10,6 +10,8 @@ class ResConfigSettings(models.TransientModel):
     use_mailgateway = fields.Boolean(string='Let your employees record expenses by email',
                                      config_parameter='hr_expense.use_mailgateway')
 
+    module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
+
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
