@@ -656,7 +656,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(self.pos_order_pos0.state, 'paid', 'Order should be in paid state.')
 
         # I generate the journal entries
-        self.pos_order_pos0._create_account_move_line()
+        self.pos_order_pos0._create_account_entry()
 
         # I test that the generated journal entry is attached to the PoS order
         self.assertTrue(self.pos_order_pos0.account_move, "Journal entry has not been attached to Pos order.")

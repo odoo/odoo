@@ -192,7 +192,7 @@ class PosOrder(models.Model):
     def _get_account_move_line_group_data_type_key(self, data_type, values, options={}):
         """
         Return a tuple which will be used as a key for grouping account
-        move lines in _create_account_move_line method.
+        move lines in _create_account_entry method.
         :param data_type: 'product', 'tax', ....
         :param values: account move line values
         :return: tuple() representing the data_type key
@@ -333,7 +333,7 @@ class PosOrder(models.Model):
                 res.append({'data_type': 'tax', 'values': data})
         return res
 
-    def _create_account_move_line(self, session=None):
+    def _create_account_entry(self, session=None):
 
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -733,7 +733,7 @@ class PosOrder(models.Model):
 
     @api.multi
     def action_pos_order_done(self):
-        return self._create_account_move_line()
+        return self._create_account_entry()
 
     @api.model
     def create_from_ui(self, orders):

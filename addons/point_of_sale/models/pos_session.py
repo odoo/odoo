@@ -25,7 +25,7 @@ class PosSession(models.Model):
             if not journal:
                 raise UserError(_("You have to set a Sale Journal for the POS:%s") % (session.config_id.name,))
             orders = session.order_ids.filtered(lambda order: order.state == 'paid')
-            orders.with_context(force_company=journal.company_id.id)._create_account_move_line(session)
+            orders.with_context(force_company=journal.company_id.id)._create_account_entry(session)
             for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
                 if order.state not in ('paid'):
                     raise UserError(
