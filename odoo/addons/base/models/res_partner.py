@@ -572,7 +572,7 @@ class Partner(models.Model):
                             ("The selected company is not compatible with the companies of the related user(s)"))
         # no padding on the big image, because it's used as website logo
         tools.image_resize_images(vals, return_big=False)
-        tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
+        tools.image_resize_images(vals, return_medium=False, return_small=False)
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -601,7 +601,7 @@ class Partner(models.Model):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
             # no padding on the big image, because it's used as website logo
             tools.image_resize_images(vals, return_big=False)
-            tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
+            tools.image_resize_images(vals, return_medium=False, return_small=False)
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):

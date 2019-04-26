@@ -28,7 +28,7 @@ class ImageMixin(models.AbstractModel):
         for record in self:
             images = tools.image_get_resized_images(record.image_original, big_name=False)
             record.image_big = tools.image_get_resized_images(record.image_original,
-                large_name=False, medium_name=False, small_name=False, preserve_aspect_ratio=True)['image']
+                large_name=False, medium_name=False, small_name=False)['image']
             record.image_large = images['image_large']
             record.image_medium = images['image_medium']
             record.image_small = images['image_small']
