@@ -56,10 +56,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Yesterday</span>
                                                     % if data['yesterday'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['yesterday'][kpi]['margin'] &gt; 0.0:
+                                                            % if data['yesterday'][kpi]['margin'] is greaterthan(0.0):
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['yesterday'][kpi]['margin'] &lt; 0.0:
+                                                            % if data['yesterday'][kpi]['margin'] is lessthan(0.0):
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
                                                             % endif
                                                         </span>
@@ -76,10 +76,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 7 Days</span>
                                                     % if data['lastweek'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['lastweek'][kpi]['margin'] &gt; 0.0:
+                                                            % if data['lastweek'][kpi]['margin'] is greaterthan(0.0):
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['lastweek'][kpi]['margin'] &lt;0.0:
+                                                            % if data['lastweek'][kpi]['margin'] is lessthan(0.0):
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
                                                             %endif
                                                         </span>
@@ -96,10 +96,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 30 Days</span>
                                                     % if data['lastmonth'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                             % if data['lastmonth'][kpi]['margin'] &gt; 0.0:
+                                                             % if data['lastmonth'][kpi]['margin'] is greaterthan(0.0):
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['lastmonth'][kpi]['margin'] &lt; 0.0:
+                                                            % if data['lastmonth'][kpi]['margin'] is lessthan(0.0):
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
                                                             %endif
                                                         </span>
