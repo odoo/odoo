@@ -235,6 +235,18 @@ class ProductProduct(models.Model):
         account_moves = self.env['account.move'].create(am_vals_list)
         account_moves.post()
 
+        tracking_values = {
+            'company_id': self.env.company.id,
+            'new_value_float': new_price,
+            'field_type': 'float',
+            'field': 'standard_price',
+            'field_desc': 'Cost'
+        }
+
+        for product in self.filtered(lambda x: x.product_tmpl_id.product_variant_count == 1):
+            tracking_values.update({'old_value_float': product.standard_price})
+            product.product_tmpl_id._message_log(tracking_value_ids=[(0, 0, tracking_values)])
+
         # Actually update the standard price.
         self.write({'standard_price': new_price})
 
