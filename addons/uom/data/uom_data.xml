@@ -89,59 +89,77 @@
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_litre" model="uom.uom">
-            <field name="name">Liters</field>
+            <field name="name">L</field>
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.0</field>
             <field name="uom_type">reference</field>
         </record>
+        <record id="product_uom_cubic_meter" model="uom.uom">
+            <field name="name">m³</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor_inv">1000</field>
+            <field name="uom_type">bigger</field>
+        </record>
 
         <!--Americanization of units of measure-->
         <record id="product_uom_lb" model="uom.uom">
-            <field name="name">lbs</field>
+            <field name="name">lb</field>
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="factor">2.20462</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_oz" model="uom.uom">
-            <field name="name">ozs</field>
+            <field name="name">oz</field>
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="factor">35.274</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_inch" model="uom.uom">
-            <field name="name">inches</field>
+            <field name="name">in</field>
             <field name="category_id" ref="uom_categ_length"/>
             <field name="factor">39.3701</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_foot" model="uom.uom">
-            <field name="name">foot(ft)</field>
+            <field name="name">ft</field>
             <field name="category_id" ref="uom_categ_length"/>
             <field name="factor">3.28084</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_mile" model="uom.uom">
-            <field name="name">miles</field>
+            <field name="name">mi</field>
             <field name="category_id" ref="uom_categ_length"/>
             <field name="factor_inv" eval="1609.34"/>
             <field name="uom_type">bigger</field>
         </record>
         <record id="product_uom_floz" model="uom.uom">
-            <field name="name">fl oz</field>
+            <field name="name">fl oz (US)</field>
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">33.814</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_qt" model="uom.uom">
-            <field name="name">qt</field>
+            <field name="name">qt (US)</field>
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.05669</field>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_gal" model="uom.uom">
-            <field name="name">gals</field>
+            <field name="name">gal (US)</field>
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor_inv" eval="3.78541"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_cubic_inch" model="uom.uom">
+            <field name="name">in³</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">61.0237</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_cubic_foot" model="uom.uom">
+            <field name="name">ft³</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor_inv">28.3168</field>
             <field name="uom_type">bigger</field>
         </record>
     </data>
