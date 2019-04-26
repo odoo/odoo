@@ -36,7 +36,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import limited_image_resize, topological_sort, html_escape, pycompat
+from odoo.tools import image_process, topological_sort, html_escape, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
@@ -1036,12 +1036,9 @@ class Binary(http.Controller):
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
-                suffix = 'big' if field == 'image' else field.split('_')[-1]
-                if suffix in ('small', 'medium', 'large', 'big'):
-                    image_base64 = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(image_base64)
+                width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = limited_image_resize(
-            image_base64, width=width, height=height, crop=crop)
+        image_base64 = image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))

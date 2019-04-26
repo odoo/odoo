@@ -97,7 +97,7 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image_base64 = tools.image_optimize_for_web(image_base64)
+            image_base64 = tools.image_process(image_base64)
             mimetype = guess_mimetype(base64.b64decode(image_base64))
             # append image extension in name
             query += mimetypes.guess_extension(mimetype) or ''

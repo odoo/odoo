@@ -348,9 +348,9 @@ class Partner(models.Model):
             with open(img_path, 'rb') as f:
                 image_base64 = base64.b64encode(f.read())
         if image_base64 and colorize:
-            image_base64 = tools.image_colorize(image_base64)
+            image_base64 = tools.image_process(image_base64, colorize=True)
 
-        return tools.image_resize_image_big(image_base64)
+        return tools.image_process(image_base64, size=tools.IMAGE_BIG_SIZE)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
