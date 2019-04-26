@@ -32,18 +32,10 @@ class WebsiteProfile(http.Controller):
             return user.website_published and user.karma > 0
         return False
 
-    def _get_default_avatar(self, field, headers, width, height):
+    def _get_default_avatar(self):
         img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
         with open(img_path, 'rb') as f:
-            image = f.read()
-        content = base64.b64encode(image)
-        dictheaders = dict(headers) if headers else {}
-        dictheaders['Content-Type'] = 'image/png'
-        if not (width or height):
-            suffix = field.split('_')[-1] if '_' in field else 'large'
-            if suffix in ('small', 'medium', 'large', 'big'):
-                content = getattr(tools, 'image_resize_image_%s' % suffix)(content)
-        return content
+            return base64.b64encode(f.read())
 
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
@@ -99,10 +91,11 @@ class WebsiteProfile(http.Controller):
             return werkzeug.wrappers.Response(status=304)
 
         if not image_base64:
-            image_base64 = self._get_default_avatar(field, headers, width, height)
+            image_base64 = self._get_default_avatar()
+            if not (width or height):
+                width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.limited_image_resize(
-            image_base64, width=width, height=height, crop=crop)
+        image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))

@@ -7,11 +7,10 @@ from datetime import datetime
 from dateutil import relativedelta
 import pprint
 
-from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
+from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
+from odoo.tools import consteq, float_round, image_resize_images, image_process, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
-from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 
@@ -525,16 +524,16 @@ class PaymentIcon(models.Model):
         for vals in vals_list:
             if 'image' in vals:
                 image = ustr(vals['image'] or '').encode('utf-8')
-                vals['image_payment_form'] = image_resize_image(image, size=(45,30))
-                vals['image'] = image_resize_image(image, size=(64,64))
+                vals['image_payment_form'] = image_process(image, size=(45,30))
+                vals['image'] = image_process(image, size=(64,64))
         return super(PaymentIcon, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
             image = ustr(vals['image'] or '').encode('utf-8')
-            vals['image_payment_form'] = image_resize_image(image, size=(45,30))
-            vals['image'] = image_resize_image(image, size=(64,64))
+            vals['image_payment_form'] = image_process(image, size=(45,30))
+            vals['image'] = image_process(image, size=(64,64))
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
