@@ -52,7 +52,7 @@
 
         <div id="wrap" t-attf-class="container #{website_forum_action}">
             <div class="row">
-                <div class="o_wprofile_email_validation_container flex-grow-1 mb16 mt16 col-lg-9">
+                <div class="o_wprofile_email_validation_container mb16 mt16 col-lg-9">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/forum/%s' % forum.id"/>
                         <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the forum.'"/>
@@ -60,66 +60,65 @@
                     </t>
                     <t t-raw="0"/>
                 </div>
-                <t t-if="not is_profile_page">
-                    <div class="col-lg-3" id="right-column">
-                        <a role="button" type="button" class="btn btn-primary btn-lg btn-block mb-3" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
-                        <div class="card bg-secondary" t-if="question">
-                            <h6 class="card-header"><b>Writer</b></h6>
-                            <div class="card-body o_card_people">
-                                <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
-                                <h6 class="text-center">
-                                    <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
-                                    <b><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}'/></b>
-                                </h6>
-                            </div>
-                        </div>
-                        <div class="card my-3 bg-secondary" t-if="question and not len(question.tag_ids)&lt;=0">
-                            <h6 class="card-header">
-                                <b>
-                                    <t t-if="len(question.tag_ids)&lt;=1">
-                                        Tag
-                                    </t>
-                                    <t t-else="">
-                                        Tags
-                                    </t>
-                                </b>
+                <div class="col-lg-3" id="right-column" t-if="not is_profile_page">
+                    <a role="button" type="button" class="btn btn-primary btn-lg btn-block mb-3" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
+                    <div class="card bg-secondary" t-if="question">
+                        <h6 class="card-header"><b>Writer</b></h6>
+                        <div class="card-body o_card_people">
+                            <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
+                            <h6 class="text-center">
+                                <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
+                                <b><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}'/></b>
                             </h6>
-                            <div class="card-body">
-                                <t t-foreach="question.tag_ids" t-as="tag">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge badge-primary" t-field="tag.name"/>
+                        </div>
+                    </div>
+                    <div class="card my-3 bg-secondary" t-if="question and not len(question.tag_ids)&lt;=0">
+                        <h6 class="card-header">
+                            <b>
+                                <t t-if="len(question.tag_ids)&lt;=1">
+                                    Tag
                                 </t>
-                            </div>
-                        </div>
-                        <div class="card my-3 bg-secondary" t-if="question">
-                            <h6 class="card-header"><b>Keep Informed</b></h6>
-                            <div class="card-body o_subscribe_post">
-                                <t t-call="website_mail.follow">
-                                    <t t-set="object" t-value="question"/>
-                                    <t t-set="div_class" t-value="'mx-auto'"/>
+                                <t t-else="">
+                                    Tags
                                 </t>
-                                <div class="text-center mt-3">
-                                    <strong><t t-raw="len(question.message_follower_ids)"/> follower(s)</strong>
-                                </div>
-                            </div>
+                            </b>
+                        </h6>
+                        <div class="card-body">
+                            <t t-foreach="question.tag_ids" t-as="tag">
+                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge badge-primary" t-field="tag.name"/>
+                            </t>
                         </div>
-                        <div class="card my-3 bg-secondary" id="about_forum">
-                            <h6 class="card-header"><b>About This Community</b></h6>
-                            <div class="card-body">
-                                <span t-field="forum.description"/>
-                                <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="btn btn-primary mt-3">Read Guidelines</a>
-                                <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="btn btn-primary mt-3"> Back to <span t-field="forum.name"/></a>
-                            </div>
-                        </div>
-                        <div class="card my-3 bg-secondary" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
-                            <h6 class="card-header"><b>Moderation Tools</b></h6>
-                            <div class="card-body">
-                                <a t-attf-href="/forum/#{slug(forum)}/validation_queue" class="text-dark"><i class="fa fa-check-square-o mr-2 text-primary"/><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
-                                <hr style="margin-top:4px;margin-bottom:0;padding-bottom:4px;" />
-                                <a t-attf-href="/forum/#{slug(forum)}/flagged_queue" class="text-dark"><i class="fa fa-flag mr-2 text-primary"/><strong id="count_flagged_posts"><t t-esc="forum.count_flagged_posts"/></strong> post<t t-if="forum.count_flagged_posts&gt;1">s</t> flagged</a>
+                    </div>
+                    <div class="card my-3 bg-secondary" t-if="question">
+                        <h6 class="card-header"><b>Keep Informed</b></h6>
+                        <div class="card-body o_subscribe_post">
+                            <t t-call="website_mail.follow">
+                                <t t-set="object" t-value="question"/>
+                                <t t-set="div_class" t-value="'mx-auto'"/>
+                            </t>
+                            <div class="text-center mt-3">
+                                <strong><t t-raw="len(question.message_follower_ids)"/> follower(s)</strong>
                             </div>
                         </div>
                     </div>
-                </t>
+                    <div class="card my-3 bg-secondary" id="about_forum">
+                        <h6 class="card-header"><b>About This Community</b></h6>
+                        <div class="card-body">
+                            <span t-field="forum.description"/>
+                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="btn btn-primary mt-3">Read Guidelines</a>
+                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="btn btn-primary mt-3"> Back to <span t-field="forum.name"/></a>
+                        </div>
+                    </div>
+                    <div class="card my-3 bg-secondary" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
+                        <h6 class="card-header"><b>Moderation Tools</b></h6>
+                        <div class="card-body">
+                            <a t-attf-href="/forum/#{slug(forum)}/validation_queue" class="text-dark"><i class="fa fa-check-square-o mr-2 text-primary"/><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
+                            <hr style="margin-top:4px;margin-bottom:0;padding-bottom:4px;" />
+                            <a t-attf-href="/forum/#{slug(forum)}/flagged_queue" class="text-dark"><i class="fa fa-flag mr-2 text-primary"/><strong id="count_flagged_posts"><t t-esc="forum.count_flagged_posts"/></strong> post<t t-if="forum.count_flagged_posts&gt;1">s</t> flagged</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
@@ -380,12 +379,14 @@
     <t t-call="website.layout">
         <div class="container">
             <h1 class="mb32">Our forums</h1>
-            <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
-            <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
-                <a t-attf-href="/forum/#{ slug(forum) }">
-                    <div class="fa fa-5x fa-fcomment mb16" role="img" aria-label="Forum" title="Forum"/>
-                    <div t-field="forum.name"/>
-                </a>
+            <div class='row'>
+                <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
+                <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
+                    <a t-attf-href="/forum/#{ slug(forum) }">
+                        <div class="fa fa-5x fa-comment mb16" role="img" aria-label="Forum" title="Forum"/>
+                        <div t-field="forum.name"/>
+                    </a>
+                </div>
             </div>
         </div>
     </t>
