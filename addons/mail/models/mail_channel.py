@@ -185,6 +185,31 @@ class Channel(models.Model):
             if record.channel_type == 'chat':
                 record.is_chat = True
 
+    @api.multi
+    def _get_message_unread(self):
+        super(Channel, self)._get_message_unread()
+        res = dict((res_id, 0) for res_id in self.ids)
+        partner_id = self.env.user.partner_id.id
+
+        # search for unread messages, directly in SQL to improve performances
+        self._cr.execute(""" SELECT cp.channel_id, count(*) FROM mail_message msg
+                             JOIN mail_message_mail_channel_rel rel
+                             ON rel.mail_message_id = msg.id
+                             JOIN mail_channel_partner cp
+                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                                (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+                             WHERE msg.model = 'mail.channel' AND cp.channel_id = ANY(%s) AND
+                                   (msg.author_id IS NULL OR msg.author_id != %s) AND
+                                   (msg.message_type != 'notification' OR msg.model != 'mail.channel')
+                             GROUP BY cp.channel_id""",
+                         (partner_id, list(self.ids), partner_id,))
+        for result in self._cr.fetchall():
+            res[result[0]] = result[1]
+
+        for record in self:
+            record.message_unread_counter = res.get(record.id, 0)
+            record.message_unread = bool(record.message_unread_counter)
+
     @api.onchange('public')
     def _onchange_public(self):
         if self.public == 'public':
