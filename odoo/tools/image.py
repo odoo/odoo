@@ -99,14 +99,14 @@ def image_resize_image(base64_source, size=IMAGE_BIG_SIZE, filetype=None, avoid_
         return base64_source
 
     if image.size != size:
-        image = image_resize_and_sharpen(image, size, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
+        image = image_resize_and_sharpen(image, size, preserve_aspect_ratio=preserve_aspect_ratio)
     if image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (filetype == 'JPEG' and image.mode == 'RGBA'):
         image = image.convert("RGB")
 
     return image_to_base64(image, filetype)
 
 
-def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0, upper_limit=False):
+def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0):
     """
         Create a thumbnail by resizing while keeping ratio.
         A sharpen filter is applied for a better looking result.
@@ -125,10 +125,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     sharpener = ImageEnhance.Sharpness(image)
     resized_image = sharpener.enhance(factor)
     # create a transparent image for background and paste the image on it
-    if upper_limit:
-        image = Image.new('RGBA', (size[0], size[1]-3), (255, 255, 255, 0)) # FIXME temporary fix for trimming the ghost border.
-    else:
-        image = Image.new('RGBA', size, (255, 255, 255, 0))
+    image = Image.new('RGBA', size, (255, 255, 255, 0))
     image.paste(resized_image, ((size[0] - resized_image.size[0]) // 2, (size[1] - resized_image.size[1]) // 2))
 
     if image.mode != origin_mode:
