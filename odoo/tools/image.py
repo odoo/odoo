@@ -171,7 +171,7 @@ def image_resize_image_small(base64_source, filetype=None):
 # Crop Image
 # ----------------------------------------
 
-def crop_image(base64_source, type='top', ratio=None, size=None, image_format=None):
+def crop_image(base64_source, size, type='center', image_format=None):
     """ Used for cropping image and create thumbnail
         :param base64_source: the image base64 encoded
         :param type: Used for cropping position possible
@@ -188,31 +188,26 @@ def crop_image(base64_source, type='top', ratio=None, size=None, image_format=No
         return False
     image = base64_to_image(base64_source)
     w, h = image.size
-    new_h = h
-    new_w = w
-
-    if ratio:
-        w_ratio, h_ratio = ratio
-        new_h = (w * h_ratio) // w_ratio
-        new_w = w
-        if new_h > h:
-            new_h = h
-            new_w = (h * w_ratio) // h_ratio
-
     image_format = image_format or image.format or 'JPEG'
+
+    new_w, new_h = size
+
+    if new_w > w:
+        new_w, new_h = w, (new_h * w) // new_w
+    if new_h > h:
+        new_w, new_h = (new_w * h) // new_h, h
+
+    box = None
     if type == "top":
         box = (0, 0, new_w, new_h)
     elif type == "center":
         box = ((w - new_w) // 2, (h - new_h) // 2, (w + new_w) // 2, (h + new_h) // 2)
     elif type == "bottom":
         box = (0, h - new_h, new_w, h)
-    else:
-        raise ValueError('ERROR: invalid value for crop_type')
+    if box:
+        image = image.crop(box)
 
-    image = image.crop(box)
-
-    if size:
-        image.thumbnail(size, Image.LANCZOS)
+    image.thumbnail(size, Image.LANCZOS)
 
     return image_to_base64(image, image_format)
 
@@ -361,7 +356,7 @@ def limited_image_resize(base64_source, width=None, height=None, crop=False):
     """
     if base64_source and (width or height):
         if crop:
-            return crop_image(base64_source, type='center', size=(width, height), ratio=(1, 1))
+            return crop_image(base64_source, size=(width, height))
         else:
             return image_resize_image(base64_source=base64_source, size=(width, height))
     return base64_source
