@@ -1025,28 +1025,27 @@ class Binary(http.Controller):
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
                       upper_limit=False, placeholder='placeholder.png', **kw):
-        status, headers, content = request.env['ir.http'].binary_content(
+        status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
         if status == 301 or (status != 200 and download):
-            return request.env['ir.http']._response_by_status(status, headers, content)
-        if not content:
-            content = base64.b64encode(self.placeholder(image=placeholder))
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+        if not image_base64:
+            image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
                 suffix = 'big' if field == 'image' else field.split('_')[-1]
                 if suffix in ('small', 'medium', 'large', 'big'):
-                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+                    image_base64 = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(image_base64)
 
+        image_base64 = limited_image_resize(
+            image_base64, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
 
-        content = limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
-
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers.append(('Content-Length', len(content)))
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
