@@ -185,8 +185,8 @@ class Import(models.TransientModel):
             if ext in EXTENSIONS:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
-                except Exception:
-                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
+                except Exception as exp_error:
+                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension: %s", self.file_name, self.id, exp_error)
 
         if req:
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
