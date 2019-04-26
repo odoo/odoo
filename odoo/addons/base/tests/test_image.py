@@ -3,7 +3,7 @@
 
 import base64
 import binascii
-import PIL
+from PIL import Image, ImageDraw, PngImagePlugin
 
 from odoo import tools
 from odoo.tests.common import TransactionCase
@@ -20,220 +20,216 @@ class TestImage(TransactionCase):
     """
     def setUp(self):
         super(TestImage, self).setUp()
-        # This is the base64 of a 1px * 1px image saved as PNG.
-        self.base64_image_1x1 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+        self.bg_color = (135, 90, 123)
+        self.fill_color = (0, 160, 157)
+
+        self.base64_1x1_png = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
         self.base64_svg = base64.b64encode(b'<svg></svg>')
-        self.base64_image_1920_1080 = tools.image_to_base64(PIL.Image.new('RGB', (1920, 1080)), 'JPEG')
+        self.base64_1920x1080_jpeg = tools.image_to_base64(Image.new('RGB', (1920, 1080)), 'JPEG')
+
+        # Draw a red square in the middle of the image, this will be used to
+        # verify crop is working. The border is going to be `self.bg_color` and
+        # the middle is going to be `self.fill_color`.
+
+        # horizontal image (border is left/right)
+        image = Image.new('RGB', (1920, 1080), color=self.bg_color)
+        offset = (image.size[0] - image.size[1]) / 2
+        draw = ImageDraw.Draw(image)
+        draw.rectangle(xy=[
+            (offset, 0),
+            (image.size[0] - offset, image.size[1])
+        ], fill=self.fill_color)
+        self.base64_1920x1080_png = tools.image_to_base64(image, 'PNG')
+
+        # vertical image (border is top/bottom)
+        image = Image.new('RGB', (1080, 1920), color=self.bg_color)
+        offset = (image.size[1] - image.size[0]) / 2
+        draw = ImageDraw.Draw(image)
+        draw.rectangle(xy=[
+            (0, offset),
+            (image.size[0], image.size[1] - offset)
+        ], fill=self.fill_color)
+        self.base64_1080x1920_png = tools.image_to_base64(image, 'PNG')
 
     def test_00_base64_to_image(self):
         """Test that base64 is correctly opened as a PIL image."""
+        image = tools.base64_to_image(self.base64_1x1_png)
+        self.assertEqual(type(image), PngImagePlugin.PngImageFile, "base64 as bytes, correct format")
+        self.assertEqual(image.size, (1, 1), "base64 as bytes, correct size")
 
-        # CASE: base64 as bytes
-        image = tools.base64_to_image(self.base64_image_1x1)
-        self.assertEqual(type(image), PIL.PngImagePlugin.PngImageFile)
-        self.assertEqual(image.size, (1, 1))
+        image = tools.base64_to_image(self.base64_1x1_png.decode('ASCII'))
+        self.assertEqual(type(image), PngImagePlugin.PngImageFile, "base64 as string, correct format")
+        self.assertEqual(image.size, (1, 1), "base64 as string, correct size")
 
-        # CASE: base64 as string
-        image = tools.base64_to_image(self.base64_image_1x1.decode('ASCII'))
-        self.assertEqual(type(image), PIL.PngImagePlugin.PngImageFile)
-        self.assertEqual(image.size, (1, 1))
-
-        # CASE: wrong base64: binascii.Error: Incorrect padding
-        with self.assertRaises(binascii.Error):
+        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
             image = tools.base64_to_image(b'oazdazpodazdpok')
 
-        # CASE: wrong base64: OSError: cannot identify image file
-        with self.assertRaises(OSError):
+        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
             image = tools.base64_to_image(b'oazdazpodazdpokd')
 
     def test_01_image_to_base64(self):
         """Test that a PIL image is correctly saved as base64."""
-        image = PIL.Image.new('RGB', (1, 1))
+        image = Image.new('RGB', (1, 1))
         image_base64 = tools.image_to_base64(image, 'PNG')
-        self.assertEqual(image_base64, self.base64_image_1x1)
+        self.assertEqual(image_base64, self.base64_1x1_png)
 
-    def test_10_image_process_resize(self):
-        """Test that image_process is working as expected for resizeing."""
+    def test_10_image_process_base64_source(self):
+        """Test the base64_source parameter of image_process."""
+        self.assertFalse(tools.image_process(False), "return False if base64_source is falsy")
+        self.assertEqual(tools.image_process(self.base64_svg), self.base64_svg, "return base64_source if format is SVG")
 
-        # CASE: return False if base64_source is falsy
-        res = tools.image_process(False)
-        self.assertFalse(res)
+        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
+            tools.image_process(b'oazdazpodazdpok')
 
-        # CASE: return base64_source if format is SVG
-        res = tools.image_process(self.base64_svg)
-        self.assertEqual(res, self.base64_svg)
+        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
+            tools.image_process(b'oazdazpodazdpokd')
 
-        # CASE: correct resize (keep ratio)
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(800, 600)))
-        self.assertEqual(image.size, (800, 450))
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg))
+        self.assertEqual(image.size, (1920, 1080), "OK return the image")
 
-        # CASE: change format to PNG
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, output_format='PNG'))
-        self.assertEqual(image.format, 'PNG')
+    def test_11_image_process_size(self):
+        """Test the size parameter of image_process."""
 
-        # CASE: change format to JPEG (case insensitive)
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1x1, output_format='jpeg'))
-        self.assertEqual(image.format, 'JPEG')
+        # Format of `tests`: (original base64 image, size parameter, expected result, text)
+        tests = [
+            (self.base64_1920x1080_jpeg, (192, 108), (192, 108), "resize to given size"),
+            (self.base64_1920x1080_jpeg, (1920, 1080), (1920, 1080), "same size, no change"),
+            (self.base64_1920x1080_jpeg, (192, None), (192, 108), "set height from ratio"),
+            (self.base64_1920x1080_jpeg, (0, 108), (192, 108), "set width from ratio"),
+            (self.base64_1920x1080_jpeg, (192, 200), (192, 108), "adapt to width"),
+            (self.base64_1920x1080_jpeg, (400, 108), (192, 108), "adapt to height"),
+            (self.base64_1920x1080_jpeg, (3000, 2000), (1920, 1080), "don't resize above original, both set"),
+            (self.base64_1920x1080_jpeg, (3000, False), (1920, 1080), "don't resize above original, width set"),
+            (self.base64_1920x1080_jpeg, (None, 2000), (1920, 1080), "don't resize above original, height set"),
+            (self.base64_1080x1920_png, (3000, 192), (108, 192), "vertical image, resize if below"),
+        ]
 
-        # CASE: change format to BMP converted to PNG
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1x1, output_format='BMP'))
-        self.assertEqual(image.format, 'PNG')
+        count = 0
+        for test in tests:
+            image = tools.base64_to_image(tools.image_process(test[0], size=test[1]))
+            self.assertEqual(image.size, test[2], test[3])
+            count = count + 1
+        self.assertEqual(count, 10, "ensure the loop is ran")
 
-        # CASE: change format PNG with RGBA to JPEG
-        base64_image_1080_1920_rgba = tools.image_to_base64(PIL.Image.new('RGBA', (1080, 1920)), 'PNG')
-        image = tools.base64_to_image(tools.image_process(base64_image_1080_1920_rgba, output_format='jpeg'))
-        self.assertEqual(image.format, 'JPEG')
+    def test_12_image_process_verify_resolution(self):
+        """Test the verify_resolution parameter of image_process."""
+        res = tools.image_process(self.base64_1920x1080_jpeg, verify_resolution=True)
+        self.assertNotEqual(res, False, "size ok")
+        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (45001, 1000)), 'PNG')
+        with self.assertRaises(ValueError, msg="size excessive"):
+            tools.image_process(base64_image_excessive, verify_resolution=True)
 
-        # CASE: keep ratio if no height given
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(192, None)))
-        self.assertEqual(image.size, (192, 108))
-
-        # CASE: keep ratio if no width given
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(None, 108)))
-        self.assertEqual(image.size, (192, 108))
-
-        # CASE: size above, return original
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(3000, 2000)))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: same size, no change
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(1920, 1080)))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: no resize if above
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(3000, None)))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: no resize if above
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(None, 2000)))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: vertical image, correct resize if below
-        base64_image_1080_1920 = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'PNG')
-        image = tools.base64_to_image(tools.image_process(base64_image_1080_1920, size=(3000, 192)))
-        self.assertEqual(image.size, (108, 192))
-
-        # CASE: adapt to width
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(192, 200)))
-        self.assertEqual(image.size, (192, 108))
-
-        # CASE: adapt to height
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(400, 108)))
-        self.assertEqual(image.size, (192, 108))
-
-    def test_11_image_process(self):
-        """Test that image_proces is working as expected."""
-        # CASE: return base64_source if format is SVG
-        res = tools.image_process(self.base64_svg)
-        self.assertEqual(res, self.base64_svg)
-
-        # CASE: size excessive
-        base64_image_excessive = tools.image_to_base64(PIL.Image.new('RGB', (45001, 1000)), 'PNG')
-        with self.assertRaises(ValueError):
-            res = tools.image_process(base64_image_excessive, verify_resolution=True)
-
-        # CASE: max_width
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, (192, 0)))
-        self.assertEqual(image.size, (192, 108))
+    def test_13_image_process_quality(self):
+        """Test the quality parameter of image_process."""
 
         # CASE: PNG RGBA doesn't apply quality, just optimize
-        base64_image_1080_1920_rgba = tools.image_to_base64(PIL.Image.new('RGBA', (1080, 1920)), 'PNG')
-        res = tools.image_process(base64_image_1080_1920_rgba)
-        self.assertLessEqual(len(res), len(base64_image_1080_1920_rgba))
+        image = tools.image_to_base64(Image.new('RGBA', (1080, 1920)), 'PNG')
+        res = tools.image_process(image)
+        self.assertLessEqual(len(res), len(image))
 
         # CASE: PNG RGB doesn't apply quality, just optimize
-        base64_image_1080_1920_rgb = tools.image_to_base64(PIL.Image.new('P', (1080, 1920)), 'PNG')
-        res = tools.image_process(base64_image_1080_1920_rgb)
-        self.assertLessEqual(len(res), len(base64_image_1080_1920_rgb))
+        image = tools.image_to_base64(Image.new('P', (1080, 1920)), 'PNG')
+        res = tools.image_process(image)
+        self.assertLessEqual(len(res), len(image))
 
-        # CASE: JPEG strictly reduced quality
-        res = tools.image_process(self.base64_image_1920_1080)
-        self.assertLessEqual(len(res), len(self.base64_image_1920_1080))
+        # CASE: JPEG optimize + reduced quality
+        res = tools.image_process(self.base64_1920x1080_jpeg)
+        self.assertLessEqual(len(res), len(self.base64_1920x1080_jpeg))
 
         # CASE: GIF doesn't apply quality, just optimize
-        base64_image_1080_1920_gif = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'GIF')
-        res = tools.image_process(base64_image_1080_1920_gif)
-        self.assertLessEqual(len(res), len(base64_image_1080_1920_gif))
+        image = tools.image_to_base64(Image.new('RGB', (1080, 1920)), 'GIF')
+        res = tools.image_process(image)
+        self.assertLessEqual(len(res), len(image))
 
-        # CASE: unsupported format
-        base64_image_1080_1920_tiff = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'TIFF')
-        image = tools.base64_to_image(tools.image_process(base64_image_1080_1920_tiff))
-        self.assertEqual(image.format, 'JPEG')
+    def test_14_image_process_crop(self):
+        """Test the crop parameter of image_process."""
 
-    def test_12_image_process(self):
-        """Test that image_process is working as expected with crop."""
+        # Optimized PNG use palette, getpixel below will return palette value.
+        fill = 0
+        bg = 1
 
-        # CASE: return False if base64_source is falsy
-        res = tools.image_process(False, size=(1, 1), crop='center')
-        self.assertFalse(res)
+        # Format of `tests`: (original base64 image, size parameter, crop parameter, res size, res color (top, bottom, left, right), text)
+        tests = [
+            (self.base64_1920x1080_png, None, None, (1920, 1080), (fill, fill, bg, bg), "horizontal, verify initial"),
+            (self.base64_1920x1080_png, (2000, 2000), 'center', (1080, 1080), (fill, fill, fill, fill), "horizontal, crop biggest possible"),
+            (self.base64_1920x1080_png, (2000, 4000), 'center', (540, 1080), (fill, fill, fill, fill), "horizontal, size vertical, limit height"),
+            (self.base64_1920x1080_png, (4000, 2000), 'center', (1920, 960), (fill, fill, bg, bg), "horizontal, size horizontal, limit width"),
+            (self.base64_1920x1080_png, (512, 512), 'center', (512, 512), (fill, fill, fill, fill), "horizontal, type center"),
+            (self.base64_1920x1080_png, (512, 512), 'top', (512, 512), (fill, fill, fill, fill), "horizontal, type top"),
+            (self.base64_1920x1080_png, (512, 512), 'bottom', (512, 512), (fill, fill, fill, fill), "horizontal, type bottom"),
+            (self.base64_1920x1080_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "horizontal, wrong crop value, use center"),
+            (self.base64_1920x1080_png, (192, 0), None, (192, 108), (fill, fill, bg, bg), "horizontal, not cropped, just do resize"),
 
-        # CASE: size, crop biggest possible
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 2000), crop='center'))
-        self.assertEqual(image.size, (1080, 1080))
+            (self.base64_1080x1920_png, None, None, (1080, 1920), (bg, bg, fill, fill), "vertical, verify initial"),
+            (self.base64_1080x1920_png, (2000, 2000), 'center', (1080, 1080), (fill, fill, fill, fill), "vertical, crop biggest possible"),
+            (self.base64_1080x1920_png, (2000, 4000), 'center', (960, 1920), (bg, bg, fill, fill), "vertical, size vertical, limit height"),
+            (self.base64_1080x1920_png, (4000, 2000), 'center', (1080, 540), (fill, fill, fill, fill), "vertical, size horizontal, limit width"),
+            (self.base64_1080x1920_png, (512, 512), 'center', (512, 512), (fill, fill, fill, fill), "vertical, type center"),
+            (self.base64_1080x1920_png, (512, 512), 'top', (512, 512), (bg, fill, fill, fill), "vertical, type top"),
+            (self.base64_1080x1920_png, (512, 512), 'bottom', (512, 512), (fill, bg, fill, fill), "vertical, type bottom"),
+            (self.base64_1080x1920_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "vertical, wrong crop value, use center"),
+            (self.base64_1080x1920_png, (108, 0), None, (108, 192), (bg, bg, fill, fill), "vertical, not cropped, just do resize"),
+        ]
 
-        # CASE: size vertical, limit height
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 4000), crop='center'))
-        self.assertEqual(image.size, (540, 1080))
+        count = 0
+        for test in tests:
+            count = count + 1
+            # process the image
+            image = tools.base64_to_image(tools.image_process(test[0], size=test[1], crop=test[2]))
+            # verify size
+            self.assertEqual(image.size, test[3], "%s - correct size" % test[5])
 
-        # CASE: size horizontal, limit width
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(4000, 2000), crop='center'))
-        self.assertEqual(image.size, (1920, 960))
+            half_width, half_height = image.size[0] / 2, image.size[1] / 2
+            top, bottom, left, right = 0, image.size[1] - 1, 0, image.size[0] - 1
+            # verify top
+            px = (half_width, top)
+            self.assertEqual(image.getpixel(px), test[4][0], "%s - color top (%s, %s)" % (test[5], px[0], px[1]))
+            # verify bottom
+            px = (half_width, bottom)
+            self.assertEqual(image.getpixel(px), test[4][1], "%s - color bottom (%s, %s)" % (test[5], px[0], px[1]))
+            # verify left
+            px = (left, half_height)
+            self.assertEqual(image.getpixel(px), test[4][2], "%s - color left (%s, %s)" % (test[5], px[0], px[1]))
+            # verify right
+            px = (right, half_height)
+            self.assertEqual(image.getpixel(px), test[4][3], "%s - color right (%s, %s)" % (test[5], px[0], px[1]))
 
-        # CASE: type center
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 2000), crop='center'))
-        self.assertEqual(image.size, (1080, 1080))
+        self.assertEqual(count, 2 * 9, "ensure the loop is ran")
 
-        # CASE: type center
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 2000), crop='top'))
-        self.assertEqual(image.size, (1080, 1080))
-
-        # CASE: type bottom
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 2000), crop='bottom'))
-        self.assertEqual(image.size, (1080, 1080))
-
-        # CASE: wrong crop value, use center
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(2000, 2000), crop='wrong'))
-        self.assertEqual(image.size, (1080, 1080))
-
-        # CASE: size given, resize too
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, size=(512, 512), crop='center'))
-        self.assertEqual(image.size, (512, 512))
-
-    def test_13_image_process_colorize(self):
-        """Test that image_process is working as expected for colorize."""
+    def test_15_image_process_colorize(self):
+        """Test the colorize parameter of image_process."""
 
         # verify initial condition
-        image_rgba = PIL.Image.new('RGBA', (1, 1))
+        image_rgba = Image.new('RGBA', (1, 1))
+        self.assertEqual(image_rgba.mode, 'RGBA')
         self.assertEqual(image_rgba.getpixel((0, 0)), (0, 0, 0, 0))
         base64_rgba = tools.image_to_base64(image_rgba, 'PNG')
 
         # CASE: color random, color has changed
         image = tools.base64_to_image(tools.image_process(base64_rgba, colorize=True))
+        self.assertEqual(image.mode, 'P')
         self.assertNotEqual(image.getpixel((0, 0)), (0, 0, 0))
 
-    def test_16_image_process_resize(self):
-        """Test that image_process is working as expected."""
+    def test_16_image_process_format(self):
+        """Test the format parameter of image_process."""
 
-        # CASE: return input if no width or height
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080))
-        self.assertEqual(image.size, (1920, 1080))
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, output_format='PNG'))
+        self.assertEqual(image.format, 'PNG', "change format to PNG")
 
-        # CASE: given width, resize and keep ratio
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, (192, 0)))
-        self.assertEqual(image.size, (192, 108))
+        image = tools.base64_to_image(tools.image_process(self.base64_1x1_png, output_format='JpEg'))
+        self.assertEqual(image.format, 'JPEG', "change format to JPEG (case insensitive)")
 
-        # CASE: given height, resize and keep ratio
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, (0, 108)))
-        self.assertEqual(image.size, (192, 108))
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, output_format='BMP'))
+        self.assertEqual(image.format, 'PNG', "change format to BMP converted to PNG")
 
-        # CASE: crop
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, (192, 108), crop=True))
-        self.assertEqual(image.size, (192, 108))
+        self.base64_image_1080_1920_rgba = tools.image_to_base64(Image.new('RGBA', (108, 192)), 'PNG')
+        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_rgba, output_format='jpeg'))
+        self.assertEqual(image.format, 'JPEG', "change format PNG with RGBA to JPEG")
 
-        # CASE: keep ratio
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1920_1080, (1000, 1000)))
-        self.assertEqual(image.size, (1000, 562))
+        self.base64_image_1080_1920_tiff = tools.image_to_base64(Image.new('RGB', (108, 192)), 'TIFF')
+        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_tiff))
+        self.assertEqual(image.format, 'JPEG', "unsupported format to JPEG")
 
-    def test_17_image_data_uri(self):
+    def test_20_image_data_uri(self):
         """Test that image_data_uri is working as expected."""
-        self.assertEqual(tools.image_data_uri(self.base64_image_1x1), 'data:image/png;base64,' + self.base64_image_1x1.decode('ascii'))
+        self.assertEqual(tools.image_data_uri(self.base64_1x1_png), 'data:image/png;base64,' + self.base64_1x1_png.decode('ascii'))
