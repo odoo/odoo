@@ -176,40 +176,40 @@ class TestImage(TransactionCase):
         """Test that crop_image is working as expected."""
 
         # CASE: return False if base64_source is falsy
-        res = tools.crop_image(False)
+        res = tools.crop_image(False, size=(1, 1))
         self.assertFalse(res)
 
-        # CASE: no param, no crop
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: ratio, crop biggest possible
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(1, 1)))
+        # CASE: size, crop biggest possible
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000)))
         self.assertEqual(image.size, (1080, 1080))
 
-        # CASE: ratio vertical, limit height
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(1, 2)))
+        # CASE: size vertical, limit height
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 4000)))
         self.assertEqual(image.size, (540, 1080))
 
-        # CASE: ratio horizontal, limit width
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(2, 1)))
+        # CASE: size horizontal, limit width
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(4000, 2000)))
         self.assertEqual(image.size, (1920, 960))
 
         # CASE: type center
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(1, 1), type='center'))
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='center'))
+        self.assertEqual(image.size, (1080, 1080))
+
+        # CASE: type center
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='top'))
         self.assertEqual(image.size, (1080, 1080))
 
         # CASE: type bottom
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(1, 1), type='bottom'))
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='bottom'))
         self.assertEqual(image.size, (1080, 1080))
 
-        # CASE: wrong type
-        with self.assertRaises(ValueError):
-            tools.crop_image(self.base64_image_1920_1080, ratio=(1, 1), type='wrong')
+        # CASE: wrong type, no change
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='wrong'))
+        self.assertEqual(image.size, (1920, 1080))
 
-        # CASE: size given, resize too (but keep ratio)
-        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, ratio=(2, 1), size=(512, 512)))
-        self.assertEqual(image.size, (512, 256))
+        # CASE: size given, resize too
+        image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(512, 512)))
+        self.assertEqual(image.size, (512, 512))
 
     def test_13_image_colorize(self):
         """Test that image_colorize is working as expected."""
@@ -244,11 +244,11 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, height=108))
         self.assertEqual(image.size, (192, 108))
 
-        # CASE: if crop, ratio always 1:1
+        # CASE: crop
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=192, height=108, crop=True))
-        self.assertEqual(image.size, (108, 108))
+        self.assertEqual(image.size, (192, 108))
 
-        # keep ratio
+        # CASE: keep ratio
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=1000, height=1000))
         self.assertEqual(image.size, (1000, 562))
 
