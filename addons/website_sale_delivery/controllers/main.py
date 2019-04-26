@@ -31,10 +31,12 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     @http.route(['/shop/carrier_rate_shipment'], type='json', auth='public', methods=['POST'], website=True)
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
-        Monetary = request.env['ir.qweb.field.monetary']
         order = request.website.sale_get_order(force_create=True)
+        assert int(carrier_id) in order._get_delivery_methods().ids, "unallowed carrier"
+        Monetary = request.env['ir.qweb.field.monetary']
+
         res = {'carrier_id': carrier_id}
-        carrier = request.env['delivery.carrier'].browse(int(carrier_id))
+        carrier = request.env['delivery.carrier'].sudo().browse(int(carrier_id))
         rate = carrier.rate_shipment(order)
         if rate.get('success'):
             res['status'] = True
