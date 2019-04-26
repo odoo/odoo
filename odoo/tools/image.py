@@ -35,92 +35,166 @@ IMAGE_SMALL_SIZE = (64, 64)
 IMAGE_MAX_RESOLUTION = 45e6
 
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=80, crop=None, colorize=False, output_format=None):
-    """Process the `base64_source` image by executing the given operations and
-    return the result as a base64 encoded image.
+class ImageProcess():
 
-    :param base64_source: the original image base64 encoded
-        Return False immediately if `base64_source` is falsy or if the image
-            cannot be identified by Pillow.
-        Return the given `base64_source` without change if the image is SVG.
-    :type base64_source: string or bytes
+    def __init__(self, base64_source, verify_resolution=True):
+        """Initialize the `base64_source` image for processing.
 
-    :param size: resize the image
-        - The image is never resized above the original image size.
-        - The original image ratio is preserved, unless `crop` is also given.
-        - If width or height is falsy, it will be computed from the other value
-            and from the ratio of the original image.
-        - If size is falsy or both width and height are falsy, no resize is done.
-    :type max_width: tuple (width, height)
+        :param base64_source: the original image base64 encoded
+            No processing will be done if the `base64_source` is falsy or if
+            the image is SVG.
+        :type base64_source: string or bytes
 
-    :param verify_resolution: if True, make sure the original image size is not
-        excessive before starting to process it. The max allowed resolution is
-        defined by `IMAGE_MAX_RESOLUTION`.
-    :type verify_resolution: bool
+        :param verify_resolution: if True, make sure the original image size is not
+            excessive before starting to process it. The max allowed resolution is
+            defined by `IMAGE_MAX_RESOLUTION`.
+        :type verify_resolution: bool
 
-    :param quality: quality setting to apply.
-        - Ignored if image is not JPEG.
-        - 1 is worse, 95 is best. Default to 80.
-    :type quality: int
+        :return: self
+        :rtype: ImageProcess
 
-    :param crop: crop the image.
-        Instead of preserving the ratio of the original image, this will force
-        the output to take the ratio of the given `size`. Both `size` width
-        and height have to be defined for `crop` to work.
-        The value of `crop` defines where to crop: 'center', 'top', 'bottom'.
-        Default to 'center' if truthy.
-    :type crop: string
+        :raise: ValueError if `verify_resolution` is True and the image is too large
+        :raise: binascii.Error: if the base64 is incorrect
+        :raise: OSError if the image can't be identified by PIL
+        """
+        self.base64_source = base64_source or False
 
-    :param colorize: replace the trasparent background by a random color
-    :type colorize: bool
+        if not base64_source or base64_source[:1] == b'P':
+            # don't process empty source or SVG
+            self.image = False
+        else:
+            self.image = base64_to_image(self.base64_source)
 
-    :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
-        Default to the format of the original image.
-        BMP is converted to PNG, other formats are converted to JPEG.
-    :type output_format: string
+            w, h = self.image.size
+            if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
+                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
 
-    :return: image after the operations have been applied, base64 encoded
-    :rtype: bytes
+            self.original_format = self.image.format
 
-    :raise: ValueError if `verify_resolution` is True and the image is too large
-    :raise: binascii.Error: if the base64 is incorrect
-    :raise: OSError if the image can't be identified by PIL
-    """
-    if not base64_source:
-        return False
-    if base64_source[:1] == b'P':
-        # don't process SVG
-        return base64_source
+    def image_base64(self, quality=80, output_format=None):
+        """Return the base64 encoded image resulting of all the image processing
+        operations that have been applied previously.
 
-    image = base64_to_image(base64_source)
+        Return False if the initialized `base64_source` was falsy, and return
+        the initialized `base64_source` without change if it was SVG.
 
-    w, h = image.size
-    if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-        raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
+        :param quality: quality setting to apply.
+            - Ignored if image is not JPEG.
+            - 1 is worse, 95 is best. Default to 80.
+        :type quality: int
 
-    # get the format of the original image (must be done before resize)
-    output_format = (output_format or image.format).upper()
-    if output_format == 'BMP':
-        output_format = 'PNG'
-    elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
-        output_format = 'JPEG'
+        :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
+            Default to the format of the original image. BMP is converted to
+            PNG, other formats than those mentioned above are converted to JPEG.
+        :type output_format: string
 
-    opt = {'format': output_format}
+        :return: image base64 encoded or False
+        :rtype: bytes or False
+        """
+        output_image = self.image
 
-    if size and (size[0] or size[1]):
-        w, h = image.size
-        asked_width = size[0] or (w * size[1]) // h
-        asked_height = size[1] or (h * size[0]) // w
+        if not output_image:
+            return self.base64_source
 
-        if crop:
+        output_format = (output_format or self.original_format).upper()
+        if output_format == 'BMP':
+            output_format = 'PNG'
+        elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
+            output_format = 'JPEG'
+
+        opt = {'format': output_format}
+
+        if output_format == 'PNG':
+            opt['optimize'] = True
+            alpha = False
+            if output_image.mode in ('RGBA', 'LA') or (output_image.mode == 'P' and 'transparency' in output_image.info):
+                alpha = output_image.convert('RGBA').split()[-1]
+            if output_image.mode != 'P':
+                # Floyd Steinberg dithering by default
+                output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+            if alpha:
+                output_image.putalpha(alpha)
+        if output_format == 'JPEG':
+            opt['optimize'] = True
+            opt['quality'] = quality
+        if output_format == 'GIF':
+            opt['optimize'] = True
+
+        if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
+            output_image = output_image.convert("RGB")
+
+        return image_to_base64(output_image, **opt)
+
+    def resize(self, max_width=0, max_height=0):
+        """Resize the image.
+
+        The image is never resized above the current image size. This method is
+        only to create a smaller version of the image.
+
+        The current ratio is preserved. To change the ratio, see `crop_resize`.
+
+        If `max_width` or `max_height` is falsy, it will be computed from the
+        other to keep the current ratio. If both are falsy, no resize is done.
+
+        :param max_width: max width
+        :type max_width: int
+
+        :param max_height: max height
+        :type max_height: int
+
+        :return: self to allow chaining
+        :rtype: ImageProcess
+        """
+        if self.image and (max_width or max_height):
+            w, h = self.image.size
+            asked_width = max_width or (w * max_height) // h
+            asked_height = max_height or (h * max_width) // w
+            self.image.thumbnail((asked_width, asked_height), Image.LANCZOS)
+        return self
+
+    def crop_resize(self, max_width, max_height, center_x=0.5, center_y=0.5):
+        """Crop and resize the image.
+
+        The image is never resized above the current image size. This method is
+        only to create smaller versions of the image.
+
+        Instead of preserving the ratio of the original image like `resize`,
+        this method will force the output to take the ratio of the given
+        `max_width` and `max_height`, so both have to be defined.
+
+        The crop is done before the resize in order to preserve as much of the
+        original image as possible. The goal of this method is primarily to
+        resize to a given ratio, and it is not to crop unwanted parts of the
+        original image. If the latter is what you want to do, you should create
+        another method, or directly use the `crop` method from PIL.
+
+        :param max_width: max width
+        :type max_width: int
+
+        :param max_height: max height
+        :type max_height: int
+
+        :param center_x: the center of the crop between 0 (left) and 1 (right)
+            Default to 0.5 (center).
+        :type center_x: float
+
+        :param center_y: the center of the crop between 0 (top) and 1 (bottom)
+            Default to 0.5 (center).
+        :type center_y: float
+
+        :return: self to allow chaining
+        :rtype: ImageProcess
+        """
+        if self.image and max_width and max_height:
+            w, h = self.image.size
             # We want to keep as much of the image as possible -> at least one
             # of the 2 crop dimensions always has to be the same value as the
             # original image.
-            # The target size will be reached with the following resize.
-            if w / asked_width > h / asked_height:
-                new_w, new_h = w, (asked_height * w) // asked_width
+            # The target size will be reached with the final resize.
+            if w / max_width > h / max_height:
+                new_w, new_h = w, (max_height * w) // max_width
             else:
-                new_w, new_h = (asked_width * h) // asked_height, h
+                new_w, new_h = (max_width * h) // max_height, h
 
             # No cropping above image size.
             if new_w > w:
@@ -128,48 +202,48 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
             if new_h > h:
                 new_w, new_h = (new_w * h) // new_h, h
 
-            # Corretly place the center of the crop, by default in the center
-            # (50% width, 50% height).
+            # Corretly place the center of the crop.
+            x_offset = (w - new_w) * center_x
+            h_offset = (h - new_h) * center_y
+
+            self.image = self.image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
+
+        return self.resize(max_width, max_height)
+
+    def colorize(self):
+        """Replace the trasparent background by a random color.
+
+        :return: self to allow chaining
+        :rtype: ImageProcess
+        """
+        if self.image:
+            original = self.image
+            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
+            self.image = Image.new('RGB', original.size)
+            self.image.paste(color, box=(0, 0) + original.size)
+            self.image.paste(original, mask=original)
+        return self
+
+
+def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=80, crop=None, colorize=False, output_format=None):
+    """Process the `base64_source` image by executing the given operations and
+    return the result as a base64 encoded image.
+    """
+    image = ImageProcess(base64_source, verify_resolution)
+    if size:
+        if crop:
             center_x = 0.5
             center_y = 0.5
             if crop == 'top':
                 center_y = 0
             elif crop == 'bottom':
                 center_y = 1
-            x_offset = (w - new_w) * center_x
-            h_offset = (h - new_h) * center_y
-
-            image = image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
-
-        image.thumbnail((asked_width, asked_height), Image.LANCZOS)
-
+            image.crop_resize(max_width=size[0], max_height=size[1], center_x=center_x, center_y=center_y)
+        else:
+            image.resize(max_width=size[0], max_height=size[1])
     if colorize:
-        original = image
-        color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
-        image = Image.new('RGB', original.size)
-        image.paste(color, box=(0, 0) + original.size)
-        image.paste(original, mask=original)
-
-    if output_format == 'PNG':
-        opt['optimize'] = True
-        alpha = False
-        if image.mode in ('RGBA', 'LA') or (image.mode == 'P' and 'transparency' in image.info):
-            alpha = image.convert('RGBA').split()[-1]
-        if image.mode != 'P':
-            # Floyd Steinberg dithering by default
-            image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
-        if alpha:
-            image.putalpha(alpha)
-    if output_format == 'JPEG':
-        opt['optimize'] = True
-        opt['quality'] = quality
-    if output_format == 'GIF':
-        opt['optimize'] = True
-
-    if image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and image.mode == 'RGBA'):
-        image = image.convert("RGB")
-
-    return image_to_base64(image, **opt)
+        image.colorize()
+    return image.image_base64(quality=quality, output_format=output_format)
 
 
 # ----------------------------------------
