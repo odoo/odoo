@@ -328,29 +328,29 @@ class Partner(models.Model):
         if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
             return False
 
-        colorize, img_path, image = False, False, False
+        colorize, img_path, image_base64 = False, False, False
 
         if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
-            image = parent_image and base64.b64decode(parent_image) or None
+            image_base64 = parent_image or None
 
-        if not image and partner_type == 'invoice':
+        if not image_base64 and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/img', 'money.png')
-        elif not image and partner_type == 'delivery':
+        elif not image_base64 and partner_type == 'delivery':
             img_path = get_module_resource('base', 'static/img', 'truck.png')
-        elif not image and is_company:
+        elif not image_base64 and is_company:
             img_path = get_module_resource('base', 'static/img', 'company_image.png')
-        elif not image:
+        elif not image_base64:
             img_path = get_module_resource('base', 'static/img', 'avatar.png')
             colorize = True
 
         if img_path:
             with open(img_path, 'rb') as f:
-                image = f.read()
-        if image and colorize:
-            image = tools.image_colorize(image)
+                image_base64 = base64.b64encode(f.read())
+        if image_base64 and colorize:
+            image_base64 = tools.image_colorize(image_base64)
 
-        return tools.image_resize_image_big(base64.b64encode(image))
+        return tools.image_resize_image_big(image_base64)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
