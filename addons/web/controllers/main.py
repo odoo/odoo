@@ -971,11 +971,6 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    def force_contenttype(self, headers, contenttype='image/png'):
-        dictheaders = dict(headers)
-        dictheaders['Content-Type'] = contenttype
-        return list(dictheaders.items())
-
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -1034,14 +1029,13 @@ class Binary(http.Controller):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
-            headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
         image_base64 = image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
-        headers.append(('Content-Length', len(content)))
+        headers = http.set_safe_image_headers(headers, content)
         response = request.make_response(content, headers)
         response.status_code = status
         return response
