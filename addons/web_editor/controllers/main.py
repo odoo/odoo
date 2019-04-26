@@ -164,7 +164,7 @@ class Web_Editor(http.Controller):
     def _image_to_attachment(self, res_model, res_id, image_base64, name, datas_fname, disable_optimization=None):
         Attachments = request.env['ir.attachment']
         if not disable_optimization:
-            image_base64 = tools.image_optimize_for_web(image_base64)
+            image_base64 = tools.image_process(image_base64, verify_resolution=True)
         attachment = Attachments.create({
             'name': name,
             'datas_fname': datas_fname,

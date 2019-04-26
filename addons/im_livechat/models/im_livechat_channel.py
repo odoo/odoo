@@ -21,7 +21,7 @@ class ImLivechatChannel(models.Model):
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
 
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]

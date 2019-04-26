@@ -168,46 +168,6 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
 
     return image_to_base64(image, **opt)
 
-# ----------------------------------------
-# Image resizing
-# ----------------------------------------
-
-
-def image_resize_image(base64_source, size=IMAGE_BIG_SIZE, filetype=None):
-    return image_process(base64_source, size=size, output_format=filetype)
-
-
-def image_optimize_for_web(base64_source, max_width=0, quality=80):
-    return image_process(base64_source, size=(max_width, 0), verify_resolution=True, quality=quality)
-
-
-def image_resize_image_big(base64_source, filetype=None):
-    return image_process(base64_source, size=IMAGE_BIG_SIZE, output_format=filetype)
-
-
-def image_resize_image_large(base64_source, filetype=None):
-    return image_process(base64_source, size=IMAGE_LARGE_SIZE, output_format=filetype)
-
-
-def image_resize_image_medium(base64_source, filetype=None):
-    return image_process(base64_source, size=IMAGE_MEDIUM_SIZE, output_format=filetype)
-
-
-def image_resize_image_small(base64_source, filetype=None):
-    return image_process(base64_source, size=IMAGE_SMALL_SIZE, output_format=filetype)
-
-
-def crop_image(base64_source, size, type='center', image_format=None):
-    return image_process(base64_source, size=size, crop=type, output_format=image_format)
-
-
-# ----------------------------------------
-# Colors
-# ---------------------------------------
-
-def image_colorize(base64_source):
-    return image_process(base64_source, colorize=True)
-
 
 # ----------------------------------------
 # Misc image tools
@@ -298,13 +258,13 @@ def image_get_resized_images(base64_source,
     """
     return_dict = dict()
     if big_name:
-        return_dict[big_name] = image_resize_image_big(base64_source)
+        return_dict[big_name] = image_process(base64_source, size=IMAGE_BIG_SIZE)
     if large_name:
-        return_dict[large_name] = image_resize_image_large(base64_source)
+        return_dict[large_name] = image_process(base64_source, size=IMAGE_LARGE_SIZE)
     if medium_name:
-        return_dict[medium_name] = image_resize_image_medium(base64_source)
+        return_dict[medium_name] = image_process(base64_source, size=IMAGE_MEDIUM_SIZE)
     if small_name:
-        return_dict[small_name] = image_resize_image_small(base64_source)
+        return_dict[small_name] = image_process(base64_source, size=IMAGE_SMALL_SIZE)
     return return_dict
 
 
@@ -333,10 +293,6 @@ def image_resize_images(vals,
             vals[small_name] = False
 
 
-def limited_image_resize(base64_source, width=None, height=None, crop=False):
-    return image_process(base64_source, size=(width, height), crop=crop)
-
-
 def image_data_uri(base64_source):
     """This returns data URL scheme according RFC 2397
     (https://tools.ietf.org/html/rfc2397) for all kind of supported images
@@ -354,5 +310,5 @@ if __name__=="__main__":
     assert len(sys.argv)==3, 'Usage to Test: image.py SRC.png DEST.png'
 
     img = base64.b64encode(open(sys.argv[1],'rb').read())
-    new = image_resize_image(img, (128,100))
+    new = image_process(img, (128, 100))
     open(sys.argv[2], 'wb').write(base64.b64decode(new))

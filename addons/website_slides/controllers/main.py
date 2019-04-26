@@ -524,10 +524,11 @@ class WebsiteSlides(WebsiteProfile):
             return werkzeug.wrappers.Response(status=304)
 
         if not image_base64:
-            image_base64 = self._get_default_avatar(field, headers, width, height)
+            image_base64 = self._get_default_avatar()
+            if not (width or height):
+                width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.limited_image_resize(
-            image_base64, width=width, height=height, crop=crop)
+        image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))
