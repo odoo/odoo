@@ -80,7 +80,6 @@ def py2exe_options():
                         'encodings',
                         'HTMLParser',
                         'imaplib',
-                        'jinja2',
                         'lxml', 'lxml._elementpath', 'lxml.builder', 'lxml.etree', 'lxml.objectify',
                         'mako',
                         'markupsafe',
