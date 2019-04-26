@@ -805,7 +805,7 @@
                                 </left>
                             </line>
                         </t>
-                        <t t-else='line.discount !== 0'>
+                        <t t-elif='line.discount !== 0'>
                             <line indent='1'>
                                 <left>
                                     <value t-att-value-decimals='pos.dp["Product Price"]'>
