@@ -163,9 +163,8 @@ class StockMove(models.Model):
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
         for move in self:
-            if move.picking_id:
-                move.is_locked = move.picking_id.is_locked
-
+            if move.picking_id.is_locked:
+                move.is_locked = True
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
@@ -199,12 +198,13 @@ class StockMove(models.Model):
     @api.depends('state', 'picking_id')
     def _compute_is_initial_demand_editable(self):
         for move in self:
+            is_initial_demand_editable = False
             if self._context.get('planned_picking'):
-                move.is_initial_demand_editable = True
+                is_initial_demand_editable = True
             elif not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
+                is_initial_demand_editable = True
+            if is_initial_demand_editable:
                 move.is_initial_demand_editable = True
-            else:
-                move.is_initial_demand_editable = False
 
     @api.multi
     @api.depends('state', 'picking_id', 'product_id')
