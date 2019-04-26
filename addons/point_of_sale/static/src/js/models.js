@@ -608,13 +608,17 @@ exports.PosModel = Backbone.Model.extend({
         return loaded;
     },
 
+    prepare_new_partners_domain: function(){
+        return [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
+    },
+
     // reload the list of partner, returns as a deferred that resolves if there were
     // updated partners, and fails if not
     load_new_partners: function(){
         var self = this;
         var def  = new $.Deferred();
         var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
-        var domain = [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
+        var domain = self.prepare_new_partners_domain();
         rpc.query({
                 model: 'res.partner',
                 method: 'search_read',
