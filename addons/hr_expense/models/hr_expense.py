@@ -614,10 +614,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def _default_journal_id(self):
-        journal = self.env.ref('hr_expense.hr_expense_account_journal', raise_if_not_found=False)
-        if not journal:
-            journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
-        return journal.id
+        return self.env['account.journal'].search([('type', '=', 'purchase')], limit=1).id
 
     @api.model
     def _default_bank_journal_id(self):
