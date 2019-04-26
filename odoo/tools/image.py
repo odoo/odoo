@@ -7,6 +7,9 @@ from PIL import Image
 from PIL import ImageEnhance
 from random import randrange
 
+from odoo.tools.translate import _
+
+
 # Preload PIL with the minimal subset of image formats we need
 Image.preinit()
 Image._initialized = 2
@@ -24,6 +27,10 @@ IMAGE_BIG_SIZE = (1024, 1024)
 IMAGE_LARGE_SIZE = (256, 256)
 IMAGE_MEDIUM_SIZE = (128, 128)
 IMAGE_SMALL_SIZE = (64, 64)
+
+# Arbitraty limit to fit most resolutions, including Nokia Lumia 1020 photo,
+# 8K with a ratio up to 16:10, and almost all variants of 4320p
+IMAGE_MAX_RESOLUTION = 45e6
 
 
 # ----------------------------------------
@@ -133,17 +140,44 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     return image
 
 
-def image_save_for_web(image, fp=None, format=None):
-    """
-        Save image optimized for web usage.
+def image_optimize_for_web(base64_source, max_width=0, quality=80):
+    """Return the given `base64_source` optimized for web usage.
 
-        :param image: PIL.Image.Image()
-        :param fp: File name or file object. If not specified, a bytestring is returned.
-        :param format: File format if could not be deduced from image.
+    :param base64_source: the image base64 encoded
+    :type base64_source: string or bytes
+
+    :param max_width: max width for the image. No resize if 0 given or if
+        the image is already smaller than the given value.
+    :type max_width: int
+
+    :param quality: quality setting to apply. Ignored if image is not JPEG.
+        1 is worse, 100 is best. Default to 80.
+        Set to 95 to keep the original quality.
+    :type quality: int
+
+    :return: optimized image base64 encoded
+    :rtype: bytes
+
+    :raise: ValueError if image too large
     """
-    opt = dict(format=image.format or format)
-    if image.format == 'PNG':
-        opt.update(optimize=True)
+    if base64_source[:1] == b'P':
+        # don't process SVG
+        return base64_source
+
+    image = base64_to_image(base64_source)
+
+    w, h = image.size
+    if w * h > IMAGE_MAX_RESOLUTION:
+        raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
+
+    # get the format of the original image (must be done before resize)
+    opt = {'format': image.format}
+
+    if max_width and w and max_width < w:
+        image.thumbnail((max_width, (h * max_width) / w))
+
+    if opt['format'] == 'PNG':
+        opt['optimize'] = True
         alpha = False
         if image.mode in ('RGBA', 'LA') or (image.mode == 'P' and 'transparency' in image.info):
             alpha = image.convert('RGBA').split()[-1]
@@ -152,14 +186,15 @@ def image_save_for_web(image, fp=None, format=None):
             image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
         if alpha:
             image.putalpha(alpha)
-    elif image.format == 'JPEG':
-        opt.update(optimize=True, quality=80)
-    if fp:
-        image.save(fp, **opt)
+    elif opt['format'] == 'JPEG':
+        opt['optimize'] = True
+        opt['quality'] = quality
+    elif opt['format'] == 'GIF':
+        opt['optimize'] = True
     else:
-        img = io.BytesIO()
-        image.save(img, **opt)
-        return img.getvalue()
+        raise ValueError(_("Unsupported image format: %s. Only JPEG, PNG and GIF are supported.") % image.format)
+
+    return image_to_base64(image, **opt)
 
 
 def image_resize_image_big(base64_source, filetype=None, avoid_if_small=True, preserve_aspect_ratio=False, upper_limit=False):
