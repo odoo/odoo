@@ -95,7 +95,7 @@ class Track(models.Model):
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
         for track in self:
-            if not isinstance(track.id, models.NewId):
+            if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.onchange('partner_id')
