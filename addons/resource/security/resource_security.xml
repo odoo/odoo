@@ -19,5 +19,13 @@
         <field name="domain_force">[('resource_id.user_id', '=', user.id)]</field>
 		<field name="perm_read" eval="False"/>
     </record>
+
+    <record model="ir.rule" id="resource_calendar_leaves_rule_group_admin_modify">
+        <field name="name">resource.calendar.leaves: admin modifies global</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        <field name="domain_force">[('resource_id', '=', False)]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
 </data>
 </odoo>
