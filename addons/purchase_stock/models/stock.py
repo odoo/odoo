@@ -60,7 +60,13 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             purchase_currency = self.purchase_line_id.currency_id
             if purchase_currency != self.company_id.currency_id:
-                purchase_price_unit = self.purchase_line_id.price_unit
+                # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                # is in the UOM of the product, not the UOM of the PO line.
+                purchase_price_unit = (
+                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                    if self.purchase_line_id.product_uom_qty
+                    else self.purchase_line_id.price_unit
+                )
                 currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
                 rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
                 rslt['credit_line_vals']['currency_id'] = purchase_currency.id

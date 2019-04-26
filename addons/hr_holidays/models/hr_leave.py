@@ -323,19 +323,22 @@ class HolidaysRequest(models.Model):
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
-        if self.holiday_type == 'employee' and not self.employee_id:
-            self.employee_id = self.env.user.employee_ids[:1].id
+        if self.holiday_type == 'employee':
+            if not self.employee_id:
+                self.employee_id = self.env.user.employee_ids[:1].id
             self.mode_company_id = False
             self.category_id = False
-        elif self.holiday_type == 'company' and not self.mode_company_id:
+        elif self.holiday_type == 'company':
             self.employee_id = False
-            self.mode_company_id = self.env.user.company_id.id
+            if not self.mode_company_id:
+                self.mode_company_id = self.env.user.company_id.id
             self.category_id = False
-        elif self.holiday_type == 'department' and not self.department_id:
+        elif self.holiday_type == 'department':
             self.employee_id = False
             self.mode_company_id = False
-            self.department_id = self.env.user.employee_ids[:1].department_id.id
             self.category_id = False
+            if not self.department_id:
+                self.department_id = self.env.user.employee_ids[:1].department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False
@@ -785,8 +788,9 @@ class HolidaysRequest(models.Model):
         responsible = self.env.user
 
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+            company = self.department_id.company_id if self.holiday_type == 'department' else self.employee_id.company_id
             responsible = self.env['res.users'].search([
-                ('company_id', '=', self.employee_id.company_id.id),
+                ('company_id', '=', company.id),
                 ('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)
             ], limit=1)
         elif self.state == 'confirm' or (self.state == 'validate' and self.validation_type == 'no_validation'):
