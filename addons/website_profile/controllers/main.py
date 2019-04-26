@@ -86,27 +86,27 @@ class WebsiteProfile(http.Controller):
 
         can_sudo = self._check_avatar_access(user_id, **post)
         if can_sudo:
-            status, headers, content = request.env['ir.http'].sudo().binary_content(
+            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         else:
-            status, headers, content = request.env['ir.http'].binary_content(
+            status, headers, image_base64 = request.env['ir.http'].binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, content)
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not content:
-            content = self._get_default_avatar(field, headers, width, height)
+        if not image_base64:
+            image_base64 = self._get_default_avatar(field, headers, width, height)
 
-        content = tools.limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        image_base64 = tools.limited_image_resize(
+            image_base64, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
 
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers.append(('Content-Length', len(content)))
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
