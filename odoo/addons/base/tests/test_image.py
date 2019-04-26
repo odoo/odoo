@@ -63,10 +63,6 @@ class TestImage(TransactionCase):
         res = tools.image_resize_image(False)
         self.assertFalse(res)
 
-        # CASE: return base64_source if size == (None, None)
-        res = tools.image_resize_image(self.base64_image_1x1, size=(None, None))
-        self.assertEqual(res, self.base64_image_1x1)
-
         # CASE: return base64_source if format is SVG
         res = tools.image_resize_image(self.base64_svg)
         self.assertEqual(res, self.base64_svg)
@@ -105,20 +101,20 @@ class TestImage(TransactionCase):
         self.assertEqual(image.size, (192, 108))
 
         # CASE: size above, return original
-        res = tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000))
-        self.assertEqual(res, self.base64_image_1920_1080)
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000)))
+        self.assertEqual(image.size, (1920, 1080))
 
         # CASE: same size, no change
-        res = tools.image_resize_image(self.base64_image_1920_1080, size=(1920, 1080))
-        self.assertEqual(res, self.base64_image_1920_1080)
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(1920, 1080)))
+        self.assertEqual(image.size, (1920, 1080))
 
         # CASE: no resize if above
-        res = tools.image_resize_image(self.base64_image_1920_1080, size=(3000, None))
-        self.assertEqual(res, self.base64_image_1920_1080)
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(3000, None)))
+        self.assertEqual(image.size, (1920, 1080))
 
         # CASE: no resize if above
-        res = tools.image_resize_image(self.base64_image_1920_1080, size=(None, 2000))
-        self.assertEqual(res, self.base64_image_1920_1080)
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(None, 2000)))
+        self.assertEqual(image.size, (1920, 1080))
 
         # CASE: vertical image, correct resize if below
         base64_image_1080_1920 = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'PNG')
@@ -169,8 +165,8 @@ class TestImage(TransactionCase):
 
         # CASE: unsupported format
         base64_image_1080_1920_tiff = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'TIFF')
-        with self.assertRaises(ValueError):
-            res = tools.image_optimize_for_web(base64_image_1080_1920_tiff)
+        image = tools.base64_to_image(tools.image_optimize_for_web(base64_image_1080_1920_tiff))
+        self.assertEqual(image.format, 'JPEG')
 
     def test_12_crop_image(self):
         """Test that crop_image is working as expected."""
@@ -203,9 +199,9 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='bottom'))
         self.assertEqual(image.size, (1080, 1080))
 
-        # CASE: wrong type, no change
+        # CASE: wrong crop value, use center
         image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(2000, 2000), type='wrong'))
-        self.assertEqual(image.size, (1920, 1080))
+        self.assertEqual(image.size, (1080, 1080))
 
         # CASE: size given, resize too
         image = tools.base64_to_image(tools.crop_image(self.base64_image_1920_1080, size=(512, 512)))
@@ -223,10 +219,6 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.image_colorize(base64_rgba))
         self.assertNotEqual(image.getpixel((0, 0)), (0, 0, 0))
 
-        # CASE: not random, fixed color
-        image = tools.base64_to_image(tools.image_colorize(base64_rgba, randomize=False))
-        self.assertEqual(image.getpixel((0, 0)), (255, 255, 255))
-
     def test_16_limited_image_resize(self):
         """Test that limited_image_resize is working as expected."""
 
@@ -234,7 +226,8 @@ class TestImage(TransactionCase):
         self.assertEqual(tools.limited_image_resize(False), False)
 
         # CASE: return input if no width or height
-        self.assertEqual(tools.limited_image_resize(self.base64_image_1x1), self.base64_image_1x1)
+        image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080))
+        self.assertEqual(image.size, (1920, 1080))
 
         # CASE: given width, resize and keep ratio
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=192))

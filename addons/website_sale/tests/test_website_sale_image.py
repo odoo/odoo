@@ -49,19 +49,19 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
         # first image (blue) for the template
         f = io.BytesIO()
-        Image.new('RGB', (1920, 1080), color_blue).save(f, 'PNG')
+        Image.new('RGB', (1920, 1080), color_blue).save(f, 'JPEG')
         f.seek(0)
         blue_image = base64.b64encode(f.read())
 
         # second image (red) for the variant 1, small image (no zoom)
         f = io.BytesIO()
-        Image.new('RGB', (800, 500), color_red).save(f, 'PNG')
+        Image.new('RGB', (800, 500), color_red).save(f, 'JPEG')
         f.seek(0)
         red_image = base64.b64encode(f.read())
 
         # second image (green) for the variant 2, big image (zoom)
         f = io.BytesIO()
-        Image.new('RGB', (1920, 1080), color_green).save(f, 'PNG')
+        Image.new('RGB', (1920, 1080), color_green).save(f, 'JPEG')
         f.seek(0)
         green_image = base64.b64encode(f.read())
 
@@ -82,9 +82,9 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
         # Green Variant Extra Image 1
         f = io.BytesIO()
-        Image.new('RGB', (2147, 3251)).save(f, 'JPEG')
+        Image.new('RGB', (2147, 3251)).save(f, 'PNG')
         f.seek(0)
-        image_jpeg = base64.b64encode(f.read())
+        image_png = base64.b64encode(f.read())
 
         # create the template, without creating the variants
         template = self.env['product.template'].with_context(create_product_product=True).create({
@@ -124,7 +124,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
             'image': green_image,
             'product_tmpl_id': template.id,
             'attribute_value_ids': [(6, 0, attr_values.filtered(lambda l: l.name == name_green).ids)],
-            'product_variant_image_ids': [(0, 0, {'name': 'image 3', 'image': image_jpeg})],
+            'product_variant_image_ids': [(0, 0, {'name': 'image 3', 'image': image_png})],
         })
 
         # now set the red image on the first variant, that works because
@@ -140,27 +140,32 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         self.assertTrue(product_green.can_image_be_zoomed)
         self.assertTrue(product_green.product_variant_image_ids[0].can_image_be_zoomed)
 
+        # jpeg encoding is changing the color a bit
+        jpeg_blue = (65, 105, 227)
+        jpeg_red = (205, 93, 92)
+        jpeg_green = (34, 139, 34)
+
         # Verify original size: keep original
         image = Image.open(io.BytesIO(base64.b64decode(template.image_original)))
         self.assertEqual(image.size, (1920, 1080))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_original)))
         self.assertEqual(image.size, (800, 500))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_original)))
         self.assertEqual(image.size, (1920, 1080))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify big size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_big)))
         self.assertEqual(image.size, (1024, 576))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_big)))
         self.assertEqual(image.size, (800, 500))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_big)))
         self.assertEqual(image.size, (1024, 576))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify image == image_big
         self.assertEqual(template.image_big, template.image)
@@ -170,35 +175,35 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # Verify large size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_large)))
         self.assertEqual(image.size, (256, 144))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_large)))
         self.assertEqual(image.size, (256, 160))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_large)))
         self.assertEqual(image.size, (256, 144))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify medium size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_medium)))
         self.assertEqual(image.size, (128, 72))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_medium)))
         self.assertEqual(image.size, (128, 80))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_medium)))
         self.assertEqual(image.size, (128, 72))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify small size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_small)))
         self.assertEqual(image.size, (64, 36))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_small)))
         self.assertEqual(image.size, (64, 40))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_small)))
         self.assertEqual(image.size, (64, 36))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
+        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
@@ -223,7 +228,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # write on the raw field, otherwise it will write on the fallback here
         product_green.image_raw_original = False
         images = product_green._get_images()
-        self.assertEqual(images[0].image_original, image_jpeg)
+        self.assertEqual(images[0].image_original, image_png)
         self.assertEqual(images[1].image_original, red_image)
         self.assertEqual(images[2].image_original, image_gif)
         self.assertEqual(images[3].image_original, image_svg)
