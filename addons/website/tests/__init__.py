@@ -9,4 +9,5 @@ from . import test_ui
 from . import test_views
 from . import test_menu
 from . import test_page
+from . import test_website_favicon
 from . import test_website_reset_password

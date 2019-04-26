@@ -4,6 +4,9 @@ import base64
 import io
 
 from PIL import Image
+# We can preload Ico too because it is considered safe
+from PIL import IcoImagePlugin
+
 from random import randrange
 
 from odoo.tools.translate import _
@@ -71,7 +74,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
     :param colorize: replace the trasparent background by a random color
     :type colorize: bool
 
-    :param output_format: the output format. Can be PNG, JPEG or GIF.
+    :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
         Default to the format of the original image.
         BMP is converted to PNG, other formats are converted to JPEG.
     :type output_format: string
@@ -99,7 +102,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
     output_format = (output_format or image.format).upper()
     if output_format == 'BMP':
         output_format = 'PNG'
-    elif output_format not in ['PNG', 'JPEG', 'GIF']:
+    elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
         output_format = 'JPEG'
 
     opt = {'format': output_format}
