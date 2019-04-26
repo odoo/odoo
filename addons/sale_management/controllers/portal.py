@@ -47,14 +47,21 @@ class CustomerPortal(CustomerPortal):
         currency = order_sudo.currency_id
         format_price = partial(formatLang, request.env, digits=currency.decimal_places)
 
-        return {
+        results = {
             'order_line_product_uom_qty': str(quantity),
             'order_line_price_total': format_price(order_line.price_total),
             'order_line_price_subtotal': format_price(order_line.price_subtotal),
             'order_amount_total': format_price(order_sudo.amount_total),
             'order_amount_untaxed': format_price(order_sudo.amount_untaxed),
             'order_amount_tax': format_price(order_sudo.amount_tax),
+            'order_amount_undiscounted': format_price(order_sudo.amount_undiscounted),
         }
+        try:
+            results['order_totals_table'] = request.env['ir.ui.view'].render_template('sale.sale_order_portal_content_totals_table', {'sale_order': order_sudo})
+        except ValueError:
+            pass
+
+        return results
 
     @http.route(["/my/orders/<int:order_id>/add_option/<int:option_id>"], type='http', auth="public", website=True)
     def add(self, order_id, option_id, access_token=None, **post):
