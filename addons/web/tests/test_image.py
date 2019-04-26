@@ -13,10 +13,10 @@ class TestImage(HttpCase):
         """The goal of this test is to make sure the placeholder image is
         resized appropriately depending on the given URL parameters."""
 
-        # CASE: resize placeholder to given size
+        # CASE: resize placeholder, given size but original ratio is always kept
         response = self.url_open('/web/image/0/200x150')
         image = Image.open(io.BytesIO(response.content))
-        self.assertEqual(image.size, (200, 150))
+        self.assertEqual(image.size, (150, 150))
 
         # CASE: resize placeholder to small
         response = self.url_open('/web/image/fake/0/image_small')

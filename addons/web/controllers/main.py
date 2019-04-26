@@ -1023,8 +1023,8 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
-                      upper_limit=False, placeholder='placeholder.png', **kw):
+                      download=None, width=0, height=0, crop=False, access_token=None,
+                      placeholder='placeholder.png', **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1041,7 +1041,7 @@ class Binary(http.Controller):
                     image_base64 = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(image_base64)
 
         image_base64 = limited_image_resize(
-            image_base64, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+            image_base64, width=width, height=height, crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))
