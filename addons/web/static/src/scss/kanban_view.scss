@@ -146,7 +146,15 @@
                 margin-right: $o-kanban-inside-hgutter*2;
                 flex: 1 0 $o-kanban-image-fill-width;
                 min-height: 95px;
-                background: {size: cover; position: center };
+                background: {
+                    size: cover;
+                    position: center;
+                    repeat: no-repeat;
+                };
+
+                &.o_kanban_image_full {
+                    background-size: contain;
+                }
             }
 
             // Adapt default 'o_kanban_image' element if present.
@@ -158,6 +166,10 @@
                 flex: 0 0 $o-kanban-image-width;
                 min-height: $o-kanban-image-width;
                 align-self: baseline;
+                background: {
+                    repeat: no-repeat;
+                    position: center;
+                }
 
                 // On medium screen size, align 'o_kanban_image' to 'o_kanban_image_fill_left' elements.
                 @include media-breakpoint-up(md) {
