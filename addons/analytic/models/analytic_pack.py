@@ -18,11 +18,11 @@ class AnalyticPack(models.Model):
     name = fields.Char("Name")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, required=True)
     res_model = fields.Selection(selection='_selection_res_model', string="Related Document Model", copy=False)
-    analytic_line_ids = fields.One2many('account.analytic.line', 'analytic_pack_id', string="Analytic Lines")
+    analytic_line_ids = fields.One2many('account.analytic.line', 'pack_id', string="Analytic Lines")
 
     @api.multi
     def name_get(self):
         result = []
         for pack in self:
-            result.append((pack.id, "%s (%d)" % (pack.name, pack.res_model)))
+            result.append((pack.id, "%s (%s)" % (pack.name, pack.res_model)))
         return result

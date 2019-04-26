@@ -9,6 +9,7 @@ class Project(models.Model):
     _name = 'project.project'
     _inherit = ['project.project', 'analytic.parent.mixin']
 
+    track_cost = fields.Boolean(default=True)
     allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Timesheets can be logged on this task.")
 
     # TODO JEM: SQL constraint allow_timesheet ==> track_cost=true
@@ -41,7 +42,7 @@ class Project(models.Model):
     def write(self, values):
         result = super(Project, self).write(values)
         if values.get('analytic_account_id'):
-            self.env['project.task'].search([('project_id', 'in', self.ids), ('analytic_pack_id', '=', False)])._analytic_create_pack()
+            self.env['project.task'].with_context(active_test=False).search([('project_id', 'in', self.ids), ('analytic_pack_id', '=', False)])._analytic_create_pack()
         return result
 
     @api.multi
@@ -58,7 +59,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     _name = 'project.task'
-    _inherit = 'analytic.pack.mixin'
+    _inherit = ['project.task', 'analytic.pack.mixin']
     _analytic_parent_field = 'project_id'
 
     analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
@@ -68,9 +69,9 @@ class Task(models.Model):
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
-    timesheet_ids = fields.One2many(related="analytic_pack_id.timesheet_ids")
+    timesheet_ids = fields.One2many(related='analytic_pack_id.timesheet_ids', readonly=False)
 
-    @api.depends('analytic_pack_idtimesheet_ids.unit_amount')
+    @api.depends('analytic_pack_id.timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
         for task in self:
             task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)

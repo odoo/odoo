@@ -64,7 +64,7 @@ class AnalyticParentMixin(models.AbstractModel):
 
     def _analytic_create_account(self):
         for record in self:
-            values = record._analytic_create_prepare_values()
+            values = record._analytic_create_account_prepare_values()
             analytic_account = self.env['account.analytic.account'].create(values)
             record.write({'analytic_account_id': analytic_account.id})
 
@@ -77,7 +77,7 @@ class AnalyticParentMixin(models.AbstractModel):
             'active': True,
         }
         if hasattr(self, 'partner_id'):
-            values['partner_id'] = self.parent_id.id
+            values['partner_id'] = self.partner_id.id
         if hasattr(self, 'company_id'):
             values['company_id'] = self.company_id.id
         return values
@@ -161,6 +161,6 @@ class AnalyticPackMixin(models.AbstractModel):
     def _analytic_create_pack_prepare_values(self):
         return {
             'name': self.display_name,
+            'analytic_account_id': self[self._analytic_parent_field].analytic_account_id.id,
             'res_model': self._name,
-            'analytic_account_id': self[self._analytic_parent_field].analytic_account_id.id
         }
