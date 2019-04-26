@@ -52,7 +52,7 @@
 
         <div id="wrap" t-attf-class="container #{website_forum_action}">
             <div class="row">
-                <div class="o_wprofile_email_validation_container mb16 mt16">
+                <div class="col o_wprofile_email_validation_container mb16 mt16">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/forum/%s' % forum.id"/>
                         <t t-set="send_validation_email_message" t-value="'Click here to send a verification email allowing you to participate to the forum.'"/>
@@ -380,12 +380,14 @@
     <t t-call="website.layout">
         <div class="container">
             <h1 class="mb32">Our forums</h1>
-            <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
-            <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
-                <a t-attf-href="/forum/#{ slug(forum) }">
-                    <div class="fa fa-5x fa-fcomment mb16" role="img" aria-label="Forum" title="Forum"/>
-                    <div t-field="forum.name"/>
-                </a>
+            <div class='row'>
+                <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
+                <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
+                    <a t-attf-href="/forum/#{ slug(forum) }">
+                        <div class="fa fa-5x fa-comment mb16" role="img" aria-label="Forum" title="Forum"/>
+                        <div t-field="forum.name"/>
+                    </a>
+                </div>
             </div>
         </div>
     </t>
