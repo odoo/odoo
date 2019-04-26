@@ -379,7 +379,7 @@
                     </t>
                 </div>
                 <div class="mb-3">
-                    <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
+                    <strong>Date:</strong> <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                 </div>
                 <div class="mb-3" t-if="sale_order.validity_date">
                     <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
