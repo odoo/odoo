@@ -167,37 +167,37 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         self.assertEqual(product_red.image_big, product_red.image)
         self.assertEqual(product_green.image_big, product_green.image)
 
-        # Verify large size
+        # Verify large size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_large)))
-        self.assertEqual(image.size, (256, 256))
+        self.assertEqual(image.size, (256, 144))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_large)))
-        self.assertEqual(image.size, (256, 256))
+        self.assertEqual(image.size, (256, 160))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_large)))
-        self.assertEqual(image.size, (256, 256))
+        self.assertEqual(image.size, (256, 144))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
 
-        # Verify medium size
+        # Verify medium size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_medium)))
-        self.assertEqual(image.size, (128, 128))
+        self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_medium)))
-        self.assertEqual(image.size, (128, 128))
+        self.assertEqual(image.size, (128, 80))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_medium)))
-        self.assertEqual(image.size, (128, 128))
+        self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
 
-        # Verify small size
+        # Verify small size: keep aspect ratio
         image = Image.open(io.BytesIO(base64.b64decode(template.image_small)))
-        self.assertEqual(image.size, (64, 64))
+        self.assertEqual(image.size, (64, 36))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (65, 105, 225), "blue")
         image = Image.open(io.BytesIO(base64.b64decode(product_red.image_small)))
-        self.assertEqual(image.size, (64, 64))
+        self.assertEqual(image.size, (64, 40))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (205, 92, 92), "red")
         image = Image.open(io.BytesIO(base64.b64decode(product_green.image_small)))
-        self.assertEqual(image.size, (64, 64))
+        self.assertEqual(image.size, (64, 36))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), (34, 139, 34), "green")
 
         # self.env.cr.commit()  # uncomment to save the product to test in browser

@@ -45,7 +45,6 @@ class Image(models.AbstractModel):
 
         sha = hashlib.sha1(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
-        avoid_if_small = '&avoid_if_small=true' if options.get('avoid_if_small') else ''
 
         if options.get('filename-field') and getattr(record, options['filename-field'], None):
             filename = record[options['filename-field']]
@@ -54,7 +53,7 @@ class Image(models.AbstractModel):
         else:
             filename = record.display_name
 
-        src = '/web/image/%s/%s/%s%s/%s?unique=%s%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha, avoid_if_small)
+        src = '/web/image/%s/%s/%s%s/%s?unique=%s' % (record._name, record.id, options.get('preview_image', field_name), max_size, url_quote(filename), sha)
 
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
             alt = escape(record[options['alt-field']])

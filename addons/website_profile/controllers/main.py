@@ -80,7 +80,7 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False, **post):
+    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, **post):
         if field not in ('image_small', 'image_medium', 'image_large'):
             return werkzeug.exceptions.Forbidden()
 
@@ -102,7 +102,7 @@ class WebsiteProfile(http.Controller):
             image_base64 = self._get_default_avatar(field, headers, width, height)
 
         image_base64 = tools.limited_image_resize(
-            image_base64, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+            image_base64, width=width, height=height, crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))

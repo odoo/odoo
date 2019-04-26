@@ -506,7 +506,7 @@ class WebsiteSlides(WebsiteProfile):
         return response
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
-    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False):
+    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
         if field not in ('image_small', 'image_medium', 'image_large'):
             return werkzeug.exceptions.Forbidden()
@@ -527,7 +527,7 @@ class WebsiteSlides(WebsiteProfile):
             image_base64 = self._get_default_avatar(field, headers, width, height)
 
         image_base64 = tools.limited_image_resize(
-            image_base64, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+            image_base64, width=width, height=height, crop=crop)
 
         content = base64.b64decode(image_base64)
         headers.append(('Content-Length', len(content)))

@@ -20,7 +20,6 @@ class TestImage(TransactionCase):
     - image_resize_image_small
     - image_get_resized_images
     - image_resize_images
-    - image_resize_and_sharpen
     - is_image_size_above
     """
     def setUp(self):
@@ -72,13 +71,13 @@ class TestImage(TransactionCase):
         res = tools.image_resize_image(self.base64_svg)
         self.assertEqual(res, self.base64_svg)
 
-        # CASE: ok with default parameters
+        # CASE: ok with default parameters (keep ratio)
         image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080))
-        self.assertEqual(image.size, tools.IMAGE_BIG_SIZE)
+        self.assertEqual(image.size, (1024, 576))
 
-        # CASE: correct resize
+        # CASE: correct resize (keep ratio)
         image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(800, 600)))
-        self.assertEqual(image.size, (800, 600))
+        self.assertEqual(image.size, (800, 450))
 
         # CASE: change filetype to PNG
         image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, filetype='PNG'))
@@ -105,41 +104,33 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(None, 108)))
         self.assertEqual(image.size, (192, 108))
 
-        # CASE: resize above original size
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000)))
-        self.assertEqual(image.size, (3000, 2000))
-
-        # CASE: avoid_if_small=True and size above, return original
-        res = tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000), avoid_if_small=True)
+        # CASE: size above, return original
+        res = tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000))
         self.assertEqual(res, self.base64_image_1920_1080)
 
-        # CASE: same size, no sharpen
+        # CASE: same size, no change
         res = tools.image_resize_image(self.base64_image_1920_1080, size=(1920, 1080))
         self.assertEqual(res, self.base64_image_1920_1080)
 
-        # CASE: upper_limit=True, no resize if above
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(3000, 2000), upper_limit=True))
-        self.assertEqual(image.size, (1920, 1080))
+        # CASE: no resize if above
+        res = tools.image_resize_image(self.base64_image_1920_1080, size=(3000, None))
+        self.assertEqual(res, self.base64_image_1920_1080)
 
-        # CASE: upper_limit=True, keep ratio, no resize if above
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(3000, None), upper_limit=True))
-        self.assertEqual(image.size, (1920, 1080))
+        # CASE: no resize if above
+        res = tools.image_resize_image(self.base64_image_1920_1080, size=(None, 2000))
+        self.assertEqual(res, self.base64_image_1920_1080)
 
-        # CASE: upper_limit=True, keep ratio, no resize if above
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(None, 2000), upper_limit=True))
-        self.assertEqual(image.size, (1920, 1080))
-
-        # CASE: upper_limit=True, vertical image, correct resize if below
+        # CASE: vertical image, correct resize if below
         base64_image_1080_1920 = tools.image_to_base64(PIL.Image.new('RGB', (1080, 1920)), 'PNG')
-        image = tools.base64_to_image(tools.image_resize_image(base64_image_1080_1920, size=(3000, 192), upper_limit=True))
+        image = tools.base64_to_image(tools.image_resize_image(base64_image_1080_1920, size=(3000, 192)))
         self.assertEqual(image.size, (108, 192))
 
-        # CASE: preserve_aspect_ratio=True, adapt to width
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(192, 200), preserve_aspect_ratio=True))
+        # CASE: adapt to width
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(192, 200)))
         self.assertEqual(image.size, (192, 108))
 
-        # CASE: preserve_aspect_ratio=True, adapt to height
-        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(400, 108), preserve_aspect_ratio=True))
+        # CASE: adapt to height
+        image = tools.base64_to_image(tools.image_resize_image(self.base64_image_1920_1080, size=(400, 108)))
         self.assertEqual(image.size, (192, 108))
 
     def test_11_image_optimize_for_web(self):
@@ -257,12 +248,8 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=192, height=108, crop=True))
         self.assertEqual(image.size, (108, 108))
 
-        # CASE: if not upper_limit, max 500px * 500px
+        # keep ratio
         image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=1000, height=1000))
-        self.assertEqual(image.size, (500, 500))
-
-        # CASE: if upper_limit=True, no limit
-        image = tools.base64_to_image(tools.limited_image_resize(self.base64_image_1920_1080, width=1000, height=1000, upper_limit=True))
         self.assertEqual(image.size, (1000, 562))
 
     def test_17_image_data_uri(self):
