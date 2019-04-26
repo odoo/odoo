@@ -933,7 +933,7 @@
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <div class="row mb8 cart_line">
-                    <div class="col-3">
+                    <div class="col-3 text-center">
                         <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
                     </div>
                     <div class="col-9">
@@ -1414,7 +1414,7 @@
                         <tbody>
                             <tr t-foreach="website_sale_order.website_order_line" t-as="line">
                                 <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
-                                <td class='td-img' t-if="line.product_id.product_tmpl_id">
+                                <td class='td-img text-center' t-if="line.product_id.product_tmpl_id">
                                     <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
                                 </td>
                                 <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
