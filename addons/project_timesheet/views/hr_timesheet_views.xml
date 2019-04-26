@@ -15,6 +15,7 @@
                 <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
             </xpath>
         </field>
+        <field name="active" eval="False"/>
     </record>
 
     <record id="timesheet_view_form" model="ir.ui.view">
@@ -31,6 +32,7 @@
                 <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
             </xpath>
         </field>
+        <field name="active" eval="False"/>
     </record>
 
 	<record id="timesheet_view_search" model="ir.ui.view">
@@ -48,6 +50,7 @@
                 <field name="task_id"/>
             </xpath>
         </field>
+        <field name="active" eval="False"/>
     </record>
 
 	<record id="timesheet_view_kanban" model="ir.ui.view">
@@ -69,8 +72,6 @@
         <field name="context">{
             'search_default_week':1,
             'search_default_groupby_employee':1,
-            'search_default_groupby_project':1,
-            'search_default_groupby_task':1,
             'default_is_timesheet': 1,
         }</field>
     </record>

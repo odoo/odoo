@@ -21,7 +21,6 @@ class AccountAnalyticLine(models.Model):
         return result
 
     is_timesheet = fields.Boolean("Is timesheet", default=False, index=True)
-    timesheet_service_id = fields.Many2one('timesheet.service', string="Service")
 
     employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)

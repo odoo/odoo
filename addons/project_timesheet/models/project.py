@@ -7,7 +7,16 @@ from odoo.exceptions import UserError
 
 class Project(models.Model):
     _name = 'project.project'
-    _inherit = ['project.project', 'timesheet.parent.service.mixin']
+    _inherit = ['project.project', 'analytic.parent.mixin']
+
+    allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Timesheets can be logged on this task.")
+
+    # TODO JEM: SQL constraint allow_timesheet ==> track_cost=true
+
+    @api.onchange('allow_timesheets')
+    def _onchange_allow_timesheet(self):
+        if self.allow_timesheets:
+            self.track_cost = True
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -29,6 +38,12 @@ class Project(models.Model):
         }
         return self.create(values).name_get()[0]
 
+    def write(self, values):
+        result = super(Project, self).write(values)
+        if values.get('analytic_account_id'):
+            self.env['project.task'].search([('project_id', 'in', self.ids), ('analytic_pack_id', '=', False)])._analytic_create_pack()
+        return result
+
     @api.multi
     def unlink(self):
         """ Delete the empty related analytic account """
@@ -40,31 +55,11 @@ class Project(models.Model):
         analytic_accounts_to_delete.unlink()
         return result
 
-    # ---------------------------------------------------------
-    # Business Methods
-    # ---------------------------------------------------------
-
-    def _create_analytic_account_convert_values(self, values):
-        values = super(Project, self)._create_analytic_account_convert_values(values)
-        values.update({
-            'company_id': values.get('company_id', self.env.user.company_id.id),
-            'partner_id': values.get('partner_id'),
-            'active': True,
-        })
-        return values
-
-    def _create_analytic_account_prepare_values(self):
-        values = super(Project, self)._create_analytic_account_prepare_values()
-        values.update({
-            'company_id': self.company_id.id,
-            'partner_id': self.partner_id.id,
-            'active': True,
-        })
-        return values
-
 
 class Task(models.Model):
-    _inherit = "project.task"
+    _name = 'project.task'
+    _inherit = 'analytic.pack.mixin'
+    _analytic_parent_field = 'project_id'
 
     analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
@@ -73,9 +68,9 @@ class Task(models.Model):
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
-    timesheet_ids = fields.One2many('account.analytic.line', 'task_id', string='Timesheets', domain=[('is_timesheet', '=', True)])
+    timesheet_ids = fields.One2many(related="analytic_pack_id.timesheet_ids")
 
-    @api.depends('timesheet_ids.unit_amount')
+    @api.depends('analytic_pack_idtimesheet_ids.unit_amount')
     def _compute_effective_hours(self):
         for task in self:
             task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
