@@ -6,8 +6,8 @@
 # Martin Trigaux, 2018
 # Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# Linkup <link-up@naver.com>, 2019
 # JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
@@ -27,7 +27,7 @@ msgstr ""
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
@@ -247,7 +247,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "송장 작성"
+msgstr "청구서 작성"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
@@ -262,7 +262,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr "송장 작성"
+msgstr "청구서 작성"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__create_uid
@@ -324,7 +324,7 @@ msgstr "이름 표시"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "정말로 송장을 생성하시겠습니까?"
+msgstr "정말로 청구서를 생성하시겠습니까?"
 
 #. module: repair
 #: selection:repair.line,state:0
@@ -449,7 +449,7 @@ msgstr "청구서"
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Invoice Exception"
-msgstr "송장 제외"
+msgstr "청구서 제외"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
@@ -465,7 +465,7 @@ msgstr "인보이스 방식"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
-msgstr "송장 주소 :"
+msgstr "청구서 주소 :"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -476,7 +476,7 @@ msgstr "소장 및 배송 주소 :"
 #: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "Invoice created"
-msgstr "작성된 송장"
+msgstr "작성된 청구서"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced

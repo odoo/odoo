@@ -8,9 +8,9 @@
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# Linkup <link-up@naver.com>, 2019
 # Martin Trigaux, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
 # JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
@@ -40,7 +40,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -1003,7 +1003,7 @@ msgstr "고객"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "고객 계정"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_delivery_address
@@ -3502,7 +3502,7 @@ msgstr ""
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
-msgstr ""
+msgstr "%s회계분석에 연결된%s이 판매주문은 비용등록전에 승인되어있어야 합니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -3525,7 +3525,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "대시보드에 표시되는 이 채널의 그래프입니다.\n"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3730,6 +3730,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"B2B 모드로 초대장을 보내려면 연락처보기를 열거 나 목록보기에서 연락처를 선택하고 드롭 다운 메뉴 *작업*에서 '포탈 사용 권한 관리'"
+" 옵션을 클릭하십시오."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -3930,7 +3932,7 @@ msgstr "유효 마감일"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
-msgstr "검증 순서"
+msgstr "승인 순서"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date

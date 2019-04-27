@@ -28,19 +28,19 @@ msgstr "설정 구성"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "최소 비밀번호 길이"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
-msgstr ""
+msgstr "암호에 포함되어야 하는 최소 문자 수. 사용하지 않으려면 0으로 설정하십시오."
 
 #. module: auth_password_policy
 #: code:addons/auth_password_policy/models/res_users.py:30
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "비밀번호는 최소한 %d 글자 이상이어야 합니다. 현재 비밀번호는 %d 글자입니다."
 
 #. module: auth_password_policy
 #. openerp-web
@@ -51,6 +51,9 @@ msgid ""
 "\n"
 "Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
 msgstr ""
+"필수 항목 : %s.\n"
+"\n"
+"힌트: 길이를 늘리고, 여러 단어를 사용하며, 특수문자를 사용하여 암호의 강도를 높입니다."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -62,25 +65,25 @@ msgstr "사용자"
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
 #, python-format
 msgid "at least %d character classes"
-msgstr ""
+msgstr "적어도 %d 문자 클래스"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
 #, python-format
 msgid "at least %d characters"
-msgstr ""
+msgstr "적어도 %d 문자"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
 #, python-format
 msgid "at least %d words"
-msgstr ""
+msgstr "적어도 %d 단어"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "요구 사항 없음"
