@@ -21,16 +21,16 @@ Wizards provided by this module:
 --------------------------------
     * Partner VAT Intra: Enlist the partners with their related VAT and invoiced
       amounts. Prepares an XML file format.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra
     * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of
       the Main company of the User currently Logged in.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration
     * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat
       Declaration of the Main company of the User currently Logged in Based on
       Fiscal year.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
@@ -44,6 +44,7 @@ Wizards provided by this module:
     'data': [
         'data/res.country.state.csv',
         'data/account_chart_template_data.xml',
+        'data/account.account.template.csv',
         'data/account_pcmn_belgium_data.xml',
         'data/account_data.xml',
         'data/account_tax_template_data.xml',

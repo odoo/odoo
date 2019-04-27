@@ -187,6 +187,7 @@ class PurchaseOrder(models.Model):
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
+            'user_id': False,
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
@@ -246,6 +247,12 @@ class PurchaseOrderLine(models.Model):
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                        elif move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
+                            # Edge case: the dropship is returned to the stock, no to the supplier.
+                            # In this case, the received quantity on the PO is set although we didn't
+                            # receive the product physically in our stock. To avoid counting the
+                            # quantity twice, we do nothing.
+                            pass
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_received = total
@@ -354,6 +361,7 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
+            'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
@@ -369,15 +377,15 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
-        done = self.env['stock.move'].browse()
+        values = []
         for line in self:
             for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
-        return done
+                values.append(val)
+        return self.env['stock.move'].create(values)
 
-    def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        """ This function purpose is to be override with the purpose to forbide _run_buy  method
-        to merge a new po line in an existing one.
+    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        """ Return the record in self where the procument with values passed as
+        args can be merged. If it returns an empty record then a new line will
+        be created.
         """
-        return True
+        return self and self[0] or self.env['purchase.order.line']

@@ -183,29 +183,29 @@ MockServer.include({
     _performRpc: function (route, args) {
         // routes
         if (route === '/mail/init_messaging') {
-            return $.when(this._mockInitMessaging(args));
+            return Promise.resolve(this._mockInitMessaging(args));
         }
         // methods
         if (args.method === 'channel_fetch_listeners') {
-            return $.when([]);
+            return Promise.resolve([]);
         }
         if (args.method === 'channel_fetch_preview') {
-            return $.when(this._mockChannelFetchPreview(args));
+            return Promise.resolve(this._mockChannelFetchPreview(args));
         }
         if (args.method === 'channel_minimize') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'channel_seen') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'channel_fetched') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'message_fetch') {
-            return $.when(this._mockMessageFetch(args));
+            return Promise.resolve(this._mockMessageFetch(args));
         }
         if (args.method === 'message_format') {
-            return $.when(this._mockMessageFormat(args));
+            return Promise.resolve(this._mockMessageFormat(args));
         }
         if (args.method === 'activity_format') {
             var res = this._mockRead(args.model, args.args, args.kwargs);
@@ -217,19 +217,19 @@ MockServer.include({
                 }
                 return record;
             });
-            return $.when(res);
+            return Promise.resolve(res);
         }
         if (args.method === 'set_message_done') {
-            return $.when(this._mockSetMessageDone(args));
+            return Promise.resolve(this._mockSetMessageDone(args));
         }
         if (args.method === 'moderate') {
-            return $.when(this._mockModerate(args));
+            return Promise.resolve(this._mockModerate(args));
         }
         if (args.method === 'notify_typing') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'set_message_done') {
-            return $.when();
+            return Promise.resolve();
         }
         return this._super(route, args);
     },

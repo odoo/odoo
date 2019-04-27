@@ -78,6 +78,8 @@ var AbstractView = Factory.extend({
      * @param {string} [params.controllerState]
      * @param {string} [params.displayName]
      * @param {Array[]} [params.domain=[]]
+     * @param {Object[]} [params.dynamicFilters] transmitted to the
+     *   ControlPanelView
      * @param {number[]} [params.ids]
      * @param {boolean} [params.isEmbedded=false]
      * @param {Object} [params.searchQuery={}]
@@ -88,6 +90,8 @@ var AbstractView = Factory.extend({
      * @param {boolean} [params.withControlPanel=true]
      */
     init: function (viewInfo, params) {
+        this._super.apply(this, arguments);
+
         var action = params.action || {};
         params = _.defaults(params, this._extractParamsFromAction(action));
 
@@ -105,7 +109,7 @@ var AbstractView = Factory.extend({
         this.arch = this.fieldsView.arch;
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
-        this.withControlPanel = params.withControlPanel;
+        this.withControlPanel = this.withControlPanel && params.withControlPanel;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph
@@ -122,10 +126,10 @@ var AbstractView = Factory.extend({
         this.controllerParams = {
             actionViews: params.actionViews,
             activeActions: {
-                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
-                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
-                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
-                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? !!JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? !!JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? !!JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? !!JSON.parse(this.arch.attrs.duplicate) : true,
             },
             bannerRoute: this.arch.attrs.banner_route,
             controllerID: params.controllerID,
@@ -165,6 +169,7 @@ var AbstractView = Factory.extend({
         this.controlPanelParams = {
             action: action,
             activateDefaultFavorite: params.activateDefaultFavorite,
+            dynamicFilters: params.dynamicFilters,
             breadcrumbs: params.breadcrumbs,
             context: this.loadParams.context,
             domain: this.loadParams.domain,
@@ -191,15 +196,12 @@ var AbstractView = Factory.extend({
             def = this._createControlPanel(parent);
         }
         var _super = this._super.bind(this);
-        return $.when(def).then(function (controlPanel) {
-            if (controlPanel) {
-                var searchQuery = controlPanel.getSearchQuery();
-                self._updateMVCParams(searchQuery);
-            }
+        return Promise.resolve(def).then(function (controlPanel) {
             // get the parent of the model if it already exists, as _super will
             // set the new controller as parent, which we don't want
             var modelParent = self.model && self.model.getParent();
-            return _super(parent).done(function (controller) {
+            var prom =  _super(parent);
+            prom.then(function (controller) {
                 if (controlPanel) {
                     controlPanel.setParent(controller);
                 }
@@ -208,7 +210,7 @@ var AbstractView = Factory.extend({
                     self.model.setParent(modelParent);
                 }
             });
-
+            return prom;
         });
     },
     /**
@@ -249,6 +251,7 @@ var AbstractView = Factory.extend({
         return controlPanelView.getController(parent).then(function (controlPanel) {
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
+                self._updateMVCParams(controlPanel.getSearchQuery());
                 return controlPanel;
             });
         });
@@ -329,6 +332,7 @@ var AbstractView = Factory.extend({
         var timeRangeDescription = timeRangeMenuData.timeRangeDescription || '';
         this.loadParams = _.extend(this.loadParams, {
             compare: comparisonTimeRange.length > 0,
+            comparisonField: timeRangeMenuData.comparisonField,
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             context: searchQuery.context,

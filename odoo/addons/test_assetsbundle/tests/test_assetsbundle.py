@@ -507,7 +507,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         """
         self.phantom_js(
             "/test_assetsbundle/js",
-            "a + b + c === 6 ? console.log('ok') : console.log('error')",
+            "a + b + c === 6 ? console.log('test successful') : console.log('error')",
             login="admin"
         )
 
@@ -532,7 +532,7 @@ class TestAssetsBundleInBrowser(HttpCase):
 
         self.phantom_js(
             "/test_assetsbundle/js",
-            "a + b + c + d === 10 ? console.log('ok') : console.log('error')",
+            "a + b + c + d === 10 ? console.log('test successful') : console.log('error')",
             login="admin",
         )
 

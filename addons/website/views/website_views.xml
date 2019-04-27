@@ -13,6 +13,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
             <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
@@ -26,18 +27,14 @@
                     <sheet>
                         <div name="domain">
                             <group name="domain">
-                                <group>
-                                    <field name="name"/>
-                                    <field name="domain"/>
-                                </group>
+                                <field name="name"/>
+                                <field name="domain"/>
                             </group>
                         </div>
                         <div name="other">
                             <group name="other">
-                                <group>
-                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                    <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
-                                </group>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
                             </group>
                         </div>
                     </sheet>
@@ -291,6 +288,9 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="website_id" groups="website.group_multi_website"/>
+                </field>
+                <field name="xml_id" position="before">
+                    <field name="key" groups="website.group_multi_website"/>
                 </field>
             </field>
         </record>

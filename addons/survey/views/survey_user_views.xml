@@ -14,6 +14,9 @@
                 <filter string="Partially Completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                 <separator/>
+                <filter string="Invite" name="invite" domain="[('input_type', '=', 'link')]"/>
+                <separator/>
+                <filter string="Quizz passed" name="quizz_passed" domain="[('quizz_passed','=', True)]"/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
@@ -29,9 +32,9 @@
         <field name="arch" type="xml">
             <form string="Survey User inputs" create="false">
                 <header>
-                    <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('input_type','=','manually'), ('state', '=', 'done')]}"/>
-                    <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
-                    <button name="action_survey_results" string="View Results" type="object" />
+                    <button name="action_resend" string="Resend Invitation" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('state', '=', 'done'), '&amp;', ('partner_id', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_print_answers" states="done" string="Print" type="object"  class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -39,7 +42,7 @@
                     <group col="2">
                         <group>
                             <field name="survey_id"/>
-                            <field name="date_create"/>
+                            <field name="create_date"/>
                             <field name="input_type"/>
                             <field name="token" groups="base.group_no_one"/>
                         </group>
@@ -48,17 +51,18 @@
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
                             <field name="test_entry" groups="base.group_no_one"/>
-                            <field name="quizz_score" groups="base.group_no_one"/>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="quizz_score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <field name="quizz_passed" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                         </group>
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
                         <tree>
-                            <field name="page_id"/>
                             <field name="question_id"/>
                             <field name="answer_type"/>
                             <field name="skipped"/>
-                            <field name="date_create"/>
-                            <field name="quizz_mark" groups="base.group_no_one"/>
+                            <field name="create_date"/>
+                            <field name="answer_score" groups="base.group_no_one"/>
                         </tree>
                     </field>
                 </sheet>
@@ -71,14 +75,15 @@
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
                 <field name="survey_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="deadline"/>
                 <field name="partner_id"/>
                 <field name="email"/>
-                <field name="input_type"/>
+                <field name="input_type" groups="base.group_no_one"/>
                 <field name="state"/>
                 <field name="test_entry" invisible="True"/>
-                <field name="quizz_score" groups="base.group_no_one"/>
+                <field name="quizz_passed"/>
+                <field name="quizz_score"/>
             </tree>
         </field>
     </record>
@@ -89,7 +94,7 @@
         <field name="arch" type="xml">
             <kanban create="false">
                 <field name="survey_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="partner_id"/>
                 <field name="email"/>
                 <field name="input_type"/>
@@ -105,10 +110,10 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
-                                    <field name="date_create"/>
+                                    <field name="create_date"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right mr4">
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                    <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
                                 </div>
                             </div>
                         </div>
@@ -131,13 +136,14 @@
           </p>
         </field>
     </record>
-    <record id="action_selected_survey_user_input" model="ir.actions.act_window">
-        <field name="name">Survey User input</field>
+    <record model="ir.actions.act_window" id="action_survey_user_input_notest">
+        <field name="name">Answers</field>
         <field name="res_model">survey.user_input</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="survey_user_input_tree"></field>
         <field name="search_view_id" ref="survey_user_input_search"/>
-        <field name="context">{'search_default_survey_id': active_id, 'default_survey_id': active_id}</field>
+        <field name="context">{'search_default_group_by_survey': True}</field>
+        <field name="domain">[('test_entry', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             Nobody has replied to your surveys yet
@@ -155,15 +161,16 @@
                 <sheet>
                     <group col="4">
                         <field name="question_id"/>
-                        <field name="date_create"/>
+                        <field name="create_date"/>
                         <field name="answer_type"/>
                         <field name="skipped" />
-                        <field name="quizz_mark" groups="base.group_no_one"/>
+                        <field name="answer_score" groups="base.group_no_one"/>
                     </group>
                     <group>
                         <field name="value_text" colspan='2' attrs="{'invisible': [('answer_type','!=','text')]}"/>
                         <field name="value_number" colspan='2' attrs="{'invisible': [('answer_type','!=','number')]}"/>
                         <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
+                        <field name="value_datetime" colspan='2' attrs="{'invisible': [('answer_type','!=','datetime')]}"/>
                         <field name="value_free_text" colspan='2' attrs="{'invisible': [('answer_type','!=','free_text')]}"/>
                         <field name="value_suggested_row" colspan='2' />
                         <field name="value_suggested" colspan='2' attrs="{'invisible': [('answer_type','!=','suggestion')]}"/>
@@ -179,12 +186,11 @@
             <tree string="Survey Answer Line" create="false">
                 <field name="survey_id"/>
                 <field name="user_input_id"/>
-                <field name="page_id"/>
                 <field name="question_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="answer_type"/>
                 <field name="skipped"/>
-                <field name="quizz_mark" groups="base.group_no_one"/>
+                <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>

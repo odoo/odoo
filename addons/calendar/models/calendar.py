@@ -17,6 +17,7 @@ import uuid
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
@@ -192,27 +193,27 @@ class Attendee(models.Model):
         invitation_template = invitation_template.with_context(rendering_context)
 
         # send email with attachments
-        mails_to_send = self.env['mail.mail']
+        mail_ids = []
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
-                mail_id = invitation_template.send_mail(attendee.id, notif_layout='mail.mail_notification_light')
 
-                vals = {}
+                email_values = {
+                    'model': None,  # We don't want to have the mail in the tchatter while in queue!
+                    'res_id': None,
+                }
                 if ics_file:
-                    vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
-                                                      'mimetype': 'text/calendar',
-                                                      'datas_fname': 'invitation.ics',
-                                                      'datas': base64.b64encode(ics_file)})]
-                vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
-                vals['res_id'] = False
-                current_mail = self.env['mail.mail'].browse(mail_id)
-                current_mail.mail_message_id.write(vals)
-                mails_to_send |= current_mail
+                    email_values['attachment_ids'] = [
+                        (0, 0, {'name': 'invitation.ics',
+                                'mimetype': 'text/calendar',
+                                'datas_fname': 'invitation.ics',
+                                'datas': base64.b64encode(ics_file)})
+                    ]
+                mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
-        if force_send and mails_to_send:
-            res = mails_to_send.send()
+        if force_send and mail_ids:
+            res = self.env['mail.mail'].browse(mail_ids).send()
 
         return res
 
@@ -492,10 +493,11 @@ class Alarm(models.Model):
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
-    @api.onchange('duration', 'interval')
+    @api.onchange('duration', 'interval', 'alarm_type')
     def _onchange_duration_interval(self):
         display_interval = self._interval_selection.get(self.interval, '')
-        self.name = str(self.duration) + ' ' + display_interval
+        display_alarm_type = {key: value for key, value in self._fields['alarm_type']._description_selection(self.env)}[self.alarm_type]
+        self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
 
     def _update_cron(self):
         try:
@@ -598,7 +600,7 @@ class Meeting(models.Model):
         else:
             reference_date = self.start
 
-        timezone = pytz.timezone(self._context.get('tz') or 'UTC')
+        timezone = pytz.timezone(self.event_tz) if self.event_tz else pytz.timezone(self._context.get('tz') or 'UTC')
         event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
         if not event_date:
             event_date = datetime.datetime.now()
@@ -636,7 +638,7 @@ class Meeting(models.Model):
             invalidate = True
 
         def naive_tz_to_utc(d):
-            return timezone.localize(d).astimezone(pytz.UTC)
+            return timezone.localize(d.replace(tzinfo=None), is_dst=True).astimezone(pytz.UTC)
         return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
@@ -765,7 +767,7 @@ class Meeting(models.Model):
                     event.is_highlighted = True
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
-    state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
+    state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
 
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
@@ -775,14 +777,15 @@ class Meeting(models.Model):
     stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
     allday = fields.Boolean('All Day', states={'done': [('readonly', True)]}, default=False)
-    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
+    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)  # old date_deadline
+    event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
-    location = fields.Char('Location', states={'done': [('readonly', True)]}, track_visibility='onchange', help="Location of Event")
+    location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
 
     # linked document
@@ -933,6 +936,10 @@ class Meeting(models.Model):
                 data['recurrency'] = True
                 data.update(self._rrule_parse(meeting.rrule, data, meeting.start))
                 meeting.update(data)
+
+    @api.model
+    def _event_tz_get(self):
+        return _tz_get(self)
 
     @api.constrains('start_datetime', 'stop_datetime', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -1124,6 +1131,9 @@ class Meeting(models.Model):
             select_fields = ["id"]
             where_params_list = []
             for pos, arg in enumerate(domain):
+                # hack: if we received recurrent ids, we need to clean them
+                if arg[0] == 'id' and arg[1] in ('in', 'not in'):
+                    arg = (arg[0], arg[1], [calendar_id2real_id(id) for id in arg[2]])
                 if not arg[0] in ('start', 'stop', 'final_date', '&', '|'):
                     e = expression.expression([arg], self)
                     where_clause, where_params = e.to_sql()  # CAUTION, wont work if field is autojoin, not supported

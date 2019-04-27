@@ -333,8 +333,8 @@ td {
 }
 .pos .pos-logo {
     height: 35px;
-    margin-left: 7px;
-    margin-top: 2px;
+    margin-left: 10px;
+    margin-top: 5px;
     vertical-align:middle;
 } 
 .pos .pos-branding .username{
@@ -731,7 +731,7 @@ td {
     border-top-right-radius: 4px;
 }
 .pos .numpad button {
-    float: left;
+    float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     height: 54px;
     width: 54px;
     font-weight: bold;
@@ -1479,6 +1479,8 @@ td {
     body {
         margin: 0;
         color: white !important;
+        /* avoid black background if backgrounds are printed */
+        background: initial;
     }
     .oe_leftbar,
     .oe_loading,
@@ -2319,6 +2321,7 @@ td {
     margin-right: 3px;
 }
 .pos .popup-numpad {
+    direction: ltr/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     margin: 12px auto;
     text-align: center;
     width: 254px;

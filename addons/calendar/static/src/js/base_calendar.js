@@ -2,17 +2,19 @@ odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var BasicModel = require('web.BasicModel');
-var field_registry = require('web.field_registry');
+var fieldRegistry = require('web.field_registry');
 var Notification = require('web.Notification');
-var relational_fields = require('web.relational_fields');
+var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 
-var FieldMany2ManyTags = relational_fields.FieldMany2ManyTags;
+var FieldMany2ManyTags = relationalFields.FieldMany2ManyTags;
 
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
+    xmlDependencies: (Notification.prototype.xmlDependencies || [])
+        .concat(['/calendar/static/src/xml/notification_calendar.xml']),
 
     init: function(parent, params) {
         this._super(parent, params);
@@ -40,10 +42,8 @@ var CalendarNotification = Notification.extend({
             },
 
             'click .link2showed': function() {
-                var self = this;
-                this._rpc({route: '/calendar/notify_ack'}).always(function() {
-                    self.destroy();
-                });
+                this._rpc({route: '/calendar/notify_ack'})
+                    .then(this.destroy.bind(this), this.destroy.bind(this));
             },
         });
     },
@@ -69,7 +69,7 @@ WebClient.include({
                 var notificationID = self.call('notification', 'notify', {
                     Notification: CalendarNotification,
                     title: notif.title,
-                    text: notif.message,
+                    message: notif.message,
                     eventID: notif.event_id,
                 });
                 self.calendar_notif[notif.event_id] = notificationID;
@@ -84,8 +84,10 @@ WebClient.include({
     },
     get_next_calendar_notif: function() {
         session.rpc("/calendar/notify", {}, {shadow: true})
-            .done(this.display_calendar_notif.bind(this))
-            .fail(function(err, ev) {
+            .then(this.display_calendar_notif.bind(this))
+            .guardedCatch(function(reason) { //
+                var err = reason.message;
+                var ev = reason.event;
                 if(err.code === -32098) {
                     // Prevent the CrashManager to display an error
                     // in case of an xhr error not due to a server error
@@ -114,7 +116,7 @@ BasicModel.include({
      * @private
      * @param {Object} record
      * @param {string} fieldName
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _fetchSpecialAttendeeStatus: function (record, fieldName) {
         var context = record.getContext({fieldName: fieldName});
@@ -137,6 +139,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     // as this widget is model dependant (rpc on res.partner), use it in another
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
+    description: "",
     tag_template: "Many2ManyAttendeeTag",
     specialData: "_fetchSpecialAttendeeStatus",
 
@@ -155,6 +158,6 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     },
 });
 
-field_registry.add('many2manyattendee', Many2ManyAttendee);
+fieldRegistry.add('many2manyattendee', Many2ManyAttendee);
 
 });

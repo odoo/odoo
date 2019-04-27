@@ -1149,7 +1149,7 @@ QUnit.module('core', function () {
         assert.checkAST("1.4", "float value");
         assert.checkAST("-12", "negative integer value");
         assert.checkAST("True", "boolean");
-        assert.checkAST("'some string'", "a string");
+        assert.checkAST(`"some string"`, "a string");
         assert.checkAST("None", "None");
     });
 
@@ -1157,8 +1157,8 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkAST("{}", "empty dictionary");
-        assert.checkAST("{'a': 1}", "dictionary with a single key");
-        assert.checkAST("d['a']", "get a value in a dictionary");
+        assert.checkAST(`{"a": 1}`, "dictionary with a single key");
+        assert.checkAST(`d["a"]`, "get a value in a dictionary");
     });
 
     QUnit.test("list", function (assert) {
@@ -1225,14 +1225,14 @@ QUnit.module('core', function () {
 
     QUnit.test("strftime", function (assert) {
         assert.expect(3);
-        assert.checkAST("time.strftime('%Y')", "strftime with year");
-        assert.checkAST("time.strftime('%Y') + '-01-30'", "strftime with year");
-        assert.checkAST("time.strftime('%Y-%m-%d %H:%M:%S')", "strftime with year");
+        assert.checkAST(`time.strftime("%Y")`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year");
     });
 
     QUnit.test("context_today", function (assert) {
         assert.expect(1);
-        assert.checkAST("context_today().strftime('%Y-%m-%d')", "context today call");
+        assert.checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call");
     });
 
 
@@ -1250,7 +1250,7 @@ QUnit.module('core', function () {
         assert.checkAST('(a - b).days', "substraction and .days");
         assert.checkAST('a + day == date(2002, 3, 3)');
 
-        var expr = "[('type', '=', 'in'), ('day', '<=', time.strftime('%Y-%m-%d')), ('day', '>', (context_today() - datetime.timedelta(days = 15)).strftime('%Y-%m-%d'))]";
+        var expr = `[("type", "=", "in"), ("day", "<=", time.strftime("%Y-%m-%d")), ("day", ">", (context_today() - datetime.timedelta(days = 15)).strftime("%Y-%m-%d"))]`;
         assert.checkAST(expr);
     });
 
@@ -1271,23 +1271,23 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkNormalization("[]");
-        assert.checkNormalization("[('a', '=', 1)]");
-        assert.checkNormalization("['!', ('a', '=', 1)]");
+        assert.checkNormalization(`[("a", "=", 1)]`);
+        assert.checkNormalization(`["!", ("a", "=", 1)]`);
     });
 
     QUnit.test("properly add the & in a non normalized domain", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "[('a', '=', 1), ('b', '=', 2)]",
-            "['&', ('a', '=', 1), ('b', '=', 2)]"
+            `[("a", "=", 1), ("b", "=", 2)]`,
+            `["&", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 
     QUnit.test("normalize domain with ! operator", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "['!', ('a', '=', 1), ('b', '=', 2)]",
-            "['&', '!', ('a', '=', 1), ('b', '=', 2)]"
+            `["!", ("a", "=", 1), ("b", "=", 2)]`,
+            `["&", "!", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 

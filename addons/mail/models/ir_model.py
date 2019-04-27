@@ -19,9 +19,24 @@ class IrModel(models.Model):
     )
 
     def unlink(self):
-        # Delete followers for models that will be unlinked.
+        # Delete followers, messages and attachments for models that will be unlinked.
+        models = tuple(self.mapped('model'))
+
         query = "DELETE FROM mail_followers WHERE res_model IN %s"
-        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        self.env.cr.execute(query, [models])
+
+        query = "DELETE FROM mail_message WHERE model in %s"
+        self.env.cr.execute(query, [models])
+
+        query = """
+            DELETE FROM ir_attachment
+            WHERE res_model in %s
+            RETURNING store_fname
+        """
+        self.env.cr.execute(query, [models])
+        for (fname,) in self.env.cr.fetchall():
+            self.env['ir.attachment']._file_delete(fname)
+
         return super(IrModel, self).unlink()
 
     @api.multi
@@ -61,23 +76,3 @@ class IrModel(models.Model):
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.activity.mixin']
         return model_class
-
-
-class IrModelField(models.Model):
-    _inherit = 'ir.model.fields'
-
-    track_visibility = fields.Selection(
-        [('onchange', "On Change"), ('always', "Always")], string="Tracking",
-        help="When set, every modification to this field will be tracked in the chatter.",
-    )
-
-    def _reflect_field_params(self, field):
-        vals = super(IrModelField, self)._reflect_field_params(field)
-        vals['track_visibility'] = getattr(field, 'track_visibility', None)
-        return vals
-
-    def _instanciate_attrs(self, field_data):
-        attrs = super(IrModelField, self)._instanciate_attrs(field_data)
-        if attrs and field_data.get('track_visibility'):
-            attrs['track_visibility'] = field_data['track_visibility']
-        return attrs

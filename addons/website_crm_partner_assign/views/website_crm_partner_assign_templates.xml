@@ -187,10 +187,10 @@
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
-                    My Leads
+                    Leads
                 </a>
                 <t t-else="">
-                    My Leads
+                    Leads
                 </t>
             </li>
             <li t-if="lead" class="breadcrumb-item active">
@@ -198,10 +198,10 @@
             </li>
             <li t-if="page_name == 'opportunity' or opportunity" t-attf-class="breadcrumb-item #{'active ' if not opportunity else ''}">
                 <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
-                    My Opportunities
+                    Opportunities
                 </a>
                 <t t-else="">
-                    My Opportunities
+                    Opportunities
                 </t>
             </li>
             <li t-if="opportunity" class="breadcrumb-item active">
@@ -213,12 +213,12 @@
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-if="lead_count" t-call="portal.portal_docs_entry">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
                 <t t-set="count" t-value="lead_count"/>
             </t>
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="count" t-value="opp_count"/>
             </t>
@@ -227,8 +227,10 @@
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
             </t>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
@@ -259,7 +261,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
 
                 <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
@@ -291,8 +293,8 @@
                             </div>
                         </main>
                         <footer class="modal-footer">
-                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button> or
-                            <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button>
                         </footer>
                     </form>
                 </div>
@@ -444,8 +446,8 @@
                                 </div>
                             </main>
                             <footer class="modal-footer">
-                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
                             </footer>
                         </form>
                     </div>
@@ -477,8 +479,8 @@
                                 </div>
                             </main>
                             <footer class="modal-footer">
-                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                             </footer>
                         </form>
                     </div>
@@ -510,12 +512,12 @@
                         </div>
                         <div class="col-md text-md-right">
                             <div class="d-inline-block">
-                                <small class="mr-2"><b>Stage:</b></small>
-                                <div t-foreach="stages" t-as="stage" class="float-right">
+                                <small class="mr-2 mt-1 float-left"><b>Stage:</b></small>
+                                <div t-foreach="stages[::-1]" t-as="stage" class="float-left">
+                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-2 mr-1 small" style="opacity: 0.5"/>
                                     <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
                                         <span t-field="stage.name"/>
                                     </button>
-                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-1 mr-2 small" style="opacity: 0.5"/>
                                 </div>
                             </div>
                         </div>
@@ -533,7 +535,7 @@
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
                             </div>
                             <div class="row mb-2">
-                                <strong class="col-12 col-sm-4">Deadline</strong>
+                                <strong class="col-12 col-sm-4">Expected Closing</strong>
                                 <div class="col">
                                     <span t-if="opportunity.date_deadline" t-field="opportunity.date_deadline"/>
                                     <span t-else="" class="text-muted"> - </span>
@@ -672,10 +674,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label>Deadline:</label>
-                                                        <div class="input-group date">
-                                                            <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                            <div class="input-group-append">
+                                                        <label>Expected Closing:</label>
+                                                        <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                            <input  type="text" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                            <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
                                                                 </span>
@@ -688,7 +691,7 @@
                                                 <label class="col-form-label" for="next_activity">Next Activity</label>
                                                 <select class="form-control next_activity" name="next_activity">
                                                     <t t-foreach="activity_types" t-as="activity_type">
-                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
+                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count" t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
                                                     </t>
                                                 </select>
                                             </div>
@@ -698,9 +701,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
-                                                <div class="input-group date">
-                                                    <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                    <div class="input-group-append">
+                                                <div class="input-group date" id="next_activity_div" data-target-input="nearest">
+                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                    <input type="text" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                    <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
                                                         </span>
@@ -709,8 +713,8 @@
                                             </div>
                                         </main>
                                         <footer class="modal-footer">
-                                            <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
                                         </footer>
                                     </form>
                                 </div>
@@ -789,8 +793,8 @@
                                             </div>
                                         </main>
                                         <footer class="modal-footer">
-                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
                                         </footer>
                                     </form>
                                 </div>

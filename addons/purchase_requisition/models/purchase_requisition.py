@@ -43,16 +43,6 @@ class PurchaseRequisition(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
 
-    def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
-        company = self.env['res.company']._company_default_get('purchase.requisition')
-        if not pick_in or pick_in.sudo().warehouse_id.company_id.id != company.id:
-            pick_in = self.env['stock.picking.type'].search(
-                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
-                limit=1,
-            )
-        return pick_in
-
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
@@ -61,20 +51,18 @@ class PurchaseRequisition(models.Model):
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
     vendor_id = fields.Many2one('res.partner', string="Vendor")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
-    ordering_date = fields.Date(string="Ordering Date", track_visibility='onchange')
-    date_end = fields.Datetime(string='Agreement Deadline', track_visibility='onchange')
-    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", track_visibility='onchange')
+    ordering_date = fields.Date(string="Ordering Date", tracking=True)
+    date_end = fields.Datetime(string='Agreement Deadline', tracking=True)
+    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", tracking=True)
     user_id = fields.Many2one('res.users', string='Purchase Representative', default= lambda self: self.env.user)
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
-                              'Status', track_visibility='onchange', required=True,
+                              'Status', tracking=True, required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id)
@@ -159,17 +147,16 @@ class PurchaseRequisition(models.Model):
                 requisition_line.supplier_info_ids.unlink()
         self.write({'state': 'done'})
 
-    def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+    def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         return{
             'origin': origin,
             'date_end': values['date_planned'],
             'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
-            'company_id': values['company_id'].id,
+            'company_id': company_id.id,
             'line_ids': [(0, 0, {
                 'product_id': product_id.id,
                 'product_uom_id': product_uom.id,
                 'product_qty': product_qty,
-                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False,
             })],
         }
 
@@ -196,7 +183,6 @@ class PurchaseRequisitionLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
-    move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
     @api.model
@@ -207,7 +193,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not [s.requisition_id for s in supplier_infos]:
+            if not any([s.purchase_requisition_id for s in supplier_infos]):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))
@@ -258,7 +244,7 @@ class PurchaseRequisitionLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.product_uom_id = self.product_id.uom_id
+            self.product_uom_id = self.product_id.uom_po_id
             self.product_qty = 1.0
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
@@ -281,5 +267,4 @@ class PurchaseRequisitionLine(models.Model):
             'date_planned': date_planned,
             'account_analytic_id': self.account_analytic_id.id,
             'analytic_tag_ids': self.analytic_tag_ids.ids,
-            'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }

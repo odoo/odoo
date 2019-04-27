@@ -30,6 +30,9 @@ from . import ir_module
 from . import ir_demo
 from . import ir_demo_failure
 from . import report_paperformat
+
+from . import image_mixin
+
 from . import res_country
 from . import res_lang
 from . import res_partner

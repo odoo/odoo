@@ -5,10 +5,9 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
-var weContext = require('web_editor.context');
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
-var websiteRootData = require('website.WebsiteRoot');
+var websiteRootData = require('website.root');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -93,7 +92,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             self.fields = fields;
         }));
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -176,7 +175,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }
         this.$('#date_publish_container').datetimepicker(datepickersOptions);
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -195,7 +194,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     save: function (data) {
         var self = this;
-        var context = weContext.get();
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         var url = this.$('#page_url').val();
 
         var $date_publish = this.$("#date_publish");
@@ -251,7 +255,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      *
      * @private
      * @param {integer} moID
-     * @returns {Deferred<Array>}
+     * @returns {Promise<Array>}
      */
     _getPageDependencies: function (moID) {
         return this._rpc({
@@ -265,7 +269,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      *
      * @private
      * @param {integer} moID
-     * @returns {Deferred<Array>}
+     * @returns {Promise<Array>}
      */
     _getPageKeyDependencies: function (moID) {
         return this._rpc({
@@ -278,7 +282,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      * Retrieves supported mimtype
      *
      * @private
-     * @returns {Deferred<Array>}
+     * @returns {Promise<Array>}
      */
     _getSupportedMimetype: function () {
         return this._rpc({
@@ -364,13 +368,15 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, editor, data) {
+    init: function (parent, options, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
-        this.data = data;
-        this._super(parent, _.extend({}, {
+
+        this._super(parent, _.extend({
             title: _t("Create Menu"),
-        }, options || {}), editor, data);
+        }, options || {}), _.extend({
+            needLabel: true,
+        }, data || {}));
     },
     /**
      * @override
@@ -400,13 +406,12 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     save: function () {
         var $e = this.$('#o_link_dialog_label_input');
         if (!$e.val() || !$e[0].checkValidity()) {
-            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
+            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $e.focus();
             return;
         }
         return this._super.apply(this, arguments);
     },
-
 });
 
 var SelectEditMenuDialog = weWidgets.Dialog.extend({
@@ -467,7 +472,12 @@ var EditMenuDialog = weWidgets.Dialog.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
         var self = this;
-        var context = weContext.get();
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         defs.push(this._rpc({
             model: 'website.menu',
             method: 'get_tree',
@@ -478,7 +488,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             self.flat = self._flatenize(menu);
             self.to_delete = [];
         }));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -514,7 +524,12 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
         var data = [];
-        var context = weContext.get();
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
             if (menu.id) {
@@ -570,7 +585,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _onAddMenuButtonClick: function () {
         var self = this;
-        var dialog = new MenuEntryDialog(this, {}, undefined, {});
+        var dialog = new MenuEntryDialog(this, {}, {});
         dialog.on('save', this, function (link) {
             var new_menu = {
                 id: _.uniqueId('new-'),
@@ -611,7 +626,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
         var menu = self.flat[menu_id];
         if (menu) {
-            var dialog = new MenuEntryDialog(this, {}, undefined, menu);
+            var dialog = new MenuEntryDialog(this, {}, menu);
             dialog.on('save', this, function (link) {
                 var id = link.id;
                 var menu_obj = self.flat[id];
@@ -720,63 +735,73 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @private
      * @param {function} [beforeReloadCallback]
-     * @returns {Deferred}
+     * @returns {Promise}
      *          Unresolved if the menu is edited and saved as the page will be
      *          reloaded.
      *          Resolved otherwise.
      */
     _editMenu: function (beforeReloadCallback) {
         var self = this;
-        var def = $.Deferred();
-
-        // If there is multiple menu on the page, ask the user which one he
-        // wants to edit
-        var selectDef = $.Deferred();
-        if ($('[data-content_menu_id]').length) {
-            var select = new SelectEditMenuDialog(this);
-            select.on('save', selectDef, selectDef.resolve);
-            select.on('cancel', def, def.resolve);
-            select.open();
-        } else {
-            selectDef.resolve(null);
-        }
-        selectDef.then(function (rootID) {
-            // Open the dialog to show the menu structure and allow its edition
-            var editDef = $.Deferred();
-            var dialog = new EditMenuDialog(self, {}, rootID).open();
-            dialog.on('save', editDef, editDef.resolve);
-            dialog.on('cancel', def, def.resolve);
-            return editDef;
-        }).then(function () {
-            // Before reloading the page after menu modification, does the
-            // given action to do.
-            return beforeReloadCallback && beforeReloadCallback();
-        }).then(function () {
-            // Reload the page so that the menu modification are shown
-            window.location.reload(true);
+        return new Promise(function (resolve) {
+            function resolveWhenEditMenuDialogIsCancelled(rootID) {
+                return self._openEditMenuDialog(rootID, beforeReloadCallback).then(resolve);
+            }
+            if ($('[data-content_menu_id]').length) {
+                var select = new SelectEditMenuDialog(self);
+                select.on('save', self, resolveWhenEditMenuDialogIsCancelled);
+                select.on('cancel', self, resolve);
+                select.open();
+            } else {
+                resolveWhenEditMenuDialogIsCancelled(null);
+            }
         });
-
-        return def;
     },
+    /**
+     *
+     * @param {*} rootID
+     * @param {function|undefied} beforeReloadCallback function that returns a promise
+     * @returns {Promise}
+     */
+    _openEditMenuDialog: function (rootID, beforeReloadCallback) {
+        var self = this;
+        return new Promise(function (resolve) {
+            var dialog = new EditMenuDialog(self, {}, rootID);
+            dialog.on('save', self, function () {
+                // Before reloading the page after menu modification, does the
+                // given action to do.
+                if (beforeReloadCallback) {
+                    // Reload the page so that the menu modification are shown
+                    beforeReloadCallback().then(function () {
+                        window.location.reload(true);
+                    });
+                } else {
+                    window.location.reload(true);
+                }
+            });
+            dialog.on('cancel', self, resolve);
+            dialog.open();
+        });
+    },
+
     /**
      * Retrieves the value of a page option.
      *
      * @private
      * @param {string} name
-     * @returns {Deferred<*>}
+     * @returns {Promise<*>}
      */
     _getPageOption: function (name) {
         var option = this.pageOptions[name];
         if (!option) {
-            return $.Deferred().reject();
+            return Promise.reject();
         }
-        return $.when(option.value);
+        return Promise.resolve(option.value);
     },
     /**
      * On save, simulated page options have to be server-saved.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _onSave: function () {
         var self = this;
@@ -788,13 +813,13 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 }, true, true);
             }
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Opens the page properties dialog.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _pageProperties: function () {
         var mo;
@@ -815,7 +840,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {*} [params.value] (change value by default true -> false -> true)
      * @param {boolean} [forceSave=false]
      * @param {boolean} [noReload=false]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _togglePageOption: function (params, forceSave, noReload) {
         // First check it is a website page
@@ -826,13 +851,13 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             },
         });
         if (mo.model !== 'website.page') {
-            return $.Deferred().reject();
+            return Promise.reject();
         }
 
         // Check if this is a valid option
         var option = this.pageOptions[params.name];
         if (!option) {
-            return $.Deferred().reject();
+            return Promise.reject();
         }
 
         // Toggle the value
@@ -841,23 +866,23 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // If simulate is true, it means we want the option to be toggled but
         // not saved on the server yet
         if (!forceSave) {
-            return $.when();
+            return Promise.resolve();
         }
 
         // If not, write on the server page and reload the current location
         var vals = {};
         vals[params.name] = option.value;
-        var def = this._rpc({
+        var prom = this._rpc({
             model: 'website.page',
             method: 'write',
             args: [[mo.id], vals],
         });
         if (noReload) {
-            return def;
+            return prom;
         }
-        return def.then(function () {
+        return prom.then(function () {
             window.location.reload();
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
 });
@@ -879,7 +904,7 @@ var PageManagement = Widget.extend({
      *
      * @private
      * @param {integer} moID
-     * @returns {Deferred<Array>}
+     * @returns {Promise<Array>}
      */
     _getPageDependencies: function (moID) {
         return this._rpc({
@@ -926,35 +951,34 @@ var PageManagement = Widget.extend({
 // TODO: This function should be integrated in a widget in the future
 function _deletePage(pageId, fromPageManagement) {
     var self = this;
-    var def = $.Deferred();
-
-    // Search the page dependencies
-    this._getPageDependencies(pageId)
-    .then(function (dependencies) {
-    // Inform the user about those dependencies and ask him confirmation
-        var confirmDef = $.Deferred();
-        Dialog.safeConfirm(self, "", {
-            title: _t("Delete Page"),
-            $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
-            confirm_callback: confirmDef.resolve.bind(confirmDef),
-            cancel_callback: def.resolve.bind(self),
-        });
-        return confirmDef;
-    }).then(function () {
-    // Delete the page if the user confirmed
-        return self._rpc({
-            model: 'website.page',
-            method: 'unlink',
-            args: [pageId],
-        });
-    }).then(function () {
-        if (fromPageManagement) {
-            window.location.reload(true);
-        }
-        else {
-            window.location.href = '/';
-        }
-    }, def.reject.bind(def));
+    new Promise(function (resolve, reject) {
+        // Search the page dependencies
+        self._getPageDependencies(pageId)
+        .then(function (dependencies) {
+            // Inform the user about those dependencies and ask him confirmation
+            return new Promise(function (confirmResolve, confirmReject) {
+                Dialog.safeConfirm(self, "", {
+                    title: _t("Delete Page"),
+                    $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
+                    confirm_callback: confirmResolve,
+                    cancel_callback: resolve,
+                });
+            });
+        }).then(function () {
+            // Delete the page if the user confirmed
+            return self._rpc({
+                model: 'website.page',
+                method: 'unlink',
+                args: [pageId],
+            });
+        }).then(function () {
+            if (fromPageManagement) {
+                window.location.reload(true);
+            } else {
+                window.location.href = '/';
+            }
+        }, reject);
+    });
 }
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');

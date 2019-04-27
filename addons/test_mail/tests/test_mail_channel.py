@@ -155,7 +155,15 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
         """ Posting a message on a mailing list should send one email to all recipients """
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'schlouby.fr')
         self.test_channel.write({'email_send': True})
-        self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner)
+
+        # Subscribe an user without email. We shouldn't try to send email to them.
+        nomail = self.env['res.users'].create({
+            "login": "nomail",
+            "name": "No Mail",
+            "email": False,
+            "notification_type": "email",
+        })
+        self._join_channel(self.test_channel, self.user_employee.partner_id | self.test_partner | nomail.partner_id)
         self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
 
         self.assertEqual(len(self._mails), 1)
@@ -187,6 +195,19 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
             self.assertIn(
                 email['email_to'][0],
                 [formataddr((self.user_employee.name, self.user_employee.email)), formataddr((self.test_partner.name, self.test_partner.email))])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_channel_out_of_office(self):
+        self.user_employee.out_of_office_message = 'Out'
+        test_chat = self.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
+            'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, self.user_admin.partner_id.id)],
+            'public': 'private',
+            'channel_type': 'chat',
+            'email_send': False,
+            'name': 'test'
+        })
+        infos = test_chat.sudo(self.user_admin).channel_info()
+        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'Out')
 
 
 @tagged('moderation')

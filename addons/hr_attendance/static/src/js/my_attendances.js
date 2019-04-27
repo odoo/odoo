@@ -8,10 +8,9 @@ var core = require('web.core');
 var MyAttendances = AbstractAction.extend({
     contentTemplate: 'HrAttendanceMyMainMenu',
     events: {
-        "click .o_hr_attendance_sign_in_out_icon": function() {
-            this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
+        "click .o_hr_attendance_sign_in_out_icon": _.debounce(function() {
             this.update_attendance();
-        },
+        }, 200, true),
     },
 
     willStart: function () {
@@ -26,7 +25,7 @@ var MyAttendances = AbstractAction.extend({
                 self.employee = res.length && res[0];
             });
 
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.all([def, this._super.apply(this, arguments)]);
     },
 
     update_attendance: function () {

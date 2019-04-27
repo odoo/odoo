@@ -56,14 +56,14 @@
     </data>
     <!-- Template and notification section -->
     <data noupdate="1">
-        <template id="" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
+        <template id="mail_notification_paynow_online" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
             <xpath expr="//t[@t-set='access_name']" position="after">
                 <t t-if="record._name == 'sale.order'">
-                    <t t-if="record.has_to_be_signed()">
+                    <t t-if="record.has_to_be_signed(include_draft=True)">
                         <t t-if="record.has_to_be_paid()" t-set="access_name">Sign and pay online</t>
                         <t t-else="" t-set="access_name">Accept and sign online</t>
                     </t>
-                    <t t-elif="record.has_to_be_paid()">
+                    <t t-elif="record.has_to_be_paid(include_draft=True)">
                         <t t-set="access_name">Pay online</t>
                     </t>
                 </t>
@@ -73,18 +73,18 @@
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order: Send by email</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="email_from">${object.user_id.email_formatted |safe}</field>
-            <field name="partner_to">${object.partner_id.id}</field>
             <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'
-        Dear ${object.partner_id.name}
         % if object.partner_id.parent_id:
-            (${object.partner_id.parent_id.name})
+            Dear ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+        % else:
+            Dear ${object.partner_id.name},
         % endif
-        ,
         <br /><br />
         Here is
         % if ctx.get('proforma')
@@ -103,7 +103,7 @@
 </div>
             </field>
             <field name="report_template" ref="action_report_saleorder"/>
-            <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>

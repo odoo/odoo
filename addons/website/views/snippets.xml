@@ -100,7 +100,7 @@
     <section class="s_text_block pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-10 offset-lg-1 pt32 pb32">
+                <div class="col-lg-12 pt32 pb32">
                     <p class="lead">A great way to catch your reader's attention is to tell a story. <br/>Everything you consider writing can be told as a story.</p>
                     <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
                     <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
@@ -143,7 +143,7 @@
                         <img class="card-img-top" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature One</h3>
-                            <p class="card-text">Adapt these three columns to fit you design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action.</p>
+                            <p class="card-text">Adapt these three columns to fit your design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action.</p>
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                         <img class="card-img-top" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature Two</h3>
-                            <p class="card-text">To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the column to create a new one as a copy.</p>
+                            <p class="card-text">To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the columns to create a new one as a copy.</p>
                         </div>
                         <div class="card-footer">
                             <i class="fa fa-info-circle mr-1"/> <small>Additional information</small>
@@ -164,7 +164,7 @@
                         <img class="card-img-top" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                         <div class="card-body">
                             <h3 class="card-title">Feature Three</h3>
-                            <p class="card-text">Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change it's <em>rounded corner</em> style.</p>
+                            <p class="card-text">Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change its <em>rounded corner</em> style.</p>
                             <div class="s_btn text-left pb0 pt16" data-name="Button">
                                 <a href="#" class="btn btn-primary btn-sm">Learn more</a>
                             </div>
@@ -893,11 +893,14 @@
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.png"/>
+        <t t-install="website_form" string="Form Builder" t-thumbnail="/website/static/src/img/s_website_form.png"/>
+        <t id="s_products_searchbar" t-install="website_sale" string="Products Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_local_events.png"/>
         <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button_channel_subscribe.png"/>
         <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
+        <t id="s_products_searchbar_input" t-install="website_sale" string="Products Search Input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
     </xpath>
 </template>
 
@@ -1347,6 +1350,12 @@
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
             <div class="dropdown-menu"/>
         </div>
+    </div>
+
+    <!-- Anchor Name -->
+    <div data-js="anchorName"
+        data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > div">
+        <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-anchor-dialog=""><i class="fa fa-anchor"/>Anchor Name</a>
     </div>
 </template>
 </odoo>

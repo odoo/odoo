@@ -1,40 +1,25 @@
-odoo.define('account.AccountPortalSidebar.instance', function (require) {
-"use strict";
-
-require('web.dom_ready');
-var AccountPortalSidebar = require('account.AccountPortalSidebar');
-
-if (!$('.o_portal_invoice_sidebar').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_portal_invoice_sidebar'");
-}
-
-var account_portal_sidebar = new AccountPortalSidebar();
-return account_portal_sidebar.attachTo($('.o_portal_invoice_sidebar')).then(function () {
-    return account_portal_sidebar;
-});
-});
-
-//==============================================================================
-
 odoo.define('account.AccountPortalSidebar', function (require) {
-"use strict";
+'use strict';
 
+var publicWidget = require('web.public.widget');
 var PortalSidebar = require('portal.PortalSidebar');
 
-var AccountPortalSidebar = PortalSidebar.extend({
+publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
+    selector: '.o_portal_invoice_sidebar',
     events: {
         'click .o_portal_invoice_print': '_onPrintInvoice',
     },
+
     /**
      * @override
      */
     start: function () {
-        var self = this;
-        this._super.apply(this, arguments);
+        var def = this._super.apply(this, arguments);
         var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        var updateIframeSize = self._updateIframeSize.bind(self, $invoiceHtml);
+        var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
         $invoiceHtml.on('load', updateIframeSize);
         $(window).on('resize', updateIframeSize);
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -64,7 +49,4 @@ var AccountPortalSidebar = PortalSidebar.extend({
         this._printIframeContent(href);
     },
 });
-
-
-return AccountPortalSidebar;
 });

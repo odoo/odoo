@@ -12,8 +12,16 @@ class SaleOrder(models.Model):
         for so in self:
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+        return res
+
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for so in self:
             if any(so.order_line.filtered(lambda line: line.event_id)):
-                return self.env['ir.actions.act_window'].with_context(default_sale_order_id=so.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
+                return self.env['ir.actions.act_window'] \
+                    .with_context(default_sale_order_id=so.id) \
+                    .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
 
@@ -65,6 +73,11 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
 
+    @api.onchange('product_uom', 'product_uom_qty')
+    def product_uom_change(self):
+        if not self.event_ticket_id:
+            super(SaleOrderLine, self).product_uom_change()
+
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         company = self.event_id.company_id or self.env.user.company_id
@@ -86,6 +99,6 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
             )
 
-            return ticket.get_ticket_multiline_description_sale()
+            return ticket.get_ticket_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
         else:
             return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)

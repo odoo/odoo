@@ -8,7 +8,7 @@
     'version': '2.0',
     'sequence': 110,
     'website': 'https://www.odoo.com/page/mailing',
-    'category': 'Marketing',
+    'category': 'Marketing/Email Marketing',
     'depends': [
         'contacts',
         'mail',
@@ -43,6 +43,9 @@
     ],
     'demo': [
         'data/mass_mailing_demo.xml',
+    ],
+    'qweb': [
+        'static/src/xml/*.xml',
     ],
     'application': True,
 }

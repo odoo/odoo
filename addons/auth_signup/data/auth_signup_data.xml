@@ -8,7 +8,7 @@
             <field name="name">Auth Signup: Reset Password</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Password reset</field>
-            <field name="email_from">${('"%s" &lt;%s&gt;' % (object.company_id.name, object.company_id.email or user.email))|safe}</field>
+            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
             <field name="email_to">${object.email_formatted | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -92,6 +92,7 @@
 </td></tr>
 </table>
             </field>
+            <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>
@@ -101,7 +102,7 @@
             <field name="name">Auth Signup: Odoo Connection</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">${object.create_uid.name} from ${object.company_id.name} invites you to connect to Odoo</field>
-            <field name="email_from">"${object.company_id.name|safe}" &lt;${object.company_id.email or user.email|safe}&gt;</field>
+            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
             <field name="email_to">${object.email_formatted | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -142,7 +143,7 @@
                         % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')
                         Your Odoo domain is: <b><a href='${website_url}'>${website_url}</a></b><br />
                         Your sign in email is: <b><a href="/web/login?login=${object.email}" target="_blank">${object.email}</a></b><br /><br />
-                        Never heard of Odoo? It’s a all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
+                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
                         <br /><br />
                         Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo Tour</a> to discover the tool.
                         <br /><br />
@@ -189,6 +190,7 @@
     </table>
 </td></tr>
 </table></field>
+            <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>
@@ -198,7 +200,7 @@
             <field name="name">Auth Signup: Odoo Account Created</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Welcome to ${object.company_id.name}!</field>
-            <field name="email_from">"${object.company_id.name|safe}" &lt;${(object.company_id.email or user.email)|safe}&gt;</field>
+            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
             <field name="email_to">${object.email_formatted | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -281,6 +283,7 @@
     </table>
 </td></tr>
 </table></field>
+            <field name="lang">${object.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>

@@ -3,13 +3,11 @@ odoo.define("website_forum.tour_forum", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
     tour.register("question", {
         url: "/",
-        wait_for: base.ready(),
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_forum]",
         content: _t("Select this menu item to create a new forum."),

@@ -31,6 +31,23 @@
         @include border-bottom-radius($card-inner-border-radius);
     }
 }
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
 
 // Modify modals so that their scrollable element is the modal-body (except in
 // mobile).

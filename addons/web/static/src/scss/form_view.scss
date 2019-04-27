@@ -42,7 +42,7 @@
             min-width: 50px;
             margin: 0 (-$o-form-spacing-unit/2);
 
-            > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
+            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
                 flex: 0 0 auto;
                 width: auto!important;
                 margin-right: $o-form-spacing-unit/2;
@@ -81,16 +81,10 @@
 
     .o_form_uri {
         display: inline-block;
+        color: $link-color;
 
-        color: $o-main-text-color;
-        &:first-line {
-            color: $link-color;
-        }
         &:hover {
-            color: darken($o-main-text-color, 1%); // hack required on chrome
-            &:first-line {
-                color: darken($link-color, 15%);
-            }
+            color: darken($link-color, 15%);
         }
     }
 
@@ -378,8 +372,8 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        .nav-tabs > .tab-pane {
-            min-height: 100px;
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
         }
     }
 
@@ -576,13 +570,8 @@
     &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
-
-    // Attachments
-    .oe_attachment {
-        display: inline-block;
-        border: 1px solid $o-brand-lightsecondary;
-        margin: 0 $o-form-spacing-unit $o-form-spacing-unit 0;
-        padding: $o-form-spacing-unit;
+    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+        display: none;  // Hide the handler on readonly fields
     }
 
     &.oe_form_configuration {
@@ -683,6 +672,11 @@
 
                 .o_field_widget {
                     margin-bottom: $o-form-spacing-unit * 2;
+
+                    > .o_field_widget {
+                        margin-bottom: 0;
+                    }
+
                     &.o_field_boolean {
                         margin-right: 0;
                     }
@@ -743,6 +737,11 @@
             }
             .o_field_widget {
                 width: 50%;
+                flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;

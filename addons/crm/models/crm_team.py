@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 class Team(models.Model):
     _name = 'crm.team'
     _inherit = ['mail.alias.mixin', 'crm.team']
-    _description = 'Sales Channels'
+    _description = 'Sales Team'
     use_opportunities = fields.Boolean('Manage a pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")    
 
@@ -31,7 +31,10 @@ class Team(models.Model):
         compute='_compute_overdue_opportunities',
         string='Overdue Opportunities Revenues')
 
-    alias_user_id = fields.Many2one(domain=lambda self: [
+    # Since we are in a _inherits case, this is not an override
+    # but a plain definition of a field
+    # So we need to reset the property related of that field
+    alias_user_id = fields.Many2one('res.users', related='alias_id.alias_user_id', inherited=True, domain=lambda self: [
         ('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
 
     def _compute_unassigned_leads_count(self):
@@ -45,13 +48,18 @@ class Team(models.Model):
             team.unassigned_leads_count = counts.get(team.id, 0)
 
     def _compute_opportunities(self):
-        opportunity_data = self.env['crm.lead'].read_group([
+        opportunity_data = self.env['crm.lead'].search([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ], ['planned_revenue', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['planned_revenue']) for datum in opportunity_data}
+        ]).read(['planned_revenue', 'team_id'])
+        counts = {}
+        amounts = {}
+        for datum in opportunity_data:
+            counts.setdefault(datum['team_id'][0], 0)
+            amounts.setdefault(datum['team_id'][0], 0)
+            counts[datum['team_id'][0]] += 1
+            amounts[datum['team_id'][0]] += (datum.get('planned_revenue', 0))
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)

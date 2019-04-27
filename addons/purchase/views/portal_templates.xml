@@ -68,7 +68,12 @@
               <div class="row">
                 <div class="col-lg-12">
                   <h4>
-                    Purchase Order
+                    <t t-if="order.state in ['draft', 'sent']">
+                      Request for Quotation
+                    </t>
+                    <t t-else="1">
+                      Purchase Order
+                    </t>
                     <span t-esc="order.name"/>
                   </h4>
                 </div>

@@ -157,9 +157,9 @@ class Goal(models.Model):
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
-    target_goal = fields.Float('To Reach', required=True, track_visibility='always')
+    target_goal = fields.Float('To Reach', required=True, tracking=True)
 # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0, track_visibility='always')
+    current = fields.Float("Current Value", required=True, default=0, tracking=True)
     completeness = fields.Float("Completeness", compute='_get_completion')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -167,7 +167,7 @@ class Goal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Canceled"),
-    ], default='draft', string='State', required=True, track_visibility='always')
+    ], default='draft', string='State', required=True, tracking=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
@@ -221,6 +221,7 @@ class Goal(models.Model):
                            .get_email_template(self.id)
         body_html = self.env['mail.template'].with_context(template._context)\
             ._render_template(template.body_html, 'gamification.goal', self.id)
+        # TDE NOTE: should be a notification (see with xdo)
         self.env['mail.thread'].message_post(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],

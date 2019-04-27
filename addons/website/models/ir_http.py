@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from lxml import etree
 import traceback
 import os
 import unittest
@@ -12,14 +13,14 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models
+from odoo import api, models, registry
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config
-from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
+from odoo.addons.base.models.qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -39,6 +40,23 @@ def sitemap_qs2dom(qs, route, field='name'):
         else:
             dom = FALSE_DOMAIN
     return dom
+
+
+def get_request_website():
+    """ Return the website set on `request` if called in a frontend context
+    (website=True on route).
+    This method can typically be used to check if we are in the frontend.
+
+    This method is easy to mock during python tests to simulate frontend
+    context, rather than mocking every method accessing request.website.
+
+    Don't import directly the method or it won't be mocked during tests, do:
+    ```
+    from odoo.addons.website.models import ir_http
+    my_var = ir_http.get_request_website()
+    ```
+    """
+    return request and getattr(request, 'website', False) or False
 
 
 class Http(models.AbstractModel):
@@ -74,7 +92,9 @@ class Http(models.AbstractModel):
 
         # Force website with query string paramater, typically set from website selector in frontend navbar
         force_website_id = request.httprequest.args.get('fw')
-        if force_website_id and request.session.get('force_website_id') != force_website_id:
+        if (force_website_id and request.session.get('force_website_id') != force_website_id and
+                request.env.user.has_group('website.group_multi_website') and
+                request.env.user.has_group('website.group_website_publisher')):
             request.env['website']._force_website(request.httprequest.args.get('fw'))
 
         context = {}
@@ -162,7 +182,7 @@ class Http(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
-            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.type)
+            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.redirect_type)
 
         return False
 
@@ -183,7 +203,7 @@ class Http(models.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception as e:
-                if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
+                if 'werkzeug' in config['dev_mode']:
                     raise e
                 exception = e
 
@@ -205,18 +225,12 @@ class Http(models.AbstractModel):
 
             if isinstance(exception, QWebException):
                 values.update(qweb_exception=exception)
-                if isinstance(exception.qweb.get('cause'), odoo.exceptions.AccessError):
-                    code = 403
 
-            if code == 500:
-                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if 'qweb_exception' in values:
-                    view = request.env["ir.ui.view"]
-                    views = view._views_get(exception.qweb['template'])
-                    to_reset = views.filtered(lambda view: view.model_data_id.noupdate is True and view.arch_fs)
-                    values['views'] = to_reset
-            elif code == 403:
-                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                # retro compatibility to remove in 12.2
+                exception.qweb = dict(message=exception.message, expression=exception.html)
+
+                if type(exception.error) == odoo.exceptions.AccessError:
+                    code = 403
 
             values.update(
                 status_message=werkzeug.http.HTTP_STATUS_CODES[code],
@@ -231,10 +245,43 @@ class Http(models.AbstractModel):
             if not request.uid:
                 cls._auth_method_public()
 
-            try:
-                html = request.env['ir.ui.view'].render_template('website.%s' % view_id, values)
-            except Exception:
-                html = request.env['ir.ui.view'].render_template('website.http_error', values)
+            with registry(request.env.cr.dbname).cursor() as cr:
+                env = api.Environment(cr, request.uid, request.env.context)
+                if code == 500:
+                    logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                    View = env["ir.ui.view"]
+                    values['view'] = View
+                    if 'qweb_exception' in values:
+                        try:
+                            # exception.name might be int, string
+                            exception_template = int(exception.name)
+                        except:
+                            exception_template = exception.name
+                        view = View._view_obj(exception_template)
+                        if exception.html and exception.html in view.arch:
+                            values['view'] = view
+                        else:
+                            # There might be 2 cases where the exception code can't be found
+                            # in the view, either the error is in a child view or the code
+                            # contains branding (<div t-att-data="request.browse('ok')"/>).
+                            et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
+                            node = et.xpath(exception.path)
+                            line = node is not None and etree.tostring(node[0], encoding='unicode')
+                            if line:
+                                values['view'] = View._views_get(exception_template).filtered(
+                                    lambda v: line in v.arch
+                                )
+                                values['view'] = values['view'] and values['view'][0]
+
+                        # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
+                        values['editable'] = request.uid and request.website.is_publisher()
+                elif code == 403:
+                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                try:
+                    html = env['ir.ui.view'].render_template('website.%s' % view_id, values)
+                except Exception:
+                    html = env['ir.ui.view'].render_template('website.http_error', values)
+
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
@@ -248,7 +295,7 @@ class Http(models.AbstractModel):
             obj = self.env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
             if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                self.sudo()
+                self = self.sudo()
         return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,

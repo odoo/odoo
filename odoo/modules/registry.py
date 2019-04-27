@@ -259,7 +259,7 @@ class Registry(Mapping):
             model._prepare_setup()
 
         # do the actual setup from a clean state
-        self._m2m = {}
+        self._m2m = defaultdict(list)
         for model in models:
             model._setup_base()
 
@@ -316,7 +316,7 @@ class Registry(Mapping):
 
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
-            _logger.warning("Models have no table: %s.", ", ".join(missing))
+            _logger.info("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
             deps = {name: model._depends for name, model in env.items()}
             for name in topological_sort(deps):

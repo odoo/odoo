@@ -31,12 +31,6 @@ var SwitchCompanyMenu = Widget.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return session.user_companies ? this._super() : $.Deferred().reject();
-    },
-    /**
-     * @override
-     */
     start: function () {
         var companiesList = '';
         if (this.isMobile) {
@@ -53,7 +47,7 @@ var SwitchCompanyMenu = Widget.extend({
             } else {
                 a = '<span style="margin-right: 24px;"/>';
             }
-            companiesList += '<a href="#" class="dropdown-item" data-menu="company" data-company-id="' +
+            companiesList += '<a role="menuitem" href="#" class="dropdown-item" data-menu="company" data-company-id="' +
                             company[0] + '">' + a + company[1] + '</a>';
         });
         this.$('.dropdown-menu').html(companiesList);
@@ -81,9 +75,9 @@ var SwitchCompanyMenu = Widget.extend({
         });
     },
 });
-
-SystrayMenu.Items.push(SwitchCompanyMenu);
-
+if (session.user_companies) {
+    SystrayMenu.Items.push(SwitchCompanyMenu);
+}
 return SwitchCompanyMenu;
 
 });

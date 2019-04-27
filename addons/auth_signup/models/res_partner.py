@@ -27,16 +27,16 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self:
-            partner.signup_valid = bool(partner.signup_token) and \
-            (not partner.signup_expiration or dt <= partner.signup_expiration)
+        for partner, partner_sudo in zip(self, self.sudo()):
+            partner.signup_valid = bool(partner_sudo.signup_token) and \
+            (not partner_sudo.signup_expiration or dt <= partner_sudo.signup_expiration)
 
     @api.multi
     def _compute_signup_url(self):
@@ -48,13 +48,13 @@ class ResPartner(models.Model):
             partner.signup_url = result.get(partner.id, False)
 
     @api.multi
-    def _get_signup_url_for_action(self, action=None, view_type=None, menu_id=None, res_id=None, model=None):
+    def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for partner in self:
+            base_url = partner.get_base_url()
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
                 partner.sudo().signup_prepare()
@@ -73,23 +73,26 @@ class ResPartner(models.Model):
             else:
                 continue        # no signup token, no user, thus no signup url!
 
-            fragment = dict()
-            base = '/web#'
-            if action == '/mail/view':
-                base = '/mail/view?'
-            elif action:
-                fragment['action'] = action
-            if view_type:
-                fragment['view_type'] = view_type
-            if menu_id:
-                fragment['menu_id'] = menu_id
-            if model:
-                fragment['model'] = model
-            if res_id:
-                fragment['res_id'] = res_id
+            if url:
+                query['redirect'] = url
+            else:
+                fragment = dict()
+                base = '/web#'
+                if action == '/mail/view':
+                    base = '/mail/view?'
+                elif action:
+                    fragment['action'] = action
+                if view_type:
+                    fragment['view_type'] = view_type
+                if menu_id:
+                    fragment['menu_id'] = menu_id
+                if model:
+                    fragment['model'] = model
+                if res_id:
+                    fragment['res_id'] = res_id
 
-            if fragment:
-                query['redirect'] = base + werkzeug.urls.url_encode(fragment)
+                if fragment:
+                    query['redirect'] = base + werkzeug.urls.url_encode(fragment)
 
             res[partner.id] = werkzeug.urls.url_join(base_url, "/web/%s?%s" % (route, werkzeug.urls.url_encode(query)))
         return res

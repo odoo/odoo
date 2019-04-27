@@ -14,6 +14,11 @@ class StockPickingType(models.Model):
         compute='_get_mo_count')
     count_mo_late = fields.Integer(string="Number of Manufacturing Orders Late",
         compute='_get_mo_count')
+    use_create_components_lots = fields.Boolean(
+        string="Create New Lots/Serial Numbers for Components",
+        help="Allow to create new lot/serial numbers for the components",
+        default=False,
+    )
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
@@ -34,3 +39,24 @@ class StockPickingType(models.Model):
 
     def get_mrp_stock_picking_action_picking_type(self):
         return self._get_action('mrp.mrp_production_action_picking_deshboard')
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    def _less_quantities_than_expected_add_documents(self, moves, documents):
+        documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)
+
+        def _keys_in_sorted(move):
+            """ sort by picking and the responsible for the product the
+            move.
+            """
+            return (move.raw_material_production_id.id, move.product_id.responsible_id.id)
+
+        def _keys_in_groupby(move):
+            """ group by picking and the responsible for the product the
+            move.
+            """
+            return (move.raw_material_production_id, move.product_id.responsible_id)
+
+        production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        return {**documents, **production_documents}

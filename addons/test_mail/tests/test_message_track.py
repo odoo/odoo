@@ -117,8 +117,26 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
 
-    def test_message_track_sequence(self):
-        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their track_sequence"""
+    def test_message_track_template_at_create(self):
+        """ Create a record with tracking template on create, template should be sent."""
+
+        Model = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context)
+        Model = Model.with_context(mail_notrack=False)
+        record = Model.create({
+            'name': 'Test',
+            'customer_id': self.user_admin.partner_id.id,
+            'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id,
+        })
+
+        self.assertEqual(len(record.message_ids), 1, 'should have 1 new messages for template')
+        # one new message containing the template linked to tracking
+        self.assertEqual(record.message_ids[0].subject, 'Test Template')
+        self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
+        # one email send due to template
+        self.assertEqual(len(self._mails), 1)
+
+    def test_message_tracking_sequence(self):
+        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
         self.record.write({
             'name': 'Zboub',
             'customer_id': self.user_admin.partner_id.id,
@@ -128,6 +146,34 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
 
         tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
-        self.assertEqual(tracking_values[0].track_sequence, 1)
-        self.assertEqual(tracking_values[1].track_sequence, 2)
-        self.assertEqual(tracking_values[2].track_sequence, 100)
+        self.assertEqual(tracking_values[0].tracking_sequence, 1)
+        self.assertEqual(tracking_values[1].tracking_sequence, 2)
+        self.assertEqual(tracking_values[2].tracking_sequence, 100)
+
+    def test_track_groups(self):
+        self.record._fields['email_from'].groups = 'base.group_erp_manager' # patch the group attribute
+        self.record.sudo().write({'email_from': 'X'})
+
+        msg_emp = self.record.message_ids.message_format()
+        msg_admin = self.record.message_ids.sudo(self.user_admin).message_format()
+        self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
+        self.assertTrue(msg_admin[0].get('tracking_value_ids'), "should have protected tracking values")
+
+    def test_notify_track_groups(self):
+        self.record._fields['email_from'].groups = 'base.group_erp_manager' # patch the group attribute
+        self.record.sudo().write({'email_from': 'X'})
+
+        msg_emp = self.partner_employee.sudo(self.user_employee)._notify_prepare_template_context(self.record.message_ids, self.record)
+        msg_admin = self.partner_admin.sudo(self.user_admin)._notify_prepare_template_context(self.record.message_ids, self.record)
+        self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
+        self.assertTrue(msg_admin.get('tracking_values'), "should have protected tracking values")
+
+    def test_unlinked_field(self):
+        record_sudo = self.record.sudo()
+        record_sudo.write({'email_from': 'X'})  # create a tracking value
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
+        ir_model_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'mail.test.full'),
+            ('name', '=', 'email_from')])
+        ir_model_field.with_context(_force_unlink=True).unlink()
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)

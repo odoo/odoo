@@ -50,7 +50,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
     _primary_email = 'email_from'
 
     def _default_probability(self):
@@ -64,31 +64,30 @@ class Lead(models.Model):
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', tracking=10, index=True,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
-    active = fields.Boolean('Active', default=True, track_visibility=True)
+    active = fields.Boolean('Active', default=True, tracking=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
+    email_from = fields.Char('Email', help="Email address of the contact", tracking=40, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
-        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the Sales Team.')
+        index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
-    email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
-    description = fields.Text('Notes', track_visibility='onchange', track_sequence=6)
+    description = fields.Text('Notes')
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
-    contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
-    partner_name = fields.Char("Company Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
+    contact_name = fields.Char('Contact Name', tracking=30)
+    partner_name = fields.Char("Company Name", tracking=20, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True, tracking=15,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
-    stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
+    stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', tracking=True, index=True,
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
         group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
-    user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
     date_open = fields.Datetime('Assignation Date', readonly=True, default=fields.Datetime.now)
@@ -102,7 +101,7 @@ class Lead(models.Model):
 
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', track_visibility='always')
+    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     color = fields.Integer('Color Index', default=0)
@@ -121,13 +120,13 @@ class Lead(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
-    phone = fields.Char('Phone', track_visibility='onchange', track_sequence=5)
+    phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id.id)
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
-    lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, track_visibility='onchange')
+    lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -277,6 +276,13 @@ class Lead(models.Model):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        res = {'domain': {'state_id': []}}
+        if self.country_id:
+            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
+        return res
+
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
     # ----------------------------------------
@@ -306,8 +312,7 @@ class Lead(models.Model):
             partner = self.env['res.partner'].browse(context['default_partner_id'])
             vals['email_from'] = partner.email
 
-        # context: no_log, because subtype already handle this
-        return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
+        return super(Lead, self.with_context(context)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -1097,6 +1102,8 @@ class Lead(models.Model):
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
+    def _creation_subtype(self):
+        return self.env.ref('crm.mt_lead_create')
 
     @api.multi
     def _track_subtype(self, init_values):
@@ -1105,8 +1112,6 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
             return self.env.ref('crm.mt_lead_lost')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:
-            return self.env.ref('crm.mt_lead_create')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)
@@ -1197,7 +1202,6 @@ class Lead(models.Model):
         defaults = {
             'name':  msg_dict.get('subject') or _("No Subject"),
             'email_from': msg_dict.get('from'),
-            'email_cc': msg_dict.get('cc'),
             'partner_id': msg_dict.get('author_id', False),
         }
         if msg_dict.get('author_id'):
@@ -1205,6 +1209,10 @@ class Lead(models.Model):
         if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
+
+        # assign right company
+        if 'company_id' not in defaults and 'team_id' in defaults:
+            defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, *args, **kwargs):

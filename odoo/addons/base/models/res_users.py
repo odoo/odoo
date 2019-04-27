@@ -107,6 +107,11 @@ class Groups(models.Model):
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
     ]
 
+    @api.multi
+    @api.constrains('users')
+    def _check_one_user_type(self):
+        self.mapped('users')._check_one_user_type()
+
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
@@ -224,6 +229,7 @@ class Users(models.Model):
              "a change of password, the user has to login again.")
     signature = fields.Html()
     active = fields.Boolean(default=True)
+    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
@@ -401,6 +407,13 @@ class Users(models.Model):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
     @api.multi
+    @api.constrains('groups_id')
+    def _check_one_user_type(self):
+        for user in self:
+            if len(user.groups_id.filtered(lambda x: x.category_id.xml_id == 'base.module_category_user_type')) > 1:
+                raise ValidationError(_('The user cannot have more than one user types.'))
+
+    @api.multi
     def toggle_active(self):
         for user in self:
             if not user.active and not user.partner_id.active:
@@ -503,13 +516,14 @@ class Users(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        user_ids = []
-        if name and operator in ['=', 'ilike']:
-            user_ids = self._search([('login', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = [('login', '=', name)]
+        user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
-            user_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(user_ids).name_get()
 
     @api.multi
@@ -541,9 +555,8 @@ class Users(models.Model):
         }
 
     @api.model
-    @api.returns('ir.actions.act_window', lambda record: record.id)
     def action_get(self):
-        return self.sudo().env.ref('base.action_res_users_my')
+        return self.sudo().env.ref('base.action_res_users_my').read()[0]
 
     def check_super(self, passwd):
         return check_super(passwd)
@@ -922,8 +935,26 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': list(zip(repeat(4), group.with_context(active_test=False).users.ids))}
-                super(GroupsImplied, group.trans_implied_ids).write(vals)
+                self._cr.execute("""
+                    WITH RECURSIVE group_imply(gid, hid) AS (
+                        SELECT gid, hid
+                          FROM res_groups_implied_rel
+                         UNION
+                        SELECT i.gid, r.hid
+                          FROM res_groups_implied_rel r
+                          JOIN group_imply i ON (i.hid = r.gid)
+                    )
+                    INSERT INTO res_groups_users_rel (gid, uid)
+                         SELECT i.hid, r.uid
+                           FROM group_imply i, res_groups_users_rel r
+                          WHERE r.gid = i.gid
+                            AND i.gid = %(gid)s
+                         EXCEPT
+                         SELECT r.gid, r.uid
+                           FROM res_groups_users_rel r
+                           JOIN group_imply i ON (r.gid = i.hid)
+                          WHERE i.gid = %(gid)s
+                """, dict(gid=group.id))
         return res
 
 class UsersImplied(models.Model):
@@ -935,7 +966,14 @@ class UsersImplied(models.Model):
             if 'groups_id' in values:
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
-                gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+                group_public = self.env.ref('base.group_public', raise_if_not_found=False)
+                group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
+                if group_public and group_public in user.groups_id:
+                    gs = self.env.ref('base.group_public') | self.env.ref('base.group_public').trans_implied_ids
+                elif group_portal and group_portal in user.groups_id:
+                    gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
+                else:
+                    gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
                 values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
         return super(UsersImplied, self).create(vals_list)
 
@@ -947,9 +985,9 @@ class UsersImplied(models.Model):
             for user in self.with_context({}):
                 if not user.has_group('base.group_user'):
                     vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
-                else:
-                    gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                    vals = {'groups_id': [(4, g.id) for g in gs]}
+                    super(UsersImplied, user).write(vals)
+                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
+                vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, user).write(vals)
         return res
 
@@ -1019,11 +1057,11 @@ class GroupsView(models.Model):
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
+            xml_by_category = {}
             xml1.append(E.separator(string=_('User Type'), colspan="2", groups='base.group_no_one'))
-            xml2.append(E.separator(string=_('Application Accesses'), colspan="2"))
 
             user_type_field_name = ''
-            for app, kind, gs in self.get_groups_by_application():
+            for app, kind, gs, category_name in self.get_groups_by_application():
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
@@ -1043,8 +1081,12 @@ class GroupsView(models.Model):
                 elif kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
-                    xml2.append(E.field(name=field_name, **attrs))
-                    xml2.append(E.newline())
+                    if category_name not in xml_by_category:
+                        xml_by_category[category_name] = []
+                        xml_by_category[category_name].append(E.newline())
+                    xml_by_category[category_name].append(E.field(name=field_name, **attrs))
+                    xml_by_category[category_name].append(E.newline())
+
                 else:
                     # application separator with boolean fields
                     app_name = app.name or _('Other')
@@ -1062,6 +1104,11 @@ class GroupsView(models.Model):
                 user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
             else:
                 user_type_attrs = {}
+
+            for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
+                xml_cat_name = xml_cat[1]
+                master_category_name = (_(xml_cat_name))
+                xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(
                 E.group(*(xml1), col="2"),
@@ -1090,17 +1137,17 @@ class GroupsView(models.Model):
             order.  If ``kind`` is ``'selection'``, ``groups`` are given in
             reverse implication order.
         """
-        def linearize(app, gs):
+        def linearize(app, gs, category_name):
             # 'User Type' is an exception
             if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs.sorted('id'))
+                return (app, 'selection', gs.sorted('id'), category_name)
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
             if len(set(order.values())) == len(gs):
-                return (app, 'selection', gs.sorted(key=order.get))
+                return (app, 'selection', gs.sorted(key=order.get), category_name)
             else:
-                return (app, 'boolean', gs)
+                return (app, 'boolean', gs, (100, 'Other'))
 
         # classify all groups by application
         by_app, others = defaultdict(self.browse), self.browse()
@@ -1112,9 +1159,13 @@ class GroupsView(models.Model):
         # build the result
         res = []
         for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
-            res.append(linearize(app, gs))
+            if app.parent_id:
+                res.append(linearize(app, gs, (app.parent_id.sequence, app.parent_id.name)))
+            else:
+                res.append(linearize(app, gs, (100, 'Other')))
+
         if others:
-            res.append((self.env['ir.module.category'], 'boolean', others))
+            res.append((self.env['ir.module.category'], 'boolean', others, (100,'Other')))
         return res
 
 
@@ -1211,13 +1262,18 @@ class UsersView(models.Model):
                 values[f] = get_boolean_group(f) in gids
             elif is_selection_groups(f):
                 selected = [gid for gid in get_selection_groups(f) if gid in gids]
-                values[f] = selected and selected[-1] or False
+                # if 'Internal User' is in the group, this is the "User Type" group
+                # and we need to show 'Internal User' selected, not Public/Portal.
+                if self.env.ref('base.group_user').id in selected:
+                    values[f] = self.env.ref('base.group_user').id
+                else:
+                    values[f] = selected and selected[-1] or False
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
+        for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
                 selection_vals = [(False, '')]

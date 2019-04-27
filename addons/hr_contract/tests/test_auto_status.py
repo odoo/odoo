@@ -10,7 +10,12 @@ class TestHrContracts(TransactionCase):
     def setUp(self):
         super(TestHrContracts, self).setUp()
         self.contracts = self.env['hr.contract'].with_context(tracking_disable=True)
-        self.employee = self.env.ref('hr.employee_admin')
+        self.employee = self.env['hr.employee'].create({
+            'name': 'Richard',
+            'gender': 'male',
+            'birthday': '1984-05-01',
+            'country_id': self.ref('base.be'),
+        })
         self.test_contract = dict(name='Test', wage=1, employee_id=self.employee.id, state='open')
 
     def apply_cron(self):
@@ -51,3 +56,9 @@ class TestHrContracts(TransactionCase):
         self.contract.write(self.test_contract)
         self.apply_cron()
         self.assertEquals(self.contract.state, 'close')
+
+    def test_contract_start_date(self):
+        self.test_contract.update(dict(date_start=datetime.now(), state='incoming'))
+        self.contract = self.contracts.create(self.test_contract)
+        self.apply_cron()
+        self.assertEquals(self.contract.state, 'open')

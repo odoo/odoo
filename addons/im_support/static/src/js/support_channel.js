@@ -249,7 +249,7 @@ var SupportChannel = SearchableThread.extend({
      *
      * @override
      * @private
-     * @return {$.Promise}
+     * @return {Promise}
      */
     _postMessage: function (data) {
         // ensure that the poll is active before posting the message

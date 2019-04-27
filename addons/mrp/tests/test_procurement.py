@@ -70,7 +70,7 @@ class TestProcurement(TestMrpCommon):
             'active_id': produce_product_4.id,
             'active_ids': [produce_product_4.id],
         }))
-        produce_form.product_qty = produce_product_4.product_qty
+        produce_form.qty_producing = produce_product_4.product_qty
         product_produce = produce_form.save()
         product_produce.do_produce()
         produce_product_4.post_inventory()
@@ -96,7 +96,7 @@ class TestProcurement(TestMrpCommon):
             'active_id': production_product_6.id,
             'active_ids': [production_product_6.id],
         }))
-        produce_form.product_qty = production_product_6.product_qty
+        produce_form.qty_producing = production_product_6.product_qty
         product_produce = produce_form.save()
         product_produce.do_produce()
         production_product_6.post_inventory()

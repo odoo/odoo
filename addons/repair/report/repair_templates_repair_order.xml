@@ -4,7 +4,7 @@
 <template id="report_repairorder">
         <t t-set="o" t-value="doc"/>
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <t t-set="information_block">
                     <strong t-if="o.address_id == o.partner_invoice_id">Invoice and shipping address:</strong>
                     <div t-if="o.partner_invoice_id">
@@ -33,28 +33,28 @@
                         <span t-field="o.name"/>
                     </h2>
 
-                    <div class="row mt32 mb32">
-                        <div t-if="o.product_id.name" class="col-3">
+                    <div id="informations" class="row mt32 mb32">
+                        <div t-if="o.product_id.name" class="col-3 bm-2">
                             <strong>Product to Repair:</strong>
-                            <p t-field="o.product_id.name"/>
+                            <p t-field="o.product_id.name" class="m-0"/>
                         </div>
-                        <div class="col-3" groups="stock.group_production_lot">
+                        <div class="col-3 bm-2" groups="stock.group_production_lot">
                             <strong>Lot/Serial Number:</strong>
                             <t t-if="o.lot_id">
                                 <span t-field="o.lot_id.name"/>
                             </t>
                         </div>
-                        <div t-if="o.guarantee_limit" class="col-3">
+                        <div t-if="o.guarantee_limit" class="col-3 bm-2">
                             <strong>Warranty:</strong>
-                            <p t-field="o.guarantee_limit"/>
+                            <p t-field="o.guarantee_limit" class="m-0"/>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 bm-2">
                             <strong>Printing Date:</strong>
-                            <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}"/>
+                            <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}" class="m-0"/>
                         </div>
                     </div>
 
-                    <table class="table table-sm">
+                    <table class="table table-sm o_main_table">
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -68,7 +68,7 @@
                         </thead>
                         <tbody>
                             <t t-if="o.operations">
-                                <tr><td colspan="5"><strong>Parts</strong></td></tr>
+                                <tr class="bg-200 o_line_section"><td colspan="5"><strong>Parts</strong></td></tr>
                                 <tr t-foreach="o.operations" t-as="line">
                                     <td>
                                         <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
@@ -85,14 +85,14 @@
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
                                     </t>
                                 </tr>
                             </t>
                             <t t-if="o.fees_lines">
-                                <tr><td colspan="5"><strong>Operations</strong></td></tr>
+                                <tr class="bg-200 o_line_section"><td colspan="5"><strong>Operations</strong></td></tr>
                                 <tr t-foreach="o.fees_lines" t-as="fees">
                                     <td>
                                         <span t-field="fees.name"/>
@@ -108,7 +108,7 @@
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, fees.tax_id))"/>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-field="fees.price_subtotal"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
@@ -118,11 +118,11 @@
                         </tbody>
                     </table>
 
-                    <div class="row justify-content-end">
+                    <div id="total" class="row justify-content-end">
                         <div class="col-4">
                             <table class="table table-sm">
                                 <t t-if="o.invoice_method !='none'">
-                                    <tr class="border-black">
+                                    <tr class="border-black o_subtotal">
                                         <td><strong>Total Without Taxes</strong></td>
                                         <td class="text-right">
                                             <span t-field="o.amount_untaxed"
@@ -131,14 +131,14 @@
                                     </tr>
                                     <tr>
                                         <td>Taxes</td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-field="o.amount_tax"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                         </td>
                                     </tr>
-                                    <tr class="border-black">
+                                    <tr class="border-black o_total">
                                         <td><strong>Total</strong></td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-field="o.amount_total"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                         </td>

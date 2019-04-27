@@ -2,21 +2,24 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
+var concurrency = require('web.concurrency');
+var dp = new concurrency.DropPrevious();
 
-sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'change select[name="shipping_id"]': '_onSetAddress',
-        'click #delivery_carrier input[name="delivery_type"]': '_onCarrierClick',
+        'click #delivery_carrier .o_delivery_carrier_select': '_onCarrierClick',
     },
 
     /**
      * @override
      */
     start: function () {
+        var self = this;
         var $carriers = $('#delivery_carrier input[name="delivery_type"]');
         // Workaround to:
         // - update the amount/error on the label at first rendering
@@ -24,6 +27,18 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
         if ($carriers.length > 0) {
             $carriers.filter(':checked').click();
         }
+
+        // Asynchronously retrieve every carrier price
+        _.each($carriers, function (carrierInput, k) {
+            self._showLoading($(carrierInput));
+            self._rpc({
+                route: '/shop/carrier_rate_shipment',
+                params: {
+                    'carrier_id': carrierInput.value,
+                },
+            }).then(self._handleCarrierUpdateResultBadge.bind(self));
+        });
+
         return this._super.apply(this, arguments);
     },
 
@@ -33,43 +48,55 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
 
     /**
      * @private
+     * @param {jQuery} $carrierInput
+     */
+    _showLoading: function ($carrierInput) {
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').html('<span class="fa fa-spinner fa-spin"/>');
+    },
+    /**
+     * @private
      * @param {Object} result
      */
     _handleCarrierUpdateResult: function (result) {
-        var $payButton = $('#o_payment_form_pay');
-        var $amountDelivery = $('#order_delivery span.oe_currency_value');
-        var $amountUntaxed = $('#order_total_untaxed span.oe_currency_value');
-        var $amountTax = $('#order_total_taxes span.oe_currency_value');
-        var $amountTotal = $('#order_total span.oe_currency_value');
-        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
-        var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
-        var $discount = $('#order_discounted');
-
-        if ($discount && result.new_amount_order_discounted) {
-            // Cross module without bridge
-            // Update discount of the order
-            $discount.find('.oe_currency_value').text(result.new_amount_order_discounted);
-
-            // We are in freeshipping, so every carrier is Free
-            $('#delivery_carrier .badge').text(_t('Free'));
-        }
+        this._handleCarrierUpdateResultBadge(result);
+        var $payButton = $('#o_payment_form_pay .monetary_field');
+        var $amountDelivery = $('#order_delivery .monetary_field');
+        var $amountUntaxed = $('#order_total_untaxed .monetary_field');
+        var $amountTax = $('#order_total_taxes .monetary_field');
+        var $amountTotal = $('#order_total .monetary_field');
 
         if (result.status === true) {
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
-            $carrierBadge.children('span').text(result.new_amount_delivery);
-            $carrierBadge.removeClass('d-none');
-            $computeBadge.addClass('d-none');
-            $payButton.prop('disabled', false);
+            $amountDelivery.html(result.new_amount_delivery);
+            $amountUntaxed.html(result.new_amount_untaxed);
+            $amountTax.html(result.new_amount_tax);
+            $amountTotal.html(result.new_amount_total);
+            $payButton.data('disabled_reasons').carrier_selection = false;
+            $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
-            console.error(result.error_message);
-            $computeBadge.text(result.error_message);
-            $amountDelivery.text(result.new_amount_delivery);
-            $amountUntaxed.text(result.new_amount_untaxed);
-            $amountTax.text(result.new_amount_tax);
-            $amountTotal.text(result.new_amount_total);
+            $amountDelivery.html(result.new_amount_delivery);
+            $amountUntaxed.html(result.new_amount_untaxed);
+            $amountTax.html(result.new_amount_tax);
+            $amountTotal.html(result.new_amount_total);
+        }
+    },
+    /**
+     * @private
+     * @param {Object} result
+     */
+    _handleCarrierUpdateResultBadge: function (result) {
+        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_wsale_delivery_badge_price');
+
+        if (result.status === true) {
+             // if free delivery (`free_over` field), show 'Free', not '$0'
+             if (result.is_free_delivery) {
+                 $carrierBadge.text(_t('Free'));
+             } else {
+                 $carrierBadge.html(result.new_amount_delivery);
+             }
+             $carrierBadge.removeClass('o_wsale_delivery_carrier_error');
+        } else {
+            $carrierBadge.addClass('o_wsale_delivery_carrier_error');
+            $carrierBadge.text(result.error_message);
         }
     },
 
@@ -82,13 +109,19 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onCarrierClick: function (ev) {
-        $('#o_payment_form_pay').prop('disabled', true);
-        this._rpc({
+        var $radio = $(ev.currentTarget).find('input[type="radio"]');
+        this._showLoading($radio);
+        $radio.prop("checked", true);
+        var $payButton = $('#o_payment_form_pay');
+        $payButton.prop('disabled', true);
+        $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
+        $payButton.data('disabled_reasons').carrier_selection = true;
+        dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
-                carrier_id: $(ev.currentTarget).val(),
+                carrier_id: $radio.val(),
             },
-        }).then(this._handleCarrierUpdateResult.bind(this));
+        })).then(this._handleCarrierUpdateResult.bind(this));
     },
     /**
      * @private

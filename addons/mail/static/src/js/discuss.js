@@ -56,7 +56,10 @@ var PartnerInviteDialog = Dialog.extend({
             allowClear: true,
             multiple: true,
             formatResult: function (item) {
-                var status = QWeb.render('mail.UserStatus', { status: item.im_status });
+                var status = QWeb.render('mail.UserStatus', {
+                    status: self.call('mail_service', 'getImStatus', { partnerID: item.id }),
+                    partnerID: item.id,
+                });
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
@@ -79,7 +82,7 @@ var PartnerInviteDialog = Dialog.extend({
 
     /**
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _addChannel: function () {
         var self = this;
@@ -294,7 +297,7 @@ var Discuss = AbstractAction.extend({
      * @override
      */
     willStart: function () {
-        return $.when(this._super(), this.call('mail_service', 'isReady'));
+        return Promise.all([this._super(), this.call('mail_service', 'isReady')]);
     },
     /**
      * @override
@@ -328,7 +331,7 @@ var Discuss = AbstractAction.extend({
             this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
         defs.push(this._super.apply(this, arguments));
 
-        return $.when.apply($, defs)
+        return Promise.all(defs)
             .then(function () {
                 return self._setThread(self._defaultThreadID);
             })
@@ -368,7 +371,7 @@ var Discuss = AbstractAction.extend({
      */
     destroy: function () {
         if (this.$buttons) {
-            this.$buttons.off().destroy();
+            this.$buttons.off().remove();
         }
         this._super.apply(this, arguments);
     },
@@ -471,7 +474,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _fetchAndRenderThread: function () {
         var self = this;
@@ -564,7 +567,7 @@ var Discuss = AbstractAction.extend({
      * loaded when scrolling to the top, so they can't be loaded if there is no
      * scrollbar)
      *
-     * @returns {Deferred} resolved when there are enough messages to fill the
+     * @returns {Promise} resolved when there are enough messages to fill the
      *   screen, or when there is no more message to fetch
      */
     _loadEnoughMessages: function () {
@@ -580,7 +583,7 @@ var Discuss = AbstractAction.extend({
      * Load more messages for the current thread
      *
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _loadMoreMessages: function () {
         var self = this;
@@ -641,9 +644,10 @@ var Discuss = AbstractAction.extend({
         var self = this;
         if (type === 'multi_user_channel') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self._searchChannel(self._lastSearchVal).done(function (result){
+                    self._searchChannel(self._lastSearchVal).then(function (result){
                         result.push({
                             label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s (Public)") + '</strong>',
@@ -682,9 +686,10 @@ var Discuss = AbstractAction.extend({
             });
         } else if (type === 'dm_chat') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).done(response);
+                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).then(response);
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
@@ -814,7 +819,7 @@ var Discuss = AbstractAction.extend({
      * Renders, binds events and appends a thread widget.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
@@ -872,7 +877,7 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {string} searchVal
-     * @returns {$.Promise<Array>}
+     * @returns {Promise<Array>}
      */
     _searchChannel: function (searchVal){
         return this._rpc({
@@ -910,7 +915,7 @@ var Discuss = AbstractAction.extend({
         this._extendedComposer.do_show();
 
         this._threadWidget.scrollToMessage({
-            msgID: messageID,
+            messageID: messageID,
             duration: 200,
             onlyIfNecessary: true
         });
@@ -922,7 +927,7 @@ var Discuss = AbstractAction.extend({
      *
      * @private
      * @param {integer} threadID a thread with such ID
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _setThread: function (threadID) {
         var self = this;
@@ -992,10 +997,10 @@ var Discuss = AbstractAction.extend({
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onChannelLeft)
+            .on('updated_im_status', this, this._onUpdatedImStatus)
             .on('update_needaction', this, this._onUpdateNeedaction)
             .on('update_starred', this, this._onUpdateStarred)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
-            .on('update_dm_presence', this, this._onUpdateDmPresence)
             .on('activity_updated', this, this._onActivityUpdated)
             .on('update_moderation_counter', this, this._onUpdateModerationCounter)
             .on('update_typing_partners', this, this._onTypingPartnersUpdated)
@@ -1229,7 +1234,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _onActivityUpdated: function () {
-        this._throttleUpdateThreads();
+        this._throttledUpdateThreads();
     },
     /**
      * @private
@@ -1456,8 +1461,9 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {Object} messageData
+     * @param {Function} callback
      */
-    _onPostMessage: function (messageData) {
+    _onPostMessage: function (messageData, callback) {
         var self = this;
         var options = {};
         if (this._selectedMessage) {
@@ -1478,9 +1484,7 @@ var Discuss = AbstractAction.extend({
                 } else {
                     self._threadWidget.scrollToBottom();
                 }
-            })
-            .fail(function () {
-                // todo: display notifications
+                callback();
             });
     },
     /**
@@ -1572,7 +1576,7 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      */
-    _onUpdateDmPresence: function () {
+    _onUpdatedImStatus: function () {
         this._throttledUpdateThreads();
     },
     /**

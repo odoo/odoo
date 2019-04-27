@@ -1,7 +1,6 @@
 odoo.define('mail.model.Channel', function (require) {
 "use strict";
 
-var ChannelSeenMixin = require('mail.model.ChannelSeenMixin');
 var SearchableThread = require('mail.model.SearchableThread');
 var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 var mailUtils = require('mail.utils');
@@ -17,7 +16,7 @@ var time = require('web.time');
  * Any piece of code in JS that make use of channels must ideally interact with
  * such objects, instead of direct data from the server.
  */
-var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
+var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * @override
      * @param {Object} params
@@ -50,7 +49,6 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
     init: function (params) {
         var self = this;
         this._super.apply(this, arguments);
-        ChannelSeenMixin.init.apply(this, arguments);
         ThreadTypingMixin.init.apply(this, arguments);
 
         var data = params.data;
@@ -72,7 +70,7 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
         this._members = data.members || [];
-        // Deferred that is resolved on fetched members of this channel.
+        // Promise that is resolved on fetched members of this channel.
         this._membersDef = undefined;
         // number of messages that are 'needaction', which is equivalent to the
         // number of messages in this channel that are in inbox.
@@ -131,19 +129,21 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
      * @pverride
      */
     detach: function () {
-        this._super.apply(this, arguments);
-        this._rpc({
-            model: 'mail.channel',
-            method: 'channel_minimize',
-            args: [this.getUUID(), true],
-        }, {
-            shadow: true,
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._rpc({
+                model: 'mail.channel',
+                method: 'channel_minimize',
+                args: [self.getUUID(), true],
+            }, {
+                shadow: true,
+            });
         });
     },
     /**
      * Force fetch members of the channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {Promise<Object[]>} resolved with list of channel listeners
      */
     forceFetchMembers: function () {
         this._membersDef = undefined;
@@ -188,7 +188,7 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
     /**
      * Get listeners of a channel
      *
-     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     * @returns {Promise<Object[]>} resolved with list of list of
      *   channel listeners.
      */
     getMentionPartnerSuggestions: function () {
@@ -304,7 +304,7 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
      * Unsubscribes from channel
      *
      * @abstract
-     * @returns {$.Promise} resolve when unsubscribed
+     * @returns {Promise} resolve when unsubscribed
      */
     unsubscribe: function () {},
     /**
@@ -383,33 +383,19 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
      *
      * @override
      * @private
-     * @returns {$.Promise} resolved when message has been marked as read
+     * @returns {Promise} resolved when message has been marked as read
      */
     _markAsRead: function () {
         var superDef = this._super.apply(this, arguments);
-        var seenDef = this._throttleNotifySeen();
-        return $.when(superDef, seenDef);
-    },
-    /**
-     * @override {mail.model.ThreadSeenMixin}
-     * @private
-     * @returns {$.Promise}
-     */
-    _notifyFetched: function () {
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_fetched',
-            args: [[this._id]],
-        }, {
-            shadow: true
-        });
+        var seenDef = this._notifySeen();
+        return Promise.all([superDef, seenDef]);
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
      * @private
      * @param {Object} params
      * @param {boolean} params.typing
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _notifyMyselfTyping: function (params) {
         return this._rpc({
@@ -420,20 +406,16 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
         }, { shadow: true });
     },
     /**
-     * @override {mail.model.ThreadSeenMixin}
      * @private
      * @returns {$.Promise<integer>} resolved with ID of last seen message
      */
     _notifySeen: function () {
         var self = this;
-        this._cancelThrottledNotifyFetched();
         return this._rpc({
             model: 'mail.channel',
             method: 'channel_seen',
             args: [[this._id]],
-        }, {
-            shadow: true
-        }).then(function (lastSeenMessageID) {
+        }, { shadow: true }).then(function (lastSeenMessageID) {
             self._lastSeenMessageID = lastSeenMessageID;
             return lastSeenMessageID;
         });
@@ -444,7 +426,7 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
      * @override
      * @private
      * @param {Object} data data related to the new message
-     * @returns {$.Promise<Object>} resolved when the message has been sent to
+     * @returns {Promise<Object>} resolved when the message has been sent to
      *   the server, with the object message that has been sent to the server.
      */
     _postMessage: function (data) {

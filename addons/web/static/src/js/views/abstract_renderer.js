@@ -23,14 +23,14 @@ return mvc.Renderer.extend({
         this.noContentHelp = params.noContentHelp;
     },
     /**
-     * The rendering can be asynchronous (but it is not encouraged). The start
+     * The rendering is asynchronous. The start
      * method simply makes sure that we render the view.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this.$el.addClass(this.arch.attrs.class);
-        return $.when(this._render(), this._super());
+        return Promise.all([this._render(), this._super()]);
     },
     /**
      * Called each time the renderer is attached into the DOM.
@@ -86,11 +86,11 @@ return mvc.Renderer.extend({
      * @param {Object} params
      * @param {boolean} [params.noRender=false]
      *        if true, the method only updates the state without rerendering
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateState: function (state, params) {
         this.state = state;
-        return params.noRender ? $.when() : this._render();
+        return params.noRender ? Promise.resolve() : this._render();
     },
 
     //--------------------------------------------------------------------------
@@ -102,10 +102,10 @@ return mvc.Renderer.extend({
      *
      * @abstract
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
-        return $.when();
+        return Promise.resolve();
     },
 });
 

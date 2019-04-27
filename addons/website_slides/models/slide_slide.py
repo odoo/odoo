@@ -6,17 +6,41 @@ from PIL import Image
 import base64
 import datetime
 import io
-import json
 import re
+import uuid
 
 from werkzeug import urls
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.tools import image
-from odoo.exceptions import Warning
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
+from odoo.exceptions import Warning, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
+
+
+class SlidePartnerRelation(models.Model):
+    _name = 'slide.slide.partner'
+    _description = 'Slide / Partner decorated m2m'
+    _table = 'slide_slide_partner'
+
+    slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
+    channel_id = fields.Many2one(
+        'slide.channel', string="Channel",
+        related="slide_id.channel_id", store=True, index=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
+    vote = fields.Integer('Vote', default=0)
+    completed = fields.Boolean('Completed')
+    quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
+
+
+class SlideLink(models.Model):
+    _name = 'slide.slide.link'
+    _description = "External URL for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
+    name = fields.Char('Title', required=True)
+    link = fields.Char('External Link', required=True)
 
 
 class EmbeddedSlide(models.Model):
@@ -29,8 +53,10 @@ class EmbeddedSlide(models.Model):
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
-    def add_embed_url(self, slide_id, url):
+    def _add_embed_url(self, slide_id, url):
         baseurl = urls.url_parse(url).netloc
+        if not baseurl:
+            return 0
         embeds = self.search([('url', '=', baseurl), ('slide_id', '=', int(slide_id))], limit=1)
         if embeds:
             embeds.count_views += 1
@@ -55,102 +81,136 @@ class SlideTag(models.Model):
 
 
 class Slide(models.Model):
-    """ This model represents actual presentations. Those must be one of four
-    types:
-
-     - Presentation
-     - Document
-     - Infographic
-     - Video
-
-    Slide has various statistics like view count, embed count, like, dislikes """
-
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = [
+        'mail.thread', 'rating.mixin',
+        'image.mixin',
+        'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
+    _order_by_strategy = {
+        'sequence': 'category_sequence asc, sequence asc',
+        'most_viewed': 'total_views desc',
+        'most_voted': 'likes desc',
+        'latest': 'date_published desc',
+    }
+    _order = 'category_sequence asc, sequence asc'
 
-    _PROMOTIONAL_FIELDS = [
-        '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
-        'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
-        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
-    ]
+    def _default_access_token(self):
+        return str(uuid.uuid4())
 
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    sequence = fields.Integer('Sequence', default=10)
+    category_sequence = fields.Integer('Category sequence', related="category_id.sequence", store=True)
+    user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
-    download_security = fields.Selection(
-        [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
-        string='Download Security',
-        required=True, default='user')
-    image = fields.Binary('Image', attachment=True)
-    image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
-    image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
-
-    @api.depends('image')
-    def _get_image(self):
-        for record in self:
-            if record.image:
-                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
-                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
-            else:
-                record.image_medium = False
-                record.iamge_thumb = False
+    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
+    is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
+    completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
+    # subscribers
+    partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
+                                   string='Subscribers', groups='website.group_website_publisher')
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website.group_website_publisher')
+    user_membership_id = fields.Many2one(
+        'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
+        help="Subscriber information for the current logged in user")
+    # Quiz related fields
+    question_ids = fields.One2many("slide.question","slide_id", string="Questions")
+    quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
+    quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
+    quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
+    quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
 
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
+        ('webpage', 'Web Page'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
-        ('video', 'Video')],
+        ('video', 'Video'),
+        ('quiz', "Quiz")],
         string='Type', required=True,
-        default='document',
+        default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     mime_type = fields.Char('Mime-type')
-
-    @api.onchange('url')
-    def on_change_url(self):
-        self.ensure_one()
-        if self.url:
-            res = self._parse_document_url(self.url)
-            if res.get('error'):
-                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
-            values = res['values']
-            if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in values.items():
-                self[key] = value
-
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
-    likes = fields.Integer('Likes')
-    dislikes = fields.Integer('Dislikes')
+    likes = fields.Integer('Likes', compute='_compute_user_info', store=True)
+    dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True)
+    user_vote = fields.Integer('User vote', compute='_compute_user_info')
+    embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
-    slide_views = fields.Integer('# of Website Views')
-    embed_views = fields.Integer('# of Embedded Views')
+    slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
+    public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
 
-    @api.depends('slide_views', 'embed_views')
+    _sql_constraints = [
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
+    ]
+
+    @api.depends('slide_views', 'public_views')
     def _compute_total(self):
         for record in self:
-            record.total_views = record.slide_views + record.embed_views
+            record.total_views = record.slide_views + record.public_views
 
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
+    @api.depends('slide_partner_ids.vote')
+    def _compute_user_info(self):
+        slide_data = dict.fromkeys(self.ids, dict({'likes': 0, 'dislikes': 0, 'user_vote': False}))
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids)
+        ])
+        for slide_partner in slide_partners:
+            if slide_partner.vote == 1:
+                slide_data[slide_partner.slide_id.id]['likes'] += 1
+                if slide_partner.partner_id == self.env.user.partner_id:
+                    slide_data[slide_partner.slide_id.id]['user_vote'] = 1
+            elif slide_partner.vote == -1:
+                slide_data[slide_partner.slide_id.id]['dislikes'] += 1
+                if slide_partner.partner_id == self.env.user.partner_id:
+                    slide_data[slide_partner.slide_id.id]['user_vote'] = -1
+        for slide in self:
+            slide.update(slide_data[slide.id])
 
-    def _get_embed_code(self):
+    @api.depends('slide_partner_ids.slide_id')
+    def _compute_slide_views(self):
+        # TODO awa: tried compute_sudo, for some reason it doesn't work in here...
+        read_group_res = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids)],
+            ['slide_id'],
+            groupby=['slide_id']
+        )
+        mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
+        for slide in self:
+            slide.slide_views = mapped_data.get(slide.id, 0)
+
+    @api.depends('slide_partner_ids.partner_id')
+    def _compute_user_membership_id(self):
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+        ])
+
+        for record in self:
+            record.user_membership_id = next(
+                (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
+                self.env['slide.slide.partner']
+            )
+
+    @api.depends('document_id', 'slide_type', 'mime_type')
+    def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if base_url[-1] == '/':
             base_url = base_url[:-1]
@@ -168,9 +228,23 @@ class Slide(models.Model):
             else:
                 record.embed_code = False
 
+    @api.onchange('url')
+    def _on_change_url(self):
+        self.ensure_one()
+        if self.url:
+            res = self._parse_document_url(self.url)
+            if res.get('error'):
+                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
+            values = res['values']
+            if not values.get('document_id'):
+                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
+            for key, value in values.items():
+                self[key] = value
+
     @api.multi
     @api.depends('name')
     def _compute_website_url(self):
+        # TDE FIXME: clena this link.tracker strange stuff
         super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
@@ -185,8 +259,27 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    @api.depends('channel_id.can_publish')
+    def _compute_can_publish(self):
+        for record in self:
+            record.can_publish = record.channel_id.can_publish
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
+
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+
     @api.model
     def create(self, values):
+        # Do not publish slide if user has not publisher rights
+        channel = self.env['slide.channel'].browse(values['channel_id'])
+        if not channel.can_publish:
+            # 'website_published' is handled by mixin
+            values['date_published'] = False
+
         if not values.get('index_content'):
             values['index_content'] = values.get('description')
         if values.get('slide_type') == 'infographic' and not values.get('image'):
@@ -197,12 +290,11 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-        # Do not publish slide if user has not publisher rights
-        if not self.user_has_groups('website.group_website_publisher'):
-            values['website_published'] = False
+
         slide = super(Slide, self).create(values)
-        slide.channel_id.message_subscribe(partner_ids=self.env.user.partner_id.ids)
-        slide._post_publication()
+
+        if slide.website_published:
+            slide._post_publication()
         return slide
 
     @api.multi
@@ -211,41 +303,24 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-        if values.get('channel_id'):
-            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
-            custom_channels.write({'custom_slide_id': False})
+
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
         return res
 
-    @api.model
-    def check_field_access_rights(self, operation, fields):
-        """ As per channel access configuration (visibility)
-         - public  ==> no restriction on slides access
-         - private ==> restrict all slides of channel based on access group defined on channel group_ids field
-         - partial ==> show channel, but presentations based on groups means any user can see channel but not slide's content.
-        For private: implement using record rule
-        For partial: user can see channel, but channel gridview have slide detail so we have to implement
-        partial field access mechanism for public user so he can have access of promotional field (name, view_count) of slides,
-        but not all fields like data (actual pdf content)
-        all fields should be accessible only for user group defined on channel group_ids
-        """
-        if self.env.uid == SUPERUSER_ID:
-            return fields or list(self._fields)
-        fields = super(Slide, self).check_field_access_rights(operation, fields)
-        # still read not perform so we can not access self.channel_id
-        if self.ids:
-            self.env.cr.execute('SELECT DISTINCT channel_id FROM ' + self._table + ' WHERE id IN %s', (tuple(self.ids),))
-            channel_ids = [x[0] for x in self.env.cr.fetchall()]
-            channels = self.env['slide.channel'].sudo().browse(channel_ids)
-            limited_access = all(channel.visibility == 'partial' and
-                                 not len(channel.group_ids & self.env.user.groups_id)
-                                 for channel in channels)
-            if limited_access:
-                fields = [field for field in fields if field in self._PROMOTIONAL_FIELDS]
-        return fields
+    # ---------------------------------------------------------
+    # Mail/Rating
+    # ---------------------------------------------------------
+
+    @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, message_type='notification', **kwargs):
+        self.ensure_one()
+        if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
+            raise KarmaError(_('Not enough karma to comment'))
+        return super(Slide, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
     def get_access_action(self, access_uid=None):
@@ -272,19 +347,9 @@ class Slide(models.Model):
 
         return groups
 
-    def get_related_slides(self, limit=20):
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
-        if self.category_id:
-            domain += [('category_id', '=', self.category_id.id)]
-        for record in self.search(domain, limit=limit):
-            yield record
-
-    def get_most_viewed_slides(self, limit=20):
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
-        for record in self.search(domain, limit=limit, order='total_views desc'):
-            yield record
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
 
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -292,7 +357,7 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
             subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
-            slide.channel_id.message_post(
+            slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
@@ -300,10 +365,170 @@ class Slide(models.Model):
             )
         return True
 
-    @api.one
-    def send_share_email(self, email):
+    def _generate_signed_token(self, partner_id):
+        """ Lazy generate the acces_token and return it signed by the given partner_id
+            :rtype tuple (string, int)
+            :return (signed_token, partner_id)
+        """
+        if not self.access_token:
+            self.write({'access_token': self._default_access_token()})
+        return self._sign_token(partner_id)
+
+    def _send_share_email(self, email):
+        # TDE FIXME: template to check
+        mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light')
+        for record in self:
+            mail_ids.append(self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(record.id, notif_layout='mail.mail_notification_light'))
+        return mail_ids
+
+    def action_like(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        return self._action_vote(upvote=True)
+
+    def action_dislike(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        return self._action_vote(upvote=False)
+
+    def _action_vote(self, upvote=True):
+        """ Private implementation of voting. It does not check for any real access
+        rights; public methods should grant access before calling this method.
+
+          :param upvote: if True, is a like; if False, is a dislike
+        """
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        slide_partners = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id)
+        ])
+        slide_id = slide_partners.mapped('slide_id')
+        new_slides = self_sudo - slide_id
+        channel = slide_id.channel_id
+        karma_to_add = 0
+
+        for slide_partner in slide_partners:
+            if upvote:
+                new_vote = 0 if slide_partner.vote == -1 else 1
+                if slide_partner.vote != 1:
+                    karma_to_add += channel.karma_gen_slide_vote
+            else:
+                new_vote = 0 if slide_partner.vote == 1 else -1
+                if slide_partner.vote != -1:
+                    karma_to_add -= channel.karma_gen_slide_vote
+            slide_partner.vote = new_vote
+
+        for new_slide in new_slides:
+            new_vote = 1 if upvote else -1
+            new_slide.write({
+                'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
+            })
+            karma_to_add += new_slide.channel_id.karma_gen_slide_vote * (1 if upvote else -1)
+
+        if karma_to_add:
+            self.env.user.add_karma(karma_to_add)
+
+    def action_set_viewed(self, quiz_attempts_inc=False):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
+
+        return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
+
+    def _action_set_viewed(self, target_partner, quiz_attempts_inc=False):
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        existing_sudo = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        if quiz_attempts_inc:
+            for exsting_slide in existing_sudo:
+                exsting_slide.write({
+                    'quiz_attempts_count': exsting_slide.quiz_attempts_count + 1
+                })
+
+        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        return SlidePartnerSudo.create([{
+            'slide_id': new_slide.id,
+            'channel_id': new_slide.channel_id.id,
+            'partner_id': target_partner.id,
+            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
+            'vote': 0} for new_slide in new_slides])
+
+    def action_set_completed(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
+
+        return self._action_set_completed(self.env.user.partner_id)
+
+    def _action_set_completed(self, target_partner):
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        existing_sudo = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        existing_sudo.write({'completed': True})
+
+        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        SlidePartnerSudo.create([{
+            'slide_id': new_slide.id,
+            'channel_id': new_slide.channel_id.id,
+            'partner_id': target_partner.id,
+            'vote': 0,
+            'completed': True} for new_slide in new_slides])
+
+        return True
+
+    def _action_set_quiz_done(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
+
+        points = 0
+        for slide in self:
+            user_membership_sudo = slide.user_membership_id.sudo()
+            if not user_membership_sudo or user_membership_sudo.completed or not user_membership_sudo.quiz_attempts_count:
+                continue
+
+            gains = [slide.quiz_first_attempt_reward,
+                     slide.quiz_second_attempt_reward,
+                     slide.quiz_third_attempt_reward,
+                     slide.quiz_fourth_attempt_reward]
+            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+
+        return self.env.user.sudo().add_karma(points)
+
+    def _compute_quiz_info(self, target_partner, quiz_done=False):
+        result = dict.fromkeys(self.ids, False)
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
+        for slide in self:
+            if not slide.question_ids:
+                gains = [0]
+            else:
+                gains = [slide.quiz_first_attempt_reward,
+                         slide.quiz_second_attempt_reward,
+                         slide.quiz_third_attempt_reward,
+                         slide.quiz_fourth_attempt_reward]
+            result[slide.id] = {
+                'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
+                'quiz_karma_gain': gains[0],  # what would be gained at next test
+                'quiz_karma_won': 0,  # what has been gained
+                'quiz_attempts_count': 0,  # number of attempts
+            }
+            slide_partner = slide_partners_map.get(slide.id)
+            if slide.question_ids and slide_partner:
+                if slide_partner.quiz_attempts_count:
+                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+                    result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
+                if quiz_done or slide_partner.completed:
+                    result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+        return result
 
     # --------------------------------------------------
     # Parsing methods
@@ -443,5 +668,6 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_thumb" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_small" % (self.id)
+        res['default_meta_description'] = self.description
         return res

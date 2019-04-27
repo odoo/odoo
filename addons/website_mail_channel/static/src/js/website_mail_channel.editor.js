@@ -2,8 +2,6 @@ odoo.define('website_mail_channel.editor', function (require) {
 'use strict';
 
 var core = require('web.core');
-var rpc = require('web.rpc');
-var weContext = require('web_editor.context');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
@@ -17,21 +15,20 @@ options.registry.subscribe = options.Class.extend({
             window_title: _t("Add a Subscribe Button"),
             select: _t("Discussion List"),
             init: function (field) {
-                return rpc.query({
-                        model: 'mail.channel',
-                        method: 'name_search',
-                        args: ['', [['public','=','public']]],
-                        context: weContext.get(), // TODO use this._rpc
-                    });
+                return self._rpc({
+                    model: 'mail.channel',
+                    method: 'name_search',
+                    args: ['', [['public', '=', 'public']]],
+                });
             },
-        }).then(function (mail_channel_id) {
-            self.$target.attr("data-id", mail_channel_id);
+        }).then(function (result) {
+            self.$target.attr("data-id", result.val);
         });
     },
     onBuilt: function () {
         var self = this;
         this._super();
-        this.select_mailing_list("click").fail(function () {
+        this.select_mailing_list("click").guardedCatch(function () {
             self.getParent().removeSnippet();
         });
     },

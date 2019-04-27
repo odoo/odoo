@@ -5,16 +5,6 @@ from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
-
-    optional_product_ids = fields.Many2many(
-        'product.template', 'product_optional_rel', 'src_id', 'dest_id',
-        string='Optional Products', help="Optional Products are suggested "
-        "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).")
-
-
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
@@ -56,6 +46,14 @@ class ProductProduct(models.Model):
     def _get_invoice_policy(self):
         return self.invoice_policy
 
+    @api.multi
+    def _get_combination_info_variant(self, add_qty=1, pricelist=False, parent_combination=False):
+        """Return the variant info based on its combination.
+        See `_get_combination_info` for more information.
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._get_combination_info(self.product_template_attribute_value_ids, self.id, add_qty, pricelist, parent_combination)
+
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
@@ -90,6 +88,6 @@ class ProductAttributeCustomValue(models.Model):
     _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
 
-    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute')
+    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
     custom_value = fields.Char('Custom value')

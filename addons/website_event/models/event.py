@@ -22,7 +22,7 @@ class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin']
 
-    is_published = fields.Boolean(track_visibility='onchange')
+    is_published = fields.Boolean(tracking=True)
 
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
 
@@ -63,9 +63,7 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    @api.multi
-    def write(self, vals):
-        res = super(Event, self).write(vals)
+    def _toggle_create_website_menus(self, vals):
         for event in self:
             if 'website_menu' in vals:
                 if event.menu_id and not event.website_menu:
@@ -76,6 +74,17 @@ class Event(models.Model):
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
+
+    @api.model
+    def create(self, vals):
+        res = super(Event, self).create(vals)
+        res._toggle_create_website_menus(vals)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(Event, self).write(vals)
+        self._toggle_create_website_menus(vals)
         return res
 
     def _create_menu(self, sequence, name, url, xml_id):
@@ -145,4 +154,5 @@ class Event(models.Model):
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
         res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.date_begin
         return res

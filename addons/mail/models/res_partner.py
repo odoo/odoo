@@ -7,6 +7,8 @@ import threading
 from odoo.tools.misc import split_every
 
 from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo.addons.bus.models.bus_presence import AWAY_TIMER
+from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -21,6 +23,8 @@ class Partner(models.Model):
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
+    # override the field to track the visibility of user
+    user_id = fields.Many2one(tracking=True)
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -52,14 +56,24 @@ class Partner(models.Model):
         else:
             website_url = False
 
+        # Retrieve the language in which the template was rendered, in order to render the custom
+        # layout in the same language.
+        lang = self.env.context.get('lang')
+        if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
+            if template and template.lang:
+                lang = template._render_template(template.lang, self.env.context['default_model'], self.env.context['default_res_id'])
+
         if not model_description and message.model:
-            model_description = self.env['ir.model']._get(message.model).display_name
+            model_description = self.env['ir.model'].with_context(lang=lang)._get(message.model).display_name
 
         tracking = []
         for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
-            tracking.append((tracking_value.field_desc,
-                             tracking_value.get_old_display_value()[0],
-                             tracking_value.get_new_display_value()[0]))
+            groups = tracking_value.field_groups
+            if not groups or self.user_has_groups(groups):
+                tracking.append((tracking_value.field_desc,
+                                tracking_value.get_old_display_value()[0],
+                                tracking_value.get_new_display_value()[0]))
 
         is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
@@ -74,6 +88,7 @@ class Partner(models.Model):
             'tracking_values': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
+            'lang': lang,
         }
 
     @api.model
@@ -95,14 +110,13 @@ class Partner(models.Model):
         if not rdata:
             return True
 
+        base_template_ctx = self._notify_prepare_template_context(message, record, model_description=model_description)
         template_xmlid = message.layout if message.layout else 'mail.message_notification_email'
         try:
-            base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
+            base_template = self.env.ref(template_xmlid, raise_if_not_found=True).with_context(lang=base_template_ctx['lang'])
         except ValueError:
             _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
             base_template = False
-
-        base_template_ctx = self._notify_prepare_template_context(message, record, model_description=model_description)
 
         # prepare notification mail values
         base_mail_values = {
@@ -242,3 +256,38 @@ class Partner(models.Model):
             partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
 
         return [users, partners]
+
+    @api.model
+    def im_search(self, name, limit=20):
+        """ Search partner with a name and return its id, name and im_status.
+            Note : the user must be logged
+            :param name : the partner name to search
+            :param limit : the limit of result to return
+        """
+        # This method is supposed to be used only in the context of channel creation or
+        # extension via an invite. As both of these actions require the 'create' access
+        # right, we check this specific ACL.
+        if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
+            name = '%' + name + '%'
+            excluded_partner_ids = [self.env.user.partner_id.id]
+            self.env.cr.execute("""
+                SELECT
+                    U.id as user_id,
+                    P.id as id,
+                    P.name as name,
+                    CASE WHEN B.last_poll IS NULL THEN 'offline'
+                         WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                         WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
+                         ELSE 'online'
+                    END as im_status
+                FROM res_users U
+                    JOIN res_partner P ON P.id = U.partner_id
+                    LEFT JOIN bus_presence B ON B.user_id = U.id
+                WHERE P.name ILIKE %s
+                    AND P.id NOT IN %s
+                    AND U.active = 't'
+                LIMIT %s
+            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+            return self.env.cr.dictfetchall()
+        else:
+            return {}

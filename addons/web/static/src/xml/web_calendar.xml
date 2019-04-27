@@ -14,7 +14,7 @@
 
     <t t-name="calendar-box">
         <t t-set="color" t-value="widget.getColor(event.color_index)"/>
-        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
+        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
             <div class="fc-time"/>
             <div class="o_fields">
                 <t t-foreach="widget.displayFields" t-as="name">
@@ -52,7 +52,7 @@
                             <t t-if="filter.value == 'all'">
                                 <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
                             </t>
-                            <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
+                            <t t-if="widget.avatar_field &amp;&amp; (filter.value &amp;&amp; filter.value != 'all')">
                                 <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
                             </t>
                             <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
@@ -85,10 +85,12 @@
     </t>
 
     <t t-name="CalendarView.TodayButtonMobile">
-        <span class="fa-stack o_calendar_button_today">
-            <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"></i>
-            <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
-        </span>
+        <button class="btn btn-sm btn-link">
+            <span class="fa-stack o_calendar_button_today">
+                <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"/>
+                <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
+            </span>
+        </button>
     </t>
 
     <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">

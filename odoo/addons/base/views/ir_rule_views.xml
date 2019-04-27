@@ -73,6 +73,8 @@
                     <field name="name" string="Record Rule"/>
                     <filter string="Global" name="global" domain="[('global','=',True)]"/>
                     <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
                     <filter string="Full Access Right" name="full_access_right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                     <filter string="Read Access Right" name="read_access_right" domain="[('perm_read','=',True)]"/>
                     <filter string="Write Access Right" name="write_access_right" domain="[('perm_write','=',True)]"/>

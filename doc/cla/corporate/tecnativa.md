@@ -20,3 +20,4 @@ Jairo Llopis jairo.llopis@tecnativa.com https://github.com/yajo
 Vicent Cubells vicent.cubells@tecnativa.com https://github.com/cubells
 Luis Montalba luis.montalba@tecnativa.com https://github.com/luismontalba
 David Vidal david.vidal@tecnativa.com https://github.com/chienandalu
+Cristina Martín cristina.martin@tecnativa.com https://github.com/cristinamartinrod

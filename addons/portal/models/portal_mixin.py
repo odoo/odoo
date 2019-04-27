@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
-import hashlib
-import hmac
 from werkzeug.urls import url_encode
-from odoo import api, exceptions, fields, models, tools, _
+from odoo import api, exceptions, fields, models, _
 
 
 class PortalMixin(models.AbstractModel):
@@ -34,6 +32,16 @@ class PortalMixin(models.AbstractModel):
             # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
+
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current model.
+
+        Defined here to be overriden by website specific models.
+        The method has to be public because it is called from mail templates.
+        """
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         """
@@ -80,7 +88,7 @@ class PortalMixin(models.AbstractModel):
                     'has_button_access': False,
                     'button_access': {
                         'url': access_link,
-                        'title': ('View %s') % self.env['ir.model']._get(message.model).display_name,
+                        'title': _('View %s') % self.env['ir.model']._get(message.model).display_name,
                     },
                 })
             ]
@@ -132,22 +140,6 @@ class PortalMixin(models.AbstractModel):
         action['context'] = {'active_id': self.env.context['active_id'],
                              'active_model': self.env.context['active_model']}
         return action
-
-    @api.multi
-    def _sign_token(self, pid):
-        """Generate a secure hash for this record with the email of the recipient with whom the record have been shared.
-
-        This is used to determine who is opening the link
-        to be able for the recipient to post messages on the document's portal view.
-
-        :param str email:
-            Email of the recipient that opened the link.
-        """
-        self.ensure_one()
-        secret = self.env["ir.config_parameter"].sudo().get_param(
-            "database.secret")
-        token = (self.env.cr.dbname, self.access_token, pid)
-        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha256).hexdigest()
 
     @api.multi
     def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):

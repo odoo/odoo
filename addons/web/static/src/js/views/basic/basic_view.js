@@ -93,7 +93,7 @@ var BasicView = AbstractView.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadData: function (model) {
         if (this.recordID) {
@@ -145,6 +145,21 @@ var BasicView = AbstractView.extend({
                             if (_.difference(fieldViewTypes, recordViewTypes).length) {
                                 fieldNames.push(name);
                             }
+
+                            if (record.data[name].viewType === 'default') {
+                                // Use case: x2many (tags) in x2many list views
+                                // When opening the x2many record form view, the
+                                // x2many will be reloaded but it may not have
+                                // the same fields (ex: tags in list and list in
+                                // form) so we need to merge the fieldsInfo to
+                                // avoid losing the initial fields (display_name)
+                                var defaultFieldInfo = record.data[name].fieldsInfo.default;
+                                _.each(fieldViews, function (fieldView) {
+                                    _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
+                                        _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                    });
+                                });
+                            }
                         }
                     }
                     // Many2one: context is not the same between the different views
@@ -180,7 +195,7 @@ var BasicView = AbstractView.extend({
                     }
                 });
             }
-            return $.when(def).then(function () {
+            return Promise.resolve(def).then(function () {
                 return model.get(record.id);
             });
         }
@@ -378,7 +393,9 @@ var BasicView = AbstractView.extend({
                 for (var dependency_name in deps) {
                     var dependency_dict = {name: dependency_name, type: deps[dependency_name].type};
                     if (!(dependency_name in fieldsInfo)) {
-                        fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {options: deps[dependency_name].options || {}});
+                        fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {
+                            options: deps[dependency_name].options || {},
+                        });
                     }
                     if (!(dependency_name in fields)) {
                         fields[dependency_name] = dependency_dict;

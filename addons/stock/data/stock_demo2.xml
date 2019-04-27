@@ -27,6 +27,7 @@
             <field name="default_code">FURN_5555</field>
             <field name="name">Cable Management Box</field>
             <field name="type">product</field>
+            <field name="weight">0.01</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="lst_price">100.0</field>
             <field name="standard_price">70.0</field>
@@ -68,6 +69,7 @@
         <record id="outgoing_shipment_main_warehouse" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment main_warehouse</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today()"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -86,6 +88,7 @@
         <record id="outgoing_shipment_main_warehouse1" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=15)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -111,6 +114,7 @@
         <record id="outgoing_shipment_main_warehouse2" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment your_company warehouse</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=5)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -128,6 +132,7 @@
 
         <record id="outgoing_shipment_main_warehouse3" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="user_id"></field>
             <field name="origin">your company warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today()"/>
@@ -147,6 +152,7 @@
         <record id="outgoing_shipment_main_warehouse4" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=7)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -172,6 +178,7 @@
         <record id="outgoing_shipment_main_warehouse5" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=12)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -197,6 +204,7 @@
         <record id="outgoing_shipment_main_warehouse6" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=20)"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
@@ -221,6 +229,7 @@
 
         <!-- Create STOCK_PICKING for IN -->
         <record id="incomming_shipment" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
@@ -236,6 +245,7 @@
         </record>
 
         <record id="incomming_shipment1" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=5)"/>
@@ -253,6 +263,7 @@
         </record>
 
         <record id="incomming_shipment2" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -269,6 +280,7 @@
         </record>
 
         <record id="incomming_shipment3" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -285,6 +297,7 @@
         </record>
 
         <record id="incomming_shipment4" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -304,6 +317,7 @@
         <record id="incomming_chicago_warehouse" model="stock.picking">
             <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
             <field name="origin">incoming_chicago_warehouse</field>
+            <field name="user_id"></field>
             <field name="date" eval="DateTime.today()"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -320,6 +334,7 @@
         </record>
 
         <record id="incomming_chicago_warehouse1" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today() - timedelta(days=5)"/>
@@ -344,6 +359,7 @@
         </record>
 
         <record id="incomming_chicago_warehouse2" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -360,6 +376,7 @@
         </record>
 
         <record id="incomming_chicago_warehouse3" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
             <field name="origin">chicago_warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -380,6 +397,7 @@
         <!-- Create STOCK_PICKING_OUT for Chicago Warehouse -->
         <record id="outgoing_chicago_warehouse" model="stock.picking">
             <field name="picking_type_id" ref="stock.chi_picking_type_out"/>
+            <field name="user_id"></field>
             <field name="origin">outgoing_chicago_warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="date" eval="DateTime.today()"/>
@@ -397,6 +415,7 @@
         </record>
 
         <record id="outgoing_chicago_warehouse1" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_out"/>
             <field name="origin">outgoing_shipment_chicago_warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -422,6 +441,7 @@
         </record>
 
         <record id="outgoing_chicago_warehouse2" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_out"/>
             <field name="origin">chicago_warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -440,6 +460,7 @@
         </record>
 
         <record id="outgoing_chicago_warehouse3" model="stock.picking">
+            <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.chi_picking_type_out"/>
             <field name="origin">outgoing chicago warehouse</field>
             <field name="partner_id" ref="base.res_partner_1"/>

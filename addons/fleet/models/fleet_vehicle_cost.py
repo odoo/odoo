@@ -32,6 +32,8 @@ class FleetVehicleCost(models.Model):
     contract_id = fields.Many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost')
     auto_generated = fields.Boolean('Automatically Generated', readonly=True)
     description = fields.Char("Cost Description")
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get())
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     def _get_odometer(self):
         for record in self:
@@ -115,10 +117,10 @@ class FleetVehicleLogContract(models.Model):
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose whether the contract is still valid or not',
-        track_visibility="onchange",
+        tracking=True,
         copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Float('Recurring Cost Amount', track_visibility="onchange",
+    cost_generated = fields.Float('Recurring Cost Amount', tracking=True,
         help="Costs paid at regular intervals, depending on the cost frequency. "
         "If the cost frequency is set to unique, the cost will be logged at the start date")
     cost_frequency = fields.Selection([
@@ -135,7 +137,7 @@ class FleetVehicleLogContract(models.Model):
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
-    odometer = fields.Float(string='Odometer at creation', 
+    odometer = fields.Float(string='Creation Contract Odometer',
         help='Odometer measure of the vehicle at the moment of the contract creation')
 
     @api.depends('vehicle_id', 'cost_subtype_id', 'date')
@@ -156,7 +158,7 @@ class FleetVehicleLogContract(models.Model):
         otherwise return the number of days before the contract expires
         """
         for record in self:
-            if (record.expiration_date and (record.state == 'open' or record.state == 'expired')):
+            if record.expiration_date and record.state in ['open', 'diesoon', 'expired']:
                 today = fields.Date.from_string(fields.Date.today())
                 renew_date = fields.Date.from_string(record.expiration_date)
                 diff_time = (renew_date - today).days
@@ -267,9 +269,11 @@ class FleetVehicleLogContract(models.Model):
     def scheduler_manage_contract_expiration(self):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         date_today = fields.Date.from_string(fields.Date.today())
-        in_fifteen_days = fields.Date.to_string(date_today + relativedelta(days=+15))
-        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', in_fifteen_days)])
+        outdated_days = fields.Date.to_string(date_today + relativedelta(days=+delay_alert_contract))
+        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', outdated_days)])
 
         nearly_expired_contracts.write({'state': 'diesoon'})
         for contract in nearly_expired_contracts.filtered(lambda contract: contract.user_id):
@@ -277,7 +281,7 @@ class FleetVehicleLogContract(models.Model):
                 'fleet.mail_act_fleet_contract_to_renew', contract.expiration_date,
                 user_id=contract.user_id.id)
 
-        expired_contracts = self.search([('state', '!=', 'expired'), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
         expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])

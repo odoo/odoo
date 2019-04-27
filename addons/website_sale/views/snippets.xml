@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="website_sale" inherit_id="website.snippets" name="Snippet Ecommerce">
 
-    <xpath expr="//div[@id='snippet_options']" position="inside">
+<template id="s_products_searchbar_input" name="Products Search Input">
+    <t t-call="website_sale.website_sale_products_search_box">
+        <t t-set="_classes" t-value="'s_wsale_products_searchbar_input mb-3'"/>
+    </t>
+</template>
+<template id="s_products_searchbar" name="Products Search">
+    <section class="s_wsale_products_searchbar bg-200 pt24 pb24">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Search for a product</h2>
+                            <p>We have amazing products in our shop, check them now !</p>
+                            <t t-call="website_sale.s_products_searchbar_input"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_sale.s_products_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+    </xpath>
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_sale.s_products_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+    </xpath>
+</template>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_sale'][@id='s_products_searchbar']" position="replace"/>
+    <xpath expr="//t[@t-install='website_sale'][@id='s_products_searchbar_input']" position="replace"/>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
+    <xpath expr="." position="inside">
         <div data-js='website_sale'
             data-selector=".oe_product.oe_grid"
             data-no-check="true">
@@ -31,7 +68,16 @@
                 </div>
             </div>
         </div>
-    </xpath>
 
+        <div data-js="ProductsSearchBar"
+            data-selector=".s_wsale_products_searchbar_input">
+            <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-searchbar-settings=""><i class="fa fa-search"></i>Products Search Bar</a>
+        </div>
+    </xpath>
+    <xpath expr="//div[@data-js='content']" position="attributes">
+        <attribute name="data-selector" add=".s_wsale_products_searchbar_input" separator=","/>
+        <attribute name="data-drop-near" add=".s_wsale_products_searchbar_input" separator=","/>
+    </xpath>
 </template>
+
 </odoo>

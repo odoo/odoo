@@ -21,7 +21,7 @@ WebsiteNewMenu.include({
      * and redirects the user to this new event.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewEvent: function () {
         var self = this;
@@ -29,7 +29,8 @@ WebsiteNewMenu.include({
             id: "editor_new_event",
             window_title: _t("New Event"),
             input: _t("Event Name"),
-        }).then(function (eventName) {
+        }).then(function (result) {
+            var eventName = result.val;
             if (!eventName) {
                 return;
             }
@@ -40,7 +41,7 @@ WebsiteNewMenu.include({
                 },
             }).then(function (url) {
                 window.location.href = url;
-                return $.Deferred();
+                return new Promise(function () {});
             });
         });
     },

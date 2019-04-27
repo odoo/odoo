@@ -25,6 +25,7 @@ var DateWidget = Widget.extend({
 
         this.name = parent.name;
         this.options = _.extend({
+            locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),

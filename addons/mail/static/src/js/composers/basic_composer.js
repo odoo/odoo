@@ -4,7 +4,7 @@ odoo.define('mail.composer.Basic', function (require) {
 var emojis = require('mail.emojis');
 var MentionManager = require('mail.composer.MentionManager');
 var DocumentViewer = require('mail.DocumentViewer');
-var mailUtils = require('mail.utils');
+var utils = require('web.utils');
 
 var config = require('web.config');
 var core = require('web.core');
@@ -26,7 +26,7 @@ var BasicComposer = Widget.extend({
         'click .o_composer_button_add_attachment': '_onClickAddAttachment',
         'click .o_composer_button_emoji': '_onEmojiButtonClick',
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
-        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
+        'mousedown .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
         'dragover .o_file_drop_zone_container': '_onFileDragover',
         'drop .o_file_drop_zone_container': '_onFileDrop',
@@ -58,7 +58,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this._attachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileuploadID = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachmentIds || []);
 
         // Mention
         this._mentionManager = new MentionManager(this);
@@ -120,6 +120,7 @@ var BasicComposer = Widget.extend({
         });
 
         // Attachments
+        this._renderAttachments();
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
@@ -127,7 +128,7 @@ var BasicComposer = Widget.extend({
             .on('update_typing_partners', this, this._onUpdateTypingPartners);
 
         // Mention
-        this._mentionManager.prependTo(this.$('.o_composer'));
+        var prependPromise = this._mentionManager.prependTo(this.$('.o_composer'));
 
         // Drag-Drop files
         // Allowing body to detect dragenter and dragleave for display
@@ -136,7 +137,7 @@ var BasicComposer = Widget.extend({
         $body.on('dragleave.' + this._dropZoneNS, this._onBodyFileDragLeave.bind(this));
         $body.on("dragover." + this._dropZoneNS, this._onBodyFileDragover.bind(this));
         $body.on("drop." + this._dropZoneNS, this._onBodyFileDrop.bind(this));
-        return this._super();
+        return Promise.all([this._super(), prependPromise]);
     },
     destroy: function () {
         $("body").off('dragleave.' + this._dropZoneNS);
@@ -235,7 +236,7 @@ var BasicComposer = Widget.extend({
      * displayed to the user. If none of them match, then it will fetch for more
      * partner suggestions (@see _mentionFetchPartners).
      *
-     * @param {$.Deferred<Object[]>} prefetchedPartners list of list of
+     * @param {Promise<Object[]>} prefetchedPartners list of list of
      *   prefetched partners.
      */
     mentionSetPrefetchedPartners: function (prefetchedPartners) {
@@ -298,20 +299,21 @@ var BasicComposer = Widget.extend({
     /**
      * @private
      * @param {string} search
-     * @returns {$.Deferred<Object[]>}
+     * @returns {Promise<Object[]>}
      */
     _mentionGetCannedResponses: function (search) {
         var self = this;
-        var def = $.Deferred();
-        clearTimeout(this._cannedTimeout);
-        this._cannedTimeout = setTimeout(function () {
-            var cannedResponses = self.call('mail_service', 'getCannedResponses');
-            var matches = fuzzy.filter(mailUtils.unaccent(search), _.pluck(cannedResponses, 'source'));
-            var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
-            def.resolve(_.map(indexes, function (index) {
-                return cannedResponses[index];
-            }));
-        }, 500);
+        var def = new Promise(function (resolve, reject) {
+            clearTimeout(self._cannedTimeout);
+            self._cannedTimeout = setTimeout(function () {
+                var cannedResponses = self.call('mail_service', 'getCannedResponses');
+                var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
+                var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
+                resolve(_.map(indexes, function (index) {
+                    return cannedResponses[index];
+                }));
+            }, 500);
+        });
         return def;
     },
     /**
@@ -320,7 +322,7 @@ var BasicComposer = Widget.extend({
      * @returns {Array}
      */
     _mentionGetCommands: function (search) {
-        var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
+        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
         return _.filter(this._mentionCommands, function (command) {
             return searchRegexp.test(command.name);
         }).slice(0, this.options.mentionFetchLimit);
@@ -345,16 +347,16 @@ var BasicComposer = Widget.extend({
      */
     _mentionFetchPartners: function (search) {
         var self = this;
-        return $.when(this._mentionPrefetchedPartners).then(function (prefetchedPartners) {
+        return Promise.resolve(this._mentionPrefetchedPartners).then(function (prefetchedPartners) {
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
-            var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
+            var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
             _.each(prefetchedPartners, function (partners) {
                 if (limit > 0) {
                     var filteredPartners = _.filter(partners, function (partner) {
                         return partner.email && searchRegexp.test(partner.email) ||
-                            partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
+                            partner.name && searchRegexp.test(utils.unaccent(partner.name));
                     });
                     if (filteredPartners.length) {
                         suggestions.push(filteredPartners.slice(0, limit));
@@ -370,7 +372,15 @@ var BasicComposer = Widget.extend({
                     { limit: limit, search: search }
                 );
             }
-            return suggestions;
+            return Promise.resolve(suggestions).then(function (suggestions) {
+                //add im_status on suggestions
+                _.each(suggestions, function (suggestionsSet) {
+                    _.each(suggestionsSet, function (suggestion) {
+                        suggestion.im_status = self.call('mail_service', 'getImStatus', { partnerID: suggestion.id });
+                    });
+                });
+                return suggestions;
+            });
         });
     },
     /**
@@ -378,27 +388,27 @@ var BasicComposer = Widget.extend({
      * @param {string} model
      * @param {string} method
      * @param {Object} kwargs
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _mentionFetchThrottled: function (model, method, kwargs) {
         var self = this;
         // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
-        var def = $.Deferred();
-        clearTimeout(this.mentionFetchTimer);
-        this.mentionFetchTimer = setTimeout(function () {
-            return self._rpc({model: model, method: method, kwargs: kwargs})
+        return new Promise(function (resolve, reject) {
+            clearTimeout(self.mentionFetchTimer);
+            self.mentionFetchTimer = setTimeout(function () {
+                return self._rpc({model: model, method: method, kwargs: kwargs})
                 .then(function (results) {
-                    def.resolve(results);
+                    resolve(results);
                 });
-        }, this.MENTION_THROTTLE);
-        return def;
+            }, self.MENTION_THROTTLE);
+        });
     },
     /**
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _preprocessMessage: function () {
-        // Return a deferred as this function is extended with asynchronous
+        // Return a promise as this function is extended with asynchronous
         // behavior for the chatter composer
 
         //Removing unwanted extra spaces from message
@@ -411,11 +421,12 @@ var BasicComposer = Widget.extend({
         var commands = this.options.commandsEnabled ?
                         this._mentionManager.getListenerSelection('/') :
                         [];
-        return $.when({
+        return Promise.resolve({
             content: this._mentionManager.generateLinks(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('@'), 'id')),
             canned_response_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelections()[':'], 'id')),
+            channel_ids: _.uniq(_.pluck(this._mentionManager.getListenerSelection('#'), 'id')),
             command: commands.length > 0 ? commands[0].name : undefined,
         });
     },
@@ -499,9 +510,10 @@ var BasicComposer = Widget.extend({
         clearTimeout(this._cannedTimeout);
         var self = this;
         this._preprocessMessage().then(function (message) {
-            self.trigger('post_message', message);
-            self._clearComposerOnSend();
-            self.$input.focus();
+            self.trigger('post_message', message, function() {
+                self._clearComposerOnSend();
+                self.$input.focus();
+            });
         });
     },
     /**
@@ -684,6 +696,7 @@ var BasicComposer = Widget.extend({
      * @param {Event} ev
      */
     _onEmojiImageClick: function (ev) {
+        ev.preventDefault();
         var cursorPosition = this.getSelectionPositions();
         var inputVal = this.$input.val();
         var leftSubstring = inputVal.substring(0, cursorPosition.start);

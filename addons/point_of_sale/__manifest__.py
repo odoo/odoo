@@ -4,9 +4,9 @@
 {
     'name': 'Point of Sale',
     'version': '1.0.1',
-    'category': 'Point Of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 20,
-    'summary': 'Tablet POS: shops and restaurants',
+    'summary': 'User-friendly PoS interface for shops and restaurants',
     'description': "",
     'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
     'data': [

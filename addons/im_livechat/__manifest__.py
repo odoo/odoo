@@ -4,7 +4,7 @@
     'version': '1.0',
     'sequence': 170,
     'summary': 'Chat with your website visitors',
-    'category': 'Website',
+    'category': 'Website/Live Chat',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',
     'description':

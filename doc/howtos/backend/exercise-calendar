@@ -21,7 +21,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
  
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -83,6 +86,30 @@ class Session(models.Model):
+@@ -83,6 +86,27 @@ class Session(models.Model):
                  },
              }
  
@@ -34,9 +34,8 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 +
 +            # Add duration to start_date, but: Monday + 5 days = Saturday, so
 +            # subtract one second to get on Friday instead
-+            start = fields.Datetime.from_string(r.start_date)
 +            duration = timedelta(days=r.duration, seconds=-1)
-+            r.end_date = start + duration
++            r.end_date = r.start_date + duration
 +
 +    def _set_end_date(self):
 +        for r in self:
@@ -45,9 +44,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 +
 +            # Compute the difference between dates, but: Friday - Monday = 4 days,
 +            # so add one day to get 5 days instead
-+            start_date = fields.Datetime.from_string(r.start_date)
-+            end_date = fields.Datetime.from_string(r.end_date)
-+            r.duration = (end_date - start_date).days + 1
++            r.duration = (r.end_date - r.start_date).days + 1
 +
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):

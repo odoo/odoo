@@ -62,7 +62,7 @@ var DebugManager = Widget.extend({
         this._has_features = false;
         // whether the current user is an administrator
         this._is_admin = session.is_system;
-        return $.when(
+        return Promise.resolve(
             this._rpc({
                     model: 'res.users',
                     method: 'check_access_rights',
@@ -160,7 +160,7 @@ var DebugManager = Widget.extend({
             .append(QWeb.render('WebClient.DebugManager.Global', {
                 manager: this,
             }));
-        return $.when();
+        return Promise.resolve();
     },
     select_view: function () {
         var self = this;
@@ -213,6 +213,8 @@ var DebugManager = Widget.extend({
         });
     },
     perform_click_everywhere_test: function () {
+        var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
+        $homeMenu.click();
         startClickEverywhere();
     },
     split_assets: function() {
@@ -281,7 +283,7 @@ DebugManager.include({
             model: 'ir.model',
             method: 'search',
             args: [[['model', '=', model]]]
-        }).done(function (ids) {
+        }).then(function (ids) {
             self.do_action({
                 res_model: 'ir.model.fields',
                 name: _t('View Fields'),
@@ -324,7 +326,7 @@ DebugManager.include({
 DebugManager.include({
     start: function () {
         this._can_edit_views = false;
-        return $.when(
+        return Promise.all([
             this._super(),
             this._rpc({
                     model: 'ir.ui.view',
@@ -334,6 +336,7 @@ DebugManager.include({
                 .then(function (ar) {
                     this._can_edit_views = ar;
                 }.bind(this))
+            ]
         );
     },
     update: function (tag, descriptor, widget) {
@@ -365,6 +368,10 @@ DebugManager.include({
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
             domain: [['res_model', '=', this._action.res_model], ['res_id', '=', selectedIDs[0]]],
+            context: {
+                default_res_model: this._action.res_model,
+                default_res_id: selectedIDs[0],
+            },
         });
     },
     get_metadata: function() {
@@ -378,7 +385,7 @@ DebugManager.include({
             model: this._action.res_model,
             method: 'get_metadata',
             args: [selectedIDs],
-        }).done(function(result) {
+        }).then(function(result) {
             var metadata = result[0];
             metadata.creator = field_utils.format.many2one(metadata.create_uid);
             metadata.lastModifiedBy = field_utils.format.many2one(metadata.write_uid);
@@ -511,7 +518,7 @@ DebugManager.include({
                             true,
                             condition || false,
                         ],
-                    }).done(function () { d.close(); });
+                    }).then(function () { d.close(); });
                 }}
             ]
         });

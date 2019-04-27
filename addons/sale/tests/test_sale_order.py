@@ -97,7 +97,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertTrue(self.sale_order.invoice_status == 'to invoice')
 
         # create invoice: only 'invoice on order' products are invoiced
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice = Invoice.browse(inv_id)
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
         self.assertEqual(invoice.amount_total, sum([2 * p.list_price if p.invoice_policy == 'order' else 0 for p in self.product_map.values()]), 'Sale: invoice total amount is wrong')
@@ -110,7 +110,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         for line in self.sale_order.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
         self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice2 = Invoice.browse(inv_id)
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
         self.assertEqual(invoice2.amount_total, sum([2 * p.list_price if p.invoice_policy == 'delivery' else 0 for p in self.product_map.values()]), 'Sale: second invoice total amount is wrong')
@@ -124,7 +124,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
 
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice3 = Invoice.browse(inv_id)
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
@@ -238,3 +238,58 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEquals(self.sale_order.amount_total,
                           self.sale_order.amount_untaxed + self.sale_order.amount_tax,
                           'Taxes should be applied')
+
+    def test_reconciliation_with_so(self):
+        # create SO
+        so = self.env['sale.order'].create({
+            'name': 'SO/01/01',
+            'reference': 'Petit suisse',
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+        self.env['sale.order.line'].create({
+            'name': self.product_order.name,
+            'product_id': self.product_order.id,
+            'product_uom_qty': 2,
+            'product_uom': self.product_order.uom_id.id,
+            'price_unit': self.product_order.list_price,
+            'order_id': so.id,
+            'tax_id': False,
+        })
+        # Mark SO as sent otherwise we won't find any match
+        so.write({'state': 'sent'})
+        # Create bank statement
+        statement = self.env['account.bank.statement'].create({
+            'name': 'Test',
+            'journal_id': self.journal_purchase.id,
+            'user_id': self.user_employee.id,
+        })
+        st_line1 = self.env['account.bank.statement.line'].create({
+            'name': 'should not find anything',
+            'amount': 15,
+            'statement_id': statement.id
+        })
+        st_line2 = self.env['account.bank.statement.line'].create({
+            'name': 'SO/01',
+            'amount': 15,
+            'statement_id': statement.id
+        })
+        st_line3 = self.env['account.bank.statement.line'].create({
+            'name': 'suisse',
+            'amount': 15,
+            'statement_id': statement.id
+        })
+        # Call get_bank_statement_line_data for st_line_1, should not find any sale order
+        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line1.id])
+        line = res.get('lines', [{}])[0]
+        self.assertFalse(line.get('sale_order_ids', False))
+        # Call again for st_line_2, it should find sale_order
+        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line2.id])
+        line = res.get('lines', [{}])[0]
+        self.assertEquals(line.get('sale_order_ids', []), [so.id])
+        # Call again for st_line_3, it should find sale_order based on reference
+        res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
+        line = res.get('lines', [{}])[0]
+        self.assertEquals(line.get('sale_order_ids', []), [so.id])

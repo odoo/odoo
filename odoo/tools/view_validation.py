@@ -77,9 +77,9 @@ def valid_field_in_graph(arch):
 
 @validate('tree')
 def valid_field_in_tree(arch):
-    """ Children of ``tree`` view must be ``field`` or ``button`` or ``control``."""
+    """ Children of ``tree`` view must be ``field`` or ``button`` or ``control`` or ``groupby``."""
     return all(
-        child.tag in ('field', 'button', 'control')
+        child.tag in ('field', 'button', 'control', 'groupby')
         for child in arch.xpath('/tree/*')
     )
 

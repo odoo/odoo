@@ -16,6 +16,7 @@ var FieldChar = basic_fields.FieldChar;
  * "website" and "image" fields of records of this model).
  */
 var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
+    description: "",
     className: 'o_field_partner_autocomplete',
     debounceSuggestions: 400,
     resetOnAnyFieldChange: true,
@@ -135,14 +136,15 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
                 changes: data.company,
+                onSuccess: function () {
+                    // update the input's value directly
+                    if (self.onlyVAT)
+                        self.$input.val(self._formatValue(company.vat));
+                    else
+                        self.$input.val(self._formatValue(company.name));
+                },
             });
         });
-
-        // update the input's value directly
-        if (this.onlyVAT)
-            this.$input.val(this._formatValue(company.vat));
-        else
-            this.$input.val(this._formatValue(company.name));
         this._removeDropdown();
     },
 

@@ -177,11 +177,11 @@
 // Mixin which allows to extend the BS4 bg-variant mixin
 @mixin o-bg-color-extension($color, $text-color, $with-muted) {}
 
-// Function to remove all falsy values of a map
+// Function to remove all null values of a map
 @function o-map-omit($map) {
     $-map: ();
     @each $key, $value in $map {
-        @if $value {
+        @if $value != null {
             $-map: map-merge($-map, (
                 $key: $value,
             ));

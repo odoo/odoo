@@ -2,11 +2,8 @@ odoo.define('website_forum.editor', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var SummernoteManager = require('web_editor.rte.summernote');
 var WebsiteNewMenu = require('website.newMenu');
 var wUtils = require('website.utils');
-var websiteRootData = require('website.WebsiteRoot');
 
 var _t = core._t;
 
@@ -24,7 +21,7 @@ WebsiteNewMenu.include({
      * and redirects the user to this new forum.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewForum: function () {
         var self = this;
@@ -45,7 +42,9 @@ WebsiteNewMenu.include({
                 $add.find('label').append(_t("Add to menu"));
                 $group.after($add);
             }
-        }).then(function (forum_name, field, $dialog) {
+        }).then(function (result) {
+            var forum_name = result.val;
+            var $dialog = result.dialog;
             if (!forum_name) {
                 return;
             }
@@ -58,20 +57,9 @@ WebsiteNewMenu.include({
                 },
             }).then(function (url) {
                 window.location.href = url;
-                return $.Deferred();
+                return new Promise(function () {});
             });
         });
     },
 });
-
-var WebsiteForumManager = Widget.extend({
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        new SummernoteManager(this);
-    },
-});
-websiteRootData.websiteRootRegistry.add(WebsiteForumManager, '#wrapwrap');
 });

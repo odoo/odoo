@@ -9,17 +9,18 @@
 .o_mail_theme_selector {
     > a {
         @include o-position-absolute(0, 0, auto, 0);
-        height: $o-navbar-height;
-        line-height: 31px;
+        height: $o-wysiwyg-toolbar-height;
+        line-height: $o-wysiwyg-toolbar-height;
         border-radius: 0;
-        background-color: $o-we-color-darker;
-        color: $o-we-color-text-normal;
+        background-color: $o-wysiwyg-bg-color;
+        color: $o-wysiwyg-color;
         display: flex;
         justify-content: center;
         align-items: center;
+        box-shadow: none !important;
 
         &:hover, &:focus, &:active {
-            color: $o-we-color-text-light;
+            color: $o-wysiwyg-color-light;
         }
 
         i {
@@ -29,15 +30,20 @@
 
     &.show > a {
         color: white;
-        background-color: $o-we-color-dark;
+        background-color: $o-wysiwyg-color;
     }
 
     .dropdown-menu {
-        @include o-position-absolute($o-navbar-height - 1, -1px, -1px, -1px);
+        position: absolute;
+        bottom: -1px;
+        top: -3px !important;
+        left: -5px !important;
+        right: 3px !important;
         margin: 0;
         border-radius: 0;
         overflow: auto;
-        background-color: $o-we-color-dark;
+        background-color: $o-wysiwyg-bg-color;
+        z-index: 1050;
 
         .dropdown-item { 
             padding: 10px 10px;
@@ -49,8 +55,8 @@
                 display: none;
                 background-size: cover;
                 padding-top: 50%;
-                border: 1px solid $o-we-color-light;
-                border-top: 1px solid $o-we-color-text-normal;
+                border: 1px solid $o-wysiwyg-border-color;
+
 
                 &.logo {
                     display: block;
@@ -59,16 +65,16 @@
 
 
             &:hover {
-                background-color: $o-we-color-darker;
+                background-color: $o-wysiwyg-bg-color;
 
                 .o_thumb {
-                    border: 1px solid white;
+                    border: 1px solid black;
                 }
             }
 
             &.selected .o_thumb {
                 border: 2px solid $o-brand-odoo;
-                background-color: $o-we-color-dark;
+                background-color: $o-wysiwyg-bg-color;
             }
         }
     }
@@ -101,8 +107,8 @@ body.o_force_mail_theme_choice {
                     .o_thumb {
                         display: none;
                         padding-top: 107%;
-                        border: 1px solid $o-we-color-light;
-                        border-top: 1px solid $o-we-color-text-normal;
+                        border: 1px solid $o-wysiwyg-color-light;
+                        border-top: 1px solid $o-wysiwyg-border-color;
                         box-shadow: 0 5px 10px rgba(black, 0.8);
                         will-change: transform;
                         backface-visibility: hidden;
@@ -123,7 +129,7 @@ body.o_force_mail_theme_choice {
                     }
 
                     &:hover {
-                        background-color: $o-we-color-dark;
+                        background-color: $o-wysiwyg-color;
 
                         .o_thumb {
                             box-shadow: 0 5px 30px 1px rgba(black, 0.6);
@@ -157,16 +163,29 @@ body.o_force_mail_theme_choice {
             }
         }
     }
+    .note-editor {
+        display: none;
+    }
 }
 
-#web_editor_inside_iframe {
-    &.o_basic_theme {
-        padding-left: 0px !important;
-        #oe_snippets {
-            display: none;
-        }
+.o_basic_theme.o_in_iframe {
+    padding-left: 0px !important;
+    #oe_snippets {
+        display: none;
     }
-    #wrapwrap > main #editable_area {
-        padding: 24px;
+    .note-editor.o_snippets_loaded {
+        padding-left: 0px!important;
     }
+}
+
+.note-editable .o_layout {
+    overflow: initial;
+}
+
+.oe_structure {
+    width: 100%;
+}
+
+:root {
+    font-size: 14px;
 }

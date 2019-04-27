@@ -7,10 +7,6 @@ from odoo import fields, models
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    incoterms_id = fields.Many2one('account.incoterms', string="Incoterms",
-        help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
-        readonly=True, states={'draft': [('readonly', False)]})
-
     def _get_last_step_stock_moves(self):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""

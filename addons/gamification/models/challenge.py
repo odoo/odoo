@@ -67,7 +67,7 @@ class Challenge(models.Model):
             ('inprogress', "In Progress"),
             ('done', "Done"),
         ], default='draft', copy=False,
-        string="State", required=True, track_visibility='onchange')
+        string="State", required=True, tracking=True)
     manager_id = fields.Many2one(
         'res.users', default=lambda self: self.env.uid,
         string="Responsible", help="The user responsible for the challenge.",)
@@ -344,12 +344,12 @@ class Challenge(models.Model):
                 date_clause = ""
                 query_params = [line.id]
                 if start_date:
-                    date_clause += "AND g.start_date = %s"
+                    date_clause += " AND g.start_date = %s"
                     query_params.append(start_date)
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
+                    date_clause += " AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g

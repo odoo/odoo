@@ -123,7 +123,7 @@ class AccountInvoice(models.Model):
                             diff_line = {
                                 'type': 'src',
                                 'name': i_line.name[:64],
-                                'price_unit': inv.currency_id.round(price_unit_val_dif),
+                                'price_unit': price_unit_val_dif,
                                 'quantity': line_quantity,
                                 'price': inv.currency_id.round(price_val_dif),
                                 'account_id': acc,
@@ -133,8 +133,9 @@ class AccountInvoice(models.Model):
                                 'tax_ids': tax_ids,
                             }
                             # We update the original line accordingly
-                            line['price_unit'] = inv.currency_id.round(line['price_unit'] - diff_line['price_unit'])
+                            line['price_unit'] = line['price_unit'] - diff_line['price_unit']
                             line['price'] = inv.currency_id.round(line['quantity'] * line['price_unit'])
+                            line['price_unit'] = inv.currency_id.round(line['price_unit'])
                             diff_res.append(diff_line)
             return diff_res
         return []

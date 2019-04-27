@@ -2,21 +2,16 @@ odoo.define('mass_mailing.website_integration', function (require) {
 "use strict";
 
 var utils = require('web.utils');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.subscribe = sAnimation.Class.extend({
+publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 
-        // set value and display button
-        self.$target.find("input").removeClass('d-none');
-        this._rpc({
-            route: '/website_mass_mailing/is_subscriber',
-            params: {
-                list_id: this.$target.data('list-id'),
-            },
-        }).always(function (data) {
+        var always = function (data) {
             self.$target.find('input.js_subscribe_email')
                 .val(data.email ? data.email : "")
                 .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
@@ -26,7 +21,16 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
             self.$target.removeClass('d-none');
             self.$target.find('.js_subscribe_btn').toggleClass('d-none', !!data.is_subscriber);
             self.$target.find('.js_subscribed_btn').toggleClass('d-none', !data.is_subscriber);
-        });
+        };
+
+        // set value and display button
+        self.$target.find("input").removeClass('d-none');
+        this._rpc({
+            route: '/website_mass_mailing/is_subscriber',
+            params: {
+                list_id: this.$target.data('list-id'),
+            },
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
@@ -63,8 +67,10 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
     },
 });
 
-sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
+publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
     selector: ".o_newsletter_popup",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 

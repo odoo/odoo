@@ -815,8 +815,8 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (ev.which != 13 && ev.which != 32) {
-                // Key is not space or enter
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
                 return;
             }
             ev.preventDefault();
@@ -997,6 +997,7 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (_.size(this.action_buttons)) {
             this.$('.control-buttons').removeClass('oe_hidden');
         }
+        this._onKeypadKeyDown = this._onKeypadKeyDown.bind(this);
     },
 
     click_product: function(product) {
@@ -1016,12 +1017,41 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
         }
+        $(document).on('keydown.productscreen', this._onKeypadKeyDown);
     },
-
     close: function(){
         this._super();
         if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
             this.chrome.widget.keyboard.hide();
+        }
+        $(document).off('keydown.productscreen', this._onKeypadKeyDown);
+    },
+
+    _onKeypadKeyDown: function (ev) {
+        //prevent input and textarea keydown event
+        if(!_.contains(["INPUT", "TEXTAREA"], $(ev.target).prop('tagName'))) {
+            if ((ev.key >= "0" && ev.key <= "9") || ev.key === "."){
+                this.numpad.state.appendNewChar(ev.key)
+            }
+            else {
+                switch (ev.key){
+                    case "Backspace":
+                        this.numpad.state.deleteLastChar();
+                        break;
+                    case "Delete":
+                        this.numpad.state.resetValue();
+                        break;
+                    case ",":
+                        this.numpad.state.appendNewChar(".");
+                        break;
+                    case "+":
+                        this.numpad.state.positiveSign();
+                        break;
+                    case "-":
+                        this.numpad.state.negativeSign();
+                        break;
+                }
+            }
         }
     },
 });
@@ -1077,7 +1107,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.display_client_details('show',this.old_client,0);
         }
 
-        this.$('.client-list-contents').delegate('.client-line','click',function(event){
+        this.$('.client-list-contents').on('click', '.client-line', function(event){
             self.line_select(event,$(this),parseInt($(this).data('id')));
         });
 
@@ -1287,11 +1317,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
-    
+
     // what happens when we've just pushed modifications for a partner of id partner_id
-    saved_client_details: function(partner_id){
+    saved_client_details: function (partner_id) {
         var self = this;
-        this.reload_partners().then(function(){
+        var always = function () {
+            $(".client-details-contents").on('click', '.button.save', function () {
+                self.save_client_details(partner);
+            });
+        };
+        return this.reload_partners().then( function() {
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;
@@ -1299,12 +1334,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 self.display_client_details('show',partner);
             } else {
                 // should never happen, because create_from_ui must return the id of the partner it
-                // has created, and reload_partner() must have loaded the newly created partner. 
+                // has created, and reload_partner() must have loaded the newly created partner.
                 self.display_client_details('hide');
             }
-        }).always(function(){
-            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
-        });
+        }).then(always, always);
     },
 
     // resizes an image, keeping the aspect ratio intact,
@@ -1943,16 +1976,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
         $('body').keypress(this.keyboard_handler);
         // that one comes from the pos, but we prefer to cover all the basis
         $('body').keydown(this.keyboard_keydown_handler);
-        // legacy vanilla JS listeners
-        window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
         $('body').off('keypress', this.keyboard_handler);
         $('body').off('keydown', this.keyboard_keydown_handler);
-        window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -2056,7 +2084,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.fail(function(error){
+            invoiced.catch(function (error) {
                 self.invoicing = false;
                 order.finalized = false;
                 if (error.message === 'Missing Customer') {
@@ -2065,6 +2093,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
                         'body': _t('You need to select the customer before you can invoice an order.'),
                         confirm: function(){
                             self.gui.show_screen('clientlist');
+                        },
+                    });
+                } else if (error.message === 'Backend Invoice') {
+                    self.gui.show_popup('confirm',{
+                        'title': _t('Please print the invoice from the backend'),
+                        'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                        confirm: function () {
+                            this.gui.show_screen('receipt');
+                        },
+                        cancel: function () {
+                            this.gui.show_screen('receipt');
                         },
                     });
                 } else if (error.code < 0) {        // XmlHttpRequest Errors
@@ -2085,7 +2124,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 }
             });
 
-            invoiced.done(function(){
+            invoiced.then(function () {
                 self.invoicing = false;
                 self.gui.show_screen('receipt');
             });
@@ -2134,7 +2173,7 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
 
         var selection_list = no_fiscal_position.concat(fiscal_positions);
         self.gui.show_popup('selection',{
-            title: _t('Select tax'),
+            title: _t('Select Fiscal Position'),
             list: selection_list,
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();

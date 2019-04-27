@@ -5,7 +5,7 @@ from datetime import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -121,7 +121,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
-        self.invoice.invoice_validate()
+        self.invoice.action_invoice_open()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
         # Check quantity received
@@ -129,11 +129,12 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incoming shipment' % received_qty)
 
         # Create return picking
-        StockReturnPicking = self.env['stock.return.picking']
         pick = self.po.picking_ids
-        default_data = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).create(default_data)
-        return_wiz.product_return_moves.write({'quantity': 2.0, 'to_refund': True}) # Return only 2
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.write({'quantity': 2.0, 'to_refund': True})  # Return only 2
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
@@ -154,5 +155,5 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.purchase_order_change()
         self.invoice.invoice_line_ids[0].quantity = 2.0
         self.invoice.invoice_line_ids[1].quantity = 2.0
-        self.invoice.invoice_validate()
+        self.invoice.action_invoice_open()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')

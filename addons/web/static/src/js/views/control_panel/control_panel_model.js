@@ -325,7 +325,7 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {string[]} [params.searchMenuTypes=[]]
      * @param {Object} [params.timeRanges]
      * @param {boolean} [params.withSearchBar]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         var self = this;
@@ -337,11 +337,11 @@ var ControlPanelModel = mvc.Model.extend({
             // and the info comming from arch put in params.groups (if any)
             // will be lost. This is not a problem because the state
             // won't be use elsewhere.
-            return $.when();
+            return Promise.resolve();
         }
         if (params.initialState) {
             this.importState(params.initialState);
-            return $.when();
+            return Promise.resolve();
         } else {
             var groups = params.groups || [];
             groups.forEach(function (group) {
@@ -351,7 +351,7 @@ var ControlPanelModel = mvc.Model.extend({
                 this._createEmptyGroup('groupBy');
             }
             this._createGroupOfTimeRanges();
-            return $.when.apply($, self._loadSearchDefaults()).then(function () {
+            return Promise.all(self._loadSearchDefaults()).then(function () {
                 return self._loadFavorites().then(function () {
                     if (self.query.length === 0) {
                         self._activateDefaultFilters();
@@ -483,15 +483,13 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {'previous_period'|'previous_year'} [defaultTimeRanges.comparisonRange]
      */
     _activateDefaultTimeRanges: function (defaultTimeRanges) {
-        var self = this;
         if (defaultTimeRanges) {
-            var filterId = Object.keys(this.filters).find(function (filterId) {
-                var filter = self.filters[filterId];
+            var filter = _.find(this.filters, function (filter) {
                 return filter.type === 'timeRange' && filter.fieldName === defaultTimeRanges.field;
             });
-            if (filterId) {
+            if (filter) {
                 this.activateTimeRange(
-                    filterId,
+                    filter.id,
                     defaultTimeRanges.range,
                     defaultTimeRanges.comparisonRange
                 );
@@ -645,12 +643,19 @@ var ControlPanelModel = mvc.Model.extend({
      * @returns {Object} context
      */
     _getFilterContext: function (filter) {
-        var context = {};
-        if (filter.type === 'favorite') {
-            _.extend(context, filter.context);
+        var context = filter.context || {};
+
+        // for <field> nodes, a dynamic context (like context="{'field1': self}")
+        // should set {'field1': [value1, value2]} in the context
+        if (filter.type === 'field' && filter.attrs.context) {
+            context = pyUtils.eval('context', filter.attrs.context, {
+                self: _.map(filter.autoCompleteValues, function (autoCompleteValue) {
+                    return autoCompleteValue.value;
+                }),
+            });
         }
         // the following code aims to restore this:
-        // https://github.com/odoo/odoo/blob/master/addons/web/static/src/js/views/search/search_inputs.js#L498
+        // https://github.com/odoo/odoo/blob/12.0/addons/web/static/src/js/views/search/search_inputs.js#L498
         // this is required for the helpdesk tour to pass
         // this seems weird to only do that for m2o fields, but a test fails if
         // we do it for other fields (my guess being that the test should simply
@@ -659,7 +664,7 @@ var ControlPanelModel = mvc.Model.extend({
             if (this.fields[filter.attrs.name].type === 'many2one') {
                 var value = filter.defaultValue;
                 // the following if required to make the main_flow_tour pass (see
-                // https://github.com/odoo/odoo/blob/master/addons/web/static/src/js/views/search/search_inputs.js#L461)
+                // https://github.com/odoo/odoo/blob/12.0/addons/web/static/src/js/views/search/search_inputs.js#L461)
                 if (_.isArray(filter.defaultValue)) {
                     value = filter.defaultValue[0];
                 }
@@ -798,7 +803,7 @@ var ControlPanelModel = mvc.Model.extend({
      */
     _getGroupIdOfType: function (type) {
         var self = this;
-        return Object.keys(this.groups).find(function (groupId) {
+        return _.find(Object.keys(this.groups), function (groupId) {
             var group = self.groups[groupId];
             return group.type === type;
         });
@@ -867,7 +872,7 @@ var ControlPanelModel = mvc.Model.extend({
                     filter.timeRangeId,
                     filter.fieldType
                 );
-            var timeRangeDescription = filter.timeRangeOptions.find(function (option) {
+            var timeRangeDescription = _.find(filter.timeRangeOptions, function (option) {
                 return option.optionId === filter.timeRangeId;
             }).description.toString();
             if (filter.comparisonTimeRangeId) {
@@ -878,7 +883,7 @@ var ControlPanelModel = mvc.Model.extend({
                     null,
                     filter.comparisonTimeRangeId
                 );
-                comparisonTimeRangeDescription = filter.comparisonTimeRangeOptions.find(function (comparisonOption) {
+                comparisonTimeRangeDescription = _.find(filter.comparisonTimeRangeOptions, function (comparisonOption) {
                     return comparisonOption.optionId === filter.comparisonTimeRangeId;
                 }).description.toString();
             }
@@ -888,6 +893,7 @@ var ControlPanelModel = mvc.Model.extend({
             }
             context = {
                 timeRangeMenuData: {
+                    comparisonField: filter.fieldName,
                     timeRange: timeRange,
                     timeRangeDescription: timeRangeDescription,
                     comparisonTimeRange: comparisonTimeRange,
@@ -905,7 +911,7 @@ var ControlPanelModel = mvc.Model.extend({
      * if this.activateDefaultFavorite is true.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadFavorites: function () {
         var self = this;
@@ -922,10 +928,21 @@ var ControlPanelModel = mvc.Model.extend({
                     }
                     var sort = JSON.parse(favorite.sort);
                     var orderedBy = sort.map(function (order) {
-                        var orderTerms = order.split(' ');
+                        var fieldName;
+                        var asc;
+                        var sqlNotation = order.split(' ');
+                        if (sqlNotation.length > 1) {
+                            // regex: \fieldName (asc|desc)?\
+                            fieldName = sqlNotation[0];
+                            asc = sqlNotation[1] === 'asc';
+                        } else {
+                            // legacy notation -- regex: \-?fieldName\
+                            fieldName = order[0] === '-' ? order.slice(1) : order;
+                            asc = order[0] === '-' ? false : true;
+                        }
                         return {
-                            name: orderTerms[0],
-                            asc: orderTerms.length === 2 && orderTerms[1] === 'asc',
+                            name: fieldName,
+                            asc: asc,
                         };
                     });
                     return {
@@ -945,12 +962,11 @@ var ControlPanelModel = mvc.Model.extend({
                 });
                 self._createGroupOfFilters(favorites);
                 if (self.activateDefaultFavorite) {
-                    var defaultFavoriteId = Object.keys(self.filters).find(function (filterId) {
-                        var filter = self.filters[filterId];
+                    var defaultFavorite = _.find(self.filters, function (filter) {
                         return filter.type === 'favorite' && filter.isDefault;
                     });
-                    if (defaultFavoriteId) {
-                        self.toggleFilter(defaultFavoriteId);
+                    if (defaultFavorite) {
+                        self.toggleFilter(defaultFavorite.id);
                     }
                 }
             } else {
@@ -965,7 +981,7 @@ var ControlPanelModel = mvc.Model.extend({
      * is asynchronous.
      *
      * @private
-     * @returns {Deferred[]}
+     * @returns {Promise[]}
      */
     _loadSearchDefaults: function () {
         var self = this;
@@ -1029,7 +1045,7 @@ var ControlPanelModel = mvc.Model.extend({
      *
      * @private
      * @param {Object} favorite
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _saveQuery: function (favorite) {
         var self = this;

@@ -121,6 +121,10 @@ var KanbanRenderer = BasicRenderer.extend({
             this.columnOptions.progressBarStates = {};
         }
         this.quickCreateEnabled = params.quickCreateEnabled;
+        if (!params.readOnlyMode) {
+            var handleField = _.findWhere(this.state.fieldsInfo.kanban, {widget: 'handle'});
+            this.handleField = handleField && handleField.name;
+        }
         this._setState(state);
     },
     /**
@@ -148,7 +152,7 @@ var KanbanRenderer = BasicRenderer.extend({
     /**
      * Displays the quick create record in the first column.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     addQuickCreate: function () {
         return this.widgets[0].addQuickCreate();
@@ -167,13 +171,15 @@ var KanbanRenderer = BasicRenderer.extend({
         this._toggleNoContentHelper();
     },
     /**
-     * Removes a widget (record if ungrouped, column if grouped) from the view.
+     * Allow the rendering to be triggered from outside. This is used for kanban
+     * views with a searchPanel, to synchronize updates (the view is updated
+     * with param 'noRender', so that it is not re-rendered before the
+     * searchPanel).
      *
-     * @param {Widget} widget the instance of the widget to remove
+     * @returns {$.Promise}
      */
-    removeWidget: function (widget) {
-        this.widgets.splice(this.widgets.indexOf(widget), 1);
-        widget.destroy();
+    render: function () {
+        return this._render();
     },
     /**
      * Updates a given column with its new state.
@@ -185,7 +191,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {boolean} [options.openQuickCreate] if true, directly opens the
      *   QuickCreate widget in the updated column
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateColumn: function (localID, columnState, options) {
         var self = this;
@@ -202,7 +208,7 @@ var KanbanRenderer = BasicRenderer.extend({
             if (options && options.openQuickCreate) {
                 def = newColumn.addQuickCreate();
             }
-            return $.when(def).then(function () {
+            return Promise.resolve(def).then(function () {
                 newColumn.$el.insertAfter(column.$el);
                 self._toggleNoContentHelper();
                 // When a record has been quick created, the new column directly
@@ -219,7 +225,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * Updates a given record with its new state.
      *
      * @param {Object} recordState
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateRecord: function (recordState) {
         var isGrouped = !!this.state.groupedBy.length;
@@ -240,14 +246,13 @@ var KanbanRenderer = BasicRenderer.extend({
         if (record) {
             return record.update(recordState);
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * @override
      */
     updateState: function (state) {
         this._setState(state);
-        this._toggleNoContentHelper();
         return this._super.apply(this, arguments);
     },
 
@@ -276,6 +281,16 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Render the Example Ghost Kanban card on the background
+     *
+     * @private
+     * @param {DocumentFragment} fragment
+     */
+    _renderExampleBackground: function (fragment) {
+        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        $background.appendTo(fragment);
+    },
+    /**
      * Renders empty invisible divs in a document fragment.
      *
      * @private
@@ -283,10 +298,13 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {integer} nbDivs the number of divs to append
      */
     _renderGhostDivs: function (fragment, nbDivs) {
+        var ghostDefs = [];
         for (var $ghost, i = 0; i < nbDivs; i++) {
             $ghost = $('<div>').addClass('o_kanban_record o_kanban_ghost');
-            $ghost.appendTo(fragment);
+            var def = $ghost.appendTo(fragment);
+            ghostDefs.push(def);
         }
+        return Promise.all(ghostDefs);
     },
     /**
      * Renders an grouped kanban view in a fragment.
@@ -309,10 +327,7 @@ var KanbanRenderer = BasicRenderer.extend({
                 def = column.appendTo(fragment);
                 self.widgets.push(column);
             }
-            if (def.state() === 'pending') {
-                self.defs.push(def);
-            }
-
+            self.defs.push(def);
         });
 
         // remove previous sorting
@@ -347,13 +362,13 @@ var KanbanRenderer = BasicRenderer.extend({
                 this.quickCreate = new ColumnQuickCreate(this, {
                     examples: this.examples,
                 });
-                this.quickCreate.appendTo(fragment).then(function () {
+                this.defs.push(this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet
                     if (!self.state.data.length) {
                         self.quickCreate.toggleFold();
+                        self._renderExampleBackground(fragment);
                     }
-                });
-
+                }));
             }
         }
     },
@@ -370,13 +385,35 @@ var KanbanRenderer = BasicRenderer.extend({
             var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);
             var def = kanbanRecord.appendTo(fragment);
-            if (def.state() === 'pending') {
-                self.defs.push(def);
-            }
+            self.defs.push(def);
         });
 
+        // enable record resequencing if there is a field with widget='handle'
+        // and if there is no orderBy (in this case we assume that the widget
+        // has been put on the first default order field of the model), or if
+        // the first orderBy field is the one with widget='handle'
+        var orderedBy = this.state.orderedBy;
+        var hasHandle = this.handleField &&
+                        (orderedBy.length === 0 || orderedBy[0].name === this.handleField);
+        if (hasHandle) {
+            this.$el.sortable({
+                items: '.o_kanban_record:not(.o_kanban_ghost)',
+                cursor: 'move',
+                revert: 0,
+                delay: 0,
+                tolerance: 'pointer',
+                forcePlaceholderSize: true,
+                stop: function (event, ui) {
+                    self._moveRecord(ui.item.data('record').db_id, ui.item.index());
+                },
+            });
+        }
+
         // append ghost divs to ensure that all kanban records are left aligned
-        this._renderGhostDivs(fragment, 6);
+        var prom = Promise.all(self.defs).then(function () {
+            return self._renderGhostDivs(fragment, 6);
+        });
+        this.defs.push(prom);
     },
     /**
      * @override
@@ -384,30 +421,30 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderView: function () {
         var self = this;
-        var oldWidgets = this.widgets;
-        this.widgets = [];
-        this.$el.empty();
 
-        var isGrouped = !!this.state.groupedBy.length;
-        this.$el.toggleClass('o_kanban_grouped', isGrouped);
-        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
-        var fragment = document.createDocumentFragment();
         // render the kanban view
-        this.defs = [];
+        var isGrouped = !!this.state.groupedBy.length;
+        var fragment = document.createDocumentFragment();
+        var defs = [];
+        this.defs = defs;
         if (isGrouped) {
             this._renderGrouped(fragment);
         } else {
             this._renderUngrouped(fragment);
         }
-        this.$el.append(fragment);
-        this._toggleNoContentHelper();
-        var defs = this.defs;
+        delete this.defs;
+
         return this._super.apply(this, arguments).then(function () {
-            _.invoke(oldWidgets, 'destroy');
-            if (self._isInDom) {
-                _.invoke(self.widgets, 'on_attach_callback');
-            }
-            return $.when.apply(null, defs);
+            return Promise.all(defs).then(function () {
+                self.$el.empty();
+                self.$el.toggleClass('o_kanban_grouped', isGrouped);
+                self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+                self.$el.append(fragment);
+                self._toggleNoContentHelper();
+                if (self._isInDom) {
+                    _.invoke(self.widgets, 'on_attach_callback');
+                }
+            });
         });
     },
     /**
@@ -546,6 +583,7 @@ var KanbanRenderer = BasicRenderer.extend({
     _onQuickCreateColumnUpdated: function (ev) {
         ev.stopPropagation();
         this._toggleNoContentHelper();
+        this._updateExampleBackground();
     },
     /**
      * @private
@@ -595,6 +633,21 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _onStartQuickCreate: function () {
         this._toggleNoContentHelper(true);
+    },
+    /**
+     * Hide or display the background example:
+     *  - displayed when quick create column is display and there is no column else
+     *  - hidden otherwise
+     *
+     * @private
+     **/
+    _updateExampleBackground: function () {
+        var $elem = this.$('.o_kanban_example_background_container');
+        if (!this.state.data.length && !$elem.length) {
+            this._renderExampleBackground(this.$el);
+        } else {
+            $elem.remove();
+        }
     },
 });
 

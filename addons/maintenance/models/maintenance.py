@@ -33,7 +33,7 @@ class MaintenanceEquipmentCategory(models.Model):
     name = fields.Char('Category Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
-    technician_user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.uid, oldname='user_id')
+    technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid, oldname='user_id')
     color = fields.Integer('Color Index')
     note = fields.Text('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
@@ -81,7 +81,7 @@ class MaintenanceEquipmentCategory(models.Model):
         return res
 
     def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.equipment')
+        return vals.get('alias_model', 'maintenance.request')
 
     def get_alias_values(self):
         values = super(MaintenanceEquipmentCategory, self).get_alias_values()
@@ -125,16 +125,16 @@ class MaintenanceEquipment(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
-    technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
-    owner_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange')
+    technician_user_id = fields.Many2one('res.users', string='Technician', tracking=True, oldname='user_id')
+    owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
-                                  track_visibility='onchange', group_expand='_read_group_category_ids')
+                                  tracking=True, group_expand='_read_group_category_ids')
     partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
-    assign_date = fields.Date('Assigned Date', track_visibility='onchange')
+    assign_date = fields.Date('Assigned Date', tracking=True)
     effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure.")
     cost = fields.Float('Cost')
     note = fields.Text('Note')
@@ -253,9 +253,10 @@ class MaintenanceEquipment(models.Model):
             if not next_requests:
                 equipment._create_new_request(equipment.next_action_date)
 
+
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
 
@@ -264,11 +265,13 @@ class MaintenanceRequest(models.Model):
         return self.env['maintenance.stage'].search([], limit=1)
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('maintenance.mt_req_created')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return self.env.ref('maintenance.mt_req_created')
-        elif 'stage_id' in init_values and self.stage_id.sequence > 1:
+        if 'stage_id' in init_values:
             return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
@@ -283,20 +286,20 @@ class MaintenanceRequest(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     description = fields.Text('Description')
-    request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today,
+    request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
     owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
                                    ondelete='restrict', index=True)
-    user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='technician_user_id')
-    stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', track_visibility='onchange',
+    user_id = fields.Many2one('res.users', string='Technician', tracking=True, oldname='technician_user_id')
+    stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
     close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")
     kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
-                                    string='Kanban State', required=True, default='normal', track_visibility='onchange')
+                                    string='Kanban State', required=True, default='normal', tracking=True)
     # active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
     archive = fields.Boolean(default=False, help="Set archive to true to hide the maintenance request without deleting it.")
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
@@ -331,7 +334,6 @@ class MaintenanceRequest(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
         if request.owner_user_id or request.user_id:
             request._add_followers()

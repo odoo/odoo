@@ -6,6 +6,7 @@ import os
 from collections import OrderedDict
 
 from odoo import api, fields, models
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
 
@@ -24,6 +25,10 @@ class IrModuleModule(models.Model):
         ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
+    _theme_translated_fields = {
+        'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
+        'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
+    }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
                                 domain=[('res_model', '=', _name), ('mimetype', '=like', 'image/%')],
@@ -161,8 +166,10 @@ class IrModuleModule(models.Model):
                         if 'active' in rec_data:
                             rec_data.pop('active')
                         find.update(rec_data)
+                        self._post_copy(rec, find)
                 else:
-                    self.env[model_name].create(rec_data)
+                    new_rec = self.env[model_name].create(rec_data)
+                    self._post_copy(rec, new_rec)
 
                 remaining -= rec
 
@@ -172,6 +179,20 @@ class IrModuleModule(models.Model):
             raise MissingError(error)
 
         self._theme_cleanup(model_name, website)
+
+    @api.multi
+    def _post_copy(self, old_rec, new_rec):
+        self.ensure_one()
+        translated_fields = self._theme_translated_fields.get(old_rec._name, [])
+        for (src_field, dst_field) in translated_fields:
+            self._cr.execute("""INSERT INTO ir_translation (lang, src, name, res_id, state, value, type, module)
+                                SELECT t.lang, t.src, %s, %s, t.state, t.value, t.type, t.module
+                                FROM ir_translation t
+                                WHERE name = %s
+                                  AND res_id = %s
+                                ON CONFLICT DO NOTHING""",
+                             (dst_field, new_rec.id, src_field, old_rec.id))
+
 
     @api.multi
     def _theme_load(self, website):
@@ -206,7 +227,7 @@ class IrModuleModule(models.Model):
 
             for model_name in self._theme_model_names:
                 template = self._get_module_data(model_name)
-                models = template.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+                models = template.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).mapped('copy_ids').filtered(lambda m: m.website_id == website)
                 models.unlink()
                 self._theme_cleanup(model_name, website)
 
@@ -235,8 +256,9 @@ class IrModuleModule(models.Model):
 
         if model_name in ('website.page', 'website.menu'):
             return model
-
-        orphans = model.with_context(active_test=False).search([
+        # use active_test to also unlink archived models
+        # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
+        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
             ('key', '=like', self.name + '.%'),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
@@ -333,9 +355,6 @@ class IrModuleModule(models.Model):
     def button_choose_theme(self):
         """
             Remove any existing theme on the current website and install the theme ``self`` instead.
-
-            The removal of the previous theme will however keep the existing data
-            that will also be used in the new theme.
 
             The actual loading of the theme on the current website will be done
             automatically on ``write`` thanks to the upgrade and/or install.

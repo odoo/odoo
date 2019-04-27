@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -74,6 +75,7 @@ class Product(models.Model):
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_quantities(self):
@@ -149,6 +151,20 @@ class Product(models.Model):
 
         return res
 
+    def _get_description(self, picking_type_id):
+        """ return product receipt/delivery/picking description depending on
+        picking type passed as argument.
+        """
+        self.ensure_one()
+        picking_code = picking_type_id.code
+        description = self.description or self.name
+        if picking_code == 'incoming':
+            return self.description_pickingin or description
+        if picking_code == 'outgoing':
+            return self.description_pickingout or description
+        if picking_code == 'internal':
+            return self.description_picking or description
+
     def _get_domain_locations(self):
         '''
         Parses the context and returns a list of location_ids based on it.
@@ -215,8 +231,13 @@ class Product(models.Model):
             loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
             dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
+        usage = self._context.get('quantity_available_locations_domain')
+        if usage:
+            stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
+        else:
+            stock_loc_domain = domain + loc_domain
         return (
-            domain + loc_domain,
+            stock_loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
             domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
@@ -258,7 +279,9 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.with_context(prefetch_fields=False).search([]):
+        # Order the search on `id` to prevent the default order on the product name which slows
+        # down the search because of the join on the translation table to get the translated names.
+        for product in self.with_context(prefetch_fields=False).search([], order='id'):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
@@ -356,6 +379,15 @@ class Product(models.Model):
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
+    def action_view_related_putaway_rules(self):
+        self.ensure_one()
+        domain = [
+            '|',
+                ('product_id', '=', self.id),
+                ('category_id', '=', self.product_tmpl_id.categ_id.id),
+        ]
+        return self.env['product.template']._get_action_view_related_putaway_rules(domain)
+
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
@@ -367,8 +399,8 @@ class Product(models.Model):
         self.ensure_one()
         self.env['stock.quant']._quant_tasks()
         action = self.env.ref('stock.product_open_quants').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {'search_default_internal_loc': 1}
+        location_domain = self._get_domain_locations()[0]
+        action['domain'] = expression.AND([[('product_id', '=', self.id)], location_domain])
         return action
 
     @api.model
@@ -491,6 +523,17 @@ class ProductTemplate(models.Model):
             }
         return prod_available
 
+    @api.model
+    def _get_action_view_related_putaway_rules(self, domain):
+        return {
+            'name': _('Putaway Rules'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.putaway.rule',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'domain': domain,
+        }
+
     def _search_qty_available(self, operator, value):
         domain = [('qty_available', operator, value)]
         product_variant_ids = self.env['product.product'].search(domain)
@@ -528,6 +571,13 @@ class ProductTemplate(models.Model):
     @api.onchange('tracking')
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductTemplate, self)._onchange_type()
+        if self.type == 'consu' and self.tracking != 'none':
+            self.tracking = 'none'
+        return res
 
     def write(self, vals):
         if 'uom_id' in vals:
@@ -575,9 +625,18 @@ class ProductTemplate(models.Model):
         self.env['stock.quant']._quant_tasks()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
-        action['domain'] = [('product_id', 'in', products.ids)]
-        action['context'] = {'search_default_internal_loc': 1}
+        location_domain = products._get_domain_locations()[0]
+        action['domain'] = expression.AND([[('product_id', 'in', products.ids)], location_domain])
         return action
+
+    def action_view_related_putaway_rules(self):
+        self.ensure_one()
+        domain = [
+            '|',
+                ('product_id.product_tmpl_id', '=', self.id),
+                ('category_id', '=', self.categ_id.id),
+        ]
+        return self._get_action_view_related_putaway_rules(domain)
 
     def action_view_orderpoints(self):
         products = self.mapped('product_variant_ids')
@@ -618,6 +677,7 @@ class ProductCategory(models.Model):
     total_route_ids = fields.Many2many(
         'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
+    putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
 
     @api.one
     def _compute_total_route_ids(self):

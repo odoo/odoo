@@ -79,7 +79,7 @@ var LivechatButton = Widget.extend({
             ready = session.rpc('/im_livechat/init', {channel_id: this.options.channel_id})
                 .then(function (result) {
                     if (!result.available_for_me) {
-                        return $.Deferred().reject();
+                        return Promise.reject();
                     }
                     self._rule = result.rule;
                 });
@@ -190,15 +190,11 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _loadQWebTemplate: function () {
-        var xml_files = ['/mail/static/src/xml/abstract_thread_window.xml',
-                         '/mail/static/src/xml/thread.xml',
-                         '/im_livechat/static/src/xml/im_livechat.xml'];
-        var defs = _.map(xml_files, function (tmpl) {
-            return session.rpc('/web/proxy/load', { path: tmpl }).then(function (xml) {
-                QWeb.add_template(xml);
+        return session.rpc('/im_livechat/load_templates').then(function (templates) {
+            _.each(templates, function (template) {
+                QWeb.add_template(template);
             });
         });
-        return $.when.apply($, defs);
     },
     /**
      * @private
@@ -213,38 +209,67 @@ var LivechatButton = Widget.extend({
         this._openingChat = true;
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
-            def = $.when(JSON.parse(cookie));
+            def = Promise.resolve(JSON.parse(cookie));
         } else {
             this._messages = []; // re-initialize messages cache
             def = session.rpc('/im_livechat/get_session', {
                 channel_id : this.options.channel_id,
                 anonymous_name : this.options.default_username,
+                previous_operator_id: this._get_previous_operator_id(),
             }, {shadow: true});
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                alert(_t("None of our collaborators seems to be available, please try again later."));
+                alert(_t("None of our collaborators seem to be available, please try again later."));
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,
                     data: livechatData
                 });
-                self._openChatWindow();
-                self._sendWelcomeMessage();
-                self._renderMessages();
+                return self._openChatWindow().then(function () {
+                    self._sendWelcomeMessage();
+                    self._renderMessages();
+                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
+                    self.call('bus_service', 'startPolling');
 
-                self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                self.call('bus_service', 'startPolling');
-
-                utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
-                utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    if (livechatData.operator_pid[0]) {
+                        // livechatData.operator_pid contains a tuple (id, name)
+                        // we are only interested in the id
+                        var operatorPidId = livechatData.operator_pid[0];
+                        var oneWeek = 7*24*60*60;
+                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                    }
+                });
             }
-        }).always(function () {
+        }).then(function () {
+            self._openingChat = false;
+        }).guardedCatch(function() {
             self._openingChat = false;
         });
     }, 200, true),
     /**
+     * Will try to get a previous operator for this visitor.
+     * If the visitor already had visitor A, it's better for his user experience
+     * to get operator A again.
+     *
+     * The information is stored in the 'im_livechat_previous_operator_pid' cookie.
+     *
      * @private
+     * @return {integer} operator_id.partner_id.id if the cookie is set
+     */
+    _get_previous_operator_id: function () {
+        var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+        if (cookie) {
+            return cookie;
+        }
+
+        return null;
+    },
+    /**
+     * @private
+     * @return {Promise}
      */
     _openChatWindow: function () {
         var self = this;
@@ -253,7 +278,7 @@ var LivechatButton = Widget.extend({
             placeholder: this.options.input_placeholder || "",
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
-        this._chatWindow.appendTo($('body')).then(function () {
+        return this._chatWindow.appendTo($('body')).then(function () {
             var cssProps = {bottom: 0};
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
             self._chatWindow.$el.css(cssProps);
@@ -274,7 +299,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      * @param {Object} message
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _sendMessage: function (message) {
         var self = this;
@@ -341,8 +366,8 @@ var LivechatButton = Widget.extend({
         ev.stopPropagation();
         var self = this;
         var messageData = ev.data.messageData;
-        this._sendMessage(messageData).fail(function (error, e) {
-            e.preventDefault();
+        this._sendMessage(messageData).guardedCatch(function (reason) {
+            reason.event.preventDefault();
             return self._sendMessage(messageData); // try again just in case
         });
     },

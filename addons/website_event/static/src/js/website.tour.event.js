@@ -3,13 +3,11 @@ odoo.define("website_event.tour", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
     tour.register("event", {
         url: "/",
-        wait_for: base.ready(),
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_event]",
         content: _t("Click here to create a new event."),
@@ -32,6 +30,7 @@ odoo.define("website_event.tour", function (require) {
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
+        extra_trigger: ".o_dirty",
     }, {
         trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",

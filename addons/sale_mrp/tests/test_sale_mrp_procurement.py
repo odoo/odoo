@@ -40,8 +40,15 @@ class TestSaleMrpProcurement(TransactionCase):
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
         product_template_slidermobile0 = product.save()
 
+        product_component = Form(self.env['product.product'])
+        product_component.name = 'Battery'
+        product_product_bettery = product_component.save()
+
         with Form(self.env['mrp.bom']) as bom:
             bom.product_tmpl_id = product_template_slidermobile0
+            with bom.bom_line_ids.new() as line:
+                line.product_id = product_product_bettery
+                line.product_qty = 4
 
         # I create a sale order for product Slider mobile
         so_form = Form(self.env['sale.order'])

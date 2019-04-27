@@ -7,6 +7,7 @@ from odoo import models, api, _, fields
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
+import random
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -55,8 +56,7 @@ class account_journal(models.Model):
 
         #starting point of the graph is the last statement
         last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
-        if not last_stmt:
-            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+
         last_balance = last_stmt and last_stmt.balance_end_real or 0
         data.append(build_graph_data(today, last_balance))
 
@@ -74,9 +74,10 @@ class account_journal(models.Model):
                         ORDER BY l.date desc
                         """
         self.env.cr.execute(query, (self.id, last_month, today))
-        for val in self.env.cr.dictfetchall():
+        query_result = self.env.cr.dictfetchall()
+        for val in query_result:
             date = val['date']
-            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+            if date != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
             amount -= val['amount']
 
@@ -86,7 +87,15 @@ class account_journal(models.Model):
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if 'e' in version else '#7c7bad'
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
+
+        is_sample_data = not last_stmt and len(query_result) == 0
+        if is_sample_data:
+            data = []
+            for i in range(30, 0, -5):
+                current_date = today + timedelta(days=-i)
+                data.append(build_graph_data(current_date, random.randint(-5, 15)))
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -125,12 +134,22 @@ class account_journal(models.Model):
 
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
+        is_sample_data = True
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
+                is_sample_data = False
                 data[index]['value'] = query_results[index].get('total')
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        return [{'values': data, 'title': graph_title, 'key': graph_key}]
+
+        if is_sample_data:
+            for index in range(0, len(query_results)):
+                data[index]['type'] = 'o_sample_data'
+                # we use unrealistic values for the sample data
+                data[index]['value'] = random.randint(0, 20)
+                graph_key = _('Sample data')
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
 
     def _get_bar_graph_select_query(self):
         """
@@ -145,9 +164,9 @@ class account_journal(models.Model):
     @api.multi
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
-        number_to_reconcile = last_balance = account_sum = 0
+        number_to_reconcile = number_to_check = last_balance = account_sum = 0
         title = ''
-        number_draft = number_waiting = number_late = 0
+        number_draft = number_waiting = number_late = to_check_balance = 0
         sum_draft = sum_waiting = sum_late = 0.0
         if self.type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
@@ -161,6 +180,9 @@ class account_journal(models.Model):
                             AND not exists (select 1 from account_move_line aml where aml.statement_line_id = line.id)
                         """, (tuple(self.ids),))
             number_to_reconcile = self.env.cr.fetchone()[0]
+            to_check_ids = self.to_check_ids()
+            number_to_check = len(to_check_ids)
+            to_check_balance = sum([r.amount for r in to_check_ids])
             # optimization to read sum of balance from account_move_line
             account_ids = tuple(ac for ac in [self.default_debit_account_id.id, self.default_credit_account_id.id] if ac)
             if account_ids:
@@ -169,7 +191,7 @@ class account_journal(models.Model):
                            LEFT JOIN account_move move ON aml.move_id = move.id
                            WHERE aml.account_id in %%s
                            AND move.date <= %%s AND move.state = 'posted';""" % (amount_field,)
-                self.env.cr.execute(query, (account_ids, fields.Date.today(),))
+                self.env.cr.execute(query, (account_ids, fields.Date.context_today(self),))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
                     account_sum = query_results[0].get('sum')
@@ -185,16 +207,22 @@ class account_journal(models.Model):
             self.env.cr.execute(query, query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
-            today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
+            today = fields.Date.today()
+            query = """SELECT residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
+            curr_cache = {}
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
 
         difference = currency.round(last_balance-account_sum) + 0.0
+
+        is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
+
         return {
+            'number_to_check': number_to_check,
+            'to_check_balance': formatLang(self.env, to_check_balance, currency_obj=currency),
             'number_to_reconcile': number_to_reconcile,
             'account_balance': formatLang(self.env, currency.round(account_sum) + 0.0, currency_obj=currency),
             'last_balance': formatLang(self.env, currency.round(last_balance) + 0.0, currency_obj=currency),
@@ -208,6 +236,7 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
+            'is_sample_data': is_sample_data,
         }
 
     def _get_open_bills_to_pay_query(self):
@@ -226,23 +255,45 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type, date_invoice, company_id
-                  FROM account_invoice
+        # there is no account_move_lines for draft invoices, so no relevant residual_signed value
+        return ("""SELECT state,
+                    (CASE WHEN inv.type in ('out_invoice', 'in_invoice')
+                        THEN inv.amount_total
+                        ELSE (-1 * inv.amount_total)
+                    END) AS amount_total,
+                    inv.currency_id AS currency,
+                    inv.type,
+                    inv.date_invoice,
+                    inv.company_id
+                  FROM account_invoice inv
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
-    def _count_results_and_sum_amounts(self, results_dict, target_currency):
+    def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
+        amount_total must be signed !
         """
         rslt_count = 0
         rslt_sum = 0.0
+        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
+        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
+        # calls of the method.
+        curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
-            type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
-            rslt_sum += type_factor * cur._convert(
-                result.get('amount_total'), target_currency, company, result.get('date_invoice') or fields.Date.today())
+            date = result.get('date_invoice') or fields.Date.today()
+
+            amount = result.get('amount_total', 0) or 0
+            if cur != target_currency:
+                key = (cur, target_currency, company, date)
+                # Using setdefault will call _get_conversion_rate, so we explicitly check the
+                # existence of the key in the cache instead.
+                if key not in curr_cache:
+                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
+                amount *= curr_cache[key]
+            rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
     @api.multi
@@ -290,11 +341,11 @@ class account_journal(models.Model):
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
-            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
+            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)]).mapped('line_ids')
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
-                'context': {'statement_ids': bank_stmt.ids, 'company_ids': self.mapped('company_id').ids},
+                'context': {'statement_line_ids': bank_stmt.ids, 'company_ids': self.mapped('company_id').ids},
             }
         else:
             # Open reconciliation view for customers/suppliers
@@ -310,6 +361,26 @@ class account_journal(models.Model):
             }
 
     @api.multi
+    def action_open_to_check(self):
+        self.ensure_one()
+        ids = self.to_check_ids().ids
+        action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
+        action_context.update({'edition_mode': True})
+        action_context.update({'statement_line_ids': ids})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'bank_statement_reconciliation_view',
+            'context': action_context,
+        }
+
+    def to_check_ids(self):
+        self.ensure_one()
+        domain = self.env['account.move.line']._get_domain_for_edition_mode()
+        domain.append(('journal_id', '=', self.id))
+        statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
+        return statement_line_ids
+
+    @api.multi
     def open_action(self):
         """return action based on type for related journals"""
         action_name = self._context.get('action_name', False)
@@ -320,10 +391,10 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('type', '=', 'out_invoice')])
+                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('type', '=', 'in_invoice')])
+                self = self.with_context(use_domain=[('journal_id', '=', self.id)])
             else:
                 action_name = 'action_move_journal_line'
 
@@ -344,12 +415,11 @@ class account_journal(models.Model):
             'journal_type': self.type,
             'default_journal_id': self.id,
             'default_type': invoice_type,
-            'type': invoice_type
+            'type': invoice_type,
+            'search_default_journal_id': self.id,
         })
 
         [action] = self.env.ref('account.%s' % action_name).read()
-        if not self.env.context.get('use_domain'):
-            ctx['search_default_journal_id'] = self.id
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
         account_invoice_filter = self.env.ref('account.view_account_invoice_filter', False)
@@ -360,7 +430,7 @@ class account_journal(models.Model):
             action['view_id'] = False
         if self.type == 'purchase':
             new_help = self.env['account.invoice'].with_context(ctx).complete_empty_list_help()
-            action.update({'help': action.get('help', '') + new_help})
+            action.update({'help': (action.get('help') or '') + new_help})
         return action
 
     @api.multi

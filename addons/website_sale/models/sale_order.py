@@ -43,11 +43,17 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
-            domain = order.date_order and order.date_order <= abandoned_datetime and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
-            order.is_abandoned_cart = bool(domain)
+            # a quotation can be considered as an abandonned cart if it is linked to a website,
+            # is in the 'draft' state and has an expiration date
+            if order.website_id and order.state == 'draft' and order.date_order:
+                public_partner_id = order.website_id.user_id.partner_id
+                # by default the expiration date is 1 hour if not specified on the website configuration
+                abandoned_delay = order.website_id.cart_abandoned_delay or 1.0
+                abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
+                order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.order_line)
+            else:
+                order.is_abandoned_cart = False
 
     def _search_abandoned_cart(self, operator, value):
         abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
@@ -62,15 +68,21 @@ class SaleOrder(models.Model):
         # is_abandoned domain possibilities
         if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
             return abandoned_domain
-        return expression.distribute_not(abandoned_domain)  # negative domain
+        return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
+        """Find the cart line matching the given parameters.
+
+        If a product_id is given, the line will match the product only if the
+        line also has the same special attributes: `no_variant` attributes and
+        `is_custom` values.
+        """
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
 
         # split lines with the same product if it has untracked attributes
-        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant == 'always') and not line_id:
+        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id:
             return self.env['sale.order.line']
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
@@ -83,17 +95,8 @@ class SaleOrder(models.Model):
 
         if line_id:
             return lines
-        linked_line_id = kwargs.get('linked_line_id', False)
-        optional_product_ids = set(kwargs.get('optional_product_ids', []))
 
-        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
-        if optional_product_ids:
-            # only match the lines with the same chosen optional products on the existing lines
-            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
-        else:
-            lines = lines.filtered(lambda line: not line.option_line_ids)
-
-        return lines
+        return self.env['sale.order.line']
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
@@ -101,17 +104,33 @@ class SaleOrder(models.Model):
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
         product_context.update({
-            'partner': order.partner_id.id,
+            'partner': order.partner_id,
             'quantity': qty,
             'date': order.date_order,
             'pricelist': order.pricelist_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
-        pu = product.price
-        if order.pricelist_id and order.partner_id:
-            order_line = order._cart_find_product_line(product.id)
-            if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
+        discount = 0
+
+        if order.pricelist_id.discount_policy == 'without_discount':
+            # This part is pretty much a copy-paste of the method '_onchange_discount' of
+            # 'sale.order.line'.
+            price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
+            pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            if pu != 0:
+                if order.pricelist_id.currency_id != currency:
+                    # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
+                    date = order.date_order or fields.Date.today()
+                    pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
+                discount = (pu - price) / pu * 100
+                if discount < 0:
+                    discount = 0
+        else:
+            pu = product.price
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(product.id)
+                if order_line:
+                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
         return {
             'product_id': product_id,
@@ -119,34 +138,16 @@ class SaleOrder(models.Model):
             'order_id': order_id,
             'product_uom': product.uom_id.id,
             'price_unit': pu,
+            'discount': discount,
         }
-
-    @api.multi
-    def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
-        order = self.sudo().browse(order_id)
-        product_context = dict(self.env.context)
-        product_context.setdefault('lang', order.partner_id.lang)
-        product = self.env['product.product'].with_context(product_context).browse(product_id)
-
-        name = product.display_name
-
-        if product.description_sale:
-            name += '\n%s' % (product.description_sale)
-
-        if no_variant_attribute_values:
-            name += ''.join(['\n%s: %s' % (attribute_value['attribute_name'], attribute_value['attribute_value_name'])
-                for attribute_value in no_variant_attribute_values])
-
-        if custom_values:
-            name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
-
-        return name
 
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
-        SaleOrderLineSudo = self.env['sale.order.line'].sudo()
+        product_context = dict(self.env.context)
+        product_context.setdefault('lang', self.sudo().partner_id.lang)
+        SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
 
         try:
             if add_qty:
@@ -164,28 +165,73 @@ class SaleOrder(models.Model):
             request.session['sale_order_id'] = None
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
         if line_id is not False:
-            order_lines = self._cart_find_product_line(product_id, line_id, **kwargs)
-            order_line = order_lines and order_lines[0]
+            order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
 
         # Create line if no line with product_id can be located
         if not order_line:
+            # change lang to get correct name of attributes/values
+            product = self.env['product.product'].with_context(product_context).browse(int(product_id))
+
+            if not product:
+                raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
+
+            no_variant_attribute_values = kwargs.get('no_variant_attribute_values') or []
+            received_no_variant_values = product.env['product.template.attribute.value'].browse([int(ptav['value']) for ptav in no_variant_attribute_values])
+            received_combination = product.product_template_attribute_value_ids | received_no_variant_values
+            product_template = product.product_tmpl_id
+
+            # handle all cases where incorrect or incomplete data are received
+            combination = product_template._get_closest_possible_combination(received_combination)
+
+            # get or create (if dynamic) the correct variant
+            product = product_template._create_product_variant(combination)
+
+            if not product:
+                raise UserError(_("The given combination does not exist therefore it cannot be added to cart."))
+
+            product_id = product.id
+
             values = self._website_product_id_change(self.id, product_id, qty=1)
 
-            custom_values = kwargs.get('product_custom_attribute_values')
+            # add no_variant attributes that were not received
+            for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
+                no_variant_attribute_values.append({
+                    'value': ptav.id,
+                    'attribute_name': ptav.attribute_id.name,
+                    'attribute_value_name': ptav.name,
+                })
+
+            # save no_variant attributes values
+            if no_variant_attribute_values:
+                values['product_no_variant_attribute_value_ids'] = [
+                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
+                ]
+
+            # add is_custom attribute values that were not received
+            custom_values = kwargs.get('product_custom_attribute_values') or []
+            received_custom_values = product.env['product.attribute.value'].browse([int(ptav['attribute_value_id']) for ptav in custom_values])
+
+            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav.product_attribute_value_id not in received_custom_values):
+                custom_values.append({
+                    'attribute_value_id': ptav.product_attribute_value_id.id,
+                    'attribute_value_name': ptav.name,
+                    'custom_value': '',
+                })
+
+            # save is_custom attributes values
             if custom_values:
                 values['product_custom_attribute_value_ids'] = [(0, 0, {
                     'attribute_value_id': custom_value['attribute_value_id'],
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]
 
-            no_variant_attribute_values = kwargs.get('no_variant_attribute_values')
-            if no_variant_attribute_values:
-                values['product_no_variant_attribute_value_ids'] = [
-                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
-                ]
-
-            values['name'] = self._get_line_description(self.id, product_id, no_variant_attribute_values=no_variant_attribute_values, custom_values=custom_values)
+            # create the line
             order_line = SaleOrderLineSudo.create(values)
+            # Generate the description with everything. This is done after
+            # creating because the following related fields have to be set:
+            # - product_no_variant_attribute_value_ids
+            # - product_custom_attribute_value_ids
+            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
             try:
                 order_line._compute_tax_id()
@@ -206,13 +252,12 @@ class SaleOrder(models.Model):
             order_line.unlink()
         else:
             # update line
-            values = self._website_product_id_change(self.id, product_id, qty=quantity)
+            no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
+            values = self.with_context(no_variant_attributes_price_extra=no_variant_attributes_price_extra)._website_product_id_change(self.id, product_id, qty=quantity)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 order = self.sudo().browse(self.id)
-                product_context = dict(self.env.context)
-                product_context.setdefault('lang', order.partner_id.lang)
                 product_context.update({
-                    'partner': order.partner_id.id,
+                    'partner': order.partner_id,
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
@@ -227,14 +272,14 @@ class SaleOrder(models.Model):
 
             order_line.write(values)
 
-        # link a product to the sales order
-        if kwargs.get('linked_line_id'):
-            linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
-            order_line.write({
-                'linked_line_id': linked_line.id,
-                'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
-            })
-            linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+            # link a product to the sales order
+            if kwargs.get('linked_line_id'):
+                linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
+                order_line.write({
+                    'linked_line_id': linked_line.id,
+                    'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
+                })
+                linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
         for option_line_id in option_lines:
@@ -245,25 +290,28 @@ class SaleOrder(models.Model):
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         for order in self:
-            accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
             products = order.website_order_line.mapped('product_id')
-            accessory_products -= products
-
-            for product in products:
-                for product_template in accessory_products.mapped('product_tmpl_id'):
-                    template_accessory_products = accessory_products.filtered(lambda accessory_product: accessory_product.product_tmpl_id == product_template)
-                    # remove from the accessories the ones that are not available for the selected product
-                    accessory_products -= template_accessory_products - product_template.get_filtered_variants(product)
+            accessory_products = self.env['product.product']
+            for line in order.website_order_line.filtered(lambda l: l.product_id):
+                combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
+                accessory_products |= line.product_id.accessory_product_ids.filtered(lambda product:
+                    product.website_published and
+                    product not in products and
+                    product._is_variant_possible(parent_combination=combination)
+                )
 
             return random.sample(accessory_products, len(accessory_products))
 
     @api.multi
     def action_recovery_email_send(self):
+        for order in self:
+            order._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
             default_template_id = default_template.id if default_template else False
-            template_id = self.website_id and self.website_id.cart_recovery_mail_template_id.id or default_template_id
+            template_id = (self.filtered('website_id') == self and
+                           self.mapped('website_id')[-1:1].cart_recovery_mail_template_id.id) or default_template_id
         except:
             template_id = False
         return {
@@ -283,6 +331,13 @@ class SaleOrder(models.Model):
                 'active_ids': self.ids,
             },
         }
+
+    @api.multi
+    def get_base_url(self):
+        """When using multi-website, we want the user to be redirected to the
+        most appropriate website if possible."""
+        res = super(SaleOrder, self).get_base_url()
+        return self.website_id and self.website_id._get_http_domain() or res
 
 
 class SaleOrderLine(models.Model):

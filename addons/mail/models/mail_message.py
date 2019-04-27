@@ -154,8 +154,8 @@ class Message(models.Model):
     @api.multi
     def _search_has_error(self, operator, operand):
         if operator == '=' and operand:
-            return ['&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]
-        return ['!', '&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+            return [('notification_ids.email_status', 'in', ('bounce', 'exception'))]
+        return ['!', ('notification_ids.email_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
@@ -350,14 +350,16 @@ class Message(models.Model):
         message_to_tracking = dict()
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
         for tracking in tracking_values:
-            message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
-            tracking_tree[tracking.id] = {
-                'id': tracking.id,
-                'changed_field': tracking.field_desc,
-                'old_value': tracking.get_old_display_value()[0],
-                'new_value': tracking.get_new_display_value()[0],
-                'field_type': tracking.field_type,
-            }
+            groups = tracking.field_groups
+            if not groups or self.user_has_groups(groups):
+                message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
+                tracking_tree[tracking.id] = {
+                    'id': tracking.id,
+                    'changed_field': tracking.field_desc,
+                    'old_value': tracking.get_old_display_value()[0],
+                    'new_value': tracking.get_new_display_value()[0],
+                    'field_type': tracking.field_type,
+                }
 
         # 4. Update message dictionaries
         for message_dict in messages:
@@ -487,14 +489,7 @@ class Message(models.Model):
                     'moderation_status': 'pending_moderation'
                 }
         """
-        message_values = self.read([
-            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
-            'model', 'res_id', 'record_name',  # document related
-            'channel_ids', 'partner_ids',  # recipients
-            'starred_partner_ids',  # list of partner ids for whom the message is starred
-            'moderation_status',
-        ])
+        message_values = self.read(self._get_message_format_fields())
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
@@ -527,6 +522,17 @@ class Message(models.Model):
         return message_values
 
     @api.multi
+    def _get_message_format_fields(self):
+        return [
+            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
+            'message_type', 'subtype_id', 'subject',  # message specific
+            'model', 'res_id', 'record_name',  # document related
+            'channel_ids', 'partner_ids',  # recipients
+            'starred_partner_ids',  # list of partner ids for whom the message is starred
+            'moderation_status',
+        ]
+
+    @api.multi
     def _format_mail_failures(self):
         """
         A shorter message to notify a failure update
@@ -534,6 +540,16 @@ class Message(models.Model):
         failures_infos = []
         # for each channel, build the information header and include the logged partner information
         for message in self:
+            # Check if user has access to the record before displaying a notification about it.
+            # In case the user switches from one company to another, it might happen that he doesn't
+            # have access to the record related to the notification. In this case, we skip it.
+            if message.model and message.res_id:
+                record = self.env[message.model].browse(message.res_id)
+                try:
+                    record.check_access_rights('read')
+                    record.check_access_rule('read')
+                except AccessError:
+                    continue
             info = {
                 'message_id': message.id,
                 'record_name': message.record_name,
@@ -543,7 +559,7 @@ class Message(models.Model):
                 'model': message.model,
                 'last_message_date': message.date,
                 'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
-                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids)
+                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids.sudo())
             }
             failures_infos.append(info)
         return failures_infos
@@ -1069,6 +1085,9 @@ class Message(models.Model):
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
+                if active is False:
+                    # avoid to notify inactive partner by email (odoobot)
+                    continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))

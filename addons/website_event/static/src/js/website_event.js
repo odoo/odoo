@@ -1,27 +1,9 @@
-odoo.define('website_event.registration_form.instance', function (require) {
-'use strict';
-
-require('web_editor.ready');
-var EventRegistrationForm = require('website_event.website_event');
-
-var $form = $('#registration_form');
-if (!$form.length) {
-    return null;
-}
-
-var instance = new EventRegistrationForm();
-return instance.appendTo($form).then(function () {
-    return instance;
-});
-});
-
-//==============================================================================
-
 odoo.define('website_event.website_event', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
@@ -54,7 +36,7 @@ var EventRegistrationForm = Widget.extend({
             $('<div class="alert alert-info"/>')
                 .text(_t('Please select at least one ticket.'))
                 .insertAfter('#registration_form table');
-            return $.Deferred();
+            return new Promise(function () {});
         } else {
             $button.attr('disabled', true);
             return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
@@ -71,6 +53,19 @@ var EventRegistrationForm = Widget.extend({
                 });
             });
         }
+    },
+});
+
+publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend({
+    selector: '#registration_form',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        var instance = new EventRegistrationForm(this);
+        return Promise.all([def, instance.appendTo(this.$el)]);
     },
 });
 

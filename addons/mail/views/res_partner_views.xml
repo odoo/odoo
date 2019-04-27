@@ -64,8 +64,10 @@
         <record id="email_template_partner" model="mail.template">
             <field name="name">Partner Mass Mail</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="auto_delete" eval="True"/>
             <field name="partner_to">${object.id}</field>
+            <field name="user_signature" eval="True"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
         </record>
 
         <!-- Add mail-defined activity view to standard action on partners to manage activities related to partner model -->

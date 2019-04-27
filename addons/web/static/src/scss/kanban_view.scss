@@ -1,4 +1,3 @@
-
 // ------- Kanban View Layout -------
 .o_kanban_view {
     display: flex;
@@ -102,7 +101,7 @@
             .oe_kanban_bottom_left, .oe_kanban_bottom_right {
                 display: flex;
                 align-items: center;
-                height: 20px;
+                min-height: 20px;
             }
             .oe_kanban_bottom_left {
                 flex: 1 1 auto;
@@ -197,13 +196,13 @@
         .o_dropdown_kanban {
             @include o-position-absolute($o-kanban-inside-vgutter, $o-kanban-inside-hgutter);
             visibility: hidden;
+            margin: (-$o-kanban-inside-vgutter) (-$o-kanban-inside-hgutter) 0 0;
             @include media-breakpoint-down(sm) {
                 visibility: visible;
             }
 
             .dropdown-toggle {
                 @include o-kanban-dropdown;
-                margin: (-$o-kanban-inside-vgutter - 1px) (-$o-kanban-inside-hgutter - 1px) 0 0;
             }
             &.show .dropdown-toggle {
                 @include o-kanban-dropdown-open;
@@ -564,6 +563,124 @@
     @include o-kanban-record-color;
 
     .oe_kanban_color_help {
-        @include o-position-absolute(0, 5px, 0, -1px);
+        @include o-position-absolute(0, auto, 0, -1px);
+        width: $o-kanban-color-border-width;
+        z-index: 1; // show the title over kanban color
+    }
+}
+
+// ------- Kanban with SearchPanel -------
+$o-searchpanel-p: $o-horizontal-padding;
+$o-searchpanel-p-small: $o-horizontal-padding*0.5;
+$o-searchpanel-p-tiny: $o-searchpanel-p-small*0.5;
+
+$o-searchpanel-category-default-color: $o-brand-primary;
+$o-searchpanel-filter-default-color: #D59244;
+
+.o_kanban_with_searchpanel {
+    display: flex;
+    align-items: flex-start;
+
+    .o_kanban_view {
+        flex: 1 1 100%;
+        overflow: auto; // make the kanban renderer and search panel scroll individually
+        max-height: 100%;
+    }
+    .o_search_panel {
+        flex: 0 0 220px;
+        overflow: auto;
+        height: 100%;
+        padding: $o-searchpanel-p-small $o-searchpanel-p-small $o-searchpanel-p*2 $o-searchpanel-p;
+        border-right: 1px solid $gray-300;
+        background-color: white;
+
+        .o_search_panel_category .o_search_panel_section_icon {
+            color: $o-brand-odoo;
+        }
+        .o_search_panel_filter .o_search_panel_section_icon {
+            color: $o-searchpanel-filter-default-color;
+        }
+
+        .o_search_panel_label {
+            cursor: pointer;
+            user-select: none;
+
+            .o_toggle_fold {
+                padding: 3px;
+            }
+        }
+        .o_search_panel_section_header {
+            padding: $o-searchpanel-p-small 0;
+        }
+        .list-group-item {
+            padding: 0 0 $o-searchpanel-p-small 0;
+
+            .list-group-item {
+                padding: 0 0 0 $custom-control-gutter;
+                margin-bottom: $o-searchpanel-p-tiny*0.5;
+                &:first-child {
+                    margin-top: $o-searchpanel-p-tiny*0.5;
+                }
+            }
+            span.o_search_panel_label_title {
+                color: $headings-color;
+                @include o-text-overflow(inline-block, calc(100% - 22px));
+            }
+            header.active {
+                background-color: $list-group-action-active-bg;
+            }
+        }
+        .o_search_panel_category_value {
+            header {
+                margin-left: -$o-searchpanel-p-tiny;
+                padding-left: $o-searchpanel-p-tiny;
+            }
+            .o_search_panel_category_value {
+                position: relative;
+                padding-left: $o-searchpanel-p;
+                padding-bottom: $o-searchpanel-p-tiny;
+                margin-bottom: 0;
+
+                &:before, &:after {
+                    @include o-position-absolute(0, $left: $o-searchpanel-p-tiny);
+                    @include size(1px, 100%);
+                    background: $gray-500;
+                    content: '';
+                }
+                &:after {
+                    top: 10px;
+                    @include size(8px, 1px);
+                }
+                &:last-child {
+                    &:before {
+                        height: 11px;
+                    }
+                    &:after {
+                        top: 11px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ----------------- Set Cover Dialog -----------------
+.modal .o_kanban_cover_container .o_kanban_cover_image {
+    display: inline-block;
+    position: relative;
+    height: 120px;
+    width: 120px;
+    margin: 10px;
+    cursor: pointer;
+    outline: 2px solid transparent;
+    box-shadow: 0px 0px 1px 1px #ccc;
+    &.o_selected {
+        outline-color: $o-brand-primary;
+    }
+    > img {
+        @include o-position-absolute(0, 0, 0, 0);
+        margin: auto;
+        max-height: 100%;
+        max-width: 100%;
     }
 }

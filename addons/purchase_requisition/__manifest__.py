@@ -2,7 +2,7 @@
 {
     'name': 'Purchase Agreements',
     'version': '0.1',
-    'category': 'Purchases',
+    'category': 'Purchase',
     'description': """
 This module allows you to manage your Purchase Agreements.
 ===========================================================
@@ -11,7 +11,7 @@ Manage calls for tenders and blanket orders. Calls for tenders are used to get
 competing offers from different vendors and select the best ones. Blanket orders
 are agreements you have with vendors to benefit from a predetermined pricing.
 """,
-    'depends': ['purchase_stock'],
+    'depends': ['purchase'],
     'demo': ['data/purchase_requisition_demo.xml'],
     'data': [
         'security/purchase_requisition_security.xml',

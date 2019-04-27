@@ -81,10 +81,11 @@ class MrpStockReport(models.TransientModel):
         res_model = ''
         ref = ''
         res_id = False
-        if move_line.picking_id:
+        picking_id = move_line.picking_id or move_line.move_id.picking_id
+        if picking_id:
             res_model = 'stock.picking'
-            res_id = move_line.picking_id.id
-            ref = move_line.picking_id.name
+            res_id = picking_id.id
+            ref = picking_id.name
         elif move_line.move_id.inventory_id:
             res_model = 'stock.inventory'
             res_id = move_line.move_id.inventory_id.id

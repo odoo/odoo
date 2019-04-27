@@ -18,6 +18,7 @@ var _t = core._t;
 var qweb = core.qweb;
 
 var KanbanController = BasicController.extend({
+    buttons_template: 'KanbanView.buttons',
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         quick_create_add_column: '_onAddColumn',
         quick_create_record: '_onQuickCreateRecord',
@@ -32,19 +33,41 @@ var KanbanController = BasicController.extend({
         kanban_load_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
+        search_panel_domain_updated: '_onSearchPanelDomainUpdated',
+    }),
+    events: _.extend({}, BasicController.prototype.events, {
+        click: '_onClick',
     }),
     /**
      * @override
      * @param {Object} params
      * @param {boolean} params.quickCreateEnabled set to false to disable the
      *   quick create feature
+     * @param {SearchPanel} [params.searchPanel]
+     * @param {Array[]} [params.controlPanelDomain=[]] initial domain coming
+     *   from the controlPanel
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
         this.quickCreateEnabled = params.quickCreateEnabled;
+
+        // the following attributes are used when there is a searchPanel
+        this._searchPanel = params.searchPanel;
+        this.controlPanelDomain = params.controlPanelDomain || [];
+        this.searchPanelDomain = this._searchPanel ? this._searchPanel.getDomain() : [];
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (this._searchPanel) {
+            this.$('.o_content')
+                .addClass('o_kanban_with_searchpanel')
+                .prepend(this._searchPanel.$el);
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -53,18 +76,46 @@ var KanbanController = BasicController.extend({
 
     /**
      * @param {jQueryElement} $node
+     * @returns {Promise}
      */
     renderButtons: function ($node) {
         if (this.hasButtons && this.is_action_enabled('create')) {
-            this.$buttons = $(qweb.render('KanbanView.buttons', {
+            this.$buttons = $(qweb.render(this.buttons_template, {
                 btnClass: 'btn-primary',
                 widget: this,
             }));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onButtonNew.bind(this));
-            this.$buttons.on('keydown',this._onButtonsKeyDown.bind(this));
+            this.$buttons.on('keydown', this._onButtonsKeyDown.bind(this));
             this._updateButtons();
-            this.$buttons.appendTo($node);
+            return Promise.resolve(this.$buttons.appendTo($node));
         }
+        return Promise.resolve();
+    },
+    /**
+     * Override to add the domain coming from the searchPanel (if any) to the
+     * domain coming from the controlPanel.
+     *
+     * @override
+     */
+    update: function (params) {
+        if (!this._searchPanel) {
+            return this._super.apply(this, arguments);
+        }
+        var self = this;
+        if (params.domain) {
+            this.controlPanelDomain = params.domain;
+        }
+        // do not re-render the view as soon as records have been fetched,  but
+        // wait for the searchPanel to be ready as well, such that the view
+        // isn't re-rendered before the searchPanel
+        params.noRender = true;
+        params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
+        var superProm = this._super.apply(this, arguments);
+        var searchPanelProm = this._updateSearchPanel();
+        return Promise.all([superProm, searchPanelProm]).then(function () {
+            // searchPanel has been re-rendered, so re-render the view
+            return self.renderer.render();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -75,7 +126,7 @@ var KanbanController = BasicController.extend({
      * @override method comes from field manager mixin
      * @private
      * @param {string} id local id from the basic record data
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmSave: function (id) {
         var data = this.model.get(this.handle, {raw: true});
@@ -85,6 +136,16 @@ var KanbanController = BasicController.extend({
             return this.renderer.updateColumn(columnState.id, columnState);
         }
         return this.renderer.updateRecord(this.model.get(id));
+    },
+    /**
+     * Only display the pager in the ungrouped case, with data.
+     *
+     * @override
+     * @private
+     */
+    _isPagerVisible: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        return !!(state.count && !state.groupedBy.length);
     },
     /**
      * @private
@@ -148,7 +209,7 @@ var KanbanController = BasicController.extend({
     /**
      * @param {number[]} ids
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _resequenceColumns: function (ids) {
         var state = this.model.get(this.handle, {raw: true});
@@ -163,7 +224,7 @@ var KanbanController = BasicController.extend({
      * @private
      * @param {string} column_id
      * @param {string[]} ids
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _resequenceRecords: function (column_id, ids) {
         var self = this;
@@ -195,6 +256,13 @@ var KanbanController = BasicController.extend({
             this.$buttons.find('.o-kanban-button-new').toggleClass('o_hidden', createHidden);
         }
     },
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _updateSearchPanel: function () {
+        return this._searchPanel.update({searchDomain: this.controlPanelDomain});
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -210,15 +278,17 @@ var KanbanController = BasicController.extend({
      */
     _onAddColumn: function (ev) {
         var self = this;
-        this.model.createGroup(ev.data.value, this.handle).then(function () {
-            var state = self.model.get(self.handle, {raw: true});
-            var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
-            return self._resequenceColumns(ids);
-        }).then(function () {
-            return self.update({}, {reload: false});
-        }).then(function () {
-            self._updateButtons();
-            self.renderer.quickCreateToggleFold();
+        this.mutex.exec(function () {
+            return self.model.createGroup(ev.data.value, self.handle).then(function () {
+                var state = self.model.get(self.handle, {raw: true});
+                var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
+                return self._resequenceColumns(ids);
+            }).then(function () {
+                return self.update({}, {reload: false});
+            }).then(function () {
+                self._updateButtons();
+                self.renderer.quickCreateToggleFold();
+            });
         });
     },
     /**
@@ -238,7 +308,7 @@ var KanbanController = BasicController.extend({
                             self.renderer.updateColumn(db_id, data);
                         });
                     });
-            }).fail(this.reload.bind(this, {}));
+            }).guardedCatch(this.reload.bind(this));
     },
     /**
      * @private
@@ -271,11 +341,16 @@ var KanbanController = BasicController.extend({
      * @private
      */
     _onButtonNew: function () {
+        var self = this;
         var state = this.model.get(this.handle, {raw: true});
         var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
         if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
-            // Activate the quick create in the first column
-            this.renderer.addQuickCreate();
+            // activate the quick create in the first column when the mutex is
+            // unlocked, to ensure that there is no pending re-rendering that
+            // would remove it (e.g. if we are currently adding a new column)
+            this.mutex.getUnlockedDef().then(function () {
+                self.renderer.addQuickCreate();
+            });
         } else if (this.on_create && this.on_create !== 'quick_create') {
             // Execute the given action
             this.do_action(this.on_create, {
@@ -303,6 +378,23 @@ var KanbanController = BasicController.extend({
         }
     },
     /**
+     * Bounce the 'Create' button.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     **/
+    _onClick: function (ev) {
+        var state = this.model.get(this.handle, {raw: true});
+        if (!state.count && this.buttons) {
+            var classesList = ['o_kanban_view', 'o_kanban_group', 'o_column_quick_create', 'o_view_nocontent_smiling_face'];
+            var $target = $(ev.target);
+            var hasClassList = _.map(classesList, function(klass){ return $target.hasClass(klass) });
+            if (_.some(hasClassList)) {
+                this.$buttons.find('.o-kanban-button-new').odooBounce();
+            }
+        }
+    },
+    /**
      * @private
      * @param {OdooEvent} ev
      */
@@ -320,13 +412,8 @@ var KanbanController = BasicController.extend({
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
             .deleteRecords([column.db_id], relatedModelName)
-            .done(function () {
-                if (column.isEmpty()) {
-                    self.renderer.removeWidget(column);
-                    self._updateButtons();
-                } else {
-                    self.reload();
-                }
+            .then(function () {
+                self.update({}, {reload: !column.isEmpty()});
             });
     },
     /**
@@ -340,11 +427,12 @@ var KanbanController = BasicController.extend({
         var self = this;
         this.model.loadColumnRecords(ev.data.columnID).then(function (dbID) {
             var data = self.model.get(dbID);
-            self.renderer.updateColumn(dbID, data);
-            self._updateEnv();
-            if (ev.data.onSuccess) {
-                ev.data.onSuccess();
-            }
+            return self.renderer.updateColumn(dbID, data).then(function() {
+                self._updateEnv();
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            });
         });
     },
     /**
@@ -395,8 +483,8 @@ var KanbanController = BasicController.extend({
 
         this.model.createRecordInGroup(column.db_id, values)
             .then(update)
-            .fail(function (error, ev) {
-                ev.preventDefault();
+            .guardedCatch(function (reason) {
+                reason.event.preventDefault();
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
@@ -434,6 +522,15 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.domain the current domain of the searchPanel
+     */
+    _onSearchPanelDomainUpdated: function (ev) {
+        this.searchPanelDomain = ev.data.domain;
+        this.reload({offset: 0});
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
      * @param {boolean} [ev.data.openQuickCreate=false] if true, opens the
      *   QuickCreate in the toggled column (it assumes that we are opening it)
      */
@@ -454,11 +551,15 @@ var KanbanController = BasicController.extend({
      *
      * @private
      * @param {OdooEvent} ev
+     * @param {function} [ev.data.onSuccess] callback to execute after applying
+     *   changes
      */
     _onUpdateRecord: function (ev) {
+        var onSuccess = ev.data.onSuccess;
+        delete ev.data.onSuccess;
         var changes = _.clone(ev.data);
         ev.data.force_save = true;
-        this._applyChanges(ev.target.db_id, changes, ev);
+        this._applyChanges(ev.target.db_id, changes, ev).then(onSuccess);
     },
     /**
      * Allow the user to archive/restore all the records of a column.

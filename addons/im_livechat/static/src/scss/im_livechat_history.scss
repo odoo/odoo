@@ -1,4 +1,6 @@
 .o_history_container{
+    table-layout: fixed;
+    width: 200% !important;
     > tbody > tr > td {
         padding: 0px !important;
     }
@@ -9,9 +11,17 @@
                 flex-flow: column;
                 max-height:500px;
                 overflow:auto;
+                padding:2px 0px;
+                .rounded-circle {
+                    width:32px;
+                    height: 32px;
+                }
                 .o_kanban_record {
+                    padding: 0px 8px;
+                    margin: -1px 8px;
                     min-width: 300px;
                     width: 98%;
+                    word-break: break-all;
                 }
             }
             .oe_module_vignette {
@@ -21,7 +31,7 @@
                 padding-top: 8px;
             }
             .oe_module_desc {
-                padding: 8px 8px 8px 70px;
+                padding: 8px 8px 0px 64px;
             }
         }
 

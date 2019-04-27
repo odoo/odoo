@@ -68,13 +68,13 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function(actions) {
+    run: function (actions) {
         actions.click();
-        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
-            actions.click();    // close dropdown
+            actions.click(); // close dropdown
         }
     },
 }, {
@@ -211,7 +211,6 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     trigger: ".breadcrumb-item:first",
-    extra_trigger: ".o_form_readonly", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t("Use the breadcrumbs to <b>go back to products</b>."),
     position: "bottom"
 }, {
@@ -234,13 +233,13 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function(actions) {
+    run: function (actions) {
         actions.click();
-        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
-            actions.click();    // close dropdown
+            actions.click(); // close dropdown
         }
     },
 }, {
@@ -326,44 +325,69 @@ tour.register('main_flow_tour', {
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".o_field_widget[name=product_id] input",
+    /**
+     * We need both triggers because the "sale_product_configurator" module replaces the
+     * "product_id" field with a "product_template_id" field.
+     * This selector will still only ever select one element.
+     */
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",
-    run: "text the_flow.product",
+    run: function (actions) {
+        actions.text("the_flow.product", this.$anchor);
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been loaded
+        $descriptionElement.change(function () {
+            if ($(this).val().indexOf('the_flow.product') !== -1){
+                $(this).addClass('product_loading_success');
+            }
+        });
+    },
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.product')",
-    auto: true,
-    in_modal: false,
-    run: function (actions) {
-        actions.auto();
-        // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
-        }
-    },
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_loading_success',
+    run: function () {} // wait for product loading
 }, {
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".o_field_widget[name=product_id] input",
-    // the one2many may be editable or not according to the modules installed, so
-    // we have to handle both cases
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, .modal-dialog',
+    /**
+     * We need both triggers because the "sale_product_configurator" module replaces the
+     * "product_id" field with a "product_template_id" field.
+     * This selector will still only ever select one element.
+     */
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product"),
     position: "right",
-    run: "text the_flow.service",
+    run: function (actions) {
+        actions.text("the_flow.service", this.$anchor);
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been loaded
+        $descriptionElement.change(function () {
+            if ($(this).val().indexOf('the_flow.service') !== -1){
+                $(this).addClass('product_service_loading_success');
+            }
+        });
+    },
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.service')",
-    auto: true,
-    in_modal: false,
-    run: function (actions) {
-        actions.auto();
-        // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
-        }
-    },
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_service_loading_success',
+    run: function () {} // wait for product loading
+}, {
+    trigger: 'label:contains("Untaxed Amount")',
+    // click somewhere else to exit cell focus
 }, {
     trigger: ".o_statusbar_buttons > button.o_sale_print:enabled",
     content: _t("<p><b>Print this quotation.</b></p>"),
@@ -513,14 +537,7 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
-    content: _t("Select Journal"),
-    position: "bottom",
-    run: 'text(Bank (USD))',
-}, {
     trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=payment_method_id]", // FIXME: Wait onchange
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -551,7 +568,7 @@ tour.register('main_flow_tour', {
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Check availability')",
+    trigger: ".o_statusbar_buttons > button[name='action_assign']:enabled",
     content: _t("Check availability"),
     position: "bottom",
 }, {
@@ -686,27 +703,10 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_field_widget[name=create_or_link_option] .o_radio_input[data-value="link"]',
-    content: _t('Link to existing journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
     trigger: ".o_field_widget[name=acc_number]",
     content: _t("Enter an account number"),
     position: "right",
     run: "text 867656544",
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=linked_journal_id] input",
-    extra_trigger: ".modal-dialog",
-    content: _t("Select Journal"),
-    position: "bottom",
-    run: 'text Bank',
-}, {
-    edition: "enterprise",
-    trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal:false,
 }, {
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
@@ -753,7 +753,6 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=name]",
-    extra_trigger: ".o_selected_row .o_field_widget[name=partner_id] .o_external_button", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t('Let\'s enter a name.'),
     position: "bottom",
     run: "text the_flow.statement.line",
@@ -774,21 +773,8 @@ tour.register('main_flow_tour', {
     position: "right",
 }, {
     edition: "enterprise",
-    trigger: ".button_close_statement",
+    trigger: ".button_back_to_statement",
     content: _t('<p><b>Close this statement.</p>'),
     position: "bottom",
 }]);
 });
-
-/*
- * [*] FIXME: issue in tour_manager:
- *     The JQuery element of a step is registered as soon as its trigger and
- *     extra_trigger elements are visible in the DOM, but it's action is delayed
- *     to handle the 'running_step_delay' option (0 by default, but even with 0,
- *     the action is executed after finishing the current execution block, which
- *     may produce a re-rendering of the part of the DOM containing the element).
- *     When this happens, the action is executed on an jquery element not present
- *     in the DOM anymore.
- *     To avoid this, we add an 'extra_trigger' to wait for the updated jquery
- *     element before activating the step (and thus registering the JQuery element).
- */

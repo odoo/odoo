@@ -67,14 +67,14 @@ var FilterMenu = DropdownMenu.extend({
      * Add a proposition inside the custom filter edition menu.
      *
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _appendProposition: function () {
         // make modern sear_filters code!!! It works but...
         var prop = new search_filters.ExtendedSearchProposition(this, this.fields);
         this.propositions.push(prop);
         this.$('.o_apply_filter').prop('disabled', false);
-        prop.insertBefore(this.$addFilterMenu);
+        return prop.insertBefore(this.$addFilterMenu);
     },
     /**
      * Confirm a filter proposition, creates it and add it to the menu.
@@ -89,8 +89,6 @@ var FilterMenu = DropdownMenu.extend({
                 domain: Domain.prototype.arrayToString(preFilter.attrs.domain),
             };
         });
-        // TO DO intercepts 'new_filters' and decide what to do whith filters
-        //  rewrite web.search_filters?
         this.trigger_up('new_filters', {filters: filters});
         _.invoke(this.propositions, 'destroy');
         this.propositions = [];

@@ -14,6 +14,7 @@ import uuid
 import itertools
 from dateutil.relativedelta import relativedelta
 from functools import partial
+from difflib import HtmlDiff
 from operator import itemgetter
 
 import json
@@ -205,10 +206,18 @@ class View(models.Model):
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
-    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)
-    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture')
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
-    arch_fs = fields.Char(string='Arch Filename')
+    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
+                       help="""This field should be used when accessing view arch. It will use translation.
+                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
+    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
+                            help="This field is the same as `arch` field without translations")
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+                          help="This field stores the view arch.")
+    arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
+                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")
+    arch_updated = fields.Boolean(string='Modified Architecture')
+    arch_prev = fields.Text(string='Previous View Architecture', help="""This field will save the current `arch_db` before writing on it.
+                                                                         Useful to (soft) reset a broken view.""")
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
@@ -238,7 +247,7 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
 
-    @api.depends('arch_db', 'arch_fs')
+    @api.depends('arch_db', 'arch_fs', 'arch_updated')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -251,7 +260,9 @@ actual arch.
         for view in self:
             arch_fs = None
             xml_id = view.xml_id or view.key
-            if 'xml' in config['dev_mode'] and view.arch_fs and xml_id:
+            read_file = self._context.get('read_arch_from_file') or \
+                ('xml' in config['dev_mode'] and not view.arch_updated)
+            if read_file and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
@@ -272,6 +283,7 @@ actual arch.
                 path_info = get_resource_from_path(self._context['install_filename'])
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
+                    data['arch_updated'] = False
             view.write(data)
 
     @api.depends('arch')
@@ -283,6 +295,18 @@ actual arch.
     def _inverse_arch_base(self):
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
+
+    @api.multi
+    def reset_arch(self, mode='soft'):
+        for view in self:
+            arch = False
+            if mode == 'soft':
+                arch = view.arch_prev
+            elif mode == 'hard' and view.arch_fs:
+                arch = view.with_context(read_arch_from_file=True).arch
+            if arch:
+                # Don't save current arch in previous since we reset, this arch is probably broken
+                view.with_context(no_save_prev=True).write({'arch_db': arch})
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -394,7 +418,10 @@ actual arch.
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:
-            values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
+            # Do not automatically change the mode if the view already has an inherit_id,
+            # and the user change it to another.
+            if not values['inherit_id'] or all(not view.inherit_id for view in self):
+                values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
     @api.model_create_multi
@@ -419,6 +446,8 @@ actual arch.
                     values['key'] = "%s.gen_key_%s" % (values.get('model'), str(uuid.uuid4())[:6])
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
+            # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
+            values['arch_prev'] = values.get('arch_base') or values.get('arch_db') or values.get('arch')
             values.update(self._compute_defaults(values))
 
         self.clear_caches()
@@ -426,10 +455,10 @@ actual arch.
 
     @api.multi
     def write(self, vals):
-        # If view is modified we remove the arch_fs information thus activating the arch_db
-        # version. An `init` of the view will restore the arch_fs for the --dev mode
+        # Keep track if view was modified. That will be useful for the --dev mode
+        # to prefer modified arch over file arch.
         if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
-            vals['arch_fs'] = False
+            vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -438,6 +467,8 @@ actual arch.
             custom_view.unlink()
 
         self.clear_caches()
+        if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
+            vals['arch_prev'] = self.arch_db
         return super(View, self).write(self._compute_defaults(vals))
 
     def unlink(self):
@@ -763,18 +794,19 @@ actual arch.
         [view_data] = root.read(fields=fields)
         view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
         if not root.inherit_id:
+            if self._context.get('inherit_branding'):
+                view_arch.attrib.update({
+                    'data-oe-model': 'ir.ui.view',
+                    'data-oe-id': str(root.id),
+                    'data-oe-field': 'arch',
+                })
             arch_tree = view_arch
         else:
+            if self._context.get('inherit_branding'):
+                self.inherit_branding(view_arch, root.id, root.id)
             parent_view = root.inherit_id.read_combined(fields=fields)
             arch_tree = etree.fromstring(parent_view['arch'])
             arch_tree = self.apply_inheritance_specs(arch_tree, view_arch, parent_view['id'])
-
-        if self._context.get('inherit_branding'):
-            arch_tree.attrib.update({
-                'data-oe-model': 'ir.ui.view',
-                'data-oe-id': str(root.id),
-                'data-oe-field': 'arch',
-            })
 
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
@@ -877,6 +909,30 @@ actual arch.
                 field = model_fields.get(node.get('name'))
                 if field:
                     orm.transfer_field_to_modifiers(field, modifiers)
+
+        elif node.tag == 'groupby':
+            # groupby nodes should be considered as nested view because they may
+            # contain fields on the comodel
+            field = Model._fields.get(node.get('name'))
+            if field:
+                if field.type != 'many2one':
+                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                attrs = fields.setdefault(node.get('name'), {})
+                children = False
+                # move all children nodes into a new node <groupby>
+                groupby_node = E.groupby()
+                for child in list(node):
+                    node.remove(child)
+                    groupby_node.append(child)
+                # validate the new node as a nested view, and associate it to the field
+                xarch, xfields = self.with_context(
+                    base_model_name=model,
+                    view_is_editable=False,
+                ).postprocess_and_fields(field.comodel_name, groupby_node, view_id)
+                attrs['views'] = {'groupby': {
+                    'arch': xarch,
+                    'fields': xfields,
+                }}
 
         elif node.tag in ('form', 'tree'):
             result = Model.view_header_get(False, node.tag)
@@ -1012,7 +1068,7 @@ actual arch.
             if node.tag in VIEW_TYPES:
                 # determine whether this view is editable
                 editable = editable and self._view_is_editable(node)
-            elif node.tag == 'field':
+            elif node.tag in ('field', 'groupby'):
                 # determine whether the field is editable
                 field = model._fields.get(node.get('name'))
                 if field:
@@ -1026,7 +1082,7 @@ actual arch.
                 elif key == 'attrs':
                     process_attrs(val, get, key, val)
 
-            if node.tag == 'field' and field and field.relational:
+            if node.tag in ('field', 'groupby') and field and field.relational:
                 if editable and not node.get('domain'):
                     domain = field._description_domain(self.env)
                     # process the field's domain as if it was in the view
@@ -1161,8 +1217,7 @@ actual arch.
         arch = self.browse(view_id).read_combined(['arch'])['arch']
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
-        root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='unicode')
+        arch = etree.tostring(arch_tree, encoding='unicode')
         return arch
 
     @api.model
@@ -1174,6 +1229,9 @@ actual arch.
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
+
+        This method could return the ID of something that is not a view (when
+        using fallback to `xmlid_to_res_id`).
         """
         if isinstance(template, int):
             return template
@@ -1190,6 +1248,7 @@ actual arch.
     def _contains_branded(self, node):
         return node.tag == 't'\
             or 't-raw' in node.attrib\
+            or 't-call' in node.attrib\
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
     def _pop_view_branding(self, element):
@@ -1441,3 +1500,78 @@ actual arch.
                 view._check_xml()
             except Exception as e:
                 self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+
+
+class ResetViewArchWizard(models.TransientModel):
+    """ A wizard to reset views architecture. """
+    _name = "reset.view.arch.wizard"
+    _description = "Reset View Architecture Wizard"
+
+    def _default_view_id(self):
+        view_id = self._context.get('active_model') == 'ir.ui.view' and self._context.get('active_id') or []
+        return view_id
+
+    view_id = fields.Many2one('ir.ui.view', string='View', default=_default_view_id)
+    view_name = fields.Char(related='view_id.name', string='View Name')
+    arch_diff = fields.Html(string='Architecture Diff', compute='_compute_arch_diff', readonly=True, sanitize_tags=False)
+    reset_mode = fields.Selection([
+        ('soft', 'Restore previous version (soft reset).'),
+        ('hard', 'Reset to file version (hard reset).')
+    ], string='Reset Mode', default='soft', required=True, help="You might want to try a soft reset first.")
+
+    @api.one
+    @api.depends('reset_mode', 'view_id')
+    def _compute_arch_diff(self):
+        ''' Return the differences between the current view arch and either its
+        previous or initial arch, depending of `reset_mode` (soft/hard).
+        The diff will be returned in an HTML table like on github.com.
+        '''
+        def handle_style(html_diff):
+            ''' The HtmlDiff lib will add some usefull classes on the DOM to
+            identify elements. Simply replace those classes by BS4 ones.
+            For the table to fit the modal width, some custom style is needed.
+            '''
+            to_replace = {
+                'diff_header': 'diff_header bg-600 text-center align-top px-2',
+                'diff_next': 'd-none',
+                'diff_add': 'bg-success',
+                'diff_chg': 'bg-warning',
+                'diff_sub': 'bg-danger',
+                'nowrap': '',
+            }
+            for old, new in to_replace.items():
+                html_diff = html_diff.replace(old, new)
+            html_diff += '''
+                <style>
+                    table.diff { width: 100%; }
+                    table.diff .diff_header { white-space: nowrap; }
+                    table.diff th.diff_header { width: 50%; }
+                    table.diff td { word-break: break-all; }
+                </style>
+            '''
+            return html_diff
+
+        soft = self.reset_mode == 'soft'
+        arch_to_compare = False
+        if soft:
+            arch_to_compare = self.view_id.arch_prev
+        elif not soft and self.view_id.arch_fs:
+            arch_to_compare = self.view_id.with_context(read_arch_from_file=True).arch
+
+        diff = False
+        if arch_to_compare:
+            diff = HtmlDiff(tabsize=2).make_table(
+                arch_to_compare.splitlines(),
+                self.view_id.arch.splitlines(),
+                _("Previous Arch") if soft else _("File Arch"),
+                _("Current Arch"),
+                context=True,  # Show only diff lines, not all the code
+            )
+            diff = handle_style(diff)
+        self.arch_diff = diff
+
+    @api.multi
+    def reset_view_button(self):
+        self.ensure_one()
+        self.view_id.reset_arch(self.reset_mode)
+        return {'type': 'ir.actions.act_window_close'}

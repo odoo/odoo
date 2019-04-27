@@ -73,6 +73,7 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': cls.prod_att_1.id,
+                'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id])]
             })]
         })
         cls.product_7 = Product.create({

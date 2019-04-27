@@ -36,8 +36,8 @@
         </record>
 
         <record model="product.pricelist" id="product.list0">
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="selectable" eval="True" />
+            <field name="website_id" eval="False"/>
         </record>
     </data>
     <data>
@@ -53,8 +53,9 @@
         </function>
 
         <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_key">create_customer</field>
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Customer</field>
+            <field name="website_form_label">Create a Customer</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>res.partner</value>

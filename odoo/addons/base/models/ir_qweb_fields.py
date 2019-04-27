@@ -224,6 +224,7 @@ class DateTimeConverter(models.AbstractModel):
             format=dict(type='string', string=_('Pattern to format')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
+            date_only=dict(type='boolean', string=_('Display only the date')),
         )
         return options
 
@@ -244,6 +245,8 @@ class DateTimeConverter(models.AbstractModel):
         else:
             if options and options.get('time_only'):
                 strftime_pattern = (u"%s" % (lang.time_format))
+            elif options and options.get('date_only'):
+                strftime_pattern = (u"%s" % (lang.date_format))
             else:
                 strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
 
@@ -643,7 +646,7 @@ class Contact(models.AbstractModel):
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
         opsep = options and options.get('separator') or "\n"
         value = value.sudo().with_context(show_address=True)
-        name_get = value.display_name
+        name_get = value.name_get()[0][1]
 
         val = {
             'name': name_get.split("\n")[0],
@@ -658,7 +661,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options'))
+        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options', dict()))
 
 
 class QwebView(models.AbstractModel):

@@ -115,7 +115,7 @@ class Currency(models.Model):
         fractional_value = int(parts[2] or 0)
 
         lang_code = self.env.context.get('lang') or self.env.user.lang
-        lang = self.env['res.lang'].search([('code', '=', lang_code)])
+        lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
                         amt_word=self.currency_unit_label,
@@ -134,11 +134,7 @@ class Currency(models.Model):
            :param float amount: the amount to round
            :return: rounded float
         """
-        # TODO: Need to check why it calls round() from sale.py, _amount_all() with *No* ID after below commits,
-        # https://github.com/odoo/odoo/commit/36ee1ad813204dcb91e9f5f20d746dff6f080ac2
-        # https://github.com/odoo/odoo/commit/0b6058c585d7d9a57bd7581b8211f20fca3ec3f7
-        # Removing self.ensure_one() will make few test cases to break of modules event_sale, sale_mrp and stock_dropshipping.
-        #self.ensure_one()
+        self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
     @api.multi
@@ -162,6 +158,7 @@ class Currency(models.Model):
 
            With the new API, call it like: ``currency.compare_amounts(amount1, amount2)``.
         """
+        self.ensure_one()
         return tools.float_compare(amount1, amount2, precision_rounding=self.rounding)
 
     @api.multi
@@ -177,6 +174,7 @@ class Currency(models.Model):
 
            With the new API, call it like: ``currency.is_zero(amount)``.
         """
+        self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model

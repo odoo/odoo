@@ -31,7 +31,7 @@ var KioskMode = AbstractAction.extend({
             });
         // Make a RPC call every day to keep the session alive
         self._interval = window.setInterval(this._callServer.bind(this), (60*60*1000*24));
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.all([def, this._super.apply(this, arguments)]);
     },
 
     _onBarcodeScanned: function(barcode) {
@@ -69,7 +69,7 @@ var KioskMode = AbstractAction.extend({
 
     _callServer: function () {
         // Make a call to the database to avoid the auto close of the session
-        return ajax.rpc("/web/webclient/version_info", {});
+        return ajax.rpc("/hr_attendance/kiosk_keepalive", {});
     },
 
 });

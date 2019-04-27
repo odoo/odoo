@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         return warehouse_ids
 
     incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterms',
+        'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
@@ -60,17 +60,24 @@ class SaleOrder(models.Model):
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
-                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line')}
+                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
+                order_lines_to_run = self.env['sale.order.line']
                 for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
+                    if order_line not in pre_order_line_qty:
+                        order_lines_to_run |= order_line
+                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
+                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) > 0:
+                        order_lines_to_run |= order_line
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     order._log_decrease_ordered_quantity(documents)
+                if order_lines_to_run:
+                    order_lines_to_run._action_launch_stock_rule(pre_order_line_qty)
         return res
 
     @api.multi
@@ -127,7 +134,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['incoterms_id'] = self.incoterm.id or False
+        invoice_vals['incoterm_id'] = self.incoterm.id or False
         return invoice_vals
 
     @api.model
@@ -153,7 +160,6 @@ class SaleOrder(models.Model):
             return self.env.ref('sale_stock.exception_on_so').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
-
 
 
 class SaleOrderLine(models.Model):
@@ -199,19 +205,6 @@ class SaleOrderLine(models.Model):
         lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
         return lines
 
-    @api.multi
-    def write(self, values):
-        lines = self.env['sale.order.line']
-        if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
-        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
-        res = super(SaleOrderLine, self).write(values)
-        if lines:
-            lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_stock_rule()
-        return res
-
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
         super(SaleOrderLine, self)._compute_invoice_status()
@@ -256,36 +249,55 @@ class SaleOrderLine(models.Model):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        if self.product_id.type == 'product':
+        return self._check_availability(self.product_id)
+
+    def _check_availability(self, product_id):
+        """ The purpose of this method is only to be overriden if
+        'product_id' is a kit
+        """
+        product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+        return self._check_availability_warning(product_id, product_qty)
+
+    def _check_availability_warning(self, product_id, product_qty, ignore_warehouse=False):
+        if product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product = self.product_id.with_context(
+            product_by_wh = product_id.with_context(
                 warehouse=self.order_id.warehouse_id.id,
                 lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
             )
-            product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-            if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
-                is_available = self._check_routing()
+            if float_compare(product_by_wh.virtual_available, product_qty, precision_digits=precision) == -1:
+                is_available = self._check_routing(product_id)
                 if not is_available:
-                    message =  _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
-                            (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                              (self.product_uom_qty, self.product_uom.name, product_id.name,
+                               product_by_wh.virtual_available,
+                               product_by_wh.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
-                    if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
+                    if not ignore_warehouse and float_compare(product_by_wh.virtual_available, product_id.virtual_available,
+                                     precision_digits=precision) == -1:
                         message += _('\nThere are %s %s available across all warehouses.\n\n') % \
-                                (self.product_id.virtual_available, product.uom_id.name)
+                                   (product_id.virtual_available, product_by_wh.uom_id.name)
                         for warehouse in self.env['stock.warehouse'].search([]):
-                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                            quantity = product_id.with_context(warehouse=warehouse.id).virtual_available
                             if quantity > 0:
-                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
+                                message += "%s: %s %s\n" % (warehouse.name, quantity, product_id.uom_id.name)
                     warning_mess = {
                         'title': _('Not enough inventory!'),
-                        'message' : message
+                        'message': message
                     }
                     return {'warning': warning_mess}
         return {}
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # in database. Hence, we need to explicitly read them from there.
+        if self._origin:
+            product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
+        else:
+            product_uom_qty_origin = 0
+
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
             # Do not display this warning if the new quantity is below the delivered
             # one; the `write` will raise an `UserError` anyway.
             if self.product_uom_qty < self.qty_delivered:
@@ -308,7 +320,6 @@ class SaleOrderLine(models.Model):
         date_planned = self.order_id.confirmation_date\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
-            'company_id': self.order_id.company_id,
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned,
@@ -323,7 +334,7 @@ class SaleOrderLine(models.Model):
             })
         return values
 
-    def _get_qty_procurement(self):
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         qty = 0.0
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
@@ -334,18 +345,18 @@ class SaleOrderLine(models.Model):
         return qty
 
     @api.multi
-    def _action_launch_stock_rule(self):
+    def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
         Launch procurement group run method with required/custom fields genrated by a
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        errors = []
+        procurements = []
         for line in self:
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
-            qty = line._get_qty_procurement()
+            qty = line._get_qty_procurement(previous_product_uom_qty)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
@@ -374,13 +385,12 @@ class SaleOrderLine(models.Model):
             line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
-
-            try:
-                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
-            except UserError as error:
-                errors.append(error.name)
-        if errors:
-            raise UserError('\n'.join(errors))
+            procurements.append(self.env['procurement.group'].Procurement(
+                line.product_id, product_qty, procurement_uom,
+                line.order_id.partner_shipping_id.property_stock_customer,
+                line.name, line.order_id.name, line.order_id.company_id, values))
+        if procurements:
+            self.env['procurement.group'].run(procurements)
         return True
 
     @api.multi
@@ -399,14 +409,13 @@ class SaleOrderLine(models.Model):
             }
         return {}
 
-
-    def _check_routing(self):
+    def _check_routing(self, product_id):
         """ Verify the route of the product based on the warehouse
             return True if the product availibility in stock does not need to be verified,
             which is the case in MTO, Cross-Dock or Drop-Shipping
         """
         is_available = False
-        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
+        product_routes = self.route_id or (product_id.route_ids + product_id.categ_id.total_route_ids)
 
         # Check MTO
         wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id

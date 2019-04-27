@@ -1,17 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="mail_activity_type_view_form" model="ir.ui.view">
-        <field name="name">mail.activity.type.form.inherit.calendar</field>
-        <field name="model">mail.activity.type</field>
-        <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='category']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.form.inherit.calendar</field>
         <field name="model">mail.activity</field>
@@ -24,7 +13,7 @@
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_close_dialog']" position="attributes">
-                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_done']" position="attributes">
                   <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('force_next', '=', True)]}</attribute>

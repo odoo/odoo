@@ -6,7 +6,8 @@
         <menuitem
             name='Payments'
             id='root_payment_menu'
-            parent='account.menu_finance_configuration'/>
+            parent='account.menu_finance_configuration'
+            groups='account.group_account_manager'/>
 
         <record id="acquirer_form" model="ir.ui.view">
             <field name="name">payment.acquirer.form</field>
@@ -113,7 +114,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
+                                    <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
                                     <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                 </group>

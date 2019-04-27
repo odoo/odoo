@@ -161,6 +161,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         :param compute_sudo: whether the field should be recomputed as superuser
             to bypass access rights (boolean, by default ``False``)
+            Note that this has no effects on non-stored computed fields
 
         The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::
@@ -560,6 +561,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.inherited and field.required:
             self.required = True
 
+        if self.inherited:
+            self._modules.update(field._modules)
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
@@ -602,7 +606,17 @@ class Field(MetaField('DummyField', (object,), {})):
         #
         values = list(others)
         for name in self.related[:-1]:
-            values = [first(value[name]) for value in values]
+            try:
+                values = [first(value[name]) for value in values]
+            except AccessError as e:
+                description = records.env['ir.model']._get(records._name).name
+                raise AccessError(
+                    _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                        'previous_message': e.args[0],
+                        'document_kind': description,
+                        'document_model': records._name,
+                    }
+                )
         # assign final values to records
         for record, value in zip(records, values):
             record[self.name] = value[self.related_field.name]
@@ -640,13 +654,25 @@ class Field(MetaField('DummyField', (object,), {})):
         return model.env['ir.property'].get(self.name, self.model_name)
 
     def _compute_company_dependent(self, records):
-        Property = records.env['ir.property']
+        # read property as superuser, as the current user may not have access
+        context = records.env.context
+        if 'force_company' not in context:
+            field_id = records.env['ir.model.fields']._get_id(self.model_name, self.name)
+            company = records.env['res.company']._company_default_get(self.model_name, field_id)
+            context = dict(context, force_company=company.id)
+        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
     def _inverse_company_dependent(self, records):
-        Property = records.env['ir.property']
+        # update property as superuser, as the current user may not have access
+        context = records.env.context
+        if 'force_company' not in context:
+            field_id = records.env['ir.model.fields']._get_id(self.model_name, self.name)
+            company = records.env['res.company']._company_default_get(self.model_name, field_id)
+            context = dict(context, force_company=company.id)
+        Property = records.env(user=SUPERUSER_ID, context=context)['ir.property']
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -694,10 +720,16 @@ class Field(MetaField('DummyField', (object,), {})):
         # add indirect dependencies from the dependencies found above
         seen = seen.union([self])
         for model, field, path in list(result):
-            for inv_field in model._field_inverses[field]:
-                inv_model = model0.env[inv_field.model_name]
-                inv_path = None if path is None else path + [field.name]
-                result.append((inv_model, inv_field, inv_path))
+            # Fields that depend on the inverse of a one2many do not explicitly
+            # depend on the one2many. This avoids useless recomputations when
+            # writing on the one2many without actually modifying it. Actual
+            # modifications do write on the inverse, and therefore trigger the
+            # expected recomputations.
+            if field.type in ('one2many', 'many2many'):
+                for inv_field in model._field_inverses[field]:
+                    inv_model = model0.env[inv_field.model_name]
+                    inv_path = None if path is None else path + [field.name]
+                    result.append((inv_model, inv_field, inv_path))
             if not field.store and field not in seen:
                 result += field.resolve_deps(model, path, seen)
 
@@ -772,16 +804,6 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Conversion of values
     #
-
-    def cache_key(self, record):
-        """ Return the key to get/set the value of ``self`` on ``record`` in
-            cache, the full cache key being ``(self, record.id, key)``.
-        """
-        env = record.env
-        # IMPORTANT: odoo.api.Cache.get_records() depends on the fact that the
-        # result does not depend on record.id. If you ever make the following
-        # dependent on record.id, don't forget to fix the other method!
-        return env if self.context_dependent else (env.cr, env.uid)
 
     def null(self, record):
         """ Return the null value for this field in the record format. """
@@ -923,7 +945,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
-            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            try:
+                with model._cr.savepoint():
+                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
         else:
             sql.drop_index(model._cr, indexname, model._table)
 
@@ -1007,10 +1033,12 @@ class Field(MetaField('DummyField', (object,), {})):
                 spec += self.modified_draft(record)
             env.cache.invalidate(spec)
 
-        else:
+        elif (self.store or self.inverse or self.inherited):
             # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
+
+        else:
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
                 record.env.cache.set(record, self, value)
@@ -1726,6 +1754,7 @@ class Datetime(Field):
     def convert_to_export(self, value, record):
         if not value:
             return ''
+        value = self.convert_to_display_name(value, record)
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record):
@@ -1865,6 +1894,7 @@ class Selection(Field):
     <field-incremental-definition>`.
     """
     type = 'selection'
+    column_type = ('varchar', pg_varchar())
     _slots = {
         'selection': None,              # [(value, string), ...], function or method name
         'validate': True,               # whether validating upon write
@@ -1873,18 +1903,12 @@ class Selection(Field):
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    @property
-    def column_type(self):
-        if (self.selection and
-                isinstance(self.selection, list) and
-                isinstance(self.selection[0][0], int)):
-            return ('int4', 'integer')
-        else:
-            return ('varchar', pg_varchar())
-
     def _setup_regular_base(self, model):
         super(Selection, self)._setup_regular_base(model)
         assert self.selection is not None, "Field %s without selection" % self
+        if isinstance(self.selection, list):
+            assert all(isinstance(v, str) for v, _ in self.selection), \
+                "Field %s with non-str value in selection" % self
 
     def _setup_related_full(self, model):
         super(Selection, self)._setup_related_full(model)
@@ -2063,7 +2087,7 @@ class Many2one(_Relational):
     type = 'many2one'
     column_type = ('int4', 'int4')
     _slots = {
-        'ondelete': 'set null',         # what to do when value is deleted
+        'ondelete': None,               # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
         'delegate': False,              # whether self implements delegation
     }
@@ -2076,6 +2100,22 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
+
+    def _setup_regular_base(self, model):
+        super()._setup_regular_base(model)
+        # 3 cases:
+        # 1) The ondelete attribute is not defined, we assign it a sensible default
+        # 2) The ondelete attribute is defined and its definition makes sense
+        # 3) The ondelete attribute is explicitly defined as 'set null' for a required m2o,
+        #    this is considered a programming error.
+        if not self.ondelete:
+            self.ondelete = 'restrict' if self.required else 'set null'
+        if self.ondelete == 'set null' and self.required:
+            raise ValueError(
+                "The m2o field %s of model %s is required but declares its ondelete policy "
+                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name)
+            )
 
     def update_db(self, model, columns):
         comodel = model.env[self.comodel_name]
@@ -2133,7 +2173,8 @@ class Many2one(_Relational):
             return ()
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -2193,6 +2234,11 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        if not isinstance(records, BaseModel):
+            # the inverse of self is a non-relational field; do not update in
+            # this case, as we do not know whether the records are the ones that
+            # value makes reference to (via a res_model/res_id pair)
+            return
         cache = records.env.cache
         for record in records:
             special = cache.get_special(record, self)
@@ -2253,7 +2299,8 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2372,12 +2419,11 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
             invf = comodel._fields[self.inverse_name]
-            # In some rare cases, a ``One2many`` field can link to ``Int`` field
-            # (res_model/res_id pattern). Only inverse the field if this is
-            # a ``Many2one`` field.
             if isinstance(invf, Many2one):
+                # setting one2many fields only invalidates many2one inverses;
+                # integer inverses (res_model/res_id pairs) are not supported
                 model._field_inverses.add(self, invf)
-                comodel._field_inverses.add(invf, self)
+            comodel._field_inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -2432,7 +2478,7 @@ class One2many(_RelationalMulti):
         to_relink = {}                  # lines to relink {line_id: record_id}
 
         def unlink(line_ids):
-            if comodel._fields[inverse].ondelete == 'cascade':
+            if getattr(comodel._fields[inverse], 'ondelete', False) == 'cascade':
                 to_delete.extend(line_ids)
             else:
                 to_relink.update(dict.fromkeys(line_ids, False))
@@ -2501,9 +2547,19 @@ class Many2many(_RelationalMulti):
         :param column2: optional name of the column referring to "those" records
             in the table ``relation`` (string)
 
-        The attributes ``relation``, ``column1`` and ``column2`` are optional. If not
-        given, names are automatically generated from model names, provided
-        ``model_name`` and ``comodel_name`` are different!
+        The attributes ``relation``, ``column1`` and ``column2`` are optional.
+        If not given, names are automatically generated from model names,
+        provided ``model_name`` and ``comodel_name`` are different!
+
+        Note that having several fields with implicit relation parameters on a
+        given model with the same comodel is not accepted by the ORM, since
+        those field would use the same table. The ORM prevents two many2many
+        fields to use the same relation parameters, except if
+
+        - both fields use the same model, comodel, and relation parameters are
+          explicit; or
+
+        - at least one field belongs to a model with ``_auto = False``.
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
@@ -2516,6 +2572,7 @@ class Many2many(_RelationalMulti):
     """
     type = 'many2many'
     _slots = {
+        '_explicit': True,              # whether schema is explicitly given
         'relation': None,               # name of table
         'column1': None,                # column of table referring to model
         'column2': None,                # column of table referring to comodel
@@ -2538,6 +2595,7 @@ class Many2many(_RelationalMulti):
         super(Many2many, self)._setup_regular_base(model)
         if self.store:
             if not (self.relation and self.column1 and self.column2):
+                self._explicit = False
                 # table name is based on the stable alphabetical order of tables
                 comodel = model.env[self.comodel_name]
                 if not self.relation:
@@ -2553,20 +2611,34 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)
         if self.relation:
             m2m = model.pool._m2m
-            # if inverse field has already been setup, it is present in m2m
-            invf = m2m.get((self.relation, self.column2, self.column1))
-            if invf:
-                comodel = model.env[self.comodel_name]
-                model._field_inverses.add(self, invf)
-                comodel._field_inverses.add(invf, self)
-            else:
-                # add self in m2m, so that its inverse field can find it
-                m2m[(self.relation, self.column1, self.column2)] = self
+
+            # check whether other fields use the same schema
+            fields = m2m[(self.relation, self.column1, self.column2)]
+            for field in fields:
+                if (    # same model: relation parameters must be explicit
+                    self.model_name == field.model_name and
+                    self.comodel_name == field.comodel_name and
+                    self._explicit and field._explicit
+                ) or (  # different models: one model must be _auto=False
+                    self.model_name != field.model_name and
+                    not (model._auto and model.env[field.model_name]._auto)
+                ):
+                    continue
+                msg = "Many2many fields %s and %s use the same table and columns"
+                raise TypeError(msg % (self, field))
+            fields.append(self)
+
+            # retrieve inverse fields, and link them in _field_inverses
+            for field in m2m[(self.relation, self.column2, self.column1)]:
+                model._field_inverses.add(self, field)
+                model.env[field.model_name]._field_inverses.add(field, self)
 
     def update_db(self, model, columns):
         cr = model._cr

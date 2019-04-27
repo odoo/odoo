@@ -3,6 +3,8 @@
 
 from odoo import http, fields
 from odoo.http import request
+from odoo.osv import expression
+from odoo.tools import float_round, float_repr
 
 
 class LunchController(http.Controller):
@@ -10,27 +12,23 @@ class LunchController(http.Controller):
     def infos(self, user_id=None):
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        infos = {
-            'order': False,
-            'wallet': request.env['lunch.cashmove'].get_wallet_balance(user),
-            'username': user.sudo().name,
-            'userimage': '/web/image?model=res.users&id=%s&field=image_small' % user.id,
-            'is_manager': request.env.user.has_group('lunch.group_lunch_manager'),
-            'users': request.env['res.users'].search_read([('groups_id', 'not in', [request.env.ref('base.group_portal').id])], ['name']),
-            'alerts': request.env['lunch.alert'].search_read([('available_today', '=', True)], ['message'])
-        }
+        infos = self._make_infos(user, order=False)
 
-        order = self._get_current_order(user.id)
-        if order:
+        lines = self._get_current_lines(user.id)
+        if lines:
             lines = [{'id': line.id,
-                      'product': (line.product_id.name, line.product_id.price),
-                      'toppings': [(topping.name, topping.price) for topping in line.topping_ids],
+                      'product': (line.product_id.id, line.product_id.name, float_repr(float_round(line.product_id.price, 2), 2)),
+                      'toppings': [(topping.name, float_repr(float_round(topping.price, 2), 2))
+                                   for topping in line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3],
                       'quantity': line.quantity,
-                      'price': line.price} for line in order.order_line_ids]
+                      'price': line.price,
+                      'state': line.state, # Only used for _get_state
+                      'note': line.note} for line in lines]
+            raw_state, state = self._get_state(lines)
             infos.update({
-                'order': order.id,
-                'total': order.total,
-                'state': order.state,
+                'total': float_repr(float_round(sum(line['price'] for line in lines), 2), 2),
+                'raw_state': raw_state,
+                'state': state,
                 'lines': lines,
             })
         return infos
@@ -39,19 +37,20 @@ class LunchController(http.Controller):
     def trash(self, user_id=None):
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        order = self._get_current_order(user.id)
-        order.unlink()
+        lines = self._get_current_lines(user.id)
+        lines.action_cancel()
+        lines.unlink()
 
     @http.route('/lunch/pay', type='json', auth='user')
     def pay(self, user_id=None):
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        order = self._get_current_order(user.id)
-        if order:
-            wallet_balance = request.env['lunch.cashmove'].get_wallet_balance(user)
+        lines = self._get_current_lines(user.id)
+        if lines:
+            lines = lines.filtered(lambda line: line.state == 'new')
 
-            if order.state == 'new' and order.total <= wallet_balance:
-                return self._make_payment(order)
+            lines.action_order()
+            return True
 
         return False
 
@@ -59,10 +58,62 @@ class LunchController(http.Controller):
     def payment_message(self):
         return {'message': request.env['ir.qweb'].render('lunch.lunch_payment_dialog', {})}
 
-    def _get_current_order(self, user_id):
-        order = request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today())], limit=1)
-        return order
+    @http.route('/lunch/user_location_set', type='json', auth='user')
+    def set_user_location(self, location_id, user_id=None):
+        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-    def _make_payment(self, order):
-        order.action_order()
+        user.last_lunch_location_id = request.env['lunch.location'].browse(location_id)
         return True
+
+    @http.route('/lunch/user_location_get', type='json', auth='user')
+    def get_user_location(self, user_id=None):
+        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+
+        return user.last_lunch_location_id.id
+
+    def _make_infos(self, user, **kwargs):
+        res = dict(kwargs)
+
+        is_manager = request.env.user.has_group('lunch.group_lunch_manager')
+
+        currency = user.company_id.currency_id
+
+        res.update({
+            'username': user.sudo().name,
+            'userimage': '/web/image?model=res.users&id=%s&field=image_small' % user.id,
+            'wallet': request.env['lunch.cashmove'].get_wallet_balance(user, False),
+            'is_manager': is_manager,
+            'locations': request.env['lunch.location'].search_read([], ['name']),
+            'currency': {'symbol': currency.symbol, 'position': currency.position},
+        })
+
+        user_location = user.last_lunch_location_id if user.last_lunch_location_id else request.env['lunch.location'].search([], limit=1)
+
+        alert_domain = expression.AND([
+            [('available_today', '=', True)],
+            [('location_ids', 'in', user_location.id)],
+        ])
+
+        res.update({
+            'user_location': (user_location.id, user_location.name),
+            'alerts': request.env['lunch.alert'].search_read(alert_domain, ['message']),
+        })
+
+        return res
+
+    def _get_current_lines(self, user_id):
+        return request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today()), ('state', '!=', 'cancelled')])
+
+    def _get_state(self, lines):
+        """
+            This method returns the lowest state of the list of lines
+
+            eg: [confirmed, confirmed, new] will return ('new', 'To Order')
+        """
+        states_to_int = {'new': 0, 'ordered': 1, 'confirmed': 2, 'cancelled': 3}
+        int_to_states = ['new', 'ordered', 'confirmed', 'cancelled']
+        translated_states = dict(request.env['lunch.order']._fields['state']._description_selection(request.env))
+
+        state = int_to_states[min(states_to_int[line['state']] for line in lines)]
+
+        return (state, translated_states[state])

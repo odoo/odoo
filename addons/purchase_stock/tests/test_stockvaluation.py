@@ -391,9 +391,10 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.assertEqual(self.product1.stock_value, 300)
 
         # return the second po
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
@@ -479,8 +480,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'sequence': 8,
         })
 
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.valuation = 'real_time'
 
 
         # Receive 10@10 ; create the vendor bill

@@ -104,6 +104,7 @@ var FormViewDialog = ViewDialog.extend({
         this.readonly = options.readonly;
         this.deletable = options.deletable;
         this.disable_multiple_selection = options.disable_multiple_selection;
+        var oBtnRemove = 'o_btn_remove';
 
         var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
         var readonly = _.isNumber(options.res_id) && options.readonly;
@@ -127,7 +128,7 @@ var FormViewDialog = ViewDialog.extend({
                     text: (multi_select ? _t("Save & Close") : _t("Save")),
                     classes: "btn-primary",
                     click: function () {
-                        this._save().then(self.close.bind(self));
+                        self._save().then(self.close.bind(self));
                     }
                 });
 
@@ -136,7 +137,19 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
+                            self._save()
+                                .then(self.form_view.createRecord.bind(self.form_view, self.parentID))
+                                .then(function () {
+                                    if (!self.deletable) {
+                                        return;
+                                    }
+                                    self.deletable = false;
+                                    self.buttons = self.buttons.filter(function (button) {
+                                        return button.classes.split(' ').indexOf(oBtnRemove) < 0;
+                                    });
+                                    self.set_buttons(self.buttons);
+                                    self.set_title(_t("Create ") + _.str.strRight(self.title, _t("Open: ")));
+                                });
                         },
                     });
                 }
@@ -145,7 +158,7 @@ var FormViewDialog = ViewDialog.extend({
                 if (!multi && this.deletable) {
                     options.buttons.push({
                         text: _t("Remove"),
-                        classes: 'btn-secondary o_btn_remove',
+                        classes: 'btn-secondary ' + oBtnRemove,
                         click: this._remove.bind(this),
                     });
                 }
@@ -170,7 +183,7 @@ var FormViewDialog = ViewDialog.extend({
         var FormView = view_registry.get('form');
         var fields_view_def;
         if (this.options.fields_view) {
-            fields_view_def = $.when(this.options.fields_view);
+            fields_view_def = Promise.resolve(this.options.fields_view);
         } else {
             fields_view_def = this.loadFieldView(this.res_model, this.context, this.options.view_id, 'form');
         }
@@ -200,9 +213,9 @@ var FormViewDialog = ViewDialog.extend({
             if (self.recordID && self.shouldSaveLocally) {
                 self.model.save(self.recordID, {savePoint: true});
             }
-            self.form_view.appendTo(fragment)
+            return self.form_view.appendTo(fragment)
                 .then(function () {
-                    self.opened().always(function () {
+                    self.opened().then(function () {
                         var $buttons = $('<div>');
                         self.form_view.renderButtons($buttons);
                         if ($buttons.children().length) {
@@ -213,7 +226,7 @@ var FormViewDialog = ViewDialog.extend({
                             in_DOM: true,
                         });
                     });
-                    _super();
+                    return _super();
                 });
         });
 
@@ -242,7 +255,7 @@ var FormViewDialog = ViewDialog.extend({
 
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _save: function () {
         var self = this;
@@ -304,6 +317,7 @@ var SelectCreateDialog = ViewDialog.extend({
      * - list_view_options: dict of options to pass to the List View
      * - on_selected: optional callback to execute when records are selected
      * - disable_multiple_selection: true to allow create/select multiple records
+     * - dynamicFilters: filters to add to the searchview
      */
     init: function () {
         this._super.apply(this, arguments);
@@ -318,7 +332,7 @@ var SelectCreateDialog = ViewDialog.extend({
         }
         var self = this;
         var _super = this._super.bind(this);
-        this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
+        return this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
@@ -328,9 +342,8 @@ var SelectCreateDialog = ViewDialog.extend({
                     });
                     self.set_buttons(self.__buttons);
                 });
-                _super();
+                return _super();
             });
-        return this;
     },
 
     setup: function (fieldsViews) {
@@ -346,6 +359,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 controlPanelFieldsView: fieldsViews.search,
             },
             action_buttons: false,
+            dynamicFilters: this.options.dynamicFilters,
             context: this.context,
             domain: domain,
             hasSelectors: !this.options.disable_multiple_selection,

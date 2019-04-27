@@ -202,10 +202,28 @@ class TestFloatPrecision(TransactionCase):
             float_is_zero(0.01, precision_digits=3, precision_rounding=0.01)
 
         with self.assertRaises(AssertionError):
+            float_is_zero(0.0, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_is_zero(0.0, precision_rounding=-0.1)
+
+        with self.assertRaises(AssertionError):
             float_compare(0.01, 0.02, precision_digits=3, precision_rounding=0.01)
 
         with self.assertRaises(AssertionError):
+            float_compare(1.0, 1.0, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_compare(1.0, 1.0, precision_rounding=-0.1)
+
+        with self.assertRaises(AssertionError):
             float_round(0.01, precision_digits=3, precision_rounding=0.01)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_rounding=0.0)
+
+        with self.assertRaises(AssertionError):
+            float_round(1.25, precision_rounding=-0.1)
 
     def test_amount_to_text_10(self):
         """ verify that amount_to_text works as expected """

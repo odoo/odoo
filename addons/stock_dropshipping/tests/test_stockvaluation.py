@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestStockValuation(AccountingTestCase):
@@ -76,7 +76,7 @@ class TestStockValuation(AccountingTestCase):
         self.vendor_bill1.action_invoice_open()
 
         # create the customer invoice
-        self.customer_invoice1_id = self.sale_order1.action_invoice_create()
+        self.customer_invoice1_id = self.sale_order1._create_invoices()
         self.customer_invoice1 = self.env['account.invoice'].browse(self.customer_invoice1_id)
         self.customer_invoice1.action_invoice_open()
 
@@ -270,7 +270,7 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_standard_perpetual_anglosaxon_ordered_return(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
@@ -278,9 +278,10 @@ class TestStockValuation(AccountingTestCase):
         all_amls = self._dropship_product1()
 
         # return what we've done
-        stock_return_picking = self.env['stock.return.picking']\
-            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0])\
-            .create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0

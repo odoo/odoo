@@ -30,6 +30,12 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'security/ir.model.access.csv',
         'data/goal_base.xml',
         'data/badge.xml',
+        'data/gamification_karma_rank_data.xml',
         'views/gamification.xml',
+        'views/gamification_karma_rank_views.xml',
+        'views/mail_templates.xml'
+    ],
+    'demo': [
+        'data/gamification_karma_rank_demo.xml'
     ],
 }

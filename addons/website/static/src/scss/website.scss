@@ -19,6 +19,44 @@ $-font-numbers: (
     }
 }
 
+:root {
+    // The theme customize modal JS will need to know the value of some scss
+    // variables used to render the user website, and those may have been
+    // customized by themes, the user or anything else (so there is no file to
+    // parse to get them). Those will be printed here as CSS variables.
+
+    // 1) Handle default values
+    --header-font-size: #{$font-size-base};
+
+    // 2) The values in the $theme-colors map are already printed by Bootstrap.
+
+    // 3) The values in the $colors map are also printed by Bootstrap.
+
+    // 4) The Odoo values map, $o-website-values, must be printed.
+    @each $key, $value in $o-website-values {
+        --#{$key}: #{$value};
+    }
+
+    // 5) Use final value used by the theme
+    $-h1-color: if($headings-color == inherit or not $headings-color, $body-color, $headings-color);
+    $-h2-color: if(color('h2'), color('h2'), $-h1-color);
+    $-h3-color: if(color('h3'), color('h3'), $-h2-color);
+    $-h4-color: if(color('h4'), color('h4'), $-h3-color);
+    $-h5-color: if(color('h5'), color('h5'), $-h4-color);
+    $-h6-color: if(color('h6'), color('h6'), $-h5-color);
+
+    --body: #{$body-bg};
+    --text: #{$body-color};
+    --h1: #{$-h1-color};
+    --h2: #{$-h2-color};
+    --h3: #{$-h3-color};
+    --h4: #{$-h4-color};
+    --h5: #{$-h5-color};
+    --h6: #{$-h6-color};
+
+    --logo-height: #{$o-theme-navbar-logo-height};
+}
+
 #wrapwrap {
     background-size: cover;
     background-repeat: no-repeat;
@@ -64,6 +102,31 @@ $-font-numbers: (
     }
 }
 
+$-header-nav-link-height: $nav-link-height;
+@if o-website-value('header-font-size') {
+    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+    header {
+        font-size: o-website-value('header-font-size');
+
+        .dropdown-menu {
+            font-size: inherit;
+        }
+    }
+}
+@if $o-theme-navbar-logo-height {
+    // With default values, this makes it slightly bigger than standard
+    // navbar-brand, which is what we want
+    header .navbar-brand {
+        font-size: $o-theme-navbar-logo-height / $line-height-base;
+
+        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
+        &, &.logo {
+            padding-top: $-logo-padding-y;
+            padding-bottom: $-logo-padding-y;
+        }
+    }
+}
+
 .o_footer {
     @if color('footer') {
         @include o-bg-color(color('footer'));
@@ -104,6 +167,7 @@ font[class*='bg-'] {
 
 // Icons
 .fa {
+    font-family: "FontAwesome" !important;
     $size: 3rem;
 
     &.rounded-circle,
@@ -194,8 +258,7 @@ font[class*='bg-'] {
 
 // Probably outdated
 // Lists
-.o_ul_toggle_self,
-.o_ul_toggle_next {
+.o_ul_toggle {
     display: none;
 }
 
@@ -392,8 +455,6 @@ table.table_desc tr td {
 // FAQ
 .s_faq_collapse {
     .accordion .card {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-        margin: 5px 0;
         .card-header {
             cursor: pointer;
             display: inline-block;
@@ -981,15 +1042,22 @@ table.table_desc tr td {
 //
 
 // Header
-#wrapwrap .o_header_affix {
+.o_header_affix {
+    display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 20;
     background: $light;
-    margin-top: -200px;
+    margin-top: -999px;
     transition: margin-top 500ms ease 0s;
+    @include media-breakpoint-down(sm) {
+        .navbar-collapse {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    }
     &.affixed {
-        margin-top: 0px;
+        margin-top: 0px !important; // the default margin-top is adapted in JS
     }
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affix {
@@ -1060,6 +1128,23 @@ table.table_desc tr td {
         }
     }
 }
+// Figure with special style
+.o_figure_relative_layout {
+    position: relative;
+
+    .figure-img {
+        margin-bottom: 0;
+    }
+    .figure-caption {
+        @include o-position-absolute(auto, 0, 0, 0);
+        @include o-bg-color(rgba(theme-color('dark'), $o-theme-figcaption-opacity));
+        padding: $tooltip-padding-y $tooltip-padding-x;
+        font-weight: $font-weight-bold;
+        a {
+            color: inherit;
+        }
+    }
+}
 
 @each $color, $value in $theme-colors {
     .bg-#{$color}-light {
@@ -1069,4 +1154,9 @@ table.table_desc tr td {
 
 @each $media, $color in $o-social-colors {
     @include text-emphasis-variant(".text-#{$media}", $color);
+}
+
+// TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
+.modal-footer > .float-left {
+    margin-right: auto;
 }

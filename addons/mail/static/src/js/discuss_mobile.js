@@ -16,7 +16,7 @@ if (!config.device.isMobile) {
  * Overrides Discuss module in mobile
  */
 Discuss.include({
-    template: 'mail.discuss_mobile',
+    contentTemplate: 'mail.discuss_mobile',
     events: _.extend(Discuss.prototype.events, {
         'click .o_mail_mobile_tab': '_onMobileTabClicked',
         'click .o_mailbox_inbox_item': '_onMobileInboxButtonClicked',
@@ -116,7 +116,7 @@ Discuss.include({
         this._thread = thread;
         if (thread.getType() !== 'mailbox') {
             this.call('mail_service', 'openThreadWindow', threadID);
-            return $.when();
+            return Promise.resolve();
         } else {
             return this._super.apply(this, arguments);
         }
@@ -179,7 +179,7 @@ Discuss.include({
             });
             def = this.call('mail_service', 'getChannelPreviews', channels);
         }
-        return $.when(def).then(function (previews) {
+        return Promise.resolve(def).then(function (previews) {
             // update content
             if (inMailbox) {
                 if (!previouslyInInbox) {

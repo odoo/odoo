@@ -6,6 +6,7 @@ from dateutil import relativedelta
 from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -59,7 +60,7 @@ class Location(models.Model):
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
     removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
-    putaway_strategy_id = fields.Many2one('product.putaway', 'Put Away Strategy', help="Allows to suggest the exact location (shelf) where to store the product.")
+    putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False, oldname='loc_barcode')
     quant_ids = fields.One2many('stock.quant', 'location_id')
 
@@ -134,18 +135,32 @@ class Location(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ search full name and barcode """
-        if args is None:
-            args = []
-        location_ids = self._search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
+        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(location_ids).name_get()
 
-    def get_putaway_strategy(self, product):
+    def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
         current_location = self
         putaway_location = self.env['stock.location']
         while current_location and not putaway_location:
-            if current_location.putaway_strategy_id:
-                putaway_location = current_location.putaway_strategy_id.putaway_apply(product)
+            # Looking for a putaway about the product.
+            putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
+            if putaway_rules:
+                putaway_location = putaway_rules[0].location_out_id
+            # If not product putaway found, we're looking with category so.
+            else:
+                categ = product.categ_id
+                while categ:
+                    putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
+                    if putaway_rules:
+                        putaway_location = putaway_rules[0].location_out_id
+                        break
+                    categ = categ.parent_id
             current_location = current_location.location_id
         return putaway_location
 
@@ -178,9 +193,9 @@ class Route(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('stock.location.route'), index=True,
         help='Leave this field empty if this route is shared between all companies')
-    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products')
-    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
-    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
+    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
+    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses', copy=False)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):

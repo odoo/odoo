@@ -32,6 +32,9 @@ var StatementAction = AbstractAction.extend({
         load_more: '_onLoadMore',
         reload: 'reload',
     },
+    events: {
+        'change .reconciliation_search_input': '_onSearch',
+    },
     config: _.extend({}, AbstractAction.prototype.config, {
         // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
@@ -40,7 +43,7 @@ var StatementAction = AbstractAction.extend({
         // used to instantiate each widget line
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
-        params: ['statement_ids'],
+        params: ['statement_line_ids'],
         // number of statements/partners/accounts to display
         defaultDisplayQty: 10,
         // number of moves lines displayed in 'match' mode
@@ -66,12 +69,12 @@ var StatementAction = AbstractAction.extend({
         // Adding values from the context is necessary to put this information in the url via the action manager so that
         // you can retrieve it if the person shares his url or presses f5
         _.each(params.params, function (value, name) {
-            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(), parseFloat) : value;
+            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(','), parseFloat) : value;
         });
         params.params = {};
         _.each(this.config.params, function (name) {
             if (params.context[name]) {
-                params.params[name] = name.indexOf('_ids') !== -1 && _.isArray(params.context[name]) ? params.context[name].join() : params.context[name];
+                params.params[name] = params.context[name];
             }
         });
     },
@@ -102,7 +105,7 @@ var StatementAction = AbstractAction.extend({
         var self = this;
         _.each(this.widgets, function(widget) {
             widget.destroy();
-        })
+        });
         this.widgets = [];
         this.model.reload()
             .then(function() {
@@ -119,23 +122,26 @@ var StatementAction = AbstractAction.extend({
      */
     start: function () {
         var self = this;
+        var args = arguments;
+        var sup = this._super;
 
-        this.renderer.prependTo(self.$('.o_form_sheet'));
-        this._renderLines();
+        return this.renderer.prependTo(self.$('.o_form_sheet')).then(function() {
+            return self._renderLines().then(function() {
+                // No more lines to reconcile, trigger the rainbowman.
+                var initialState = self.renderer._initialState;
+                if(initialState.valuenow === initialState.valuemax){
+                    initialState.context = self.model.getContext();
+                    self.renderer.showRainbowMan(initialState);
+                }else{
+                    // Create a notification if some lines has been reconciled automatically.
+                    if(initialState.valuenow > 0)
+                        self.renderer._renderNotifications(self.model.statement.notifications);
+                    self._openFirstLine();
+                }
 
-        // No more lines to reconcile, trigger the rainbowman.
-        var initialState = this.renderer._initialState;
-        if(initialState.valuenow === initialState.valuemax){
-            initialState.context = this.model.getContext();
-            this.renderer.showRainbowMan(initialState);
-        }else{
-            // Create a notification if some lines has been reconciled automatically.
-            if(initialState.valuenow > 0)
-                this.renderer._renderNotifications(this.model.statement.notifications);
-            this._openFirstLine();
-        }
-
-        return this._super.apply(this, arguments);
+                return sup.apply(self, args);
+            });
+        });
     },
 
     /**
@@ -173,7 +179,7 @@ var StatementAction = AbstractAction.extend({
     _loadMore: function(qty) {
         var self = this;
         return this.model.loadMore(qty).then(function () {
-            self._renderLines();
+            return self._renderLines();
         });
     },
     /**
@@ -189,7 +195,9 @@ var StatementAction = AbstractAction.extend({
             }))[0];
         if (handle) {
             var line = this.model.getLine(handle);
-            this.model.changeMode(handle, 'match').always(function () {
+            this.model.changeMode(handle, 'match').then(function () {
+                self._getWidget(handle).update(line);
+            }).guardedCatch(function(){
                 self._getWidget(handle).update(line);
             });
         }
@@ -203,11 +211,12 @@ var StatementAction = AbstractAction.extend({
     _renderLines: function () {
         var self = this;
         var linesToDisplay = this.model.getStatementLines();
+        var linePromises = [];
         _.each(linesToDisplay, function (line, handle) {
             var widget = new self.config.LineRenderer(self, self.model, line);
             widget.handle = handle;
             self.widgets.push(widget);
-            widget.appendTo(self.$('.o_reconciliation_lines'));
+            linePromises.push(widget.appendTo(self.$('.o_reconciliation_lines')));
         });
         if (this.model.hasMoreLines() === false) {
             this.renderer.hideLoadMoreButton(true);
@@ -215,6 +224,7 @@ var StatementAction = AbstractAction.extend({
         else {
             this.renderer.hideLoadMoreButton(false);
         }
+        return Promise.all(linePromises);
     },
 
     //--------------------------------------------------------------------------
@@ -234,7 +244,7 @@ var StatementAction = AbstractAction.extend({
         var handle = event.target.handle;
         var line = this.model.getLine(handle);
         var mode = line.mode;
-        this.model[_.str.camelize(event.name)](handle, event.data.data).always(function () {
+        this.model[_.str.camelize(event.name)](handle, event.data.data).then(function () {
             self._getWidget(handle).update(line);
             if (mode === 'inactive' && line.mode !== 'inactive') {
                 _.each(self.model.lines, function (line, _handle) {
@@ -248,6 +258,16 @@ var StatementAction = AbstractAction.extend({
                 });
             }
         });
+    },
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSearch: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        this.reload();
     },
 
     _onActionPartialAmount: function(event) {
@@ -288,7 +308,7 @@ var StatementAction = AbstractAction.extend({
         return this.model.closeStatement().then(function (result) {
             self.do_action({
                 name: 'Bank Statements',
-                res_model: 'account.bank.statement',
+                res_model: 'account.bank.statement.line',
                 res_id: result,
                 views: [[false, 'form']],
                 type: 'ir.actions.act_window',
@@ -307,7 +327,7 @@ var StatementAction = AbstractAction.extend({
     },
     /**
      * call 'validate' model method then destroy the
-     * validated lines and update the action renderer with the new status bar 
+     * validated lines and update the action renderer with the new status bar
      * values and notifications then open the first available line
      *
      * @private
@@ -316,8 +336,7 @@ var StatementAction = AbstractAction.extend({
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var method = 'validate';
-        this.model[method](handle).then(function (result) {
+        this.model.validate(handle).then(function (result) {
             self.renderer.update({
                 'valuenow': self.model.valuenow,
                 'valuemax': self.model.valuemax,
@@ -332,7 +351,7 @@ var StatementAction = AbstractAction.extend({
                 self.widgets.splice(index, 1);
             });
             // Get number of widget and if less than constant and if there are more to laod, load until constant
-            if (self.widgets.length < self.model.defaultDisplayQty 
+            if (self.widgets.length < self.model.defaultDisplayQty
                 && self.model.valuemax - self.model.valuenow >= self.model.defaultDisplayQty) {
                 var toLoad = self.model.defaultDisplayQty - self.widgets.length;
                 self._loadMore(toLoad);

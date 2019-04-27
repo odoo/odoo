@@ -36,14 +36,35 @@ $o-social-colors: (
     'twitter': #55ACEE,
     'linkedin': #0077B5,
     'google-plus': #DD4B39,
+    'youtube': #ff0000,
+    'github': #1a1e22,
+    'instagram': #cf2872,
 );
+
+$o-theme-figcaption-opacity: 0.6;
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'logo-height': null, // Default to navbar height (see portal)
+        'header-font-size': null, // Default to BS (normal font-size)
+    ),
+) !default;
+$o-website-values-palette-number: 1 !default;
+
+// By default, all user website values are null. Each null value is
+// automatically replaced with corresponsing value of chosen values palette.
+$o-user-website-values: () !default;
 
 //------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
 
 $o-theme-fonts: (
-    (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"), // This is BS default
+    (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"), // This is BS default
     ('Open Sans', sans-serif),
     ('Source Sans Pro', sans-serif),
     ('Raleway', sans-serif),

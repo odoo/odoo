@@ -21,7 +21,7 @@ WebsiteNewMenu.include({
      * it and redirects the user to this new post.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewBlogPost: function () {
         return this._rpc({
@@ -30,7 +30,7 @@ WebsiteNewMenu.include({
         }).then(function (blog_ids) {
             if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
-                return $.Deferred();
+                return new Promise(function () {});
             } else if (blog_ids.length > 1) {
                 return wUtils.prompt({
                     id: 'editor_new_blog',
@@ -39,12 +39,13 @@ WebsiteNewMenu.include({
                     init: function (field) {
                         return blog_ids;
                     },
-                }).then(function (blog_id) {
+                }).then(function (result) {
+                    var blog_id = result.val;
                     if (!blog_id) {
                         return;
                     }
                     document.location = '/blog/' + blog_id + '/post/new';
-                    return $.Deferred();
+                    return new Promise(function () {});
                 });
             }
         });
@@ -58,15 +59,15 @@ odoo.define('website_blog.editor', function (require) {
 'use strict';
 
 require('web.dom_ready');
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 var options = require('web_editor.snippets.options');
-var rte = require('web_editor.rte');
+var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 
 if (!$('.website_blog').length) {
-    return $.Deferred().reject("DOM doesn't contain '.website_blog'");
+    return Promise.reject("DOM doesn't contain '.website_blog'");
 }
 
-rte.Class.include({
+WysiwygMultizone.include({
     /**
      * @override
      */
@@ -82,14 +83,14 @@ rte.Class.include({
     /**
      * @override
      */
-    _saveElement: function ($el, context) {
+    _saveElement: function (outerHTML, recordInfo, editable) {
         var defs = [this._super.apply(this, arguments)];
         // TODO the o_dirty class is not put on the right element for blog cover
         // edition. For some strange reason, it was forcly put (even if not
         // dirty) in <= saas-16 but this is not the case anymore.
-        var $blogContainer = $el.closest('.o_blog_cover_container');
+        var $blogContainer = $(editable).closest('.o_blog_cover_container');
         if (!this.__blogCoverSaved && $blogContainer.length) {
-            $el = $blogContainer;
+            var $el = $blogContainer;
             this.__blogCoverSaved = true;
             defs.push(this._rpc({
                 route: '/blog/post_change_background',
@@ -97,14 +98,14 @@ rte.Class.include({
                     post_id: parseInt($el.closest('[name="blog_post"], .website_blog').find('[data-oe-model="blog.post"]').first().data('oe-id'), 10),
                     cover_properties: {
                         'background-image': $el.children('.o_blog_cover_image').css('background-image').replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
-                        'background-color': $el.data('filterColor'),
-                        'opacity': $el.data('filterValue'),
-                        'resize_class': $el.data('coverClass'),
+                        'background-color': $el.attr('data-filterColor'),
+                        'opacity': $el.attr('data-filterValue'),
+                        'resize_class': $el.attr('data-coverClass'),
                     },
                 },
             }));
         }
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 
@@ -180,7 +181,7 @@ options.registry.blog_cover = options.Class.extend({
         var editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
             firstFilters: ['background']
-        }, $image, $image[0]).open();
+        }, $image[0]).open();
         editor.on('save', this, function (event, img) {
             var src = $image.attr('src');
             this.$image.css('background-image', src ? ('url(' + src + ')') : '');
@@ -244,9 +245,9 @@ options.registry.blog_cover = options.Class.extend({
                 return self.$filter.hasClass($(this).data('filterColor'));
             }).addClass('active').data('filterColor');
 
-        this.$target.data('coverClass', this.$el.find('.active[data-select-class]').data('selectClass') || '');
-        this.$target.data('filterValue', activeFilterValue || 0.0);
-        this.$target.data('filterColor', activeFilterColor || '');
+        this.$target.attr('data-coverClass', this.$el.find('.active[data-select-class]').data('selectClass') || '');
+        this.$target.attr('data-filterValue', activeFilterValue || 0.0);
+        this.$target.attr('data-filterColor', activeFilterColor || '');
     },
 });
 });

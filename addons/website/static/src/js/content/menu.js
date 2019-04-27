@@ -2,9 +2,10 @@ odoo.define('website.content.menu', function (require) {
 'use strict';
 
 var dom = require('web.dom');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
+var wUtils = require('website.utils');
 
-sAnimation.registry.affixMenu = sAnimation.Class.extend({
+publicWidget.registry.affixMenu = publicWidget.Widget.extend({
     selector: 'header.o_affix_enabled',
 
     /**
@@ -12,9 +13,6 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         var self = this;
         this.$headerClone = this.$target.clone().addClass('o_header_affix affix').removeClass('o_affix_enabled');
@@ -23,6 +21,11 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$dropdowns = this.$headers.find('.dropdown');
         this.$navbarCollapses = this.$headers.find('.navbar-collapse');
 
+        this._adaptDefaultOffset();
+        wUtils.onceAllImagesLoaded(this.$headerClone).then(function () {
+            self._adaptDefaultOffset();
+        });
+
         // Handle events for the collapse menus
         _.each(this.$headerClone.find('[data-toggle="collapse"]'), function (el) {
             var $source = $(el);
@@ -30,6 +33,12 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
             var $target = self.$headerClone.find(targetIDSelector);
             $source.attr('data-target', targetIDSelector + '_clone');
             $target.attr('id', targetIDSelector.substr(1) + '_clone');
+        });
+        // While scrolling through navbar menus, body should not be scrolled with it
+        this.$headerClone.find('div.navbar-collapse').on('show.bs.collapse', function () {
+            $(document.body).addClass('overflow-hidden');
+        }).on('hide.bs.collapse', function () {
+            $(document.body).removeClass('overflow-hidden');
         });
 
         // Window Handlers
@@ -50,6 +59,24 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptDefaultOffset: function () {
+        var bottom = this.$target.offset().top + this._getHeaderHeight();
+        this.$headerClone.css('margin-top', Math.min(-200, -bottom) + 'px');
+    },
+    /**
+     * @private
+     */
+    _getHeaderHeight: function () {
+        return this.$headerClone.outerHeight();
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -60,6 +87,10 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
      * @private
      */
     _onWindowUpdate: function () {
+        if (this.$navbarCollapses.hasClass('show')) {
+            return;
+        }
+
         var wOffset = $(window).scrollTop();
         var hOffset = this.$target.scrollTop();
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
@@ -76,7 +107,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
  * Note: this works well with the affixMenu... by chance (autohideMenu is called
  * after alphabetically).
  */
-sAnimation.registry.autohideMenu = sAnimation.Class.extend({
+publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     selector: 'header #top_menu',
 
     /**
@@ -88,16 +119,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
         this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
         if (!this.noAutohide) {
             var $navbar = this.$el.closest('.navbar');
-            _.each($navbar.find('img'), function (img) {
-                if (img.complete) {
-                    return; // Already loaded
-                }
-                var def = $.Deferred();
-                defs.push(def);
-                $(img).one('load', function () {
-                    def.resolve();
-                });
-            });
+            defs.push(wUtils.onceAllImagesLoaded($navbar));
 
             // The previous code will make sure we wait for images to be fully
             // loaded before initializing the auto more menu. But in some cases,
@@ -110,7 +132,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
                 $window.trigger('resize');
             });
         }
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             if (!self.noAutohide) {
                 dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
             }
@@ -135,7 +157,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
  *
  * @todo check bootstrap v4: maybe handled automatically now ?
  */
-sAnimation.registry.menuDirection = sAnimation.Class.extend({
+publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
     events: {
         'show.bs.dropdown': '_onDropdownShow',

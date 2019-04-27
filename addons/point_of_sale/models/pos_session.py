@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -9,6 +10,7 @@ class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
     _description = 'Point of Sale Session'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -19,15 +21,11 @@ class PosSession(models.Model):
 
     def _confirm_orders(self):
         for session in self:
-            company_id = session.config_id.journal_id.company_id.id
-            orders = session.order_ids.filtered(lambda order: order.state == 'paid')
-            journal_id = self.env['ir.config_parameter'].sudo().get_param(
-                'pos.closing.journal_id_%s' % company_id, default=session.config_id.journal_id.id)
-            if not journal_id:
+            journal = session.config_id.journal_id
+            if not journal:
                 raise UserError(_("You have to set a Sale Journal for the POS:%s") % (session.config_id.name,))
-
-            move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, int(journal_id), company_id)
-            orders.with_context(force_company=company_id)._create_account_move_line(session, move)
+            orders = session.order_ids.filtered(lambda order: order.state == 'paid')
+            orders.with_context(force_company=journal.company_id.id)._create_account_move_line(session)
             for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
                 if order.state not in ('paid'):
                     raise UserError(
@@ -160,6 +158,14 @@ class PosSession(models.Model):
             ]) > 1:
             raise ValidationError(_("Another session is already opened for this point of sale."))
 
+    @api.constrains('start_at')
+    def _check_start_date(self):
+        for record in self:
+            company = record.config_id.journal_id.company_id
+            start_date = record.start_at.date()
+            if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
+                raise ValidationError(_("You cannot create a session before the accounting lock date."))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
@@ -183,11 +189,13 @@ class PosSession(models.Model):
         # define some cash journal if no payment method exists
         if not pos_config.journal_ids:
             Journal = self.env['account.journal']
-            journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('type', '=', 'cash')])
+            journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('type', '=', 'cash'), ('company_id', '=', pos_config.company_id.id)])
             if not journals:
-                journals = Journal.with_context(ctx).search([('type', '=', 'cash')])
+                journals = Journal.with_context(ctx).search([('type', '=', 'cash'), ('company_id', '=', pos_config.company_id.id)])
                 if not journals:
-                    journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
+                    journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('company_id', '=', pos_config.company_id.id)])
+            if not journals:
+                raise ValidationError(_("No payment method configured! \nEither no Chart of Account is installed or no payment method is configured for this POS."))
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
 
@@ -274,7 +282,8 @@ class PosSession(models.Model):
         # Close CashBox
         for session in self:
             company_id = session.config_id.company_id.id
-            ctx = dict(self.env.context, force_company=company_id, company_id=company_id)
+            ctx = dict(self.env.context, force_company=company_id, company_id=company_id, default_partner_type='customer')
+            ctx_notrack = dict(ctx, mail_notrack=True)
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
@@ -282,7 +291,8 @@ class PosSession(models.Model):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The journal type for your payment method should be bank or cash."))
-                st.with_context(ctx).sudo().button_confirm_bank()
+                st.with_context(ctx_notrack).sudo().button_confirm_bank()
+                session.activity_unlink(['point_of_sale.mail_activity_old_session'])
         self.with_context(ctx)._confirm_orders()
         self.write({'state': 'closed'})
         return {
@@ -334,3 +344,24 @@ class PosSession(models.Model):
             action['res_id'] = cashbox_id
 
         return action
+
+    @api.model
+    def _alert_old_session(self):
+        # If the session is open for more then one week,
+        # log a next activity to close the session.
+        sessions = self.search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
+        for session in sessions:
+            if self.env['mail.activity'].search_count([('res_id', '=', session.id), ('res_model', '=', 'pos.session')]) == 0:
+                session.activity_schedule('point_of_sale.mail_activity_old_session',
+                        user_id=session.user_id.id, note=_("Your PoS Session is open since ") + fields.Date.to_string(session.start_at)
+                        + _(", we advise you to close it and to create a new one."))
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        self.env['pos.session']._alert_old_session()
+        if use_new_cursor:
+            self.env.cr.commit()

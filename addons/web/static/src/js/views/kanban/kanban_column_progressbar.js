@@ -30,7 +30,6 @@ var KanbanColumnProgressBar = Widget.extend({
         this.fieldName = columnState.progressBarValues.field;
         this.colors = columnState.progressBarValues.colors;
         this.sumField = columnState.progressBarValues.sum_field;
-        this.progressBarHelp = columnState.progressBarValues.help;
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
@@ -131,13 +130,6 @@ var KanbanColumnProgressBar = Widget.extend({
                 }
             },
         });
-        if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
-            this.$el.tooltip({
-                delay: 0,
-                trigger: 'hover',
-                title: this.progressBarHelp,
-            });
-        }
 
         // Display and animate the progress bars
         var barNumber = 0;

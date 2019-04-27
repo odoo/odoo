@@ -4,10 +4,12 @@
 import hashlib
 import hmac
 import logging
+import lxml
 import random
 import re
 import threading
 from ast import literal_eval
+from base64 import b64encode
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -25,6 +27,10 @@ MASS_MAILING_BUSINESS_MODELS = [
     'mail.mass_mailing.list',
     'mail.mass_mailing.contact'
 ]
+
+# Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
+# Used to find inline images
+image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailingTag(models.Model):
@@ -312,9 +318,9 @@ class MassMailingCampaign(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
         required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source',
-            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter'))
+            help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter', False))
     medium_id = fields.Many2one('utm.medium', string='Medium',
-            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
+            help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email', False))
     tag_ids = fields.Many2many(
         'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
@@ -451,18 +457,21 @@ class MassMailing(models.Model):
         return res
 
     active = fields.Boolean(default=True)
+    subject = fields.Char('Subject', help='Subject of emails to send', required=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', sanitize_attributes=False)
+    # don't translate 'body_arch', the translations are only on 'body_html'
+    body_arch = fields.Html(string='Body', translate=False)
+    body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
     campaign_id = fields.Many2one('utm.campaign', string='Campaign',
                                   help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', string='Subject', required=True, ondelete='cascade',
+    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', string='Medium',
                                 help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
@@ -620,7 +629,11 @@ class MassMailing(models.Model):
         else:
             mailing_domain.append((0, '=', 1))
         self.mailing_domain = repr(mailing_domain)
-        self.body_html = "on_change_model_and_list"
+
+    @api.onchange('subject')
+    def _onchange_subject(self):
+        if self.subject and not self.name:
+            self.name = self.subject
 
     #------------------------------------------------------
     # Technical stuff
@@ -629,8 +642,14 @@ class MassMailing(models.Model):
     @api.model
     def name_create(self, name):
         """ _rec_name is source_id, creates a utm.source instead """
-        mass_mailing = self.create({'name': name})
+        mass_mailing = self.create({'name': name, 'subject': name})
         return mass_mailing.name_get()[0]
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name') and not vals.get('subject'):
+            vals['subject'] = vals['name']
+        return super(MassMailing, self).create(vals)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -661,6 +680,53 @@ class MassMailing(models.Model):
                 record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
                 if len(record_lists) > 0:
                     record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
+
+    @api.model
+    def create(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).create(values)
+
+    def write(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).write(values)
+
+    def _convert_inline_images_to_urls(self, body_html):
+        """
+        Find inline base64 encoded images, make an attachement out of
+        them and replace the inline image with an url to the attachement.
+        """
+
+        def _image_to_url(b64image: bytes):
+            """Store an image in an attachement and returns an url"""
+            attachment = self.env['ir.attachment'].create({
+                'name': "cropped_image",
+                'datas': b64image,
+                'datas_fname': "cropped_image_mailing_{}".format(self.id),
+                'type': 'binary',})
+
+            attachment.generate_access_token()
+
+            return '/web/image/%s?access_token=%s' % (
+                attachment.id, attachment.access_token)
+
+
+        modified = False
+        root = lxml.html.fromstring(body_html)
+        for node in root.iter('img'):
+            match = image_re.match(node.attrib.get('src', ''))
+            if match:
+                mime = match.group(1)  # unsed
+                image = match.group(2).encode()  # base64 image as bytes
+
+                node.attrib['src'] = _image_to_url(image)
+                modified = True
+
+        if modified:
+            return lxml.html.tostring(root)
+
+        return body_html
 
     #------------------------------------------------------
     # Views & Actions
@@ -716,6 +782,12 @@ class MassMailing(models.Model):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
         failed_mails.mapped('statistics_ids').unlink()
         failed_mails.sudo().unlink()
+        res_ids = self.get_recipients()
+        except_mailed = self.env['mail.mail.statistics'].search([
+            ('model', '=', self.mailing_model_real),
+            ('res_id', 'in', res_ids),
+            ('exception', '!=', False),
+            ('mass_mailing_id', '=', self.id)]).unlink()
         self.write({'state': 'in_queue'})
 
     def action_view_sent(self):
@@ -779,11 +851,26 @@ class MassMailing(models.Model):
             _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
         return opt_out
 
+    def _get_convert_links(self):
+        self.ensure_one()
+        utm_mixin = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
+        vals = {'mass_mailing_id': self.id}
+
+        if self.mass_mailing_campaign_id:
+            vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
+        if utm_mixin.campaign_id:
+            vals['campaign_id'] = utm_mixin.campaign_id.id
+        if utm_mixin.source_id:
+            vals['source_id'] = utm_mixin.source_id.id
+        if utm_mixin.medium_id:
+            vals['medium_id'] = utm_mixin.medium_id.id
+        return vals
+
     def _get_seen_list(self):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
-        mail_field = 'email' if 'email' in target._fields else 'email_from'
+
         # avoid loading a large number of records in memory
         # + use a basic heuristic for extracting emails
         query = """
@@ -792,6 +879,28 @@ class MassMailing(models.Model):
               JOIN %(target)s t ON (s.res_id = t.id)
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
         """
+
+        # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
+        if 'partner_id' in target._fields:
+            mail_field = 'email'
+            query = """
+                SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                  FROM mail_mail_statistics s
+                  JOIN %(target)s t ON (s.res_id = t.id)
+                  JOIN res_partner p ON (t.partner_id = p.id)
+                 WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+            """
+        elif issubclass(type(target), self.pool['mail.address.mixin']):
+            mail_field = 'email_normalized'
+        elif 'email_from' in target._fields:
+            mail_field = 'email_from'
+        elif 'partner_email' in target._fields:
+            mail_field = 'partner_email'
+        elif 'email' in target._fields:
+            mail_field = 'email'
+        else:
+            raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
+
         if self.mass_mailing_campaign_id.unique_ab_testing:
             query +="""
                AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;
@@ -814,6 +923,7 @@ class MassMailing(models.Model):
         return {
             'mass_mailing_opt_out_list': self._get_opt_out_list(),
             'mass_mailing_seen_list': self._get_seen_list(),
+            'post_convert_links': self._get_convert_links(),
         }
 
     def get_recipients(self):
@@ -855,14 +965,11 @@ class MassMailing(models.Model):
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
-            # Convert links in absolute URLs before the application of the shortener
-            mailing.body_html = self.env['mail.thread']._replace_local_links(mailing.body_html)
-
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.convert_links()[mailing.id],
-                'subject': mailing.name,
+                'body': mailing.body_html,
+                'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
                 'record_name': False,

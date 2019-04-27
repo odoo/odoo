@@ -9,6 +9,8 @@
                 <search string="Links">
                     <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="title"/>
+                    <group expand="0" string="Group By">
+                    </group>
                 </search>
             </field>
         </record>
@@ -83,6 +85,21 @@
         </record>
 
         <!-- LINK.TRACKER.CLICK -->
+        <record id="link_tracker_click_view_search" model="ir.ui.view">
+            <field name="name">link.tracker.click.view.search</field>
+            <field name="model">link.tracker.click</field>
+            <field name="arch" type="xml">
+                <search string="Clicks">
+                    <field name="link_id"/>
+                    <field name="country_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Link" name="groupby_link_id" domain="[]" context="{'group_by': 'link_id'}"/>
+                        <filter string="Country" name="groupby_country_id" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="link_tracker_click_view_form" model="ir.ui.view">
             <field name="name">link.tracker.click.view.form</field>
             <field name="model">link.tracker.click</field>
@@ -115,7 +132,7 @@
             <field name="name">link.tracker.click.view.graph</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <graph string="Link Clicks">
+                <graph string="Link Clicks" type="pie">
                     <field name="link_id"/>
                     <field name="ip"/>
                     <field name="country_id"/>
@@ -126,7 +143,7 @@
         <record id="link_tracker_click_action_statistics" model="ir.actions.act_window">
             <field name="name">Click Statistics</field>
             <field name="res_model">link.tracker.click</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">graph,tree,form</field>
             <field name="domain">[]</field>
         </record>
 

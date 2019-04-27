@@ -5,11 +5,11 @@
     <t t-call="web_editor.snippet_options"/>
     <t t-raw="0"/>
 
-    <div data-js="sizing_x"
+    <div data-js="mass_mailing_sizing_x"
         data-selector="img, .mv, .col_mv, td, th"
         data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
 
-    <div data-js="table_item"
+    <div data-js="mass_mailing_table_item"
         data-selector="td, th"
         data-exclude=".o_mail_no_options"/>
 
@@ -29,17 +29,17 @@
         data-drop-near=".col_mv, td, th"/>
 
     <div data-js="content"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, .oe_snippet_body"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body"
         data-exclude=".o_mail_no_options"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
 
     <div data-js="sizing_y"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td, th"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
         data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
 
     <div data-js="colorpicker"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td, th"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>

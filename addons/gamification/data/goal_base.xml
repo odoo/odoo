@@ -5,9 +5,9 @@
         <!--Email template -->
         
         <record id="email_template_goal_reminder" model="mail.template">
-            <field name="name">Reminder for Goal Update</field>
+            <field name="name">Goal: Reminder for Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
-            <field name="lang">${object.user_id.lang}</field>
+            <field name="partner_to">${object.user_id.partner_id.id}</field>
             <field name="body_html" type="html">
 <div>
     <strong>Reminder ${object.name}</strong><br/>
@@ -19,10 +19,13 @@ Thank you,
     ${object.challenge_id.manager_id.signature | safe}
     % endif
 </div></field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
         </record>
         
         <record id="simple_report_template" model="mail.template">
-            <field name="name">Simple Challenge Report Progress</field>
+            <field name="name">Challenge: Simple Challenge Report Progress</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
             <field name="body_html" type="html">
 <table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">

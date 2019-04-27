@@ -3,14 +3,17 @@
 # * account_tax_python
 # 
 # Translators:
+# Yaroslav Molochko <onorua@gmail.com>, 2018
 # Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -39,12 +42,12 @@ msgid ""
 msgstr ""
 "Обчислити суму податку, встановивши змінну \"результат\".\n"
 "\n"
-":param base_amount: плаваюча, фактична сума, на яку застосовується податок\n"
-":paramр price_unit: плаваюча\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":параметр сума_ балансу: плаваюча, фактична сума, на яку застосовується податок\n"
+":параметр вартість_ одиниці: плаваюча\n"
+":параметр кількість: плаваюча\n"
+":параметр компанія: рек.компанія компанії запис одиничної вартості \n"
+":параметр товар: товар.товар  запис одиничної вартості або нічого\n"
+":параметр партнер: рез. партнер  запис одиничної вартості або нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -59,12 +62,11 @@ msgid ""
 msgstr ""
 "Обчислити суму податку, встановивши змінну \"результат\".\n"
 "\n"
-":param base_amount: плаваюча, фактична сума, на яку застосовується податок\n"
-":paramр price_unit: плаваюча\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":параметр базова_сума: плаваюча, фактична сума, на яку застосовується податок\n"
+":параметр ціна_одиниці: плаваюча\n"
+":параметр кількість: плаваюча\n"
+":параметр товар: товар.товар параметр\n"
+":параметр партнер: рез.партнер  запис одиничної вартості або нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -77,13 +79,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Вірно\" або \"Невірно\".\n"
+"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильна\" або \"Невірна\".\n"
 "\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":параметр ціна_одиниці: плаваюча\n"
+":параметр кількість: плаваюча\n"
+":параметр компанія: рез.компанія запис одиничної вартості\n"
+":параметр товар: товар.товар запис одиничної вартості або нічого\n"
+":параметр партнер: рез.партнер запис одиничної вартості або нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -95,12 +97,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Вірно\" або \"Невірно\".\n"
+"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильний\" або \"Невірний\".\n"
 "\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":параметр ціна_одиниці: плаваюча\n"
+":параметр кількість: плаваюча\n"
+":параметр товар: товар.товар  запис одиничної вартості або нічого\n"
+":param партнер: рез.партнер запис одиничної вартості або нічого"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0

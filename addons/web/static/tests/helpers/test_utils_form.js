@@ -20,7 +20,7 @@ var testUtilsDom = require('web.test_utils_dom');
  * @param {FormController} form
  */
 function clickEdit(form) {
-    testUtilsDom.click(form.$buttons.find('.o_form_button_edit'));
+    return testUtilsDom.click(form.$buttons.find('.o_form_button_edit'));
 }
 
 /**
@@ -30,7 +30,7 @@ function clickEdit(form) {
  * @param {FormController} form
  */
 function clickSave(form) {
-    testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+    return testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
 }
 
 /**
@@ -40,7 +40,7 @@ function clickSave(form) {
  * @param {FormController} form
  */
 function clickCreate(form) {
-    testUtilsDom.click(form.$buttons.find('.o_form_button_create'));
+    return testUtilsDom.click(form.$buttons.find('.o_form_button_create'));
 }
 
 /**
@@ -50,7 +50,7 @@ function clickCreate(form) {
  * @param {FormController} form
  */
 function clickDiscard(form) {
-    testUtilsDom.click(form.$buttons.find('.o_form_button_cancel'));
+    return testUtilsDom.click(form.$buttons.find('.o_form_button_cancel'));
 }
 
 /**
@@ -60,7 +60,7 @@ function clickDiscard(form) {
  * @param {[Object]} params given to the controller reload method
  */
 function reload(form, params) {
-    form.reload(params);
+    return form.reload(params);
 }
 
 return {

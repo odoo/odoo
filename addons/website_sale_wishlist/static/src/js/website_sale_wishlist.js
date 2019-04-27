@@ -1,16 +1,16 @@
 odoo.define('website_sale_wishlist.wishlist', function (require) {
 "use strict";
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var wSaleUtils = require('website_sale.utils');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 
-// ProductConfiguratorMixin events are overridden on purpose here
+// VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfiguratorMixin, {
+publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click #my_wish': '_onClickMyWish',
         'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
         'change input.product_id': '_onChangeVariant',
@@ -18,30 +18,50 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
         'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
         'click .wishlist-section .o_wish_add': '_onClickWishAdd',
     },
-    events: sAnimations.Class.events,
 
-    start: function () {
+    /**
+     * @constructor
+     */
+    init: function (parent) {
+        this._super.apply(this, arguments);
+        this.wishlistProductIDs = [];
+    },
+    /**
+     * Gets the current wishlist items.
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    willStart: function () {
         var self = this;
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
-        this.wishlistProductIDs = [];
 
         var wishDef = $.get('/shop/wishlist', {
             count: 1,
         }).then(function (res) {
             self.wishlistProductIDs = JSON.parse(res);
-            self._updateWishlistView();
-            if ($('input.js_product_change').length) { // manage "List View of variants"
-                $('input.js_product_change:checked').first().trigger('change');
-            } else {
-                $('input.js_variant_change').trigger('change');
-            }
         });
 
-        return $.when(def, wishDef);
+        return Promise.all([def, wishDef]);
+    },
+    /**
+     * Updates the wishlist view (navbar) & the wishlist button (product page).
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+
+        this._updateWishlistView();
+        // trigger change on only one input
+        if (this.$('input.js_product_change').length) { // manage "List View of variants"
+            this.$('input.js_product_change:checked').first().trigger('change');
+        } else {
+            this.$('input.product_id').first().trigger('change');
+        }
+
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -61,16 +81,21 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             }
             productID = parseInt(productID, 10);
         }
-
+        var $form = $el.closest('form');
+        var templateId = $form.find('.product_template_id').val();
+        // when adding from /shop instead of the product page, need another selector
+        if (!templateId) {
+            templateId = $el.data('product-template-id');
+        }
         $el.prop("disabled", true).addClass('disabled');
         var productReady = this.selectOrCreateProduct(
             $el.closest('form'),
             productID,
-            $el.closest('form').find('.product_template_id').val(),
+            templateId,
             false
         );
 
-        productReady.done(function (productId) {
+        productReady.then(function (productId) {
             productId = parseInt(productId, 10);
 
             if (productId && !_.contains(self.wishlistProductIDs, productId)) {
@@ -83,11 +108,11 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
-                }).fail(function () {
+                }).guardedCatch(function () {
                     $el.prop("disabled", false).removeClass('disabled');
                 });
             }
-        }).fail(function () {
+        }).guardedCatch(function () {
             $el.prop("disabled", false).removeClass('disabled');
         });
     },
@@ -113,16 +138,17 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
 
         this._rpc({
             route: '/shop/wishlist/remove/' + wish,
-        }).done(function () {
+        }).then(function () {
             $(tr).hide();
         });
 
         this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
         if (this.wishlistProductIDs.length === 0) {
-            deferred_redirect = deferred_redirect ? deferred_redirect : $.Deferred();
-            deferred_redirect.then(function () {
-                self._redirectNoWish();
-            });
+            if (deferred_redirect) {
+                deferred_redirect.then(function () {
+                    self._redirectNoWish();
+                });
+            }
         }
         this._updateWishlistView();
     },

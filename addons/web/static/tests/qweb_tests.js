@@ -1,4 +1,4 @@
-odoo.define('web.qweb', function (require) {
+odoo.define('web.qweb_tests', function (require) {
 "use strict";
 
 var qwebPath = '/web/static/lib/qweb/';
@@ -15,20 +15,20 @@ function loadTest(assert, template, context) {
     var done = assert.async();
     assert.expect(1);
 
-    var def = $.Deferred();
     var qweb = new window.QWeb2.Engine();
-
-    qweb.add_template(qwebPath + template, function (error, doc) {
-        if (error) {
-            return $.Deferred().reject(error);
-        }
-        def.resolve({
-            qweb: qweb,
-            doc: doc
+    var prom = new Promise(function (resolve, reject) {
+        qweb.add_template(qwebPath + template, function (error, doc) {
+            if (error) {
+                return reject(error);
+            }
+            resolve({
+                qweb: qweb,
+                doc: doc
+            });
         });
     });
 
-    def.then(function (r) {
+    prom.then(function (r) {
         var qweb = r.qweb;
         var doc = r.doc;
         assert.expect(doc.querySelectorAll('result').length);
@@ -60,7 +60,7 @@ function loadTest(assert, template, context) {
         }
         done();
     });
-    return def;
+    return prom;
 }
 
 QUnit.module('QWeb', {}, function () {
@@ -87,7 +87,9 @@ QUnit.module('QWeb', {}, function () {
         var WORD_REPLACEMENT = window.QWeb2.WORD_REPLACEMENT;
         window.QWeb2.WORD_REPLACEMENT = _.extend({not: '!', None: 'undefined'}, WORD_REPLACEMENT);
         loadTest(assert, 'qweb-test-global.xml', {bool: function (v) { return !!v ? 'True' : 'False';}})
-            .always(function () {
+            .then(function () {
+                window.QWeb2.WORD_REPLACEMENT = WORD_REPLACEMENT;
+            }, function () {
                 window.QWeb2.WORD_REPLACEMENT = WORD_REPLACEMENT;
             });
     });

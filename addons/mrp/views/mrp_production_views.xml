@@ -35,12 +35,11 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="consumed_less_than_planned" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', True)]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight" confirm="You have consumed less material than what was planned. Are you sure you want to close this MO?"/>
+                    <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
-                    <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', '!=', 'confirmed'), ('routing_id', '=', False), ('is_locked', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
+                    <button name="button_plan" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'planned')), '|', ('routing_id', '=', False), '|', ('date_planned_start_wo', '!=', False), ('date_planned_finished_wo', '!=', False)]}" type="object" string="Plan" class="oe_highlight"/>
+                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start_wo', '=', False), ('date_planned_finished_wo', '=', False)]}"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', 'not in', ('confirmed', 'waiting')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
                     <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}" groups="base.group_no_one"/>
@@ -63,7 +62,7 @@
                                 <span class="o_stat_text">Work Orders</span>
                             </div>
                         </button>
-                        <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
                         <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
                             <field name="delivery_count" widget="statinfo" string="Picking"/>
                         </button>
@@ -104,6 +103,13 @@
                         <group>
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
+                            <field name="date_start_wo" attrs="{'invisible': ['|', ('routing_id', '=', False), ('state', 'not in', ['draft', 'confirmed'])]}"/>
+                            <label for="date_planned_start_wo" string="Scheduled Date" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}">
+                                <field name="date_planned_start_wo" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                                <label for="date_planned_finished_wo" string="to" attrs="{'invisible': [('date_planned_finished_wo', '=', False)]}"/>
+                                <field name="date_planned_finished_wo" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
+                            </div>
                             <field name="user_id"/>
                             <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -188,6 +194,8 @@
                      <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_planned_start"/>
                     <field name="state"/>
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -227,7 +235,7 @@
             <field name="name">mrp.production.gantt</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id">
+                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id" create="0">
                 </gantt>
             </field>
         </record>
@@ -307,6 +315,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True}</field>
+            <field name="domain">[('picking_type_id.active', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new manufacturing order

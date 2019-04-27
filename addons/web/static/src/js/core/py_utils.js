@@ -415,7 +415,15 @@ function _formatAST(ast, lbp) {
         case "(number)":
             return String(ast.value);
         case "(string)":
-            return "'" + ast.value + "'";
+            // ast.value is a string that may contain a mix of single and double quotes.
+            // But we need to return a string that represents the string ast.value.
+            // We use for that JSON.stringify. It will return a string with quotes correctly
+            // escaped. For instance, for x = `""` JSON.stringify(x) is `"\"\""`.
+            // But this means that if we pass several times here, escapes will be
+            // done again and again, leading to a profusion of backslashes that we don't want.
+            // For fun consider y = `\\` and y = JSON.stringify(y).
+            // This is why we first deescape particular characters in ast.value.
+            return JSON.stringify(ast.value.replace(/(\\(['"\\]))/g,"\$2"));
         case "(constant)":
             return ast.value;
         case "(name)":

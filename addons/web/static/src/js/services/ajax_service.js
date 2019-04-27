@@ -7,19 +7,20 @@ var session = require('web.session');
 
 var AjaxService = AbstractService.extend({
     rpc: function (route, args, options, target) {
-        var def = $.Deferred();
-        var promise = def.promise();
-        var xhrDef = session.rpc(route, args, options);
-        promise.abort = xhrDef.abort.bind(xhrDef);
-        xhrDef.then(function () {
-            if (!target.isDestroyed()) {
-                def.resolve.apply(def, arguments);
-            }
-        }).fail(function () {
-            if (!target.isDestroyed()) {
-                def.reject.apply(def, arguments);
-            }
+        var rpcPromise;
+        var promise = new Promise(function (resolve, reject) {
+            rpcPromise = session.rpc(route, args, options);
+            rpcPromise.then(function (result) {
+                if (!target.isDestroyed()) {
+                    resolve(result);
+                }
+            }).guardedCatch(function (reason) {
+                if (!target.isDestroyed()) {
+                    reject(reason);
+                }
+            });
         });
+        promise.abort = rpcPromise.abort.bind(rpcPromise);
         return promise;
     },
 });

@@ -8,6 +8,7 @@ var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
+    xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
         mouseenter: "_to_info_mode",
@@ -296,13 +297,15 @@ var Tip = Widget.extend({
 });
 
 Tip.getConsumeEventType = function ($element) {
-    if ($element.is("textarea") || $element.filter("input").is(function () {
+    if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
+        return 'autocompleteselect';
+    } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
         return "input";
     }
-    return "mousedown";
+    return "click";
 };
 
 return Tip;

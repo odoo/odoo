@@ -5,9 +5,9 @@
             <field name="name">Calendar: Meeting Invitation</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">Invitation to ${object.event_id.name}</field>
-            <field name="email_from">${object.event_id.user_id.email or ''}</field>
-            <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
-            <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
+            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
+            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
+            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
             <field name="body_html" type="html">
 <div>
     % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
@@ -80,6 +80,7 @@
     % endif
 </div>
             </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>
@@ -88,9 +89,9 @@
             <field name="name">Calendar: Date updated</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">${object.event_id.name}: Date updated</field>
-            <field name="email_from">${object.event_id.user_id.email or ''}</field>
-            <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
-            <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
+            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
+            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
+            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
             <field name="body_html" type="html">
 <div>
     % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
@@ -163,6 +164,7 @@
     % endif
 </div>
             </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>
@@ -171,9 +173,9 @@
             <field name="name">Calendar: Reminder</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">${object.event_id.name} - Reminder</field>
-            <field name="email_from">${object.event_id.user_id.email or ''}</field>
-            <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
-            <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
+            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
+            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
+            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
             <field name="body_html" type="html">
 <div>
     % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
@@ -246,6 +248,7 @@
     % endif
 </div>
             </field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
         </record>

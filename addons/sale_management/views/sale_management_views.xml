@@ -69,7 +69,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_pay']/field[@name='invoice_status']" position="attributes">
+            <xpath expr="//group[@name='sale_info']/field[@name='invoice_status']" position="attributes">
                 <attribute name="invisible" eval="False"/>
             </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="before">

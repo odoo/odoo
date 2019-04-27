@@ -58,12 +58,13 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      *   of this thread. Otherwise unfold it while detaching it.
      * @param {boolean} [options.passively=false] if set, if the thread window
      *   will be created passively.
+     * @returns {Promise}
      */
     detach: function (options) {
         options = options || {};
         this._detached = true;
         this._folded = options.keepFoldState ? this._folded : false;
-        this._warnUpdatedWindowState({
+        return this._warnUpdatedWindowState({
             passively: options.passively,
         });
     },
@@ -79,10 +80,10 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * `this.LIMIT` number of messages at a time.
      *
      * @abstract
-     * @returns {$.Promise<mail.model.Message[]>}
+     * @returns {Promise<mail.model.Message[]>}
      */
     fetchMessages: function () {
-        return $.when([]);
+        return Promise.resolve([]);
     },
     /**
      * Updates the folded state of the thread. Must be overriden to reflect
@@ -110,10 +111,10 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * By default, a thread has not listener.
      *
      * @abstract
-     * @returns {$.Promise<Array<Object[]>>}
+     * @returns {Promise<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
-        return $.when([]);
+        return Promise.resolve([]);
     },
     /**
      * Returns the information required to render the preview of this channel.
@@ -287,10 +288,10 @@ var Thread = AbstractThread.extend(ServicesMixin, {
     /**
      * @abstract
      * @private
-     * @return {$.Promise}
+     * @return {Promise}
      */
     _fetchMessages: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Replace character representations of emojis by their unicode
@@ -330,7 +331,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * @abstract
      * @private
      * @param {Object} data
-     * @returns {$.Promise<Object>} resolved with the message object to be sent
+     * @returns {Promise<Object>} resolved with the message object to be sent
      *   to the server
      */
     _postMessage: function (data) {
@@ -344,6 +345,9 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         body = this._generateEmojis(body);
         var messageData = {
             partner_ids: data.partner_ids,
+            channel_ids: _.map(data.channel_ids, function (channelID) {
+               return [4, channelID, false];
+            }),
             body: body,
             attachment_ids: data.attachment_ids,
             canned_response_ids: data.canned_response_ids,
@@ -352,7 +356,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
             messageData.subject = data.subject;
         }
         return this._super.apply(this, arguments).then(function () {
-            return $.when(messageData);
+            return messageData;
         });
     },
     /**
@@ -371,10 +375,11 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * @private
      * @param {Object} [options={}]
      * @param {boolean} [options.passively=false]
+     * @returns {Promise}
      */
     _warnUpdatedWindowState: function (options) {
         options = options || {};
-        this.call('mail_service', 'updateThreadWindow', this.getID(), options);
+        return this.call('mail_service', 'updateThreadWindow', this.getID(), options);
     },
 });
 

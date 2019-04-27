@@ -24,13 +24,14 @@ var MessagingMenu = Widget.extend({
         'click .o_filter_button': '_onClickFilterButton',
         'click .o_new_message': '_onClickNewMessage',
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
+        'click .o_thread_window_expand': '_onClickExpand',
         'show.bs.dropdown': '_onShowDropdown',
     },
     /**
      * @override
      */
     willStart: function () {
-        return $.when(this._super.apply(this, arguments), this.call('mail_service', 'isReady'));
+        return Promise.all([this._super.apply(this, arguments), this.call('mail_service', 'isReady')]);
     },
     /**
      * @override
@@ -112,7 +113,7 @@ var MessagingMenu = Widget.extend({
     },
     /**
      * @private
-     * @returns {$.Promise<Object[]>} resolved with list of previews that are
+     * @returns {Promise<Object[]>} resolved with list of previews that are
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {
@@ -245,6 +246,19 @@ var MessagingMenu = Widget.extend({
      */
     _onShowDropdown: function () {
         this._updatePreviews();
+    },
+    /**
+     * Opens the related document
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickExpand: function (ev) {
+        ev.stopPropagation();
+        var $preview = $(ev.currentTarget).closest('.o_mail_preview');
+        var documentModel = $preview.data('document-model');
+        var documentID = $preview.data('document-id');
+        this._openDocument(documentModel, documentID);
     },
     /**
      * @private

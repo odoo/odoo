@@ -20,34 +20,36 @@
             <field name="model">res.country</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="oe_button_box">
-                    </div>
-                    <field name="image" widget="image" class="oe_avatar"/>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="currency_id"/>
-                            <field name="code"/>
+                    <sheet>
+                        <div class="oe_button_box">
+                        </div>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <group name="main_group">
+                            <group name="country_details">
+                                <field name="name"/>
+                                <field name="currency_id"/>
+                                <field name="code"/>
+                            </group>
+                            <group name="phone_vat_settings">
+                                <field name="phone_code"/>
+                                <field name="vat_label"/>
+                            </group>
+                            <group name="advanced_address_formatting" string="Advanced Address Formatting" groups="base.group_no_one" col="4" colspan="4">
+                                <field name="address_view_id"/>
+                                <div colspan="2" class="text-muted">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                                <field name="address_format" placeholder="Address format..."/>
+                                <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
+                                <field name="name_position"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="phone_code"/>
-                            <field name="vat_label"/>
-                        </group>
-                        <group string="Advanced Address Formatting" groups="base.group_no_one" col="4" colspan="4">
-                            <field name="address_view_id"/>
-                            <div colspan="2" class="text-muted">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
-                            <field name="address_format" placeholder="Address format..."/>
-                            <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
-                            <field name="name_position"/>
-                        </group>
-                    </group>
-                    <label for="state_ids"/>
-                    <field name="state_ids">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="code"/>
-                        </tree>
-                    </field>
+                        <label for="state_ids"/>
+                        <field name="state_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                            </tree>
+                        </field>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -75,13 +77,15 @@
             <field name="model">res.country.group</field>
             <field name="arch" type="xml">
                 <form string="Country Group">
-                    <div class="oe_title">
-                        <label for="name" string="Group name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                    </div>
-                    <group name="country_group">
-                        <field name="country_ids" widget="many2many_tags"/>
-                    </group>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group name="country_group">
+                            <field name="country_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -112,11 +116,13 @@
             <field name="model">res.country.state</field>
             <field name="arch" type="xml">
                 <form string="State">
-                    <group>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="country_id" options='{"no_open": True}'/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="country_id" options='{"no_open": True}'/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

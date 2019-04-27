@@ -15,6 +15,7 @@ if [ -e /home/pi/odoo-remote-server.conf ]
 	var=0
 	while [ ${var} -lt 30 ]; do
 		var=$((var+1))
+		sleep 1
 		status_code=$(wget ${URL_SERVER} --server-response 2>&1|grep 'HTTP/'|awk '{print $2}')
 		if [ ${status_code} -eq 200 ]
 		then

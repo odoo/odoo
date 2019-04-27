@@ -30,7 +30,6 @@ class MailChannel(models.Model):
 
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
-    _description = 'Discussion channel'
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
@@ -40,6 +39,13 @@ class MailChannel(models.Model):
 
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
                          'Livechat Operator ID is required for a channel of type livechat.')]
+
+    @api.multi
+    def _compute_is_chat(self):
+        super(MailChannel, self)._compute_is_chat()
+        for record in self:
+            if record.channel_type == 'livechat':
+                record.is_chat = True
 
     @api.multi
     def _channel_message_notifications(self, message):

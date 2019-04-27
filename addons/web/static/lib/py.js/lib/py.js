@@ -273,8 +273,7 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("([uU])?'([^']*)'", '([uU])?"([^"]*)"');
-
+        var ContStr = group("([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'", '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"');
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
         var number_pattern = new RegExp('^' + Number + '$');
@@ -282,7 +281,7 @@ var py = {};
         var name_pattern = new RegExp('^' + Name + '$');
         var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            var max=s.length, tokens = [], start, end = undefined;
+            var max=s.length, tokens = [], start, end;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
 
@@ -302,7 +301,6 @@ var py = {};
                 end = pseudoprog.lastIndex;
                 // strip leading space caught by Whitespace
                 var token = s.slice(start, end).replace(strip, '');
-                var initial = token[0];
 
                 if (number_pattern.test(token)) {
                     tokens.push(create(symbols['(number)'], {
@@ -310,9 +308,10 @@ var py = {};
                     }));
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
+                    var value = (m[3] !== undefined ? m[3] : m[5]);
                     tokens.push(create(symbols['(string)'], {
                         unicode: !!(m[2] || m[4]),
-                        value: (m[3] !== undefined ? m[3] : m[5])
+                        value: value
                     }));
                 } else if (token in symbols) {
                     var symbol;

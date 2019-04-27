@@ -25,7 +25,13 @@
 
                     <!-- Amounts. -->
                     <ram:SpecifiedLineTradeAgreement>
-                        <t t-set="taxes" t-value="line.invoice_line_tax_ids.compute_all(line.price_unit)"/>
+                        <t t-set="taxes"
+                           t-value="line.invoice_line_tax_ids.compute_all(
+                                line.price_unit,
+                                currency=line.currency_id,
+                                quantity=line.quantity,
+                                product=line.product_id,
+                                partner=record.partner_id)"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"

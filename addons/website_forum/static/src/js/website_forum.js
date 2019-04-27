@@ -2,16 +2,18 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var Wysiwyg = require('web_editor.wysiwyg.root');
+var publicWidget = require('web.public.widget');
 var session = require('web.session');
 var qweb = core.qweb;
+var WebsiteProfile = require('website_profile.website_profile');
 
 var _t = core._t;
 
-sAnimations.registry.websiteForum = sAnimations.Class.extend({
+publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
-    read_events: {
+    events: {
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
         'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
@@ -28,8 +30,6 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         'click .favourite_question': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .notification_close': '_onCloseNotificationClick',
-        'click .send_validation_email': '_onSendValidationEmailClick',
-        'click .validated_email_close': '_onCloseValidatedEmailClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
 
@@ -119,26 +119,41 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                 $textarea.val('<p><br/></p>');
             }
             var $form = $textarea.closest('form');
+            var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
             var toolbar = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['history', ['undo', 'redo']],
             ];
-            if (parseInt($('#karma').val()) >= editorKarma) {
-                toolbar.push(['insert', ['link', 'picture']]);
+            if (hasFullEdit) {
+                toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
             }
-            $textarea.summernote({
+            toolbar.push(['history', ['undo', 'redo']]);
+
+            var options = {
                 height: 150,
                 toolbar: toolbar,
-                styleWithSpan: false
-            });
-
-            // float-left class messes up the post layout OPW 769721
-            $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-            $form.on('click', 'button, .a-submit', function () {
-                $textarea.html($form.find('.note-editable').code());
+                styleWithSpan: false,
+                recordInfo: {
+                    context: self._getContext(),
+                    res_model: 'forum.post',
+                    res_id: +window.location.pathname.split('-').pop(),
+                },
+            };
+            if (!hasFullEdit) {
+                options.plugins = {
+                    LinkPlugin: false,
+                    MediaPlugin: false,
+                };
+            }
+            var wysiwyg = new Wysiwyg(self, options);
+            wysiwyg.attachTo($textarea).then(function () {
+                // float-left class messes up the post layout OPW 769721
+                $form.find('.note-editable').find('img.float-left').removeClass('float-left');
+                $form.on('click', 'button, .a-submit', function () {
+                    $form.find('textarea').data('wysiwyg').save();
+                });
             });
         });
 
@@ -164,15 +179,19 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
     _onKarmaRequiredClick: function (ev) {
         var $karma = $(ev.currentTarget);
         var karma = $karma.data('karma');
+        var forum_id = $('#wrapwrap').data('forum_id');
         if (!karma) {
             return;
         }
         ev.preventDefault();
-        var msg = karma + ' ' + _t("karma is required to perform this action. You can earn karma by having your answers upvoted by the community.");
+        var msg = karma + ' ' + _t("karma is required to perform this action. ");
+        if (forum_id) {
+            msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
+        }
         if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">' +
+        var $warning = $('<div class="alert alert-danger alert-dismissible oe_forum_alert" id="karma_alert">' +
             '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
             msg + '</div>');
         var $voteAlert = $('#karma_alert');
@@ -261,7 +280,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
-            route: $link.data('href') || $link.attr('href') || $link.attr('action'),
+            route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.closest('form').attr('action'),
         }).then(function (data) {
             if (data.error) {
                 var $warning;
@@ -453,32 +472,6 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
      * @private
      * @param {Event} ev
      */
-    _onSendValidationEmailClick: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        this._rpc({
-            route: '/forum/send_validation_email',
-            params: {
-                forum_id: $link.attr('forum-id'),
-            },
-        }).then(function (data) {
-            if (data) {
-                $('button.validation_email_close').click();
-            }
-        });
-    },
-    /**
-     * @private
-     */
-    _onCloseValidatedEmailClick: function () {
-        this._rpc({
-            route: '/forum/validate_email/close',
-        });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
         document.cookie = 'forum_welcome_message = false';
@@ -487,10 +480,10 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
     },
 });
 
-sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
+publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     selector: '.o_wforum_moderation_queue',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
-    read_events: {
+    events: {
         'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
         'input #spamSearch': '_onSpamSearchInput',
@@ -563,4 +556,5 @@ sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
         });
     },
 });
+
 });

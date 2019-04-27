@@ -8,6 +8,7 @@ from datetime import date
 
 from itertools import groupby
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
@@ -19,6 +20,11 @@ class PickingType(models.Model):
     _name = "stock.picking.type"
     _description = "Picking Type"
     _order = 'sequence, id'
+
+    def _default_show_operations(self):
+        return self.user_has_groups('stock.group_production_lot,'
+                                    'stock.group_stock_multi_locations,'
+                                    'stock.group_tracking_lot')
 
     name = fields.Char('Operation Type', required=True, translate=True)
     color = fields.Integer('Color')
@@ -44,10 +50,8 @@ class PickingType(models.Model):
         'Use Existing Lots/Serial Numbers', default=True,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     show_operations = fields.Boolean(
-        'Show Detailed Operations', default=False,
+        'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
-    show_reserved = fields.Boolean(
-        'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -121,7 +125,7 @@ class PickingType(models.Model):
         domain = []
         if name:
             domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
-        picking_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        picking_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(picking_ids).name_get()
 
     @api.onchange('code')
@@ -132,11 +136,6 @@ class PickingType(models.Model):
         elif self.code == 'outgoing':
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
-
-    @api.onchange('show_operations')
-    def onchange_show_operations(self):
-        if self.show_operations is True:
-            self.show_reserved = True
 
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
@@ -199,7 +198,7 @@ class Picking(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], string='Status', compute='_compute_state',
-        copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
+        copy=False, index=True, readonly=True, store=True, tracking=True,
         help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
              " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
              " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
@@ -215,16 +214,16 @@ class Picking(models.Model):
         PROCUREMENT_PRIORITIES, string='Priority',
         compute='_compute_priority', inverse='_set_priority', store=True,
         # default='1', required=True,  # TDE: required, depending on moves ? strange
-        index=True, track_visibility='onchange',
+        index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
+        help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
-        index=True, track_visibility='onchange',
+        index=True, tracking=True,
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date = fields.Datetime(
         'Creation Date',
-        default=fields.Datetime.now, index=True, track_visibility='onchange',
+        default=fields.Datetime.now, index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
@@ -264,6 +263,10 @@ class Picking(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('stock.picking'),
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    user_id = fields.Many2one(
+        'res.users', 'Responsible', tracking=True,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        default=lambda self: self.env.user)
 
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
@@ -405,15 +408,19 @@ class Picking(models.Model):
     def _compute_has_packages(self):
         self.has_packages = self.move_line_ids.filtered(lambda ml: ml.result_package_id)
 
-    @api.multi
     def _compute_show_check_availability(self):
+        """ According to `picking.show_check_availability`, the "check availability" button will be
+        displayed in the form view of a picking.
+        """
         for picking in self:
-            has_moves_to_reserve = any(
+            if picking.immediate_transfer or not picking.is_locked or picking.state not in ('confirmed', 'waiting', 'assigned'):
+                picking.show_check_availability = False
+                continue
+            picking.show_check_availability = any(
                 move.state in ('waiting', 'confirmed', 'partially_available') and
                 float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
                 for move in picking.move_lines
             )
-            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting', 'assigned') and has_moves_to_reserve
 
     @api.multi
     @api.depends('state', 'move_lines')
@@ -421,7 +428,7 @@ class Picking(models.Model):
         for picking in self:
             if not picking.move_lines and not picking.package_level_ids:
                 picking.show_mark_as_todo = False
-            elif not (picking.immediate_transfer) and picking.state == 'draft':
+            elif not picking.immediate_transfer and picking.state == 'draft':
                 picking.show_mark_as_todo = True
             elif picking.state != 'draft' or not picking.id:
                 picking.show_mark_as_todo = False
@@ -485,8 +492,9 @@ class Picking(models.Model):
         # TDE FIXME: what ?
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
-        if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
-            for move in vals['move_lines']:
+        moves = vals.get('move_lines') or vals.get('move_ids_without_package')
+        if moves and vals.get('location_id') and vals.get('location_dest_id'):
+            for move in moves:
                 if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
@@ -532,6 +540,10 @@ class Picking(models.Model):
     @api.one
     def action_assign_owner(self):
         self.move_line_ids.write({'owner_id': self.owner_id.id})
+
+    def action_assign_partner(self):
+        for picking in self:
+            picking.move_lines.write({'partner_id': picking.partner_id.id})
 
     @api.multi
     def do_print_picking(self):
@@ -614,6 +626,7 @@ class Picking(models.Model):
                                                     'product_id': ops.product_id.id,
                                                     'product_uom_qty': ops.qty_done,
                                                     'product_uom': ops.product_uom_id.id,
+                                                    'description_picking': ops.description_picking,
                                                     'location_id': pick.location_id.id,
                                                     'location_dest_id': pick.location_dest_id.id,
                                                     'picking_id': pick.id,
@@ -627,7 +640,7 @@ class Picking(models.Model):
         self.write({'date_done': fields.Datetime.now()})
         return True
 
-    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id')
+    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
         for picking in self:
             move_ids_without_package = self.env['stock.move']
@@ -641,7 +654,7 @@ class Picking(models.Model):
                                 move_ids_without_package |= move
                         else:
                             move_ids_without_package |= move
-            picking.move_ids_without_package = move_ids_without_package.filtered(lambda ml: ml.scrapped == False)
+            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _set_move_without_package(self):
         self.move_lines |= self.move_ids_without_package
@@ -713,7 +726,7 @@ class Picking(models.Model):
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
             raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
@@ -908,6 +921,8 @@ class Picking(models.Model):
 
         documents = {}
         for (parent, responsible), moves in grouped_moves:
+            if not parent:
+                continue
             moves = list(moves)
             moves = self.env[moves[0]._name].concat(*moves)
             # Get the note
@@ -982,7 +997,11 @@ class Picking(models.Model):
             return self.env.ref('stock.exception_on_picking').render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._less_quantities_than_expected_add_documents(moves, documents)
         self._log_activity(_render_note_exception_quantity, documents)
+
+    def _less_quantities_than_expected_add_documents(self, moves, documents):
+        return documents
 
     def _get_impacted_pickings(self, moves):
         """ This function is used in _log_less_quantities_than_expected
@@ -1007,12 +1026,15 @@ class Picking(models.Model):
 
         return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
-    def check_destinations(self):
-        if len(self.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id).mapped('location_dest_id')) > 1:
+    def _pre_put_in_pack_hook(self, move_line_ids):
+        return self._check_destinations(move_line_ids)
+
+    def _check_destinations(self, move_line_ids):
+        if len(move_line_ids.mapped('location_dest_id')) > 1:
             view_id = self.env.ref('stock.stock_package_destination_form_view').id
             wiz = self.env['stock.package.destination'].create({
                 'picking_id': self.id,
-                'location_dest_id': self.move_line_ids[0].location_dest_id.id,
+                'location_dest_id': move_line_ids[0].location_dest_id.id,
             })
             return {
                 'name': _('Choose destination location'),
@@ -1028,48 +1050,52 @@ class Picking(models.Model):
         else:
             return {}
 
-    def _put_in_pack(self):
+    def _put_in_pack(self, move_line_ids):
         package = False
-        for pick in self.filtered(lambda p: p.state not in ('done', 'cancel')):
-            move_line_ids = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
-            if move_line_ids:
-                move_lines_to_pack = self.env['stock.move.line']
-                package = self.env['stock.quant.package'].create({})
-                for ml in move_line_ids:
-                    if float_compare(ml.qty_done, ml.product_uom_qty,
-                                     precision_rounding=ml.product_uom_id.rounding) >= 0:
-                        move_lines_to_pack |= ml
-                    else:
-                        quantity_left_todo = float_round(
-                            ml.product_uom_qty - ml.qty_done,
-                            precision_rounding=ml.product_uom_id.rounding,
-                            rounding_method='UP')
-                        done_to_keep = ml.qty_done
-                        new_move_line = ml.copy(
-                            default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
-                        ml.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
-                        new_move_line.write({'product_uom_qty': done_to_keep})
-                        move_lines_to_pack |= new_move_line
-
-                package_level = self.env['stock.package_level'].create({
-                    'package_id': package.id,
-                    'picking_id': pick.id,
-                    'location_id': False,
-                    'location_dest_id': move_line_ids.mapped('location_dest_id').id,
-                    'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
-                })
-                move_lines_to_pack.write({
-                    'result_package_id': package.id,
-                })
-            else:
-                raise UserError(_('You must first set the quantity you will put in the pack.'))
+        for pick in self:
+            move_lines_to_pack = self.env['stock.move.line']
+            package = self.env['stock.quant.package'].create({})
+            for ml in move_line_ids:
+                if float_compare(ml.qty_done, ml.product_uom_qty,
+                                 precision_rounding=ml.product_uom_id.rounding) >= 0:
+                    move_lines_to_pack |= ml
+                else:
+                    quantity_left_todo = float_round(
+                        ml.product_uom_qty - ml.qty_done,
+                        precision_rounding=ml.product_uom_id.rounding,
+                        rounding_method='UP')
+                    done_to_keep = ml.qty_done
+                    new_move_line = ml.copy(
+                        default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
+                    ml.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                    new_move_line.write({'product_uom_qty': done_to_keep})
+                    move_lines_to_pack |= new_move_line
+            package_level = self.env['stock.package_level'].create({
+                'package_id': package.id,
+                'picking_id': pick.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
+            })
+            move_lines_to_pack.write({
+                'result_package_id': package.id,
+            })
         return package
 
     def put_in_pack(self):
-        res = self.check_destinations()
-        if res.get('type'):
-            return res
-        return self._put_in_pack()
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            move_line_ids = self.move_line_ids.filtered(lambda ml:
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                and not ml.result_package_id
+            )
+            if move_line_ids:
+                res = self._pre_put_in_pack_hook(move_line_ids)
+                if not res:
+                    res = self._put_in_pack(move_line_ids)
+                return res
+            else:
+                raise UserError(_('You must first set the quantity you will put in the pack.'))
 
     def button_scrap(self):
         self.ensure_one()

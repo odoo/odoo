@@ -128,6 +128,7 @@ class Message(models.Model):
         search='_search_author_partner')
     important = fields.Boolean()
     label = fields.Char(translate=True)
+    priority = fields.Integer()
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -138,7 +139,11 @@ class Message(models.Model):
     @api.one
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
-        self.name = "[%s] %s" % (self.discussion.name or '', self.author.name or '')
+        # one may force the value through the context
+        self.name = (
+            self._context.get('compute_name') or
+            "[%s] %s" % (self.discussion.name or '', self.author.name or '')
+        )
 
     @api.one
     @api.depends('author.name', 'discussion.name', 'body')
@@ -182,6 +187,12 @@ class Message(models.Model):
     def _search_author_partner(self, operator, value):
         return [('author.partner_id', operator, value)]
 
+    @api.multi
+    def write(self, vals):
+        if 'priority' in vals:
+            vals['priority'] = 5
+        return super().write(vals)
+
 
 class EmailMessage(models.Model):
     _name = 'test_new_api.emailmessage'
@@ -223,6 +234,11 @@ class MultiLine(models.Model):
     name = fields.Char()
     partner = fields.Many2one('res.partner')
     tags = fields.Many2many('test_new_api.multi.tag')
+
+
+class MultiLine2(models.Model):
+    _name = 'test_new_api.multi.line2'
+    _inherit = 'test_new_api.multi.line'
 
 
 class MultiTag(models.Model):
@@ -504,3 +520,42 @@ class MonetaryInherits(models.Model):
 
     monetary_id = fields.Many2one('test_new_api.monetary_base', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency')
+
+
+class FieldWithCaps(models.Model):
+    _name = 'test_new_api.field_with_caps'
+    _description = 'Model with field defined with capital letters'
+
+    pArTneR_321_id = fields.Many2one('res.partner')
+
+
+class RequiredM2O(models.Model):
+    _name = 'test_new_api.req_m2o'
+    _description = 'Required Many2one'
+
+    foo = fields.Many2one('res.currency', required=True, ondelete='cascade')
+    bar = fields.Many2one('res.country', required=True)
+
+
+class Attachment(models.Model):
+    _name = 'test_new_api.attachment'
+    _description = 'Attachment'
+
+    res_model = fields.Char(required=True)
+    res_id = fields.Integer(required=True)
+    name = fields.Char(compute='_compute_name', compute_sudo=True, store=True)
+
+    @api.depends('res_model', 'res_id')
+    def _compute_name(self):
+        for rec in self:
+            rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
+
+
+class AttachmentHost(models.Model):
+    _name = 'test_new_api.attachment.host'
+    _description = 'Attachment Host'
+
+    attachment_ids = fields.One2many(
+        'test_new_api.attachment', 'res_id', auto_join=True,
+        domain=lambda self: [('res_model', '=', self._name)],
+    )

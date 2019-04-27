@@ -4,14 +4,14 @@
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, AccessError
 
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
     partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
     partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
-    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', track_visibility='onchange', help="Partner this case has been forwarded/assigned to.", index=True)
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, help="Partner this case has been forwarded/assigned to.", index=True)
     partner_declined_ids = fields.Many2many(
         'res.partner',
         'crm_lead_declined_partner',
@@ -270,3 +270,35 @@ class CrmLead(models.Model):
         return {
             'id': lead.id
         }
+
+    #
+    #   DO NOT FORWARD PORT IN MASTER
+    #   instead, crm.lead should implement portal.mixin
+    #
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online document for
+        portal users or if force_website=True in the context. """
+        self.ensure_one()
+
+        user, record = self.env.user, self
+        if access_uid:
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule("read")
+            except AccessError:
+                return super(CrmLead, self).get_access_action(access_uid)
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+        if user.share or self.env.context.get('force_website'):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+            except AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/opportunity/%s' % record.id,
+                }
+        return super(CrmLead, self).get_access_action(access_uid)

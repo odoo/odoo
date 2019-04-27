@@ -5,7 +5,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractView = require('web.AbstractView');
 
 var testUtils = require('web.test_utils');
-var createAsyncView = testUtils.createAsyncView;
+var createView = testUtils.createView;
 
 var TestRenderer = AbstractRenderer.extend({
     _renderView: function () {
@@ -48,7 +48,7 @@ QUnit.module('Views', {
                     '<div class="hello_banner"/>' +
                 '</div>';
 
-            createAsyncView({
+            createView({
                 View: TestView,
                 model: 'test_model',
                 data: this.data,
@@ -56,7 +56,7 @@ QUnit.module('Views', {
                 mockRPC: function (route, args) {
                     if (route === '/module/hello_banner') {
                         assert.step(route);
-                        return $.when({html: banner_html});
+                        return Promise.resolve({html: banner_html});
                     }
                     return this._super(route, args);
                 },

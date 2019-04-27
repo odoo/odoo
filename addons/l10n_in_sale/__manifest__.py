@@ -11,7 +11,9 @@
         'sale',
     ],
     'data': [
+        'data/product_demo.xml',
         'views/report_sale_order.xml',
+        'views/sale_views.xml'
     ],
     'installable': True,
     'application': False,

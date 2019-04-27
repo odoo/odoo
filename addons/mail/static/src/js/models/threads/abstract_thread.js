@@ -75,6 +75,22 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         return this._name;
     },
     /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeInfo: function () {
+        return undefined;
+    },
+    /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeMessage: function () {
+        return undefined;
+    },
+    /**
      * Get the status of the thread (e.g. 'online', 'offline', etc.)
      *
      * @returns {string}
@@ -134,18 +150,18 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * Mark the thread as read, which resets the unread counter to 0. This is
      * only performed if the unread counter is not 0.
      *
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     markAsRead: function () {
         if (this._unreadCounter > 0) {
             return this._markAsRead();
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Post a message on this thread
      *
-     * @returns {$.Promise} resolved with the message object to be sent to the
+     * @returns {Promise} resolved with the message object to be sent to the
      *   server
      */
     postMessage: function () {
@@ -184,22 +200,22 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * Mark the thread as read
      *
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _markAsRead: function () {
         this.resetUnreadCounter();
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Post a message on this thread
      *
      * @abstract
      * @private
-     * @returns {$.Promise} resolved with the message object to be sent to the
+     * @returns {Promise} resolved with the message object to be sent to the
      *   server
      */
     _postMessage: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Warn views (e.g. discuss app, thread window, etc.) to update visually

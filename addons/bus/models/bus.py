@@ -69,7 +69,7 @@ class ImBus(models.Model):
         self.sendmany([[channel, message]])
 
     @api.model
-    def poll(self, channels, last=0, options=None, force_status=False):
+    def poll(self, channels, last=0, options=None):
         if options is None:
             options = {}
         # first poll return the notification in the 'buffer'
@@ -89,15 +89,6 @@ class ImBus(models.Model):
                 'channel': json.loads(notif['channel']),
                 'message': json.loads(notif['message']),
             })
-
-        if result or force_status:
-            partner_ids = options.get('bus_presence_partner_ids')
-            if partner_ids:
-                partners = self.env['res.partner'].browse(partner_ids)
-                result += [{
-                    'id': -1,
-                    'channel': (self._cr.dbname, 'bus.presence'),
-                    'message': {'id': r.id, 'im_status': r.im_status}} for r in partners]
         return result
 
 
@@ -140,15 +131,21 @@ class ImDispatch(object):
 
             event = self.Event()
             for channel in channels:
-                self.channels.setdefault(hashable(channel), []).append(event)
+                self.channels.setdefault(hashable(channel), set()).add(event)
             try:
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    notifications = env['bus.bus'].poll(channels, last, options, force_status=True)
+                    notifications = env['bus.bus'].poll(channels, last, options)
             except Exception:
                 # timeout
                 pass
+            finally:
+                # gc pointers to event
+                for channel in channels:
+                    channel_events = self.channels.get(hashable(channel))
+                    if channel_events and event in channel_events:
+                        channel_events.remove(event)
         return notifications
 
     def loop(self):
@@ -169,7 +166,7 @@ class ImDispatch(object):
                     # dispatch to local threads/greenlets
                     events = set()
                     for channel in channels:
-                        events.update(self.channels.pop(hashable(channel), []))
+                        events.update(self.channels.pop(hashable(channel), set()))
                     for event in events:
                         event.set()
 

@@ -4,6 +4,7 @@ from odoo.exceptions import AccessError
 from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.http import request
 
 import logging
 
@@ -163,9 +164,16 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template_id:
+        if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
 
     def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
@@ -177,7 +185,14 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():
@@ -197,7 +212,7 @@ class AccountChartTemplate(models.Model):
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
             accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
             if accounting_props:
-                accounting_props.unlink()
+                accounting_props.sudo().unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal']
@@ -406,7 +421,7 @@ class AccountChartTemplate(models.Model):
                     {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'color': 11, 'sequence': 6},
                     {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
                     {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
-                    {'name': _('Cash Basis Tax Journal'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
+                    {'name': _('Cash Basis Taxes'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
         if journals_dict != None:
             journals.extend(journals_dict)
 
@@ -669,13 +684,12 @@ class AccountChartTemplate(models.Model):
                 'amount_type': account_reconcile_model.amount_type,
                 'force_tax_included': account_reconcile_model.force_tax_included,
                 'amount': account_reconcile_model.amount,
-                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in account_reconcile_model.tax_ids],
                 'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
                 'second_label': account_reconcile_model.second_label,
                 'second_amount_type': account_reconcile_model.second_amount_type,
                 'force_second_tax_included': account_reconcile_model.force_second_tax_included,
                 'second_amount': account_reconcile_model.second_amount,
-                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
                 'rule_type': account_reconcile_model.rule_type,
                 'auto_reconcile': account_reconcile_model.auto_reconcile,
                 'match_journal_ids': [(6, None, account_reconcile_model.match_journal_ids.ids)],
@@ -691,6 +705,7 @@ class AccountChartTemplate(models.Model):
                 'match_partner': account_reconcile_model.match_partner,
                 'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
                 'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
+                'second_tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in account_reconcile_model.second_tax_ids],
             }
 
     @api.multi
@@ -971,6 +986,7 @@ class AccountReconcileModelTemplate(models.Model):
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
@@ -1025,10 +1041,9 @@ class AccountReconcileModelTemplate(models.Model):
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
-    tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
+    tax_ids = fields.Many2many('account.tax.template', string='Taxes', ondelete='restrict')
     second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
@@ -1038,4 +1053,5 @@ class AccountReconcileModelTemplate(models.Model):
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
-    second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+    second_tax_ids = fields.Many2many('account.tax.template', relation='account_reconcile_model_tmpl_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')

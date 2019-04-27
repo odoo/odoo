@@ -3,15 +3,15 @@ odoo.define('web_unsplash.image_widgets', function (require) {
 
 var core = require('web.core');
 var UnsplashAPI = require('unsplash.api');
-var weWidgets = require('web_editor.widget');
+var widgetsMedia = require('wysiwyg.widgets.media');
 
 var unsplashAPI = null;
 
-weWidgets.ImageWidget.include({
-    xmlDependencies: weWidgets.ImageWidget.prototype.xmlDependencies.concat(
+widgetsMedia.ImageWidget.include({
+    xmlDependencies: widgetsMedia.ImageWidget.prototype.xmlDependencies.concat(
         ['/web_unsplash/static/src/xml/unsplash_image_widget.xml']
     ),
-    events: _.extend({}, weWidgets.ImageWidget.prototype.events, {
+    events: _.extend({}, widgetsMedia.ImageWidget.prototype.events, {
         'dblclick .unsplash_img_container [data-imgid]': '_onUnsplashImgDblClick',
         'click .unsplash_img_container [data-imgid]': '_onUnsplashImgClick',
         'click button.save_unsplash': '_onSaveUnsplash',
@@ -112,18 +112,20 @@ weWidgets.ImageWidget.include({
         }
 
         this._unsplash.query = needle;
+
+        var always = function () {
+            if (!noRender) {
+                self._renderImages();
+                self._adaptLoadMore();
+            }
+        };
         return this.unsplashAPI.getImages(needle, this.IMAGES_DISPLAYED_TOTAL).then(function (res) {
             self._unsplash.isMaxed = res.isMaxed;
             self._unsplash.records = res.images;
             self._unsplash.error = false;
         }, function (err) {
             self._unsplash.error = err;
-        }).always(function () {
-            if (!noRender) {
-                self._renderImages();
-                self._adaptLoadMore();
-            }
-        });
+        }).then(always).guardedCatch(always);
     },
 
     //--------------------------------------------------------------------------

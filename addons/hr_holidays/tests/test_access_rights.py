@@ -10,7 +10,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger
 
 
-@tests.tagged('access_rights')
+@tests.tagged('access_rights', 'post_install', '-at_install')
 class TestLeavesRights(TestHrHolidaysBase):
 
     def setUp(self):
@@ -361,6 +361,37 @@ class TestLeavesRights(TestHrHolidaysBase):
         self.leave_type.write({'validation_type': 'both'})
         self.employee_leave.sudo(self.user_hruser).action_approve()
         self.employee_leave.sudo(self.user_hrmanager_id).action_validate()
+
+    # ----------------------------------------
+    # Validation: team leader
+    # ----------------------------------------
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_validation_team_leader_other(self):
+        """ Team Leader validates its employee's allocations only"""
+        self.leave_type.write({'allocation_type': 'fixed'})
+        self.env['hr.leave.allocation'].create({
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_emp.id,
+            'number_of_days': 10,
+        }).action_approve()
+        with self.assertRaises(AccessError):
+            self.employee_leave.sudo(self.user_team_leader).action_approve()
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_validation_team_leader(self):
+        """ Team Leader validates its employee's allocations"""
+        self.leave_type.write({'allocation_type': 'fixed'})
+
+        # set the team leader
+        self.employee_emp.leave_manager_id = self.user_team_leader
+
+        self.env['hr.leave.allocation'].create({
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_emp.id,
+            'number_of_days': 10,
+        }).action_approve()
+        self.employee_leave.sudo(self.user_team_leader).action_approve()
 
 
 class TestMultiCompany(TestHrHolidaysBase):

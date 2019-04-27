@@ -18,10 +18,12 @@
             <field name="model">res.partner.title</field>
             <field name="arch" type="xml">
                 <form string="Partner Titles">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="shortcut"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="shortcut"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -197,6 +199,9 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Partners">
+                <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner', '=', False)]}">
+                  A partner with the same Tax ID already exists (<field name="same_vat_partner" widget="html" class="d-inline-block"/>), are you sure to create a new one?
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object"
@@ -321,8 +326,8 @@
                                                         <field t-if="record.state_id.raw_value" name="state_id"/>
                                                         <field name="country_id"/>
                                                     </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone" widget="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile" widget="phone"/></div>
                                                 </div>
                                             </div>
                                         </t>
@@ -336,10 +341,15 @@
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
                                         <hr/>
-                                        <group>
-                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
-                                                <label for="street" string="Address"/>
-                                                <div>
+                                        <group col="12">
+                                            <group colspan="5">
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="title" placeholder="e.g. Mr."
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                <field name="function" placeholder="e.g. Sales Director"
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                <label for="street" string="Address" attrs="{'invisible': [('type','=', 'contact')]}"/>
+                                                <div attrs="{'invisible': [('type','=', 'contact')]}">
                                                     <div class="o_address_format" name="div_address">
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
@@ -349,17 +359,15 @@
                                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                                     </div>
                                                 </div>
+                                                <field name="comment" placeholder="Internal notes..."/>
                                             </group>
-                                            <group>
-                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
-                                                <field name="title" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                                                <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                                                <field name="email"/>
+                                            <group colspan="5">
+                                                <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
-                                                <field name="comment" placeholder="internal note..."/>
+                                            </group>
+                                            <group colspan="1">
+                                                <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
                                             </group>
                                         </group>
                                         <field name="supplier" invisible="True"/>
@@ -382,9 +390,6 @@
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
                                     <field name="supplier"/>
-                                </group>
-                                <group string="Point Of Sale">
-                                    <field name="barcode"/>
                                 </group>
                                 <group name="misc" string="Misc">
                                     <field name="ref" string="Reference"/>
@@ -462,7 +467,7 @@
                    <filter string="Vendors" name="supplier" domain="[('supplier','=',True), ('parent_id', '=', False)]"/>
                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <separator/>
-                   <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
+                   <field name="category_id" string="Tag" filter_domain="[('category_id','child_of', self)]"/>
                    <field name="user_id"/>
                    <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>
                    <group expand="0" name="group_by" string="Group By">
@@ -683,11 +688,13 @@
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
                 <form string="Contact Tag">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="parent_id"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -721,11 +728,13 @@
             <field name="model">res.partner.industry</field>
             <field name="arch" type="xml">
                 <form string="Industry">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="full_name"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="full_name"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

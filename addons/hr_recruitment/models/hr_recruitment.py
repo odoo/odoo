@@ -92,18 +92,16 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            ids = self.env['hr.recruitment.stage'].search([
+            return self.env['hr.recruitment.stage'].search([
                 '|',
                 ('job_id', '=', False),
                 ('job_id', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids
-            if ids:
-                return ids[0]
+            ], order='sequence asc', limit=1).id
         return False
 
     def _default_company_id(self):
@@ -119,12 +117,10 @@ class Applicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email")
-    email_cc = fields.Text("Watchers Emails", size=252,
-                           help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
+    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
@@ -133,7 +129,7 @@ class Applicant(models.Model):
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
-    user_id = fields.Many2one('res.users', "Responsible", track_visibility="onchange", default=lambda self: self.env.uid)
+    user_id = fields.Many2one('res.users', "Responsible", tracking=True, default=lambda self: self.env.uid)
     date_closed = fields.Datetime("Closed", readonly=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
@@ -154,7 +150,7 @@ class Applicant(models.Model):
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
-    emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
+    emp_id = fields.Many2one('hr.employee', string="Employee", tracking=True, help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False)
@@ -224,12 +220,12 @@ class Applicant(models.Model):
     def _onchange_job_id_internal(self, job_id):
         department_id = False
         user_id = False
-        stage_id = self.stage_id.id
+        stage_id = self.stage_id.id or self._context.get('default_stage_id')
         if job_id:
             job = self.env['hr.job'].browse(job_id)
             department_id = job.department_id.id
             user_id = job.user_id.id
-            if not self.stage_id:
+            if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
                     ('job_id', '=', False),
@@ -277,7 +273,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Applicant, self).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -350,10 +346,9 @@ class Applicant(models.Model):
         }
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Applicant, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Applicant, self)._track_template(changes)
         applicant = self[0]
-        changes, dummy = tracking[applicant.id]
         if 'stage_id' in changes and applicant.stage_id.template_id:
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_message': True,
@@ -363,13 +358,15 @@ class Applicant(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('hr_recruitment.mt_applicant_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
             return self.env.ref('hr_recruitment.mt_applicant_hired')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
-            return self.env.ref('hr_recruitment.mt_applicant_new')
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
+        elif 'stage_id' in init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
@@ -409,7 +406,6 @@ class Applicant(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):

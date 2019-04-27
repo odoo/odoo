@@ -52,6 +52,10 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             records.body = 'Faulty'
 
+        # field assigmenent does not cache the wrong value when write overridden
+        record.priority = 4
+        self.assertEqual(record.priority, 5)
+
     def test_10_computed(self):
         """ check definition of computed fields """
         # by default function fields are not stored and readonly
@@ -368,6 +372,26 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.bar2, 'B')
         self.assertEqual(record.bar3, 'C')
         self.assertCountEqual(log, ['compute'])
+
+    def test_13_inverse_access(self):
+        """ test access rights on inverse fields """
+        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
+        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        self.assertFalse(user.has_group('base.group_system'))
+        # add group on non-stored inverse field
+        self.patch(type(foo).display_name, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            foo.sudo(user).display_name = 'Forbidden'
+
+    def test_13_inverse_access(self):
+        """ test access rights on inverse fields """
+        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
+        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+        self.assertFalse(user.has_group('base.group_system'))
+        # add group on non-stored inverse field
+        self.patch(type(foo).display_name, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            foo.sudo(user).display_name = 'Forbidden'
 
     def test_14_search(self):
         """ test search on computed fields """
@@ -771,6 +795,10 @@ class TestFields(common.TransactionCase):
         self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
                                         'value': tag0, 'type': 'many2one'})
 
+        # assumption: users don't have access to 'ir.property'
+        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])
+        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
+
         # create/modify a record, and check the value for each user
         record = self.env['test_new_api.company'].create({
             'foo': 'main',
@@ -824,6 +852,13 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user1).foo, False)
         self.assertEqual(record.sudo(user2).foo, 'default')
 
+        # set field with 'force_company' in context
+        record.sudo(user0).with_context(force_company=company1.id).foo = 'beta'
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, 'beta')
+        self.assertEqual(record.sudo(user2).foo, 'default')
+
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
         attribute_record = self.env['test_new_api.company.attr'].create({
@@ -842,6 +877,25 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attribute_record.company.foo, 'DEF')
         self.assertEqual(attribute_record.bar, 'DEFDEF')
         self.assertFalse(self.env.has_todo())
+
+        # add group on company-dependent field
+        self.assertFalse(user0.has_group('base.group_system'))
+        self.patch(type(record).foo, 'groups', 'base.group_system')
+        with self.assertRaises(AccessError):
+            record.sudo(user0).foo = 'forbidden'
+
+        user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        record.sudo(user0).foo = 'yes we can'
+
+        # add ir.rule to prevent access on record
+        self.assertTrue(user0.has_group('base.group_user'))
+        rule = self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get_id(record._name),
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': str([('id', '!=', record.id)]),
+        })
+        with self.assertRaises(AccessError):
+            record.sudo(user0).foo = 'forbidden'
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -1104,6 +1158,18 @@ class TestFields(common.TransactionCase):
 
 
 class TestX2many(common.TransactionCase):
+    def test_definition_many2many(self):
+        """ Test the definition of inherited many2many fields. """
+        field = self.env['test_new_api.multi.line']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
+        field = self.env['test_new_api.multi.line2']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line2_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line2_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
@@ -1435,3 +1501,25 @@ class TestParentStore(common.TransactionCase):
         """ Move multiple nodes to create a cycle. """
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+
+
+class TestRequiredMany2one(common.TransactionCase):
+
+    def test_explicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['foo']
+        self.assertEqual(field.ondelete, 'cascade')
+
+    def test_implicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['bar']
+        self.assertEqual(field.ondelete, 'restrict')
+
+    def test_explicit_set_null(self):
+        Model = self.env['test_new_api.req_m2o']
+        field = Model._fields['foo']
+
+        # invalidate registry to redo the setup afterwards
+        self.registry.registry_invalidated = True
+        self.patch(field, 'ondelete', 'set null')
+
+        with self.assertRaises(ValueError):
+            field._setup_regular_base(Model)

@@ -1,18 +1,36 @@
 /* Generic report layouts*/
 .header {
-    height: 200px;
+    max-height: 40mm;
+    overflow: hidden;
+}
+.container {
+    margin-top: 5mm;
+}
+.o_standard_footer, .o_clean_footer, .o_boxed_footer, .o_background_footer {
+    max-height: 90px !important;
+    overflow: hidden;
+    width: 95%;
+    div > div:first-child {
+        padding-left: 10mm;
+    }
+}
+.o_background_footer {
+    padding-left: 8mm;
 }
 .article>.page {
     > h1, > h2, > h3 {
         width: 50%;
     }
 }
-.article {
-    > .address.row {
-        padding-top: 95px;
-    }
-    > .page {
-        margin-top:-20px;
+.article > .address.row > div[name="address"] {
+    height: 65mm;
+    background-color: #ffffff;
+    padding-top: 23mm;
+    padding-left: 5mm;
+    padding-bottom: 5mm;
+    left: -20px !important;
+    address {
+        height: 28mm;
     }
 }
 

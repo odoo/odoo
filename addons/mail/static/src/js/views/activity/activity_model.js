@@ -2,6 +2,7 @@ odoo.define('mail.ActivityModel', function (require) {
 'use strict';
 
 var AbstractModel = require('web.AbstractModel');
+var session = require('web.session');
 
 var ActivityModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ var ActivityModel = AbstractModel.extend({
      * @override
      * @param {Object} params
      * @param {Array[]} params.domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         this.domain = params.domain;
@@ -30,7 +31,7 @@ var ActivityModel = AbstractModel.extend({
      * @param {any} handle
      * @param {Object} params
      * @param {Array[]} params.domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reload: function (handle, params) {
         if (params && 'domain' in params) {
@@ -47,7 +48,7 @@ var ActivityModel = AbstractModel.extend({
      * Fetch activity data.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _fetchData: function () {
         var self = this;
@@ -57,6 +58,7 @@ var ActivityModel = AbstractModel.extend({
             kwargs: {
                 res_model: this.modelName,
                 domain: this.domain,
+                context: session.user_context,
             }
         }).then(function (result) {
             self.data.data = result;

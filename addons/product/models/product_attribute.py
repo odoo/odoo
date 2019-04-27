@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.osv import expression
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
@@ -11,11 +10,13 @@ from odoo.osv import expression
 class ProductAttribute(models.Model):
     _name = "product.attribute"
     _description = "Product Attribute"
-    _order = 'sequence, name'
+    # if you change this _order, keep it in sync with the method
+    # `_sort_key_attribute_value` in `product.template`
+    _order = 'sequence, id'
 
     name = fields.Char('Attribute', required=True, translate=True)
     value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order")
+    sequence = fields.Integer('Sequence', help="Determine the display order", index=True)
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'attribute_id', 'Lines')
     create_variant = fields.Selection([
         ('no_variant', 'Never'),
@@ -25,15 +26,49 @@ class ProductAttribute(models.Model):
         string="Create Variants",
         help="Check this if you want to create multiple variants for this attribute.", required=True)
 
+    @api.multi
+    def _without_no_variant_attributes(self):
+        return self.filtered(lambda pa: pa.create_variant != 'no_variant')
+
+    @api.multi
+    def write(self, vals):
+        """Override to make sure attribute type can't be changed if it's used on
+        a product template.
+
+        This is important to prevent because changing the type would make
+        existing combinations invalid without recomputing them, and recomputing
+        them might take too long and we don't want to change products without
+        the user knowing about it."""
+        if 'create_variant' in vals:
+            products = self._get_related_product_templates()
+            if products:
+                message = ', '.join(products.mapped('name'))
+                raise UserError(_('You are trying to change the type of an attribute value still referenced on at least one product template: %s') % message)
+        invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        res = super(ProductAttribute, self).write(vals)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template: attribute_line_ids)
+            self.invalidate_cache()
+        return res
+
+    @api.multi
+    def _get_related_product_templates(self):
+        return self.env['product.template'].with_context(active_test=False).search([
+            ('attribute_line_ids.attribute_id', 'in', self.ids),
+        ])
+
 
 class ProductAttributeValue(models.Model):
     _name = "product.attribute.value"
+    # if you change this _order, keep it in sync with the method
+    # `_sort_key_variant` in `product.template'
     _order = 'attribute_id, sequence, id'
     _description = 'Attribute Value'
 
     name = fields.Char(string='Value', required=True, translate=True)
-    sequence = fields.Integer(string='Sequence', help="Determine the display order")
-    attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='cascade', required=True)
+    sequence = fields.Integer(string='Sequence', help="Determine the display order", index=True)
+    attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='cascade', required=True, index=True)
 
     _sql_constraints = [
         ('value_company_uniq', 'unique (name, attribute_id)', 'This attribute value already exists !')
@@ -50,11 +85,31 @@ class ProductAttributeValue(models.Model):
         return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
 
     @api.multi
+    def write(self, values):
+        invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
+        res = super(ProductAttributeValue, self).write(values)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template.attribute.line: value_ids)
+            self.invalidate_cache()
+        return res
+
+    @api.multi
     def unlink(self):
-        linked_products = self.env['product.product'].with_context(active_test=False).search([('attribute_value_ids', 'in', self.ids)])
+        linked_products = self._get_related_product_templates()
         if linked_products:
             raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
         return super(ProductAttributeValue, self).unlink()
+
+    @api.multi
+    def _without_no_variant_attributes(self):
+        return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
+
+    @api.multi
+    def _get_related_product_templates(self):
+        return self.env['product.template'].with_context(active_test=False).search([
+            ('attribute_line_ids.value_ids', 'in', self.ids),
+        ])
 
 
 class ProductTemplateAttributeLine(models.Model):
@@ -64,9 +119,10 @@ class ProductTemplateAttributeLine(models.Model):
     _name = "product.template.attribute.line"
     _rec_name = 'attribute_id'
     _description = 'Product Template Attribute Line'
+    _order = 'attribute_id, id'
 
-    product_tmpl_id = fields.Many2one('product.template', string='Product Template', ondelete='cascade', required=True)
-    attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='restrict', required=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', ondelete='cascade', required=True, index=True)
+    attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
     product_template_value_ids = fields.Many2many(
         'product.template.attribute.value',
@@ -76,7 +132,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     @api.constrains('value_ids', 'attribute_id')
     def _check_valid_attribute(self):
-        if any(line.value_ids > line.attribute_id.value_ids for line in self):
+        if any(not line.value_ids or line.value_ids > line.attribute_id.value_ids for line in self):
             raise ValidationError(_('You cannot use this attribute with the following value.'))
         return True
 
@@ -96,8 +152,8 @@ class ProductTemplateAttributeLine(models.Model):
         for product_template_attribute_line in self:
             product_template_attribute_line.product_template_value_ids = self.env['product.template.attribute.value'].search([
                 ('product_tmpl_id', 'in', product_template_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id.attribute_id', 'in', product_template_attribute_line.value_ids.mapped('attribute_id').ids)]
-            ).sorted(lambda product_product_attribute: product_product_attribute.sequence)
+                ('product_attribute_value_id', 'in', product_template_attribute_line.value_ids.ids)]
+            )
 
     @api.multi
     def unlink(self):
@@ -152,13 +208,17 @@ class ProductTemplateAttributeLine(models.Model):
             return self.browse(attribute_ids).name_get()
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
+    @api.multi
+    def _without_no_variant_attributes(self):
+        return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
+
 
 class ProductTemplateAttributeValue(models.Model):
     """Materialized relationship between attribute values
     and product template generated by the product.template.attribute.line"""
 
     _name = "product.template.attribute.value"
-    _order = 'sequence, attribute_id, id'
+    _order = 'product_attribute_value_id, id'
     _description = 'Product Attribute Value'
 
     name = fields.Char('Value', related="product_attribute_value_id.name")
@@ -192,15 +252,19 @@ class ProductTemplateAttributeValue(models.Model):
             return super(ProductTemplateAttributeValue, self).name_get()
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
+    @api.multi
+    def _without_no_variant_attributes(self):
+        return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant')
+
 
 class ProductTemplateAttributeExclusion(models.Model):
     _name = "product.template.attribute.exclusion"
     _description = 'Product Template Attribute Exclusion'
 
     product_template_attribute_value_id = fields.Many2one(
-        'product.template.attribute.value', string="Attribute Value", ondelete='cascade')
+        'product.template.attribute.value', string="Attribute Value", ondelete='cascade', index=True)
     product_tmpl_id = fields.Many2one(
-        'product.template', string='Product Template', ondelete='cascade', required=True)
+        'product.template', string='Product Template', ondelete='cascade', required=True, index=True)
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id)]")

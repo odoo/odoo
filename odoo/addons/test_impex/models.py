@@ -25,7 +25,7 @@ MODELS = [
     ('date', fields.Date()),
     ('datetime', fields.Datetime()),
     ('text', fields.Text()),
-    ('selection', fields.Selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
+    ('selection', fields.Selection([('1', "Foo"), ('2', "Bar"), ('3', "Qux"), ('4', '')])),
     ('selection.function', fields.Selection(selection_fn)),
     # just relate to an integer
     ('many2one', fields.Many2one('export.integer')),
@@ -143,7 +143,7 @@ class SelectionWithDefault(models.Model):
     _description = 'Export Selection With Default'
 
     const = fields.Integer(default=4)
-    value = fields.Selection([(1, "Foo"), (2, "Bar")], default=2)
+    value = fields.Selection([('1', "Foo"), ('2', "Bar")], default='2')
 
 
 class RecO2M(models.Model):

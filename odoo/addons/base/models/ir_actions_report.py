@@ -23,6 +23,7 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from collections import OrderedDict
 
 
 _logger = logging.getLogger(__name__)
@@ -466,7 +467,10 @@ class IrActionsReport(models.Model):
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
-            raise ValueError("Cannot convert into barcode.")
+            if barcode_type == 'Code128':
+                raise ValueError("Cannot convert into barcode.")
+            else:
+                return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
 
     @api.multi
     def render_template(self, template, values=None):
@@ -478,7 +482,7 @@ class IrActionsReport(models.Model):
         if values is None:
             values = {}
 
-        context = dict(self.env.context, inherit_branding=values.get('enable_editor'))
+        context = dict(self.env.context, inherit_branding=False)
 
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
@@ -492,7 +496,6 @@ class IrActionsReport(models.Model):
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
-            editable=values.get('enable_editor'),
             user=user,
             res_company=user.company_id,
             website=website,
@@ -609,13 +612,11 @@ class IrActionsReport(models.Model):
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
-
-        # remove editor feature in pdf generation
-        data.update(enable_editor=False)
+        data.setdefault('report_type', 'pdf')
 
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
-        if tools.config['test_enable']:
+        if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
             return self.render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
@@ -645,7 +646,7 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        save_in_attachment = {}
+        save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -697,12 +698,15 @@ class IrActionsReport(models.Model):
             set_viewport_size=context.get('set_viewport_size'),
         )
         if res_ids:
-            _logger.info('The PDF report has been generated for records %s.' % (str(res_ids)))
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self.model, str(res_ids)))
             return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
     @api.model
     def render_qweb_text(self, docids, data=None):
+        if not data:
+            data = {}
+        data.setdefault('report_type', 'text')
         data = self._get_rendering_context(docids, data)
         return self.render_template(self.report_name, data), 'text'
 
@@ -710,15 +714,22 @@ class IrActionsReport(models.Model):
     def render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
+        if not data:
+            data = {}
+        data.setdefault('report_type', 'html')
         data = self._get_rendering_context(docids, data)
         return self.render_template(self.report_name, data), 'html'
+
+    @api.model
+    def _get_rendering_context_model(self):
+        report_model_name = 'report.%s' % self.report_name
+        return self.env.get(report_model_name)
 
     @api.model
     def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model_name = 'report.%s' % self.report_name
-        report_model = self.env.get(report_model_name)
+        report_model = self._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
@@ -749,7 +760,7 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+        if (self.env.user._is_admin()) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),

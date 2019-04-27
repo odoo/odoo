@@ -120,7 +120,7 @@ class Project(models.Model):
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'help': _('''<p class="o_view_nocontent_smiling_face">
-                        Documents are attached to the tasks and issues of your project.</p><p>
+                        Documents are attached to the tasks of your project.</p><p>
                         Send messages or log internal notes with attachments to link
                         documents to your project.
                     </p>'''),
@@ -173,11 +173,11 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    name = fields.Char("Name", index=True, required=True, track_visibility='onchange')
+    name = fields.Char("Name", index=True, required=True, tracking=True)
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
 
@@ -198,26 +198,26 @@ class Project(models.Model):
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
-    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, track_visibility="onchange")
+    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'On invitation only'),
-            ('employees', 'Visible by all employees'),
-            ('portal', 'Visible by following customers'),
+            ('followers', 'Visible by invited employees'),
+            ('employees', 'Visible by employees'),
+            ('portal', 'Visible by portal users and employees'),
         ],
         string='Privacy', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
-                "- On invitation only: employees may only see the followed project and tasks.\n"
-                "- Visible by all employees: employees may see all project and tasks.\n"
-                "- Visible by following customers: employees may see everything."
-                "   if website is activated, portal users may see project and tasks followed by.\n"
+                "- Visible by invited employees: employees may only see the followed project and tasks.\n"
+                "- Visible by employees: employees may see all project and tasks.\n"
+                "- Visible by portal users and employees: employees may see everything."
+                "   Portal users may see project and tasks followed by.\n"
                 "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
-    date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
+    date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
@@ -268,11 +268,18 @@ class Project(models.Model):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
+        old_to_new_tasks = {}
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task)
-            tasks += task.copy(defaults)
+            if task.parent_id:
+                # set the parent to the duplicated task
+                defaults['parent_id'] = old_to_new_tasks[task.parent_id.id]
+            new_task = task.copy(defaults)
+            old_to_new_tasks[task.id] = new_task.id
+            tasks += new_task
+
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
     @api.multi
@@ -283,6 +290,8 @@ class Project(models.Model):
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
+        if self.subtask_project_id == self:
+            project.subtask_project_id = project
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
         if 'tasks' not in default:
@@ -389,8 +398,8 @@ class Project(models.Model):
 class Task(models.Model):
     _name = "project.task"
     _description = "Task"
-    _date_name = "date_start"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
+    _date_name = "date_assign"
+    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
 
@@ -425,15 +434,15 @@ class Task(models.Model):
         return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', track_visibility='always', required=True, index=True)
+    name = fields.Char(string='Title', tracking=True, required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'Normal'),
-        ], default='0', index=True, string="Priority")
+        ('0', 'Normal'),
+        ('1', 'Important'),
+    ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
-    stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
+    stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
@@ -442,15 +451,12 @@ class Task(models.Model):
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
-    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', track_visibility='onchange')
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True, index=True)
-    date_start = fields.Datetime(string='Starting Date',
-    default=fields.Datetime.now,
-    index=True, copy=False)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, track_visibility='onchange')
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         default=fields.Datetime.now,
         index=True,
@@ -460,15 +466,15 @@ class Task(models.Model):
         string='Project',
         default=lambda self: self.env.context.get('default_project_id'),
         index=True,
-        track_visibility='onchange',
+        tracking=True,
         change_default=True)
     notes = fields.Text(string='Notes')
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
+    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
-        index=True, track_visibility='always')
+        index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=lambda self: self._get_default_partner())
@@ -490,8 +496,6 @@ class Task(models.Model):
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
-    email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
-        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
@@ -586,11 +590,6 @@ class Task(models.Model):
         else:
             self.stage_id = False
 
-    @api.onchange('user_id')
-    def _onchange_user(self):
-        if self.user_id:
-            self.date_start = fields.Datetime.now()
-
     @api.constrains('parent_id', 'child_ids')
     def _check_subtask_level(self):
         for task in self:
@@ -659,10 +658,11 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        context = dict(self.env.context, mail_create_nolog=True)
+        context = dict(self.env.context)
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))
+            context.pop('default_parent_id', None)
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
@@ -743,10 +743,9 @@ class Task(models.Model):
     # ---------------------------------------------------
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Task, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Task, self)._track_template(changes)
         test_task = self[0]
-        changes, tracking_value_ids = tracking[test_task.id]
         if 'stage_id' in changes and test_task.stage_id.mail_template_id:
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_message': True,
@@ -756,14 +755,16 @@ class Task(models.Model):
         return res
 
     @api.multi
+    def _creation_subtype(self):
+        return self.env.ref('project.mt_task_new')
+
+    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
             return self.env.ref('project.mt_task_blocked')
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return self.env.ref('project.mt_task_ready')
-        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
-            return self.env.ref('project.mt_task_new')
         elif 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
@@ -833,7 +834,6 @@ class Task(models.Model):
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id')
         }

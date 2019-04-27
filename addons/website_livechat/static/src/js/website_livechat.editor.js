@@ -21,14 +21,15 @@ WebsiteNewMenu.include({
      * and redirects the user to this new channel.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewChannel: function () {
         var self = this;
         return wUtils.prompt({
             window_title: _t("New Channel"),
             input: _t("Name"),
-        }).then(function (name) {
+        }).then(function (result) {
+            var name = result.val;
             if (!name) {
                 return;
             }
@@ -41,7 +42,7 @@ WebsiteNewMenu.include({
                 },
             }).then(function (url) {
                 window.location.href = url;
-                return $.Deferred();
+                return new Promise(function () {});
             });
         });
     },

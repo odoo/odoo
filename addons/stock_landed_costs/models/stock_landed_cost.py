@@ -22,10 +22,10 @@ class LandedCost(models.Model):
 
     name = fields.Char(
         'Name', default=lambda self: _('New'),
-        copy=False, readonly=True, track_visibility='always')
+        copy=False, readonly=True, tracking=True)
     date = fields.Date(
         'Date', default=fields.Date.context_today,
-        copy=False, required=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+        copy=False, required=True, states={'done': [('readonly', True)]}, tracking=True)
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
@@ -39,12 +39,12 @@ class LandedCost(models.Model):
         'Item Description', states={'done': [('readonly', True)]})
     amount_total = fields.Float(
         'Total', compute='_compute_total_amount',
-        digits=0, store=True, track_visibility='always')
+        digits=0, store=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Posted'),
         ('cancel', 'Cancelled')], 'State', default='draft',
-        copy=False, readonly=True, track_visibility='onchange')
+        copy=False, readonly=True, tracking=True)
     account_move_id = fields.Many2one(
         'account.move', 'Journal Entry',
         copy=False, readonly=True)
@@ -307,6 +307,9 @@ class AdjustmentLines(models.Model):
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
+        # If the stock move is dropshipped move we need to get the cost account instead the stock valuation account
+        if self.move_id._is_dropshipped():
+            debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 

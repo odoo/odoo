@@ -32,7 +32,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.tours = {};
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(get_running_key());
-        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
+        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
@@ -49,7 +49,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
-     * @param {Deferred} [options.wait_for]
+     * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
@@ -70,7 +70,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             test: options.test,
-            wait_for: options.wait_for || $.when(),
+            wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
@@ -88,7 +88,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         _.each(this.tours, this._register.bind(this, do_update));
     },
     _register: function (do_update, tour, name) {
-        if (tour.ready) return $.when();
+        if (tour.ready) return Promise.resolve();
 
         var tour_is_consumed = _.contains(this.consumed_tours, name);
 
@@ -171,7 +171,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
+            var self = this;
+            setTimeout(function () {
+                self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
+            });
         } else {
             for (var tourName in this.active_tooltips) {
                 var tip = this.active_tooltips[tourName];
@@ -340,10 +343,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 });
                 console.log(document.body.parentElement.outerHTML);
                 console.error(error); // will be displayed as error info
-                console.log("error"); // phantomJS wait for message starting by error to stop
+                console.error("test failed"); // browser_js wait for error message "test failed"
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
-                console.log("ok"); // phantomJS wait for exact message "ok"
+                console.log("test successful"); // browser_js wait for message "test successful"
             }
             this._log = [];
         } else {
@@ -371,11 +374,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _to_next_running_step: function (tip, tour_name) {
         if (this.running_tour !== tour_name) return;
+        var self = this;
         this._stop_running_tour_timeout();
+        if (this.running_step_delay) {
+            // warning: due to the delay, it may happen that the $anchor isn't
+            // in the DOM anymore when exec is called, either because:
+            // - it has been removed from the DOM meanwhile and the tip's
+            //   selector doesn't match anything anymore
+            // - it has been re-rendered and thus the selector still has a match
+            //   in the DOM, but executing the step with that $anchor won't work
+            _.delay(exec, this.running_step_delay);
+        } else {
+            exec();
+        }
 
-        var action_helper = new RunningTourActionHelper(tip.widget);
-        _.delay((function () {
-            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+        function exec() {
+            var action_helper = new RunningTourActionHelper(tip.widget);
+            do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
@@ -385,7 +400,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             } else {
                 action_helper.auto();
             }
-        }).bind(this), this.running_step_delay);
+        }
     },
 
     /**

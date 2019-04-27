@@ -61,6 +61,13 @@ class MrpBom(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
         required=True)
+    consumption = fields.Selection([
+        ('strict', 'Strict'),
+        ('flexible', 'Flexible')],
+        help="Defines if you can consume more or less components than the quantity defined on the BoM.",
+        default='strict',
+        string='Consumption'
+    )
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -94,6 +101,8 @@ class MrpBom(models.Model):
             self.product_uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
+            for line in self.bom_line_ids:
+                line.attribute_value_ids = False
 
     @api.onchange('routing_id')
     def onchange_routing_id(self):
@@ -111,8 +120,7 @@ class MrpBom(models.Model):
         return super(MrpBom, self).unlink()
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
-        """ Finds BoM for particular product, picking and company """
+    def _bom_find_domain(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
         if product:
             if not product_tmpl:
                 product_tmpl = product.product_tmpl_id
@@ -121,7 +129,7 @@ class MrpBom(models.Model):
             domain = [('product_tmpl_id', '=', product_tmpl.id)]
         else:
             # neither product nor template, makes no sense to search
-            return False
+            raise UserError(_('You should provide either a product or a product template to search a BoM'))
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
@@ -129,6 +137,14 @@ class MrpBom(models.Model):
         if bom_type:
             domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without
+        return domain
+
+    @api.model
+    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
+        """ Finds BoM for particular product, picking and company """
+        domain = self._bom_find_domain(product_tmpl=product_tmpl, product=product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
+        if domain is False:
+            return domain
         return self.search(domain, order='sequence, product_id', limit=1)
 
     def explode(self, product, quantity, picking_type=False):
@@ -292,8 +308,10 @@ class MrpBomLine(models.Model):
 
     @api.onchange('parent_product_tmpl_id')
     def onchange_parent_product(self):
+        if not self.parent_product_tmpl_id:
+            return {}
         return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id.mapped('attribute_line_ids.value_ids.id')),
+            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
             ('attribute_id.create_variant', '!=', 'no_variant')
         ]}}
 

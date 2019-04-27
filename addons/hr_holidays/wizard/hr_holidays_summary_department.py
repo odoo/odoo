@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 class HolidaysSummaryDept(models.TransientModel):
 
     _name = 'hr.holidays.summary.dept'
-    _description = 'HR Leaves Summary Report By Department'
+    _description = 'HR Time Off Summary Report By Department'
 
     date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))
     depts = fields.Many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', string='Department(s)')
@@ -17,7 +17,7 @@ class HolidaysSummaryDept(models.TransientModel):
         ('Approved', 'Approved'),
         ('Confirmed', 'Confirmed'),
         ('both', 'Both Approved and Confirmed')
-    ], string='Leave Type', required=True, default='Approved')
+    ], string='Time Off Type', required=True, default='Approved')
 
     @api.multi
     def print_report(self):

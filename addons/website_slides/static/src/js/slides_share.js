@@ -1,11 +1,10 @@
 odoo.define('website_slides.slides_share', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
 
-var ShareMail = Widget.extend({
+var ShareMail = publicWidget.Widget.extend({
     events: {
         'click button': '_sendMail',
     },
@@ -39,9 +38,9 @@ var ShareMail = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     selector: '#wrapwrap',
-    read_events: {
+    events: {
         'click a.o_slides_social_share': '_onSlidesSocialShare',
     },
 
@@ -50,24 +49,24 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      * @param {Object} parent
      */
     start: function (parent) {
+        var self = this;
         var defs = [this._super.apply(this, arguments)];
         defs.push(new ShareMail(this).attachTo($('.oe_slide_js_share_email')));
 
         if ($('div#statistic').length) {
-            var slideURL = $('div#statistic').attr('slide-url');
-            var socialURLs = {
+            this.slideURL = $('div#statistic').attr('slide-url');
+            this.socialURLs = {
                 linkedin: 'https://www.linkedin.com/countserv/count/share?url=',
                 twitter: 'https://cdn.api.twitter.com/1/urls/count.json?url=',
                 facebook: 'https://graph.facebook.com/?id=',
-                gplus: 'https://clients6.google.com/rpc',
             };
         }
 
-        _.each(socialURLs, function (value, key) {
-            this._updateStatistics(key, slideURL);
-        });
+            _.each(this.socialURLs, function (value, key) {
+                self._updateStatistics(key, self.slideURL);
+            });
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -80,42 +79,16 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      * @param {string} slide_url
      */
     _updateStatistics: function (socialSite, slideURL) {
-        if (socialSite === 'gplus') {
-            $.ajax({
-                url: this.social_urls['gplus'],
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify([{
-                    method: 'pos.plusones.get',
-                    id: 'p',
-                    params: {
-                        nolog: true,
-                        id: slideURL,
-                        source: 'widget',
-                        userId: '@viewer',
-                        groupId: '@self'
-                    },
-                    // TDE NOTE: should there be a key here ?
-                    jsonrpc: '2.0',
-                    apiVersion: 'v1'
-                }]),
-                success: function (data) {
-                    $('#google-badge').text(data[0].result.metadata.globalCounts.count || 0);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
-                },
-            });
-        } else {
-            $.ajax({
-                url: this.social_urls[socialSite] + slideURL,
-                dataType: 'jsonp',
-                success: function (data) {
-                    var shareCount = (socialSite === 'facebook' ? data.shares : data.count) || 0;
-                    $('#' + socialSite + '-badge').text(shareCount);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + socialSite + '-badge').text()));
-                },
-            });
-        }
+        var self = this;
+        $.ajax({
+            url: self.socialURLs[socialSite] + slideURL,
+            dataType: 'jsonp',
+            success: function (data) {
+                var shareCount = (socialSite === 'facebook' ? data.shares : data.count) || 0;
+                $('#' + socialSite + '-badge').text(shareCount);
+                $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + socialSite + '-badge').text()));
+            },
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -127,13 +100,14 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      * @param {Object} ev
      */
     _onSlidesSocialShare: function (ev) {
+        var self = this;
         ev.preventDefault();
         var key = $(ev.currentTarget).attr('social-key');
         var popUpURL = $(ev.currentTarget).attr('href');
         var popUp = window.open(popUpURL, 'Share Dialog', 'width=626,height=436');
         $(window).on('focus', function () {
             if (popUp.closed) {
-                this._updateStatistics(key, this.slide_url);
+                self._updateStatistics(key, self.slide_url);
                 $(window).off('focus');
             }
         });

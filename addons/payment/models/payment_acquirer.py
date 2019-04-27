@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import logging
 from datetime import datetime
+from dateutil import relativedelta
 import pprint
 
 from odoo import api, exceptions, fields, models, _
@@ -296,6 +297,19 @@ class PaymentAcquirer(models.Model):
         return True
 
     @api.multi
+    def get_acquirer_extra_fees(self, amount, currency_id, country_id):
+        extra_fees = {
+            'currency_id': currency_id
+        }
+        acquirers = self.filtered(lambda x: x.fees_active)
+        for acq in acquirers:
+            custom_method_name = '%s_compute_fees' % acq.provider
+            if hasattr(acq, custom_method_name):
+                fees = getattr(acq, custom_method_name)(amount, currency_id, country_id)
+                extra_fees[acq] = fees
+        return extra_fees
+
+    @api.multi
     def get_form_action_url(self):
         """ Returns the form action URL, for form-based acquirer implementations. """
         if hasattr(self, '%s_get_form_action_url' % self.provider):
@@ -322,7 +336,7 @@ class PaymentAcquirer(models.Model):
             'acquirers': acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
-                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)]),
+                ('acquirer_id', 'in', acquirers.ids)]),
         }
 
     @api.multi
@@ -354,6 +368,7 @@ class PaymentAcquirer(models.Model):
         if values is None:
             values = {}
 
+        values.setdefault('return_url', '/payment/process')
         # reference and amount
         values.setdefault('reference', reference)
         amount = float_round(amount, 2)
@@ -445,7 +460,6 @@ class PaymentAcquirer(models.Model):
             'context': self._context,
             'type': values.get('type') or 'form',
         })
-        values.setdefault('return_url', False)
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
         return self.view_template_id.render(values, engine='ir.qweb')
@@ -579,7 +593,7 @@ class PaymentTransaction(models.Model):
                             help='Internal reference of the TX')
     acquirer_reference = fields.Char(string='Acquirer Reference', readonly=True, help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
-    partner_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange')
+    partner_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     partner_name = fields.Char('Partner Name')
     partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
@@ -671,6 +685,9 @@ class PaymentTransaction(models.Model):
             message_vals.append(self.payment_id._get_payment_chatter_link())
         elif self.state == 'cancel' and self.state_message:
             message = _('The transaction %s with %s for %s has been cancelled with the following message: %s')
+            message_vals.append(self.state_message)
+        elif self.state == 'error' and self.state_message:
+            message = _('The transaction %s with %s for %s has return failed with the following error message: %s')
             message_vals.append(self.state_message)
         else:
             message = _('The transaction %s with %s for %s has been cancelled.')
@@ -770,6 +787,7 @@ class PaymentTransaction(models.Model):
             'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             'state_message': msg,
         })
+        self._log_payment_transaction_received()
 
     @api.multi
     def _post_process_after_done(self):
@@ -781,9 +799,14 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _cron_post_process_after_done(self):
         if not self:
+            ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
+            # we don't want to forever try to process a transaction that doesn't go through
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
-                                ('is_processed', '=', False)
+                                ('is_processed', '=', False),
+                                ('date', '<=', ten_minutes_ago),
+                                ('date', '>=', retry_limit_date),
                             ])
         for tx in self:
             try:
@@ -866,24 +889,25 @@ class PaymentTransaction(models.Model):
     def create(self, values):
         # call custom create method if defined (i.e. ogone_create for ogone)
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-        partner = self.env['res.partner'].browse(values['partner_id'])
+        if values.get('partner_id'):
+            partner = self.env['res.partner'].browse(values['partner_id'])
 
-        values.update({
-            'partner_name': partner.name,
-            'partner_lang': partner.lang or 'en_US',
-            'partner_email': partner.email,
-            'partner_zip': partner.zip,
-            'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
-            'partner_city': partner.city,
-            'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
-            'partner_phone': partner.phone,
-        })
+            values.update({
+                'partner_name': partner.name,
+                'partner_lang': partner.lang or 'en_US',
+                'partner_email': partner.email,
+                'partner_zip': partner.zip,
+                'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
+                'partner_city': partner.city,
+                'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
+                'partner_phone': partner.phone,
+            })
 
         # compute fees
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), partner.country_id.id)
+                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
             values['fees'] = fees
 
         # custom create

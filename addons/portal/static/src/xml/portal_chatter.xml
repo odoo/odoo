@@ -15,7 +15,12 @@
         </div>
     </t>
 
-    <t t-name="portal.chatter_composer">
+    <!--
+        Widget PortalComposer (standalone)
+
+        required many options: token, res_model, res_id, ...
+    -->
+    <t t-name="portal.Composer">
         <div class="o_portal_chatter_composer" t-if="widget.options['allow_composer']">
             <t t-if="!widget.options['display_composer']">
                 <h4>Leave a comment</h4>
@@ -45,13 +50,16 @@
                     </div>
                 </div>
             </t>
-            <hr/>
         </div>
     </t>
 
+    <!--
+        Widget PortalChatter, and subtemplates
+    -->
+
     <t t-name="portal.chatter_messages">
         <div class="o_portal_chatter_messages">
-            <t t-foreach="widget.get('messages')" t-as="message">
+            <t t-foreach="widget.get('messages') || []" t-as="message">
                 <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
                     <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
                     <div class="media-body">
@@ -96,13 +104,14 @@
         </div>
     </t>
 
-    <t t-name="portal.chatter">
+    <t t-name="portal.Chatter">
         <div class="o_portal_chatter p-0">
             <div class="o_portal_chatter_header">
                 <t t-call="portal.chatter_message_count"/>
             </div>
+            <hr t-if="widget.options['allow_composer']"/>
+            <div class="o_portal_chatter_composer"/>
             <hr/>
-            <t t-call="portal.chatter_composer"/>
             <t t-call="portal.chatter_messages"/>
             <div class="o_portal_chatter_footer">
                 <t t-call="portal.pager"/>

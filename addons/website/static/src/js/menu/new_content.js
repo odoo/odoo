@@ -12,7 +12,7 @@ var _t = core._t;
 var enableFlag = 'enable_new_content';
 
 var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         close_all_widgets: '_handleCloseDemand',
         new_page: '_createNewPage',
@@ -70,7 +70,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * redirects the user to this new page.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewPage: function () {
         return wUtils.prompt({
@@ -81,20 +81,22 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 var $group = this.$dialog.find('div.form-group');
                 $group.removeClass('mb0');
 
-                var $add = $('<div/>', {'class': 'form-group mb0'})
+                var $add = $('<div/>', {'class': 'form-group mb0 row'})
                             .append($('<span/>', {'class': 'offset-md-3 col-md-9 text-left'})
-                                    .append(qweb.render('web_editor.components.switch', {id: 'switch_addTo_menu', label: _t("Add to menu")})));
+                                    .append(qweb.render('website.components.switch', {id: 'switch_addTo_menu', label: _t("Add to menu")})));
                 $add.find('input').prop('checked', true);
                 $group.after($add);
             }
-        }).then(function (val, field, $dialog) {
+        }).then(function (result) {
+            var val = result.val;
+            var $dialog = result.dialog;
             if (!val) {
                 return;
             }
             var url = '/website/add/' + encodeURIComponent(val);
             if ($dialog.find('input[type="checkbox"]').is(':checked')) url +='?add_menu=1';
             document.location = url;
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
     /**
@@ -138,7 +140,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @private
      * @param {number} moduleId: the module to install
-     * @return {Deferred}
+     * @return {Promise}
      */
     _install: function (moduleId) {
         this.pendingInstall = true;
@@ -147,7 +149,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             model: 'ir.module.module',
             method: 'button_immediate_install',
             args: [[moduleId]],
-        }).fail(function () {
+        }).guardedCatch(function () {
             $('body').css('pointer-events', '');
         });
     },
@@ -155,20 +157,21 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * Show the menu
      *
      * @private
-     * @returns Deferred
+     * @returns {Promise}
      */
     _showMenu: function () {
-        var def = $.Deferred();
-        this.trigger_up('action_demand', {
-            actionName: 'close_all_widgets',
-            onSuccess: def.resolve.bind(def),
-        });
-        return def.then((function () {
-            this.firstTab = true;
-            this.$newContentMenuChoices.removeClass('o_hidden');
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.trigger_up('action_demand', {
+                actionName: 'close_all_widgets',
+                onSuccess: resolve,
+            });
+        }).then(function () {
+            self.firstTab = true;
+            self.$newContentMenuChoices.removeClass('o_hidden');
             $('body').addClass('o_new_content_open');
-            this.$('> a').focus();
-        }).bind(this));
+            self.$('> a').focus();
+        });
     },
 
     //--------------------------------------------------------------------------

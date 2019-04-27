@@ -3,7 +3,12 @@ odoo.define('website_sale_link_tracker.backend', function (require) {
 
 var WebsiteSaleBackend = require('website_sale.backend');
 
+var COLORS = ['#875a7b', '#21b799', '#E4A900', '#D5653E', '#5B899E', '#E46F78', '#8F8F8F'];
+
 WebsiteSaleBackend.include({
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
 
     events: _.defaults({
         'click .js_utm_selector': '_onClickUtmButton', // Click event on select UTM drop-down button
@@ -35,34 +40,46 @@ WebsiteSaleBackend.include({
         var graphData = this.utmGraphData[utmDataType];
         if (graphData.length) {
             this.$(".o_utm_no_data_img").hide();
-            this.$(".o_utm_data_graph").show();
+            this.$(".o_utm_data_graph").empty().show();
+            var $canvas = $('<canvas/>');
+            this.$(".o_utm_data_graph").append($canvas);
+            var context = $canvas[0].getContext('2d');
+            console.log(graphData);
 
-            this.$(".o_utm_data_graph").empty();
-            nv.addGraph(function() {
-                var utmChart = nv.models.pieChart()
-                    .x(function(d) {return d.utm_type; })
-                    .y(function(d) {return d.amount_total; })
-                    .showLabels(true)
-                    .labelThreshold(0.1)
-                    .labelType("percent")
-                    .showLegend(false)
-                    .margin({ "left": 0, "right": 0, "top": 0, "bottom": 0 })
-                    .color(['#875a7b', '#21b799', '#E4A900', '#D5653E', '#5B899E', '#E46F78', '#8F8F8F']);
-
-                utmChart.tooltip.valueFormatter(function(value, i) {
-                    return self.render_monetary_field(value, self.data.currency);
-                });
-
-                var svg = d3.select(".o_utm_data_graph").append("svg");
-
-                svg
-                    .attr("height", "15em")
-                    .datum(graphData)
-                    .call(utmChart);
-
-                nv.utils.windowResize(utmChart.update);
-                return utmChart;
+            var data = [];
+            var labels = [];
+            graphData.forEach(function(pt) {
+                data.push(pt.amount_total);
+                labels.push(pt.utm_type);
             });
+            var config = {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: COLORS,
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var label = data.labels[tooltipItem.index] || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                var amount = data.datasets[0].data[tooltipItem.index];
+                                amount = self.render_monetary_field(amount, self.data.currency);
+                                label += amount;
+                                return label;
+                            }
+                        }
+                    },
+                    legend: {display: false}
+                }
+            };
+            new Chart(context, config);
         } else {
             this.$(".o_utm_no_data_img").show();
             this.$(".o_utm_data_graph").hide();

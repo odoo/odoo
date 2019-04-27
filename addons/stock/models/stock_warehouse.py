@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.osv import expression
 
 import logging
 
@@ -148,7 +149,7 @@ class Warehouse(models.Model):
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
-            depends = [depend for depends in [value['depends'] for value in warehouse._get_routes_values().values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
             if any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
@@ -161,7 +162,7 @@ class Warehouse(models.Model):
             # _get_global_route_rules_values method under the key named
             # 'depends'.
             global_rules = warehouse._get_global_route_rules_values()
-            depends = [depend for depends in [value['depends'] for value in global_rules.values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in global_rules.values()] for depend in depends]
             if any(rule in vals for rule in global_rules) or\
                     any(depend in vals for depend in depends):
                 warehouse._create_or_update_global_routes_rules()
@@ -280,9 +281,9 @@ class Warehouse(models.Model):
                 warehouse_data[picking_type] = PickingType.create(values).id
 
         if 'out_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data['in_type_id']})
+            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('in_type_id', False)})
         if 'in_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
+            PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
 
     def _create_or_update_global_routes_rules(self):
@@ -292,7 +293,7 @@ class Warehouse(models.Model):
         with the wanted reception, delivery,... steps.
         """
         for rule_field, rule_details in self._get_global_route_rules_values().items():
-            values = rule_details['update_values']
+            values = rule_details.get('update_values', {})
             if self[rule_field]:
                 self[rule_field].write(values)
             else:
@@ -334,7 +335,7 @@ class Warehouse(models.Model):
                 'depends': ['delivery_steps'],
                 'create_values': {
                     'active': True,
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -376,11 +377,13 @@ class Warehouse(models.Model):
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
-                route.write(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route.write(route_data['route_update_values'])
                 route.rule_ids.write({'active': False})
             # Create the route
             else:
-                route_data['route_create_values'].update(route_data['route_update_values'])
+                if 'route_update_values' in route_data:
+                    route_data['route_create_values'].update(route_data['route_update_values'])
                 route = self.env['stock.location.route'].create(route_data['route_create_values'])
                 self[route_field] = route
             # Get rules needed for the route
@@ -495,12 +498,39 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        code = vals.get('code') or self.code
+        code = code.replace(' ', '').upper()
         sub_locations = {
-            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
-            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
-            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
-            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
-            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+            'lot_stock_id': {
+                'name': _('Stock'),
+                'active': True,
+                'usage': 'internal',
+                'barcode': code + '-STOCK'
+            },
+            'wh_input_stock_loc_id': {
+                'name': _('Input'),
+                'active': reception_steps != 'one_step',
+                'usage': 'internal',
+                'barcode': code + '-INPUT'
+            },
+            'wh_qc_stock_loc_id': {
+                'name': _('Quality Control'),
+                'active': reception_steps == 'three_steps',
+                'usage': 'internal',
+                'barcode': code + '-QUALITY'
+            },
+            'wh_output_stock_loc_id': {
+                'name': _('Output'),
+                'active': delivery_steps != 'ship_only',
+                'usage': 'internal',
+                'barcode': code + '-OUTPUT'
+            },
+            'wh_pack_stock_loc_id': {
+                'name': _('Packing Zone'),
+                'active': delivery_steps == 'pick_pack_ship',
+                'usage': 'internal',
+                'barcode': code + '-PACKING'
+            },
         }
         return sub_locations
 
@@ -936,10 +966,22 @@ class Orderpoint(models.Model):
     lead_type = fields.Selection(
         [('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type',
         required=True, default='supplier')
+    allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    @api.depends('warehouse_id')
+    def _compute_allowed_location_ids(self):
+        loc_domain = [('usage', 'in', ('internal', 'view'))]
+        # We want to keep only the locations
+        #  - strictly belonging to our warehouse
+        #  - not belonging to any warehouses
+        other_warehouses = self.env['stock.warehouse'].search([('id', '!=', self.warehouse_id.id)])
+        for view_location_id in other_warehouses.mapped('view_location_id'):
+            loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
+        self.allowed_location_ids = self.env['stock.location'].search(loc_domain)
 
     def _quantity_in_progress(self):
         """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
@@ -971,7 +1013,7 @@ class Orderpoint(models.Model):
             # These days will be substracted when creating the PO
             days += self.product_id._select_seller(
                 quantity=product_qty,
-                date=start_date,
+                date=fields.Date.context_today(self,start_date),
                 uom_id=self.product_uom).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -985,6 +1027,5 @@ class Orderpoint(models.Model):
             'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
-            'company_id': self.company_id,
             'group_id': group or self.group_id,
         }

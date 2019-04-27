@@ -19,8 +19,8 @@ Allows to contact directly the employee in case of unjustified absence.
     'depends': ['hr', 'hr_holidays', 'sms'],
     'data': [
         'views/res_config_settings_views.xml',
-        'views/hr_employee_views.xml',
         'data/ir_actions_server.xml',
+        'views/hr_employee_views.xml',
         'data/mail_data.xml',
     ],
     'demo': [],

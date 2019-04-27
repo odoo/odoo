@@ -28,7 +28,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         ctx = self._context
         periods = {}
         date_from = fields.Date.from_string(date_from)
-        start = date_from - relativedelta(days=1)
+        start = date_from
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             period_name = str((5-(i+1)) * period_length + 1) + '-' + str((5-i) * period_length)
@@ -142,6 +142,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
                 if not self.env.user.company_id.currency_id.is_zero(line_amount):
                     partners_amount[partner_id] += line_amount
+                    lines.setdefault(partner_id, [])
                     lines[partner_id].append({
                         'line': line,
                         'amount': line_amount,
@@ -179,6 +180,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     line_amount -= partial_line.company_id.currency_id._convert(partial_line.amount, user_currency, user_company, date_from)
             if not self.env.user.company_id.currency_id.is_zero(line_amount):
                 undue_amounts[partner_id] += line_amount
+                lines.setdefault(partner_id, [])
                 lines[partner_id].append({
                     'line': line,
                     'amount': line_amount,

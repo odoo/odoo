@@ -19,7 +19,7 @@ otherwise.
     only useful as a mnemonic/description of the view when looking for one in
     a list of some sort
 ``model``
-    the model linked to the view, if applicable (it doesn't for QWeb views)
+    the model linked to the view, if applicable
 ``priority``
     client programs can request views by ``id``, or by ``(model, type)``. For
     the latter, all the views for the right type and model will be searched,
@@ -202,12 +202,6 @@ root can have the following attributes:
     .. code-block:: xml
 
         <tree default_order="sequence,name desc">
-``colors``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
-``fonts``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
     record's attributes.
@@ -222,25 +216,17 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``
+``create``, ``edit``, ``delete``, ``duplicate``, ``import``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
-    the default size of a page. It should be a positive integer
-``on_write``
-    only makes sense on an ``editable`` list. Should be the name of a method
-    on the list's model. The method will be called with the ``id`` of a record
-    after having created or edited that record (in database).
-
-    The method should return a list of ids of other records to load or update.
-``string``
-    alternative translatable label for the view
-
-    .. deprecated:: 8.0
-
-        not displayed anymore
-
-.. toolbar attribute is for tree-tree views
+    the default size of a page. It must be a positive integer
+``groups_limit``
+    when the list view is grouped, the default number of groups of a page. It
+    must be a position integer
+``expand``
+    when the list view is grouped, automatically open the first level of groups
+    if set to true (default: false)
 
 Possible children elements of the list view are:
 
@@ -323,16 +309,14 @@ Possible children elements of the list view are:
         lists the groups which should be able to see the field
     ``widget``
         alternate representations for a field's display. Possible list view
-        values are:
+        values are (among others):
 
         ``progressbar``
             displays ``float`` fields as a progress bar.
-        ``many2onebutton``
-            replaces the m2o field's value by a checkmark if the field is
-            filled, and a cross if it is not
         ``handle``
-            for ``sequence`` fields, instead of displaying the field's value
-            just displays a drag&drop icon
+            for ``sequence`` (or ``integer``) fields by which records are
+            sorted, instead of displaying the field's value just displays a
+            drag&drop icon to reorder records.
     ``sum``, ``avg``
         displays the corresponding aggregate at the bottom of the column. The
         aggregation is only computed on *currently displayed* records. The
@@ -342,10 +326,35 @@ Possible children elements of the list view are:
         dynamic attributes based on record values. Only effects the current
         field, so e.g. ``invisible`` will hide the field but leave the same
         field of other records visible, it will not hide the column itself
+    ``width_factor`` (for ``editable``)
+        the column relative width (as the layout is fixed)
+    ``width`` (for ``editable``)
+        the column width (as the layout is fixed)
 
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+``groupby``
+  defines custom headers (with buttons) for the current view when grouping
+  records on many2one fields. It is also possible to add `field`, inside the
+  `groupby` which can be used for modifiers. These fields thus belong on the
+  many2one comodel. These extra fields will be fetched in batch.
+
+  ``name``
+      the name of a many2one field (on the current model). Custom header will be
+      displayed when grouping the view on this field name (only for first level).
+
+  .. code-block:: xml
+
+    <groupby name="partner_id">
+      <field name="name"/> <!-- name of partner_id -->
+        <button type="edit" name"edit" string="Edit/>
+        <button type="object" name="my_method" string="Button1"
+          attrs="{'invisible': [('name', '=', 'Georges')]}"/>
+    </groupby>
+
+  A special button (`type="edit"`) can be defined to open the many2one form view.
 
 ``control``
   defines custom controls for the current view.
@@ -469,7 +478,10 @@ system. Available semantic components are:
 
 ``field``
   renders (and allow edition of, possibly) a single field of the current
-  record. Possible attributes are:
+  record. Using several times a field in a form view is supported and the fields 
+  can receive different values for modifiers 'invisible' and 'readonly'. However,
+  the behavior is not guaranteed when several fields exist with different values 
+  for modifier 'required'. Possible attributes of the field node are:
 
   ``name`` (mandatory)
     the name of the field to render
@@ -1073,6 +1085,11 @@ Possible children of the view element are:
     a :meth:`~odoo.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
+  ``context``
+    the current context, coming from the action, and the one2many or many2many
+    field in the case of a Kanban view embedded in a Form view
+  ``user_context``
+    self-explanatory
   ``read_only_mode``
     self-explanatory
 
@@ -1082,8 +1099,14 @@ Possible children of the view element are:
     While most of the Kanban templates are standard :ref:`reference/qweb`, the
     Kanban view processes ``field``, ``button`` and ``a`` elements specially:
 
-    * by default fields are replaced by their formatted value, unless they
-      match specific kanban view widgets
+    * by default fields are replaced by their formatted value, unless the
+      ``widget`` attribute is specified, in which case their rendering and
+      behavior depends on the corresponding widget. Possible values are (among
+      others):
+
+      ``handle``
+          for ``sequence`` (or ``integer``) fields by which records are
+          sorted, allows to drag&drop records to reorder them.
 
       .. todo:: list widgets?
 
@@ -1105,6 +1128,57 @@ Possible children of the view element are:
 
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
+
+``searchpanel``
+  allows to display a search panel on the left of the kanban view.
+  This tool allows to quickly filter data on the basis of given fields. The fields
+  are specified as direct children of the ``searchpanel`` with tag name ``field``,
+  and the following attributes:
+
+  * ``name`` (mandatory) the name of the field to filter on
+
+  * ``select`` determines the behavior and display. Possible values are
+
+      ``one`` (default) at most one value can be selected. Supported field types are
+        many2one and selection.
+
+      ``multi`` several values can be selected (checkboxes). Supported field
+        types are many2one, many2many and selection.
+
+  * ``groups``: restricts to specific users
+
+  * ``string``: determines the label to display
+
+  * ``icon``: specifies which icon is used
+
+  * ``color``: determines the icon color
+
+  Additional optional attributes are available in the ``multi`` case:
+
+  * ``domain``: determines conditions that the comodel records have to satisfy.
+
+  A domain might be used to express a dependency on another field (with select="one")
+  of the search panel. Consider
+
+  .. code-block:: xml
+
+    <searchpanel>
+      <field name="department_id"/>
+      <field name="manager_id" select="multi" domain="[('department_id', '=', department_id)]"/>
+    <searchpanel/>
+
+  In the above example, the range of values for manager_id (manager names) available at screen
+  will depend on the value currently selected for the field ``department_id``.
+
+  * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
+
+  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+
+    This feature has been implemented in case performances would be too bad.
+
+    Another way to solve performance issues is to properly override the
+    ``search_panel_select_multi_range`` method.
+
 
 If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
 
@@ -1211,56 +1285,109 @@ take the following attributes:
 ``date_start`` (required)
   name of the field providing the start datetime of the event for each
   record.
-``date_stop``
+``date_stop`` (required)
   name of the field providing the end duration of the event for each
-  record. Can be replaced by ``date_delay``. One (and only one) of
-  ``date_stop`` and ``date_delay`` must be provided.
+  record.
+``color``
+  name of the field used to color the pills according to its value
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
+    record's attributes.
 
-  If the field is ``False`` for a record, it's assumed to be a "point event"
-  and the end date will be set to the start date
-``date_delay``
-  name of the field providing the duration of the event
-``duration_unit``
-  one of ``minute``, ``hour`` (default), ``day``, ``week``, ``month``, ``year``
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
 
+    ``{$name}`` can be any `bootstrap contextual color
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``default_group_by``
   name of a field to group tasks by
-``type``
-  ``gantt`` classic gantt view (default)
-
-  ``consolidate`` values of the first children are consolidated in the gantt's task
-
-  ``planning`` children are displayed in the gantt's task
 ``consolidation``
   field name to display consolidation value in record cell
 ``consolidation_max``
-  dictionary with the "group by" field as key and the maximum consolidation
+  dictionnary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
   (e.g. ``{"user_id": 100}``)
 ``consolidation_exclude``
-  name of the field that describe if the task has to be excluded
+  name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-
-  .. warning::
-      The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
-      not a valid value
 ``create``, ``edit``
     allows *dis*\ abling the corresponding action in the view by setting the
-    corresponding attribute to ``false``
-``string``
-  string to display next to the consolidation value, if not specified, the label
-  of the consolidation field will be used
-``fold_last_level``
-  If a value is set, the last grouping level is folded
-``round_dnd_dates``
-  enables rounding the task's start and end dates to the nearest scale marks
-``drag_resize``
-  resizing of the tasks, default is ``true``
-
+    corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
+    will be displayed while hovering each time slot to create a new record in
+    that slot, and if ``edit`` is enabled, a "magnifying glass" button will be
+    displayed to plan records into that time slot.
+``offset``
+  Depending on the scale, the number of units to add to today to compute the
+  default period. Examples: An offset of +1 in default_scale week will open the
+  gantt view for next week, and an offset of -2 in default_scale month will open
+  the gantt view of 2 months ago.
 ``progress``
   name of a field providing the completion percentage for the record's event,
   between 0 and 100
+``string``
+  title of the gantt view
+``precision``
+  JSON object specifying snapping precisions for the pills in each scale.
+
+  * Possible values for scale ``day`` are (default: ``hour``):
+
+    ``hour``: records times snap to full hours (ex: 7:12 becomes 8:00)
+
+    ``hour:half``: records times snap to half hours (ex: 7:12 becomes 7:30)
+
+    ``hour:quarter``: records times snap to half hours (ex: 7:12 becomes 7:15)
+
+  * Possible values for scale ``week`` are (default: ``day:half``):
+
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+
+    ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
+
+  * Possible values for scale ``month`` are (default: ``day:half``):
+
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+
+    ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
+
+  * Scale ``year`` always snap to full day.
+  Example of precision attribute: ``{"day": "hour:quarter", "week": "day:half", "month": "day"}``
+``total_row``
+  boolean to control whether the row containing the total count of records should
+  be displayed. (default: ``false``)
+``collapse_first_level``
+  boolean to control whether it is possible to collapse each row if grouped by
+  one field. (default: ``false``, the collapse starts when grouping by two fields)
+``display_unavailability``
+  boolean to mark the dates returned by the ``gantt_unavailability`` function of
+  the model as available inside the gantt view. Records can still be scheduled
+  in them, but their unavailability is visually displayed. (default: ``false``)
+``default_scale``
+  default scale when rendering the view. Possible values are (default: ``month``):
+
+  * ``day``
+  * ``week``
+  * ``month``
+  * ``year``
+``scales``
+  comma-separated list of allowed scales for this view. By default, all scales
+  are allowed. For possible scale values to use in this list, see ``default_scale``.
+
+``templates``
+  defines the :ref:`reference/qweb` template ``gantt-popover`` which is used
+  when the user hovers over one of the records in the gantt view.
+
+  The gantt view uses mostly-standard :ref:`javascript qweb
+  <reference/qweb/javascript>` and provides the following context variables:
+
+  ``widget``
+    the current :js:class:`GanttRow`, can be used to fetch some
+    meta-information. The ``getColor`` method to convert in a color integer is
+    also available directly in the template context without using ``widget``.
 
 .. _reference/views/diagram:
 
@@ -1637,9 +1764,10 @@ Possible children elements of the search view are:
         If both ``operator`` and ``filter_domain`` are provided,
         ``filter_domain`` takes precedence.
     ``context``
-        allows adding context keys, including the user-provided value (which
-        as for ``domain`` is available as a ``self`` variable). By default,
-        fields don't generate domains.
+        allows adding context keys, including the user-provided values (which
+        as for ``domain`` are available as a ``self`` variable, an array of
+        values e.g. ``[id_1, id_2]`` for a :class:`~odoo.fields.Many2one` field).
+        By default, fields don't generate domains.
 
         .. note:: the domain and context are inclusive and both are generated
                   if a ``context`` is specified. To only generate context
@@ -1816,14 +1944,45 @@ QWeb
 ====
 
 QWeb views are standard :ref:`reference/qweb` templates inside a view's
-``arch``. They don't have a specific root element.
+``arch``. They don't have a specific root element. Because QWeb views don't
+have a specific root element, their type must be specified explicitly (it can
+not be inferred from the root element of the ``arch`` field).
 
-A QWeb view can only contain a single template\ [#template_inherit]_, and the
-template's name *must* match the view's complete (including module name)
-:term:`external id`.
+QWeb views have two use cases:
 
-:ref:`reference/data/template` should be used as a shortcut to define QWeb
-views.
+* they can be used as frontend templates, in which case
+  :ref:`reference/data/template` should be used as a shortcut.
+* they can be used as actual qweb views (opened inside an action), in which
+  case they should be defined as regular view with an explicit ``type`` (it
+  can not be inferred) and a model.
+
+The main additions of qweb-as-view to the basic qweb-as-template are:
+
+* qweb-as-view has a special case for a ``<nav>`` element bearing the CSS
+  class ``o_qweb_cp_buttons``: its contents should be buttons and will be
+  extracted and moved to the control panel's button area, the ``<nav>`` itself
+  will be removed, this is a work-around to control panel views not existing
+  yet
+* qweb-as-view rendering adds several items to the standard qweb rendering
+  context:
+
+  ``model``
+    the model to which the qweb view is bound
+  ``domain``
+    the domain provided by the search view
+  ``context``
+    the context provided by the search view
+  ``records``
+    a lazy proxy to ``model.search(domain)``, this can be used if you just
+    want to iterate the records and not perform more complex operations
+    (e.g. grouping)
+* qweb-as-view also provides additional rendering hooks:
+
+  - ``_qweb_prepare_context(view_id, domain)`` prepares the rendering context
+    specific to qweb-as-view
+  - ``qweb_render_view(view_id, domain)`` is the method called by the client
+    and will call the context-preparation methods and ultimately
+    ``env['ir.qweb'].render()``.
 
 .. [#backwards-compatibility] for backwards compatibility reasons
 .. [#hasclass] an extension function is added for simpler matching in QWeb

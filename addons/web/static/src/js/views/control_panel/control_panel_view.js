@@ -43,6 +43,10 @@ var ControlPanelView = Factory.extend({
      *   breadcrumbs won't be rendered
      * @param {boolean} [params.withSearchBar=true] if set to false, no default
      *   search bar will be rendered
+     * @param {Object[]} [params.dynamicFilters=[]] filters to add to the
+     *   search (in addition to those described in the arch), each filter being
+     *   an object with keys 'description' (what is displayed in the searchbar)
+     *   and 'domain'
      */
     init: function (params) {
         var self = this;
@@ -101,6 +105,19 @@ var ControlPanelView = Factory.extend({
         INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(function (option) {
             return _.extend(option, {description: option.description.toString()});
         });
+
+        // add a filter group with the dynamic filters, if any
+        if (params.dynamicFilters && params.dynamicFilters.length) {
+            var dynamicFiltersGroup = params.dynamicFilters.map(function (filter) {
+                return {
+                    description: filter.description,
+                    domain: JSON.stringify(filter.domain),
+                    isDefault: true,
+                    type: 'filter',
+                };
+            });
+            this.loadParams.groups.unshift(dynamicFiltersGroup);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -141,6 +158,7 @@ var ControlPanelView = Factory.extend({
                                 'Ω';
         if (filter.type === 'filter') {
             filter.domain = attrs.domain;
+            filter.context = pyUtils.eval('context', attrs.context);
             if (attrs.date) {
                 filter.fieldName = attrs.date;
                 filter.fieldType = this.fields[attrs.date].type;
@@ -196,7 +214,11 @@ var ControlPanelView = Factory.extend({
         var groupOfGroupBys = [];
         var groupNumber = 1;
 
+
         _.each(preFilters, function (preFilter) {
+            if (preFilter.attrs && preFilter.attrs.invisible) {
+                return;
+            }
             if (preFilter.tag !== currentTag || _.contains(['separator', 'field'], preFilter.tag)) {
                 if (currentGroup.length) {
                     if (currentTag === 'groupBy') {

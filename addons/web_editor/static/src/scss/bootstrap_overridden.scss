@@ -1,6 +1,3 @@
-// Hacky way to detect if its the backend or not
-$-is-backend: variable-exists('primary');
-
 // Use auto threshold for yiq colors
 $yiq-contrasted-threshold: false !default;
 
@@ -9,22 +6,13 @@ $colors: () !default;
 $colors: map-merge($o-color-palette, $colors);
 
 // Automatically extend bootstrap to create theme background/text/button classes
-$-palette: $o-theme-color-palette;
-@if $-is-backend {
-    $-palette: map-remove($-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
-}
 $theme-colors: () !default;
-$theme-colors: map-merge($-palette, $theme-colors);
+$theme-colors: map-merge($o-theme-color-palette, $theme-colors);
 
-// Extend grays with transparent ones (for some reason, BS4 create black-50 and
-// white-50 but does not allow overridding that with variables), also use the
-// theme gray palette (which is supposed to at least declare white and black).
-$-palette: $o-gray-color-palette;
-@if $-is-backend {
-    $-palette: map-remove($-palette, '100', '200', '300', '400', '500', '600', '700', '800', '900');
-}
+// Automatically extend bootstrap gray palette (the theme palette is supposed to
+// at least declare white and black)
 $grays: () !default;
-$grays: map-merge($-palette, $grays);
+$grays: map-merge($o-gray-color-palette, $grays);
 
 // Bootstrap use standard variables to define individual colors which are then
 // placed into a map which is then used to get the value of each individual

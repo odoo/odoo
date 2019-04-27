@@ -11,6 +11,7 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 # Default hour per day value. The one should
@@ -150,21 +151,20 @@ class ResourceCalendar(models.Model):
         res = super(ResourceCalendar, self).default_get(fields)
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
+        if not res.get('attendance_ids'):
+            res['attendance_ids'] = [
+                (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
         return res
-
-    def _get_default_attendance_ids(self):
-        return [
-            (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-        ]
 
     name = fields.Char(required=True)
     company_id = fields.Many2one(
@@ -172,27 +172,32 @@ class ResourceCalendar(models.Model):
         default=lambda self: self.env['res.company']._company_default_get())
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
-        copy=True, default=_get_default_attendance_ids)
+        copy=True)
     leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Leaves')
+        'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
+        'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
         domain=[('resource_id', '=', False)]
         )
-    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY,
+    hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
 
+
+    def _get_global_attendances(self):
+        return self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to and not attendance.resource_id)
+
     @api.onchange('attendance_ids')
     def _onchange_hours_per_day(self):
-        attendances = self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        attendances = self._get_global_attendances()
         hour_count = 0.0
         for attendance in attendances:
             hour_count += attendance.hour_to - attendance.hour_from
-        self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
+        if attendances:
+            self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
 
     # --------------------------------------------------
     # Computation API
@@ -206,10 +211,10 @@ class ResourceCalendar(models.Model):
 
         resource_ids = [resource.id, False] if resource else [False]
         domain = domain if domain is not None else []
-        domain = domain + [
+        domain = expression.AND([domain, [
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
-        ]
+        ]])
 
         # express all dates and times in the resource's timezone
         tz = timezone((resource or self).tz)
@@ -439,7 +444,7 @@ class ResourceResource(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        'Active', default=True, track_visibility='onchange',
+        'Active', default=True, tracking=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.company']._company_default_get())
     resource_type = fields.Selection([
@@ -506,7 +511,7 @@ class ResourceResource(models.Model):
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
-    _description = "Resource Leaves Detail"
+    _description = "Resource Time Off Detail"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(
@@ -517,14 +522,14 @@ class ResourceCalendarLeaves(models.Model):
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
-        help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
-    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave',
-                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
+        help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
+    time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
+                                 help="Whether this should be computed as a time off or as work time (eg: formation)")
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
-            raise ValidationError(_('The start date of the leave must be earlier end date.'))
+            raise ValidationError(_('The start date of the time off must be earlier end date.'))
 
     @api.onchange('resource_id')
     def onchange_resource(self):

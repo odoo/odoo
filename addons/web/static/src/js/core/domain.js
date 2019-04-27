@@ -104,8 +104,13 @@ var Domain = collections.Tree.extend({
                     );
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
+                case "=like":
+                    var regExp = new RegExp(this._data[2].toLowerCase().replace(/([.\[\]\{\}\+\*])/g, '\\\$1').replace(/%/g, '.*'));
+                    return regExp.test(fieldValue.toLowerCase());
                 case "ilike":
                     return (fieldValue.indexOf(this._data[2]) >= 0);
+                case "=ilike":
+                    return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
                     throw new Error(_.str.sprintf(
                         "Domain %s uses an unsupported operator",
@@ -258,8 +263,8 @@ var Domain = collections.Tree.extend({
                     });
                     break;
                 case 'previous_year':
-                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years-- : -1;
-                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years-- : -1;
+                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years - 1 : -1;
+                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years - 1 : -1;
                   break;
             }
 
@@ -353,6 +358,11 @@ var Domain = collections.Tree.extend({
                 leftBoundaryParams = {days: -365};
                 rightBoundaryParams = t ? {days: -1} : {};
                 offsetPeriodParams = {days: -365};
+                return makeInterval();
+            case 'last_5_years':
+                leftBoundaryParams = {years: -5};
+                rightBoundaryParams = t ? {days: -1} : {};
+                offsetPeriodParams = {years: -5};
                 return makeInterval();
         }
     },

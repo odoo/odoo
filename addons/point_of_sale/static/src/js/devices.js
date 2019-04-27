@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 // the JobQueue schedules a sequence of 'jobs'. each job is
-// a function returning a deferred. the queue waits for each job to finish
+// a function returning a promise. The queue waits for each job to finish
 // before launching the next. Each job can also be scheduled with a delay.
 // the  is used to prevent parallel requests to the proxy.
 
@@ -19,17 +19,19 @@ var JobQueue = function(){
     var queue = [];
     var running = false;
     var scheduled_end_time = 0;
-    var end_of_queue = (new $.Deferred()).resolve();
+    var end_of_queue = Promise.resolve();
     var stoprepeat = false;
 
-    var run = function(){
-        if(end_of_queue.state() === 'resolved'){
-            end_of_queue =  new $.Deferred();
-        }
-        if(queue.length > 0){
+    var run = function () {
+        var runNextJob = function () {
+            if (queue.length === 0) {
+                running = false;
+                scheduled_end_time = 0;
+                return Promise.resolve();
+            }
             running = true;
             var job = queue[0];
-            if(!job.opts.repeat || stoprepeat){
+            if (!job.opts.repeat || stoprepeat) {
                 queue.shift();
                 stoprepeat = false;
             }
@@ -37,30 +39,37 @@ var JobQueue = function(){
             // the time scheduled for this job
             scheduled_end_time = (new Date()).getTime() + (job.opts.duration || 0);
 
-            // we run the job and put in def when it finishes
-            var def = job.fun() || (new $.Deferred()).resolve();
+            // we run the job and put in prom when it finishes
+            var prom = job.fun() || Promise.resolve();
 
-            // we don't care if a job fails ...
-            def.always(function(){
+            var always = function () {
                 // we run the next job after the scheduled_end_time, even if it finishes before
-                setTimeout(function(){
-                    run();
-                }, Math.max(0, scheduled_end_time - (new Date()).getTime()) );
-            });
-        }else{
-            running = false;
-            scheduled_end_time = 0;
-            end_of_queue.resolve();
+                return new Promise(function (resolve, reject) {
+                    setTimeout(
+                        resolve,
+                        Math.max(0, scheduled_end_time - (new Date()).getTime())
+                    );
+                });
+            };
+            // we don't care if a job fails ...
+            return prom.then(always, always).then(runNextJob);
+        };
+
+        if (!running) {
+            end_of_queue = runNextJob();
         }
     };
 
-    // adds a job to the schedule.
-    // opts : {
-    //    duration    : the job is guaranteed to finish no quicker than this (milisec)
-    //    repeat      : if true, the job will be endlessly repeated
-    //    important   : if true, the scheduled job cannot be canceled by a queue.clear()
-    // }
-    this.schedule  = function(fun, opts){
+    /**
+     * Adds a job to the schedule.
+     *
+     * @param {function} fun must return a promise
+     * @param {object} [opts]
+     * @param {number} [opts.duration] the job is guaranteed to finish no quicker than this (milisec)
+     * @param {boolean} [opts.repeat] if true, the job will be endlessly repeated
+     * @param {boolean} [opts.important] if true, the scheduled job cannot be canceled by a queue.clear()
+     */
+    this.schedule  = function (fun, opts) {
         queue.push({fun:fun, opts:opts || {}});
         if(!running){
             run();
@@ -77,10 +86,13 @@ var JobQueue = function(){
         stoprepeat = true;
     };
 
-    // returns a deferred that resolves when all scheduled
-    // jobs have been run.
-    // ( jobs added after the call to this method are considered as well )
-    this.finished = function(){
+    /**
+     * Returns a promise that resolves when all scheduled jobs have been run.
+     * (jobs added after the call to this method are considered as well)
+     *
+     * @returns {Promise}
+     */
+    this.finished = function () {
         return end_of_queue;
     };
 
@@ -153,11 +165,16 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         }
     },
 
-    // connects to the specified url
+    /**
+     * Connects to the specified url.
+     *
+     * @param {string} url
+     * @returns {Promise}
+     */
     connect: function(url){
         var self = this;
         this.connection = new Session(undefined,url, { use_cors: true});
-        this.host   = url;
+        this.host = url;
         this.set_connection_status('connecting',{});
 
         return this.message('handshake').then(function(response){
@@ -175,82 +192,99 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             });
     },
 
-    // find a proxy and connects to it. for options see find_proxy
-    //   - force_ip : only try to connect to the specified ip.
-    //   - port: what port to listen to (default 8069)
-    //   - progress(fac) : callback for search progress ( fac in [0,1] )
-    autoconnect: function(options){
+    /**
+     * Find a proxy and connects to it.
+     *
+     * @param {Object} [options]
+     * @param {string} [options.force_ip] only try to connect to the specified ip.
+     * @param {string} [options.port] @see find_proxy
+     * @param {function} [options.progress] @see find_proxy
+     * @returns {Promise}
+     */
+    autoconnect: function (options) {
         var self = this;
         this.set_connection_status('connecting',{});
-        var found_url = new $.Deferred();
-        var success = new $.Deferred();
+        var found_url = new Promise(function () {});
 
-        if ( options.force_ip ){
+        if (options.force_ip) {
             // if the ip is forced by server config, bailout on fail
             found_url = this.try_hard_to_connect(options.force_ip, options);
-        }else if( localStorage.hw_proxy_url ){
+        } else if (localStorage.hw_proxy_url) {
             // try harder when we remember a good proxy url
             found_url = this.try_hard_to_connect(localStorage.hw_proxy_url, options)
-                .then(null,function(){
-                    if (window.location.protocol != 'https:'){
+                .catch(function () {
+                    if (window.location.protocol != 'https:') {
                         return self.find_proxy(options);
                     }
                 });
-        }else{
+        } else {
             // just find something quick
             if (window.location.protocol != 'https:'){
                 found_url = this.find_proxy(options);
             }
         }
 
-        success = found_url.then(function(url){
-                return self.connect(url);
-            });
+        var successProm = found_url.then(function (url) {
+            return self.connect(url);
+        });
 
-        success.fail(function(){
+        successProm.catch(function () {
             self.set_connection_status('disconnected');
         });
 
-        return success;
+        return successProm;
     },
 
     // starts a loop that updates the connection status
-    keepalive: function(){
+    keepalive: function () {
         var self = this;
 
         function status(){
+            var always = function () {
+                setTimeout(status, 5000);
+            };
             self.connection.rpc('/hw_proxy/status_json',{},{shadow: true, timeout:2500})
-                .then(function(driver_status){
+                .then(function (driver_status) {
                     self.set_connection_status('connected',driver_status);
-                },function(){
+                }, function () {
                     if(self.get('status').status !== 'connecting'){
                         self.set_connection_status('disconnected');
                     }
-                }).always(function(){
-                    setTimeout(status,5000);
-                });
+                }).then(always, always);
         }
 
-        if(!this.keptalive){
+        if (!this.keptalive) {
             this.keptalive = true;
             status();
         }
     },
 
-    message : function(name,params){
+    /**
+     * @param {string} name
+     * @param {Object} [params]
+     * @returns {Promise}
+     */
+    message : function (name, params) {
         var callbacks = this.notifications[name] || [];
-        for(var i = 0; i < callbacks.length; i++){
+        for (var i = 0; i < callbacks.length; i++) {
             callbacks[i](params);
         }
-        if(this.get('status').status !== 'disconnected'){
+        if (this.get('status').status !== 'disconnected') {
             return this.connection.rpc('/hw_proxy/' + name, params || {}, {shadow: true});
-        }else{
-            return (new $.Deferred()).reject();
+        } else {
+            return Promise.reject();
         }
     },
 
-    // try several time to connect to a known proxy url
-    try_hard_to_connect: function(url,options){
+    /**
+     * Tries several time to connect to a known proxy url.
+     *
+     * @param {*} url
+     * @param {Object} [options]
+     * @param {string} [options.port=8069] what port to listen to
+     * @returns {Promise<string|Array>}
+     */
+    try_hard_to_connect: function (url, options) {
         options   = options || {};
         var protocol = window.location.protocol;
         var port = ( !options.port && protocol == "https:") ? ':443' : ':' + (options.port || '8069');
@@ -266,35 +300,36 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         }
 
         // try real hard to connect to url, with a 1sec timeout and up to 'retries' retries
-        function try_real_hard_to_connect(url, retries, done){
-
-            done = done || new $.Deferred();
-
-            $.ajax({
-                url: url + '/hw_proxy/hello',
-                method: 'GET',
-                timeout: 1000,
-            })
-            .done(function(){
-                done.resolve(url);
-            })
-            .fail(function(resp){
-                if(retries > 0){
-                    try_real_hard_to_connect(url,retries-1,done);
-                }else{
-                    done.reject(resp.statusText, url);
-                }
-            });
-            return done;
+        function try_real_hard_to_connect(url, retries) {
+            return Promise.resolve(
+                $.ajax({
+                    url: url + '/hw_proxy/hello',
+                    method: 'GET',
+                    timeout: 1000,
+                })
+                .then(function () {
+                    return Promise.resolve(url);
+                }, function (resp) {
+                    if (retries > 0) {
+                        return try_real_hard_to_connect(url, retries-1);
+                    } else {
+                        return Promise.reject([resp.statusText, url]);
+                    }
+                })
+            );
         }
 
-        return try_real_hard_to_connect(url,3);
+        return try_real_hard_to_connect(url, 3);
     },
 
-    // returns as a deferred a valid host url that can be used as proxy.
-    // options:
-    //   - port: what port to listen to (default 8069)
-    //   - progress(fac) : callback for search progress ( fac in [0,1] )
+    /**
+     * Returns as a promise a valid host url that can be used as proxy.
+     *
+     * @param {Object} [options]
+     * @param {string} [options.port] what port to listen to (default 8069)
+     * @param {function} [options.progress] callback for search progress ( fac in [0,1] )
+     * @returns {Promise<string>} will be resolved with the proxy valid url
+     */
     find_proxy: function(options){
         options = options || {};
         var self  = this;
@@ -302,7 +337,6 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         var urls  = [];
         var found = false;
         var parallel = 8;
-        var done = new $.Deferred(); // will be resolved with the proxies valid urls
         var threads  = [];
         var progress = 0;
 
@@ -323,51 +357,47 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             }
         }
 
-        function thread(done){
+        function thread () {
             var url = urls.shift();
 
-            done = done || new $.Deferred();
-
-            if( !url || found || !self.searching_for_proxy ){
-                done.resolve();
-                return done;
+            if (!url || found || !self.searching_for_proxy) {
+                return Promise.resolve();
             }
 
-            $.ajax({
+            return Promise.resolve(
+                $.ajax({
                     url: url + '/hw_proxy/hello',
                     method: 'GET',
                     timeout: 400,
-                }).done(function(){
+                }).then(function () {
                     found = true;
                     update_progress();
-                    done.resolve(url);
-                })
-                .fail(function(){
+                    return Promise.resolve(url);
+                }, function () {
                     update_progress();
-                    thread(done);
-                });
-
-            return done;
+                    return thread();
+                })
+            );
         }
 
         this.searching_for_proxy = true;
 
-        var len  = Math.min(parallel,urls.length);
+        var len  = Math.min(parallel, urls.length);
         for(i = 0; i < len; i++){
             threads.push(thread());
         }
 
-        $.when.apply($,threads).then(function(){
-            var urls = [];
-            for(var i = 0; i < arguments.length; i++){
-                if(arguments[i]){
-                    urls.push(arguments[i]);
+        return new Promise(function (resolve, reject) {
+            Promise.all(threads).then(function(results){
+                var urls = [];
+                for(var i = 0; i < results.length; i++){
+                    if(results[i]){
+                        urls.push(results[i]);
+                    }
                 }
-            }
-            done.resolve(urls[0]);
+                resolve(urls[0]);
+            });
         });
-
-        return done;
     },
 
     stop_searching: function(){
@@ -384,20 +414,24 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         this.notifications[name].push(callback);
     },
 
-    // returns the weight on the scale.
-    scale_read: function(){
+    /**
+     * Returns the weight on the scale.
+     *
+     * @returns {Promise<Object>}
+     */
+    scale_read: function () {
         var self = this;
-        var ret = new $.Deferred();
         if (self.use_debug_weight) {
-            return (new $.Deferred()).resolve({weight:this.debug_weight, unit:'Kg', info:'ok'});
+            return Promise.resolve({weight:this.debug_weight, unit:'Kg', info:'ok'});
         }
-        this.message('scale_read',{})
-            .then(function(weight){
-                ret.resolve(weight);
-            }, function(){ //failed to read weight
-                ret.resolve({weight:0.0, unit:'Kg', info:'ok'});
+        return new Promise(function (resolve, reject) {
+            self.message('scale_read',{})
+            .then(function (weight) {
+                resolve(weight);
+            }, function () { //failed to read weight
+                resolve({weight:0.0, unit:'Kg', info:'ok'});
             });
-        return ret;
+        });
     },
 
     // sets a custom weight, ignoring the proxy returned value.
@@ -476,15 +510,22 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         }
     },
 
+    /**
+     * @param {string} html
+     * @returns {Promise}
+     */
     take_ownership_over_client_screen: function(html) {
         return this.message("take_control", { html: html });
     },
 
+    /**
+     * @returns {Promise}
+     */
     test_ownership_of_client_screen: function() {
         if (this.connection) {
             return this.message("test_ownership", {});
         }
-        return null;
+        return Promise.reject({abort: true});
     },
 
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.

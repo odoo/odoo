@@ -25,10 +25,10 @@ QUnit.module('account', {
 }, function () {
     QUnit.module('Reconciliation');
 
-    QUnit.test('Reconciliation form field', function (assert) {
-        assert.expect(5);
+    QUnit.test('Reconciliation form field', async function (assert) {
+        assert.expect(6);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'account.invoice',
             data: this.data,
@@ -39,12 +39,13 @@ QUnit.module('account', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === 'remove_move_reconcile') {
-                    assert.deepEqual(args.args, [22,{"invoice_id":1}], "should call remove_move_reconcile {warning: required focus}");
-                    return $.when();
+                    assert.deepEqual(args.args, [22], "should call remove_move_reconcile {warning: required focus}");
+                    assert.deepEqual(args.kwargs, {context: {"invoice_id": 1}}, "should call remove_move_reconcile {warning: required focus}");
+                    return Promise.resolve();
                 }
                 if (args.method === 'assign_outstanding_credit') {
                     assert.deepEqual(args.args, [4, 20], "should call assign_outstanding_credit {warning: required focus}");
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },

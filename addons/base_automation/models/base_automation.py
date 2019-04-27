@@ -61,6 +61,9 @@ class BaseAutomation(models.Model):
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
+    trigger_field_ids = fields.Many2many('ir.model.fields', string='Watched fields',
+                                        help="The action will be triggered if and only if one of these fields is updated."
+                                             "If empty, all fields are watched.")
 
     # which fields have an impact on the registry
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_fields']
@@ -161,14 +164,17 @@ class BaseAutomation(models.Model):
             return records
 
     def _filter_post(self, records):
+        return self._filter_post_export_domain(records)[0]
+
+    def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
             domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
-            return records.search(domain)
+            return records.search(domain), domain
         else:
-            return records
+            return records, None
 
-    def _process(self, records):
+    def _process(self, records, domain_post=None):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
         action_done = self._context['__action_done']
@@ -193,8 +199,37 @@ class BaseAutomation(models.Model):
         # execute server actions
         if self.action_server_id:
             for record in records:
-                ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
-                self.action_server_id.with_context(**ctx).run()
+                # we process the action if any watched field has been modified
+                if self._check_trigger_fields(record):
+                    ctx = {
+                        'active_model': record._name,
+                        'active_ids': record.ids,
+                        'active_id': record.id,
+                        'domain_post': domain_post,
+                    }
+                    self.action_server_id.with_context(**ctx).run()
+
+    def _check_trigger_fields(self, record):
+        """ Return whether any of the trigger fields has been modified on ``record``. """
+        if not self.trigger_field_ids:
+            # all fields are implicit triggers
+            return True
+
+        if not self._context.get('old_values'):
+            # this is a create: all fields are considered modified
+            return True
+
+        # Note: old_vals are in the format of read()
+        old_vals = self._context['old_values'].get(record.id, {})
+
+        def differ(name):
+            field = record._fields[name]
+            return (
+                name in old_vals and
+                field.convert_to_cache(record[name], record, validate=False) !=
+                field.convert_to_cache(old_vals[name], record, validate=False)
+            )
+        return any(differ(field.name) for field in self.trigger_field_ids)
 
     @api.model_cr
     def _register_hook(self):
@@ -241,13 +276,14 @@ class BaseAutomation(models.Model):
                 # read old values before the update
                 old_values = {
                     old_vals.pop('id'): old_vals
-                    for old_vals in records.read(list(vals))
+                    for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
                 _write.origin(records, vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
-                    action._process(action._filter_post(pre[action]))
+                    records, domain_post = action._filter_post_export_domain(pre[action])
+                    action._process(records, domain_post=domain_post)
                 return True
 
             return _write

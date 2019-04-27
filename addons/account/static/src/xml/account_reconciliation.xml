@@ -19,6 +19,10 @@
             <t t-else="">
                 <h1 class="statement_name" />
             </t>
+            <div class="o_filter_input_wrapper">
+                <span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"></i></span>
+                <input class="reconciliation_search_input o_filter_input" type="text" placeholder="Search..." />
+            </div>
             <h1 class="statement_name_edition" style="display: none;"/>
             <div class="progress progress-striped">
                 <div class="progress-text">
@@ -41,9 +45,10 @@
 
 <t t-name="reconciliation.manual.statement" t-extend="reconciliation.statement">
     <t t-jquery="div:first" t-operation="attributes">
-        <attribute name="class">o_manual_statement</attribute>
+        <attribute name="class" value="o_manual_statement" />
     </t>
     <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
+    <t t-jquery=".o_filter_input_wrapper" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>
         <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
@@ -58,11 +63,11 @@
         </t>
     </p>
     <t t-if="context &amp;&amp; context.active_model">
-        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
+        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement' || context['active_model'] === 'account.bank.statement.import'" class="actions_buttons">
             <t t-if="context.journal_id">
                 <button class="button_back_to_statement btn btn-secondary" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
-            <t t-if="context['active_model'] === 'account.bank.statement'">
+            <t t-if="context['active_model'] === 'account.bank.statement.line'">
                 <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
             </t>
         </p>
@@ -144,7 +149,8 @@
 
 <div t-name="reconciliation.line.match">
     <div class="match_controls">
-        <input class="filter" placeholder="Filter..." type="text" value=""/>
+        <input class="filter o_input" placeholder="Filter..." type="text" value=""/>
+        <button class="btn btn-secondary btn-sm fa fa-search" type="button"></button>
     </div>
     <table>
         <tbody>
@@ -182,7 +188,7 @@
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_tax_id">
-            <td class="o_td_label">Tax</td>
+            <td class="o_td_label">Taxes</td>
             <td class="o_td_field"></td>
         </tr>
         <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
@@ -212,6 +218,14 @@
                 <td class="o_td_label">Tax Included in Price</td>
                 <td class="o_td_field"></td>
             </tr>
+            <tr class="create_date d-none">
+                <td class="o_td_label">Writeoff Date</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_to_check"> <!--TODO d-none maybe see with avw-->
+                <td class="o_td_label">To Check</td>
+                <td class="o_td_field"></td>
+            </tr>
         </tbody>
     </table>
     <div class="add_line_container">
@@ -222,7 +236,7 @@
 
 <t t-name="reconciliation.line.mv_line.amount">
     <span t-att-class="(line.is_move_line &amp;&amp; proposition == true) ? 'cell' : ''">
-        
+
         <span class="line_amount">
             <span t-if="line.amount_currency_str"
                   t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"

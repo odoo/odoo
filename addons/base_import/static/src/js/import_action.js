@@ -152,18 +152,19 @@ var DataImport = AbstractAction.extend({
         }).then(function (result) {
             self.importTemplates = result;
         });
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), def]);
     },
     start: function () {
         var self = this;
+        this.$form = this.$('form');
         this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
         this.setup_date_format_picker();
 
-        return $.when(
+        return Promise.all([
             this._super(),
-            self.create_model().done(function (id) {
+            self.create_model().then(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
 
@@ -172,8 +173,8 @@ var DataImport = AbstractAction.extend({
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.updateControlPanel(status);
-            })
-        );
+            }),
+        ]);
     },
     create_model: function() {
         return this._rpc({
@@ -319,25 +320,25 @@ var DataImport = AbstractAction.extend({
         this.$('.oe_import_date_format').select2('val', '');
         this.$('.oe_import_datetime_format').val('');
 
-        this.$el.removeClass('oe_import_preview oe_import_error');
+        this.$form.removeClass('oe_import_preview oe_import_error');
         var import_toggle = false;
         var file = this.$('input.oe_import_file')[0].files[0];
         // some platforms send text/csv, application/csv, or other things if Excel is prevent
         if ((file.type && _.last(file.type.split('/')) === "csv") || ( _.last(file.name.split('.')) === "csv")) {
             import_toggle = true;
         }
-        this.$el.find('.oe_import_box').toggle(import_toggle);
-        jsonp(this.$el, {
+        this.$form.find('.oe_import_box').toggle(import_toggle);
+        jsonp(this.$form, {
             url: '/base_import/set_file'
         }, this.proxy('settings_changed'));
     },
     onpreviewing: function () {
         var self = this;
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
-        this.$el.addClass('oe_import_with_file');
+        this.$form.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
-        this.$el.removeClass('oe_import_preview_error oe_import_error');
-        this.$el.toggleClass(
+        this.$form.removeClass('oe_import_preview_error oe_import_error');
+        this.$form.toggleClass(
             'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
         this._rpc({
@@ -345,7 +346,7 @@ var DataImport = AbstractAction.extend({
                 method: 'parse_preview',
                 args: [this.id, this.import_options()],
                 kwargs: {context: session.user_context},
-            }).done(function (result) {
+            }).then(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);
             });
@@ -353,9 +354,9 @@ var DataImport = AbstractAction.extend({
     onpreview_error: function (event, from, to, result) {
         this.$('.oe_import_options').show();
         this.$buttons.filter('.o_import_file_reload').removeClass('d-none');
-        this.$el.addClass('oe_import_preview_error oe_import_error');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$el.find('.o_view_nocontent').addClass('d-none');
+        this.$form.addClass('oe_import_preview_error oe_import_error');
+        this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$form.find('.o_view_nocontent').addClass('d-none');
         this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.preview.error', result));
     },
@@ -366,9 +367,9 @@ var DataImport = AbstractAction.extend({
             .removeClass('btn-primary').addClass('btn-secondary')
             .blur();
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('d-none');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$el.find('.o_view_nocontent').addClass('d-none');
-        this.$el.addClass('oe_import_preview');
+        this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$form.find('.o_view_nocontent').addClass('d-none');
+        this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
@@ -566,7 +567,9 @@ var DataImport = AbstractAction.extend({
                 method: 'do',
                 args: [this.id, fields, columns, this.import_options()],
                 kwargs : kwargs,
-            }).then(null, function (error, event) {
+            }).then(null, function (reason) {
+                var error = reason.message;
+                var event = reason.event;
                 // In case of unexpected exception, convert
                 // "JSON-RPC error" to an import failure, and
                 // prevent default handling (warning dialog)
@@ -587,7 +590,7 @@ var DataImport = AbstractAction.extend({
                         || error.message;
                 }
 
-                return $.when({'messages': [{
+                return Promise.resolve({'messages': [{
                     type: 'error',
                     record: false,
                     message: msg,
@@ -595,12 +598,14 @@ var DataImport = AbstractAction.extend({
             }) ;
     },
     onvalidate: function () {
-        return this.call_import({ dryrun: true, tracking_disable: true })
-            .done(this.proxy('validated'));
+        var prom = this.call_import({ dryrun: true, tracking_disable: true });
+        prom.then(this.proxy('validated'));
+        return prom;
     },
     onimport: function () {
         var self = this;
-        return this.call_import({ dryrun: false }).done(function (results) {
+        var prom = this.call_import({ dryrun: false });
+        prom.then(function (results) {
             var message = results.messages;
             if (!_.any(message, function (message) {
                     return message.type === 'error'; })) {
@@ -609,6 +614,7 @@ var DataImport = AbstractAction.extend({
             }
             self['import_failed'](results);
         });
+        return prom;
     },
     onimported: function (event, from, to, results) {
         this.do_notify(_t("Import completed"), _.str.sprintf(_t("%d records were successfully imported"), results.ids.length));
@@ -632,7 +638,7 @@ var DataImport = AbstractAction.extend({
         // offset more if header
         if (this.import_options().headers) { offset += 1; }
 
-        this.$el.addClass('oe_import_error');
+        this.$form.addClass('oe_import_error');
         this.$('.oe_import_error_report').html(
             QWeb.render('ImportView.error', {
                 errors: _(message).groupBy('message'),

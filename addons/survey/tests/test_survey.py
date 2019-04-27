@@ -29,7 +29,7 @@ class TestSurveyInternals(common.SurveyCase):
                 kwargs['labels_2'] = [{'value': 'Row0'}, {'value': 'Row1'}]
             question = self._add_question(self.page_0, 'Q0', question_type, **kwargs)
 
-            answer_tag = '%s_%s_%s' % (self.survey.id, self.page_0.id, question.id)
+            answer_tag = '%s_%s' % (self.survey.id, question.id)
             self.assertDictEqual(
                 question.validate_question({answer_tag: ''}, answer_tag),
                 {answer_tag: 'TestError'}
@@ -40,7 +40,7 @@ class TestSurveyInternals(common.SurveyCase):
         question = self._add_question(
             self.page_0, 'Q0', 'date', validation_required=True,
             validation_min_date='2015-03-20', validation_max_date='2015-03-25', validation_error_msg='ValidationError')
-        answer_tag = '%s_%s_%s' % (self.survey.id, self.page_0.id, question.id)
+        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
             question.validate_question({answer_tag: 'Is Alfred an answer ?'}, answer_tag),
@@ -67,7 +67,7 @@ class TestSurveyInternals(common.SurveyCase):
         question = self._add_question(
             self.page_0, 'Q0', 'numerical_box', validation_required=True,
             validation_min_float_value=2.2, validation_max_float_value=3.3, validation_error_msg='ValidationError')
-        answer_tag = '%s_%s_%s' % (self.survey.id, self.page_0.id, question.id)
+        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
             question.validate_question({answer_tag: 'Is Alfred an answer ?'}, answer_tag),
@@ -92,7 +92,7 @@ class TestSurveyInternals(common.SurveyCase):
     @users('survey_manager')
     def test_answer_validation_textbox_email(self):
         question = self._add_question(self.page_0, 'Q0', 'textbox', validation_email=True)
-        answer_tag = '%s_%s_%s' % (self.survey.id, self.page_0.id, question.id)
+        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
             question.validate_question({answer_tag: 'not an email'}, answer_tag),
@@ -109,7 +109,7 @@ class TestSurveyInternals(common.SurveyCase):
         question = self._add_question(
             self.page_0, 'Q0', 'textbox', validation_required=True,
             validation_length_min=2, validation_length_max=8, validation_error_msg='ValidationError')
-        answer_tag = '%s_%s_%s' % (self.survey.id, self.page_0.id, question.id)
+        answer_tag = '%s_%s' % (self.survey.id, question.id)
 
         self.assertEqual(
             question.validate_question({answer_tag: 'l'}, answer_tag),
@@ -138,7 +138,7 @@ class TestSurveyInternals(common.SurveyCase):
                 question, answer, random.choice(question.labels_ids.ids),
                 answer_type='suggestion', answer_fname='value_suggested')
         lines = [line.value_suggested.id for line in question.user_input_line_ids]
-        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id} for label in question.labels_ids]
+        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id, 'answer_score': label.answer_score} for label in question.labels_ids]
         prp_result = self.env['survey.survey'].prepare_result(question)['answers']
         self.assertItemsEqual(prp_result, answers)
 
@@ -175,19 +175,3 @@ class TestSurveyInternals(common.SurveyCase):
         result = self.env['survey.survey'].prepare_result(question)
         for key in exresult:
             self.assertEqual(result[key], exresult[key])
-
-    @users('survey_manager')
-    def test_survey_urls(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in urltypes.items():
-            survey_url = getattr(self.survey, urltype + '_url')
-            survey_url_relative = getattr(self.survey.with_context({'relative_url': True}), urltype + '_url')
-            url = "survey/%s/%s" % (urltxt, slug(self.survey))
-            full_url = urls.url_join(base_url, url)
-            self.assertEqual(full_url, survey_url)
-            self.assertEqual('/' + url, survey_url_relative)
-            if urltype == 'public':
-                url_html = '<a href="%s">Click here to start survey</a>'
-                self.assertEqual(url_html % full_url, getattr(self.survey, urltype + '_url_html'), msg="Public URL is incorrect")
-                self.assertEqual(url_html % ('/' + url), getattr(self.survey.with_context({'relative_url': True}), urltype + '_url_html'))

@@ -35,6 +35,26 @@ class TestRules(TransactionCase):
         with self.assertRaises(AccessError):
             self.assertEqual(browse2.val, -1)
 
+    def test_group_rule(self):
+        env = self.env(user=self.browse_ref('base.public_user'))
+
+        # we forbid access to the public group, to which the public user belongs
+        self.env['ir.rule'].create({
+            'name': 'Forbid public group',
+            'model_id': self.browse_ref('test_access_rights.model_test_access_right_some_obj').id,
+            'groups': [(6, 0, [self.browse_ref('base.group_public').id])],
+            'domain_force': "[(0, '=', 1)]"
+        })
+
+        browse2 = env['test_access_right.some_obj'].browse(self.id2)
+        browse1 = env['test_access_right.some_obj'].browse(self.id1)
+
+        # everything should blow up
+        with self.assertRaises(AccessError):
+            self.assertEqual(browse2.val, -1)
+        with self.assertRaises(AccessError):
+            self.assertEqual(browse1.val, 1)
+
     def test_many2many(self):
         """ Test assignment of many2many field where rules apply. """
         ids = [self.id1, self.id2]
@@ -56,3 +76,9 @@ class TestRules(TransactionCase):
         container_user.write({'some_ids': [(5,)]})
         self.assertItemsEqual(container_user.some_ids.ids, [])
         self.assertItemsEqual(container_admin.some_ids.ids, [self.id2])
+
+    def test_access_rule_performance(self):
+        env = self.env(user=self.browse_ref('base.public_user'))
+        Model = env['test_access_right.some_obj']
+        with self.assertQueryCount(0):
+            Model._filter_access_rules('read')

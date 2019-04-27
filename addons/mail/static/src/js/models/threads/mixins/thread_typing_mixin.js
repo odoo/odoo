@@ -94,17 +94,17 @@ var ThreadTypingMixin = {
      * Get the text to display when some partners are typing something on the
      * thread:
      *
-     *   - single typing partner:
+     * - single typing partner:
      *
-     *          A is typing...
+     *   A is typing...
      *
-     *   - two typing partners:
+     * - two typing partners:
      *
-     *          A and B are typing...
+     *   A and B are typing...
      *
-     *   - three or more typing partners:
+     * - three or more typing partners:
      *
-     *          A, B and more are typing...
+     *   A, B and more are typing...
      *
      * The choice of the members name for display is not random: it displays
      * the user that have been typing for the longest time. Also, this function
@@ -239,11 +239,11 @@ var ThreadTypingMixin = {
      * @private
      * @param {Object} params
      * @param {boolean} params.typing whether we are typing something or not
-     * @returns {$.Promise} resolved if the server is notified, rejected
+     * @returns {Promise} resolved if the server is notified, rejected
      *   otherwise
      */
     _notifyMyselfTyping: function (params) {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Warn views that the list of users that are currently typing on this
