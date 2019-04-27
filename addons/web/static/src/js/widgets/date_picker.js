@@ -15,6 +15,7 @@ var DateWidget = Widget.extend({
         'change.datetimepicker': 'changeDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'keydown': '_onKeydown',
         'show.datetimepicker': '_onDateTimePickerShow',
     },
     /**
@@ -25,6 +26,7 @@ var DateWidget = Widget.extend({
 
         this.name = parent.name;
         this.options = _.extend({
+            locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
@@ -236,6 +238,17 @@ var DateWidget = Widget.extend({
     _onDateTimePickerShow: function () {
         if (this.$input.val().length !== 0 && this.isValid()) {
             this.$input.select();
+        }
+    },
+    /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            this.__libInput++;
+            this.$el.datetimepicker('hide');
+            this.__libInput--;
         }
     },
     /**

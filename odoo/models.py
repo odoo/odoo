@@ -192,6 +192,12 @@ PREFETCH_MAX = 1000
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
+# valid SQL aggregation functions
+VALID_AGGREGATE_FUNCTIONS = {
+    'array_agg', 'count', 'count_distinct',
+    'bool_and', 'bool_or', 'max', 'min', 'avg', 'sum',
+}
+
 
 @pycompat.implements_to_string
 class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
@@ -2118,7 +2124,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 field = self._fields[fname]
                 if not (field.base_field.store and field.base_field.column_type):
                     raise UserError(_("Cannot aggregate field %r.") % fname)
-                if not func.isidentifier():
+                if func not in VALID_AGGREGATE_FUNCTIONS:
                     raise UserError(_("Invalid aggregation function %r.") % func)
             else:
                 # we have 'name', retrieve the aggregator on the field
@@ -2760,17 +2766,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
-        result = []
-        name_fields = [(name, self._fields[name]) for name in (stored + inherited + computed)]
+        self = self.with_prefetch(self._prefetch.copy())
+        data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
-        for record in self:
-            try:
-                values = {'id': record.id}
-                for name, field in name_fields:
-                    values[name] = field.convert_to_read(record[name], record, use_name_get)
-                result.append(values)
-            except MissingError:
-                pass
+        for name in (stored + inherited + computed):
+            convert = self._fields[name].convert_to_read
+            # restrict the prefetching of self's model to self; this avoids
+            # computing fields on a larger recordset than self
+            self._prefetch[self._name] = set(self._ids)
+            for record, vals in data:
+                # missing records have their vals empty
+                if not vals:
+                    continue
+                try:
+                    vals[name] = convert(record[name], record, use_name_get)
+                except MissingError:
+                    vals.clear()
+        result = [vals for record, vals in data if vals]
 
         return result
 
@@ -2865,36 +2877,46 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
             return '%s as "%s"' % (res, col)
 
+        # selected fields are: 'id' followed by fields_pre
         qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
 
         # determine the actual query to execute
         from_clause, where_clause, params = query.get_sql()
         query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
-        result = []
+        # fetch one list of record values per field
+        field_values_list = [[] for name in qual_names]
         param_pos = params.index(param_ids)
         for sub_ids in cr.split_for_in_conditions(self.ids):
             params[param_pos] = tuple(sub_ids)
             cr.execute(query_str, params)
-            result.extend(cr.dictfetchall())
+            for row in cr.fetchall():
+                for values, val in pycompat.izip(field_values_list, row):
+                    values.append(val)
 
-        ids = [vals['id'] for vals in result]
+        ids = field_values_list.pop(0)
         fetched = self.browse(ids)
 
         if ids:
             # translate the fields if necessary
             if context.get('lang'):
-                for field in fields_pre:
+                for field, values in pycompat.izip(fields_pre, field_values_list):
                     if not field.inherited and callable(field.translate):
                         name = field.name
                         translate = field.get_trans_func(fetched)
-                        for vals in result:
-                            vals[name] = translate(vals['id'], vals[name])
+                        for index in range(len(ids)):
+                            values[index] = translate(ids[index], values[index])
 
             # store result in cache
-            for vals in result:
-                record = self.browse(vals.pop('id'), self._prefetch)
-                record._cache.update(record._convert_to_cache(vals, validate=False))
+            target = self.browse([], self._prefetch)
+            for field, values in pycompat.izip(fields_pre, field_values_list):
+                convert = field.convert_to_cache
+                # Note that the target record passed to convert below is empty.
+                # This does not harm in practice, as it is only used in Monetary
+                # fields for rounding the value. As the value comes straight
+                # from the database, it is expected to be rounded already.
+                values = [convert(value, target, validate=False) for value in values]
+                self.env.cache.update(fetched, field, values)
 
             # determine the fields that must be processed now;
             # for the sake of simplicity, we ignore inherited fields
@@ -3256,6 +3278,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         with self.env.protecting(protected_fields, self):
             # write stored fields with (low-level) method _write
             if store_vals or inverse_vals or inherited_vals:
+                # if log_access is enabled, this updates 'write_date' and
+                # 'write_uid' and check access rules, even when old_vals is
+                # empty
                 self._write(store_vals)
 
             # update parent records (after possibly updating parent fields)
@@ -3272,6 +3297,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.env[model_name].browse(parent_ids).write(parent_vals)
 
             if inverse_vals:
+                self.check_field_access_rights('write', list(inverse_vals))
+
                 self.modified(set(inverse_vals) - set(store_vals))
 
                 # group fields by inverse method (to call it once), and order
@@ -3718,6 +3745,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         modified_ids = {row[0] for row in cr.fetchall()}
         self.browse(modified_ids).modified(['parent_path'])
 
+    def _load_records_write(self, values):
+        self.write(values)
+
+    def _load_records_create(self, values):
+        return self.create(values)
+
     def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
 
@@ -3775,7 +3808,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # update existing records
         for data in to_update:
-            data['record'].write(data['values'])
+            data['record']._load_records_write(data['values'])
 
         # determine existing parents for new records
         for parent_model, parent_field in self._inherits.items():
@@ -3802,7 +3835,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         # create records
-        records = self.create([data['values'] for data in to_create])
+        records = self._load_records_create([data['values'] for data in to_create])
         for data, record in pycompat.izip(to_create, records):
             data['record'] = record
 
@@ -4209,11 +4242,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if vals['lang'] == old.env.lang and field.translate is True:
                         # force a source if the new_val was not changed by copy override
                         if new_val == old[name]:
-                            vals['source'] = old_wo_lang[name]
+                            new_wo_lang[name] = old_wo_lang[name]
+                            vals['src'] = old_wo_lang[name]
                         # the value should be the new value (given by copy())
                         vals['value'] = new_val
                     vals_list.append(vals)
-                Translation.create(vals_list)
+                Translation._upsert_translations(vals_list)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -4596,7 +4630,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     #
 
     @classmethod
-    def _browse(cls, ids, env, prefetch=None):
+    def _browse(cls, ids, env, prefetch=None, add_prefetch=True):
         """ Create a recordset instance.
 
         :param ids: a tuple of record ids
@@ -4609,7 +4643,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if prefetch is None:
             prefetch = defaultdict(set)         # {model_name: set(ids)}
         records._prefetch = prefetch
-        prefetch[cls._name].update(ids)
+        if add_prefetch:
+            prefetch[cls._name].update(ids)
         return records
 
     def browse(self, arg=None, prefetch=None):
@@ -4648,9 +4683,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Verifies that the current recorset holds a single record. Raises
         an exception otherwise.
         """
-        if len(self) == 1:
+        try:
+            # unpack to ensure there is only one value is faster than len when true and
+            # has a significant impact as this check is largely called
+            _id, = self._ids
             return self
-        raise ValueError("Expected singleton: %s" % self)
+        except ValueError:
+            raise ValueError("Expected singleton: %s" % self)
 
     def with_env(self, env):
         """ Returns a new version of this recordset attached to the provided
@@ -4916,7 +4955,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def __iter__(self):
         """ Return an iterator over ``self``. """
         for id in self._ids:
-            yield self._browse((id,), self.env, self._prefetch)
+            yield self._browse((id,), self.env, self._prefetch, False)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.

@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Bill Hsu <hcm86@icloud.com>, 2018
+# Jason Au Yeung <auyeung112002@gmail.com>, 2018
 # amos lin <seeing@edirect168.com>, 2018
 # Martin Trigaux, 2018
-# Andy Cheng <andy.cheng@richsoda.com>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# sejun huang <sejun.huang@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:47+0000\n"
+"POT-Creation-Date: 2019-01-09 10:38+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3175,6 +3175,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"包括以下中文本地化數據\n"
+"========================================================\n"
+"\n"
+"帳戶類型/科目類型\n"
+"\n"
+"州數據/省份數據"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -7351,6 +7358,40 @@ msgstr ""
 "Python 庫"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
+msgid ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_rule_form
+msgid ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
 msgstr "<span aria-label=\"Close\">&amp;times;</span>"
@@ -7394,6 +7435,13 @@ msgid ""
 "<span class=\"o_form_label\">We suggest to reload the menu tab to see the "
 "new menus (Ctrl+T then Ctrl+R).\"</span>"
 msgstr "<span class=\"o_form_label\">我們提議重載選單來查看新選單 (Ctrl+T 然後 Ctrl+R).\"</span>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
+msgid ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -8632,21 +8680,10 @@ msgid "Active"
 msgstr "有效"
 
 #. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-msgid "Activity"
-msgstr "活動"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr "確切的下一號碼"
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "添加關注者"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -9063,6 +9100,13 @@ msgid ""
 msgstr "允許您創建憑單，以及追蹤付款。這是為不是會計人員的管理人員準備的簡化版會計模組。"
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr "您還可以在此處找到所有相關文件，並通過點選任何單個文件進行下載。"
+
+#. module: base
 #: code:addons/base/models/ir_fields.py:394
 #, python-format
 msgid ""
@@ -9328,11 +9372,6 @@ msgid "At least one language must be active."
 msgstr "至少要啟動一種語言."
 
 #. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Attach a new document"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "附件名稱"
@@ -9343,6 +9382,7 @@ msgid "Attached To"
 msgstr "附加於"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "附件"
@@ -9428,11 +9468,6 @@ msgstr "Authorize.Net付款"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
 msgstr "自動搜尋"
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "自動動作"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -11183,11 +11218,6 @@ msgid "Create Menu Wizard"
 msgstr "創建選單嚮導"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Create Next Activity"
-msgstr "建立新的活動"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
 msgstr "從潛在客戶創建任務"
@@ -11237,6 +11267,11 @@ msgstr "創建一個新聯繫人標籤"
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
 msgstr "在您的地址簿中創建一個聯繫人"
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Create a new document"
+msgstr "創建一個新文件"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -11818,27 +11853,6 @@ msgid "Days"
 msgstr "天"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"尊敬的先生/女士，\n"
-"    我們的記錄表明，您仍有逾期待付的款項尚未付款。請查閱如明細。\n"
-"    如款項已經支付，請忽略此通知。否則，請按如下所述的總金額付款給我們。\n"
-"    如果有任何關於帳戶的疑問，請聯繫我們。\n"
-"\n"
-"    謝謝您的合作。\n"
-"    此致 ，\n"
-"           敬禮"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "調試"
@@ -12119,7 +12133,7 @@ msgid ""
 "Disabling this option will also uninstall the following modules \n"
 "%s"
 msgstr ""
-"停用此選項也會卸載以下模組 \\n\n"
+"停用此選項也會卸載以下模組\n"
 "%s"
 
 #. module: base
@@ -12358,7 +12372,6 @@ msgid "Doctor"
 msgstr "博士"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "文件"
@@ -12743,11 +12756,6 @@ msgstr "員工合同"
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "員工"
-
-#. module: base
-#: selection:ir.attachment,type:0
-msgid "Empty"
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:466
@@ -14899,11 +14907,6 @@ msgstr "IBAN銀行帳號"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "此動作的 ID，如果在 XML 檔案中有定義"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -20904,6 +20907,11 @@ msgid "Partner Titles"
 msgstr "業務夥伴稱謂"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__active_partner
+msgid "Partner is Active"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
 msgstr "網站的業務夥伴模組"
@@ -21842,6 +21850,7 @@ msgid "Record ID"
 msgstr "記錄 ID"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "記錄規則"
@@ -22203,11 +22212,6 @@ msgstr "捨入精度"
 #, python-format
 msgid "Rounding unit"
 msgstr "捨入單位"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_rule
-msgid "Rule"
-msgstr "規則"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -22715,11 +22719,6 @@ msgid "Sell your products online"
 msgstr "線上銷售您的產品"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "發送電子信件"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr "發送文件到網上簽名和處理填寫的副本"
@@ -22830,7 +22829,6 @@ msgstr "伺服器"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
-#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -22843,6 +22841,7 @@ msgstr "伺服器動作值映射"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
+#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -24248,7 +24247,6 @@ msgstr "技術名稱"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技術設定"
 
@@ -24652,8 +24650,9 @@ msgid ""
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
-"該操作無法完成，可能是由於以下原因：\\n - 刪除：您可能正試圖刪除一個記錄，但是仍有其它記錄引用到它 \\n - "
-"創建/更新：一個強制字段沒有正確設定"
+"該操作無法完成，可能是由於以下原因：\n"
+"- 刪除：您可能正試圖刪除一個記錄，但是仍有其它記錄引用到它\n"
+"- 創建/更新：一個強制字段沒有正確設定"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -24788,6 +24787,13 @@ msgid ""
 msgstr ""
 "將要呈現的報表的類型，每個報表都有其自己的呈現方法。HTML 表示將直接在瀏覽器中打開報表。PDF 表示報表將使用 Wkhtmltopdf "
 "進行呈現並由使用者下載。"
+
+#. module: base
+#: code:addons/base/models/res_users.py:117
+#: code:addons/base/models/res_users.py:404
+#, python-format
+msgid "The user cannot have more than one user types."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id

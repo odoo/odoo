@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * website_sale_stock
 # 
+# Translators:
+# Martin Trigaux, 2019
+# Arnis Putniņš <arnis@allegro.lv>, 2019
+# InfernalLV <karlisdreizis@gmail.com>, 2019
+# JanisJanis <jbojars@gmail.com>, 2019
+# ievaputnina <ievai.putninai@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2019\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,77 +24,54 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid "<strong>Delivery Orders</strong>"
-msgstr ""
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_available_threshold
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "Pieejamība"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_cart_qty
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_custom_message
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurācijas iestatījumi"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
 msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Availability Mode"
+msgid "Default Mode"
 msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
@@ -103,13 +88,14 @@ msgid "In stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_inventory_availability
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory"
-msgstr ""
+msgstr "Krājumi"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
 msgstr ""
 
@@ -123,22 +109,22 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkts"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produkta veidne"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr ""
+msgid "Sale Order"
+msgstr "Tirdzniecības Pasūtījums"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Pasūtījuma Rinda"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -165,7 +151,7 @@ msgid "Show product-specific notifications"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:28
+#: code:addons/website_sale_stock/models/sale_order.py:30
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -180,14 +166,31 @@ msgid "Temporarily out of stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line_warning_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_warning_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
+msgstr "Tīkla vietne"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
 msgstr ""
 
 #. module: website_sale_stock
@@ -198,7 +201,7 @@ msgid "You already added"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:26
+#: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
 msgstr ""
@@ -223,9 +226,4 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "in your cart."
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""

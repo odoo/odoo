@@ -307,6 +307,9 @@ class AdjustmentLines(models.Model):
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
+        # If the stock move is dropshipped move we need to get the cost account instead the stock valuation account
+        if self.move_id._is_dropshipped():
+            debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 

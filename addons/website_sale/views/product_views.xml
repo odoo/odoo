@@ -88,6 +88,7 @@
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_published" widget="website_button"/>
+                    <field name="is_published" invisible="1"/>
                 </button>
             </xpath>
             <xpath expr="//page[@name='sales']" position="after">
@@ -199,7 +200,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" string="Allow to use on " placeholder="None website"/>
+                <field name="website_id" options="{'no_create': True}" />
             </field>
         </field>
     </record>

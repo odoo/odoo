@@ -16,8 +16,13 @@ class StockQuantPackage(models.Model):
     @api.depends('quant_ids')
     def _compute_weight(self):
         weight = 0.0
-        for quant in self.quant_ids:
-            weight += quant.quantity * quant.product_id.weight
+        if self.env.context.get('picking_id'):
+            current_picking_move_line_ids = self.env['stock.move.line'].search([('result_package_id', '=', self.id), ('picking_id', '=', self.env.context['picking_id'])])
+            for ml in current_picking_move_line_ids:
+                weight += ml.product_uom_id._compute_quantity(ml.qty_done,ml.product_id.uom_id) * ml.product_id.weight
+        else:
+            for quant in self.quant_ids:
+                weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight', help="Weight computed based on the sum of the weights of the products.")
@@ -96,7 +101,7 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight_uom_id = weight_uom_id
 
-    @api.depends('move_lines')
+    @api.depends('move_lines', 'move_ids_without_package')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')

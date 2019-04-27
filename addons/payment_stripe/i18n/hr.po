@@ -3,18 +3,19 @@
 # * payment_stripe
 # 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Tina Milas, 2017
-# Martin Trigaux, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2018
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "&times;"
 msgstr "&times;"
@@ -81,7 +82,7 @@ msgstr "Zatvori"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
 #, python-format
 msgid "Error"
 msgstr "Greška"
@@ -119,6 +120,11 @@ msgid "Payment Acquirer"
 msgstr "Stjecatelj plaćanja"
 
 #. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr "Token plaćanja"
+
+#. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
@@ -136,7 +142,7 @@ msgid "Paypal"
 msgstr "Paypal"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:175
+#: code:addons/payment_stripe/models/payment.py:174
 #, python-format
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
@@ -169,25 +175,25 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:173
+#: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:185
+#: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe: %s nalozi pronađeni za referencu %s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:181
+#: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe: nije pronađen nalog za referencu %s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:171
+#: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr ""
@@ -196,8 +202,3 @@ msgstr ""
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "Bankovni nalog"
-
-#. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"

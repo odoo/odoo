@@ -53,7 +53,7 @@ var SwitchCompanyMenu = Widget.extend({
             } else {
                 a = '<span style="margin-right: 24px;"/>';
             }
-            companiesList += '<a href="#" class="dropdown-item" data-menu="company" data-company-id="' +
+            companiesList += '<a role="menuitem" href="#" class="dropdown-item" data-menu="company" data-company-id="' +
                             company[0] + '">' + a + company[1] + '</a>';
         });
         this.$('.dropdown-menu').html(companiesList);

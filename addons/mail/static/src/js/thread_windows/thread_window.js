@@ -128,9 +128,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      *
      * Do not display the input in the following cases:
      *
-     *      - no thread related to this window
-     *      - window of a mailbox (temp: let us have mailboxes in window mode)
-     *      - window of a thread with mass mailing
+     * - no thread related to this window
+     * - window of a mailbox (temp: let us have mailboxes in window mode)
+     * - window of a thread with mass mailing
      *
      * Any other threads show the input in the window.
      *
@@ -276,8 +276,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
-                    self.call('mail_service', 'getMailBus')
-                        .trigger('discuss_open', false);
+                    var mailBus = self.call('mail_service', 'getMailBus');
+                    if (mailBus) {
+                        mailBus.trigger('discuss_open', false);
+                    }
                 },
             });
         }

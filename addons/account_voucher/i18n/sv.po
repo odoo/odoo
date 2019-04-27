@@ -3,21 +3,21 @@
 # * account_voucher
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Haojun Zou <apollo_zhj@msn.com>, 2018
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2018
-# Robert Frykelius <robert.frykelius@linserv.se>, 2018
-# Kim Asplund <kim.asplund@gmail.com>, 2018
-# lynnliuying <lynn.liu1971@gmail.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Haojun Zou <apollo_zhj@msn.com>, 2019
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
+# Robert Frykelius <robert.frykelius@linserv.se>, 2019
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: lynnliuying <lynn.liu1971@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,11 @@ msgid "Accounting Voucher"
 msgstr "Redovisningsverifikat"
 
 #. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+msgid "Accounting Voucher Line"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
 msgid "Action Needed"
 msgstr "Åtgärd krävs"
@@ -82,6 +87,11 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Är du säker på att du vill avbryta detta kvitto?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -96,7 +106,7 @@ msgstr "Räkningsinformation"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Fakturareferens"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -123,7 +133,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__company_id
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
@@ -227,7 +237,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr "Gruppera på"
+msgstr "Gruppera efter"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
@@ -279,7 +289,7 @@ msgstr "Journal"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
-msgstr "Verifikation"
+msgstr "Verifikat"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -304,6 +314,11 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
@@ -370,13 +385,13 @@ msgstr "Endast för skatt ej inkluderat i priset"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
-msgstr "Betald"
+msgstr "Betalad"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
-msgstr "Företag"
+msgstr "Samarbetspartner"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -421,7 +436,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr "Postat"
+msgstr "Bokförd"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -451,12 +466,6 @@ msgid "Purchase Receipt"
 msgstr "Inköpskvitto"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
-msgid "Purchase Receipts"
-msgstr "Inköpskvitton"
-
-#. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
 msgstr ""
@@ -465,6 +474,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "Antal"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Receipts"
+msgstr "Mottagningar"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -485,12 +502,6 @@ msgstr "Försäljningsinformation"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
 msgstr "Försäljningskvitto"
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipts"
-msgstr "Försäljningskvitton"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -630,7 +641,6 @@ msgid "Voucher Entries"
 msgstr "Verifikattransaktioner"
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -674,7 +684,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:456
+#: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
 msgid "You must first select a partner."
 msgstr ""

@@ -166,16 +166,15 @@ class HolidaysAllocation(models.Model):
 
             # We have to check when the employee has been created
             # in order to not allocate him/her too much leaves
-            creation_date = fields.Datetime.from_string(holiday.employee_id.create_date)
-
+            start_date = holiday.employee_id._get_date_start_work()
             # If employee is created after the period, we cancel the computation
-            if period_end <= creation_date:
+            if period_end <= start_date:
                 holiday.write(values)
                 continue
 
             # If employee created during the period, taking the date at which he has been created
-            if period_start <= creation_date:
-                period_start = creation_date
+            if period_start <= start_date:
+                period_start = start_date
 
             worked = holiday.employee_id.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
             left = holiday.employee_id.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
@@ -244,16 +243,26 @@ class HolidaysAllocation(models.Model):
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
-        if self.holiday_type == 'employee' and not self.employee_id:
-            if self.env.user.employee_ids:
-                self.employee_id = self.env.user.employee_ids[0]
+        if self.holiday_type == 'employee':
+            if not self.employee_id:
+                self.employee_id = self.env.user.employee_ids[:1].id
+            self.mode_company_id = False
+            self.category_id = False
+        elif self.holiday_type == 'company':
+            self.employee_id = False
+            if not self.mode_company_id:
+                self.mode_company_id = self.env.user.company_id.id
+            self.category_id = False
         elif self.holiday_type == 'department':
-            if self.env.user.employee_ids:
-                self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
-            self.employee_id = None
+            self.employee_id = False
+            self.mode_company_id = False
+            self.category_id = False
+            if not self.department_id:
+                self.department_id = self.env.user.employee_ids[:1].department_id.id
         elif self.holiday_type == 'category':
-            self.employee_id = None
-            self.department_id = None
+            self.employee_id = False
+            self.mode_company_id = False
+            self.department_id = False
 
     @api.onchange('employee_id')
     def _onchange_employee(self):

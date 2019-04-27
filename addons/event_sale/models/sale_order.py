@@ -12,8 +12,16 @@ class SaleOrder(models.Model):
         for so in self:
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+        return res
+
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for so in self:
             if any(so.order_line.filtered(lambda line: line.event_id)):
-                return self.env['ir.actions.act_window'].with_context(default_sale_order_id=so.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
+                return self.env['ir.actions.act_window'] \
+                    .with_context(default_sale_order_id=so.id) \
+                    .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
 
@@ -34,11 +42,11 @@ class SaleOrderLine(models.Model):
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
         Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids), ('state', '!=', 'cancel')])
+        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
-                existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
+                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).confirm_registration()
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').do_draft()
 
@@ -64,6 +72,11 @@ class SaleOrderLine(models.Model):
         # We reset the ticket when keeping it would lead to an inconstitent state.
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
+
+    @api.onchange('product_uom', 'product_uom_qty')
+    def product_uom_change(self):
+        if not self.event_ticket_id:
+            super(SaleOrderLine, self).product_uom_change()
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):

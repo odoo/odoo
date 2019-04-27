@@ -69,6 +69,7 @@ return Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
+            .attr('aria-expanded', !(_.isUndefined(is_open)) ? is_open : (this.$save_search.attr('aria-expanded') === 'false'))
             .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('o_open_menu', is_open);
         this.$save_name.toggle(is_open);
@@ -195,6 +196,10 @@ return Widget.extend({
             icon: 'fa-star',
             field: {
                 get_context: function () {
+                    var filterContext = filter.context;
+                    if (typeof filter.context === 'string') {
+                        filterContext = pyUtils.eval('context', filter.context);
+                    }
                     var sortParsed = JSON.parse(filter.sort || "[]");
                     var orderedBy = [];
                     _.each(sortParsed, function (sort) {
@@ -204,7 +209,7 @@ return Widget.extend({
                         });
                     });
 
-                return _.defaults({}, filter.context, {orderedBy : orderedBy});
+                return _.defaults({}, filterContext, {orderedBy : orderedBy});
                 },
                 get_groupby: function () { return [filter.context]; },
                 // facet is not used
@@ -250,7 +255,7 @@ return Widget.extend({
             var $filter = $('<div>', {class: 'position-relative'})
                 .addClass(filter.user_id ? 'o-searchview-custom-private'
                                          : 'o-searchview-custom-public')
-                .append($('<a>', {href: '#', class: 'dropdown-item'}).text(filter.name))
+                .append($('<a>', {role: 'menuitem', href: '#', class: 'dropdown-item'}).text(filter.name))
                 .append($('<span>', {
                     class: 'fa fa-trash-o o-remove-filter',
                     on: {

@@ -1,64 +1,88 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
-# Abul Hassan M I <miabulhassan@gmail.com>, 2016
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-01 13:23+0000\n"
-"Last-Translator: Abul Hassan M I <miabulhassan@gmail.com>\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
-msgid "# Analytic Rules"
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr ""
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
 msgstr ""
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
-msgstr ""
+msgstr "கணக்குகள்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: code:addons/account_analytic_default/models/account_analytic_default.py:27
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
+msgstr ""
+"ஒரு பகுப்பாய்வு இயல்புநிலைக்கு குறைந்தபட்சம் ஒரு பகுப்பாய்வுக் கணக்கு அல்லது"
+" ஒரு பகுப்பாய்வுக் குறி தேவைப்படுகிறது."
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கு"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr ""
+msgstr "பகுப்பாய்வு இயல்புநிலை"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "பகுப்பாய்வு விநியோகம்"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr "பகுப்பாய்வு விதிகள்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "பகுப்பாய்வு குறிச்சொற்கள்"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "நிறுவனம்"
@@ -69,144 +93,154 @@ msgid "Conditions"
 msgstr "நிபந்தனைகள்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
 msgstr "உருவாக்கப்பட்ட தேதி"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+msgid "Default Analytic Values"
+msgstr "இயல்புநிலை பகுப்பாய்வு மதிப்புகள்"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr ""
+msgstr "இந்த அனலிட்டிக் கணக்கிற்கான இயல்புநிலை முடிவு தேதி."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr ""
+msgstr "இந்த பகுப்பாய்வுக் கணக்கிற்கான இயல்புநிலை தொடக்க தேதி."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
 msgstr "கடைசி தேதி"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "பதிவுகள்"
-
-#. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"பகுப்பாய்வு விநியோகத்தின் பட்டியலைக் காண்பிக்கும் போது வரிசை வரிசையை "
+"அளிக்கிறது"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr ""
+msgstr "மூலம் குழு"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "விலைப்பட்டியல் வரி"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "கூட்டாளி"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_product
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "தயாரிப்பு"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
-msgstr "தயாரிப்பு டெம்ப்ளேட்"
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "விற்பனை வரிசை வரிசை"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
+"பகுப்பாய்வு இயல்புநிலையில் குறிப்பிடப்பட்ட பகுப்பாய்வுக் கணக்கைப் "
+"பயன்படுத்துகின்ற ஒரு நிறுவனத்தைத் தேர்ந்தெடுக்கவும் (எ.கா. புதிய "
+"வாடிக்கையாளர் விவரப்பட்டியல் அல்லது விற்பனையை நாங்கள் இந்த நிறுவனத்தைத் "
+"தேர்ந்தெடுத்தால், அது தானாகவே ஒரு பகுப்பாய்வுக் கணக்கை எடுக்கும்)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
+"பகுப்பாய்வு இயல்புநிலையில் குறிப்பிடப்பட்ட பகுப்பாய்வுக் கணக்கைப் "
+"பயன்படுத்துகின்ற ஒரு கூட்டாளரைத் தேர்ந்தெடுக்கவும் (எ.கா. புதிய "
+"வாடிக்கையாளர் விலைப்பட்டியல் அல்லது விற்பனையை நாம் இந்த பங்குதாரரைத் "
+"தேர்ந்தெடுத்தால், அது தானாகவே பகுப்பாய்வுக் கணக்காக எடுத்துக்கொள்ளும்)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
+"பகுப்பாய்வு இயல்புநிலையில் குறிப்பிடப்பட்ட பகுப்பாய்வுக் கணக்கைப் பயன்படுத்துவதற்கான ஒரு தயாரிப்பு என்பதைத் தேர்ந்தெடுக்கவும் (எ.கா. புதிய வாடிக்கையாளர் விலைப்பட்டியல் அல்லது விற்பனையை ஒழுங்கமைக்க இந்த தயாரிப்பு தேர்ந்தெடுத்தால், இது தானாகவே பகுப்பாய்வுக் கணக்காக எடுத்துக்கொள்ளும்)\n"
+"Mūlam kuḻu"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
+"பகுப்பாய்வு இயல்புநிலையில் குறிப்பிடப்பட்ட பகுப்பாய்வுக் கணக்கைப் "
+"பயன்படுத்தும் ஒரு பயனரைத் தேர்ந்தெடுக்கவும்."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
 msgstr "வரிசை"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
 msgstr "தொடக்க தேதி"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "பயனர்"
 
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "செலவு விலைப்பட்டியல் கொள்கை "
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
+msgstr ""

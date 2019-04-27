@@ -6,26 +6,26 @@
 # zpq001 <zpq001@live.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
+# JZH-Odoo <jzh@odoo.com>, 2018
 # Maie <m@maie.name>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # neter ji <jifuyi@qq.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,74 @@ msgstr "<b>拖拽商机</b> 移动商机漏斗进行处理."
 #, python-format
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
-msgstr "<b>邀请同事</b> 通过邮件邀请.<br/><i>每行输入一个电子邮件地址</i>"
+msgstr "<b>邀请同事</b> 通过邮件邀请.<br/><i>每行输入一个EMail地址</i>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
+msgid "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "<i class=\"fa fa-comments\" aria-label=\"Unread messages\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-comments\" aria-label=\"Unread messages\" role=\"img\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
+"title=\"Favorites\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
+"title=\"Favorites\"/>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:139
@@ -173,6 +240,7 @@ msgid "Activities Done Target"
 msgstr "活动达成"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
 msgstr "活动待办"
@@ -778,12 +846,12 @@ msgstr "编辑"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Email"
-msgstr "电子邮箱"
+msgstr "EMail"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "电邮别名"
+msgstr "EMail别名"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
@@ -805,7 +873,7 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
-"收到发送至该地址的电子邮件会生成尚未分配给任何销售渠道的新销售线索。将其转化为机会时可以做到这一点。收到的电子邮件可以自动分配到特定的销售渠道。为此，请在销售渠道上设置电子邮件别名。"
+"收到发送至该地址的EMail会生成尚未分配给任何销售渠道的新销售线索。将其转化为机会时可以做到这一点。收到的EMail可以自动分配到特定的销售渠道。为此，请在销售渠道上设置EMail别名。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -925,12 +993,13 @@ msgid "Format phone numbers based on national conventions"
 msgstr "根据国家惯例变更相应的电话号码格式"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:606
+#: code:addons/crm/models/crm_lead.py:613
 #, python-format
 msgid "From %s : %s"
 msgstr "来自: %s:%s"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr "未来活动"
@@ -941,7 +1010,7 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
-"从收到的电子邮件中产生线索，并手动分配\n"
+"从收到的EMail中产生线索，并手动分配\n"
 "给销售团队"
 
 #. module: crm
@@ -1047,7 +1116,7 @@ msgstr "如果设置，该销售团队将被用于与该伙伴相关的销售和
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr "存在于黑名单的电子邮件地址将不会再收到任何群发邮件。"
+msgstr "存在于黑名单的EMail地址将不会再收到任何群发邮件。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1167,12 +1236,13 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
 msgstr "逾期活动"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:913
+#: code:addons/crm/models/crm_lead.py:920
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1328,12 +1398,12 @@ msgstr "制作报价"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
 msgid "Manual Assignation of Emails"
-msgstr "手动分配电子邮件"
+msgstr "手动分配EMail"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr "手动分配收到的电子邮件"
+msgstr "手动分配收到的EMail"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -1755,7 +1825,7 @@ msgstr "逾期的机会"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
 msgid "Partner Contact Email"
-msgstr "业务伙伴联系电邮"
+msgstr "业务伙伴联系EMail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_name
@@ -2021,7 +2091,7 @@ msgstr "选择商机/线索"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send an email"
-msgstr "发送电子邮件"
+msgstr "发送EMail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2057,6 +2127,7 @@ msgid "Show Lead Menu"
 msgstr "显示线索菜单"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr "显示下一个操作日期在今天之前的所有商机"
@@ -2232,7 +2303,7 @@ msgstr "团队漏斗"
 msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
-msgstr "与此渠道相关联的电子邮件地址。收到的新电子邮件会自动创建分配给该渠道的新线索。"
+msgstr "与此渠道相关联的EMail地址。收到的新EMail会自动创建分配给该渠道的新线索。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_model
@@ -2280,14 +2351,14 @@ msgstr "这是一个帮助您追踪不同营销活动的名称，例如，节能
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "这是传达方法，例如，明信片、电子邮件或横幅广告"
+msgstr "这是传达方法，例如，明信片、EMail或横幅广告"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "这是链接源，例如，搜索引擎、其他域名或电子邮件列表名称"
+msgstr "这是链接源，例如，搜索引擎、其他域名或EMail列表名称"
 
 #. module: crm
 #. openerp-web
@@ -2334,6 +2405,7 @@ msgid "Today"
 msgstr "今日"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
 msgstr "今天的活动"
@@ -2408,7 +2480,7 @@ msgstr "未读消息计数器"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Use an External Email Server"
-msgstr "使用外部电子邮件服务器"
+msgstr "使用外部EMail服务器"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
@@ -2467,7 +2539,7 @@ msgstr "用于阶段的排序，数字越小越好。"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_email
 msgid "User Email"
-msgstr "用户Email"
+msgstr "用户EMail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_login
@@ -2631,7 +2703,7 @@ msgstr "例如：www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr "或者发送电子邮件给 %s"
+msgstr "或者发送EMail给 %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

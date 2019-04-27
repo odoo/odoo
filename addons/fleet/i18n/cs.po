@@ -6,18 +6,18 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Martin Trigaux, 2018
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# J.Podhorecky <j.podhorecky@volny.cz>, 2019
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -227,7 +227,7 @@ msgstr "Emise CO2"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
-msgstr "Emise CO vozidla"
+msgstr "Emise CO2 vozidla"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
@@ -824,7 +824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
@@ -1096,7 +1096,7 @@ msgstr "je Sledující"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
 msgid "Junior"
-msgstr ""
+msgstr "Junior"
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1107,6 +1107,11 @@ msgstr "Kilometry"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
 msgstr "Km"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "LPG"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
@@ -1399,7 +1404,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Další typ aktivity"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1709,7 +1714,7 @@ msgstr "Obnovení smlouvy"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
 msgid "Rent (Excluding VAT)"
-msgstr "Půjčovné (mimo DPH)"
+msgstr "Půjčovné (bez DPH)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_8
@@ -1790,7 +1795,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
 msgid "Senior"
-msgstr ""
+msgstr "Senior"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__sequence
@@ -2277,6 +2282,18 @@ msgstr ""
 #: model:fleet.service.type,name:fleet.type_service_50
 msgid "Water Pump Replacement"
 msgstr "Výměna vodní pumpy"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Zprávy Webové stránky"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Historie komunikace Webové stránky"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0

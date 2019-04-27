@@ -18,6 +18,9 @@
     }
 }
 .o_background_footer {
+    .list-inline-item {
+        white-space: nowrap;
+    }
     ul {
         border-top: 1px solid $o-brand-odoo;
         border-bottom: 1px solid $o-brand-odoo;
@@ -77,5 +80,12 @@
                 }
             }
         }
+    }
+}
+
+/* special case for displaying report in iframe */
+.o_in_iframe {
+    .o_background_header {
+        min-width: 0;
     }
 }

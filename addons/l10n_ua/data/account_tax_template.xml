@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="ua_psbp_6412" model="account.account.template">
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.acc_tag_vat')])]"/>
+        </record>
+
+        <!-- Tax template for VAT -->
+        <record id="sale_tax_template_vat20_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація ПДВ 20%</field>
+            <field name="description">+ ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat20incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація в т. ч. ПДВ 20%</field>
+            <field name="description">в т. ч. ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat7_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">11</field>
+            <field name="name">Реалізація ПДВ 7%</field>
+            <field name="description">+ ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="sale_tax_template_vat7incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">11</field>
+            <field name="name">Реалізація в т. ч. ПДВ 7%</field>
+            <field name="description">в т .ч. ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="sale_tax_template_vat0_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">12</field>
+            <field name="name">Реалізація ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat0')])]"/>
+        </record>
+        <record id="sale_tax_template_vat_free_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">13</field>
+            <field name="name">Реалізація звільнена від  ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_free')])]"/>
+        </record>
+        <record id="sale_tax_template_vat_not_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">14</field>
+            <field name="name">Реалізація Не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_psbp_6431"/>
+            <field name="refund_account_id" ref="ua_psbp_6431"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_not')])]"/>
+        </record>
+
+        <record id="purchase_tax_template_vat20_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання ПДВ 20%</field>
+            <field name="description">+ ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat20incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання в т. ч. ПДВ 20%</field>
+            <field name="description">в т. ч. ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat7_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Придбання ПДВ 7%</field>
+            <field name="description">+ ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="purchase_tax_template_vat7incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Придбання в т. ч. ПДВ 7%</field>
+            <field name="description">в т. ч. ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="purchase_tax_template_vat0_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">22</field>
+            <field name="name">Придбання ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat0')])]"/>
+        </record>
+        <record id="purchase_tax_template_vat_free_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">23</field>
+            <field name="name">Придбання звільнене від  ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_free')])]"/>
+        </record>
+        <record id="purchase_tax_template_vat_not_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">24</field>
+            <field name="name">Придбання Не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_psbp_6441"/>
+            <field name="refund_account_id" ref="ua_psbp_6441"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_not')])]"/>
+        </record>
+        <!-- Simplified tax system -->
+        <!-- Sale taxes -->
+        <record id="simple_tax_sale_product_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">30</field>
+            <field name="name">Дохід від продажу  товарів</field>
+            <field name="description">Дохід від продажу товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_gift_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">31</field>
+            <field name="name">Дохід від безоплатно отриманих  товарів</field>
+            <field name="description">Дохід від безоплатно отриманих товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_old_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">32</field>
+            <field name="name">Дохід від заборгованності за якою минув строк позивної давності</field>
+            <field name="description">Дохід від заборгованності, за якою минув строк позивної давності</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_15_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">33</field>
+            <field name="name">Дохід, за ставкою 15%</field>
+            <field name="description">Дохід за ставкою 15%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <!-- Purchase taxes -->
+        <record id="simple_tax_purchase_product_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">40</field>
+            <field name="name">Витрати від продажу  товарів</field>
+            <field name="description">Витрати від продажу товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_salary_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">41</field>
+            <field name="name">Витрати на оплату праці</field>
+            <field name="description">Витрати на оплату праці найманих працівників</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_esv_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">42</field>
+            <field name="name">Витрати ЄСВ</field>
+            <field name="description">Витрати на ЄСВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_other_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">43</field>
+            <field name="name">Витрати  інші</field>
+            <field name="description">Витрати інші</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+
+        <!-- IAS -->
+        <record id="ua_ias_1203" model="account.account.template">
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.acc_tag_vat')])]"/>
+        </record>
+
+        <!-- Tax template for VAT -->
+        <record id="sale_tax_template_vat20" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація з ПДВ 20%</field>
+            <field name="description">+ ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat20incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація в т. ч. ПДВ 20%</field>
+            <field name="description">в т. ч. ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat7" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">11</field>
+            <field name="name">Реалізація з ПДВ 7%</field>
+            <field name="description">+ ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="sale_tax_template_vat7incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">11</field>
+            <field name="name">Реалізація в т. ч. ПДВ 7%</field>
+            <field name="description">в т .ч. ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="sale_tax_template_vat0" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">12</field>
+            <field name="name">Реалізація з ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat0')])]"/>
+        </record>
+        <record id="sale_tax_template_vat_free" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">13</field>
+            <field name="name">Реалізація звільнена від ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_free')])]"/>
+        </record>
+        <record id="sale_tax_template_vat_not" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">14</field>
+            <field name="name">Реалізація не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_not')])]"/>
+        </record>
+
+        <record id="purchase_tax_template_vat20" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання з ПДВ 20%</field>
+            <field name="description">+ ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat20incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання в т. ч. ПДВ 20%</field>
+            <field name="description">в т. ч. ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat20')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat7" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Придбання з ПДВ 7%</field>
+            <field name="description">+ ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="purchase_tax_template_vat7incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Придбання в т. ч. ПДВ 7%</field>
+            <field name="description">в т. ч. ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat7')])]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat7"/>
+        </record>
+        <record id="purchase_tax_template_vat0" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">22</field>
+            <field name="name">Придбання з ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat0')])]"/>
+        </record>
+        <record id="purchase_tax_template_vat_free" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">23</field>
+            <field name="name">Придбання звільнене від ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_free')])]"/>
+        </record>
+        <record id="purchase_tax_template_vat_not" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">24</field>
+            <field name="name">Придбання не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vat_not')])]"/>
+        </record>
+        <!-- Simplified tax system -->
+        <!-- Sale taxes -->
+        <record id="simple_tax_sale_product" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">30</field>
+            <field name="name">Дохід від продажу товарів</field>
+            <field name="description">Дохід від продажу товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_gift" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">31</field>
+            <field name="name">Дохід від безоплатно отриманих товарів</field>
+            <field name="description">Дохід від безоплатно отриманих товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_old" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">32</field>
+            <field name="name">Дохід від заборгованності, за якою минув строк позивної давності</field>
+            <field name="description">Дохід від заборгованності, за якою минув строк позивної давності</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="simple_tax_sale_15" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">33</field>
+            <field name="name">Дохід, що оподатковується за ставкою 15%</field>
+            <field name="description">Дохід за ставкою 15%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <!-- Purchase taxes -->
+        <record id="simple_tax_purchase_product" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">40</field>
+            <field name="name">Витрати від продажу товарів</field>
+            <field name="description">Витрати від продажу товарів</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_salary" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">41</field>
+            <field name="name">Витрати на оплату праці найманих працівників</field>
+            <field name="description">Витрати на оплату праці найманих працівників</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_esv" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">42</field>
+            <field name="name">Витрати на ЄСВ</field>
+            <field name="description">Витрати на ЄСВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record id="simple_tax_purchase_other" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">43</field>
+            <field name="name">Витрати інші</field>
+            <field name="description">Витрати інші</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+        </record>
+    </data>
+</odoo>

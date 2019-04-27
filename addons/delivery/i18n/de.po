@@ -7,13 +7,15 @@
 # Johannes Croe <jcr@odoo.com>, 2018
 # Wolfgang Taferner, 2018
 # Marco Broscheit <marco.broscheit@posteo.de>, 2018
+# Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Marco Broscheit <marco.broscheit@posteo.de>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,12 +66,25 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Zur Bestellung hinzufügen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
 msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
+msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -81,11 +96,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
-msgid "<span>kg</span>"
-msgstr "<span>kg</span>"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
@@ -94,7 +104,7 @@ msgstr "<strong>Frachtführer</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong> Sendungsgewicht </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -212,7 +222,7 @@ msgstr "Protokollierung der Fehlerdiagnose"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Neue Liefermethode festlegen"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -247,6 +257,7 @@ msgstr "Liefermitteilung"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr "Auslieferungsmethode"
@@ -318,7 +329,7 @@ msgstr "Anzeigename"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Links zur Sendungsverfolgung anzeigen"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -341,7 +352,7 @@ msgstr "Umgebung"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Fehler: Diese Liefermethode ist für diese Adresse nicht verfügbar."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -782,6 +793,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 "Diese Auslieferungsmethode wird angewendet, wenn vom Lieferauftrag auch die "
@@ -879,6 +891,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
 msgstr "Gewicht für den Versand"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight

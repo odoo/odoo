@@ -9,6 +9,12 @@
                 <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
                     <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
                     <a t-att-id="line.id"/>
+                    <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                        Product: <strong t-esc="line.product_id.name"/>:
+                        this content will appear on the quotation only if this
+                        product is not removed.
+                    </div>
                     <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty d-print-none'" t-field="line.website_description"/>
                 </t>
             </t>

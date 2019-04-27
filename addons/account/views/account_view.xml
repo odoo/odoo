@@ -291,7 +291,7 @@
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
-                                    <group string="Accounting App Options" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase', 'bank', 'cash'])]}">
+                                    <group string="Accounting App Options">
                                         <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -1253,6 +1253,7 @@
                                         <field name="invoice_id" attrs="{'invisible': [('invoice_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
+                                        <field name="date"/>
                                         <field name="date_maturity"/>
                                     </group>
 
@@ -1260,7 +1261,7 @@
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                     </group>
-                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False)]}">
+                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False), ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                         <label for="full_reconcile_id"/>
                                         <div>
                                             <field name="full_reconcile_id"/>
@@ -1541,7 +1542,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span class="float-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -1556,10 +1557,11 @@
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <form string="Account Entry">
+                <form string="Account Entry" duplicate="false">
                     <header>
                         <button name="action_post" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_view_account_move_reversal)d" states="posted" string="Reverse Entry" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

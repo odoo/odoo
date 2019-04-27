@@ -15,6 +15,7 @@ from odoo.tools import float_compare, pycompat
 _logger = logging.getLogger(__name__)
 
 
+
 class ProductCategory(models.Model):
     _name = "product.category"
     _description = "Product Category"
@@ -279,7 +280,11 @@ class ProductProduct(models.Model):
         if isinstance(value, pycompat.text_type):
             value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
-        if self.product_tmpl_id.image:
+
+        # This is needed because when there is only one variant, the user
+        # doesn't know there is a difference between template and variant, he
+        # expects both images to be the same.
+        if self.product_tmpl_id.image and self.product_variant_count > 1:
             self.image_variant = image
         else:
             self.product_tmpl_id.image = image
@@ -338,6 +343,8 @@ class ProductProduct(models.Model):
             # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
             if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
                 product._set_standard_price(vals.get('standard_price') or 0.0)
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
         return products
 
     @api.multi
@@ -346,6 +353,15 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, self).write(values)
         if 'standard_price' in values:
             self._set_standard_price(values['standard_price'])
+        if 'attribute_value_ids' in values:
+            # `_get_variant_id_for_combination` depends on `attribute_value_ids`
+            self.clear_caches()
+        if 'active' in values:
+            # prefetched o2m have to be reloaded (because of active_test)
+            # (eg. product.template: product_variant_ids)
+            self.invalidate_cache()
+            # `_get_first_possible_variant_id` depends on variants active state
+            self.clear_caches()
         return res
 
     @api.multi
@@ -366,6 +382,8 @@ class ProductProduct(models.Model):
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
         unlink_templates.unlink()
+        # `_get_variant_id_for_combination` depends on existing variants
+        self.clear_caches()
         return res
 
     @api.multi
@@ -412,17 +430,36 @@ class ProductProduct(models.Model):
         self.check_access_rule("read")
 
         result = []
+
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        # Use `load=False` to not call `name_get` for the `product_tmpl_id`
+        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids', 'attribute_line_ids'], load=False)
+
+        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
+
+        if partner_ids:
+            supplier_info = self.env['product.supplierinfo'].sudo().search([
+                ('product_tmpl_id', 'in', product_template_ids),
+                ('name', 'in', partner_ids),
+            ])
+            # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+            # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
+            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            supplier_info_by_template = {}
+            for r in supplier_info:
+                supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
             # display only the attributes with multiple possible values on the template
-            variable_attributes = product.product_tmpl_id._get_valid_product_template_attribute_lines().filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
+            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
             variant = product.attribute_value_ids._variant_name(variable_attributes)
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
+                sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                    sellers = [x for x in product_supplier_info if not x.product_id]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
@@ -520,7 +557,10 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self._prepare_sellers(params):
+        sellers = self._prepare_sellers(params)
+        if self.env.context.get('force_company'):
+            sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.context['force_company'])
+        for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -628,6 +668,10 @@ class ProductProduct(models.Model):
             - it ONLY uses valid values
             We must make sure that all attributes are used to take into account the case where
             attributes would be added to the template.
+
+            This method does not check if the combination is possible, it just
+            checks if it has valid attributes and values. A possible combination
+            is always valid, but a valid combination is not always possible.
 
             :param valid_attributes: a recordset of product.attribute
             :param valid_values: a recordset of product.attribute.value

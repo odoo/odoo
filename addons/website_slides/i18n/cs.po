@@ -9,15 +9,15 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Martin Trigaux, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,6 +162,11 @@ msgid "<i class=\"fa fa-comments-o\"/> Comments"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-download fa-2x\" role=\"img\" aria-label=\"Download\"/>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
 msgstr ""
@@ -209,7 +214,19 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
+"title=\"Dislikes\"/>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" title=\"Likes\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -294,6 +311,22 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" class=\"ml-2 mr-2\" title=\"First slide\" role=\"img\" aria-label=\"First slide\">\n"
+"                                            <i class=\"fa fa-step-backward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" title=\"View fullscreen\" role=\"img\" aria-label=\"Fullscreen\">\n"
+"                                            <i class=\"fa fa-arrows-alt fa-2x\"/>\n"
+"                                        </span>"
 msgstr ""
 
 #. module: website_slides
@@ -726,7 +759,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see_full
@@ -1208,7 +1241,7 @@ msgstr "Datum zveřejnění"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
-msgstr ""
+msgstr "Publikováno"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
@@ -1354,7 +1387,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Slide"
-msgstr ""
+msgstr "Prezentace"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -1370,7 +1403,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Slide image"
-msgstr ""
+msgstr "stránka prezentace"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
@@ -1439,6 +1472,8 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Typ dokumentu se nastaví automaticky na základě adresy URL dokumentu a "
+"vlastností (např. Výšky a šířky prezentace a dokumentu)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -1654,25 +1689,25 @@ msgstr "Historie komunikace Webové stránky"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Meta-Popis webových stránek"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Meta-Klíčová slova webových stránek"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Meta-Název webových stránek"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_og_img
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "opengraph obrázek webových stránek"
 
 #. module: website_slides
 #. openerp-web
@@ -1705,12 +1740,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
-msgstr ""
+msgstr "Youtube nebo Google Document ID"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
-msgstr ""
+msgstr "Youtube nebo Google Document URL"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email

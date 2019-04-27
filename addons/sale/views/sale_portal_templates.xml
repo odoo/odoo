@@ -124,7 +124,7 @@
             <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-12 col-lg flex-lg-grow-0 d-print-none'"/>
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
 
                     <t t-set="title">
                         <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
@@ -161,7 +161,7 @@
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
                                 </li>
-                                <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item flex-grow-1">
+                                <li t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
@@ -386,13 +386,16 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <strong class="d-block mb-1">Invoicing Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address</strong>
                         <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
-                    <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
-                        <strong class="d-block mb-1">Shipping Address</strong>
-                        <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
+                     <t t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id">
+                        <div id="shipping_address" class="col-lg-6">
+                            <strong class="d-block mb-1">Shipping Address</strong>
+                            <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        </div>
+                    </t>
                 </div>
 
                 <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
@@ -425,12 +428,14 @@
                 <table class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
+                            <!-- TODO: remove in master -->
                             <t t-set="colspan" t-value="6"/>
                             <th class="text-left">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
                             <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                 <span>Discount</span>
+                                <!-- TODO: remove in master -->
                                 <t t-set="colspan" t-value="colspan+1"/>
                             </th>
                             <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">Taxes</th>
@@ -460,6 +465,7 @@
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div
+                                            t-if="line.discount &gt;= 0"
                                             t-field="line.price_unit"
                                             t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             t-att-style="line.discount and 'text-decoration: line-through' or None"
@@ -470,7 +476,7 @@
                                         </div>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
-                                        <strong t-if="line.discount" class="text-info">
+                                        <strong t-if="line.discount &gt; 0" class="text-info">
                                             <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
                                         </strong>
                                     </td>
@@ -478,19 +484,19 @@
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                        <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <span class="oe_order_line_price_total" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <span t-field="line.name"/>
                                     </td>
                                     <t t-set="current_section" t-value="line"/>
                                     <t t-set="current_subtotal" t-value="0"/>
                                 </t>
                                 <t t-if="line.display_type == 'line_note'">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <span t-field="line.name"/>
                                     </td>
                                 </t>
@@ -498,7 +504,7 @@
 
                             <t t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')">
                                 <tr class="is-subtotal text-right">
-                                    <td t-att-colspan="colspan">
+                                    <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
                                         <span
                                             t-esc="current_subtotal"
@@ -518,7 +524,7 @@
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
                                     <span
-                                        data-id="total_amount"
+                                        data-id="total_untaxed"
                                         t-field="sale_order.amount_untaxed"
                                         t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
                                     />

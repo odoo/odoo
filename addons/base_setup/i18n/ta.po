@@ -1,362 +1,406 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-05 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
-msgid "Activate the customer portal"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-lg fa-building-o\"/>\n"
+"                                            <span class=\"text-muted\">\n"
+"                                                the creation of documents between your companies\n"
+"                                            </span>"
+msgstr "உங்கள் நிறுவனங்களுக்கு இடையில் ஆவணங்களை உருவாக்குதல்"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_share
-msgid "Allow documents sharing"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Document Template</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr "ஆவணம் டெம்ப்ளேட்"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
-msgid "Allow multi currencies"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Format</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr "வடிவமைப்பு 1"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr "இந்த பக்கத்தை சேமித்து, அம்சத்தை அமைப்பதற்கு இங்கு மீண்டும் வருக."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Access Rights"
+msgstr "அணுகல் உரிமைகள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add fun feedback and motivate your employees"
+msgstr "வேடிக்கையான கருத்தைச் சேர்த்து உங்கள் பணியாளர்களை ஊக்குவிக்கவும்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
+"பயனர்கள் தங்கள் காலெண்டரை Google Calendar உடன் ஒத்திசைக்க அனுமதிக்கவும்"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr ""
+"CSV / XLS / XLSX / ODS கோப்புகளிலிருந்து தரவை இறக்குமதி செய்ய பயனர்களை "
+"அனுமதிக்கவும்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "பல நாணயச் சூழலில் பணியாற்ற அனுமதிக்கிறது"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model_terms:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Apply"
-msgstr "விண்ணப்பி"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
+msgid "Asterisk (VoIP)"
+msgstr "ஆஸ்டிரிஸ்க் (VoIP)"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
 msgid "Attach Google documents to any record"
+msgstr "எந்த ஆவணத்திற்கும் Google ஆவணங்களை இணைக்கவும்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr "ஆட்டோ-மக்கள்தொகை நிறுவனம் தரவு"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
+msgstr "தானியங்கு நிரப்பு நிறுவனத்தின் தரவு (பெயர், லோகோ, முகவரி, முதலியன)"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Business Documents"
+msgstr "வணிக ஆவணங்கள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"By default, new users get highest access rights for all installed apps."
 msgstr ""
+"முன்னிருப்பாக, நிறுவப்பட்ட பயன்பாடுகளுக்கான புதிய பயனர்கள் அதிக அணுகல் "
+"உரிமைகள் பெறுகின்றனர்."
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Authentication"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Change Document Template"
+msgstr "ஆவண வார்ப்புருவை மாற்றவும்"
+
+#. module: base_setup
+#: code:addons/base_setup/models/res_config_settings.py:100
+#, python-format
+msgid "Choose Your Document Layout"
+msgstr "உங்கள் ஆவண அமைப்பைத் தேர்வு செய்க"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Choose your document's header and footer layout"
+msgstr "உங்கள் ஆவணத்தின் தலைப்பு மற்றும் முடிப்பு அமைப்பைத் தேர்வுசெய்யவும்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
+msgid "Collaborative Pads"
+msgstr "கூட்டுப் பட்டைகள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Common Contact Book"
+msgstr "பொது தொடர்பு புத்தக"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Companies"
+msgstr "நிறுவனங்கள்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
+msgid "Company"
+msgstr "நிறுவனம்"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr "கட்டமைப்பு அமைப்புகள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
 msgstr ""
+"உங்கள் நிறுவனத்தில் ஒன்று உங்கள் நிறுவனத்தில் மற்றொருவருக்கு விற்கும் / "
+"வாங்கும் போது தானாக SO / PO ஐ உருவாக்க நிறுவனத்தின் விதிகளை கட்டமைக்கவும்."
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model_terms:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Cancel"
-msgstr "ரத்து"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Create and attach Google Drive documents to any record"
 msgstr ""
+"எந்த பதிவிற்கும் Google இயக்கக ஆவணங்களை உருவாக்கலாம் மற்றும் இணைக்கவும்"
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model_terms:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
+msgid "Custom Report Footer"
+msgstr "விருப்ப அறிக்கை அடிக்குறிப்பு"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr "இயல்புநிலை அணுகல் உரிமைகள்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
+msgid "Document Template"
+msgstr "ஆவண வார்ப்புரு"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Edit Layout"
+msgstr "தொகு நிலை"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
+msgid "External Email Servers"
+msgstr "வெளி மின்னஞ்சல் சேவையகங்கள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Extract and analyze Odoo data from Google Spreadsheet"
 msgstr ""
+"Google விரிதாளில் இருந்து Odoo தரவை பிரித்தெடுத்து, பகுப்பாய்வு செய்யவும்"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure outgoing email servers"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Find free high-resolution images from Unsplash"
+msgstr "Unsplash இலிருந்து இலவச உயர்தர படங்களைக் கண்டறிக"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure your company data"
-msgstr ""
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "அடிக்குறிப்பு உரை எல்லா அறிக்கைகளிலும் கீழே காட்டப்படும்."
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
-msgid "Created by"
-msgstr "உருவாக்கியவர்"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Format"
+msgstr "வடிவம்"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
-msgid "Created on"
-msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
+#: model:ir.ui.menu,name:base_setup.menu_config
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "General Settings"
+msgstr "பொது அமைப்புகள்"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Gengo Translations"
+msgstr "ஜெனோ மொழிபெயர்ப்பு"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
-msgid "Display Name"
-msgstr "காட்சி பெயர்"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Google Calendar"
+msgstr "கூகிள் நாட்காட்டி"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Google Drive"
+msgstr "Google இயக்ககம்"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Email"
-msgstr "மின்னஞ்சல்"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "Google விரிதாள்"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP ரவுட்டிங்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Import & Export"
+msgstr "இறக்குமதி ஏற்றுமதி"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Integrations"
+msgstr "ஒருங்கிணைவுகளையும்-"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Inter Company Flows"
+msgstr "இண்டர் கம்பனி பாய்கிறது"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "LDAP Authentication"
+msgstr "LDAP அங்கீகாரம்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "இன்டர் கம்பெனை நிர்வகி"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_company
+msgid "Manage multiple companies"
+msgstr "பல நிறுவனங்களை நிர்வகி"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage multiple legal entities with separate accounting"
+msgstr "தனிப்பட்ட கணக்கியல் மூலம் பல சட்ட நிறுவனங்கள் நிர்வகிக்கவும்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
+msgid "Multi-Currencies"
+msgstr "பல நாணயங்கள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Multi-companies"
+msgstr "பல நிறுவனங்கள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "OAuth Authentication"
+msgstr "OAuth அங்கீகரிப்பு"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
+msgid "Paper format"
+msgstr "காகித வடிவமைப்பு"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Preview Document"
+msgstr "ஆவணத்தை முன்னோட்டம்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set custom access rights for new users"
+msgstr "புதிய பயனர்களுக்கான விருப்ப அணுகல் உரிமைகளை அமைக்கவும்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Set the paper format of printed documents"
+msgstr "அச்சிடப்பட்ட ஆவணங்களின் காகித வடிவத்தை அமைக்கவும்"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "General Settings"
-msgstr ""
+msgid "Settings"
+msgstr "அமைப்புகள்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
-msgid "Give your customers access to their documents."
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Calendar"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Drive"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Integration"
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
-msgid "ID"
-msgstr "ID"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Import / Export"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Inter company"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
-msgid "Last Modified on"
-msgstr "கடைசியாக திருத்திய"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
-msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
-msgid "Last Updated on"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
-msgid "Manage Inter Company"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
-msgid "Manage multiple companies"
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Company"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Currencies"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "கூட்டாளி"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Portal access"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embbed any screen of Odoo."
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_share_partner
 msgid "Share partners to all companies"
-msgstr ""
+msgstr "எல்லா நிறுவனங்களுக்கும் பங்குதாரர்களைப் பகிர்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is "
-"defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company "
-"is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
+"உங்கள் கூட்டாளியால் வரையறுக்கப்பட்ட அனைத்து நிறுவனங்களுக்கும் உங்கள் பங்காளிகளைப் பகிர்ந்து கொள்ளுங்கள்\n"
+"  * சரிபார்க்கப்பட்டது: ஒரு நிறுவனம் பங்குதாரர் மீது வரையறுக்கப்பட்டிருந்தாலும், ஒவ்வொரு நிறுவனங்களுக்கும் பங்குதாரர்கள் தெரியும்\n"
+"  * தேர்வுசெய்யப்படாதது: ஒவ்வொரு நிறுவனமும் அதன் பங்குதாரர் (கம்பெனி வரையறுக்கப்பட்டுள்ள பங்காளிகள்) மட்டுமே காண முடியும். ஒரு நிறுவனம் தொடர்பான பங்குதாரர்கள் அனைத்து நிறுவனங்களுக்கும் தெரியும்."
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Shared resources"
-msgstr ""
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr "விளைவு காட்டு"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "Google காலெண்டருடன் உங்கள் காலெண்டரை ஒத்திசைக்கவும்"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Template"
+msgstr "டெம்ப்ளேட்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
-msgid "This installs the module google_calendar."
-msgstr ""
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr "ஜெனோவுடன் உங்கள் இணையத்தளத்தை மொழிபெயர்க்கவும்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
-msgid "This installs the module google_docs."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Translate your website with Gengo"
+msgstr "ஜெனோவுடன் உங்கள் இணையத்தை மொழிபெயர்க்கவும்"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr "Unsplash பட நூலகம்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use LDAP credentials to log in"
+msgstr "உள்நுழைய LDAP சான்றுகளை பயன்படுத்தவும்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external accounts to log in (Google, Facebook, etc.)"
+msgstr ""
+"(Google, Facebook, முதலியன) உள்நுழைவதற்கு வெளிப்புற கணக்குகளைப் "
+"பயன்படுத்தவும்"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "புற அங்கீகார வழங்குநர்களை (OAuth) பயன்படுத்தவும்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Use external pads in Odoo Notes"
+msgstr "Odoo குறிப்புகள் வெளிப்புற பட்டைகள் பயன்படுத்த"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Users"
+msgstr "பயனர்கள்"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
 msgstr ""
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
-"                                    etc."
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
+"உங்கள் முகவரி புத்தகத்தை populating போது, Odoo பொருந்தும் நிறுவனங்கள் "
+"பட்டியலை வழங்குகிறது. ஒரு உருப்படியைத் தேர்ந்தெடுக்கும்போது, நிறுவனத்தின் "
+"தரவு மற்றும் லோகோ தானாக நிரப்பப்படுகின்றன."

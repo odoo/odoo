@@ -1,10 +1,12 @@
-'use strict';
 odoo.define('website_sale_delivery.checkout', function (require) {
+    'use strict';
 
     require('web.dom_ready');
     var ajax = require('web.ajax');
     var core = require('web.core');
     var _t = core._t;
+    var concurrency = require('web.concurrency');
+    var dp = new concurrency.DropPrevious();
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
@@ -35,7 +37,8 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $carrier_badge.children('span').text(result.new_amount_delivery);
             $carrier_badge.removeClass('d-none');
             $compute_badge.addClass('d-none');
-            $pay_button.prop('disabled', false);
+            $pay_button.data('disabled_reasons').carrier_selection = false;
+            $pay_button.prop('disabled', _.contains($pay_button.data('disabled_reasons'), true));
         }
         else {
             console.error(result.error_message);
@@ -48,10 +51,12 @@ odoo.define('website_sale_delivery.checkout', function (require) {
     };
 
     var _onCarrierClick = function(ev) {
+        $pay_button.data('disabled_reasons', $pay_button.data('disabled_reasons') || {});
+        $pay_button.data('disabled_reasons').carrier_selection = true;
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         var values = {'carrier_id': carrier_id};
-        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+        dp.add(ajax.jsonRpc('/shop/update_carrier', 'call', values))
           .then(_onCarrierUpdateAnswer);
     };
 

@@ -1,24 +1,70 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueSetup
 from odoo.tests import tagged
 
 
+class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
+    def _setup_currency(self, currency_ratio=2):
+        """Get or create a currency. This makes the test non-reliant on demo.
+
+        With an easy currency rate, for a simple 2 ratio in the following tests.
+        """
+        from_currency = self.computer.currency_id
+        self._set_or_create_rate_today(from_currency, rate=1)
+
+        to_currency = self._get_or_create_currency("my currency", "C")
+        self._set_or_create_rate_today(to_currency, currency_ratio)
+
+        return to_currency
+
+    def _set_or_create_rate_today(self, currency, rate):
+        """Get or create a currency rate for today. This makes the test
+        non-reliant on demo data."""
+        name = fields.Date.today()
+        currency_id = currency.id
+        company_id = self.env.user.company_id.id
+
+        CurrencyRate = self.env['res.currency.rate']
+
+        currency_rate = CurrencyRate.search([
+            ('company_id', '=', company_id),
+            ('currency_id', '=', currency_id),
+            ('name', '=', name),
+        ])
+
+        if currency_rate:
+            currency_rate.rate = rate
+        else:
+            CurrencyRate.create({
+                'company_id': company_id,
+                'currency_id': currency_id,
+                'name': name,
+                'rate': rate,
+            })
+
+    def _get_or_create_currency(self, name, symbol):
+        """Get or create a currency based on name. This makes the test
+        non-reliant on demo data."""
+        currency = self.env['res.currency'].search([('name', '=', name)])
+        return currency or currency.create({
+            'name': name,
+            'symbol': symbol,
+        })
+
+
 @tagged('post_install', '-at_install')
-class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
-    def _setup_pricelist(self):
-        # easy currency rate, for a simple 2 ratio in the following tests
-        self.computer.currency_id.rate_ids[0].rate = 1
-        currency_ratio = 2
-        currency = self.env['res.currency'].browse(1 if self.computer.currency_id.id != 1 else 2)
-        currency.rate_ids[0].rate = currency_ratio
+class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
+    def _setup_pricelist(self, currency_ratio=2):
+        to_currency = self._setup_currency(currency_ratio)
 
         discount = 10
 
         pricelist = self.env['product.pricelist'].create({
             'name': 'test pl',
-            'currency_id': currency.id,
+            'currency_id': to_currency.id,
             'company_id': self.computer.company_id.id,
         })
 
@@ -34,8 +80,13 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
 
     def test_01_is_combination_possible_archived(self):
         """The goal is to test the possibility of archived combinations.
+
         This test could not be put into product module because there was no
-        field which had product_id as required and without cascade on delete.
+        model which had product_id as required and without cascade on delete.
+        Here we have the sales order line in this situation.
+
+        This is a necessary condition for `create_variant_ids` to archive
+        instead of delete the variants.
         """
         def do_test(self):
             computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -64,6 +115,7 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
 
             variant2.active = False
             # CASE: 1 not archived, 2 archived
+            # Test invalidate_cache on product.product write
             self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_2))
             # CASE: both archived combination (without no_variant)
@@ -139,6 +191,11 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
         do_test(self)
 
     def test_02_get_combination_info(self):
+        # If using multi-company, company_id will be False, and this code should
+        # still work.
+        # The case with a company_id will be implicitly tested on website_sale.
+        self.computer.company_id = False
+
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
         computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
         computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
@@ -210,6 +267,7 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
 
         # CASE: dynamic combination, no variant existing
+        # Test invalidate_cache on product.template create_variant_ids
         self._add_keyboard_attribute()
         self.computer.create_variant_ids()
         combination += self._get_product_template_attribute_value(self.keyboard_excluded)
@@ -221,8 +279,8 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
         self.assertEqual(res['list_price'], (2222 - 5) * currency_ratio)
 
         # CASE: pricelist set value to 0, no variant
+        # Test invalidate_cache on product.pricelist write
         pricelist_item.percent_price = 100
-        self.computer.invalidate_cache()  # need o2m to be refetched
         res = self.computer._get_combination_info(combination, add_qty=2, pricelist=pricelist)
         self.assertEqual(res['product_template_id'], self.computer.id)
         self.assertEqual(res['product_id'], False)
@@ -295,7 +353,6 @@ class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
         self.hdd_attribute.create_variant = 'dynamic'
         self._add_hdd_attribute_line()
         self.computer.create_variant_ids()
-        self.computer.invalidate_cache()
 
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
         computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)

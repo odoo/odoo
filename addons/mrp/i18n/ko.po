@@ -6,18 +6,18 @@
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,28 @@ msgid "18″ x 2½″ Square Leg"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:339
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:332
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -100,6 +121,24 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
+msgid ""
+"<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
+"role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -388,7 +427,7 @@ msgstr "아카이브됨"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__local_url
@@ -424,9 +463,10 @@ msgstr "사용 가능"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Avatar"
-msgstr ""
+msgstr "아바타"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template__produce_delay
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
@@ -454,6 +494,7 @@ msgid "BOM lines of the referred bom"
 msgstr "참조된 재료 명세서의 재료 명세"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "바코드"
@@ -484,6 +525,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
+#: model:ir.model.fields,field_description:mrp.field_product_product__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -695,7 +737,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "체크섬/SHA1"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -744,7 +786,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1142,12 +1184,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas
 msgid "File Content"
-msgstr ""
+msgstr "파일 컨텐츠"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__file_size
 msgid "File Size"
-msgstr ""
+msgstr "파일 크기"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas_fname
@@ -1189,6 +1231,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
 #: model_terms:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Finished Product"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.report,name:mrp.action_report_finished_product
+msgid "Finished Product Label (PDF)"
 msgstr ""
 
 #. module: mrp
@@ -1365,7 +1412,7 @@ msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합�
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 메시지에 배달 오류가 발생합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate
@@ -1438,7 +1485,7 @@ msgstr "진행중"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
-msgstr ""
+msgstr "색인화된 콘텐츠"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -1494,7 +1541,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__public
 msgid "Is public document"
-msgstr ""
+msgstr "공문서입니까?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -1707,7 +1754,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_main_attachment_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:465
@@ -1791,6 +1838,7 @@ msgid "Manufacturing"
 msgstr "제조"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
@@ -1884,7 +1932,7 @@ msgstr "기초정보"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "주 생산 일정"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__availability
@@ -1898,7 +1946,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 배달 오류"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -1911,7 +1959,7 @@ msgstr "메시지"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "MIME 유형"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -2078,7 +2126,7 @@ msgstr "메모"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 횟수"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
@@ -2101,7 +2149,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "오류 횟수"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -2117,7 +2165,7 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "배달 오류 메시지 수"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
@@ -2250,7 +2298,7 @@ msgstr "기한이 지난"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
 msgid "Overview"
-msgstr ""
+msgstr "개요"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -2509,7 +2557,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr ""
+msgstr "제품 라이프 사이클 관리 (PLM)"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_move_line
@@ -2633,7 +2681,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Productivity"
-msgstr ""
+msgstr "생산성"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
@@ -2678,7 +2726,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control
 #: selection:mrp.workcenter.productivity.loss.type,loss_type:0
 msgid "Quality"
-msgstr ""
+msgstr "품질"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2735,6 +2783,7 @@ msgstr ""
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:10
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "수량:"
@@ -2846,7 +2895,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_model_name
 msgid "Res Model Name"
-msgstr ""
+msgstr "자원 모델 이름"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__qty_reserved
@@ -2863,7 +2912,7 @@ msgstr "자원"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "자원 필드"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_id
@@ -2873,7 +2922,7 @@ msgstr "리소스 ID"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_model
 msgid "Resource Model"
-msgstr ""
+msgstr "자원 모델"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_name
@@ -3211,7 +3260,7 @@ msgstr "재고 이동"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "재고 규칙"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -3232,7 +3281,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "저장된 파일 이름"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3360,7 +3409,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "첨부 파일이 첨부될 데이터베이스 개체입니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__routing_id
@@ -3415,7 +3464,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "다음이 레코드 ID에 첨부됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__routing_id
@@ -3479,7 +3528,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "미리보기 이미지"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -4169,7 +4218,7 @@ msgstr ""
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
-msgstr ""
+msgstr "컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여 넣을 수 있습니다."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:605

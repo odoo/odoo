@@ -101,7 +101,7 @@ class Digest(models.Model):
         for digest in self:
             for user in digest.user_ids:
                 subject = '%s: %s' % (user.company_id.name, digest.name)
-                digest.template_id.with_context(user=user, company=user.company_id).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
+                digest.template_id.with_context(user=user).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
             digest.next_run_date = digest._get_next_run_date()
 
     def compute_kpis(self, company, user):
@@ -133,7 +133,7 @@ class Digest(models.Model):
         tip = self.env['digest.tip'].search([('user_ids', '!=', user.id), '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)], limit=1)
         if not tip:
             return False
-        tip.user_ids = [4, user.id]
+        tip.user_ids += user
         body = tools.html_sanitize(tip.tip_description)
         tip_description = self.env['mail.template']._render_template(body, 'digest.tip', self.id)
         return tip_description

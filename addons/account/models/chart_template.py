@@ -165,15 +165,16 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        if request and request.db:
-            company_id = request.env.user.company_id.id
-            company = self.env['res.company'].browse(company_id)
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
         else:
             # fallback to company of current user, most likely __system__
             # (won't work well for multi-company)
             company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template_id:
+        if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
 
     def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
@@ -185,9 +186,10 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        if request and request.db:
-            company_id = request.env.user.company_id.id
-            company = self.env['res.company'].browse(company_id)
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
         else:
             # fallback to company of current user, most likely __system__
             # (won't work well for multi-company)

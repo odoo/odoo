@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -23,6 +23,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-book\" role=\"img\" aria-label=\"Documents\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
 msgstr ""
@@ -30,6 +55,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid ""
+"<span title=\"Documents\"><i class=\"fa fa-book\" role=\"img\" aria-label=\"Documents\"/>\n"
+"                                                </span>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -278,15 +310,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Diccionari Python a avaluar per proporcionar valors per defecte quan es "
-"creïn nous registres per aquest pseudònim."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 msgid "Action Needed"
 msgstr "Cal fer alguna acció"
@@ -339,29 +362,9 @@ msgid "Alias"
 msgstr "Àlies"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_contact
-msgid "Alias Contact Security"
-msgstr "Pseudònim del contacte de seguretat"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
-msgid "Alias Name"
-msgstr "Pseudònim"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
-msgid "Alias domain"
-msgstr "Pseudònim del domini"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
-msgid "Aliased Model"
-msgstr "Model amb pseudònim"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -511,6 +514,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:65
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -678,11 +690,6 @@ msgstr "Dies per al tancament"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_open
 msgid "Days to Open"
 msgstr "Dies per obrir"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
-msgid "Default Values"
-msgstr "Valors per defecte"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -998,15 +1005,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"Id del registre pare que te el pseudònim.(exemple: el projecte que conté el "
-"pseudònim per la creació de tasques)"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Si està marcat, els nous missatges requereixen la vostra atenció."
@@ -1039,6 +1037,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:69
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1273,11 +1280,6 @@ msgid "My Applications"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
-msgid "My Next Activities"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
 msgid "Name"
 msgstr "Nom"
@@ -1342,7 +1344,6 @@ msgid "Newly hired employee"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_nmenu_activity
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
 msgid "Next Activities"
 msgstr "Activitat següent"
@@ -1377,11 +1378,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
-msgid "No scheduled activities for the moment"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1460,46 +1456,9 @@ msgid "Online Posting"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Id opcional d'un fil (registre) al que tots els missatges entrants "
-"s'adjuntaran, inclús si no van ser respostes del mateix. Si s'estableix, se "
-"desactivarà completament la creació de nous registres."
-
-#. module: hr_recruitment
 #: selection:hr.applicant,activity_state:0
 msgid "Overdue"
 msgstr "Fora de termini"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
-msgid "Owner"
-msgstr "Propietari"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
-msgid "Parent Model"
-msgstr "Model pare"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_thread_id
-msgid "Parent Record Thread ID"
-msgstr "Id del registre pare"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
-msgstr ""
-"El model pare conte el pseudònim. El model que conte la referència del "
-"pseudònim no és necessàriament el model que es dóna a través del camp "
-"alias_model_id (exemple: projecto (parent_model) i tasca (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1515,19 +1474,6 @@ msgstr "Telèfon"
 #: selection:hr.applicant,activity_state:0
 msgid "Planned"
 msgstr "Planificat"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
-msgstr ""
-"Política per enviar un missatge en el document utilitzant la passarel·la del correu.\n"
-"-Tots: Tothom pot enviar.\n"
-"-Empreses: Només les empreses autenticades.\n"
-"-Seguidors: Només els seguidors del document relacionat o els membres dels canals següents.\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -1551,6 +1497,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:67
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
+#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -1566,11 +1521,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
-msgid "Record Thread ID"
-msgstr "Id. del registre fill"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1863,43 +1813,9 @@ msgid "The date at which the applicant will be available to start working"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"El model (Tipus de document d'Odoo) al que correspon aquest pseudònim. "
-"Qualsevol correu electrònic entrant que no sigui resposta a un registre "
-"existent, causarà la creació d'un nou registre d'aquest model (per exemple, "
-"una tasca de projecte)"
-
-#. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"El nom d'aquest pseudònim de correu electrònic. Per exemple, \"jobs\", si el"
-" que vol és obtenir els correus per <jobs@example.odoo.com>"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"El propietari dels registres creats al rebre correus electrònics amb aquest "
-"pseudònim. Si aquest camp no esta definit, el sistema intentarà de trobar el"
-" propietari correcte basat amb l'adreça de l'emissor (De), o utilitzarà la "
-"compta d'administrador si no es troba un usuari per aquesta adreça."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources

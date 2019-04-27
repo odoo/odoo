@@ -464,7 +464,7 @@ MailManager.include({
         var self = this;
         var partnerID = data.partner_id;
         this.call('bus_service', 'sendNotification', data.title, data.message, function ( ){
-            self.call('mail_service', 'openDmWindow', partnerID);
+            self.call('mail_service', 'openDMChatWindowFromBlankThreadWindow', partnerID);
         });
     },
     /**

@@ -6,19 +6,23 @@ class A(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
-    f1 = fields.Integer(required=True)
+    f1 = fields.Char(required=True)
     f2 = fields.Integer(default=42)
     f3 = fields.Integer()
     f4 = fields.Integer(compute='_compute_f4')
+    f5 = fields.Integer()
+    f6 = fields.Integer()
 
     @api.onchange('f2')
     def _on_change_f2(self):
         self.f3 = int(self.f2 / 2)
+        self.f5 = self.f2
+        self.f6 = self.f2
 
     @api.depends('f1', 'f2')
     def _compute_f4(self):
         for r in self:
-            r.f4 = r.f2 / (r.f1 or 1)
+            r.f4 = r.f2 / (int(r.f1) or 1)
 
 class B(models.Model):
     _name = 'test_testing_utilities.readonly'
@@ -67,7 +71,7 @@ class M2Onchange(models.Model):
     def _on_change_f2(self):
         self.f = self.env['test_testing_utilities.m2o'].search([
             ('name', 'ilike', self.f2),
-        ], limit=1)
+        ], limit=1) if self.f2 else False
 
 class M2MChange(models.Model):
     _name = 'test_testing_utilities.e'
@@ -150,7 +154,6 @@ class O2MSub(models.Model):
 
     @api.onchange('has_parent')
     def _onchange_has_parent(self):
-        self.has_parent = bool(self.parent_id)
         if self.has_parent:
             self.value = self.parent_id.value
 
@@ -185,6 +188,13 @@ class O2MSub3(models.Model):
             r.name = str(r.v)
 
 
+class O2MRecursive(models.Model):
+    _name = _description = 'test_testing_utilities.recursive'
+
+    one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
+    many_to_one_ids = fields.One2many('test_testing_utilities.recursive', 'one_to_many_id', readonly=True)
+
+
 class O2MOnchangeParent(models.Model):
     _name = 'test_testing_utilities.onchange_parent'
     _description = 'Testing Utilities Onchange Parent'
@@ -208,3 +218,46 @@ class M2OOnchangeLine(models.Model):
     @api.onchange('dummy')
     def _onchange_flag(self):
         self.flag = True
+
+class O2MChangeCount(models.Model):
+    _name = 'test_testing_utilities.onchange_count'
+    _description = _name
+
+    count = fields.Integer()
+    line_ids = fields.One2many('test_testing_utilities.onchange_count_sub', 'parent')
+
+    @api.onchange('count')
+    def _onchange_count(self):
+        Sub = self.env['test_testing_utilities.onchange_count_sub']
+        recs = Sub
+        for i in range(self.count):
+            recs |= Sub.new({'name': str(i)})
+        self.line_ids = recs
+
+class O2MChangeSub(models.Model):
+    _name = 'test_testing_utilities.onchange_count_sub'
+    _description = _name
+
+    parent = fields.Many2one('test_testing_utilities.onchange_count')
+    name = fields.Char()
+
+class O2MReadonlySubfield(models.Model):
+    _name = 'o2m_readonly_subfield_parent'
+    _description = _name
+
+    line_ids = fields.One2many('o2m_readonly_subfield_child', 'parent_id')
+
+class O2MReadonlySubfieldChild(models.Model):
+    _name = _description = 'o2m_readonly_subfield_child'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('o2m_readonly_subfield_parent')
+    f = fields.Integer(compute='_compute_f', inverse='_inverse_f', readonly=True)
+
+    @api.depends('name')
+    def _compute_f(self):
+        for r in self:
+            r.f = len(r.name) if r.name else 0
+
+    def _inverse_f(self):
+        raise AssertionError("Inverse of f should not be called")

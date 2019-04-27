@@ -5,7 +5,6 @@
 # Translators:
 # e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # Liping Wang <lynn.config@gmail.com>, 2018
@@ -13,18 +12,18 @@
 # fausthuang, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Bo Cao, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# Fisher <fisher@kdomi.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
 # Lisa Zhang <lzh@odoo.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Youfu Sheng <wdmsyf@sina.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Youfu Sheng <wdmsyf@sina.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +50,27 @@ msgstr "3个月"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
 msgstr "同比增长 50%"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Publication date\" role=\"img\" aria-"
+"label=\"Publication date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"Publication date\" role=\"img\" aria-"
+"label=\"Publication date\"/>"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -269,11 +289,6 @@ msgid "In the meantime,"
 msgstr "同时，"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-msgid "Is published"
-msgstr "已发布"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
 msgstr "工作申请表"
@@ -341,11 +356,6 @@ msgid "Need More Info?"
 msgstr "需要更多的信息？"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
-msgid "New Job Offer"
-msgstr "提供新工作"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No outbound calls, you get leads and focus on providing value to them"
 msgstr "没有外拨电话，您可以获得潜在客户并专注于为他们提供价值"
@@ -393,19 +403,9 @@ msgid "Profitable"
 msgstr "有利"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "限制发布到本网站。"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Resume"
 msgstr "重新开始"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
-msgid "SEO optimized"
-msgstr "SEO优化"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -458,11 +458,6 @@ msgid "The founder’s story"
 msgstr "创始人的故事"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整URL。"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event"
@@ -489,16 +484,6 @@ msgid "Variability of the Job:"
 msgstr "工作变动："
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
-msgid "Visible on current website"
-msgstr "在当前网站显示"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
-msgid "Website"
-msgstr "网站"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 msgid "Website Editor"
 msgstr "网站编辑"
@@ -509,34 +494,9 @@ msgid "Website Recruitment Form"
 msgstr "网站招聘表格"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
-msgid "Website URL"
-msgstr "网站网址"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
 msgid "Website description"
 msgstr "网站说明"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
-msgid "Website meta description"
-msgstr "网站元说明"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "网站meta关键词"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
-msgid "Website meta title"
-msgstr "网站meta标题"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
-msgid "Website opengraph image"
-msgstr "网站opengraph图像"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -553,7 +513,7 @@ msgstr "您向中小企业的董事销售管理软件：有趣的项目和人员
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Your Email"
-msgstr "你的电子邮件"
+msgstr "你的EMail"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply

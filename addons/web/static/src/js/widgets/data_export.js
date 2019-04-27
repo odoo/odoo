@@ -311,7 +311,7 @@ var DataExport = Dialog.extend({
             });
 
             self.$export_format_inputs = $fmts.find('input');
-            self.$export_format_inputs.first().prop('checked', true);
+            self.$export_format_inputs.filter(':enabled').first().prop('checked', true);
         }
     },
     show_exports_list: function() {

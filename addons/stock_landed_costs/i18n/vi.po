@@ -3,20 +3,21 @@
 # * stock_landed_costs
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 # Martin Trigaux, 2018
 # fanha99 <fanha99@hotmail.com>, 2018
 # son dang <son.dang@doda100.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: khoibv Mr <kendev2009@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,11 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:371
 #, python-format
 msgid " already out"
+msgstr "đã xuất"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -264,7 +270,7 @@ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Nếu chọn, sẽ hiển thị thông báo lỗi."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
@@ -291,7 +297,7 @@ msgstr "Trở thành người theo dõi"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "Là  Chi phí vận chuyển"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
@@ -325,7 +331,7 @@ msgstr "Kiểu Landed cost"
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr ""
+msgstr "Loại Chi phí vận chuyển"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -376,7 +382,7 @@ msgstr "Đính kèm chính"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Thông báo gửi đi gặp lỗi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
@@ -423,7 +429,7 @@ msgstr "Số thông điệp cần có hành động"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Số tin gửi đi bị lỗi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread_counter

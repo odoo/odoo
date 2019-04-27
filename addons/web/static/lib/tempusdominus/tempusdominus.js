@@ -2093,6 +2093,9 @@ var TempusDominusBootstrap4 = function ($) {
             }
 
             currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
+            // !! ODOO FIX START !!
+            var now = this.getMoment();
+            // !! ODOO FIX END !!
 
             for (i = 0; i < 42; i++) {
                 //always display 42 days (should show 6 weeks)
@@ -2125,7 +2128,9 @@ var TempusDominusBootstrap4 = function ($) {
                 if (!this._isValid(currentDate, 'd')) {
                     clsName += ' disabled';
                 }
-                if (currentDate.isSame(this.getMoment(), 'd')) {
+                // !! ODOO FIX START !!
+                if (currentDate.date() === now.date() && currentDate.month() === now.month() && currentDate.year() === now.year()) {
+                // !! ODOO FIX END !!
                     clsName += ' today';
                 }
                 if (currentDate.day() === 0 || currentDate.day() === 6) {
@@ -2749,7 +2754,8 @@ var TempusDominusBootstrap4 = function ($) {
         if ($target.length === 0) {
             return;
         }
-        if (config._options.debug || window.debug) {
+        // /!\ ODOO FIX: check on 'config' existence added by odoo
+        if (config && config._options.debug || window.debug) {
             return;
         }
         TempusDominusBootstrap4._jQueryInterface.call($target, 'hide', event);

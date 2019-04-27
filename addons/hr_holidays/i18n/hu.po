@@ -6,17 +6,17 @@
 # Kovács Tibor <kovika@gmail.com>, 2018
 # Martin Trigaux, 2018
 # gezza <geza.nagy@oregional.hu>, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
-# krnkris, 2018
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# krnkris, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -640,6 +640,11 @@ msgid "Analyze from"
 msgstr "Analízis/Elemzés ettől"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__double_validation
+msgid "Apply Double Validation"
+msgstr "Dupla jóváhagyás alkalmazása"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
 msgid "Appraisal Analysis"
 msgstr "Értékelés elemzés"
@@ -1145,7 +1150,7 @@ msgstr "Kezdő dátum"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Jövőbeli tevékenységek"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__payslip_status
@@ -1250,6 +1255,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1330,7 +1336,7 @@ msgstr "Legutóbb frissítve "
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Késő tevékenységek"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1538,7 +1544,7 @@ msgstr "Távollétek."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2018"
+msgid "Legal Leaves 2019"
 msgstr ""
 
 #. module: hr_holidays
@@ -1591,7 +1597,7 @@ msgstr "Magenta"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Fő melléklet"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
@@ -1647,7 +1653,7 @@ msgstr "Találkozó típusa"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Üzenetkézbesítési hiba"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -1724,7 +1730,7 @@ msgstr "Új igény"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Következő tevékenység-határidő"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
@@ -1736,7 +1742,7 @@ msgstr "Következő tevékenység összegzése"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Következő tevékenységtípus"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
@@ -1777,7 +1783,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hiba száma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
@@ -1796,7 +1802,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_number
@@ -1891,11 +1897,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Overview"
-msgstr ""
+msgstr "Áttekintés"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
-msgid "Paid Time Off 2018"
+msgid "Paid Time Off 2019"
 msgstr ""
 
 #. module: hr_holidays
@@ -1918,7 +1924,7 @@ msgstr "Bérszámfejtés"
 #: selection:hr.leave,activity_state:0
 #: selection:hr.leave.allocation,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Tervezett"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
@@ -2128,6 +2134,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: Az esedékesség dátuma már elmúlt\n"
+"Ma: A tevékenység dátuma ma van\n"
+"Tervezett: Jövőbeli tevékenységek."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2449,6 +2459,15 @@ msgstr "Hét(ek)"
 #: selection:hr.leave.type,color_name:0
 msgid "Wheat"
 msgstr "Búzaszín"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__double_validation
+msgid ""
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
+msgstr ""
+"Ha ki van választva, akkor ez a típusú Kihelyezés/Távollét igényt két "
+"jóváhagyással kell elfogadni."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type

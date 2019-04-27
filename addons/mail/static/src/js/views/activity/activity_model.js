@@ -2,6 +2,7 @@ odoo.define('mail.ActivityModel', function (require) {
 'use strict';
 
 var AbstractModel = require('web.AbstractModel');
+var session = require('web.session');
 
 var ActivityModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
@@ -57,6 +58,7 @@ var ActivityModel = AbstractModel.extend({
             kwargs: {
                 res_model: this.modelName,
                 domain: this.domain,
+                context: session.user_context,
             }
         }).then(function (result) {
             self.data.data = result;

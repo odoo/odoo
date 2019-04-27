@@ -61,12 +61,8 @@ return session.is_bound.then(function () {
         }, 500);
         var observer = new MutationObserver(check_tooltip);
         var start_service = (function () {
-            var load_def;
 
             return function (observe) {
-                if (load_def === undefined && observe && session.is_frontend) {
-                    load_def = ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb);
-                }
 
                 var def = $.Deferred();
                 $(function () {
@@ -74,18 +70,16 @@ return session.is_bound.then(function () {
                      * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
                      * registration and starting listening for DOM mutations.
                      */
-                    $.when(load_def).then(function () {
-                        _.defer(function () {
-                            tour_manager._register_all(observe);
-                            if (observe) {
-                                observer.observe(document.body, {
-                                    attributes: true,
-                                    childList: true,
-                                    subtree: true,
-                                });
-                            }
-                            def.resolve();
-                        });
+                    _.defer(function () {
+                        tour_manager._register_all(observe);
+                        if (observe) {
+                            observer.observe(document.body, {
+                                attributes: true,
+                                childList: true,
+                                subtree: true,
+                            });
+                        }
+                        def.resolve();
                     });
                 });
                 return def;

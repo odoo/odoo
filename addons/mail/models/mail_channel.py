@@ -78,6 +78,7 @@ class Channel(models.Model):
         ('chat', 'Chat Discussion'),
         ('channel', 'Channel')],
         'Channel Type', default='channel')
+    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat', default=False)
     description = fields.Text('Description')
     uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
@@ -177,6 +178,12 @@ class Channel(models.Model):
         membership_ids = memberships.mapped('channel_id')
         for record in self:
             record.is_member = record in membership_ids
+
+    @api.multi
+    def _compute_is_chat(self):
+        for record in self:
+            if record.channel_type == 'chat':
+                record.is_chat = True
 
     @api.onchange('public')
     def _onchange_public(self):
@@ -345,7 +352,7 @@ class Channel(models.Model):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
+                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist if partner.email),
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
@@ -384,7 +391,7 @@ class Channel(models.Model):
         if moderation_status == 'rejected':
             return self.env['mail.message']
 
-        self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
+        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
 
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
 

@@ -64,7 +64,8 @@ class Base(models.AbstractModel):
                         locale=locale)
 
             if field_type == 'selection':
-                group_by_value = selection_labels[group_by_value]
+                group_by_value = selection_labels[group_by_value] \
+                    if group_by_value in selection_labels else False
 
             if type(group_by_value) == tuple:
                 group_by_value = group_by_value[1] # FIXME should use technical value (0)

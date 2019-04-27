@@ -9,20 +9,19 @@
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
 # Rolandas <info@paninfo.lt>, 2018
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Paulius Stundžia <paulius@focusate.eu>, 2018
 # Martin Trigaux, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +38,7 @@ msgstr "Susitikimų sk."
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% endif"
-msgstr ""
+msgstr "% endif"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -48,6 +47,9 @@ msgid ""
 "    % if email\n"
 "    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+"    % if email\n"
+"    <strong style=\"font-size: 16px;\">Išbandykite pašto sietuvą</strong>"
 
 #. module: crm
 #. openerp-web
@@ -57,6 +59,8 @@ msgid ""
 "<b>Choose a name</b> for your opportunity, example: <i>'Need a new "
 "website'</i>"
 msgstr ""
+"<b>Pasirinkti pavadinimą</b> savo galimybei, pavyzdžiui: <i>\"Reikia naujos "
+"svetainės\"</i>"
 
 #. module: crm
 #. openerp-web
@@ -66,7 +70,7 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
-"<b>Tempkite galimybes</b> tarp stulpelių, kai jos progresuoja Jūsų pardavimo"
+"<b>Tempkite galimybes</b> tarp stulpelių, kai jos progresuoja jūsų pardavimo"
 " cikle."
 
 #. module: crm
@@ -76,8 +80,75 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"<b>Pakvieskite bendradarbius</b>el. paštu.<br/><i>Eilutėje įrašykite po "
-"vieną el. paštą.</i>"
+"<b>Pakvieskite kolegas</b>el. paštu.<br/><i>Eilutėje įrašykite po vieną el. "
+"paštą.</i>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
+msgid "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "<i class=\"fa fa-comments\" aria-label=\"Unread messages\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-comments\" aria-label=\"Unread messages\" role=\"img\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
+"title=\"Favorites\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
+"title=\"Favorites\"/>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:139
@@ -88,6 +159,10 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
+"<p class='o_view_nocontent_smiling_face'>Pridėkite naujas galimybes</p><p>\n"
+"Panašu, kad nesate pardavimų komandos narys. Turėtumėte pridėti save\n"
+"kaip pardavimų komandos narį.\n"
+"</p>"
 
 #. module: crm
 #. openerp-web
@@ -112,6 +187,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now.</i></p>"
 msgstr ""
+"<p>Galėsite individualizuoti savo sekamas veiklas. "
+"Pavyzdžiui:</p><ol><li>Įžanginis laiškas</li><li>skambutis po 10 "
+"dienų</li><li>antras skambutis po dar 3 dienų, ...</li></ol><p "
+"class='mb0'><i>Kol kas pasirinkite standartinę veiklą.</i></p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -166,6 +245,7 @@ msgid "Activities Done Target"
 msgstr "Atliktų veiklų tikslas"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
 msgstr "Atliktinos veiklos"
@@ -189,7 +269,7 @@ msgstr "Veiklos tipai"
 #: code:addons/crm/models/crm_lead.py:933
 #, python-format
 msgid "Add a new lead"
-msgstr ""
+msgstr "Pridėti naują šaltąjį kontaktą"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -221,7 +301,7 @@ msgstr "Pritaikyti dublikatų šalinimą"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Assign opportunities to"
-msgstr "Pardavimų galimybės priskyrimas"
+msgstr "Priskirti galimybes"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -241,7 +321,7 @@ msgstr "Priskyrimo data"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Prisegtukų skaičius"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -251,7 +331,7 @@ msgstr "Tikimybės vidurkis"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Juodasis sąrašas"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:400
@@ -279,7 +359,7 @@ msgstr "CRM veiklos analizė"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stages"
-msgstr ""
+msgstr "CRM etapai"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -357,7 +437,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:32
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr ""
+msgstr "<b>Norėdami pridėti galimybę</b>, paspauskite čia."
 
 #. module: crm
 #. openerp-web
@@ -375,7 +455,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:60
 #, python-format
 msgid "Click on the opportunity to zoom in."
-msgstr ""
+msgstr "Norėdami priartinti, paspauskite ant galimybės."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
@@ -416,12 +496,12 @@ msgstr "Įmonės pavadinimas"
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigūracijos nustatymai"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
 msgid "Configuration"
-msgstr "Nustatymai"
+msgstr "Konfigūracija"
 
 #. module: crm
 #. openerp-web
@@ -444,7 +524,7 @@ msgstr "Kontaktai"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
 msgid "Contact Name"
-msgstr "Kontakto pavadinimas"
+msgstr "Kontakto vardas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -483,12 +563,12 @@ msgstr "Konversijos pasirinktys"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr ""
+msgstr "Paversti šaltąjį kontaktą galimybe (masiškai)"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr ""
+msgstr "Paversti šaltąjį kontaktą galimybe (ne masiškai)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -522,6 +602,8 @@ msgid ""
 "Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
 msgstr ""
+"Konvertuokite savo svetainės lankytojus į šaltuosius kontaktus CRM "
+"programoje. Suteikiame papildomus duomenis pagal jų IP adresą."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -553,7 +635,7 @@ msgstr "Sukurti ir redaguoti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Sukurkite šaltuosius kontaktus/galimybes iš savo svetainės srauto"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -564,18 +646,18 @@ msgstr "Sukurti pardavimo galimybę"
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr "Sukurti naują klientą"
+msgstr "Sukurkite naują klientą"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid "Create a new lead"
-msgstr ""
+msgstr "Sukurkite naują šaltąjį kontaktą"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create a new tag for your opportunities"
-msgstr ""
+msgstr "Sukurkite naują žymą savo galimybėms"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
@@ -586,13 +668,13 @@ msgstr "Sukurti galimybę"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Create an new opportunity related to this customer"
-msgstr ""
+msgstr "Sukurkite naują galimybę, susijusią su šiuo klientu"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:935
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr ""
+msgstr "Sukurti galimybę savo piltuvėlyje"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
@@ -600,6 +682,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and tack your opportunities."
 msgstr ""
+"Sukurkite žymas, kurios tinka jūsų verslui (produkto struktūra, pardavimų "
+"tipas ir t.t.), kad geriau valdytumėte ir sektumėte savo galimybes."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -692,17 +776,17 @@ msgstr "Data"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Date Closed"
-msgstr "Įvykdymo data"
+msgstr "Uždarymo data"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
 msgid "Days to Assign"
-msgstr "Priskiriamos dienos"
+msgstr "Dienos priskyrimui"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
 msgid "Days to Close"
-msgstr "Dienos iki uždarymo"
+msgstr "Dienos uždarymui"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_alias_prefix
@@ -712,7 +796,7 @@ msgstr "Numatytasis pseudonimas šaltiesiems kontaktams"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Define a new lost reason"
-msgstr ""
+msgstr "Nustatykite praradimo priežastį"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -732,7 +816,7 @@ msgstr "Kurti"
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -758,6 +842,7 @@ msgstr "Rodomas pavadinimas"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
+"Neturi prieigos, praleiskite šiuos duomenis vartotojo santraukos el. paštui"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -769,7 +854,7 @@ msgstr "Nesusieti su pirkėju"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Išsiskleidžiantis meniu"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -799,6 +884,8 @@ msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
 msgstr ""
+"Laiškas siunčiamas <strong>${email}</strong>, kad jūsų piltuvėlyje būtų "
+"sugeneruojamos galimybės. <br>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -808,6 +895,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"Laiškai, gauti tuo adresu, generuoja naujus šaltuosius kontaktus, kurie dar "
+"nepriskirti pardavimų komandai. Tai gali būti atliekama konvertuojant juos į"
+" galimybes. Įeinantys laiškai gali būti automatiškai priskirti konkrečioms "
+"pardavimų komandoms. Norėdami tai padaryti, nustatykite pardavimų komandai "
+"el. pašto pseudonimą."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -826,7 +918,7 @@ msgstr "Numanoma data, kada bus laimėta pardavimų galimybė"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Event"
-msgstr "Įvykis"
+msgstr "Renginys"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
@@ -859,7 +951,7 @@ msgstr "Numatoma uždarymo savaitė"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__planned_revenue
 msgid "Expected Revenue"
-msgstr "Numanomos pajamos"
+msgstr "Numatomos pajamos"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -898,27 +990,27 @@ msgstr "Sutrauktas piltuvėlyje"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
 msgid "Follow-up Quote"
-msgstr "Sekama kaina"
+msgstr "Priminimo citata"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
 msgid "Followers"
-msgstr "Prenumeratoriai"
+msgstr "Sekėjai"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Prenumeratoriai (kanalai)"
+msgstr "Sekėjai (kanalai)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Prenumeratoriai (partneriai)"
+msgstr "Sekėjai (partneriai)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Followup"
-msgstr ""
+msgstr "Pratęsimas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -931,12 +1023,13 @@ msgid "Format phone numbers based on national conventions"
 msgstr "Formatuoti telefono numerius pagal standartinius sutarimus"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:606
+#: code:addons/crm/models/crm_lead.py:613
 #, python-format
 msgid "From %s : %s"
 msgstr "Nuo %s : %s"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr "Būsimos veiklos"
@@ -947,6 +1040,8 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
+"Generuokite šaltuosius kontaktus iš įeinančių el. laiškų ir\n"
+" priskirkite juos pardavimų komandai rankiniu būdu"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -956,7 +1051,7 @@ msgstr "Gauti praradimo priežastį"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr ""
+msgstr "Nurodykite savo komandai reikalavimus galimybės perėjimui į šį etapą."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -975,7 +1070,7 @@ msgstr "Taip ir toliau! Sveikiname su pirmu sandėriu!"
 #: code:addons/crm/static/src/js/tour.js:95
 #, python-format
 msgid "Good job! You completed the tour of the CRM app."
-msgstr ""
+msgstr "Šaunu! Baigėte CRM programos turą."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -988,7 +1083,7 @@ msgstr "Grupuoti pagal"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
+msgstr "Grupavimo būdas"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
@@ -1031,12 +1126,12 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Jeigu pažymėtas - naujoms žinutėms reikia jūsų dėmesio."
+msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
@@ -1044,6 +1139,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Jei nustatyta, ši pardavimų komanda bus naudojama pardavimams ir "
+"priskyrimams, susijusiems su šiuo partneriu"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1052,6 +1149,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Jei el. paštas yra juodajame sąraše, kontaktas negaus jokių masinių laiškų "
+"iš jokių sąrašų"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1067,7 +1166,7 @@ msgstr "Importuoti ir sinchronizuoti"
 #: code:addons/crm/models/crm_lead.py:1230
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "Importuoti šabloną šaltiesiems kontaktams ir galimybėms"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1082,7 +1181,7 @@ msgstr "Informacija"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Initial Contact Information"
-msgstr ""
+msgstr "Pradinė kontakto informacija"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1103,7 +1202,7 @@ msgstr "Yra sekėjas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
 msgid "Job Position"
-msgstr "Darbo pozicija"
+msgstr "Pareigos"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -1113,12 +1212,12 @@ msgstr "Kanban būsena"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "KPI CRM kontakto sukurta reikšmė"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "KPI CRM laimėtų galimybių reikšmė"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1142,7 +1241,7 @@ msgstr "Paskutinį kartą keista"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Paskutinis stadijos atnaujinimas"
+msgstr "Paskutinis etapo atnaujinimas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__write_uid
@@ -1171,12 +1270,13 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
 msgstr "Vėluojančios veiklos"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:913
+#: code:addons/crm/models/crm_lead.py:920
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1189,7 +1289,7 @@ msgstr "Šaltasis kontaktas"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Lead Tag"
-msgstr ""
+msgstr "Šaltojo kontakto žyma"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_form
@@ -1234,7 +1334,7 @@ msgid ""
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
 "Šaltųjų kontaktų analizė leidžia jums patikrinti įvairią CRM informaciją, "
-"tokią kaip vėlavimai ar kontaktų skaičius kiekvienai būsenai. Galite "
+"tokią, kaip vėlavimai ar kontaktų skaičius kiekvienai būsenai. Galite "
 "rūšiuoti savo kontaktų analizę pagal skirtingas grupes ir gauti tikslius "
 "duomenis."
 
@@ -1277,7 +1377,7 @@ msgstr "Šaltieji kontaktai/galimybės"
 #: code:addons/crm/static/src/js/tour.js:47
 #, python-format
 msgid "Let's schedule an activity."
-msgstr ""
+msgstr "Suplanuokime veiklą."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1291,6 +1391,9 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Susietas partneris (papildomas). Dažniausiai sukuriamas konvertuojant "
+"šaltąjį kontaktą. Galite rasti partnerį pagal jo vardą, mokėtojo kodą, el. "
+"paštą arba vidinį numerį."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1122
@@ -1328,7 +1431,7 @@ msgstr "Žemas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Pagrindinis prisegtukas"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
@@ -1343,7 +1446,7 @@ msgstr "Rankinis el. laiškų priskyrimas"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr ""
+msgstr "Rankinis įeinančių laiškų priskyrimas"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -1368,7 +1471,7 @@ msgstr "Pažymėti kaip laimėtą"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Mark as Lost"
-msgstr ""
+msgstr "Pažymėti kaip prarastą "
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
@@ -1417,7 +1520,7 @@ msgstr "Apjungti šaltuosius kontaktus/galimybes"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge Opportunities"
-msgstr ""
+msgstr "Sujungti galimybes"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
@@ -1435,7 +1538,7 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing opportunities"
-msgstr "Sulieti su esamomis pardavimų galimybėmis"
+msgstr "Sujungti su esamomis pardavimų galimybėmis"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:556
@@ -1453,7 +1556,7 @@ msgstr "Apjungti šaltieji kontaktai"
 #: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged opportunities"
-msgstr "Sulieti galimybes"
+msgstr "Sujungti galimybes"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:556
@@ -1464,12 +1567,12 @@ msgstr "Sujungta galimybė"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Žinutės pristatymo klaida"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1506,7 +1609,7 @@ msgstr "Mano piltuvėlis"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
 msgid "Name"
-msgstr "Pavadinimas"
+msgstr "Vardas"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
@@ -1516,7 +1619,7 @@ msgstr "Naujas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr ""
+msgstr "Nauji šaltieji kontaktai/galimybės"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -1527,7 +1630,7 @@ msgstr "Nauja galimybė"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
 msgid "Next Activities"
-msgstr "Būsimos veiklos"
+msgstr "Kitos veiklos"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
@@ -1563,7 +1666,7 @@ msgstr "Nėra temos"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid "No next activity"
-msgstr ""
+msgstr "Nėra kitos veiklos"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -1593,7 +1696,7 @@ msgstr "Veiksmų skaičius"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Klaidų skaičius"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1603,7 +1706,7 @@ msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Žinučių su pristatymo klaida skaičius"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
@@ -1637,7 +1740,7 @@ msgstr "Atvira galimybė"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr ""
+msgstr "Galimyb. prarad. priežastis"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -1680,12 +1783,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
-msgstr ""
+msgstr "Galimybių pajamos"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
 msgid "Opportunities Won"
-msgstr ""
+msgstr "Laimėtos galimybės"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1695,7 +1798,7 @@ msgstr "Man priskirtos pardavimų galimybės"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities with a date of Expected Closing which is in the past"
-msgstr ""
+msgstr "Galimybės, kurių planuojama uždarymo data yra praėjusi"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:446
@@ -1716,18 +1819,18 @@ msgstr "Pardavimo galimybė"
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
-msgstr ""
+msgstr "Galimybė sukurta"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr "Pralaimėta galimybė"
+msgstr "Prarasta galimybė"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr "Pasikeitė galimybės stadija"
+msgstr "Pasikeitė galimybės etapas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -1743,7 +1846,7 @@ msgstr "Laimėta galimybė"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "Galimybė sukurta"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
@@ -1763,7 +1866,7 @@ msgstr "Kita"
 #. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Overdue"
-msgstr "Pavėluotas"
+msgstr "Vėluoja"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1783,17 +1886,17 @@ msgstr "Partnerio kontakto vardas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_phone
 msgid "Partner Contact Phone"
-msgstr ""
+msgstr "Kontaktinis partnerio telefonas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
 msgid "Partner is blacklisted"
-msgstr ""
+msgstr "Partneris juodajame sąraše"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Partner linking/binding in CRM wizard"
-msgstr ""
+msgstr "Partnerio nurodymas/susiejimas CRM vedlyje"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -1856,6 +1959,11 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the Sales Team."
 msgstr ""
+"Piltuvėlio analizė suteikia jums momentinė prieigą\n"
+"prie jūsų galimybių su tokia informacija, kaip planuojamos pajamos, planuojami\n"
+"kaštai, praleisti terminai arba veiksmų galimybėje skaičius. Ši ataskaita yra\n"
+"dažniausiai naudojama pardavimų vadovo, kad būtų galima periodiškai peržvelgti\n"
+"piltuvėlį su pardavimų komanda."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:224
@@ -1886,7 +1994,7 @@ msgstr "Svarba"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__legend_priority
 msgid "Priority Management Explanation"
-msgstr "Pirmenybės valdymo paaiškinimas"
+msgstr "Pirmenybių valdymo paaiškinimas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__probability
@@ -1912,12 +2020,12 @@ msgstr "Pasiūlymas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "Paskirstytas pelnas"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
 msgid "Qualified"
-msgstr "Kvalifikuoti"
+msgstr "Kvalifikuota"
 
 #. module: crm
 #. openerp-web
@@ -1928,11 +2036,13 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
 msgstr ""
+"Pasiruošę padidinti savo pardavimus? Jūsų  <b>Piltuvėlis</b> yra "
+"čia,<b>CRM</b> programoje"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
 msgid "Referred By"
-msgstr "Nurodytas"
+msgstr "Nurodė"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
@@ -1955,7 +2065,7 @@ msgstr "Reikalavimai"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
 msgid "Responsible User"
-msgstr "Atsakingas naudotojas"
+msgstr "Atsakingas vartotojas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1997,7 +2107,7 @@ msgstr "Pardavimų komanda"
 #: code:addons/crm/models/crm_lead.py:1125
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "Pardavimo komandos nustatymai"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -2041,7 +2151,7 @@ msgstr "Pasirinkite šaltuosius kontaktus/galimybes"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send an email"
-msgstr ""
+msgstr "Siųsti el. laišką"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2056,7 +2166,7 @@ msgstr "Paslaugos"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr ""
+msgstr "Savo galimybių piltuvėlyje nustatykite naują etapą"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__on_change
@@ -2077,6 +2187,7 @@ msgid "Show Lead Menu"
 msgstr "Rodyti kontaktų meniu"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
@@ -2121,8 +2232,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
-"Konkreti komanda, kuri naudoja šią stadiją. Kitos komandos negalės naudoti "
-"ar matyti šios stadijos."
+"Konkreti komanda, kuri naudoja šią etapą. Kitos komandos negalės naudoti ar "
+"matyti šio etapo."
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
@@ -2134,7 +2245,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Stage"
-msgstr "Stadija"
+msgstr "Etapas"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
@@ -2144,24 +2255,24 @@ msgstr "Etapas pakeistas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__name
 msgid "Stage Name"
-msgstr "Stadijos pavadinimas"
+msgstr "Etapo pavadinimas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_stage_search
 msgid "Stage Search"
-msgstr "Stadijos paieška"
+msgstr "Etapo paieška"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Stadija pakeista"
+msgstr "Etapas pakeistas"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_tree
 msgid "Stages"
-msgstr "Stadijos"
+msgstr "Etapai"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -2177,7 +2288,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "Regionas"
+msgstr "Būsena"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -2250,7 +2361,7 @@ msgstr "Žymos"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
-msgstr ""
+msgstr "Komandos piltuvėliai"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -2283,7 +2394,7 @@ msgstr "Sandorio sudarymo tikimybė turėtų būti tarp 0% ir 100%!"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_period_pipeline
 msgid "The time period this channel's dashboard graph will consider."
-msgstr "Laiko tarpas,  į kurį šis kanalo grafikas atkreips dėmesį."
+msgstr "Laikotarpis,  į kurį šis kanalo grafikas atkreips dėmesį."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
@@ -2300,7 +2411,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr ""
+msgstr "Šis laukelis leidžia galimybes filtruoti pagal suplanuotas veiklas."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2315,7 +2426,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Tai yra pristatymo metodas, pvz., atvirukas, el. laiškas ar reklaminis "
+"Tai yra pristatymo būdas, pvz., atvirukas, el. laiškas ar reklaminis "
 "skydelis"
 
 #. module: crm
@@ -2332,7 +2443,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:42
 #, python-format
 msgid "This opportunity has <b>no activity planned</b>."
-msgstr ""
+msgstr "Ši galimybė <b>neturi suplanuotos veiklos</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__probability
@@ -2354,8 +2465,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ši stadija bus suskleista kanban tipo peržiūroje, jei šioje stadijoje nebus "
-"nė vieno įrašo."
+"Šis etapas yra suskleidžiamas Kanban tipo peržiūroje, kai etape nėra nė "
+"vieno įrašo."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1088
@@ -2376,6 +2487,7 @@ msgid "Today"
 msgstr "Šiandien"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
 msgstr "Šiandienos veiklos"
@@ -2398,7 +2510,7 @@ msgstr "Mokymai"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
-msgstr ""
+msgstr "Išbandyti dabar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2441,7 +2553,7 @@ msgstr "Neapibrėžta"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neperskaitytos žinutės"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_unread_counter
@@ -2480,6 +2592,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Naudokite šaltuosius kontaktus, jei jums reikia kvalifikacijos žingsnio "
+"prieš sukuriant galimybę arba klientą. Tai gali būti vizitinė kortelė, kurą "
+"gavote, jūsų svetainėje užpildyta kontaktų formą arba nekvalifikuotų "
+"perspektyvų failas, kurį importuojate. Kai kvalifikuojamas, šaltasis "
+"kontaktas gali būti paverčiamas verslo galimybe ir/ar nauju klientu jūsų "
+"adresų knygelėje."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2511,8 +2629,7 @@ msgstr "Naudojamas prisijungimui prie sistemos"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__sequence
 msgid "Used to order stages. Lower is better."
-msgstr ""
-"Šis skaičius naudojamas stadijų eilės tvarkai. Pirmumas mažesnei reikšmei."
+msgstr "Naudojama stadijų eilės tvarkai. Pirmumas mažesniam."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_email
@@ -2522,7 +2639,7 @@ msgstr "Vartotojo el. paštas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_login
 msgid "User Login"
-msgstr "Vartotojo registracijos vardas"
+msgstr "Vartotojo prisijungimas"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
@@ -2537,7 +2654,7 @@ msgstr "Labai aukštas"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr "Mes neturime resursų/įgūdžių"
+msgstr "Mes neturime žmogiškųjų išteklių/įgūdžių"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website
@@ -2547,7 +2664,7 @@ msgstr "Svetainė"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Website Lead Generation"
-msgstr ""
+msgstr "Svetainės šaltųjų kontaktų generavimas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website_message_ids
@@ -2569,6 +2686,8 @@ msgstr "Kontakto svetainė"
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
+"Siunčiant laiškus numatytasis el. pašto adresas yra paimamas iš pardavimų "
+"komandos. "
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
@@ -2616,6 +2735,8 @@ msgid ""
 "You have to enable the Pipeline on your Sales Team to be able to set it as a"
 " content for the graph"
 msgstr ""
+"Norėdami nustatyti tai kaip grafiko turinį, turite savo pardavimų komandai "
+"įjungti piltuvėlį"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:404
@@ -2682,12 +2803,12 @@ msgstr "pvz. www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr ""
+msgstr "arba siųsti laišką %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:952

@@ -226,9 +226,9 @@ class Warehouse(models.Model):
                 warehouse_data[picking_type] = PickingType.create(values).id
 
         if 'out_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data['in_type_id']})
+            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('in_type_id', False)})
         if 'in_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
+            PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
 
     def _create_or_update_global_routes_rules(self):
@@ -439,14 +439,49 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        code = vals.get('code') or self.code
+        code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         sub_locations = {
-            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
-            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
-            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
-            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
-            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+            'lot_stock_id': {
+                'name': _('Stock'),
+                'active': True,
+                'usage': 'internal',
+                'barcode': self._valid_barcode(code + '-STOCK', company_id)
+            },
+            'wh_input_stock_loc_id': {
+                'name': _('Input'),
+                'active': reception_steps != 'one_step',
+                'usage': 'internal',
+                'barcode': self._valid_barcode(code + '-INPUT', company_id)
+            },
+            'wh_qc_stock_loc_id': {
+                'name': _('Quality Control'),
+                'active': reception_steps == 'three_steps',
+                'usage': 'internal',
+                'barcode': self._valid_barcode(code + '-QUALITY', company_id)
+            },
+            'wh_output_stock_loc_id': {
+                'name': _('Output'),
+                'active': delivery_steps != 'ship_only',
+                'usage': 'internal',
+                'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
+            },
+            'wh_pack_stock_loc_id': {
+                'name': _('Packing Zone'),
+                'active': delivery_steps == 'pick_pack_ship',
+                'usage': 'internal',
+                'barcode': self._valid_barcode(code + '-PACKING', company_id)
+            },
         }
         return sub_locations
+
+    def _valid_barcode(self, barcode, company_id):
+        location = self.env['stock.location'].with_context(active_test=False).search([
+            ('barcode', '=', barcode),
+            ('company_id', '=', company_id)
+        ])
+        return not location and barcode
 
     def _create_missing_locations(self, vals):
         """ It could happen that the user delete a mandatory location or a
@@ -929,7 +964,7 @@ class Orderpoint(models.Model):
             # These days will be substracted when creating the PO
             days += self.product_id._select_seller(
                 quantity=product_qty,
-                date=start_date,
+                date=fields.Date.context_today(self,start_date),
                 uom_id=self.product_uom).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)

@@ -3,15 +3,16 @@
 # * iap
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,17 +32,31 @@ msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:40
+#: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Buy credits at Odoo"
 msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:43
+#: code:addons/iap/static/src/xml/iap_templates.xml:41
+#, python-format
+msgid "Buy more credits"
+msgstr ""
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/js/crash_manager.js:61
 #, python-format
 msgid "Cancel"
 msgstr "Odustani"
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:28
+#, python-format
+msgid "Checking remaining credit ..."
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_id
@@ -70,6 +85,7 @@ msgstr ""
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
+#: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
 msgstr ""
@@ -87,16 +103,23 @@ msgstr "ID"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:23
+#: code:addons/iap/static/src/xml/iap_templates.xml:21
 #, python-format
 msgid "In-App Purchases"
 msgstr ""
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:37
+#: code:addons/iap/static/src/js/crash_manager.js:51
 #, python-format
 msgid "Insufficient Balance"
+msgstr ""
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:31
+#, python-format
+msgid "Insufficient credit"
 msgstr ""
 
 #. module: iap
@@ -122,11 +145,34 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:34
+#, python-format
+msgid "Remaining :"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 msgid "Service Name"
 msgstr ""
 
 #. module: iap
-#: model:ir.model,name:iap.model_iap_account
-msgid "iap.account"
+#. openerp-web
+#: code:addons/iap/static/src/js/crash_manager.js:23
+#, python-format
+msgid "Start a Trial at Odoo"
+msgstr ""
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:37
+#, python-format
+msgid "Temporarily unavailable"
+msgstr ""
+
+#. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:34
+#, python-format
+msgid "credits"
 msgstr ""

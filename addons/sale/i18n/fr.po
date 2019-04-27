@@ -5,14 +5,14 @@
 # Translators:
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Florian Hatat, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
 # f5f0a0dac17dde787a1d812a6989680e, 2018
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
-# fr rev <e2ffr04@hotmail.com>, 2018
+# 31c77b784710e4a287a92d851a40e039, 2018
 # fr trans <e2ffr05@hotmail.com>, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
 # Fabri Yohann <psn@fabri.pw>, 2018
@@ -21,20 +21,22 @@
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Richard Mathot <rim@odoo.com>, 2018
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
-# Fred Gilson <fgi@odoo.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Nancy Bolognesi <nb@microcom.ca>, 2018
 # Alain van de Werve <avw@openerp.com>, 2018
-# Martin Trigaux, 2018
-# Moka Tourisme <hello@mokatourisme.fr>, 2018
+# Nicolas Bayet <nicolas.bayet@gmail.com>, 2018
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# Fred Gilson <fgi@odoo.com>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2018\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +56,8 @@ msgstr "# de bons de commande"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_brouillon' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -90,13 +88,6 @@ msgstr "&amp;nbsp;<span>sur</span>&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
-msgid ""
-",\n"
-"                an awesome"
-msgstr "un magnifique"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -172,13 +163,20 @@ msgstr "<i class=\"fa fa-check\"/> Accepter &amp; Signer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
+msgid "<i class=\"fa fa-clock-o\" aria-title=\"Dates\" title=\"Dates\"/>"
 msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
+msgstr "Contactez-nous pour un nouveau devis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get the final version."
 msgstr ""
+"<i class=\"fa fa-comment\"/> Contactez-nous pour obtenir la version "
+"définitive."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -188,6 +186,13 @@ msgstr "<i class=\"fa fa-comment\"/> Commentaires"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
+msgstr "<i class=\"fa fa-comment\"/> Envoyer un message"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid ""
+"<i class=\"fa fa-download mr-1\" role=\"img\" aria-label=\"Download\" "
+"title=\"Download\"/>"
 msgstr ""
 
 #. module: sale
@@ -221,9 +226,21 @@ msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> Imprimer"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.optional_product_items
+msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -233,30 +250,12 @@ msgstr "<i class=\"fa fa-times\"/> Rejeter "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires in</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Cette proposition expire dans</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span class=\"badge badge-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> Waiting Payment</span>"
-msgstr ""
-"<span class=\"badge badge-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> Paiement en attente</span>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span class=\"badge badge-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Paid</span>"
-msgstr ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Payé</span>"
+msgstr "<small><b class=\"text-muted\">Notre offre</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -266,10 +265,18 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"<span class=\"js_item add_qty\">1 </span><span class=\"js_items d-none\">5 "
-"</span>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale
@@ -284,16 +291,9 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Vendu</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>Accepté au nom de :</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -318,7 +318,7 @@ msgstr "<span>Réduction</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>Pour un montant de :</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -328,16 +328,11 @@ msgstr "<span>Facture pro-forma n° </span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>Avec les conditions de paiement : </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
 msgstr ""
 
 #. module: sale
@@ -352,14 +347,9 @@ msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Sous-total</strong>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong class=\"text-muted d-block mb-1\">Invoices</strong>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Votre Contact</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -422,17 +412,22 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This is a draft quotation.</strong>"
-msgstr ""
+msgstr "<strong>Ceci est un devis en brouillon.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Cette proposition a expiré !</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
 msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
+msgid "<strong>Total:</strong>"
+msgstr "<strong>Total :</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -506,6 +501,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
 msgstr "Accepter &amp; Payer"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -618,6 +618,7 @@ msgstr "Vous permet d'envoyer une facture pro-forma."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Amount"
 msgstr "Montant"
 
@@ -922,7 +923,7 @@ msgstr "Configurer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Configure a product"
-msgstr ""
+msgstr "Configurez un article"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_quotation_layout
@@ -1387,6 +1388,7 @@ msgid "Expected Date"
 msgstr "Date prévue"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
 "Expenses and vendor bills can be re-invoiced to a customer.With this option,"
@@ -1504,6 +1506,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__hide_expense_policy
 msgid "Hide Expense Policy"
 msgstr ""
@@ -1770,6 +1773,12 @@ msgid "Invoicing"
 msgstr "Facturation"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Adresse de facturation"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -1784,6 +1793,11 @@ msgstr "Objectif de facturation"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
 msgstr "Adresse de facturation :"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing and Shipping Address"
+msgstr "Adresse de facturation et de livraison"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1839,6 +1853,7 @@ msgstr ""
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
+"Il n'est pas autorisé de confirmer une commande aux étapes suivantes : %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1958,6 +1973,7 @@ msgid "Manually set quantities on order"
 msgstr "Mettre manuellement les quantités sur la commande"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
 msgid ""
 "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
@@ -1980,10 +1996,12 @@ msgstr "Erreur d'envoi du message"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
 msgstr "Message sur les commandes de vente"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
 msgstr "Message à la ligne de commande de vente"
@@ -2163,11 +2181,6 @@ msgid "Number of unread messages"
 msgstr "Nombre de messages non lus"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
-msgid "Odoo"
-msgstr "Odoo"
-
-#. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
 msgstr ""
@@ -2219,15 +2232,10 @@ msgstr "Signature en ligne"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/sale.js:32
+#: code:addons/sale/static/src/js/sale.js:49
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Seul entier sera une valeur valide."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
-msgid "Open Source CRM"
-msgstr "CRM Open Source"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
@@ -2235,11 +2243,13 @@ msgid "Option not available"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
 msgstr "Produits optionnels"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale.field_product_template__optional_product_ids
 msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
@@ -2344,6 +2354,7 @@ msgid "Ordered Quantity"
 msgstr "Quantité commandée"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
@@ -2423,7 +2434,7 @@ msgstr "Payer et confirmer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr "Payeer &amp; Confirmer"
+msgstr "Payer &amp; Confirmer"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:160
@@ -2435,6 +2446,11 @@ msgstr "Payer maintenant"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
 msgstr "Payer maintenant"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2547,11 +2563,6 @@ msgstr "URL d'accès au portail"
 #: selection:sale.report,state:0
 msgid "Posted"
 msgstr "Comptabilisé"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
-msgid "Powered by"
-msgstr "Fourni par"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2682,6 +2693,9 @@ msgstr "Catégorie d'article"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_image
+#: model_terms:ir.ui.view,arch_db:sale.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
+#: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Product Image"
 msgstr "Image de l'article"
 
@@ -2874,6 +2888,7 @@ msgid "Radio"
 msgstr "Radio"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Policy"
 msgstr ""
@@ -2956,6 +2971,7 @@ msgstr "Bon de commande"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
 msgstr "Nombre de bons de commande"
 
@@ -3034,8 +3050,9 @@ msgid "Sales Information"
 msgstr "Information sur les ventes"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:262
+#: code:addons/sale/models/sale.py:271
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -3057,6 +3074,7 @@ msgstr "Ligne de vente"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
 msgstr "Ligne de bons de commande"
@@ -3128,6 +3146,7 @@ msgstr "Équipes commerciales"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr ""
 
@@ -3220,8 +3239,10 @@ msgid "Select a product, or create a new one on the fly."
 msgstr "Sélectionnez un produit, ou créez-en un au vol."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
 #: model:ir.model.fields,help:sale.field_res_partner__sale_warn
+#: model:ir.model.fields,help:sale.field_res_users__sale_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -3373,6 +3394,11 @@ msgstr "Afficher le prix public et la remise au client"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr "Afficher les conditions générales sur les commandes"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3761,6 +3787,11 @@ msgstr ""
 "attendue, la date d'engagement, la date effective."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
+msgid "This product has no valid combination."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
@@ -3868,6 +3899,7 @@ msgstr "Total"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Total Price"
 msgstr "Prix total"
 
@@ -3883,11 +3915,7 @@ msgid "Total Tax Included"
 msgstr "Total taxes incluses"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
-msgid "Total:"
-msgstr "Total:"
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
 msgstr "Service de suivi"

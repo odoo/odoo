@@ -155,13 +155,26 @@ hr {
 .container-fluid .container-fluid {
     @extend %o-double-container-no-padding;
 }
+#wrap {
+    > .container, > .container-fluid {
+        // BS3 used to do this on all containers so that margins and floats are
+        // cleared inside containers. As lots of current odoo layouts may rely
+        // on this for some alignments, this is restored (at least for a while)
+        // here only for main containers of the frontend.
+        &::before, &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+}
 [class^="col-lg-"] {
     min-height: 24px;
 }
 .input-group {
     flex-flow: row nowrap;
 }
-.list-group-item:not([class*="list-group-item-"]) {
+.list-group-item:not([class*="list-group-item-"]):not(.active) {
     color: color-yiq($list-group-bg);
 }
 

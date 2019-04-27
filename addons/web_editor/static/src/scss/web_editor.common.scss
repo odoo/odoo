@@ -159,7 +159,7 @@ ul.oe_menu_editor {
 @mixin o-spacing-all($factor: 1) {
     // Generate vertical margin/padding classes used by the editor
     @for $i from 0 through (256 / 8) {
-        @include o-vspacing($i * 8);
+        @include o-vspacing($i * 8, $factor);
     }
     @include o-vspacing(4, $factor);
 

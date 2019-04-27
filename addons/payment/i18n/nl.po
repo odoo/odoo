@@ -8,15 +8,15 @@
 # dpms <pieter.van.de.wygaert@telenet.be>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +58,29 @@ msgstr "<b>Referentie:</b>"
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> Terug naar mijn account"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+msgid ""
+"<i class=\"fa fa-check text-success\" title=\"This payment method is "
+"verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
+msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"Deze betaalmethode is door ons"
+" systeem geverifieerd.\" role=\"img\" aria-label=\"Ok\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+msgid ""
+"<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
+"been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
+msgstr ""
+"<i class=\"fa fa-close text-danger\" title=\"Deze betaalmethode is niet door"
+" ons systeem geverifieerd.\" role=\"img\" aria-label=\"Niet geverifieerd\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay_methods
+msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -219,8 +242,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
-"<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order "
-"is nog niet bevestigd.</span>"
+"<span>In behandeling,</i> Uw online betaling is succesvol verwerkt. Uw order"
+" is nog niet bevestigd.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1005,7 +1028,7 @@ msgid ""
 msgstr ""
 "Middelgrote afbeelding van deze aanbieder. Het wordt automatisch aangepast "
 "naar 128x128px, met behoud van de verhouding. Gebruik dit veld in "
-"formulierweergaves en sommige kanban weergaves."
+"formulierweergaven en sommige kanban weergaven."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1718,7 +1741,7 @@ msgstr "De SEPA QR code informatie is niet correct ingevuld."
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr "De klant heeft %sgeselecteerd om dit document mee te betalen."
+msgstr "De klant heeft %s geselecteerd om dit document mee te betalen."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677

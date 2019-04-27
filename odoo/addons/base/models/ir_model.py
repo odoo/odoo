@@ -185,6 +185,11 @@ class IrModel(models.Model):
                     self._cr.execute('DROP VIEW "%s"' % table)
                 elif kind == 'r':
                     self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+                    # discard all translations for this model
+                    self._cr.execute("""
+                        DELETE FROM ir_translation
+                        WHERE type IN ('model', 'model_terms') AND name LIKE %s
+                    """, [model.model + ',%'])
             else:
                 _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
@@ -198,6 +203,9 @@ class IrModel(models.Model):
                     raise UserError(_("Model '%s' contains module data and cannot be removed.") % model.name)
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
+
+        # delete fields whose comodel is being removed
+        self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
 
         self._drop_table()
         res = super(IrModel, self).unlink()
@@ -403,6 +411,11 @@ class IrModelFields(models.Model):
             raise UserError(_("The Selection Options expression is not a valid Pythonic expression. "
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
+    @api.constrains('domain')
+    def _check_domain(self):
+        for field in self:
+            safe_eval(field.domain or '[]')
+
     @api.constrains('name', 'state')
     def _check_name(self):
         for field in self:
@@ -566,6 +579,12 @@ class IrModelFields(models.Model):
                 tables_to_drop.add(rel_name)
             if field.state == 'manual' and is_model:
                 model._pop_field(field.name)
+            if field.translate:
+                # discard all translations for this field
+                self._cr.execute("""
+                    DELETE FROM ir_translation
+                    WHERE type IN ('model', 'model_terms') AND name=%s
+                """, ['%s,%s' % (field.model, field.name)])
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields
@@ -1539,7 +1558,8 @@ class IrModelData(models.Model):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         # enable model/field deletion
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
+        # we deactivate prefetching to not try to read a column that has been deleted
+        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
         datas = self.search([('module', 'in', modules_to_remove)])
         to_unlink = tools.OrderedSet()
@@ -1585,9 +1605,17 @@ class IrModelData(models.Model):
 
         # Remove non-model records first, then model fields, and finish with models
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
+
+        # Remove copied views. This must happen after removing all records from
+        # the modules to remove, otherwise ondelete='restrict' may prevent the
+        # deletion of some view. This must also happen before cleaning up the
+        # database schema, otherwise some dependent fields may no longer exist
+        # in database.
+        modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
+        modules._remove_copied_views()
+
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
 
-        modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
@@ -1624,6 +1652,16 @@ class IrModelData(models.Model):
         for (id, xmlid, model, res_id) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if model in self.env:
+                    if self.search_count([
+                        ("model", "=", model),
+                        ("res_id", "=", res_id),
+                        ("id", "!=", id),
+                        ("id", "not in", bad_imd_ids),
+                    ]):
+                        # another external id is still linked to the same record, only deleting the old imd
+                        bad_imd_ids.append(id)
+                        continue
+
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():

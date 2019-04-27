@@ -21,6 +21,7 @@ var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
+var SPLIT_THRESHOLD = config.device.isMobile ? Infinity : 20;
 
 return AbstractRenderer.extend({
     className: "o_graph_container",
@@ -193,10 +194,12 @@ return AbstractRenderer.extend({
             }
         }
 
-        // For Bar chart View, we keep only groups where count > 0
-        data[0].values  = _.filter(data[0].values, function (elem, index) {
-            return self.state.data[index].count > 0;
-        });
+        // For one level Bar chart View, we keep only groups where count > 0
+        if (this.state.groupedBy.length <= 1) {
+            data[0].values  = _.filter(data[0].values, function (elem, index) {
+                return self.state.data[index].count > 0;
+            });
+        }
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
@@ -210,6 +213,10 @@ return AbstractRenderer.extend({
           margin: {left: 80, bottom: 100, top: 80, right: 0},
           delay: 100,
           transition: 10,
+          controlLabels: {
+            'grouped': _t('Grouped'),
+            'stacked': _t('Stacked'),
+          },
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
@@ -406,7 +413,11 @@ return AbstractRenderer.extend({
             }
         }
 
-        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        var $svgContainer = $('<div/>', { class: 'o_graph_svg_container'});
+        // Split the tooltip into columns for large data because some portion goes out off the screen.
+        if (data.length >= SPLIT_THRESHOLD) {
+            $svgContainer.addClass('o_tooltip_split_in_columns');
+        }
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);

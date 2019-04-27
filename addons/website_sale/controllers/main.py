@@ -150,9 +150,10 @@ class WebsiteSale(ProductConfiguratorController):
         return pricelist_context, pricelist
 
     def _get_compute_currency(self, pricelist, product=None):
-        from_currency = (product or request.env.user.company_id).currency_id
+        company = product and product._get_current_company(pricelist=pricelist, website=request.website) or pricelist.company_id or request.website.company_id
+        from_currency = (product or request.env['res.company']._get_main_company()).currency_id
         to_currency = pricelist.currency_id
-        return lambda price: from_currency._convert(price, to_currency, (product or request.env.user).company_id, fields.Date.today())
+        return lambda price: from_currency._convert(price, to_currency, company, fields.Date.today())
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -229,12 +230,13 @@ class WebsiteSale(ProductConfiguratorController):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        Product = request.env['product.template']
+        Product = request.env['product.template'].with_context(bin_size=True)
 
         Category = request.env['product.public.category']
         search_categories = False
+        search_product = Product.search(domain)
         if search:
-            categories = Product.search(domain).mapped('public_categ_ids')
+            categories = search_product.mapped('public_categ_ids')
             search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
             categs = search_categories.filtered(lambda c: not c.parent_id)
         else:
@@ -249,15 +251,14 @@ class WebsiteSale(ProductConfiguratorController):
                 parent_category_ids.append(current_category.parent_id.id)
                 current_category = current_category.parent_id
 
-        product_count = Product.search_count(domain)
+        product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            selected_products = Product.search(domain, limit=False)
-            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', selected_products.ids)])
+            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids)])        
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
@@ -312,7 +313,7 @@ class WebsiteSale(ProductConfiguratorController):
         pricelist = request.website.get_current_pricelist()
 
         def compute_currency(price):
-            return product.currency_id._convert(price, pricelist.currency_id, product.company_id, fields.Date.today())
+            return product.currency_id._convert(price, pricelist.currency_id, product._get_current_company(pricelist=pricelist, website=request.website), fields.Date.today())
 
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
@@ -337,7 +338,7 @@ class WebsiteSale(ProductConfiguratorController):
         }
         return request.render("website_sale.product", values)
 
-    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
@@ -345,7 +346,7 @@ class WebsiteSale(ProductConfiguratorController):
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')
 
-    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
         pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
@@ -567,7 +568,7 @@ class WebsiteSale(ProductConfiguratorController):
             except ValidationError:
                 error["vat"] = 'error'
 
-        if [err for err in error.items() if err == 'missing']:
+        if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
@@ -604,6 +605,7 @@ class WebsiteSale(ProductConfiguratorController):
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
         new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
+        new_values['company_id'] = request.website.company_id.id
         new_values['website_id'] = request.website.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None

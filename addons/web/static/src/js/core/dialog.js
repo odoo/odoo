@@ -143,7 +143,11 @@ var Dialog = Widget.extend({
                     $.when(def).always(self.close.bind(self));
                 }
             });
-            self.$footer.append($button);
+            if (self.technical) {
+                self.$footer.append($button);
+            } else {
+                self.$footer.prepend($button);
+            }
         });
     },
 
@@ -225,13 +229,13 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        if (!isFocusSet) {
-            var modals = $('body > .modal').filter(':visible');
-            if (modals.length) {
+        var modals = $('body > .modal').filter(':visible');
+        if (modals.length) {
+            if (!isFocusSet) {
                 modals.last().focus();
-                // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-                $('body').addClass('modal-open');
             }
+            // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
+            $('body').addClass('modal-open');
         }
     },
     /**

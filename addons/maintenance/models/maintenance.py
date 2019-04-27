@@ -302,7 +302,7 @@ class MaintenanceRequest(models.Model):
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
-    duration = fields.Float(help="Duration in minutes and seconds.")
+    duration = fields.Float(help="Duration in hours and minutes.")
 
     @api.multi
     def archive_equipment_request(self):

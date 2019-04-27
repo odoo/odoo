@@ -1,48 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-11 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:91
-#, python-format
-msgid "3 exp. closing"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:137
-#, python-format
-msgid "35,029.39€"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:124
-#, python-format
-msgid "78,140.03€"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
-#, python-format
-msgid "80.000€"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
 
 #. module: sales_team
@@ -52,8 +33,8 @@ msgstr "<span>புதிய</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>அறிக்கைகள்</span>"
+msgid "<span>Reporting</span>"
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -61,90 +42,142 @@ msgid "<span>View</span>"
 msgstr "<span>நோக்கு</span>"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+msgid "Action Needed"
+msgstr "செயல் தேவை"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 msgid "Active"
+msgstr "செயலில்"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "செயல்பாடு வகைகள்"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:114
-#, python-format
-msgid "Activities Done"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "காப்பகப்படுத்தியவை"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_act
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales team."
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+msgid "Attachment Count"
+msgstr "இணைப்பு எண்ணிக்கை"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:152
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:161
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:165
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:174
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:178
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
-#, python-format
-msgid "Click to set"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
-msgid "Color Index"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Bar"
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:274
+#, python-format
+msgid "Big Pretty Button :)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
+msgid "Channel Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__color
+msgid "Color Index"
+msgstr "வண்ண குறியீட்டு"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
 msgid "Company"
 msgstr "நிறுவனம்"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
-#, python-format
-msgid "Create a few opportunities to activate your dashboard."
-msgstr ""
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+msgid "Configuration"
+msgstr "கட்டமைப்பு"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "தொடர்பு"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_model
+msgid "Content"
+msgstr "உள்ளடக்க"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
-msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
+msgstr "உருவாக்கப்பட்ட தேதி"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:16
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-#: model:ir.ui.menu,name:sales_team.menu_sales_team_act
-#, python-format
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
+msgid "Currency"
+msgstr "நாணயம்"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Dashboard"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Direct Sales"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
+msgid "Dashboard Button"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
+msgid "Dashboard Graph Data"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Day"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid "Define a new Sales Team"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
+msgid "Favorite Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -154,172 +187,231 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:214
-#, python-format
-msgid "Great sales journeys start with a clean pipeline."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+msgid "Followers"
+msgstr "பின்பற்றுபவர்கள்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "பின்தொடர்பவர்கள் (சேனல்கள்)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "பின்பற்றுபவர்கள் (பங்குதாரர்கள்)"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Graph"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Group By..."
-msgstr ""
+msgstr "மூலம் குழு ..."
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:213
-#, python-format
-msgid "Hi there!"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_group
+msgid "Group by"
+msgstr "குழு மூலம்"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_group
+msgid "How this channel's dashboard graph will group the results."
+msgstr "இந்த சேனலின் டாஷ்போர்டு வரைபடம் எவ்வாறு முடிவுகளை வகுக்கும்."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_active
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+msgid "If checked new messages require your attention."
+msgstr "சோதனை செய்தால் புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "சரிபார்க்கப்பட்டால், புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "சரிபார்க்கப்பட்டால், சில செய்திகளுக்கு ஒரு பிழை ஏற்பட்டது."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"team without removing it."
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
+msgstr ""
+"அமைக்கப்பட்டால், இந்த பங்குதாரர் தொடர்பான விற்பனை மற்றும் பணிக்காக இந்த "
+"விற்பனை குழு பயன்படுத்தப்படும்"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "Indirect Sales"
-msgstr ""
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "பற்றுச்சீட்டுகள்"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
-#, python-format
-msgid "Invoiced"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+msgid "Is Follower"
+msgstr "பின்பற்றுபவர்"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
-#, python-format
+#: selection:crm.team,dashboard_graph_period:0
 msgid "Last Month"
 msgstr "கடந்த மாதம்"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:25
-#, python-format
-msgid "Meetings"
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Week"
 msgstr ""
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+#: selection:crm.team,dashboard_graph_period:0
+msgid "Last Year"
+msgstr "சென்ற ஆண்டு"
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "More Info"
-msgstr ""
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Line"
+msgstr "வரி"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, python-format
-msgid "My Pipeline"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "முக்கிய இணைப்பு"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr "மேலாளர்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+msgid "Message Delivery error"
+msgstr "செய்தி வழங்கல் பிழை"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+msgid "Messages"
+msgstr "செய்திகள்"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Month"
+msgstr "மாதம்"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "My Salesteams"
+msgid "My Favorites"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
+#: code:addons/sales_team/models/crm_team.py:260
 #, python-format
-msgid "Next 7 days"
+msgid "Not Defined"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:38
-#, python-format
-msgid "Next Actions"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of Actions"
+msgstr "செயல்கள் எண்ணிக்கை"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of error"
+msgstr "பிழை எண்ணிக்கை"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "நடவடிக்கை தேவைப்படும் செய்திகளின் எண்ணிக்கை"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "விநியோக பிழை கொண்ட செய்திகளின் எண்ணிக்கை"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+msgid "Number of unread messages"
+msgstr "படிக்காத செய்திகளின் எண்ணிக்கை"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Pipeline"
+msgstr "பைப்லைன்"
+
+#. module: sales_team
+#: selection:crm.team,team_type:0
+msgid "Point of Sale"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
-#, python-format
-msgid "Only Integer Value should be valid."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "கூட்டாளி"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
-#, python-format
-msgid "Performance"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
 msgid "Reply-To"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
-msgid "Sale Pricelist"
-msgstr ""
+#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
+msgid "Sales"
+msgstr "விற்பனை"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
+msgid "Sales Channels"
+msgstr "விற்பனை சேனல்கள்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr ""
+msgstr "விற்பனை குழு"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
 msgid ""
-"Sales Team the user is member of. Used to compute the members of a sales "
-"team through the inverse one2many"
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
 msgid "Sales Teams"
 msgstr ""
 
 #. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Sales team"
-msgstr ""
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Salesperson"
+msgstr "விற்பனையாளர்"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -332,130 +424,117 @@ msgid "Salesteams Search"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
+msgid "Scale"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
+msgstr "அமைப்புகள்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
+msgid "Show on dashboard"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
-#, python-format
-msgid "Target"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr ""
 
 #. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+msgid "Team Pipelines"
+msgstr "குழு குழாய்கள்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
+msgid "Team Type"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_color
-msgid "The color of the team"
+#: model:ir.model.fields,help:sales_team.field_crm_team__color
+msgid "The color of the channel"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales team"
+"cases in this Sales Team"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
-#, python-format
-msgid "This Month"
-msgstr "இந்த மாதம்"
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
+msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_property_product_pricelist
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
+msgid "The time period this channel's dashboard graph will consider."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
+msgid "The type of graph this channel will display in the dashboard."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__team_type
 msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
+"The type of this channel, it will define the resources this channel uses."
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:29
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:61
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:76
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
+msgid "Type"
+msgstr "வகை"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:151
+#: code:addons/sales_team/models/crm_team.py:178
 #, python-format
-msgid "To Activities"
+msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:105
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:189
-#, python-format
-msgid "To Activity Report"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+msgid "Unread Messages"
+msgstr "படிக்காத செய்திகள்"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:16
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:51
-#, python-format
-msgid "To Calendar"
-msgstr ""
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "படிக்காத செய்திகள்"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:131
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
-#, python-format
-msgid "To Invoice Report"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:86
-#, python-format
-msgid "To Opportunities"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:118
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:194
-#, python-format
-msgid "To Opportunity Report"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
-#, python-format
-msgid "To do"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
-#, python-format
-msgid "Today"
-msgstr ""
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_act
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales team to organize your different salespersons or\n"
-"                    departments into separate teams. Each team will work in\n"
-"                    its own list of opportunities."
+"Use Sales Teams to organize your sales departments.\n"
+"                    Each channel will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User's Sales Team"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
 msgstr ""
 
 #. module: sales_team
@@ -464,29 +543,41 @@ msgid "Users"
 msgstr "பயனர்கள்"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
-#, python-format
-msgid "Won in Opportunities"
+#: model:crm.team,name:sales_team.salesteam_website_sales
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "இணையதளம்"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "இணைய செய்திகள்"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "வலைத்தள தகவல்தொடர்பு வரலாறு"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Week"
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
-#, python-format
-msgid "Wrong value entered!"
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
-#, python-format
-msgid "exp. closing"
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
 msgstr ""
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
-#, python-format
-msgid "overdue"
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
 msgstr ""

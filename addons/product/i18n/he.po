@@ -3,22 +3,23 @@
 # * product
 # 
 # Translators:
-# yacov mosbacher (‫יעקב מוסבכר‬‎) <ymosba@gmail.com>, 2018
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2018
+# yacov mosbacher (‫יעקב מוסבכר‬‎) <ymosba@gmail.com>, 2018
 # שהאב חוסיין <shhab89@gmail.com>, 2018
 # Martin Trigaux, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
-# hed shefetr <hed@laylinetech.com>, 2018
+# hed shefetr <hed@laylinetech.com>, 2019
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: hed shefetr <hed@laylinetech.com>, 2018\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "קטגורית מוצר"
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr "# משתני מוצר"
+msgstr "# מאפייני מוצר"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
@@ -80,6 +81,11 @@ msgid "2 year"
 msgstr "שנתיים"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  -  </span>\n"
@@ -93,9 +99,10 @@ msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> מוצרים</span>"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "<span>kg</span>"
-msgstr "<span>ק\"ג</span>"
+#: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label
+msgid "<span class=\"text-muted\">No barcode available</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -131,7 +138,7 @@ msgstr "<strong>הדפס תאריך</strong>:<br/>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>כמות: </strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -144,7 +151,7 @@ msgstr ""
 #. module: product
 #: sql_constraint:product.product:0
 msgid "A barcode can only be assigned to one product !"
-msgstr "ניתן להקצות ברקוד אחד למוצר בלבד!"
+msgstr "ניתן להקצות ברקוד למוצר אחד בלבד!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -170,6 +177,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"מוצר מנוהל מלאי הוא מוצר שעבורו מתבצע ניהול מלאי במערכת. יש להתקין את "
+"האפליקציית מלאי.מוצר נצרך הוא מוצר אשר אינו מנוהל מלאי.שירות הוא מוצר שאינו "
+"חומר אלא אספקת שירות."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -242,7 +252,7 @@ msgstr "תמיד"
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
-msgstr ""
+msgstr "חלים על"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -265,7 +275,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ספירת קבצים מצורפים"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -365,13 +375,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "ניתן לרכוש"
+msgstr "ניתן לרכישה"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__rental
 #: model:ir.model.fields,field_description:product.field_product_template__rental
 msgid "Can be Rent"
-msgstr "ניתן להשכיר"
+msgstr "ניתן להשכרה"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -479,7 +489,7 @@ msgstr ""
 #: model:product.category,name:product.product_category_consumable
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "נצר"
+msgstr "נצרך"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -517,11 +527,19 @@ msgid "Cost"
 msgstr "עלות"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
+msgid "Cost Currency"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/FIFO."
 msgstr ""
+" עלות המשמשת להערכת שווי המלאי במחיר סטנדרטי וגם כמחיר ראשוני בחישוב מחיר "
+"ממוצע או FIFO"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -580,7 +598,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
 msgid "Created by"
-msgstr "נוצר על ידי"
+msgstr "נוצר על-ידי"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
@@ -650,7 +668,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "ברירת מחדל של יחידת מידה המשמשת לביצוע כל פעולות המלאי."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -736,7 +754,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "מגירה שחורה "
 
 #. module: product
 #: model:product.product,description:product.product_product_27
@@ -823,13 +841,13 @@ msgstr "עוקבים"
 #: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "עוקבים (ערוצים)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "עוקבים (שותפים)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -852,7 +870,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Future Activities"
-msgstr ""
+msgstr "פעילויות עתידיות"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -924,19 +942,19 @@ msgstr "מזהה"
 #: model:ir.model.fields,help:product.field_product_product__message_unread
 #: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked new messages require your attention."
-msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
+msgstr "אם מסומן אז הודעות חדשות דורשות את התייחסותכם."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "אם סומן, הודעות חדשות דורשות את תשומת הלב שלך."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "אם סומן, לחלק מההודעות יש שגיאת משלוח."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -1022,13 +1040,13 @@ msgstr "הערות פנימיות"
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
 #: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "הפניה פנימית"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 #: model:ir.model.fields,help:product.field_product_template__barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "מספר זיהוי בינלאומי המשמש להגדרת המוצר."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1039,7 +1057,7 @@ msgstr "מלאי"
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "האם עוקב"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
@@ -1109,7 +1127,7 @@ msgstr "תאריך שינוי אחרון"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
 msgid "Last Updated by"
-msgstr "עודכן לאחרונה על ידי"
+msgstr "עודכן לאחרונה על-ידי"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
@@ -1132,7 +1150,7 @@ msgstr "תאריך עדכון אחרון"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr ""
+msgstr "פעילויות מאוחרות"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -1161,7 +1179,7 @@ msgstr "לוגיסטיקה"
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
 #: model:ir.model.fields,field_description:product.field_product_template__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "קובץ מצורף ראשי"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -1213,7 +1231,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "הודעת שגיאת משלוח"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
@@ -1263,19 +1281,19 @@ msgstr "מחיר חדש ="
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "תאריך היעד האחרון לפעילת הבאה "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_template__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "תקציר הפעילות הבאה "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "סוג הפעילות הבאה"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1287,19 +1305,19 @@ msgstr "מספר הפעולות"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "מספר שגיאה"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "מספר ההודעות שדורשות פעולה"
+msgstr "מספר ההודעות המחייבות פעולה"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "מספר הודעות עם שגיאת משלוח"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -1356,12 +1374,12 @@ msgstr ""
 #: selection:product.product,activity_state:0
 #: selection:product.template,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "איחור - שזמנו פירעונו כבר עבר"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 msgid "Package Type"
-msgstr ""
+msgstr "סוג חבילה"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -1401,7 +1419,7 @@ msgstr "האחוז מהמחיר"
 #: selection:product.product,activity_state:0
 #: selection:product.template,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "תכנן"
 
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
@@ -1460,7 +1478,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "המחיר לפיו המוצר נמכר ללקוח."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1480,6 +1498,7 @@ msgstr "מחירון"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_id
 #: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "מחירון"
@@ -1592,7 +1611,7 @@ msgstr ""
 #: model:ir.actions.report,name:product.report_product_product_barcode
 #: model:ir.actions.report,name:product.report_product_template_barcode
 msgid "Product Barcode (PDF)"
-msgstr ""
+msgstr "ברקוד מוצר (PDF)."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1615,7 +1634,7 @@ msgstr "קטגורית מוצר"
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
-msgstr ""
+msgstr "תווית מוצר (PDF)."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1645,7 +1664,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr ""
+msgstr "חבילות המוצר"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
@@ -1688,7 +1707,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__type
 #: model:ir.model.fields,field_description:product.field_product_template__type
 msgid "Product Type"
-msgstr "סוג מוצר"
+msgstr "סוג פריט"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
@@ -1769,7 +1788,7 @@ msgstr "תיאור קנייה"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr "יחידת מידה של הקנייה"
+msgstr "יחידת המידה של הקנייה"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list__qty1
@@ -1846,7 +1865,7 @@ msgstr "מכירות"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Sales Price"
-msgstr ""
+msgstr "מחיר מכירה"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -1874,7 +1893,7 @@ msgstr "רצף"
 #. module: product
 #: selection:product.template,type:0
 msgid "Service"
-msgstr "שירו"
+msgstr "שירות"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1906,7 +1925,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "הצג את כל הרשומות שתאריך הפעולה הבא שלהם הוא לפני היום"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
@@ -2000,6 +2019,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"מצב על בסיס פעילויות\n"
+"איחור: תאריך היעד כבר חלף\n"
+"היום: תאריך הפעילות הוא היום\n"
+"מתוכנן: פעילויות עתידיות."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
@@ -2009,7 +2032,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Storable Product"
-msgstr ""
+msgstr "מנוהל מלאי"
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -2020,6 +2043,26 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__valid_archived_variant_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_existing_variant_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_archived_variant_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_existing_variant_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
+msgid "Technical compute"
 msgstr ""
 
 #. module: product
@@ -2076,7 +2119,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:475
+#: code:addons/product/models/product_template.py:480
 #, python-format
 msgid ""
 "The number of variants to generate is too high. You should either not "
@@ -2086,15 +2129,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:46
-#, python-format
-msgid ""
-"You are trying to change the type of an attribute value still referenced on "
-"at least one product template: %s"
-msgstr ""
-
-#. module: product
-#: code:addons/product/models/product_attribute.py:56
+#: code:addons/product/models/product_attribute.py:85
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2104,6 +2139,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:943
+#, python-format
+msgid "The product template is archived so no combination is possible."
 msgstr ""
 
 #. module: product
@@ -2122,11 +2163,29 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__volume
 #: model:ir.model.fields,help:product.field_product_template__volume
 msgid "The volume in m3."
-msgstr ""
+msgstr "הנפח במטר מעוקב."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
+msgstr "משקל התכולה בק\"ג, לא כולל אריזות וכו'."
+
+#. module: product
+#: code:addons/product/models/product_template.py:1010
+#, python-format
+msgid "There are no possible combination."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:1005
+#, python-format
+msgid "There are no remaining closest combination."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:963
+#, python-format
+msgid "There are no remaining possible combination."
 msgstr ""
 
 #. module: product
@@ -2161,7 +2220,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "הערה זו היא למטרות פנימיות בלבד."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2170,6 +2229,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2291,7 +2351,7 @@ msgstr "הודעות שלא נקראו"
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "מונה הודעות שלא נקראו"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -2301,6 +2361,54 @@ msgstr "בעזרת מחירונים ניתן להתאים מחירי פריטי�
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Valid"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_archived_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_archived_variant_ids
+msgid "Valid Archived Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_existing_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_existing_variant_ids
+msgid "Valid Existing Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
+msgid "Valid Product Attribute Lines"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_wnva_ids
+msgid "Valid Product Attribute Lines Without No Variant Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_ids
+msgid "Valid Product Attribute Values"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_wnva_ids
+msgid "Valid Product Attribute Values Without No Variant Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_ids
+msgid "Valid Product Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_wnva_ids
+msgid "Valid Product Attributes Without No Variant Attributes"
 msgstr ""
 
 #. module: product
@@ -2324,7 +2432,7 @@ msgstr "ערכים"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "גרסה לספירה "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant
@@ -2357,7 +2465,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "משתני"
+msgstr "מאפיינים"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -2485,6 +2593,14 @@ msgid "White"
 msgstr "לבן"
 
 #. module: product
+#: code:addons/product/models/product_attribute.py:46
+#, python-format
+msgid ""
+"You are trying to change the type of an attribute value still referenced on "
+"at least one product template: %s"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
@@ -2492,14 +2608,14 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:437
+#: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:54
+#: code:addons/product/models/product.py:57
 #, python-format
 msgid "You cannot create recursive categories."
 msgstr ""
@@ -2510,6 +2626,12 @@ msgstr ""
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:332
+#, python-format
+msgid "You cannot define two attribute lines for the same attribute."
 msgstr ""
 
 #. module: product

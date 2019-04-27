@@ -174,7 +174,7 @@ function getMatchedCSSRules(a) {
                 break;
             }
             $el = $el.parent();
-        } while (!$el.is('html'));
+        } while ($el.length && !$el.is('html'));
     }
 
     return style;
@@ -251,6 +251,9 @@ function applyOverDescendants(node, func) {
         if (node.nodeName === 'A' && $node.hasClass('btn') && !$node.children().length && $(node).parents('.o_outlook_hack').length)  {
             node = $(node).parents('.o_outlook_hack')[0];
         }
+        else if (node.nodeName === 'IMG' && $node.parent('p').hasClass('o_outlook_hack')) {
+            node = $node.parent()[0];
+        }
         node = node.nextSibling;
     }
 }
@@ -307,6 +310,9 @@ function classToStyle($editable) {
                 $(node).remove();
             }
         }
+        else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
+            $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>');
+        }
     });
 }
 
@@ -318,8 +324,8 @@ function classToStyle($editable) {
  */
 function styleToClass($editable) {
     // Outlook revert
-    $editable.find('table.o_outlook_hack').each(function () {
-        $(this).after($('a', this));
+    $editable.find('.o_outlook_hack').each(function () {
+        $(this).after($('a,img', this));
     }).remove();
 
     getMatchedCSSRules($editable[0]);

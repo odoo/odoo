@@ -75,13 +75,15 @@ class AccountInvoice(models.Model):
                             for val_stock_move in valuation_stock_move:
                                 # In case val_stock_move is a return move, its valuation entries have been made with the
                                 # currency rate corresponding to the original stock move
-                                valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date_expected
+                                valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
                                 valuation_price_unit_total += company_currency._convert(
                                     abs(val_stock_move.price_unit) * val_stock_move.product_qty,
                                     inv.currency_id,
                                     company=inv.company_id, date=valuation_date, round=False,
                                 )
                                 valuation_total_qty += val_stock_move.product_qty
+
+                            # in Stock Move, price unit is in company_currency
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
                             line_quantity = valuation_total_qty
@@ -123,7 +125,7 @@ class AccountInvoice(models.Model):
                             diff_line = {
                                 'type': 'src',
                                 'name': i_line.name[:64],
-                                'price_unit': inv.currency_id.round(price_unit_val_dif),
+                                'price_unit': price_unit_val_dif,
                                 'quantity': line_quantity,
                                 'price': inv.currency_id.round(price_val_dif),
                                 'account_id': acc,
@@ -133,8 +135,9 @@ class AccountInvoice(models.Model):
                                 'tax_ids': tax_ids,
                             }
                             # We update the original line accordingly
-                            line['price_unit'] = inv.currency_id.round(line['price_unit'] - diff_line['price_unit'])
+                            line['price_unit'] = line['price_unit'] - diff_line['price_unit']
                             line['price'] = inv.currency_id.round(line['quantity'] * line['price_unit'])
+                            line['price_unit'] = inv.currency_id.round(line['price_unit'])
                             diff_res.append(diff_line)
             return diff_res
         return []

@@ -296,3 +296,12 @@ class Company(models.Model):
     def action_save_onboarding_company_step(self):
         if bool(self.street):
             self.set_onboarding_step_done('base_onboarding_company_state')
+
+    @api.model
+    def _get_main_company(self):
+        try:
+            main_company = self.sudo().env.ref('base.main_company')
+        except ValueError:
+            main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
+
+        return main_company

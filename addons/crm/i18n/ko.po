@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Mark Lee <odoos@soti.33mail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# nle_odoo, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
+# nle_odoo, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +69,57 @@ msgstr "<b>Drag &amp; 기회 무효시키기</b> 판매주기가 진행됨에 �
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr "이메일로 <b>동료를 초대합니다</b>.<br/><i>한 행에 하나의 이메일을 입력하십시오..</i>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('is_blacklisted', '=', False), "
+"('partner_address_email', '!=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': ['|', ('partner_is_blacklisted', '=', False), "
+"('partner_address_email', '=', False)]}\" groups=\"base.group_user\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
+msgid "<i class=\"fa fa-comments\" aria-label=\"Messages\" role=\"img\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "<i class=\"fa fa-comments\" aria-label=\"Unread messages\" role=\"img\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
+"title=\"Favorites\"/>"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:139
@@ -154,6 +205,7 @@ msgid "Activities Done Target"
 msgstr "활동 완료 목표"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
 msgstr "해야 할 활동"
@@ -229,7 +281,7 @@ msgstr "지정 날짜"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -394,7 +446,7 @@ msgstr "회사 이름"
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
@@ -531,7 +583,7 @@ msgstr "작성 & 편집"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "웹 사이트 트래픽에서 리드 / 기회 창출"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -710,7 +762,7 @@ msgstr "디자인"
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "요약"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -735,7 +787,7 @@ msgstr "이름 표시"
 #: code:addons/crm/models/digest.py:18 code:addons/crm/models/digest.py:29
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "사용 권한 없음. 이 데이터는 사용자 이메일에서 무시됩니다."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -747,7 +799,7 @@ msgstr "고객과 연결하지 마십시오"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Dropdown menu"
-msgstr ""
+msgstr "드롭 다운 메뉴"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -905,12 +957,13 @@ msgid "Format phone numbers based on national conventions"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:606
+#: code:addons/crm/models/crm_lead.py:613
 #, python-format
 msgid "From %s : %s"
 msgstr "보낸사람 %s : %s"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr "향후 활동"
@@ -1010,7 +1063,7 @@ msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합�
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 메시지에 배달 오류가 발생합니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
@@ -1145,12 +1198,13 @@ msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
 msgstr "지연된 활동"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:913
+#: code:addons/crm/models/crm_lead.py:920
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1298,7 +1352,7 @@ msgstr "낮음"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
@@ -1431,7 +1485,7 @@ msgstr "기회 병합"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 배달 오류"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_ids
@@ -1555,12 +1609,12 @@ msgstr "메모"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 횟수"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "오류 횟수"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1570,7 +1624,7 @@ msgstr "조치가 필요한 메시지 수"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "배달 오류 메시지 수"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
@@ -2037,6 +2091,7 @@ msgid "Show Lead Menu"
 msgstr "리드(영업제안) 메뉴 표시"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr "다음 행동 날짜가 오늘전인 모든 기회 표시"
@@ -2317,6 +2372,7 @@ msgid "Today"
 msgstr "오늘"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
 msgstr "오늘 활동"

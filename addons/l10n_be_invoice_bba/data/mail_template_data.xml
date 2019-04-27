@@ -25,7 +25,7 @@
             This invoice is already paid.
         % else:
             Please remit payment at your earliest convenience.
-            % if object.reference_type == 'bba' and object.reference:
+            % if object.invoice_reference_type=='structured' and object.reference:
             Please use the following communication for your payment: <strong>${object.reference}</strong>.
         % endif
         <br /><br />

@@ -140,7 +140,7 @@ class ReportBomStructure(models.AbstractModel):
             price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
                 factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
-                sub_total = self._get_price(line.child_bom_id, factor)
+                sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
             else:
                 sub_total = price
             sub_total = self.env.user.company_id.currency_id.round(sub_total)
@@ -180,7 +180,7 @@ class ReportBomStructure(models.AbstractModel):
             })
         return operations
 
-    def _get_price(self, bom, factor):
+    def _get_price(self, bom, factor, product):
         price = 0
         if bom.routing_id:
             # routing are defined on a BoM and don't have a concept of quantity.
@@ -194,9 +194,11 @@ class ReportBomStructure(models.AbstractModel):
             price += sum([op['total'] for op in operations])
 
         for line in bom.bom_line_ids:
+            if line._skip_bom_line(product):
+                continue
             if line.child_bom_id:
                 qty = line.product_uom_id._compute_quantity(line.product_qty * factor, line.child_bom_id.product_uom_id)
-                sub_price = self._get_price(line.child_bom_id, qty)
+                sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
                 price += sub_price
             else:
                 prod_qty = line.product_qty * factor
@@ -206,10 +208,10 @@ class ReportBomStructure(models.AbstractModel):
 
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):
 
-        data = self._get_bom(bom_id=bom_id, product_id=product_id, line_qty=qty)
+        data = self._get_bom(bom_id=bom_id, product_id=product_id.id, line_qty=qty)
 
         def get_sub_lines(bom, product_id, line_qty, line_id, level):
-            data = self._get_bom(bom_id=bom.id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
+            data = self._get_bom(bom_id=bom.id, product_id=product_id.id, line_qty=line_qty, line_id=line_id, level=level)
             bom_lines = data['components']
             lines = []
             for bom_line in bom_lines:
@@ -225,7 +227,7 @@ class ReportBomStructure(models.AbstractModel):
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
-                    lines += (get_sub_lines(line.child_bom_id, line.product_id, line.product_qty * data['bom_qty'], line, level + 1))
+                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['prod_qty'], line, level + 1))
             if data['operations']:
                 lines.append({
                     'name': _('Operations'),

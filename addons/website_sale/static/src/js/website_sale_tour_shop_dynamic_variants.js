@@ -26,6 +26,7 @@ tour.register('tour_shop_dynamic_variants', {
     },
     {
         content: "click add to cart",
+        extra_trigger: 'body:has(input[type="hidden"][name="product_id"][value=0])',
         trigger: '#add_to_cart',
     },
     {

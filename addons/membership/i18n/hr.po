@@ -3,20 +3,23 @@
 # * membership
 # 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Martin Trigaux, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Tina Milas, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Marko Carević <marko.carevic@live.com>, 2019
+# Tina Milas, 2019
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +44,14 @@ msgstr "# Na čekanju"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid "<i class=\"fa fa-clock-o\" aria-hidden=\"true\"/><strong> From: </strong>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 msgstr ""
 
 #. module: membership
@@ -53,11 +63,11 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
 #: model:ir.model.fields,help:membership.field_res_users__associate_member
 msgid ""
-"A member with whom you want to associate your membership. It will consider "
+"A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Član s kojim želite povezati svoje članstvo. Uzet će se u obzir stanje "
-"članstva pridruženog člana."
+"Član s kojim želite povezati svoje članstvo. Ono će uzeti u obzir stanje "
+"članstva pridruženog člana ."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -173,7 +183,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
 msgid "Created on"
-msgstr "Datum kreiranja"
+msgstr "Kreirano"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
@@ -297,7 +307,7 @@ msgstr "ID"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Inactive"
-msgstr "Neaktivno"
+msgstr "Neaktivan"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice
@@ -459,6 +469,11 @@ msgid "Membership Invoice"
 msgstr "Račun za članstvo"
 
 #. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr ""
+
+#. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
 msgstr "Članovi partneri"
@@ -556,13 +571,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: membership
-#: code:addons/membership/models/partner.py:181
+#: code:addons/membership/models/partner.py:186
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Parnter nema adresu za izdavanje računa."
 
 #. module: membership
-#: code:addons/membership/models/partner.py:179
+#: code:addons/membership/models/partner.py:184
 #, python-format
 msgid "Partner is a free Member."
 msgstr "Partner je besplatan član."
@@ -646,7 +661,7 @@ msgstr "Ovo će prikazati stupce na čekanju, izdani račun i ukupno na čekanju
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "za"
+msgstr "Do"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -661,12 +676,7 @@ msgid "Waiting Member"
 msgstr "Član na čekanju"
 
 #. module: membership
-#: code:addons/membership/models/partner.py:159
+#: code:addons/membership/models/partner.py:162
 #, python-format
 msgid "You cannot create recursive associated members."
 msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr "membership.membership_line"

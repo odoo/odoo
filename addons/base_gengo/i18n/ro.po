@@ -5,13 +5,15 @@
 # Translators:
 # Martin Trigaux, 2018
 # Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
+"POT-Creation-Date: 2019-01-22 11:11+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +64,11 @@ msgid "Auto Approve Translation ?"
 msgstr "Aprobati Automat Traducerea"
 
 #. module: base_gengo
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
+
+#. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Both"
 msgstr "Ambii (Ambele)"
@@ -110,7 +117,7 @@ msgstr "Companii"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -165,7 +172,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Nivelul Serviciului de Traduceri Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:85
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -175,7 +182,7 @@ msgstr ""
 " autentificare Gengo în `Setari > Companii > Parametri Gengo`."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:96
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -288,7 +295,7 @@ msgid "Sync Type"
 msgstr "Tip Sincronizare"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -312,7 +319,7 @@ msgstr ""
 "Acest comentariu va fi inclus automat in fiecare cerere trimisa catre Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Aceasta limba nu este acceptata de serviciile de traducere Gengo."
@@ -345,8 +352,3 @@ msgid ""
 msgstr ""
 "Aici puteti selecta nivelul serviciului pe care il doriti pentru o traducere"
 " automata folosind Gengo."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "baza.gengo.traduceri"

@@ -6,6 +6,7 @@ from dateutil import relativedelta
 from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -114,9 +115,12 @@ class Location(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ search full name and barcode """
-        if args is None:
-            args = []
-        location_ids = self._search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
+        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(location_ids).name_get()
 
     def get_putaway_strategy(self, product):
@@ -158,9 +162,9 @@ class Route(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('stock.location.route'), index=True,
         help='Leave this field empty if this route is shared between all companies')
-    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products')
-    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
-    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
+    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
+    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses', copy=False)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):

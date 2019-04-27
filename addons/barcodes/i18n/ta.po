@@ -1,343 +1,450 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * barcodes
-#
+# 
 # Translators:
+# Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Abul Hassan M I <miabulhassan@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-18 08:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:223
+#: code:addons/barcodes/models/barcodes.py:204
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
+"'*' சரியான REGEX பார்கோடு மாதிரி அல்ல. நீங்கள் '. * *' என்று அர்த்தமா?"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid ": a rule can only contain one pair of braces."
-msgstr ""
+msgstr ": ஒரு விதி ஒரே ஒரு ஜோடி ப்ரேஸை மட்டுமே கொண்டிருக்க முடியும்."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217
+#: code:addons/barcodes/models/barcodes.py:198
 #, python-format
 msgid ": braces can only contain N's followed by D's."
-msgstr ""
+msgstr ": பிரேஸ்களை N இன் பின்னால் டி'ஸ் மட்டுமே கொண்டிருக்கும்."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:219
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid ": empty braces."
-msgstr ""
+msgstr ": வெற்று பிரேஸ்களே."
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
-"categorized.\n"
-"                                When a barcode is scanned it is associated "
-"to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of "
-"regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix "
-"of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"பார்கோடுகள் பெயர்ச்சொற்கள் பார்கோடுகள் எவ்வாறு அங்கீகரிக்கப்படுகின்றன மற்றும் வகைப்படுத்தப்படுகின்றன என்பதை வரையறுக்கின்றன.\n"
+"                                 ஒரு பார்கோடு ஸ்கேன் செய்யப்பட்டால், அது பொருந்தும் முதல் விதிக்கு தொடர்புடையது\n"
+"                                 முறை. மாதிரி தொடரியல் வழக்கமான வெளிப்பாடு, மற்றும் ஒரு பார்கோடு பொருத்தப்பட்டுள்ளது\n"
+"                                 வழக்கமான வெளிப்பாடு பார்கோடு முன்னொட்டுடன் பொருந்தும் என்றால்."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets "
-"barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr ""
+"ஒரு பார்கோட்களின் பெயரிடுதல் என்பது, விற்பனையின் புள்ளியை அடையாளப்படுத்தி "
+"பார்கோடுகளை எவ்வாறு விளக்குகிறது என்பதை வரையறுக்கிறது"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
-#, python-format
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Add a new barcode nomenclature"
+msgstr "புதிய பார்கோடு பெயரிடுதலை சேர்க்கவும்"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
 msgid "Alias"
-msgstr ""
+msgstr "அலைஸ்"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "Always"
-msgstr ""
+msgstr "எப்போதும்"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_rule_name
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "இந்த பார்கோடு பெயரிடப்பட்ட விதிமுறைக்கான ஒரு உள் அடையாளம்"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "பார்கோடு பெயரிடப்பட்ட ஒரு பெயர்"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:183
-#, python-format
+#: selection:barcode.rule,encoding:0
 msgid "Any"
-msgstr ""
+msgstr "எந்த"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr "பார்கோடு நிகழ்வு கலவை"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "பார்கோடு பெயரிடல்"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr ""
+msgstr "பார்கோடு பெயர்ச்சொற்கள்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr ""
+msgstr "பார்கோடு மாதிரி"
 
 #. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr ""
+msgstr "பார்கோடு விதி"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr ""
+msgstr "பார்கோடு ஸ்கேன் செய்யப்பட்டது"
 
 #. module: barcodes
-#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "Click to add a Barcode Nomenclature ."
-msgstr ""
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "காசாளர்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "வாடிக்கையாளர்"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "நிறுவனங்கள்"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
 msgid "Created on"
-msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
+msgstr "உருவாக்கப்பட்ட தேதி"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "கடன் அட்டை"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:390
+#, python-format
+msgid "Discard"
+msgstr "நிராகரி"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "தள்ளுபடி தயாரிப்பு"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
 #. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
+msgstr "ஈ.ஏ.என்-13"
+
+#. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "EAN-13 to UPC-A"
-msgstr ""
+msgstr "UP-A க்கு EAN-13"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr "EAN-8 ஐ"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
-msgstr ""
+msgstr "என்கோடிங்"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:326
 #, python-format
-msgid "Error : Document not editable"
-msgstr ""
+msgid "Error: Barcode command is undefined"
+msgstr "பிழை: பார்கோடு கட்டளை வரையறுக்கப்படவில்லை"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
 #, python-format
-msgid "Error : No last scanned barcode"
-msgstr ""
+msgid "Error: Document not editable"
+msgstr "பிழை: ஆவணத்தை திருத்த முடியாது"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:362
+#, python-format
+msgid "Error: No last scanned barcode"
+msgstr "பிழை: கடைசி ஸ்கேன் செய்யப்பட்ட பார்கோடு இல்லை"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:95
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:110
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:126
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:139
+#, python-format
+msgid "Error: Pager not available"
+msgstr "பிழை: பேஜர் கிடைக்கவில்லை"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP ரவுட்டிங்"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr "கடைசியாக புதுப்பிக்கப்பட்டவர்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
-msgid "Never"
-msgstr ""
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "இருப்பிடம்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
-msgid "Nomenclature Name"
-msgstr ""
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "நிறைய"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Never"
+msgstr "ஒருபோதும்"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "பெயர்முறை"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "தொகுப்பு"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can "
-"be\n"
-"                                encoded into the barcode. They are indicated "
-"by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are "
-"encoded. Floats are also supported with the \n"
-"                                decimals indicated with D's, such as "
-"<code>{NNNDD}</code>. In these cases, \n"
-"                                the barcode field on the associated records "
-"<i>must</i> show these digits as \n"
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"எடை அல்லது விலை போன்ற எண்கணித மதிப்புகள் எப்படி இருக்க முடியும் என்பதை வகைப்படுத்தலாம்\n"
+"                                 பார்கோடு குறியிடப்பட்டது. அவை N யின் NNN மூலம் குறிக்கப்படுகின்றன\n"
+"                                 எண்களின் இலக்கங்கள் எங்கு குறியாக்கப்படுகின்றன என்பதை வரையறுக்கின்றன. Floats உடன் துணைபுரிகிறது\n"
+"                                 டி.சி. உடன் டிசிமால்ஸ் காட்டப்பட்டுள்ளது, இது போன்றவை {NNNDD}. இந்த சந்தர்ப்பங்களில்,\n"
+"                                 தொடர்புடைய பதிவுகள் உள்ள பார்கோடு துறையில் இந்த இலக்கங்களை காட்ட வேண்டும்\n"
+"                                 பூஜ்ஜியம்."
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "விலை தயாரிப்பு"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
 msgid "Rule Name"
-msgstr ""
+msgstr "விதி பெயர்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
-msgstr ""
+msgstr "விதிகள்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:382
+#, python-format
+msgid "Select"
+msgstr "தேர்வு"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
 msgstr "வரிசை"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:77
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:381
 #, python-format
 msgid "Set quantity"
-msgstr ""
+msgstr "அளவு அமைக்கவும்"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr ""
+msgstr "அட்டவணைகள்"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "பார்கோடு பொருத்துதல் முறை"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr ""
+msgstr "பார்கோடு விதிகளின் பட்டியல்"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "பொருத்தப்பட்ட முறை இந்த பார்கோடுக்கு மாற்றுகிறது"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217 code:addons/barcodes/barcodes.py:219
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
-msgstr ""
+msgstr "பார்கோடு மாதிரி ஒரு தொடரியல் பிழை உள்ளது"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
+"பார்கோடு குறிப்பிட்ட குறியீட்டுடன் குறியிடப்பட்டால் மட்டுமே இந்த விதி "
+"பயன்படுத்தப்படும்"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
-msgstr ""
+msgstr "இந்த ஆவணத்தை மாற்ற, முதல் பதிப்பைத் தொடங்கவும்."
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:363
 #, python-format
 msgid "To set the quantity please scan a barcode first."
-msgstr ""
+msgstr "அளவு அமைக்க, முதலில் ஒரு பார்கோடு ஸ்கேன் செய்யுங்கள்."
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
 msgid "Type"
 msgstr "வகை"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in "
-"one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"UPC குறியீடுகள் அவற்றை பூஜ்யமாக முன்னொட்டு, EAN க்கு மாற்றலாம். UPC / EAN "
+"பார்கோடு தானாகவே மற்ற குறியீட்டுடன் ஒரு விதியைப் பொருத்த முயற்சிக்கும் போது,"
+" ஒரு வழியில் அல்லது வேறுவிதமாக மாற்றப்பட வேண்டும் என்றால் இந்த அமைப்பு "
+"தீர்மானிக்கிறது."
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr "யூ.பீ.சி- A"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "UPC-A to EAN-13"
-msgstr ""
+msgstr "UPC-A ஆனது EAN-13 ஆகும்"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC/EAN Conversion"
-msgstr ""
+msgstr "UPC / EAN மாற்றுதல்"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
-#, python-format
+#: selection:barcode.rule,type:0
 msgid "Unit Product"
-msgstr ""
+msgstr "அலகு தயாரிப்பு"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
+"முதலில் ஒரு சிறிய வரிசை போட்டியுடன் விதிகள் விதிக்கப் பயன்படுத்தப்படும் "
+"விதிகள்"
 
 #. module: barcodes
-#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr ""
+msgstr "கடந்த பார்கோடு மதிப்பு ஸ்கேன் செய்யப்பட்டது."
 
 #. module: barcodes
-#: model:ir.model,name:barcodes.model_barcode_nomenclature
-msgid "barcode.nomenclature"
-msgstr ""
-
-#. module: barcodes
-#: model:ir.model,name:barcodes.model_barcode_rule
-msgid "barcode.rule"
-msgstr ""
-
-#. module: barcodes
-#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
-msgid "barcodes.barcode_events_mixin"
-msgstr ""
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "கனமான தயாரிப்பு"

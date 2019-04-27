@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-01-22 11:11+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +63,11 @@ msgid "Auto Approve Translation ?"
 msgstr "Орчуулгыг автоматаар зөвшөөрөх үү ?"
 
 #. module: base_gengo
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
+
+#. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Both"
 msgstr "Хоёул"
@@ -109,7 +116,7 @@ msgstr "Компаниуд"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -164,7 +171,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo Орчуулгын үйлчилгээний түвшин"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:85
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -175,7 +182,7 @@ msgstr ""
 "оруулаарай."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:96
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -288,7 +295,7 @@ msgid "Sync Type"
 msgstr "Синкийн төрөл"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -311,7 +318,7 @@ msgid ""
 msgstr "Энэ сэтгэгдлийг Gengo рүү илгээсэн хүсэлт бүрт автоматаар хавсаргана"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Энэ хэлийг Gengo орчуулгын үйлчилгээ дэмждэггүй."
@@ -343,8 +350,3 @@ msgid ""
 "using Gengo."
 msgstr ""
 "Та энд Gengo автомат орчуулгын үйлчилгээний түвшнийг сонгох боломжтой."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"

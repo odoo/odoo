@@ -6,17 +6,17 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
-# Jan Prokop, 2018
+# Jan Prokop, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Jan Prokop, 2018\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -517,7 +517,7 @@ msgstr "Stav aktivity"
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Typy aktivity"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -534,7 +534,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
 msgid "Afternoon"
-msgstr ""
+msgstr "Popoludnie"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_all
@@ -636,6 +636,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Analyze from"
 msgstr "Analýza od"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__double_validation
+msgid "Apply Double Validation"
+msgstr "Uplatniť dvojité overovanie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
@@ -983,7 +988,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rozbaľovacie menu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1531,7 +1536,7 @@ msgstr "Voľná."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2018"
+msgid "Legal Leaves 2019"
 msgstr ""
 
 #. module: hr_holidays
@@ -1668,7 +1673,7 @@ msgstr "Mesiac(e)"
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
 msgid "Morning"
-msgstr ""
+msgstr "Ráno"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
@@ -1887,7 +1892,7 @@ msgstr "Prehľad"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
-msgid "Paid Time Off 2018"
+msgid "Paid Time Off 2019"
 msgstr ""
 
 #. module: hr_holidays
@@ -2027,7 +2032,7 @@ msgstr "Resetovať na koncept"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Leaves Detail"
-msgstr ""
+msgstr "Detaily odchodov zdrojov"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -2116,6 +2121,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2360,7 +2369,7 @@ msgstr "Používateľ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__valid
 msgid "Valid"
-msgstr ""
+msgstr "Platný"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2436,10 +2445,20 @@ msgid "Wheat"
 msgstr "Čo"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__double_validation
+msgid ""
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
+msgstr ""
+"Ak zvolené, Pridelenie / Žiadosť o voľno pre tento typ vyžaduje druhé "
+"potvrdenie na schválenie."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
 msgid ""
 "Whether this should be computed as a holiday or as work time (eg: formation)"
 msgstr ""
+"či má byť počítané ako dovolenka alebo ako pracovný čas (napr. tvorba). "
 
 #. module: hr_holidays
 #: selection:hr.leave.allocation,interval_unit:0

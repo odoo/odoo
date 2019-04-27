@@ -2,6 +2,7 @@ odoo.define("website.ace", function (require) {
 "use strict";
 
 var AceEditor = require('web_editor.ace');
+var weContext = require('web_editor.context');
 
 /**
  * Extends the default view editor so that the URL hash is updated with view ID
@@ -37,9 +38,31 @@ var WebsiteAceEditor = AceEditor.extend({
      */
     _saveResources: function () {
         return this._super.apply(this, arguments).then((function () {
-            this._updateHash();
-            window.location.reload();
-            return $.Deferred();
+            var defs = [];
+            if (this.currentType === 'xml') {
+                // When saving a view, the view ID might change. Thus, the
+                // active ID in the URL will be incorrect. After the save
+                // reload, that URL ID won't be found and JS will crash.
+                // We need to find the new ID (either because the view became
+                // specific or because its parent was edited too and the view
+                // got copy/unlink).
+                var selectedView = _.findWhere(this.views, {id: this._getSelectedResource()});
+                var context = weContext.get();
+                defs.push(this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'search_read',
+                    fields: ['id'],
+                    domain: [['key', '=', selectedView.key], ['website_id', '=', context.website_id]],
+                }).then((function (view) {
+                    if (view[0]) {
+                        this._updateHash(view[0].id);
+                    }
+                }).bind(this)));
+            }
+            return $.when.apply($, defs).then((function () {
+                window.location.reload();
+                return $.Deferred();
+            }));
         }).bind(this));
     },
     /**
@@ -56,8 +79,8 @@ var WebsiteAceEditor = AceEditor.extend({
      *
      * @private
      */
-    _updateHash: function () {
-        window.location.hash = this.hash + "?res=" + this._getSelectedResource();
+    _updateHash: function (resID) {
+        window.location.hash = this.hash + "?res=" + (resID || this._getSelectedResource());
     },
 });
 

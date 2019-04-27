@@ -4,24 +4,25 @@
 # 
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2018
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # Gökay Kıvırcıoğlu <riza.gokay@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Martin Trigaux, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,13 +33,14 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Teslimat Emri (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -79,6 +81,15 @@ msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
 msgstr ""
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
 #, python-format
 msgid ""
@@ -86,11 +97,6 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
-msgid "<span>kg</span>"
-msgstr "<span>kg</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -106,7 +112,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Takip Numarası</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -254,6 +260,7 @@ msgstr "Teslimat Mesajı"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr "Teslim Yöntemi"
@@ -348,7 +355,7 @@ msgstr "Ortam"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Hata: bu teslimat yöntemi bu adres için mevcut değil."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -437,6 +444,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Bilgi:\n"
+"Teslimat ücretsiz, çünkü sipariş tutarı aşıyor %.2f.\n"
+"(asıl teslimat ücreti: %.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -717,7 +727,7 @@ msgstr "Kimlik bilgileriniz üretim için onaylandıysa, True olarak ayarlayın.
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
-msgstr ""
+msgstr "%s takip numarasıyla taşımacılık için Transfer %s<br/>Ücret: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -780,6 +790,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 "Bu teslimat yöntemi, toplama üzerinden faturalandırma yaparken "
@@ -808,7 +819,7 @@ msgstr "Takip Referansı"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "Takip URL"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -877,6 +888,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
 msgstr "Nakliye Ağırlığı"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight

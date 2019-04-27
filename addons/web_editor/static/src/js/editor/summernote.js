@@ -1259,9 +1259,11 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     } else {
         node = dom.splitTree(last, {'node': r.sc, 'offset': r.so}) || r.sc;
         if (!contentBefore) {
+            // dom.node chooses the parent if node is text
             var cur = dom.node(dom.lastChild(node.previousSibling));
             if (!dom.isBR(cur)) {
-                $(cur).html(br);
+                // We should concat what was before with a <br>
+                $(cur).html(cur.innerHTML + br.outerHTML);
             }
         }
         if (!dom.isVisibleText(node)) {

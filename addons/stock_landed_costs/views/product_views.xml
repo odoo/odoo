@@ -7,11 +7,16 @@
             <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='inventory']" position="inside">
-                    <group string="Inventory Valuation" name="inventory_valuation">
-                        <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('type', 'not in', ['product', 'consu', 'service'])]}"/>
-                        <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('type', 'not in', ['product', 'consu', 'service'])]}"/>
+                    <group string="Inventory Valuation" name="inventory_valuation" invisible="1">
+                        <field name="split_method" invisible="1"/>
                     </group>
                 </xpath>
+                <div name="options" position="inside">
+                    <div attrs="{'invisible':[('type', 'not in', ['product', 'consu', 'service'])]}">
+                        <field name="landed_cost_ok"/>
+                        <label for="landed_cost_ok"/>
+                    </div>
+                </div>
             </field>
         </record>
     </data>

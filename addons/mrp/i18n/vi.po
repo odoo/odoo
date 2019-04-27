@@ -7,19 +7,19 @@
 # son dang <son.dang@doda100.com>, 2018
 # Martin Trigaux, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 # fanha99 <fanha99@hotmail.com>, 2018
 # Tien Nguyen <tienkt05@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,8 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"            Cần xử lý bằng tay."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
@@ -85,7 +87,28 @@ msgid "18″ x 2½″ Square Leg"
 msgstr "Chân bàn 18″ x 2½″"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:339
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+#: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:332
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -101,6 +124,21 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
+msgid ""
+"<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
+"role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: mrp
@@ -437,6 +475,7 @@ msgid "Avatar"
 msgstr "Ảnh đại diện"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template__produce_delay
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
@@ -464,6 +503,7 @@ msgid "BOM lines of the referred bom"
 msgstr "Chi tiết các dòng BoM của BoM được tham chiếu"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "Mã vạch"
@@ -494,6 +534,7 @@ msgstr "Dòng Định mức Nguyên liệu"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
+#: model:ir.model.fields,field_description:mrp.field_product_product__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -1132,6 +1173,8 @@ msgstr "Ngày kết thúc"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
+"Đảm bảo truy xuất nguồn gốc của một sản phẩm có thể lưu trữ trong kho của "
+"bạn."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1204,6 +1247,11 @@ msgstr "Lô hàng đã tồn tại"
 #: model_terms:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Finished Product"
 msgstr "Sản phẩm hoàn chỉnh"
+
+#. module: mrp
+#: model:ir.actions.report,name:mrp.action_report_finished_product
+msgid "Finished Product Label (PDF)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_finished_ids
@@ -1384,7 +1432,7 @@ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Nếu chọn, sẽ hiển thị thông báo lỗi."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate
@@ -1833,6 +1881,7 @@ msgid "Manufacturing"
 msgstr "Sản xuất"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
@@ -1946,7 +1995,7 @@ msgstr "Tính khả dụng của Vật liệu"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Thông báo gửi đi gặp lỗi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -2167,7 +2216,7 @@ msgstr "Số thông điệp cần có hành động"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Số tin gửi đi bị lỗi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
@@ -2571,7 +2620,7 @@ msgstr "Truy vết"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Chuyển sản phẩm (Chi tiết phiếu kho)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__product_produce_id
@@ -2786,6 +2835,7 @@ msgstr "Số lượng chờ Xử lý"
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:10
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "Số lượng:"
@@ -3212,7 +3262,7 @@ msgstr "Bắt đầu Làm việc"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Start a new work order"
-msgstr ""
+msgstr "Bắt đầu một lệnh sản xuất mới"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -3270,7 +3320,7 @@ msgstr "Dịch chuyển kho"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Quy tắc tồn kho"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -3564,7 +3614,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Hình nhỏ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -3652,7 +3702,7 @@ msgstr "Chờ Bắt đầu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "To Process"
-msgstr ""
+msgstr "Để xử lý"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit

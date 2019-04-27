@@ -8,7 +8,6 @@
 # Ludwik Trammer <ludwik@gmail.com>, 2018
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2018
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
 # Maja Stawicka <mjstwck@wp.pl>, 2018
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2018
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2018
@@ -27,14 +26,15 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
 # Maksym <ms@myodoo.pl>, 2018
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-02-08 05:29+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
+"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,6 +218,20 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">opuścił(a) <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_short
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -412,6 +426,7 @@ msgstr "Grupy dostępu"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
 msgstr "Wymagana akcja"
 
@@ -447,6 +462,7 @@ msgstr "Aktywna domena"
 #: code:addons/mail/static/src/xml/systray.xml:108
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -481,6 +497,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
 msgstr "Stan czynności"
 
@@ -515,6 +532,13 @@ msgstr "Typ czynności"
 #, python-format
 msgid "Add"
 msgstr "dodaj"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/chatter.xml:30
+#, python-format
+msgid "Add Attachments"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -810,8 +834,9 @@ msgstr "Załącznik"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
+#: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Ilość Załączników"
 
 #. module: mail
 #. openerp-web
@@ -975,6 +1000,7 @@ msgstr "Pozdrawiamy"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
 msgstr ""
 
@@ -1164,6 +1190,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -1348,12 +1375,13 @@ msgstr "Konwersacje"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
+#: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Licznik liczby wymienionych wiadomości e-mail dla tego kontaktu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:565
+#: code:addons/mail/static/src/js/discuss.js:566
 #, python-format
 msgid "Create %s"
 msgstr "Utwórz %s"
@@ -1657,8 +1685,8 @@ msgstr "Dyskusje"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
-msgid "Discussion channel"
-msgstr "Kanał dyskusji"
+msgid "Discussion Channel"
+msgstr ""
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1719,6 +1747,13 @@ msgstr ""
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chatter.js:498
+#, python-format
+msgid "Do you really want to delete %s?"
 msgstr ""
 
 #. module: mail
@@ -2184,6 +2219,7 @@ msgstr "Obserwuj"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
@@ -2194,6 +2230,7 @@ msgstr "Obserwatorzy"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "Obserwatorzy (kanały)"
 
@@ -2202,6 +2239,7 @@ msgstr "Obserwatorzy (kanały)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Obserwatorzy (partnerzy)"
 
@@ -2462,6 +2500,7 @@ msgstr "Bezczynny"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 
@@ -2470,6 +2509,7 @@ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
 
@@ -2478,8 +2518,10 @@ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Jesli zaznaczone, część wiadomości napotkało na błąd przy próbie doręczenia."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__send_mail
@@ -2519,6 +2561,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
 #: model:ir.model.fields,help:mail.field_mail_channel_partner__is_blacklisted
 #: model:ir.model.fields,help:mail.field_res_partner__is_blacklisted
+#: model:ir.model.fields,help:mail.field_res_users__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -2714,6 +2757,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
+#: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
 msgstr "Jest obserwatorem"
 
@@ -2730,6 +2774,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
 msgid "Is Subscribed"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
+msgid "Is a chat"
 msgstr ""
 
 #. module: mail
@@ -3084,8 +3133,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Główny Załącznik"
 
 #. module: mail
 #. openerp-web
@@ -3211,8 +3261,9 @@ msgstr "Wiadomość"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Błąd Doręczenia wiadomosci"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -3317,6 +3368,7 @@ msgstr "Message-ID"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
+#: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
@@ -3627,18 +3679,21 @@ msgstr "Następne czynności"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Termin następnej czynności"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
 msgstr "Następne podsumowanie aktywności"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
 msgstr "Typ następnej czynności"
 
@@ -3769,6 +3824,7 @@ msgstr "Powiadom obserwujących dokument (tylko wiadomość masowa)"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Liczba akcji"
 
@@ -3784,14 +3840,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Numer błedu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Liczba wiadomości wymagających akcji"
 
@@ -3800,14 +3858,16 @@ msgstr "Liczba wiadomości wymagających akcji"
 #: model:ir.model.fields,help:mail.field_mail_channel__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Ilośc wiadomości z błedami przy doręczeniu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Liczba nieprzeczytanych wiadomości"
 
@@ -4013,9 +4073,12 @@ msgid "Outgoing mail server"
 msgstr "Serwer poczty wychodzącej"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:110
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Overdue"
 msgstr "Przeterminowane"
 
@@ -4170,9 +4233,12 @@ msgid "Placeholder Expression"
 msgstr "Wyrażenie zastępcze"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:112
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
+#, python-format
 msgid "Planned"
 msgstr "Zaplanowane"
 
@@ -4575,6 +4641,7 @@ msgstr "Odpowiedzialny"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
 msgstr "Użytkownik odpowiedzialny"
 
@@ -4961,12 +5028,17 @@ msgstr "Status"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,help:mail.field_res_partner__activity_state
+#: model:ir.model.fields,help:mail.field_res_users__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status bazuje na aktywnościach\n"
+"Opóźnione: Data \"do\" minęła\n"
+"Dziś: Aktywnośc przewidziana na dziś\n"
+"Zaplanowane: Przyszłe aktywności."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_model_object_field
@@ -5246,8 +5318,9 @@ msgstr "Do:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/activity.js:87
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:107
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:111
 #: code:addons/mail/static/src/xml/systray.xml:96
 #: selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
@@ -5431,6 +5504,7 @@ msgstr "Nieznany błąd"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
 msgstr "Nieprzeczytane wiadomości"
 
@@ -5439,6 +5513,7 @@ msgstr "Nieprzeczytane wiadomości"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Licznik nieprzeczytanych wiadomości"
 

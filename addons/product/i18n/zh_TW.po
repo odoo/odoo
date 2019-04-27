@@ -3,18 +3,18 @@
 # * product
 # 
 # Translators:
-# bluce Lan <bluce.lan@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# bluce Lan <bluce.lan@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: bluce Lan <bluce.lan@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,11 @@ msgid "2 year"
 msgstr "2 年"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  -  </span>\n"
@@ -92,9 +97,10 @@ msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> 產品</span>"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "<span>kg</span>"
-msgstr "<span>公斤</span>"
+#: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label
+msgid "<span class=\"text-muted\">No barcode available</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -526,6 +532,12 @@ msgstr ""
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr "成本"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
+msgid "Cost Currency"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
@@ -1495,6 +1507,7 @@ msgstr "價格表"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_id
 #: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "價格表"
@@ -2047,6 +2060,26 @@ msgid "Supplier Pricelist"
 msgstr "供應商價目表"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_product__valid_archived_variant_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_existing_variant_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_archived_variant_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_existing_variant_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
+msgid "Technical compute"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
 #: model:ir.model.fields,help:product.field_product_template__pricelist_id
 msgid ""
@@ -2100,7 +2133,7 @@ msgid ""
 msgstr "此類別下的產品數量 (不考慮子類別)"
 
 #. module: product
-#: code:addons/product/models/product_template.py:475
+#: code:addons/product/models/product_template.py:480
 #, python-format
 msgid ""
 "The number of variants to generate is too high. You should either not "
@@ -2110,15 +2143,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:46
-#, python-format
-msgid ""
-"You are trying to change the type of an attribute value still referenced on "
-"at least one product template: %s"
-msgstr ""
-
-#. module: product
-#: code:addons/product/models/product_attribute.py:56
+#: code:addons/product/models/product_attribute.py:85
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2131,6 +2156,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
 msgstr "該價格購買產品"
+
+#. module: product
+#: code:addons/product/models/product_template.py:943
+#, python-format
+msgid "The product template is archived so no combination is possible."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2154,6 +2185,24 @@ msgstr "這體積是m3"
 #: model:ir.model.fields,help:product.field_product_template__weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
 msgstr "以Kg(公斤)表示內容物重量，不包含任何包裝等。"
+
+#. module: product
+#: code:addons/product/models/product_template.py:1010
+#, python-format
+msgid "There are no possible combination."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:1005
+#, python-format
+msgid "There are no remaining closest combination."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:963
+#, python-format
+msgid "There are no remaining possible combination."
+msgstr ""
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2196,6 +2245,7 @@ msgstr "此便箋將顯示在銷售訂單和憑單上。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2328,6 +2378,54 @@ msgstr "為每個客戶使用價目表來選定您的價格"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Valid"
 msgstr "有效"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_archived_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_archived_variant_ids
+msgid "Valid Archived Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_existing_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_existing_variant_ids
+msgid "Valid Existing Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
+msgid "Valid Product Attribute Lines"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_wnva_ids
+msgid "Valid Product Attribute Lines Without No Variant Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_ids
+msgid "Valid Product Attribute Values"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_wnva_ids
+msgid "Valid Product Attribute Values Without No Variant Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_ids
+msgid "Valid Product Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_wnva_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_wnva_ids
+msgid "Valid Product Attributes Without No Variant Attributes"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2511,6 +2609,14 @@ msgid "White"
 msgstr "白"
 
 #. module: product
+#: code:addons/product/models/product_attribute.py:46
+#, python-format
+msgid ""
+"You are trying to change the type of an attribute value still referenced on "
+"at least one product template: %s"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
@@ -2518,14 +2624,14 @@ msgid ""
 msgstr "您可以為客戶分配價目表或在創建新的銷售報價單時選擇一個。"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:437
+#: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr "您不能將主價目表作為價目表項中的其他價目表分配。"
 
 #. module: product
-#: code:addons/product/models/product.py:54
+#: code:addons/product/models/product.py:57
 #, python-format
 msgid "You cannot create recursive categories."
 msgstr "不能創建遞迴類別。"
@@ -2537,6 +2643,12 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr "您不能將「帳戶」的小數精度定義為大於公司主要貨幣的捨入因子"
+
+#. module: product
+#: code:addons/product/models/product_template.py:332
+#, python-format
+msgid "You cannot define two attribute lines for the same attribute."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:79

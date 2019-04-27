@@ -30,11 +30,17 @@ class MailChannel(models.Model):
 
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
-    _description = 'Discussion channel'
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
+
+    @api.multi
+    def _compute_is_chat(self):
+        super(MailChannel, self)._compute_is_chat()
+        for record in self:
+            if record.channel_type == 'livechat':
+                record.is_chat = True
 
     @api.multi
     def _channel_message_notifications(self, message):

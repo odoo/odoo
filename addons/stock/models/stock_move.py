@@ -145,7 +145,7 @@ class StockMove(models.Model):
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
-    has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking', readonly=False)
+    has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking', readonly=True)
     quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set')
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations', readonly=False)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
@@ -891,8 +891,13 @@ class StockMove(models.Model):
         """
         assigned_moves = self.env['stock.move']
         partially_available_moves = self.env['stock.move']
+        # Read the `reserved_availability` field of the moves out of the loop to prevent unwanted
+        # cache invalidation when actually reserving the move.
+        reserved_availability = {move: move.reserved_availability for move in self}
+        roundings = {move: move.product_id.uom_id.rounding for move in self}
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
-            missing_reserved_uom_quantity = move.product_uom_qty - move.reserved_availability
+            rounding = roundings[move]
+            missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             if move.location_id.should_bypass_reservation()\
                     or move.product_id.type == 'consu':
@@ -919,7 +924,7 @@ class StockMove(models.Model):
                         continue
                     # If we don't need any quantity, consider the move assigned.
                     need = missing_reserved_quantity
-                    if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
+                    if float_is_zero(need, precision_rounding=rounding):
                         assigned_moves |= move
                         continue
                     # Reserve new quants and create move lines accordingly.
@@ -928,9 +933,9 @@ class StockMove(models.Model):
                     if available_quantity <= 0:
                         continue
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
-                    if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                    if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
-                    if need == taken_quantity:
+                    if float_compare(need, taken_quantity, precision_rounding=rounding) == 0:
                         assigned_moves |= move
                     else:
                         partially_available_moves |= move
@@ -993,12 +998,12 @@ class StockMove(models.Model):
                         # this case `quantity` is directly the quantity on the quants themselves.
                         available_quantity = self.env['stock.quant']._get_available_quantity(
                             move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-                        if float_is_zero(available_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                        if float_is_zero(available_quantity, precision_rounding=rounding):
                             continue
                         taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
-                        if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                        if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
-                        if need - taken_quantity == 0.0:
+                        if float_is_zero(need - taken_quantity, precision_rounding=rounding):
                             assigned_moves |= move
                             break
                         partially_available_moves |= move
@@ -1009,10 +1014,12 @@ class StockMove(models.Model):
     def _action_cancel(self):
         if any(move.state == 'done' for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
-        for move in self:
-            if move.state == 'cancel':
-                continue
-            move._do_unreserve()
+        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
+        # self cannot contain moves that are either cancelled or done, therefore we can safely
+        # unlink all associated move_line_ids
+        moves_to_cancel._do_unreserve()
+
+        for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate:
                 # only cancel the next move if all my siblings are also cancelled
@@ -1134,7 +1141,8 @@ class StockMove(models.Model):
         moves_todo.mapped('move_dest_ids')._action_assign()
 
         # We don't want to create back order for scrap moves
-        if all(move_todo.scrapped for move_todo in moves_todo):
+        # Replace by a kwarg in master
+        if self.env.context.get('is_scrap'):
             return moves_todo
 
         if picking:

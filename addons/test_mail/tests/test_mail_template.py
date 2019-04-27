@@ -3,6 +3,7 @@
 
 import base64
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
 from odoo.addons.test_mail.tests.common import mail_new_test_user
@@ -202,3 +203,36 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     #         self.env['mail.mail'].process_email_queue(ids=[mail_in_2_days.id])
     #         self.assertEqual(mail_in_2_days.state, 'outgoing')
     #         self.assertEqual(mail_now.exists() | mail_in_2_days.exists(), mail_in_2_days)
+
+    def test_create_partner_from_tracking_multicompany(self):
+        company1 = self.env['res.company'].create({'name': 'company1'})
+        self.env.user.write({'company_ids': [(4, company1.id, False)]})
+        self.assertNotEqual(self.env.user.company_id, company1)
+
+        email_new_partner = "diamonds@rust.com"
+        Partner = self.env['res.partner']
+        self.assertFalse(Partner.search([('email', '=', email_new_partner)]))
+
+        template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('mail.test.track').id,
+            'name': 'AutoTemplate',
+            'subject': 'autoresponse',
+            'email_from': self.env.user.email_formatted,
+            'email_to': "${object.email_from}",
+            'body_html': "<div>A nice body</div>",
+        })
+
+        def patched_message_track_post_template(*args, **kwargs):
+            args[0].message_post_with_template(template.id)
+            return True
+
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+            self.env['mail.test.track'].create({
+                'email_from': email_new_partner,
+                'company_id': company1.id,
+                'user_id': self.env.user.id,  # trigger tracking,
+            })
+
+        new_partner = Partner.search([('email', '=', email_new_partner)])
+        self.assertTrue(new_partner)
+        self.assertEqual(new_partner.company_id, company1)

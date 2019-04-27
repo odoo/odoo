@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,6 +239,13 @@ msgid "<b>[Answer]</b>"
 msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-circle badge-gold\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "<i class=\"fa fa-arrow-right\"/> Back to"
 msgstr ""
@@ -251,6 +258,18 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<i class=\"fa fa-arrow-right\"/>Edit Your Profile"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
+"title=\"Dropdown menu\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "<i class=\"fa fa-pencil fa-1g float-left\" title=\"Edit\"/>"
 msgstr ""
 
 #. module: website_forum
@@ -274,6 +293,55 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<small class=\"text-muted\">profile</small>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.users
+msgid ""
+"<span class=\"fa fa-circle badge-bronze ml8\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-circle badge-bronze\" role=\"img\" aria-label=\"Bronze "
+"badge\" title=\"Bronze badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.users
+msgid ""
+"<span class=\"fa fa-circle badge-gold\" role=\"img\" aria-label=\"Gold "
+"badge\" title=\"Gold badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.users
+msgid ""
+"<span class=\"fa fa-circle badge-silver ml8\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-circle badge-silver\" role=\"img\" aria-label=\"Silver "
+"badge\" title=\"Silver badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid ""
+"<span class=\"fa fa-thumbs-down\" role=\"img\" aria-label=\"Negative votes\""
+" title=\"Negative votes\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid ""
+"<span class=\"fa fa-thumbs-up\" role=\"img\" aria-label=\"Positive votes\" "
+"title=\"Positive votes\"/>"
 msgstr ""
 
 #. module: website_forum
@@ -700,7 +768,7 @@ msgstr "질문하기"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "첨부 파일 수"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -719,7 +787,7 @@ msgstr "자서전작가"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model_terms:ir.ui.view,arch_db:website_forum.users
 msgid "Avatar"
-msgstr ""
+msgstr "아바타"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1308,7 +1376,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "External link"
-msgstr ""
+msgstr "외부 링크"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1670,7 +1738,7 @@ msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합�
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "이 옵션을 선택하면 일부 메시지에 배달 오류가 발생합니다."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -1868,7 +1936,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "주요 첨부 파일"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1881,7 +1949,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "메시지 배달 오류"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -2028,7 +2096,7 @@ msgstr "주목할만한 질문"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "작업 횟수"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__posts_count
@@ -2050,7 +2118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "오류 횟수"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2069,7 +2137,7 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "배달 오류 메시지 수"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
@@ -2469,7 +2537,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "이 웹 사이트로의 게시를 제한하십시오."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2487,7 +2555,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO 최적화"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2779,9 +2847,15 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgstr ""
+
+#. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -3104,7 +3178,7 @@ msgstr "웹사이트 메타 제목"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "웹사이트 오픈그래프 이미지"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
