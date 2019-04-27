@@ -14,6 +14,7 @@
 # Seksan Poltree <seksan.poltree@gmail.com>, 2018
 # Martin Trigaux, 2019
 # gsong <gsong2014@foxmail.com>, 2019
+# Panupong Jantapoon <panupong.jtp@gmail.com>, 2019
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # 
 msgid ""
@@ -59,7 +60,7 @@ msgstr "${object.company_id.name} ใบแจ้งหนี้ (Ref ${object.n
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ใบเสร็จ (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account.py:937
@@ -81,12 +82,12 @@ msgstr "%s (สำเนา)"
 #: code:addons/account/models/account.py:688
 #, python-format
 msgid "%s Sequence"
-msgstr ""
+msgstr "%s เลขลำดับ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp; <span>บน</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
@@ -111,7 +112,7 @@ msgstr "15 วัน"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr ""
+msgstr "2 เดือน"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
@@ -126,13 +127,13 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr ""
+msgstr "45 วัน"
 
 #. module: account
 #: code:addons/account/models/account.py:686
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr "การคืนเงิน"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -154,6 +155,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน ${object.partner_id.name}<br/><br/>\n"
+"        ขอบคุณสำหรับการชำระเงิน.\n"
+"        นี่คือใบเสร็จของคุณ <strong>${(object.name or '').replace('/','-')}</strong> จำนวน\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> จาก ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        อย่าลังเลที่จะติดต่อเราหากคุณมีคำถาม.\n"
+"        <br/><br/>\n"
+"        ด้วยความเคารพ,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -191,23 +208,23 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr ""
+msgstr "<em>ร่างใบแจ้งหนี้</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> ดาวน์โหลด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -215,11 +232,13 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
 "title=\"Selection\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>ส่งข้อความ</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -230,7 +249,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-print\"/> Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> พิมพ์"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:699
@@ -3901,7 +3920,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
-msgstr ""
+msgstr "เลิกใช้"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation

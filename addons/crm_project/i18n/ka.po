@@ -3,20 +3,24 @@
 # * crm_project
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Saba Khmaladze <skhmaladze@uglt.org>, 2019
+# Martin Trigaux, 2019
+# Temur, 2019
+# Giorgi Melitauri <gmelitauri@live.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Giorgi Melitauri <gmelitauri@live.com>, 2019\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ka\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: crm_project
 #: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
@@ -24,70 +28,97 @@ msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
+"<span class=\"o_stat_text\">დავალებად</span>\n"
+"                                <span class=\"o_stat_text\">გარდაქმნა</span>"
 
 #. module: crm_project
 #: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
-msgstr "შეწყვეტა"
+msgstr "გაუქმება"
 
 #. module: crm_project
 #: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
 #: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 #: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid "Convert to Task"
-msgstr ""
+msgstr "დავალებად გარდაქმნა"
 
 #. module: crm_project
 #: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Create Task"
-msgstr ""
+msgstr "დავალების შექმნა"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "შექმენით ახალი კლიენტი"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "შემქმნელი"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
 msgstr "შექმნის თარიღი"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "კლიენტი"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "სახელი"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
 msgstr "იდენტიფიკატორი"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
-msgstr "ბოლოს განახლებულია"
+msgstr "ბოლოს შეიცვალა"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
 msgstr "ბოლოს განაახლა"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
-msgstr "ბოლოს განახლებულია"
+msgstr "ბოლოს განახლდა"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
-msgstr ""
-
-#. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
-msgid "Project"
-msgstr ""
+msgstr "წინამძღოლი"
 
 #. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task
-msgid "crm.lead.convert2task"
+msgid "Lead convert to Task"
+msgstr ""
+
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
+msgid "Project"
+msgstr "პროექტი"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
 msgstr ""

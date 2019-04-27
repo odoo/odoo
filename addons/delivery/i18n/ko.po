@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# Linkup <link-up@naver.com>, 2019
 # JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
@@ -26,13 +26,13 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} 배송 주문 (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -61,16 +61,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ${object.partner_id.name}님 안녕하세요.<br/><br/>\n"
+"        귀하의 주문 물품이 배송되었음을 알려드립니다.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            배송 조회는 다음과 같습니다.\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        자세한 내용은 배송 주문서를 참조하여 주시기 바랍니다.<br/><br/>\n"
+"        감사합니다.<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 주문 추가"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 취득율"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -80,6 +103,10 @@ msgid ""
 "attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
 "in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -89,32 +116,35 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    지금 Odoo Enterprise를 구입하여 더 많은 공급자를 확보하세요.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>운송 회사</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong>배송 무게</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>배송 조회 번호</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>무게</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "배송 주문 확인 중 작업"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -136,22 +166,22 @@ msgstr "무료 배송 혜택을 받는 주문 금액을 회사가 사용하는 �
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관됨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "사용 가능한 운송 회사 "
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 msgid "Based on Rules"
-msgstr ""
+msgstr "기준 규칙"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "벌크 무게"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -210,12 +240,12 @@ msgstr "작성일"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "디버그 로깅"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "새로운 배송 방법 정의"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -230,22 +260,22 @@ msgstr "배송"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "배송 회사"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "배송 비용"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "배송 정보"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "배송 메시지"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -253,7 +283,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
-msgstr "운송 방법"
+msgstr "배송 방법"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -262,30 +292,30 @@ msgstr "운송 방법"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
-msgstr "운송 방법"
+msgstr "배송 방법"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "배송 패키지 선택 마법사"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr "배송 포장품"
+msgstr "배송 패키지"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "배송 팩키징"
+msgstr "배송 패키지"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "배송 가격 규칙"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -295,12 +325,12 @@ msgstr "상품 배송"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "배송 등급 성공"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "목적지 사용 가능"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -310,19 +340,19 @@ msgstr "표시 순서 결정"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "작성취소"
+msgstr "작성 취소"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시 이름"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "링크 추적 표시"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -445,7 +475,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
-msgstr "운송"
+msgstr "배송 여부"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package____last_update
@@ -471,12 +501,12 @@ msgstr "최근 갱신 날짜"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length
 msgid "Length"
-msgstr ""
+msgstr "길이"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "길이는 양수여야 합니다"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -491,32 +521,32 @@ msgstr "이윤"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "이윤은 -100%보다 낮을 수 없습니다"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "이익율"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "최대 중량"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "무게는 양수여야 합니다"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr "최대 가치"
+msgstr "최대값"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "이 포장으로 수송할 수 있는 최대 중량"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -527,13 +557,13 @@ msgstr "이름"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "통합 운송 회사 없음"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:80
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "이 주문에 설정된 운송회사가 없습니다."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:102
@@ -546,12 +576,12 @@ msgstr ""
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
-msgstr ""
+msgstr "일반 배송료"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr "OK"
+msgstr "확인"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -765,7 +795,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "출하 송장을 발행할 때 운송 방법을 사용합니다."
+msgstr "출하 청구서를 발행할 때 운송 방법을 사용합니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin

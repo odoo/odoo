@@ -1107,7 +1107,7 @@ msgstr ""
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
 "Hiba! A projekt kezdeti dátumának korábbinak kell lennie a befejező "
-"dátumnál."
+"dátumánál."
 
 #. module: project
 #. openerp-web
@@ -1118,6 +1118,10 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
+"Mindenki felvethet ötleteket, és a szerkesztő a következőként jelöli meg a "
+"legjobbakat: %s. Mellékeljen minden dokumentumot vagy hivatkozást a "
+"feladathoz közvetlenül, hogy a kutatásról szóló összes információ "
+"központosítva álljon rendelkezésre."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1130,6 +1134,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Magyarázó szöveg, amely segíti a felhasználókat a csillag használatában az "
+"ezen szakaszban lévő feladatokon vagy ügyeken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1170,8 +1176,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
-"Kövesse ezt a projektet azoknak az eseményeknek az automatikus nyomon "
-"követéséhez, melyek kapcsolatban vannak a projekt feladataival és ügyeivel"
+"Kövesse ezt a projektet annak érdekében, hogy automatikusan nyomon kövesse "
+"az ezen projekt feladataihoz és ügyeihez kapcsolódó eseményeket."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1241,24 +1247,24 @@ msgstr "Zöld"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Zöld kanban címke"
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Szürke"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Szürke kanban címke"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "Csoportosítás ezzel"
+msgstr "Csoportosítás"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1300,7 +1306,7 @@ msgstr ""
 "- Kizárólag a meghívottak láthatják: Az alkalmazottak kizárólag a követett projekteket, feladatokat vagy ügyeket láthatják\n"
 "- Minden alkalmazott láthatja: Az alkalmazottak láthatják az összes projektet, feladatot vagy ügyet\n"
 "- A követő ügyfelek láthatják: Az alkalmazottak mindent láthatnak;\n"
-"   ha a weboldal aktív, akkor a portál felhasználói láthatják az általuk vagy a vállalatuk által követett\n"
+"   ha a weboldal aktiválásra kerül, akkor a portál felhasználói láthatják az általuk vagy a vállalatuk egyik munkaktársa által követett\n"
 "   projekteket, feladatokat vagy ügyeket\n"
 
 #. module: project
@@ -1318,8 +1324,8 @@ msgid ""
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 "Hogyan kaphat ügyféli visszajelzéseket?\n"
-"- Értékelés szakaszváltoztatáskor: egy e-mail fog elküldésre kerülni, amikor egy feladat/ügy áthúzásra kerül a következő szakaszba\n"
-"- Időszakos értékelés: egy e-mail fog elküldésre kerülni időszakosan\n"
+"- Értékelés szakaszváltoztatáskor: egy e-mail kerül elküldésre, amikor egy feladat/ügy áthúzásra kerül a következő szakaszba\n"
+"- Időszakos értékelés: egy e-mail kerül elküldésre időszakosan\n"
 "\n"
 "Ne felejtse el az e-mail sablonok beállítását azon szakaszokra, melyekre az ügyféli visszajelzéseket kapni szeretné."
 
@@ -1358,13 +1364,13 @@ msgstr "Ötletek"
 #: model:ir.model.fields,help:project.field_project_project__message_unread
 #: model:ir.model.fields,help:project.field_project_task__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+msgstr "Ha be van jelölve, akkor az új üzenetek a figyelmét igénylik."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+msgstr "Ha be van jelölve, akkor az új üzenetek a figyelmét igénylik."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
@@ -1389,6 +1395,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Ha beállításra kerül, és ha a projekt értékelési konfigurációja 'Értékelés "
+"szakaszváltoztatáskor'-ra van állítva, akkor egy e-mail kerül elküldésre az "
+"ügyfélnek, amikor a feladat eléri ezt a szakaszt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1452,7 +1461,7 @@ msgstr "Folyamatban"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:45
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "Fejlesztés alatt"
 
 #. module: project
 #. openerp-web
@@ -1489,6 +1498,9 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Ez a feladat elvégzésének tervezett idejét jelzi. Ha ez a dokumentum "
+"alfeladatokkal rendelkezik, akkor ez a feladat és az alfeladatai "
+"elvégzéséhez szükséges időt jelenti."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1509,7 +1521,7 @@ msgstr "Kanbanállapot"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Kanbanállapot címkéje"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1519,7 +1531,7 @@ msgstr "Kanban tényleges magyarázata"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "Kpi nyitott projektfeladat érték"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1543,7 +1555,7 @@ msgstr "Utóbbi 7 nap"
 #: model:ir.model.fields,field_description:project.field_project_task_type____last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:108
@@ -1556,7 +1568,7 @@ msgstr "Szakasz legutóbbi frissítése"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Legutóbb frissítve"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1596,7 +1608,7 @@ msgstr "Legutóbbi értékelés: Elégedett"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr ""
+msgstr "Előzmények prioritása"
 
 #. module: project
 #. openerp-web
@@ -1610,7 +1622,7 @@ msgstr "Hozza létre első projektjét."
 #: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Hozza létre első feladatát."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1618,32 +1630,35 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Lehetővé teszi a vállalat számára annak testreszabását, hogy melyik "
+"szerkesztőtelepítést használja az új szerkesztőkkel való összekapcsoláshoz "
+"(például: http://etherpad.com/)."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Élő"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Munkaidő naplózása a feladatokon"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Logó dizájn"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:51
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "Hosszútávú"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1660,7 +1675,7 @@ msgstr "Fő melléklet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Fő mellékletek"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -1697,7 +1712,7 @@ msgstr "Kedvenceim"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Követett feladataim"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1716,7 +1731,7 @@ msgstr "Név"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Feladatok neve:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -1759,7 +1774,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "Új projektek"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1767,6 +1782,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Az új feladatok létrehozhatóak a bejövő e-mailekből. Csak állítson be e-mail"
+" álneveket a projektjeiben.<br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1783,7 +1800,7 @@ msgstr "Következő tevékenységek"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Következő tevékenység-határidő"
+msgstr "Következő tevékenység határideje"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -1805,12 +1822,12 @@ msgstr "Nincs tárgy"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Nincsenek még ügyféli értékelések"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
-msgstr ""
+msgstr "Nincs publikált projekt-értékelés egyelőre."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1854,17 +1871,17 @@ msgstr "Műveletek száma"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Munkanapok száma a feladat megnyitásáig"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Munkanapok száma a feladat lezárásáig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
 msgid "Number of documents attached"
-msgstr "Csatolt dokumentumok száma"
+msgstr "Mellékelt dokumentumok száma"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
