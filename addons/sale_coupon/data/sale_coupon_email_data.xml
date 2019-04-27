@@ -5,7 +5,7 @@
          <field name="name">Coupon: Send by Email</field>
          <field name="model_id" ref="sale_coupon.model_sale_coupon"/>
          <field name="subject">Your reward coupon from ${object.program_id.company_id.name} </field>
-         <field name="email_from">${object.program_id.company_id.email|safe}</field>
+         <field name="email_from">${object.program_id.company_id.email | safe}</field>
          <field name="partner_to">${object.partner_id.id}</field>
          <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0px auto;"><tbody>
@@ -84,9 +84,9 @@
             </field>
             <field name="report_template" ref="report_coupon_code"/>
             <field name="report_name">Your Coupon Code</field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
-            <field name="lang">${object.partner_id.lang}</field>
       </record>
    </data>
 </odoo>

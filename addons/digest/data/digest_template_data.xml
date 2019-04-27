@@ -3,10 +3,9 @@
     <record id="digest_mail_template" model="mail.template">
         <field name="name">Digest: Default main template</field>
         <field name="model_id" ref="digest.model_digest_digest"/>
-        <field name="auto_delete" eval="True" />
-        <field name="email_from">${user.email}</field>
-        <field name="lang">${user.lang}</field>
-        <field name="body_html"><![CDATA[
+        <field name="email_from">${user.email_formatted | safe}</field>
+        <field name="subject">${'%s: %s' % (ctx.get('user', user).company_id.name, object.name)}</field>
+        <field name="body_html" type="html">
 <table style="width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;">
     <tr>
         <td align="center" valign="top" style="border-collapse: collapse; padding: 0">
@@ -54,10 +53,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Yesterday</span>
                                                     % if data['yesterday'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['yesterday'][kpi]['margin'] > 0.0:
+                                                            % if data['yesterday'][kpi]['margin'] &gt; 0.0:
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['yesterday'][kpi]['margin'] < 0.0:
+                                                            % if data['yesterday'][kpi]['margin'] &lt; 0.0:
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
                                                             % endif
                                                         </span>
@@ -74,10 +73,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 7 Days</span>
                                                     % if data['lastweek'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['lastweek'][kpi]['margin'] > 0.0:
+                                                            % if data['lastweek'][kpi]['margin'] &gt; 0.0:
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['lastweek'][kpi]['margin'] < 0.0:
+                                                            % if data['lastweek'][kpi]['margin'] &lt;0.0:
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
                                                             %endif
                                                         </span>
@@ -94,10 +93,10 @@
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 30 Days</span>
                                                     % if data['lastmonth'][kpi]['margin'] != 0.0:
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                             % if data['lastmonth'][kpi]['margin'] > 0.0:
+                                                             % if data['lastmonth'][kpi]['margin'] &gt; 0.0:
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
                                                             % endif
-                                                            % if data['lastmonth'][kpi]['margin'] < 0.0:
+                                                            % if data['lastmonth'][kpi]['margin'] &lt; 0.0:
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
                                                             %endif
                                                         </span>
@@ -155,7 +154,9 @@
             </table>
         </td>
     </tr>
-</table>
-        ]]></field>
+</table></field>
+        <field name="lang">${user.lang}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="user_signature" eval="False"/>
     </record>
 </odoo>

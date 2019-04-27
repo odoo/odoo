@@ -41,6 +41,14 @@
     }
 }
 
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
+
 // Modify modals so that their scrollable element is the modal-body (except in
 // mobile).
 @include media-breakpoint-up(sm) {

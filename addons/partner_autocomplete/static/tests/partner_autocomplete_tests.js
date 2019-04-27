@@ -81,12 +81,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                         return this._getOdooSuggestions(value);
                     },
                     do_notify: function (title, message, sticky, className) {
-                        return this.call('notification', 'notify', {
-                            title: title,
-                            message: message,
-                            sticky: true,
-                            className: 'o_partner_autocomplete_test_notify'
-                        });
+                        return this.displayNotification(title, message, 'warning', true, 'o_partner_autocomplete_test_notify');
                     },
                 });
             });

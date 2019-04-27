@@ -9,7 +9,7 @@ class TestSurveyComputePagesQuestions(common.SurveyCase):
         with self.sudo(self.survey_manager):
             survey = self.env['survey.survey'].create({
                 'title': 'Test compute survey',
-                'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id
+                'state': 'open',
             })
 
             page_0 = self.env['survey.question'].create({

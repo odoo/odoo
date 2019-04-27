@@ -51,7 +51,7 @@ class TestCertificationFlow(common.SurveyCase, HttpCase):
                 'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
                 'is_time_limited': True,
                 'time_limit': 10,
-                'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id
+                'state': 'open',
             })
 
             q01 = self._add_question(

@@ -67,7 +67,7 @@ registry
     .add('radio', relational_fields.FieldRadio)
     .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
-    .add('many2one_barcode', relational_fields.FieldMany2One)
+    .add('many2one_barcode', relational_fields.Many2oneBarcode)
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2many', relational_fields.FieldMany2Many)
@@ -78,8 +78,7 @@ registry
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
-    .add('reference', relational_fields.FieldReference)
-    .add('one2many_list', relational_fields.FieldOne2Many);
+    .add('reference', relational_fields.FieldReference);
 
 // Special fields
 registry

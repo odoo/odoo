@@ -9,6 +9,7 @@ var field_registry = require('web.field_registry');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 require('web._field_registry');
 
+var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 var assetsLoaded;
@@ -27,6 +28,7 @@ var assetsLoaded;
  *  - wrapper
  */
 var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
+    description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
 

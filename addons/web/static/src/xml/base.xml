@@ -27,7 +27,13 @@
         </li>
         <li t-if="widget.attrs.widget" data-item="widget">
             <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.attrs.widget"/>
+            <t t-set="description" t-value="widget.attrs.Widget.prototype.description"/>
+            <t t-if="description">
+                <t t-esc="description"/> (<t t-esc="widget.attrs.widget"/>)
+            </t>
+            <t t-else="1">
+                <t t-esc="widget.attrs.widget"/>
+            </t>
         </li>
         <li t-if="widget.attrs.size || widget.field.size" data-item="size">
             <span class="oe_tooltip_technical_title">Size:</span>
@@ -112,26 +118,6 @@
             <t t-esc="node.attrs.name"/>
         </li>
     </ul>
-</t>
-
-<t t-name="Notification">
-    <div t-attf-class="o_notification #{widget.className}" t-translation="off" role="alertdialog">
-        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
-        <div class="o_notification_title">
-            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
-            <t t-raw="widget.title"/>
-        </div>
-        <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
-        <div t-if="widget.buttons.length" class="o_buttons">
-            <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn #{button.primary ? 'btn-primary' : 'btn-secondary'}" type="button">
-                <t t-if="button.icon">
-                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
-                    <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
-                </t>
-                <span><t t-esc="button.text"/></span>
-            </button>
-        </div>
-    </div>
 </t>
 
 <div t-name="CrashManager.warning" class="o_dialog_warning" role="alert">
@@ -1089,33 +1075,46 @@
         </t>
     </div>
 </div>
-<div t-name="FieldBinaryFileUploader.files" class="oe_attachments" aria-atomic="true">
-    <t t-if="widget.mode === 'readonly'">
-        <div t-foreach="widget.value.data" t-as="file">
-            <a target="_blank" t-att-href="widget.metadata[file.id].url" t-attf-title="#{(file.data.name || file.data.filename) + (file.data.date?' \n('+file.data.date+')':'' )}"><t t-raw="file.data.name || file.data.filename"/></a>
-        </div>
-    </t>
-    <t t-else="1">
-        <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
-            <t t-if="!file.data.upload">
-                <div>
-                    <a href="#" class="fa fa-times float-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
-                    <div class="caption"><t t-raw="file.data.name || file.data.filename"/></div>
+
+<t t-name="FieldBinaryFileUploader.attachment_preview">
+    <t t-set="url" t-value="widget.metadata[file.id] ? widget.metadata[file.id].url : false"/>
+    <t t-if="file.data" t-set="file" t-value="file.data"/>
+    <t t-set="editable" t-value="widget.mode === 'edit'"/>
+    <t t-if="file.mimetype" t-set="mimetype" t-value="file.mimetype"/>
+    <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
+        <div class="o_attachment_wrap">
+            <t t-set="ext" t-value="file.name.replace(/^.*\./, '')"/>
+            <div class="o_image_box float-left" t-att-data-id="file.id">
+                <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download">
+                    <span class="o_image o_hover" t-att-data-mimetype="mimetype" t-att-data-ext="ext" role="img"/>
+                </a>
+            </div>
+
+            <div class="caption">
+                <a class="ml4" t-att-href="url" t-att-title="'Download ' + file.name"><t t-esc='file.name'/></a>
+            </div>
+            <div class="caption small">
+                <a class="ml4 small text-uppercase" t-att-href="url" t-att-title="'Download ' + file.name"><b><t t-esc='ext'/></b></a>
+                <div t-if="editable" class="progress o_attachment_progress_bar">
+                    <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>
                 </div>
-                <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
-                   t-att-title="file.data.name"
-                   t-att-aria-label="file.data.name"
-                   t-att-data-mimetype="file.data.mimetype"
-                   t-attf-data-src="/web/image/#{file.data.id}/100x80"/>
-            </t>
+            </div>
+
+            <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+            <div t-if="editable" class="o_attachment_delete" t-att-data-id="file.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
         </div>
-        <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
-            <div>Uploading...</div>
-            <a t-att-title="file.name" t-att-aria-label="file.name" t-att-name="file.name" class="o_image">
-                <i class="fa fa-spinner fa-spin fa-5x fa-fw" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."></i>
-            </a>
-            <div><t t-esc="file.name"/></div>
-        </div>
+    </div>
+</t>
+
+<div t-name="FieldBinaryFileUploader.files" class="o_attachments" aria-atomic="true">
+    <!-- uploaded files -->
+    <t t-foreach="widget.value.data" t-as="file">
+        <t t-if="!file.data.upload" t-call="FieldBinaryFileUploader.attachment_preview"/>
+    </t>
+    <!-- uploading files -->
+    <t t-foreach="widget.uploadingFiles" t-as="file">
+        <t t-set="upload" t-value="true"/>
+        <t t-call="FieldBinaryFileUploader.attachment_preview"/>
     </t>
 </div>
 

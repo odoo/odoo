@@ -44,10 +44,13 @@ class StockRule(models.Model):
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
-        ('make_to_order', 'Trigger Another Rule')], string='Move Supply Method',
+        ('make_to_order', 'Trigger Another Rule'),
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Move Supply Method',
         default='make_to_stock', required=True,
-        help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
-             Take from Stock: The products will be taken from the available stock.""")
+        help="Take From Stock: the products will be taken from the available stock of the source location.\n"
+             "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
+             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
+             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -109,6 +112,8 @@ class StockRule(models.Model):
             suffix = ""
             if self.procure_method == 'make_to_order' and self.location_src_id:
                 suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.") % (source)
+            if self.procure_method == 'mts_else_mto' and self.location_src_id:
+                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.") % source
             message_dict = {
                 'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.') % (destination, operation, source) + suffix,
                 'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.') % (source, operation, destination)
@@ -170,12 +175,42 @@ class StockRule(models.Model):
     @api.model
     def _run_pull(self, procurements):
         moves_values_by_company = defaultdict(list)
+        mtso_products_by_locations = defaultdict(list)
+
+        # To handle the `mts_else_mto` procure method, we do a preliminary loop to
+        # isolate the products we would need to read the forecasted quantity,
+        # in order to to batch the read. We also make a sanitary check on the
+        # `location_src_id` field.
         for procurement, rule in procurements:
             if not rule.location_src_id:
                 msg = _('No source location defined on stock rule: %s!') % (rule.name, )
                 raise UserError(msg)
 
-            moves_values_by_company[procurement.company_id.id].append(rule._get_stock_move_values(*procurement))
+            if rule.procure_method == 'mts_else_mto':
+                mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
+
+        # Get the forecasted quantity for the `mts_else_mto` procurement.
+        forecasted_qties_by_loc = {}
+        for location, product_ids in mtso_products_by_locations.items():
+            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
+            forecasted_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
+
+        # Prepare the move values, adapt the `procure_method` if needed.
+        for procurement, rule in procurements:
+            procure_method = rule.procure_method
+            if rule.procure_method == 'mts_else_mto':
+                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                qty_available = forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id]
+                if float_compare(qty_needed, qty_available, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
+                    procure_method = 'make_to_stock'
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
+                else:
+                    procure_method = 'make_to_order'
+
+            move_values = rule._get_stock_move_values(*procurement)
+            move_values['procure_method'] = procure_method
+            moves_values_by_company[procurement.company_id.id].append(move_values)
+
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             moves = self.env['stock.move'].sudo().with_context(force_company=company_id).create(moves_values)

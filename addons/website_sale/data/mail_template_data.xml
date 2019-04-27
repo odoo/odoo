@@ -5,7 +5,7 @@
             <field name="name">Sale Order: Cart Recovery Email</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">You left items in your cart!</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted or '') | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="xml">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">

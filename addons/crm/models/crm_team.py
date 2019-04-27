@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 class Team(models.Model):
     _name = 'crm.team'
     _inherit = ['mail.alias.mixin', 'crm.team']
-    _description = 'Sales Channels'
+    _description = 'Sales Team'
     use_opportunities = fields.Boolean('Manage a pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")    
 

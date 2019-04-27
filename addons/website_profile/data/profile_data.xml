@@ -7,8 +7,8 @@
             <field name="name">Profile: Email Verification</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">${object.company_id.name} Profile validation</field>
-            <field name="email_from">${('&lt;%s&gt;' % (object.env.user.company_id.email or user.email)) | safe}</field>
-            <field name="email_to">${object.email|safe}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.email_formatted | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -101,6 +101,9 @@
 </td></tr>
 </table>
             </field>
+            <field name="lang">${object.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
         </record>
     </data>
 </odoo>

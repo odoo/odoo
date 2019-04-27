@@ -186,16 +186,16 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<group>' + 
-                        '<group>' + 
+                    '<group>' +
+                        '<group>' +
                             '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',True)]}"/>' +
                             '<field name="foo" attrs="{\'invisible\': [(\'bar\',\'=\',False)]}"/>' +
                             '<field name="foo"/>' +
                             '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',False)]}"/>' +
                             '<field name="int_field" attrs="{\'readonly\': [(\'bar\',\'=\',True)]}"/>' +
                             '<field name="bar"/>' +
-                        '</group>' + 
-                    '</group>' + 
+                        '</group>' +
+                    '</group>' +
                 '</form>',
             res_id: 6,
         });
@@ -209,7 +209,7 @@ QUnit.module('Views', {
         assert.hasClass(form.$('div.o_group span[name="int_field"]:eq(0)'),'o_readonly_modifier', "second int_field widget should be readonly");
         form.destroy();
     });
-   
+
     QUnit.test('duplicate fields rendered properly (one2many)', async function (assert) {
         assert.expect(7);
         this.data.partner.records.push({
@@ -245,18 +245,18 @@ QUnit.module('Views', {
         });
         assert.containsOnce(form, 'div.o_field_one2many:eq(0):not(.o_readonly_modifier)', "first one2many widget should not be readonly");
         assert.hasClass(form.$('div.o_field_one2many:eq(1)'),'o_readonly_modifier', "second one2many widget should be readonly");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)')); 
-        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop", 
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) tr.o_data_row td.o_data_cell:eq(0)'));
+        assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "yop",
             "first line in one2many of first tab contains yop");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(),
             "yop", "first line in one2many of second tab contains yop");
         await testUtils.fields.editInput(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]'), "hello");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello", 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row td.o_data_cell:eq(0)').text(), "hello",
             "first line in one2many of second tab contains hello");
-        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)')); 
+        await testUtils.dom.click(form.$('div.tab-content table.o_list_view:eq(0) a:contains(Add a line)'));
         assert.strictEqual(form.$('div.tab-content table.o_list_view tr.o_selected_row input[name="foo"]').val(), "My little Foo Value",
             "second line in one2many of first tab contains 'My little Foo Value'");
-        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(), 
+        assert.strictEqual(form.$('div.tab-content table.o_list_view:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)').text(),
             "My little Foo Value", "first line in one2many of second tab contains hello");
         form.destroy();
     });
@@ -2882,7 +2882,7 @@ QUnit.module('Views', {
             services: {
                 notification: NotificationService.extend({
                     notify: function (params) {
-                        if (params.type !== 'warning') {
+                        if (params.type !== 'danger') {
                             return;
                         }
                         assert.strictEqual(params.title, 'The following fields are invalid:',
@@ -5008,7 +5008,7 @@ QUnit.module('Views', {
         def.resolve();
         await testUtils.nextTick();
 
-        assert.verifySteps(['read', 'onchange', 'warning']);
+        assert.verifySteps(['read', 'onchange', 'danger']);
         form.destroy();
     });
 
@@ -6891,7 +6891,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('proper stringification in debug mode tooltip', async function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -6903,7 +6903,8 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<field name="product_id" context="{\'lang\': \'en_US\'}" ' +
-                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\'/>' +
+                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\' ' +
+                            'widget="many2one" />' +
                     '</sheet>' +
                 '</form>',
         });
@@ -6920,6 +6921,11 @@ QUnit.module('Views', {
             1, 'modifiers should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]')[0].lastChild.wholeText.trim(),
             '{"invisible":[["product_id","=",33]]}', "modifiers should be properly stringified");
+
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]').length,
+            1, 'widget should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
+            'Many2one (many2one)', "widget description should be correct");
 
         config.debug = initialDebugMode;
         form.destroy();

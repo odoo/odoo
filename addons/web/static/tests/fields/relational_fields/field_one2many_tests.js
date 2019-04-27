@@ -2,7 +2,6 @@ odoo.define('web.field_one_to_many_tests', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
-var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
@@ -121,6 +120,7 @@ QUnit.module('fields', {}, function () {
                         display_name: "leonardo",
                         turtle_bar: true,
                         turtle_foo: "yop",
+                        turle_int: 1,
                         partner_ids: [],
                     }, {
                         id: 2,
@@ -5541,7 +5541,7 @@ QUnit.module('fields', {}, function () {
 
                 "button_disabled_partner_4",
                 "button_warn_partner_4",
-                "warning", // warn btn8
+                "danger", // warn btn8
 
                 "button_disabled_partner_4",
                 "button_warn_partner_4",
@@ -8287,6 +8287,59 @@ QUnit.module('fields', {}, function () {
                 "should have a record in the relation");
             assert.strictEqual(form.$('.o_kanban_record span:contains(blip)').length, 1,
                 "condition in the kanban template should have been correctly evaluated");
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many kanban with widget handle', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[0].turtles = [1, 2, 3];
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<kanban>' +
+                                '<field name="turtle_int" widget="handle"/>' +
+                                '<templates>' +
+                                    '<t t-name="kanban-box">' +
+                                        '<div><field name="turtle_foo"/></div>' +
+                                    '</t>' +
+                                '</templates>' +
+                            '</kanban>' +
+                        '</field>' +
+                    '</form>',
+                mockRPC: function (route, args) {
+                    if (args.method === 'write') {
+                        assert.deepEqual(args.args[1], {
+                            turtles: [
+                                [1, 2, {turtle_int: 0}],
+                                [1, 3, {turtle_int: 1}],
+                                [1, 1, {turtle_int: 2}],
+                            ],
+                        });
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                res_id: 1,
+            });
+
+            assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'yopblipkawa');
+            assert.doesNotHaveClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+
+            await testUtils.form.clickEdit(form);
+
+            assert.hasClass(form.$('.o_field_one2many .o_kanban_view'), 'ui-sortable');
+
+            var $record = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:first');
+            var $to = form.$('.o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:nth-child(3)');
+            await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
+
+            assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'blipkawayop');
+
+            await testUtils.form.clickSave(form);
 
             form.destroy();
         });
