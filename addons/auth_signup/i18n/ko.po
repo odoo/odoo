@@ -3,18 +3,19 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,12 +142,12 @@ msgstr "<strong>이 사용자에게 암호 재설정 요청 되었습니다. 다
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>다음 가입 링크가 있는 초대장이 발급됩니다.</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "이미 계정이 있습니까?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:79
@@ -212,17 +213,17 @@ msgstr "암호를 초기화 할 수 없음"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "고객 계정"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "기본 사용 권한"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "아직 계정이 없으십니까?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
@@ -270,7 +271,7 @@ msgstr "연결한 적이 없음"
 #: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "로그인 계정이 제공되지 않습니다."
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -285,7 +286,7 @@ msgstr "비밀번호"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "비밀번호 재설정"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -296,7 +297,7 @@ msgstr "암호 초기화"
 #: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "비밀번호가 일치하지 않으므로 다시 입력하십시오."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -358,19 +359,19 @@ msgstr "가입 URL"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "초대 받지 않은 사용자는 가입 할 수 없습니다."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "'%s' 가입 토큰은 더 이상 유효하지 않습니다."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "'%s' 가입 토큰이 유효하지 않습니다."
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -386,7 +387,7 @@ msgstr "가입을 통해 생성된 새로운 사용자를 위한 사용자 양�
 #: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "서식이 제대로 채워지지 않았습니다."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -396,7 +397,7 @@ msgstr "사용자"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr " ${object.company_id.name}님을 환영합니다!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
