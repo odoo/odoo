@@ -6,9 +6,9 @@
 # ТАрас <tratatuta@i.ua>, 2018
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2019\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">Використовуйте це посилання як префікс "
+"теми під час надсилання електронною поштою.</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -125,8 +127,8 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
-"Платіж %s %s з посиланням <a href='/mail/view?%s'>%s</a>, пов'язани з вашими"
-" витратами,%sбуло зроблено."
+"Платіж %s %s з посиланням <a href='/mail/view?%s'>%s</a>, пов'язаний з "
+"вашими витратами,%sбуло зроблено."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -142,7 +144,7 @@ msgstr "Бухоблік"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -160,7 +162,7 @@ msgstr "Стан дії"
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
 #: model:ir.ui.menu,name:hr_expense.hr_expense_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Типи діяльності"
+msgstr "Типи дії"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -722,12 +724,12 @@ msgstr "Сховати метод оплати"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
 msgid "Hr Expense"
-msgstr "Розрахунковий рахунок"
+msgstr "Витрати відділу кадрів"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr "Вартість витрат на рік"
+msgstr "Звіт витрат відділу кадрів"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -875,7 +877,7 @@ msgstr "Витрати моєї команди"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Team Reports"
-msgstr "Мої командні звіти"
+msgstr "Звіти моєї команди"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -892,7 +894,7 @@ msgstr "Новий звіт про витрати"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Наступий дедлайн дії"
+msgstr "Дедлайн наступної дії"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
@@ -904,7 +906,7 @@ msgstr "Підсумок наступної дії"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_type_id
 msgid "Next Activity Type"
-msgstr "Наступний тип дії"
+msgstr "Тип наступної дії"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:248
@@ -962,7 +964,7 @@ msgstr "Кількість дій"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
-msgstr "Кількість долучень"
+msgstr "Кількість прикріплень"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1049,7 +1051,7 @@ msgstr "Інша інформація"
 #: selection:hr.expense,activity_state:0
 #: selection:hr.expense.sheet,activity_state:0
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -1163,7 +1165,7 @@ msgstr "Товар:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "Товар: не знайдено"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1290,8 +1292,8 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure."
 msgstr ""
-"Обрана одиниця виміру не належить до тієї ж категорії, що і одиниця виміру "
-"продукту."
+"Обрана одиниця виміру не належить до тієї ж категорії, що й одиниця виміру "
+"товару."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1302,6 +1304,11 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"Надішліть електронний лист на цей псевдонім електронної пошти з квитанцією в"
+" додатку, щоби створити рахунок одним кліком. Якщо перше слово теми листа "
+"містить внутрішнє посилання на товар або назву товару, відповідний товар "
+"буде автоматично встановлено. Введіть суму витрат у тему пошти, щоби "
+"встановити її на рахунок."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1353,7 +1360,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Етап заснований на діях\n"
-"Прострочений: термін виконання вже минув\n"
+"Протермінований: термін виконання вже минув\n"
 "Сьогодні: дата дії сьогодні\n"
 "Заплановано: майбутні дії."
 
@@ -1422,6 +1429,8 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"Перше слово теми повідомлення не відповідає жодному коду товару. Ви повинні "
+"встановити товар вручну на рахунок."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1562,7 +1571,7 @@ msgstr "Переглянути прикріплення"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "Переглянути витрати"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1592,7 +1601,7 @@ msgstr "Історія бесіди на сайті"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "Тепер ви можете подати його менеджеру з наступного посилання."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:749
@@ -1663,7 +1672,7 @@ msgstr "Ваші витрати"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "Ваш рахунок успішно зареєстрований."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
