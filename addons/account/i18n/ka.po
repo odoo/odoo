@@ -60,18 +60,19 @@ msgstr "ტრანზაქცია"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').ჩაანაცვლე('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} ინვოისი (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} გადახდის ქვითარი (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -101,7 +102,7 @@ msgstr "%s (კოპირება)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>ზე</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3634,7 +3635,7 @@ msgstr "ვალუტა"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_rate
 msgid "Currency Rate"
-msgstr ""
+msgstr "ვალუტის კურსი"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_currency_id
@@ -3759,7 +3760,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 #, python-format
 msgid "Dashboard"
-msgstr ""
+msgstr "დაფა"
 
 #. module: account
 #. openerp-web
@@ -5393,7 +5394,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_note
 msgid "Internal Notes"
-msgstr ""
+msgstr "შიდა ჩანაწერები"
 
 #. module: account
 #: selection:account.payment,payment_type:0
@@ -5474,7 +5475,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_invoice_line_form
 #: model:ir.ui.view,arch_db:account.view_invoice_line_tree
 msgid "Invoice Line"
-msgstr ""
+msgstr "ინვოისისი სტრიქონი"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
@@ -5567,7 +5568,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr ""
+msgstr "ინვოისრებული"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_refund_out_tree
@@ -7241,7 +7242,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr ""
+msgstr "გადახდილია"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:430
@@ -7739,7 +7740,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr ""
+msgstr "გატარებულია"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8459,7 +8460,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr ""
+msgstr "გამყიდველი"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_journal_form

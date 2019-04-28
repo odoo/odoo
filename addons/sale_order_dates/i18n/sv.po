@@ -3,15 +3,16 @@
 # * sale_order_dates
 # 
 # Translators:
-# Jakob Bjarnason <mr.bjarnason@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr "Beställningsdatum"
+msgstr "Datum för åtagande"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
@@ -38,11 +39,13 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Datum då produkter med säkerhet levereras. Detta är ett datum du kan lova "
+"kunden, baserat på produktens leveranstid."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Datum då den första leveransordern skapades."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
@@ -57,13 +60,13 @@ msgstr "Offert"
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr "Begärt datum"
+msgstr "Önskad datum"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "Önskat datum är för snart!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -77,3 +80,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"Datum som begärts av kunden är tidigare än datum för åtagande. Du kanske "
+"inte kan uppfylla kundens begäran."

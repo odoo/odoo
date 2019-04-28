@@ -75,12 +75,12 @@ msgstr "팔로워 추가"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "적용 대상"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
 msgid "Assigned to admin user"
-msgstr ""
+msgstr "관리자에게 할당됨"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -103,43 +103,43 @@ msgstr "자동화"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "기본 동작 규칙 : 확인 및 실행"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
 #: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
 msgid "Base Automation: test recursive rule"
-msgstr ""
+msgstr "기본 자동화 : 재귀 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr ""
+msgstr "기본 자동화 : 생성시 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr ""
+msgstr "기본 자동화 : 재 계산에 대한 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr ""
+msgstr "기본 자동화 : 보조 모델에 대한 테스트 규칙"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr ""
+msgstr "기본 자동화 : 쓰기에 대한 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
-msgstr ""
+msgstr "기본 자동화 : 쓰기 검사 문맥에 대한 규칙 테스트"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -201,7 +201,7 @@ msgstr "마감됨"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "변경 사항을 트리거하는 쉼표로 구분된 필드 이름의 목록입니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
@@ -239,6 +239,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"트리거 날짜 이후에 지연. \n"
+"                                     트리거 날짜에 지연이 필요한 경우,\n"
+"                                     회의 15 분 전에 미리 알림 보내기와 같이 음수를 입력할 수 있습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
@@ -395,7 +398,7 @@ msgstr "신규"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "필드 변경을 위한 트리거"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -410,7 +413,7 @@ msgstr "생성 또는 갱신할 때"
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Deletion"
-msgstr ""
+msgstr "삭제할 때"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -496,7 +499,7 @@ msgstr "제목"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
 msgid "Trigger Condition"
-msgstr ""
+msgstr "트리거 조건"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
@@ -572,6 +575,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"조건이 트리거되는시기. \n"
+"                                   존재하는 경우, 스케줄러에 의해 점검됩니다. 비어있는 경우 생성 및 업데이트 할 때 검사됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active

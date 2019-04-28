@@ -11,19 +11,17 @@
 # Nathan Noël <nathan070@me.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
 # Valentin Thirion <valentin@medineo.be>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
 # Félix Desjardins <felixinx@gmail.com>, 2017
 # Loic <loic.richard2@gmail.com>, 2017
 # Fred Gilson <fgi@odoo.com>, 2017
 # Hamid Darabi, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
 # Denis Leemann <denis.leemann@camptocamp.com>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
 # Mohammed SK <medkamar@blutec.ma>, 2017
 # David Bertha <development@fonteynethekitchen.be>, 2017
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2017
 # f5f0a0dac17dde787a1d812a6989680e, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
@@ -53,6 +51,7 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # nle_odoo, 2018
 # Martin Trigaux, 2019
+# Nancy Bolognesi <nb@microcom.ca>, 2019
 # 
 msgid ""
 msgstr ""
@@ -60,7 +59,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Nancy Bolognesi <nb@microcom.ca>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2943,7 +2942,14 @@ msgstr "Imprimer"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#, python-format
+msgid "Print Invoice"
+msgstr "Imprimer la facture"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Print Receipt"
 msgstr "Imprimer le ticket"
@@ -4133,7 +4139,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:690
 #, python-format
 msgid "Tip"
-msgstr "Conseil"
+msgstr "Pourboire"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tip_product_id
@@ -4144,7 +4150,7 @@ msgstr "Produit pour pourboire"
 #: model:product.product,name:point_of_sale.product_product_tip
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 msgid "Tips"
-msgstr "Conseils"
+msgstr "Pourboires"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_to_weight

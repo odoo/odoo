@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:15+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,17 +23,17 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> ( On  </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span> : 위도 : </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr ""
+msgstr "<span> ;  경도 :  </span>"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:19
@@ -45,6 +45,11 @@ msgid ""
 "                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
 "                          "
 msgstr ""
+"지오코딩(장소)을 위한 API 키가 필요합니다.\n"
+"\n"
+"                          이 키를 시스템 매개 변수에 저장하십시오. : google.api_key_geocode, 값 : <your api key>\n"
+"                          자세한 내용은  https://developers.google.com/maps/documentation/geocoding/get-api-key를 참조하십시오.\n"
+"                          "
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:28
@@ -52,7 +57,7 @@ msgstr ""
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
-msgstr ""
+msgstr "지리 정보 서버에 연결할 수 없습니다. 인터넷 연결이 확실한 지 확인하십시오 (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -74,18 +79,18 @@ msgstr "경도"
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocate"
-msgstr ""
+msgstr "지리적 위치"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr ""
+msgstr "지리적 위치"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users_date_localization
 msgid "Geolocation Date"
-msgstr ""
+msgstr "지리적 위치 정보"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
