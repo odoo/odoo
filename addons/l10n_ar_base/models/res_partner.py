@@ -27,9 +27,6 @@ class ResPartner(models.Model):
         compute='_compute_same_same_id_number_partner',
         store=False,
     )
-    l10n_ar_country_code = fields.Char(
-        related="company_id.l10n_ar_country_code",
-    )
 
     @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
     def _compute_same_same_id_number_partner(self):

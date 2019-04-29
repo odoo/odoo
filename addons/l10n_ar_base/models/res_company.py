@@ -18,12 +18,6 @@ class ResCompany(models.Model):
     l10n_ar_cuit = fields.Char(
         related='partner_id.l10n_ar_cuit',
     )
-    l10n_ar_country_code = fields.Char(
-        related="country_id.code",
-        string="Country code",
-        help="Technical field use it in view attrs to show or not localization"
-        " fields",
-    )
 
     @api.multi
     def ensure_cuit(self):
