@@ -1364,7 +1364,7 @@
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <a role="button" class="btn btn-primary a-submit">
+                                    <a role="button" class="btn btn-primary a-submit" href="#">
                                         <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
                                         <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
                                     </a>
