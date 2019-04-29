@@ -506,7 +506,7 @@ class WebsiteSlides(WebsiteProfile):
         return response
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
-    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False):
+    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
         if field not in ('image_small', 'image_medium', 'image_large'):
             return werkzeug.exceptions.Forbidden()
@@ -515,23 +515,24 @@ class WebsiteSlides(WebsiteProfile):
         if not slide:
             raise werkzeug.exceptions.NotFound()
 
-        status, headers, content = request.env['ir.http'].sudo().binary_content(
+        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
             model='slide.slide', id=slide.id, field=field,
             default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, content)
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not content:
-            content = self._get_default_avatar(field, headers, width, height)
+        if not image_base64:
+            image_base64 = self._get_default_avatar()
+            if not (width or height):
+                width, height = tools.image_guess_size_from_field_name(field)
 
-        content = tools.limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
 
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
