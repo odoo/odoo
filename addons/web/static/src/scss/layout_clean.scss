@@ -1,5 +1,8 @@
 .o_clean_footer, .o_clean_header, .o_report_layout_clean {
+<<<<<<< HEAD
     font-family: 'Lato', 'Noto';
+=======
+>>>>>>> [IMP] base: Configure document layout
     color: #000;
 }
 .o_clean_header {
@@ -12,14 +15,14 @@
 .o_clean_footer {
     margin: 0 3px;
     margin-top: 200px;
-    border-top: 3px solid $o-brand-odoo;
+    border-top: 3px solid $o-company-secondary-color;
     h4 {
-        color: $o-brand-odoo;
+        color: $o-company-secondary-color;
         font-weight: bolder;
     }
     .pagenumber {
-        border: 3px solid $o-brand-odoo;
-        background-color: $o-brand-primary;
+        border: 3px solid $o-company-primary-color;
+        background-color: $o-company-secondary-color;
         color: white;
         padding: 4px 8px;
         text-align: center;
@@ -27,7 +30,7 @@
 }
 .o_report_layout_clean {
     h1, h2, h3 {
-        color: $o-brand-primary;
+        color: $o-company-primary-color;
         font-weight: bolder;
     }
     strong {
@@ -39,9 +42,9 @@
         }
 
         thead {
-            color: $o-brand-odoo;
+            color: $o-company-secondary-color;
             tr th {
-                border-top: 3px solid $o-brand-odoo !important;
+                border-top: 3px solid $o-company-secondary-color !important;
                 text-transform: uppercase;
             }
             tr th:last-child {
@@ -56,7 +59,7 @@
                 border-top: none;
             }
             tr:last-child td {
-                border-bottom: 3px solid $o-brand-odoo;
+                border-bottom: 3px solid $o-company-secondary-color;
             }
             tr {
                 td {
@@ -65,6 +68,11 @@
                 td:last-child {
                 }
             }
+        }
+    }
+    #total {
+        strong {
+            color: $o-company-secondary-color;
         }
     }
     /*Total table*/

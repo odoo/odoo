@@ -2,24 +2,36 @@
 <odoo>
     <data>
         <record id="report_layout_standard" model="report.layout">
+            <field name="name">Standard</field>
             <field name="view_id" ref="web.external_layout_standard"/>
             <field name="image">/web/static/img/preview_standard.png</field>
             <field name="pdf">/web/static/pdf/preview_standard.pdf</field>
+            <field name="primary_color">#000000</field>
+            <field name="secondary_color">#000000</field>
         </record>
         <record id="report_layout_background" model="report.layout">
+            <field name="name">Background</field>
             <field name="view_id" ref="web.external_layout_background"/>
             <field name="image">/web/static/img/preview_background.png</field>
             <field name="pdf">/web/static/pdf/preview_background.pdf</field>
+            <field name="primary_color">#875A7B</field>
+            <field name="secondary_color">#875A7B</field>
         </record>
         <record id="report_layout_boxed" model="report.layout">
+            <field name="name">Boxed</field>
             <field name="view_id" ref="web.external_layout_boxed"/>
             <field name="image">/web/static/img/preview_boxed.png</field>
             <field name="pdf">/web/static/pdf/preview_boxed.pdf</field>
+            <field name="primary_color">#495057</field>
+            <field name="secondary_color">#495057</field>
         </record>
         <record id="report_layout_clean" model="report.layout">
+            <field name="name">Clean</field>
             <field name="view_id" ref="web.external_layout_clean"/>
             <field name="image">/web/static/img/preview_clean.png</field>
             <field name="pdf">/web/static/pdf/preview_clean.pdf</field>
+            <field name="primary_color">#875A7B</field>
+            <field name="secondary_color">#00A09D</field>
         </record>
     </data>
 </odoo>

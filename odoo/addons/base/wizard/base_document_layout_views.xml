@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="report_layout_id" widget="radio" />
+                            <field name="logo" widget="image" />
+                            <!-- TODO pick dominant colors from logo -->
+                            <label for="o_document_layout_company_color" string="Colors" />
+                            <div class="o_document_layout_company_color">
+                                <field name="primary_color" widget="color" context="{'user_selected':True}" />
+                                <field name="secondary_color" widget="color" context="{'user_selected':True}" />
+                                <div class="o_document_layout_reset_link">
+                                    <label for="reset_link" string="➜ Reset to default" />
+                                </div>
+                            </div>
+                            <field name="font" widget="selection" />
+                            <field name="report_header"  widget="char" placeholder="e.g. Global Business Solutions" />
+                            <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                            <field name="paperformat_id" widget="selection" />
+                            <div>
+                                <field name="reset_link" invisible="1" />
+                                <field name="use_default_colors" invisible="1" />
+                                <field name="external_report_layout_id" invisible="1" />
+                            </div>
+                        </group>
+                        <group>
+                            <div class="o_document_layout_preview">
+                                <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
+                                <field name="preview" widget="html" class="o_document_layout_preview_html" />
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <!-- TODO pdf preview button -->
+                        <button special="save" string="Save"
+                                class="btn btn-primary" type="object" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+

@@ -1,5 +1,9 @@
+
 .o_background_footer, .o_background_header, .o_report_layout_background {
+<<<<<<< HEAD
     font-family: 'Lato', 'Noto';
+=======
+>>>>>>> [IMP] base: Configure document layout
     color: gray('700');
 }
 .o_background_header {
@@ -11,7 +15,8 @@
         margin-right: 16px;
     }
     h3 {
-        color: $o-brand-odoo;
+        //color: $o-brand-odoo;
+        color: $o-company-primary-color;
         font-weight: 700;
         font-size: 1.25rem;
         max-width: 300px;
@@ -22,12 +27,12 @@
         white-space: nowrap;
     }
     ul {
-        border-top: 1px solid $o-brand-odoo;
-        border-bottom: 1px solid $o-brand-odoo;
+        border-top: 1px solid $o-company-secondary-color;
+        border-bottom: 1px solid $o-company-secondary-color;
         padding: 4px 0;
         margin: 0 0 4px 0;
         li {
-            color: $o-brand-odoo;
+            color: $o-company-secondary-color;
         }
     }
 }
@@ -45,8 +50,11 @@
     .table td, .table th {
         border-top: none;
     }
-    thead tr th, h2 {
-        color: $o-brand-odoo;
+    h2 {
+        color: $o-company-primary-color;
+    }
+    thead tr th {
+        color: $o-company-secondary-color
     }
     tbody {
         color: gray('700');
@@ -75,8 +83,10 @@
             &.o_total {
                 border-top: none !important;
                 td {
-                    color: $o-brand-odoo;
                     border-top: 1px solid gray('400') !important;
+                }
+                strong {
+                    color: $o-company-primary-color;
                 }
             }
         }

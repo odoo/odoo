@@ -92,8 +92,10 @@ class Company(models.Model):
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
-
-
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    primary_color = fields.Char()
+    secondary_color = fields.Char()
+    scss_attachment = fields.Many2one('ir.attachment') # an attachment containing the company's scss variables
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
@@ -246,6 +248,10 @@ class Company(models.Model):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
+        # Update the scss attachment if changes were made to colors or font
+        if (values.keys() & {'primary_color', 'secondary_color', 'font'}):
+            datas = self._compute_scss(values)
+            self._update_scss_attachment(datas)
 
         return super(Company, self).write(values)
 
@@ -317,3 +323,37 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    @api.multi
+    def _compute_scss(self, values):
+        """ compute and encode scss data """
+        for company in self:
+            # use the new values when they exist, otherwise use the old ones
+            data = '$o-company-primary-color:{};'.format(
+                values['primary_color'] if 'primary_color' in values else company.primary_color)
+            data += '$o-company-secondary-color:{};'.format(
+                values['secondary_color'] if 'secondary_color' in values else company.secondary_color)
+            data += '$o-company-font:{};'.format(
+                values['font'] if 'font' in values else company.font)
+            # data must be properly encoded before storage
+            return base64.b64encode((data).encode("utf-8"))
+
+    @api.multi
+    def _update_scss_attachment(self, datas):
+        """ update/create the company scss attachment """
+        for company in self:
+            if company.scss_attachment: # update the existing attachment
+                company.scss_attachment.write({"datas": datas})
+            else: # create a new attachment
+                ir_attachment = company.env["ir.attachment"]
+                url = '/web/static/src/scss/res_company.scss'
+                new_attachment = {
+                    'name': url,
+                    'type': "binary",
+                    'mimetype': "text/scss",
+                    'datas': datas,
+                    'datas_fname': url.split("/")[-1],
+                    'url': url,
+                }
+                company.scss_attachment = ir_attachment.create(new_attachment)
+            company.env["ir.qweb"].clear_caches()

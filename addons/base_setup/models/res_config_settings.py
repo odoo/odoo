@@ -97,16 +97,23 @@ class ResConfigSettings(models.TransientModel):
 
     @api.multi
     def change_report_template(self):
-        self.ensure_one()
-        template = self.env.ref('base.view_company_document_template_form')
+        company = self.env.user.company_id
+        wizard = self.env['base.document.layout'].create({'company_id': company.id})
+        view_id = self.env.ref('base.view_base_document_layout').id
+        
         return {
-            'name': _('Choose Your Document Layout'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
+            'name': _('Configure your document layout'),
             'view_mode': 'form',
+<<<<<<< HEAD
             'res_id': self.env.company_id.id,
             'res_model': 'res.company',
             'views': [(template.id, 'form')],
             'view_id': template.id,
+=======
+            'res_model': 'base.document.layout',
+            'res_id': wizard.id,
+            'views': [[view_id, 'form']],
+>>>>>>> [IMP] base: Configure document layout
             'target': 'new',
         }

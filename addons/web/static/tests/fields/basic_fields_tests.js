@@ -42,6 +42,7 @@ QUnit.module('basic_fields', {
                     selection: {string: "Selection", type: "selection", searchable:true,
                         selection: [['normal', 'Normal'],['blocked', 'Blocked'],['done', 'Done']]},
                     document: {string: "Binary", type: "binary"},
+                    hex_color: {string: "hexadecimal color", type: "char"},
                 },
                 records: [{
                     id: 1,
@@ -57,6 +58,7 @@ QUnit.module('basic_fields', {
                     trululu: 4,
                     selection: 'blocked',
                     document: 'coucou==\n',
+                    hex_color: '#00ff00'
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -5470,6 +5472,57 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
+    QUnit.module('FieldColor');
+
+    QUnit.test('Field Color: click on widget', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="hex_color" widget="color" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // FIXME: test fails when using firefox
+        await testUtils.dom.click(form.$('.o_field_color'));
+        assert.strictEqual($('.modal .o_colorpicker_widget').length, 1,
+            "Clicking on the FieldColor widget should bring up a color picker dialog");
+
+        form.destroy();
+    });
+
+    QUnit.test('Field Color: default value', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="hex_color" widget="color" />' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_color').css('backgroundColor'), "rgb(0, 0, 0)",
+            "The FieldColor widget should default to black when field value is undefined");
+
+        form.destroy();
+    });
+
 });
 });
 });

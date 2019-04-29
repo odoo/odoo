@@ -1,0 +1,115 @@
+.o_document_layout {
+    padding-bottom: 0px !important;
+}
+
+.o_document_layout_preview {
+    border: 1px solid;
+    border-color: lightgray;
+    padding: 15px;
+}
+
+.o_document_layout_preview_logo img {
+    padding-left: 5px;
+    max-height: 45px;
+}
+
+.o_document_layout_reset_link {
+    label {
+        @extend .btn-link;
+        font-weight: bold !important;
+        color: #008782;
+    }
+}
+
+.o_document_layout_company_color {
+    .o_field_widget {
+        display: inline;
+    }
+}
+
+.o_document_layout_company {
+    // we need enough space left for the preview
+    max-width: 50%;
+    tr td {
+        width: auto !important;
+    }
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+    // hide the default empty option
+    select option:first-child {
+        display: none;
+    }
+    img {
+        max-height: 90px;
+    }
+}
+
+.o_document_layout_preview_html {
+    .header {
+        * {
+            padding: 5px;
+        }
+        h2 {
+            padding-top: 50px;
+        }
+    }
+    .article {
+        margin-bottom: 10px;
+        * {
+            padding: 5px;
+        }
+    }
+    .footer {
+        border-top: 1px solid;
+        margin-bottom: 10px;
+    }
+    .o_preview_Background_layout {
+        background-image: url(/base/static/img/bg_background_template.jpg);
+        background-size: cover;
+        background-position: bottom center;
+        background-repeat: no-repeat;
+        .footer {
+            border-bottom: 1px solid;
+        }
+    }
+    .o_preview_Clean_layout {
+        .article table {
+            border-bottom: 1px solid;
+            border-top: 1px solid;
+        }
+        thead th {
+            border-top: 1px solid;
+            text-transform: uppercase;
+        }
+    }
+    .o_preview_Standard_layout {
+        .o_subtotal, .o_total {
+            td {
+                border-top: 1px solid;
+            }
+        }
+    }
+    .o_preview_Boxed_layout {
+        table {
+            border: 1px solid gray('700');
+            // border-collapse: 
+            thead th {
+                border: 1px solid gray('700');
+                text-transform: uppercase;
+            }
+            tbody tr td {
+                border-top: none;
+                border-right: 1px solid gray('700');
+            }
+        }
+        .o_subtotal td, .o_total td {
+            border-right: none;
+            border-top: 1px solid gray('700');
+        }
+        .o_total td {
+            strong, span {
+                color: white;
+            }
+        }
+    }
+}
