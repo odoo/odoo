@@ -271,6 +271,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'field_changed': '_onFieldChanged',
     }),
     _avoidFieldUpdate: {},
+    MV_LINE_DEBOUNCE: 200,
 
     /**
      * create partner_id field in editable mode
@@ -283,6 +284,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         this.model = model;
         this._initialState = state;
+        if (this.MV_LINE_DEBOUNCE) {
+            this._onSelectMoveLine = _.debounce(this._onSelectMoveLine, this.MV_LINE_DEBOUNCE, true);
+        } else {
+            this._onSelectMoveLine = this._onSelectMoveLine;
+        }
     },
 
     /**
