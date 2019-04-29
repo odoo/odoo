@@ -103,7 +103,7 @@ var CalendarController = AbstractController.extend({
      * @returns {Deferred}
      */
     _updateRecord: function (record) {
-        return this.model.updateRecord(record).then(this.reload.bind(this));
+        return this.model.updateRecord(record).always(this.reload.bind(this));
     },
 
     //--------------------------------------------------------------------------
