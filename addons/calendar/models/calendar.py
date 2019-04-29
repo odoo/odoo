@@ -458,7 +458,7 @@ class AlarmManager(models.AbstractModel):
                 'notify_at': fields.Datetime.to_string(alert['notify_at']),
             }
 
-    def notify_next_alarm(self, partner_ids):
+    def _notify_next_alarm(self, partner_ids):
         """ Sends through the bus the next alarm of given partners """
         notifications = []
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
@@ -1545,7 +1545,7 @@ class Meeting(models.Model):
                 else:
                     data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
                     if data.get('rrule'):
-                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
+                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple _notify_next_alarm
 
             new_meetings = self.browse(new_ids)
             real_meetings = self.browse(real_ids)
@@ -1561,7 +1561,7 @@ class Meeting(models.Model):
 
             attendees_create = False
             if values.get('partner_ids', False):
-                attendees_create = all_meetings.with_context(dont_notify=True).create_attendees()  # to prevent multiple notify_next_alarm
+                attendees_create = all_meetings.with_context(dont_notify=True).create_attendees()  # to prevent multiple _notify_next_alarm
 
             # Notify attendees if there is an alarm on the modified event, or if there was an alarm
             # that has just been removed, as it might have changed their next event notification
@@ -1571,7 +1571,7 @@ class Meeting(models.Model):
                     event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
-                    self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
+                    self.env['calendar.alarm_manager']._notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime') or
                     (values.get('start') and self.env.context.get('from_ui'))) and values.get('active', True):
@@ -1622,7 +1622,7 @@ class Meeting(models.Model):
         meeting._sync_activities(values)
 
         final_date = meeting._get_recurrency_end_date()
-        # `dont_notify=True` in context to prevent multiple notify_next_alarm
+        # `dont_notify=True` in context to prevent multiple _notify_next_alarm
         meeting.with_context(dont_notify=True).write({'final_date': final_date})
         meeting.with_context(dont_notify=True).create_attendees()
 
@@ -1630,7 +1630,7 @@ class Meeting(models.Model):
         # next event notification
         if not self._context.get('dont_notify'):
             if len(meeting.alarm_ids) > 0:
-                self.env['calendar.alarm_manager'].notify_next_alarm(meeting.partner_ids.ids)
+                self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
     @api.multi
@@ -1734,7 +1734,7 @@ class Meeting(models.Model):
             result = records_to_exclude.with_context(dont_notify=True).write({'active': False})
 
         # Notify the concerned attendees (must be done after removing the events)
-        self.env['calendar.alarm_manager'].notify_next_alarm(partner_ids)
+        self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
     @api.model
