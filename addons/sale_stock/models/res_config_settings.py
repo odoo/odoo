@@ -11,6 +11,8 @@ class ResConfigSettings(models.TransientModel):
     group_route_so_lines = fields.Boolean("Order-Specific Routes",
         implied_group='sale_stock.group_route_so_lines')
     group_display_incoterm = fields.Boolean("Incoterms", implied_group='sale_stock.group_display_incoterm')
+    group_lot_on_invoice = fields.Boolean("Display Lots & Serial Numbers on Invoices",
+        implied_group='sale_stock.group_lot_on_invoice')
     use_security_lead = fields.Boolean(
         string="Security Lead Time for Sales",
         config_parameter='sale_stock.use_security_lead',
