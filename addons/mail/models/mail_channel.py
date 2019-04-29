@@ -64,7 +64,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
 
     @api.model
     def default_get(self, fields):

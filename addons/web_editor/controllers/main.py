@@ -158,27 +158,17 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     @http.route('/web_editor/add_image_base64', type='json', auth='user', methods=['POST'], website=True)
     def add_image_base64(self, res_model, res_id, image_base64, filename, disable_optimization=None, **kwargs):
-        data = base64.b64decode(image_base64)
-        attachment = self._image_to_attachment(res_model, res_id, data, filename, filename, disable_optimization=disable_optimization)
+        attachment = self._image_to_attachment(res_model, res_id, image_base64, filename, filename, disable_optimization=disable_optimization)
         return attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])[0]
 
-    def _image_to_attachment(self, res_model, res_id, data, name, datas_fname, disable_optimization=None):
+    def _image_to_attachment(self, res_model, res_id, image_base64, name, datas_fname, disable_optimization=None):
         Attachments = request.env['ir.attachment']
-        try:
-            image = Image.open(io.BytesIO(data))
-            w, h = image.size
-            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                raise ValueError(
-                    u"Image size excessive, uploaded images must be smaller "
-                    u"than 42 million pixel")
-            if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                data = tools.image_save_for_web(image)
-        except IOError:
-            pass
+        if not disable_optimization:
+            image_base64 = tools.image_process(image_base64, verify_resolution=True)
         attachment = Attachments.create({
             'name': name,
             'datas_fname': datas_fname,
-            'datas': base64.b64encode(data),
+            'datas': image_base64,
             'public': res_model == 'ir.ui.view',
             'res_id': res_id,
             'res_model': res_model,
@@ -224,12 +214,12 @@ class Web_Editor(http.Controller):
             try:
                 attachments = request.env['ir.attachment']
                 for c_file in request.httprequest.files.getlist('upload'):
-                    data = c_file.read()
+                    image_base64 = base64.b64encode(c_file.read())
                     name = c_file.filename
                     datas_fname = name
                     if filters:
                         datas_fname = filters + '_' + datas_fname
-                    attachments += self._image_to_attachment(res_model, res_id, data, name, datas_fname, disable_optimization=disable_optimization)
+                    attachments += self._image_to_attachment(res_model, res_id, image_base64, name, datas_fname, disable_optimization=disable_optimization)
                 uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")

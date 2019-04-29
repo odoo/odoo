@@ -177,21 +177,19 @@ var KanbanRecord = Widget.extend({
      * @param {string} model the name of the model
      * @param {string} field the name of the field
      * @param {integer} id the id of the resource
-     * @param {integer} cache the cache duration, in seconds
-     * @param {Object} options
+     * @param {string} placeholder
      * @returns {string} the url of the image
      */
-    _getImageURL: function (model, field, id, cache, options) {
-        options = options || {};
+    _getImageURL: function (model, field, id, placeholder) {
         id = (_.isArray(id) ? id[0] : id) || false;
-        field = options.preview_image || field;
+        placeholder = placeholder || "/web/static/src/img/placeholder.png";
         var isCurrentRecord = this.modelName === model && this.recordData.id === id;
         var url;
         if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
             // Use magic-word technique for detecting image type
             url = 'data:image/' + this.file_type_magic_word[this.record[field].raw_value[0]] + ';base64,' + this.record[field].raw_value;
         } else if (!model || !field || !id || (isCurrentRecord && this.record[field] && !this.record[field].raw_value)) {
-            url = "/web/static/src/img/placeholder.png";
+            url = placeholder;
         } else {
             var session = this.getSession();
             var params = {
@@ -201,10 +199,6 @@ var KanbanRecord = Widget.extend({
             };
             if (isCurrentRecord) {
                 params.unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
-            }
-            if (cache !== undefined) {
-                // Set the cache duration in seconds.
-                params.cache = parseInt(cache, 10);
             }
             url = session.url('/web/image', params);
         }
