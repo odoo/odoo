@@ -112,7 +112,7 @@ class ResPartner(models.Model):
         """ Generate the vat field value with the information in
         the l10n_ar_id_number and l10n_ar_identification_type_id fields
         """
-        self.update_vat(values)
+        self._update_vat(values)
         return super(ResPartner, self).create(values)
 
     @api.multi
@@ -120,11 +120,11 @@ class ResPartner(models.Model):
         """ Generate the vat field value with the information in
         the l10n_ar_id_number and l10n_ar_identification_type_id fields
         """
-        self.update_vat(values)
+        self._update_vat(values)
         return super(ResPartner, self).write(values)
 
     @api.multi
-    def update_vat(self, values):
+    def _update_vat(self, values):
         """ Update the vat field value using the information we have in
         l10n_ar_id_number and l10n_ar_identification_type_id fields
 
