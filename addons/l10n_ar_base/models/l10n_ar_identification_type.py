@@ -1,17 +1,13 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
-from odoo import api, models, fields, _
-from odoo.exceptions import ValidationError, UserError
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, models, fields
 from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval
 
 
-class ResPartnerIdCategory(models.Model):
+class L10nArIdentificationType(models.Model):
 
-    _name = "l10n_ar_id_category"
-    _description = "Identification Category"
+    _name = "l10n_ar.identification.type"
+    _description = "Identification Type"
     _rec_name = "code"
     _order = "sequence"
 
@@ -23,7 +19,6 @@ class ResPartnerIdCategory(models.Model):
     name = fields.Char(
         string="ID name",
         required=True,
-        translate=True,
         help="Name of this ID type. For example: 'Passport'",
     )
     active = fields.Boolean(
@@ -39,7 +34,7 @@ class ResPartnerIdCategory(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        """ Identification category can be searched by code or name
+        """ Identification type can be searched by code or name
         """
         args = args or []
         domain = []

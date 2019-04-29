@@ -1,10 +1,7 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
@@ -19,17 +16,59 @@ class ResPartner(models.Model):
     l10n_ar_id_number = fields.Char(
         string='Identification Number',
     )
-    l10n_ar_id_category_id = fields.Many2one(
-        string="Identification Category",
-        comodel_name='l10n_ar_id_category',
+    l10n_ar_identification_type_id = fields.Many2one(
+        string="Identification Type",
+        comodel_name='l10n_ar.identification.type',
         index=True,
         auto_join=True,
     )
+    same_id_number_partner = fields.Html(
+        string='Partner with same Identification Number',
+        compute='_compute_same_same_id_number_partner',
+        store=False,
+    )
+    l10n_ar_country_code = fields.Char(
+        related="company_id.l10n_ar_country_code",
+    )
+
+    @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
+    def _compute_same_same_id_number_partner(self):
+        for partner in self:
+            partner_id = partner.id
+            partner_id_number = partner.l10n_ar_id_number
+            partner_id_type = partner.l10n_ar_identification_type_id
+            if isinstance(partner_id, models.NewId):
+                # deal with onchange(), which is always called on a single
+                # record
+                partner_id = self._origin.id
+            domain = [
+                ('l10n_ar_id_number', '=', partner_id_number),
+                ('l10n_ar_identification_type_id', '=', partner_id_type.id)]
+            if partner_id:
+                related_partners = partner.search([
+                    '|', ('id', 'parent_of', partner_id),
+                    ('id', 'child_of', partner_id)])
+                domain += [('id', 'not in', related_partners.ids)]
+            same_number_partner = self.env['res.partner'].search(
+                domain, limit=1)
+            partner.same_id_number_partner = \
+                "<a href='/web#id={}&model=res.partner' target='_blank'>{}"\
+                "</a>".format(
+                    same_number_partner.id, same_number_partner.name) \
+                        if partner_id_number and partner_id_type and \
+                            same_number_partner else False
 
     @api.multi
-    def cuit_required(self):
-        """ Return the cuit number is this one is defined if not raise an
-        UserError
+    def ensure_cuit(self):
+        """ This method is a helper that returns the cuit number is this one is
+        defined if not raise an UserError.
+
+        CUIT is not mandatory field but for some Argentinian operations the
+        cuit is required, for eg  validate an electronic invoice, build a
+        report, etc.
+
+        This method can be used to validate is the cuit is proper defined in
+        the partner
         """
         self.ensure_one()
         if not self.l10n_ar_cuit:
@@ -50,17 +89,17 @@ class ResPartner(models.Model):
             rec.l10n_ar_formated_cuit = "{0}-{1}-{2}".format(
                 cuit[0:2], cuit[2:10], cuit[10:])
 
-    @api.depends('l10n_ar_id_number', 'l10n_ar_id_category_id')
+    @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
     def _compute_l10n_ar_cuit(self):
         """ We add this computed field that returns cuit or nothing ig this one
-        is not set for the partner. This validation can be also dony by calling
-        cuit_required() method that returns the cuit nombre of error if this
-        one is not found.
+        is not set for the partner. This validation can be also done by calling
+        ensure_cuit() method that returns the cuit or error if this one is not
+        found.
         """
         for rec in self:
             # If the partner is outside Argentina then we return the defined
             # country cuit defined by AFIP for that specific partner
-            if rec.l10n_ar_id_category_id.afip_code != 80:
+            if rec.l10n_ar_identification_type_id.afip_code != 80:
                 country = rec.country_id
                 if country and country.code != 'AR':
                     if rec.is_company:
@@ -68,45 +107,46 @@ class ResPartner(models.Model):
                     else:
                         rec.l10n_ar_cuit = country.l10n_ar_cuit_fisica
                 continue
-            if rec.l10n_ar_id_category_id.afip_code == 80:
+            if rec.l10n_ar_identification_type_id.afip_code == 80:
                 rec.l10n_ar_cuit = rec.l10n_ar_id_number
 
-    @api.constrains('l10n_ar_id_number', 'l10n_ar_id_category_id')
-    def check_vat(self):
-        """ Update the the vat field using the information we have from
-        l10n_ar_id_number and l10n_ar_id_category_id fields
+    @api.model
+    def create(self, values):
+        """ Generate the vat field value with the information in
+        the l10n_ar_id_number and l10n_ar_identification_type_id fields
         """
-        for rec in self:
-            if rec.l10n_ar_id_number and rec.l10n_ar_id_category_id and \
-               rec.l10n_ar_id_category_id.afip_code == 80:
-                rec.vat = 'AR' + rec.l10n_ar_id_number
+        self.update_vat(values)
+        return super(ResPartner, self).create(values)
 
-    @api.constrains('l10n_ar_id_number', 'l10n_ar_id_category_id')
-    def check_id_number_unique(self):
-        """ Taking into account the company's general settings it will check
-        that if the identification number we are trying to use is already set
-        in another partner.
+    @api.multi
+    def write(self, values):
+        """ Generate the vat field value with the information in
+        the l10n_ar_id_number and l10n_ar_identification_type_id fields
         """
-        if not safe_eval(self.env['ir.config_parameter'].sudo().get_param(
-                "l10n_ar_base.unique_id_numbers", 'False')):
-            return True
-        for rec in self:
-            # We allow same number in related partners
-            related_partners = rec.search([
-                '|', ('id', 'parent_of', rec.id),
-                ('id', 'child_of', rec.id)])
-            same_id_numbers = rec.search([
-                ('l10n_ar_id_number', '=', rec.l10n_ar_id_number),
-                ('l10n_ar_id_category_id', '=', rec.l10n_ar_id_category_id.id),
-                ('id', 'not in', related_partners.ids),
-            ])
-            if same_id_numbers:
-                raise ValidationError(_(
-                    'Identification number must be unique per Identification'
-                    ' category!\nSame number is only allowed for partners with'
-                    ' parent/child relation\n\n Already using this'
-                    ' number: ') + ', '.join(same_id_numbers.mapped('name'))
-                )
+        self.update_vat(values)
+        return super(ResPartner, self).write(values)
+
+    @api.multi
+    def update_vat(self, values):
+        """ Update the vat field value using the information we have in
+        l10n_ar_id_number and l10n_ar_identification_type_id fields
+
+        When the vat has been set using _commercial_sync_to_children we do not
+        update it
+        """
+        if 'vat' in values or 'commercial_partner_id' in values:
+            return values
+        id_number = values.get(
+            'l10n_ar_id_number', self.l10n_ar_id_number or False)
+        id_type = values.get(
+            'l10n_ar_identification_type_id',
+            self.l10n_ar_identification_type_id.id or False)
+        if id_type:
+            id_type = self.env['l10n_ar.identification.type'].browse(id_type)
+
+        if id_number and id_type and id_type.afip_code == 80:
+            values.update({'vat': 'AR' + id_number})
+        return values
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100,

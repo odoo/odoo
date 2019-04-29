@@ -2,21 +2,28 @@
 <odoo>
 
     <record id="view_partner_form" model="ir.ui.view">
-        <field name="name">partner_documents.view_partner_form</field>
+        <field name="name">view_partner_form</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
             <form>
                 <field name="l10n_ar_cuit" invisible="1"/>
+                <field name="l10n_ar_country_code" invisible="1"/>
             </form>
+            <sheet position="before">
+                <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_id_number_partner', '=', False)]}">
+                    A partner with the same Identification Number already exists (<field name="same_id_number_partner" widget="html" class="d-inline-block"/>), are you sure to create a new one?
+                </div>
+            </sheet>
             <field name="vat" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="attrs">{'invisible': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
             </field>
 
             <field name="vat" position="after">
-                <label for="l10n_ar_id_number" string="Identification"/>
-                <div>
-                    <field name="l10n_ar_id_category_id" options="{'no_open': True, 'no_create': True}" placeholder="Category" class="oe_inline"/> - 
+                <label for="l10n_ar_id_number" string="Identification" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
+                <div class="o_address_format" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}">
+                    <field class="o_address_state" name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type"/>
+                    <span class="oe_read_only">-</span>
                     <field name="l10n_ar_id_number" placeholder="Number" class="oe_inline"/>
                 </div>
             </field>

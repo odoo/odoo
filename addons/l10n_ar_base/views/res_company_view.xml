@@ -5,14 +5,18 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="model">res.company</field>
         <field name="arch" type="xml">
+            <form>
+                <field name="l10n_ar_country_code" invisible="1"/>
+            </form>
             <field name="vat" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="attrs">{'invisible': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
             </field>
             <field name="vat" position="before">
-                <label for="l10n_ar_id_number" string="Identification"/>
-                <div class="address_format">
-                    <field name="l10n_ar_id_category_id" options="{'no_open': True, 'no_create': True}" placeholder="Category" style="width: 45%"/>
-                    <field name="l10n_ar_id_number" placeholder="Number" style="width: 53%"/>
+                <label for="l10n_ar_id_number" string="Identification" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
+                <div class="o_address_format" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}">
+                    <field class="o_address_state" name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type"/>
+                    <span class="oe_read_only">-</span>
+                    <field name="l10n_ar_id_number" placeholder="Number" class="oe_inline"/>
                 </div>
             </field>
         </field>
