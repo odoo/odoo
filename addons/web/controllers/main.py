@@ -1623,7 +1623,7 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, force_checksum=0):
         """Contoller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -1637,7 +1637,7 @@ class ReportController(http.Controller):
         at the bottom of the output image
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
+            barcode = request.env['ir.actions.report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable, force_checksum=force_checksum)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
