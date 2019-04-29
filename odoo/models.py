@@ -3281,14 +3281,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             self._name, ', '.join(sorted(unknown_names)))
 
         with self.env.protecting(protected_fields, self):
-            # write stored fields with (low-level) method _write
-            if store_vals or inverse_vals or inherited_vals:
-                # if log_access is enabled, this updates 'write_date' and
-                # 'write_uid' and check access rules, even when old_vals is
-                # empty
-                self._write(store_vals)
+            # update references to parents
+            ref_store_vals = {k: store_vals[k] for k in self._inherits.values() if k in store_vals}
+            if ref_store_vals:
+                self._write(ref_store_vals)
 
-            # update parent records (after possibly updating parent fields)
+            # update parent records
             cr = self.env.cr
             for model_name, parent_vals in inherited_vals.items():
                 parent_name = self._inherits[model_name]
@@ -3300,6 +3298,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     parent_ids.update(row[0] for row in cr.fetchall())
 
                 self.env[model_name].browse(parent_ids).write(parent_vals)
+
+            # write stored fields with (low-level) method _write
+            if store_vals or inverse_vals or inherited_vals:
+                # if log_access is enabled, this updates 'write_date' and
+                # 'write_uid' and check access rules, even when old_vals is
+                # empty
+                self._write(store_vals)
 
             if inverse_vals:
                 self.check_field_access_rights('write', list(inverse_vals))
