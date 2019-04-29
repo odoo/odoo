@@ -3,6 +3,7 @@ odoo.define('web.search_view_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 var createActionManager = testUtils.createActionManager;
 var patchDate = testUtils.patchDate;
 var createView = testUtils.createView;
@@ -1007,7 +1008,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1031,6 +1032,13 @@ QUnit.module('Search View', {
                 'partner,false,search': '<search><field name="date_field"/></search>',
             },
             res_id: 1,
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.strictEqual(data.filter.name, 'Fire on the bayou');
+                    assert.strictEqual(data.filter.is_default, true);
+                },
+            },
         });
 
         form.$('.o_input').click();
@@ -1061,8 +1069,20 @@ QUnit.module('Search View', {
             $input.click();
             $input.click();
         });
-
         assert.ok($filterDropDown.is(':visible'));
+
+        // Favorites Menu
+        testUtilsDom.click($modal.find('.o_search_options button:contains(Favorites)'));
+        testUtilsDom.click($modal.find('.o_favorites_menu a:contains(Save current search)'));
+        $modal.find('.o_search_options .dropdown-menu').one('click', function (ev) {
+            // This handler is on the webClient
+            // But since the test suite doesn't have one
+            // We manually set it here
+            ev.stopPropagation();
+        });
+        $modal.find('.o_save_name:first input').val('Fire on the bayou');
+        testUtilsDom.click($modal.find('.o_save_name label:contains(Use by default)'));
+        testUtilsDom.click($modal.find('.o_save_name button:contains(Save)'));
 
         form.destroy();
     });
