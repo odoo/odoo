@@ -80,6 +80,7 @@ class One2ManyChild(models.Model):
 class One2ManyMultiple(models.Model):
     _name = 'export.one2many.multiple'
     _description = 'Export One To Many Multiple'
+    _rec_name = 'parent_id'
 
     parent_id = fields.Many2one('export.one2many.recursive')
     const = fields.Integer(default=36)
@@ -145,6 +146,7 @@ class SelectionWithDefault(models.Model):
 class RecO2M(models.Model):
     _name = 'export.one2many.recursive'
     _description = 'Export One To Many Recursive'
+    _rec_name = 'value'
 
     value = fields.Integer()
     child = fields.One2many('export.one2many.multiple', 'parent_id')
