@@ -67,9 +67,28 @@
 }
 
 @include media-breakpoint-down(sm) {
-    .o_chatter .o_chatter_topbar > .o_topbar_right_area {
-        .o_chatter_button_attachment {
-            margin-right: initial;
+    .o_chatter .o_chatter_topbar {
+        flex-wrap: wrap;
+        height: unset;
+        > .btn {
+            flex: 1;
+        }
+        > .o_topbar_right_area {
+            display: flex;
+            order: -1;
+            width: 100%;
+            .o_followers {
+                flex: 2;
+                text-align: left;
+                .o_followers_actions {
+                    float: unset;
+                    display: flex;
+                }
+            }
+            .o_chatter_button_attachment {
+                flex: 1;
+                text-align: right;
+            }
         }
     }
 }
