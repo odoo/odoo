@@ -789,8 +789,6 @@ class Post(models.Model):
                     'views_count':1,
                     'view_date':datetime.today().date(),
                     })
-
-        # self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
     @api.multi
@@ -991,43 +989,33 @@ class PostViews(models.Model):
             rec.view_date_day = rec.view_date.day
 
     @api.model
-    def _cron_agregate_views(self):
+    def _cron_aggregate_views(self):
         """
-            Cron to agregate all views of all days from a month.
+            Cron to aggregate all views of all days from a month.
         """
-        first_day_prev_year = datetime.today().replace(year=datetime.today().year-1)
-        first_day_prev_month = datetime.today().replace(month=datetime.today().month-1)
 
-        if(datetime.today().month == 1):
-            query = """
-                INSERT INTO forum_post_view (views_count, post_id, view_date)
-                SELECT
-                    sum(views_count),
-                    post_id,
-                    date_trunc('year', view_date) AS date_year
-                FROM forum_post_view
-                WHERE view_date >= '%s'
-                GROUP BY post_id, date_year
-                RETURNING id;
-            """ % (first_day_prev_year.date())
+        interval = 'year' if datetime.today().month == 1 else 'month'
+        first_day = datetime.today().replace(**{
+            interval: datetime.today().__getattribute__(interval)-1,
+        })
 
-        else:
-            query = """
-                INSERT INTO forum_post_view (views_count, post_id, view_date)
-                SELECT
-                    sum(views_count),
-                    post_id,
-                    date_trunc('month', view_date) AS date_month
-                FROM forum_post_view
-                WHERE view_date >= '%s'
-                GROUP BY post_id, date_month
-                RETURNING id;
-            """ % (first_day_prev_month.date())
+        query = """
+            INSERT INTO forum_post_view (views_count, post_id, view_date)
+            SELECT
+                sum(views_count),
+                post_id,
+                date_trunc(%s, view_date) AS date_month
+            FROM forum_post_view
+            WHERE view_date >= '%s'
+            GROUP BY post_id, date_month
+            RETURNING id;
+        """
+        params = (
+            interval,
+            first_day,
+        )
 
-        self._cr.execute(query)
+        self._cr.execute(query, params)
         created_ids = [resp[0] for resp in self._cr.fetchall()]
 
-        if(datetime.today().month == 1):
-            self.env['forum.post.view'].search([('view_date', '>=', first_day_prev_year.date()), ('id', 'not in', created_ids)]).unlink()
-        else:
-            self.env['forum.post.view'].search([('view_date', '>=', first_day_prev_month.date()), ('id', 'not in', created_ids)]).unlink()
+        self.env['forum.post.view'].search([('view_date', '>=', first_day.date()), ('id', 'not in', created_ids)]).unlink()
