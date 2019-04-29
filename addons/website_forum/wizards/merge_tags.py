@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, fields
 from nltk.stem import WordNetLemmatizer
+from odoo import models, api, fields
 
 class MergeTagsWizard(models.TransientModel):
 
@@ -8,27 +8,27 @@ class MergeTagsWizard(models.TransientModel):
     _description = 'Merge Tag Wizard'
 
     def generate_line_ids(self):
+        self.ensure_one()
         tag_ids = self.env['forum.tag'].search([])
 
-        for record in self:
-            tags_by_lemma = {}
-            for tag in tag_ids:
-                name = tag.name
-                lemma = WordNetLemmatizer().lemmatize(name, pos="v")
-                if lemma not in tags_by_lemma:
-                    tags_by_lemma[lemma] = tag
-                else:
-                    tags_by_lemma[lemma] += tag
+        tags_by_lemma = {}
+        for tag in tag_ids:
+            name = tag.name
+            lemma = WordNetLemmatizer().lemmatize(name, pos="v")
+            if lemma not in tags_by_lemma:
+                tags_by_lemma[lemma] = tag
+            else:
+                tags_by_lemma[lemma] += tag
 
-            lines = self.env['forum.tag.merge_tags_line'].search([])
-            lines.unlink()
+        lines = self.env['forum.tag.merge_tags_line'].search([])
+        lines.unlink()
 
-            for lemma, tags in tags_by_lemma.items():
-                if len(tags) > 1:
-                    lines |= self.env['forum.tag.merge_tags_line'].create({
-                            'name':lemma,
-                            'tag_ids':[(6, 0, tags.ids)],
-                        })
+        for lemma, tags in tags_by_lemma.items():
+            if len(tags) > 1:    #if there is 2 ord more tags for the same lemma
+                self.env['forum.tag.merge_tags_line'].create({
+                    'name':lemma,
+                    'tag_ids':[(6, 0, tags.ids)],
+                })
 
         return {
             'type': 'ir.actions.act_window',
@@ -36,7 +36,6 @@ class MergeTagsWizard(models.TransientModel):
             'view_mode': 'tree',
             'view_id': self.env.ref('website_forum.merge_tags_lines_view').id,
             'res_model': 'forum.tag.merge_tags_line',
-            'type': 'ir.actions.act_window',
             'target': 'current',
         }
 
@@ -57,7 +56,6 @@ class MergeTagsLine(models.TransientModel):
     tag_ids = fields.Many2many('forum.tag')
     master_id = fields.Many2one('forum.tag', compute='_default_get_master')
 
-
     @api.multi
     def merge_ligne(self):
         self.ensure_one()
@@ -69,13 +67,6 @@ class MergeTagsLine(models.TransientModel):
                 tag.unlink()
         posts_to_write.write({'tag_ids': [(4, self.master_id.id)]})
         self.unlink()
-
-
-# class MergeAllSelectedTagsWizard(models.TransientModel):
-#     _name = 'forum.tag.merge_all_tags'
-#     _description = 'Merge All Selected Tags Wizard'
-
-
 
 
 class MergeTagsManuallyWizard(models.TransientModel):
