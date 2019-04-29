@@ -17,7 +17,7 @@ class ProductReplenish(models.TransientModel):
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id', readonly=True, required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
     quantity = fields.Float('Quantity', default=1, required=True)
-    date_planned = fields.Datetime('Scheduled Date', help="Date at which the replenishment should take place.")
+    date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True)
     route_ids = fields.Many2many('stock.location.route', string='Preferred Routes',
         help="Apply specific route(s) for the replenishment instead of product's default routes.")
@@ -75,7 +75,7 @@ class ProductReplenish(models.TransientModel):
         values = {
             'warehouse_id': self.warehouse_id,
             'route_ids': self.route_ids,
-            'date_planned': self.date_planned or fields.Datetime.now(),
+            'date_planned': self.date_planned,
             'group_id': replenishment,
         }
         return values
