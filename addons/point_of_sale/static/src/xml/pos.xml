@@ -958,7 +958,7 @@
             <line t-foreach='taxes' t-as='taxe'>
                 <left><t t-esc='taxe.name' /></left>
                 <right>
-                    <t t-esc='widget.format_currency_no_symbol(taxe.total)'/>
+                    <t t-esc='widget.format_currency_no_symbol(taxe.tax_amount)'/>
                 </right>
             </line>
 
