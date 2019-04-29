@@ -1116,7 +1116,7 @@ class SaleOrderLine(models.Model):
         result = super(SaleOrderLine, self).write(values)
         return result
 
-    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False, readonly=True)
+    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
 
