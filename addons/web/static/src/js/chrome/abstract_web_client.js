@@ -31,7 +31,9 @@ var qweb = core.qweb;
 
 var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMixin, {
     dependencies: ['notification'],
-    events: _.extend(KeyboardNavigationMixin.events, {}),
+    events: _.extend({}, KeyboardNavigationMixin.events, {
+        'click .o_search_options .dropdown-menu': '_onClickDropDownMenu',
+    }),
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -331,6 +333,16 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * When clicking inside a dropdown to modify search options
+     * prevents the bootstrap dropdown to close on itself
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickDropDownMenu: function (ev) {
+        ev.stopPropagation();
+    },
     /**
      * Whenever the connection is lost, we need to notify the user.
      *
