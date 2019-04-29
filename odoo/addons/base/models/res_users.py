@@ -257,6 +257,8 @@ class Users(models.Model):
                                     compute='_compute_accesses_count')
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
                                  compute='_compute_accesses_count')
+    menus_count = fields.Integer('# Menus', help='Number of menus that apply to the current user',
+                                 compute='_compute_accesses_count')
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count')
 
@@ -365,6 +367,7 @@ class Users(models.Model):
             groups = user.groups_id
             user.accesses_count = len(groups.model_access)
             user.rules_count = len(groups.rule_groups)
+            user.menus_count = len(groups.menu_access)
             user.groups_count = len(groups)
 
     @api.onchange('login')
@@ -758,6 +761,19 @@ class Users(models.Model):
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
             'domain': [('id', 'in', self.groups_id.rule_groups.ids)],
+            'target': 'current',
+        }
+
+    def action_show_menus(self):
+        self.ensure_one()
+        return {
+            'name': _('Menus'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.rule',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id', 'in', self.groups_id.menu_access.ids)],
             'target': 'current',
         }
 
