@@ -119,9 +119,9 @@ class IrSequence(models.Model):
     code = fields.Char(string='Sequence Code')
     implementation = fields.Selection([('standard', 'Standard'), ('no_gap', 'No gap')],
                                       string='Implementation', required=True, default='standard',
-                                      help="Two sequence object implementations are offered: Standard "
-                                           "and 'No gap'. The later is slower than the former but forbids any "
-                                           "gap in the sequence (while they are possible in the former).")
+                                      help="While assigning a sequence number to a record, the 'no gap' sequence implementation ensures that each previous sequence number has been assigned already. "
+                                      "While this sequence implementation will not skip any sequence number upon assignation, there can still be gaps in the sequence if records are deleted. "
+                                      "The 'no gap' implementation is slower than the standard one.")
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
     suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
