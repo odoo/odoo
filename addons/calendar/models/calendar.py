@@ -1107,7 +1107,8 @@ class Meeting(models.Model):
             order_fields = [field.split()[0] for field in order.split(',')]
         else:
             # fallback on self._order defined on the model
-            order_fields = [field.split()[0] for field in self._order.split(',')]
+            order_fields = [field.split()[0] for field in
+                            self._order.split(',')]
 
         if 'id' not in order_fields:
             order_fields.append('id')
@@ -1130,27 +1131,43 @@ class Meeting(models.Model):
                 ok = True
                 r_date = r_start_date  # default for empty domain
                 for arg in domain:
-                    if str(arg[0]) in ('start', 'stop', 'final_date'):
-                        if str(arg[0]) == 'start':
+                    if str(arg[0]) in (
+                    'start', 'stop', 'final_date', 'start_datetime',
+                    'start_date', 'stop_date', 'stop_datetime'):
+                        if str(arg[0]) in (
+                        'start', 'start_datetime', 'start_date'):
                             r_date = r_start_date
                         else:
                             r_date = r_stop_date
-                        if arg[2] and len(arg[2]) > len(r_date.strftime(DEFAULT_SERVER_DATE_FORMAT)):
+                        if arg[2] and len(arg[2]) > len(
+                                r_date.strftime(DEFAULT_SERVER_DATE_FORMAT)):
                             dformat = DEFAULT_SERVER_DATETIME_FORMAT
                         else:
                             dformat = DEFAULT_SERVER_DATE_FORMAT
+
+                        if isinstance(arg[2], str) and arg[2].find('T') != -1:
+                            arg[2] = arg[2].replace('T', ' ').replace(
+                                '.000Z', '')
+
+                        if arg[0] in ('start_date', 'stop_date'):
+                            date1 = r_date.strftime(dformat).split(' ')[0]
+                            date2 = arg[2].split(' ')[0]
+                        else:
+                            date1 = r_date.strftime(dformat)
+                            date2 = arg[2]
+
                         if (arg[1] == '='):
-                            ok = r_date.strftime(dformat) == arg[2]
+                            ok = date1 == date2
                         if (arg[1] == '>'):
-                            ok = r_date.strftime(dformat) > arg[2]
+                            ok = date1 > date2
                         if (arg[1] == '<'):
-                            ok = r_date.strftime(dformat) < arg[2]
+                            ok = date1 < date2
                         if (arg[1] == '>='):
-                            ok = r_date.strftime(dformat) >= arg[2]
+                            ok = date1 >= date2
                         if (arg[1] == '<='):
-                            ok = r_date.strftime(dformat) <= arg[2]
+                            ok = date1 <= date2
                         if (arg[1] == '!='):
-                            ok = r_date.strftime(dformat) != arg[2]
+                            ok = date1 != date2
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
@@ -1173,13 +1190,15 @@ class Meeting(models.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                result_data.append(meeting.get_search_fields(order_fields, r_date=r_start_date))
+                result_data.append(meeting.get_search_fields(order_fields,
+                                                             r_date=r_start_date))
 
         # seq of (field, should_reverse)
         sort_spec = list(tools.unique(
             (sort_remap(key.split()[0]), key.lower().endswith(' desc'))
             for key in (order or self._order).split(',')
         ))
+
         def key(record):
             # we need to deal with undefined fields, as sorted requires an homogeneous iterable
             def boolean_product(x):
@@ -1187,9 +1206,11 @@ class Meeting(models.Model):
                 if isinstance(x, bool):
                     return (x, x)
                 return (True, x)
+
             # first extract the values for each key column (ids need special treatment)
             vals_spec = (
-                (any_id2key(record[name]) if name == 'id' else boolean_product(record[name]), desc)
+                (any_id2key(record[name]) if name == 'id' else boolean_product(
+                    record[name]), desc)
                 for name, desc in sort_spec
             )
             # then Reverse if the value matches a "desc" column
@@ -1197,6 +1218,7 @@ class Meeting(models.Model):
                 (tools.Reverse(v) if desc else v)
                 for v, desc in vals_spec
             ]
+
         return [r['id'] for r in sorted(result_data, key=key)]
 
     @api.multi
@@ -1705,40 +1727,66 @@ class Meeting(models.Model):
     def search(self, args, offset=0, limit=0, order=None, count=False):
         if self._context.get('mymeetings'):
             args += [('partner_ids', 'in', self.env.user.partner_id.ids)]
-
         new_args = []
         for arg in args:
             new_arg = arg
-            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] == ">=":
-                if self._context.get('virtual_id', True):
-                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
-            elif arg[0] == "id":
+            if arg[0] == "id":
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
 
         if not self._context.get('virtual_id', True):
-            return super(Meeting, self).search(new_args, offset=offset, limit=limit, order=order, count=count)
+            return super(Meeting, self).search(new_args, offset=offset,
+                                               limit=limit, order=order,
+                                               count=count)
 
         if any(arg[0] == 'start' for arg in args) and \
-           not any(arg[0] in ('stop', 'final_date') for arg in args):
+                not any(arg[0] in ('stop', 'final_date') for arg in args):
             # domain with a start filter but with no stop clause should be extended
             # e.g. start=2017-01-01, count=5 => virtual occurences must be included in ('start', '>', '2017-01-02')
             start_args = new_args
             new_args = []
             for arg in start_args:
                 new_arg = arg
-                if arg[0] in ('start_date', 'start_datetime', 'start',):
-                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
                 new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
-        events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
-        events = self.browse(events.get_recurrent_ids(args, order=order))
+        def args_without_dates(args):
+            my_args = []
+            for argument in args:
+                if argument[0] not in (
+                        'stop_date',
+                        'stop_datetime',
+                        'stop',
+                        'start',
+                        'start_datetime',
+                        'start_date',
+                        'final_date'):
+                    my_args += [argument]
+            return my_args
+
+        args_no_dates = args_without_dates(args)
+        args_no_dates_and_rec = args_no_dates + [('recurrency', '=', 1)]
+        events_rec = super(Meeting, self).search(
+            args_no_dates_and_rec, offset=0, limit=0, order=order, count=False)
+        all_events_in_domain = super(Meeting, self).search(args, offset=0, limit=0,
+                                                     order=order, count=False)
+
+        events_rec_ids = events_rec.get_recurrent_ids(args, order=order)
+        non_recurrent_events = all_events_in_domain.get_non_recurrent_events()
+        events = self.browse(events_rec_ids + non_recurrent_events)
         if count:
             return len(events)
         elif limit:
             return events[offset: offset + limit]
         return events
+
+    @api.multi
+    def get_non_recurrent_events(self):
+        event_list = []
+        for rec in self:
+            if not rec.recurrency:
+                event_list.append(rec.id)
+        return event_list
 
     @api.multi
     def copy(self, default=None):
@@ -1776,3 +1824,4 @@ class Meeting(models.Model):
             if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
                 rule_str += ';COUNT=100'
         return rule_str
+

@@ -74,6 +74,14 @@ class TestRecurrentEvent(common.TransactionCase):
         ])
         self.assertEqual(meetings_count, 12, 'Recurrent weekly meetings are not created !')
 
+        # Search only for the virtual recurrent monthly meetings.
+        meetings_count2 = self.CalendarEvent.with_context(
+            {'virtual_id': True}).search_count([
+            ('start', '>=', '2011-04-02'), ('stop', '<=', '2012-05-13')
+        ])
+        self.assertEqual(meetings_count2, 11,
+                         'Recurrent weekly meetings are not found !')
+
         # I change name of my monthly Sprint Review meeting.
         idval = '%d-%s' % (self.calendar_event_sprint_review.id, '20110901130100')
         self.CalendarEvent.browse(idval).write({'name': 'Sprint Review for google modules'})
@@ -156,6 +164,15 @@ class TestRecurrentEvent(common.TransactionCase):
         ])
         self.assertEqual(meetings_count, 1, "Last recurrent weekly meetings are not found without stop filter !")
 
+        # Search for all recurrent weekly meetings that take place at a given date.
+        meetings_count = self.CalendarEvent.with_context(
+            {'virtual_id': True}).search_count([
+            ('start', '>=', '2017-01-24'), ('stop', '<=', '2017-01-26'),
+            ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 3,
+                         'Recurrent weekly meetings are not found using date filter !')
+
     def test_recurrent_meeting5(self):
         # I create a recurrent event and I check if the virtual_id are correct
         self.CalendarEvent.create({
@@ -178,3 +195,4 @@ class TestRecurrentEvent(common.TransactionCase):
 
         # virtual_dates are used by the calendar view and I check if the stop date for the first virtual event is correct.
         self.assertEqual(virutal_dates[2], '2012-04-13 12:00:00', "The virtual event doesn't have the correct stop date !")
+
