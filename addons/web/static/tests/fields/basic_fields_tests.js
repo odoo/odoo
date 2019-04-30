@@ -1870,7 +1870,7 @@ QUnit.module('basic_fields', {
 
         testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
 
-        assert.verifySteps([]); // We shoudln't have passed through steps
+        assert.verifySteps([]); // We shouldn't have passed through steps
 
         form.destroy();
         session.get_file = oldGetFile;
