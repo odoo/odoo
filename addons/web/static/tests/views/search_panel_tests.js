@@ -1556,6 +1556,36 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('tests conservation of category record order', async function (assert) {
+        assert.expect(1);
+
+        this.data.company.records.push({id: 56, name: 'highID', category_id: 6});
+        this.data.company.records.push({id: 2, name: 'lowID', category_id: 6});
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field name="company_id"/>' +
+                        '<field select="multi" name="category_id"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+        });
+
+        var $firstSection = kanban.$('.o_search_panel_section:first');
+        assert.strictEqual($firstSection.find('.o_search_panel_category_value').text().replace(/\s/g, ''),
+            'AllasustekagrolaithighIDlowID');
+        kanban.destroy();
+    });
 });
 
 });
