@@ -336,11 +336,13 @@ FormRenderer.include({
 
         // render each view
         _.each(this.actionsDescr, function (action) {
+            var eval_context = self._getActionEvalContext(action);
+            var domain =  pyUtils.eval('domain', action.domain || '[]', eval_context);
             self.defs.push(self._createController({
                 $node: $html.find('.oe_action[data-id=' + action.id + '] .oe_content'),
                 actionID: _.str.toNumber(action.name),
-                context: new Context(action.context),
-                domain: Domain.prototype.stringToArray(action.domain, {}),
+                context: eval_context,
+                domain: domain,
                 viewType: action.view_mode,
             }));
         });
@@ -353,6 +355,16 @@ FormRenderer.include({
         });
 
         return $html;
+    },
+    /**
+     * @private
+     * @param {Object} action
+     * @returns {Object}
+     */
+    _getActionEvalContext: function (action) {
+        var rawContext = new Context(action.context, {lang: session.user_context.lang});
+        var context = pyUtils.eval('context', rawContext);
+        return _.extend(context, session.user_context);
     },
 
     //--------------------------------------------------------------------------
