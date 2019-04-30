@@ -66,7 +66,7 @@ var CourseJoinWidget = Widget.extend({
 });
 
 sAnimations.registry.websiteSlidesCourseJoin = sAnimations.Class.extend({
-    selector: '.o_wslides_wrap',
+    selector: '.o_wslides_js_course_join_link',
 
     /**
      * @override
