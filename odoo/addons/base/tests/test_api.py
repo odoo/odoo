@@ -311,7 +311,7 @@ class TestAPI(common.TransactionCase):
                 partner.state_id.name
                 break
         state_ids_with_field = [state.id
-                                  for state in partners.mapped('state_id')
+                                  for state in partners.state_id
                                   if 'name' in state._cache]
         self.assertItemsEqual(state_ids_with_field, state_ids)
 
@@ -491,11 +491,13 @@ class TestAPI(common.TransactionCase):
         """ Check map on recordsets. """
         ps = self.env['res.partner'].search([])
         parents = ps.browse()
-        for p in ps: parents |= p.parent_id
+        for p in ps:
+            parents |= p.parent_id
 
         # map a single field
         self.assertEqual(ps.mapped(lambda p: p.parent_id), parents)
         self.assertEqual(ps.mapped('parent_id'), parents)
+        self.assertEqual(ps.parent_id, parents)
 
         # map a sequence of fields
         self.assertEqual(
@@ -504,6 +506,10 @@ class TestAPI(common.TransactionCase):
         )
         self.assertEqual(
             ps.mapped('parent_id.name'),
+            [p.name for p in parents]
+        )
+        self.assertEqual(
+            ps.parent_id.mapped('name'),
             [p.name for p in parents]
         )
 

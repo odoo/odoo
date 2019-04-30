@@ -56,5 +56,5 @@ class BaseModuleUninstall(models.TransientModel):
 
     @api.multi
     def action_uninstall(self):
-        modules = self.mapped('module_id')
+        modules = self.module_id
         return modules.button_immediate_uninstall()
