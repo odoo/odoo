@@ -219,7 +219,7 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
