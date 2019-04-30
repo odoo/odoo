@@ -1130,8 +1130,8 @@ class Meeting(models.Model):
                 ok = True
                 r_date = r_start_date  # default for empty domain
                 for arg in domain:
-                    if str(arg[0]) in ('start', 'stop', 'final_date'):
-                        if str(arg[0]) == 'start':
+                    if str(arg[0]) in ('start', 'stop', 'final_date', 'start_datetime', 'start_date', 'stop_date', 'stop_datetime'):
+                        if str(arg[0]) in ('start', 'start_datetime', 'start_date'):
                             r_date = r_start_date
                         else:
                             r_date = r_stop_date
@@ -1139,18 +1139,30 @@ class Meeting(models.Model):
                             dformat = DEFAULT_SERVER_DATETIME_FORMAT
                         else:
                             dformat = DEFAULT_SERVER_DATE_FORMAT
+
+                        if isinstance(arg[2], str) and arg[2].find('T') != -1:
+                            arg[2] = arg[2].replace('T', ' ').replace(
+                                '.000Z', '')
+
+                        if arg[0] in ('start_date', 'stop_date'):
+                            date1 = r_date.strftime(dformat).split(' ')[0]
+                            date2 = arg[2].split(' ')[0]
+                        else:
+                            date1 = r_date.strftime(dformat)
+                            date2 = arg[2]
+
                         if (arg[1] == '='):
-                            ok = r_date.strftime(dformat) == arg[2]
+                            ok = date1 == date2
                         if (arg[1] == '>'):
-                            ok = r_date.strftime(dformat) > arg[2]
+                            ok = date1 > date2
                         if (arg[1] == '<'):
-                            ok = r_date.strftime(dformat) < arg[2]
+                            ok = date1 < date2
                         if (arg[1] == '>='):
-                            ok = r_date.strftime(dformat) >= arg[2]
+                            ok = date1 >= date2
                         if (arg[1] == '<='):
-                            ok = r_date.strftime(dformat) <= arg[2]
+                            ok = date1 <= date2
                         if (arg[1] == '!='):
-                            ok = r_date.strftime(dformat) != arg[2]
+                            ok = date1 != date2
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
@@ -1709,10 +1721,7 @@ class Meeting(models.Model):
         new_args = []
         for arg in args:
             new_arg = arg
-            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] == ">=":
-                if self._context.get('virtual_id', True):
-                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
-            elif arg[0] == "id":
+            if arg[0] == "id":
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
 
@@ -1727,18 +1736,46 @@ class Meeting(models.Model):
             new_args = []
             for arg in start_args:
                 new_arg = arg
-                if arg[0] in ('start_date', 'start_datetime', 'start',):
-                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
                 new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
-        events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
-        events = self.browse(events.get_recurrent_ids(args, order=order))
+        def args_without_dates(args):
+            my_args = []
+            for argument in args:
+                if argument[0] not in (
+                        'stop_date',
+                        'stop_datetime',
+                        'stop',
+                        'start',
+                        'start_datetime',
+                        'start_date',
+                        'final_date'):
+                    my_args += [argument]
+            return my_args
+
+        args_no_dates = args_without_dates(args)
+        args_no_dates_and_rec = args_no_dates + [('recurrency', '=', 1)]
+        events_rec = super(Meeting, self).search(
+            args_no_dates_and_rec, offset=0, limit=0, order=order, count=False)
+        all_events_in_domain = super(Meeting, self).search(args, offset=0, limit=0,
+                                                     order=order, count=False)
+
+        events_rec_ids = events_rec.get_recurrent_ids(args, order=order)
+        non_recurrent_events = all_events_in_domain.get_non_recurrent_events()
+        events = self.browse(events_rec_ids + non_recurrent_events)
         if count:
             return len(events)
         elif limit:
             return events[offset: offset + limit]
         return events
+
+    @api.multi
+    def get_non_recurrent_events(self):
+        event_list = []
+        for rec in self:
+            if not rec.recurrency:
+                event_list.append(rec.id)
+        return event_list
 
     @api.multi
     def copy(self, default=None):

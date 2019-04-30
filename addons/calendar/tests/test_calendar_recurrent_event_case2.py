@@ -74,6 +74,14 @@ class TestRecurrentEvent(common.TransactionCase):
         ])
         self.assertEqual(meetings_count, 12, 'Recurrent weekly meetings are not created !')
 
+        # Search only for the virtual recurrent monthly meetings.
+        meetings_count2 = self.CalendarEvent.with_context(
+            {'virtual_id': True}).search_count([
+            ('start', '>=', '2011-04-02'), ('stop', '<=', '2012-05-13')
+        ])
+        self.assertEqual(meetings_count2, 11,
+                         'Recurrent weekly meetings are not found !')
+
         # I change name of my monthly Sprint Review meeting.
         idval = '%d-%s' % (self.calendar_event_sprint_review.id, '20110901130100')
         self.CalendarEvent.browse(idval).write({'name': 'Sprint Review for google modules'})
@@ -150,11 +158,27 @@ class TestRecurrentEvent(common.TransactionCase):
         ])
         self.assertEqual(meetings_count, 0, 'Too late recurrent meetings are found using time filter !')
 
+        # Search for a recurrent weekly meetings not completely contained inside a period.
+        # [('start', '<=', {end of period}), ('stop', '>=', {start of period})]
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '<=', '2017-01-26 11:55:00'), ('stop', '>=', '2017-01-24 11:49:00')
+        ])
+        self.assertEqual(meetings_count, 3, 'Too late recurrent meetings are found using time filter !')
+
         # I search using a start filter but no stop
         meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
             ('start', '>=', '2017-06-30 08:00:00'), ('name', '=', 'Review code with programmer')
         ])
         self.assertEqual(meetings_count, 1, "Last recurrent weekly meetings are not found without stop filter !")
+
+        # Search for all recurrent weekly meetings that take place at a given date.
+        meetings_count = self.CalendarEvent.with_context(
+            {'virtual_id': True}).search_count([
+            ('start', '>=', '2017-01-24'), ('stop', '<=', '2017-01-26'),
+            ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 3,
+                         'Recurrent weekly meetings are not found using date filter !')
 
     def test_recurrent_meeting5(self):
         # I create a recurrent event and I check if the virtual_id are correct
