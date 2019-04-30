@@ -8,6 +8,8 @@ from odoo import api, fields, models, _
 class RegisterExpensePayment(models.TransientModel):
     _inherit = "account.payment.register"
 
+    journal_id = fields.Many2one(domain=[('type', 'in', ('bank', 'cash', 'purchase'))])
+    # Expense sheet journal_ids are of type purchase.
     expense_sheet_id = fields.Many2one('hr.expense.sheet')
 
     @api.multi

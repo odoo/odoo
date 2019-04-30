@@ -456,7 +456,7 @@
                     <button name="%(hr_expense.account_register_payments_wizard_action)d" type="action"
                       string="Register Payment" class="oe_highlight o_expense_sheet_pay"
                       attrs="{'invisible': [('state', '!=', 'post')]}"
-                      context="{'default_amount': total_amount, 'partner_id': address_id}"
+                      context="{'default_journal_id': journal_id}"
                       groups="account.group_account_manager"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
@@ -519,7 +519,7 @@
                         <page name="other_info" string="Other Info">
                             <group>
                                 <group>
-                                    <field name="journal_id" domain="[('type', '=', 'purchase')]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
+                                    <field name="journal_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
                                     <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
                                     <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
                                 </group>
