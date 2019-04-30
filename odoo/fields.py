@@ -989,7 +989,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        if record:
+        if record._ids:
             # only a single record may be accessed
             record.ensure_one()
             try:
@@ -2033,6 +2033,15 @@ class _Relational(Field):
         'context': {},                  # context for searching values
     }
 
+    def __get__(self, records, owner):
+        # base case: do the regular access
+        if records is None or len(records._ids) <= 1:
+            return super().__get__(records, owner)
+        # multirecord case: return the union of the values of 'self' on records
+        get = super().__get__
+        comodel = records.env[self.comodel_name]
+        return comodel.union(*[get(record, owner) for record in records])
+
     def _setup_regular_base(self, model):
         super(_Relational, self)._setup_regular_base(model)
         if self.comodel_name not in model.pool:
@@ -2356,7 +2365,7 @@ class _RelationalMulti(_Relational):
         super(_RelationalMulti, self)._compute_related(records)
         if self.related_sudo:
             # determine which records in the relation are actually accessible
-            target = records.mapped(self.name)
+            target = records[self.name]
             target_ids = set(target.search([('id', 'in', target.ids)]).ids)
             accessible = lambda target: target.id in target_ids
             # filter values to keep the accessible records only
