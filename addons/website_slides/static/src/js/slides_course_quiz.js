@@ -219,6 +219,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param OdooEvent ev
          */
         _onAnswerClick: function (ev) {
+            ev.preventDefault();
             if (! this.slide.readonly && ! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }
