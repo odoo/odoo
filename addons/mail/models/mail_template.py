@@ -512,7 +512,7 @@ class MailTemplate(models.Model):
         :returns: id of the mail.mail that was created """
         self.ensure_one()
         Mail = self.env['mail.mail']
-        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove dfeault_type from context
+        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id)
