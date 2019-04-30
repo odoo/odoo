@@ -7,6 +7,7 @@ odoo.define('web.KanbanRecord', function (require) {
  */
 var config = require('web.config');
 var core = require('web.core');
+var Dialog = require("web.Dialog");
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
@@ -551,6 +552,7 @@ var KanbanRecord = Widget.extend({
     _onKanbanActionClicked: function (event) {
         event.preventDefault();
 
+        var _this = this;
         var $action = $(event.currentTarget);
         var type = $action.data('type') || 'button';
 
@@ -566,13 +568,24 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'action':
             case 'object':
-                this.trigger_up('button_clicked', {
-                    attrs: $action.data(),
-                    record: this.state,
-                });
+                var confirm = $(event.currentTarget).attr("confirm");
+                if (confirm) {
+                    Dialog.confirm(this, confirm, {
+                        confirm_callback: object_trigger_up
+                    });
+                }
+                else {
+                    object_trigger_up();
+                }
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
+        }
+        function object_trigger_up () {
+            _this.trigger_up('button_clicked', {
+                attrs: $action.data(),
+                record: _this.state,
+            });
         }
     },
     /**
