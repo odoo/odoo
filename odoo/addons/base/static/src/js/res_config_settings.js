@@ -339,6 +339,10 @@ var BaseSettingRenderer = FormRenderer.extend({
 });
 
 var BaseSettingController = FormController.extend({
+    custom_events: _.extend({}, FormController.prototype.custom_events, {
+        'button_clicked': '_onButtonClicked',
+    }),
+
     init: function () {
         this._super.apply(this, arguments);
         this.disableAutofocus = true;
@@ -353,27 +357,26 @@ var BaseSettingController = FormController.extend({
     willRestore: function () {
         this.mode = 'edit';
     },
-    /**
-     * Save settings before open actions in settings, so first we save settings
-     * and then peform action so we have to override default behaviour
-     *
-     * @override
-     */
-    _callButtonAction: function (attrs, record) {
+    start: function () {
         var self = this;
-        var _super = this._super;
-        var args = arguments;
-        if (attrs.type === 'action') {
-            var saveAttrs = {
-                type: 'object',
-                args: '{ "reload": false }',
-                name: 'execute',
-            };
-            return _super.call(this, saveAttrs, record).then(function () {
-                return _super.apply(self, args)
-            });
+        return this._super.apply(this, arguments).then(function () {
+            var previousButtonClickedEventData = self.call('local_storage', 'getItem', 'buttonClickedEvent');
+            if (previousButtonClickedEventData) {
+                previousButtonClickedEventData['execute_action_force'] = true;
+                self.trigger_up('button_clicked', previousButtonClickedEventData);
+                self.call('local_storage', 'removeItem', 'buttonClickedEvent');
+            }
+        });
+    },
+    _onButtonClicked: function (ev) {
+        var self = this;
+        if (ev.data.attrs.name !== 'execute' && ev.data.attrs.name !== 'cancel'
+            && !ev.data.execute_action_force && this.$('button[name="execute"]').length) {
+            this.call('local_storage', 'setItem', 'buttonClickedEvent', ev.data);
+            this.$('button[name="execute"]').trigger('click');
+        } else {
+            this._super.apply(this, arguments);
         }
-        return _super.apply(this, args);
     },
 });
 
