@@ -77,6 +77,14 @@ class MrpBom(models.Model):
             else:
                 if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
                     raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+            for line in bom.bom_line_ids:
+                if line.operation_id and not (line.operation_id in bom.routing_id.operation_ids):
+                    raise ValidationError(_('Operation: "%(operation)s" for component: "%(product)s" does not belong in the operations specified in the routing: "%(routing)s".\n'
+                                            '(If routing: "%(routing)s" is different from what you are seeing in the form view, perhaps it has been modified by '
+                                            'one of your users or has been modified in different form that is opened.)') %
+                                             dict(operation=line.operation_id.display_name,
+                                                  product=line.product_id.display_name,
+                                                  routing=bom.routing_id.display_name))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
