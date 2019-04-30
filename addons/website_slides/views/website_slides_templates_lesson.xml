@@ -148,6 +148,9 @@
                             </i>
                         </div>
                         <div class="o_wslides_lesson_link_name">
+                            <t t-call="website_slides.slide_icon">
+                                <t t-set="slide" t-value="aside_slide"/>
+                            </t>
                             <span t-esc="aside_slide.name" class="mr-2"/>
                         </div>
                         <div class="ml-auto" t-if="aside_slide.question_ids">
