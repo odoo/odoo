@@ -29,6 +29,10 @@ The required steps are:
 * :ref:`obtaining the status of the database request <upgrade-api-status-method>`
 * :ref:`downloading the upgraded database dump <upgrade-api-download-method>`
 
+You can also:
+
+* :ref:`skip the testing session <upgrade-api-skip-test-method>`
+
 The methods
 ~~~~~~~~~~~
 
@@ -423,17 +427,23 @@ should be empty if everything went fine.
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
         curl -sS "${PROCESS_URL}?${URL_PARAMS}"
 
-.. _upgrade-api-status-method:
+.. _upgrade-api-skip-test-method:
 
-
-Asking to skip the tests 
-=========================
+Asking to skip the tests
+========================
 
 This action asks the Upgrade Platform to skip the tests for your request.
-If you don't want Odoo to test and validate the migration, you can bypass the testing stage and directly get the migrated dump.
+
+If you don't want Odoo to test and validate the upgrade, you can bypass the
+testing stage and directly get the upgraded dump.
+
+The ticket from the *Migration Requests* project should be in the *Testing*
+stage.
+A few minutes (10 at most) after calling the method, the database will be
+delivered.
 
 The ``skip_test`` method
-----------------------
+------------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/skip_test
 
@@ -637,12 +647,12 @@ The ``request`` key contains various useful information about your request:
 Downloading your database dump
 ==============================
 
-Beside downloading your migrated database using the URL provided by the
+Beside downloading your upgraded database using the URL provided by the
 :ref:`status method <upgrade-api-status-method>`, you can also use the SFTP
 protocol as described in the :ref:`request_sftp_access method
 <upgrade-api-request-sftp-access-method>`
 
-The diffence is that you'll only be able to download the migrated database. No
+The diffence is that you'll only be able to download the upgraded database. No
 uploading will be possible.
 
 Your database upgrade request should be in the ``done`` state.
