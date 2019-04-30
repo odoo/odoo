@@ -68,7 +68,11 @@ $o-wslides-fs-side-width: 300px;
 
         &.disabled {
             opacity: 0.5;
-            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        &.completed-disabled{
+            pointer-events: none;
         }
     }
 
