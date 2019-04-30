@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2019-04-26 17:53-0300\n"
+"PO-Revision-Date: 2019-04-26 18:02-0300\n"
 "Last-Translator: Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -346,7 +346,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span class=\"pull-left\">Lot/Serial Number</span>"
-msgstr ""
+msgstr "<span class=\"pull-left\">Lote/Número de série</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document model:ir.ui.view,arch_db:stock.report_picking
@@ -481,7 +481,7 @@ msgstr "<strong>Localização</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>Lote/Número de série</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -562,7 +562,7 @@ msgstr "<strong>Pedido (Origem)</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantidade pedida</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -6667,6 +6667,10 @@ msgid ""
 "                    trigger a draft purchase order, a manufacturing order or\n"
 "                    a new task."
 msgstr ""
+"Utilizar este assistente para gerar uma solicitação de suprimento para esta\n"
+"                    produto. De acordo com a configuração do produto, este pode\n"
+"                    acionar um projeto de pedido de compra, uma ordem de produção ou\n"
+"                    uma nova tarefa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -6701,7 +6705,7 @@ msgstr "Validado"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Contagem de variantes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
@@ -6846,7 +6850,7 @@ msgstr "Armazéns"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_warehouse_and_location_usage_level
 msgid "Warehouses and Locations usage level"
-msgstr ""
+msgstr "Nível de utilização de depósitos e localizações"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_warning_stock
@@ -6992,7 +6996,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:37
 #, python-format
 msgid "You are not allowed to create a lot for this picking type"
-msgstr ""
+msgstr "Não é permitido criar um lote para esse tipo de picking"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -7039,6 +7043,8 @@ msgid ""
 "You can either do it immediately or mark it as Todo for future processing. Use your scanner to validate the transferred "
 "quantity quicker."
 msgstr ""
+"É possível fazê-lo imediatamente ou marcá-lo como Todo para processamento futuro. Use o scanner para validar a quantidade "
+"transferida mais rapidamente."
 
 #. module: stock
 #: code:addons/stock/models/product.py:486
@@ -7083,13 +7089,13 @@ msgstr "Você não pode cancelar um movimento de ações que tem sido definido c
 #: code:addons/stock/models/stock_scrap.py:72
 #, python-format
 msgid "You cannot delete a scrap which is done."
-msgstr ""
+msgstr "Não é possível eliminar um refugo que esteja concluído."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:103
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "Você não pode eliminar um ajuste de estoque validado."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
@@ -7099,6 +7105,9 @@ msgid ""
 "package, same owner and same lot. Please first validatethe first inventory adjustement with this product before creating "
 "another one."
 msgstr ""
+"Você não pode ter dois ajustes de estoque no estado 'em Progresso' com o mesmo produto(%s), mesma localização(%s), mesmo "
+"pacote, mesmo proprietário e mesmo lote. Por favor, primeiro valide o primeiro ajuste de inventário com este produto antes "
+"de criar outro."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:176
@@ -7111,6 +7120,7 @@ msgstr "Você não pode mover para um local do tipo visualização %s."
 #, python-format
 msgid "You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment."
 msgstr ""
+"Não é possível refugar um movimento sem ter estoque disponível para %s. É possível corrigi-lo com um ajuste de estoque."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:144
@@ -7189,6 +7199,8 @@ msgid ""
 "You haven't set processed (<i>done</i>) quantities. Click <i>apply</i> and\n"
 "                        Odoo will process all quantities to do."
 msgstr ""
+"O usuário não definiu quantidades processadas<i> (concluídas</i>). Clique em <i>Aplicar</i> e\n"
+"                        O Odoo vai processar todas as quantidades para fazer."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:43
