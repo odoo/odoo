@@ -229,8 +229,11 @@ var TextPlugin = AbstractPlugin.extend({
                 $(br).before(emptyText).remove();
                 range = this.context.invoke('editor.setRange', emptyText, 0, emptyText, 1);
             } else {
+                var offset = range.so;
                 this.context.invoke('HelperPlugin.insertTextInline', '\u200B');
-                range.eo += 1;
+                range = this.context.invoke('editor.createRange');
+                range.so = offset;
+                range.eo = offset + 1;
             }
             range.select();
         }
