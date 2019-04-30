@@ -51,16 +51,12 @@ class User(models.Model):
     certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
     study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
     study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
-    employee_warning = fields.Char("Missing employee warning", compute='_compute_employee_warning')
+    employee_count = fields.Integer(compute='_compute_employee_count')
 
-    @api.depends('groups_id', 'employee_ids', 'active')
-    def _compute_employee_warning(self):
-        """ Fill warning only for active internal user (employee) not linked to hr.employee """
+    @api.depends('employee_ids')
+    def _compute_employee_count(self):
         for user in self:
-            if not user.employee_ids and not user.share and user.active:
-                user.employee_warning = _("Don't forget to create the linked employee.")
-            else:
-                user.employee_warning = False
+            user.employee_count = len(user.employee_ids)
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -183,12 +179,7 @@ class User(models.Model):
     @api.multi
     def action_create_employee(self):
         self.ensure_one()
-        form_view = self.env.ref('hr.view_employee_form')
-        return {
-            'name': _('Create Employee'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
-            'views': [(form_view.id, 'form')],
-            'target': 'new',
-            'context': {'default_user_id': self.id}
-        }
+        self.env['hr.employee'].create(dict(
+            user_id=self.id,
+            **self.env['hr.employee']._sync_user(self)
+        ))
