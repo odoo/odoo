@@ -10,6 +10,79 @@ var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d
                     "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
                     "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
 
+// TODO awa: this widget loads all records and only hides some based on page
+// -> this is ugly / not efficient, needs to be refactored
+publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
+    events: {
+        'click li a': '_onPageClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Widget
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    init: function (parent, params) {
+        this._super.apply(this, arguments);
+        this.$questionsEl = params.questionsEl;
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.limit = self.$el.data("record_limit");
+            self._changePage(1);
+        });
+    },
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onPageClick: function (ev) {
+        ev.preventDefault();
+
+        var pageNumber = $(ev.currentTarget).text();
+        this._changePage(pageNumber);
+    },
+
+    // -------------------------------------------------------------------------
+    // Private
+    // -------------------------------------------------------------------------
+
+    /**
+     * Shows / hides the records based on the selected page.
+     *
+     * @private
+     * @param {string} pageNumber
+     */
+    _changePage: function (pageNumber) {
+        this.$('li').removeClass('active');
+        var $target = this.$(_.str.sprintf('li:contains("%s")', pageNumber));
+        $target.closest('li').addClass('active');
+        this.$questionsEl.find('tbody tr').addClass('d-none');
+
+        var num = $target.text();
+        var min = (this.limit * (num-1))-1;
+        if (min === -1){
+            this.$questionsEl.find('tbody tr:lt('+ this.limit * num +')')
+                .removeClass('d-none');
+        } else {
+            this.$questionsEl.find('tbody tr:lt('+ this.limit * num +'):gt(' + min + ')')
+                .removeClass('d-none');
+        }
+    },
+});
+
 publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
@@ -30,27 +103,12 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         var superDef = this._super.apply(this, arguments);
         var self = this;
 
-        //Script For Pagination
-        var survey_pagination = $('.pagination');
-        $.each(survey_pagination, function(index, pagination){
-            var question_id = $(pagination).attr("data-question_id");
-            var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
-            self.$('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('d-none');
-            self.$('#pagination_'+question_id+' li a').click(function(event){
-                event.preventDefault();
-                self.$('#pagination_'+question_id+' li').removeClass('active');
-                $(this).parent('li').addClass('active');
-                self.$('#table_question_'+ question_id +' tbody tr').addClass('d-none');
-                var num = $(this).text();
-                var min = (limit * (num-1))-1;
-                if (min === -1){
-                    self.$('#table_question_'+ question_id +' tbody tr:lt('+ limit * num +')').removeClass('d-none');
-                }
-                else{
-                    self.$('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('d-none');
-                }
+        this.$('.pagination').each(function (){
+            var questionId = $(this).data("question_id");
+            var paginationWidget = new publicWidget.registry.SurveyResultPagination(self, {
+                'questionsEl': self.$('#table_question_'+ questionId)
             });
-            self.$('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
+            paginationWidget.attachTo($(this));
         });
 
         //Script For Graph
