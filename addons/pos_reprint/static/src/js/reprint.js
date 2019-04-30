@@ -36,4 +36,6 @@ screens.define_action_button({
     },
 });
 
+return {ReprintButton: ReprintButton};
+
 });
