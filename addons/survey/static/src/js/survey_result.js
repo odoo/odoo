@@ -23,6 +23,8 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
 
     /**
      * @override
+     * @param {$.Element} params.questionsEl The element containing the actual questions
+     *   to be able to hide / show them based on the page number
      */
     init: function (parent, params) {
         this._super.apply(this, arguments);
@@ -83,95 +85,66 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
-    selector: '.o_survey_result',
-    events: {
-        'click td.survey_answer i.fa-filter': '_onSurveyAnswerFilterClick',
-        'click .clear_survey_filter': '_onClearFilterClick',
-        'click span.filter-all': '_onFilterAllClick',
-        'click span.filter-finished': '_onFilterFinishedClick',
-    },
+/**
+ * Widget responsible for the initialization and the drawing of the various charts.
+ *
+ */
+publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
 
     //--------------------------------------------------------------------------
     // Widget
     //--------------------------------------------------------------------------
 
     /**
-    * @override
-    */
+     * Initializes the widget based on its defined graph_type and loads the chart.
+     *
+     * @override
+     */
     start: function () {
-        var superDef = this._super.apply(this, arguments);
         var self = this;
 
-        this.$('.pagination').each(function (){
-            var questionId = $(this).data("question_id");
-            var paginationWidget = new publicWidget.registry.SurveyResultPagination(self, {
-                'questionsEl': self.$('#table_question_'+ questionId)
-            });
-            paginationWidget.attachTo($(this));
+        return this._super.apply(this, arguments).then(function () {
+            self.graphData = self.$el.data("graphData");
+
+            switch (self.$el.data("graphType")) {
+                case 'multi_bar':
+                    self.chartConfig = self._getMultibarChartConfig();
+                    break;
+                case 'bar':
+                    self.chartConfig = self._getBarChartConfig();
+                    break;
+                case 'pie':
+                    self.chartConfig = self._getPieChartConfig();
+                    break;
+                case 'doughnut':
+                    self.chartConfig = self._getDoughnutChartConfig();
+                    break;
+            }
+
+            self._loadChart();
         });
-
-        //Script For Graph
-        var survey_graphs = self.$('.survey_graph');
-        $.each(survey_graphs, function(index, graph){
-            var question_id = $(graph).attr("data-question_id");
-            var graph_type = $(graph).attr("data-graph_type");
-            var graph_data = JSON.parse($(graph).attr("graph-data"));
-            var containerSelector = '#graph_question_' + question_id;
-            var chartConfig;
-            if(graph_type === 'multi_bar'){
-                chartConfig = self._initMultibarChart(graph_data);
-                self._loadChart(chartConfig, containerSelector);
-            }
-            else if(graph_type === 'bar'){
-                chartConfig = self._initBarChart(graph_data);
-                self._loadChart(chartConfig, containerSelector);
-            }
-            else if(graph_type === 'pie'){
-                chartConfig = self._initPieChart(graph_data);
-                self._loadChart(chartConfig, containerSelector);
-            }
-            else if (graph_type === 'doughnut') {
-                var quizz_score = $(graph).attr("quizz-score") || 0.0;
-                chartConfig = init_doughnut_chart(graph_data, quizz_score);
-                self._loadChart(chartConfig, containerSelector);
-            }
-        });
-
-        var $scoringResultsChart = $('#scoring_results_chart');
-        if ($scoringResultsChart.length > 0) {
-            var chartConfig = self._initPieChart($scoringResultsChart.data('graph_data'));
-            self._loadChart(chartConfig, '#scoring_results_chart');
-        }
-
-        return superDef;
     },
 
     // -------------------------------------------------------------------------
-    // Private - Tools
+    // Private
     // -------------------------------------------------------------------------
 
-    // Custom Tick fuction for replacing long text with '...'
-    _customTick: function (tick_limit) {
-        return function(label) {
-            if (label.length <= tick_limit) {
-                return label;
-            }
-            else {
-                return label.slice(0, tick_limit) + '...';
-            }
-        };
-    },
-
-    //initialize MultiBar Chart
-    _initMultibarChart: function (graph_data) {
-        var chartConfig = {
+    /**
+     * Returns a standard multi bar chart configuration.
+     *
+     * @private
+     */
+    _getMultibarChartConfig: function () {
+        return {
             type: 'bar',
             data: {
-                labels: graph_data[0].values.map(function (value) {
+                labels: this.graphData[0].values.map(function (value) {
                     return value.text;
                 }),
-                datasets: graph_data.map(function (group, index) {
+                datasets: this.graphData.map(function (group, index) {
                     var data = group.values.map(function (value) {
                         return value.count;
                     });
@@ -204,18 +177,21 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                 },
             },
         };
-        return chartConfig;
     },
 
-    //initialize discreteBar Chart
-    _initBarChart: function (graph_data) {
-        var chartConfig = {
+    /**
+     * Returns a standard bar chart configuration.
+     *
+     * @private
+     */
+    _getBarChartConfig: function () {
+        return {
             type: 'bar',
             data: {
-                labels: graph_data[0].values.map(function (value) {
+                labels: this.graphData[0].values.map(function (value) {
                     return value.text;
                 }),
-                datasets: graph_data.map(function (group) {
+                datasets: this.graphData.map(function (group) {
                     var data = group.values.map(function (value) {
                         return value.count;
                     });
@@ -249,47 +225,51 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                 }
             },
         };
-        return chartConfig;
     },
 
-        //initialize Pie Chart
-    _initPieChart: function (graph_data) {
-        var data = graph_data.map(function (point) {
+    /**
+     * Returns a standard pie chart configuration.
+     *
+     * @private
+     */
+    _getPieChartConfig: function () {
+        var counts = this.graphData.map(function (point) {
             return point.count;
         });
-        var chartConfig = {
+
+        return {
             type: 'pie',
             data: {
-                labels: graph_data.map(function (point) {
+                labels: this.graphData.map(function (point) {
                     return point.text;
                 }),
                 datasets: [{
                     label: '',
-                    data: data,
-                    backgroundColor: data.map(function (val, index) {
+                    data: counts,
+                    backgroundColor: counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
                 }]
             }
         };
-        return chartConfig;
     },
 
-    //initialize doughnut Chart
-    _init_doughnut_chart: function (graph_data, quizz_score){
-        var data = graph_data.map(function (point) {
+    _getDoughnutChartConfig: function () {
+        var quizz_score = this.$el.data("quizz_score") || 0.0;
+        var counts = this.graphData.map(function (point) {
             return point.count;
         });
-        var chartConfig = {
+
+        return {
             type: 'doughnut',
             data: {
-                labels: graph_data.map(function (point) {
+                labels: this.graphData.map(function (point) {
                     return point.text;
                 }),
                 datasets: [{
                     label: '',
-                    data: data,
-                    backgroundColor: data.map(function (val, index) {
+                    data: counts,
+                    backgroundColor: counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
                 }]
@@ -301,15 +281,77 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                 },
             }
         };
-        return chartConfig;
-    }
+    },
 
-    //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    _loadChart: function (chartConfig, containerSelector) {
-        var $container = this.$(containerSelector).css({position: 'relative'});
-        var $canvas = $container.find('canvas');
+    /**
+     * Custom Tick function to replace overflowing text with '...'
+     *
+     * @private
+     * @param {Integer} tickLimit
+     */
+    _customTick: function (tickLimit) {
+        return function (label) {
+            if (label.length <= tickLimit) {
+                return label;
+            } else {
+                return label.slice(0, tickLimit) + '...';
+            }
+        };
+    },
+
+    /**
+     * Loads the chart using the provided Chart library.
+     *
+     * @private
+     */
+    _loadChart: function () {
+        this.$el.css({position: 'relative'});
+        var $canvas = this.$('canvas');
         var ctx = $canvas.get(0).getContext('2d');
-        return new Chart(ctx, chartConfig);
+        return new Chart(ctx, this.chartConfig);
+    }
+});
+
+publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
+    selector: '.o_survey_result',
+    events: {
+        'click td.survey_answer i.fa-filter': '_onSurveyAnswerFilterClick',
+        'click .clear_survey_filter': '_onClearFilterClick',
+        'click span.filter-all': '_onFilterAllClick',
+        'click span.filter-finished': '_onFilterFinishedClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Widget
+    //--------------------------------------------------------------------------
+
+    /**
+    * @override
+    */
+    willStart: function () {
+        var url = '/web/webclient/locale/' + (document.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
+        var localeReady = ajax.loadJS(url);
+        return Promise.all([this._super.apply(this, arguments), localeReady]);
+    },
+
+    /**
+    * @override
+    */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$('.pagination').each(function (){
+                var questionId = $(this).data("question_id");
+                new publicWidget.registry.SurveyResultPagination(self, {
+                    'questionsEl': self.$('#table_question_'+ questionId)
+                }).attachTo($(this));
+            });
+
+            self.$('.survey_graph').each(function () {
+                new publicWidget.registry.SurveyResultChart(self)
+                    .attachTo($(this));
+            });
+        });
     },
 
     // -------------------------------------------------------------------------
@@ -395,6 +437,10 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     },
 });
 
-return publicWidget.registry.SurveyResultWidget;
+return {
+    resultWidget: publicWidget.registry.SurveyResultWidget,
+    chartWidget: publicWidget.registry.SurveyResultChart,
+    paginationWidget: publicWidget.registry.SurveyResultPagination
+};
 
 });
