@@ -2381,6 +2381,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr = self._cr
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
+        parent_path_compute = False
 
         if self._auto:
             if must_create_table:
@@ -2389,6 +2390,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_path'):
                     self._create_parent_columns()
+                    parent_path_compute = True
 
             self._check_removed_columns(log=False)
 
@@ -2416,6 +2418,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if must_create_table:
             self._execute_sql()
+
+        if parent_path_compute:
+            self._parent_store_compute()
 
     @api.model_cr
     def init(self):
