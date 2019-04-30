@@ -131,22 +131,24 @@ var SearchPanel = Widget.extend({
         var parentField = category.parentField;
 
         category.values = {};
-        values.forEach(function (value) {
+        _.each(values, function (value) {
             category.values[value.id] = _.extend({}, value, {
                 childrenIds: [],
                 folded: true,
                 parentId: value[parentField] && value[parentField][0] || false,
             });
         });
-        Object.keys(category.values).forEach(function (valueId) {
-            var value = category.values[valueId];
+        _.map(values, function (value) {
+            var value = category.values[value.id];
             if (value.parentId) {
                 category.values[value.parentId].childrenIds.push(value.id);
             }
         });
-        category.rootIds = Object.keys(category.values).filter(function (valueId) {
-            var value = category.values[valueId];
-            return value.parentId === false;
+        category.rootIds = _.filter(_.map(values, function (value) {
+                return value.id;
+            }), function (valueId) {
+                var value = category.values[valueId];
+                return value.parentId === false;
         });
 
         // set active value
