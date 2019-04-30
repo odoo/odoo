@@ -53,7 +53,7 @@ class FetchmailServer(models.Model):
     priority = fields.Integer(string='Server Priority', readonly=True, states={'draft': [('readonly', False)]}, help="Defines the order of processing, lower values mean higher priority", default=5)
     message_ids = fields.One2many('mail.mail', 'fetchmail_server_id', string='Messages', readonly=True)
     configuration = fields.Text('Configuration', readonly=True)
-    script = fields.Char(readonly=True, default='/mail/static/scripts/openerp_mailgate.py')
+    script = fields.Char(readonly=True, default='/mail/static/scripts/odoo-mailgate.py')
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):
@@ -70,14 +70,12 @@ class FetchmailServer(models.Model):
             'uid': self.env.uid,
             'model': self.object_id.model if self.object_id else 'MODELNAME'
         }
-        self.configuration = """
-            Use the below script with the following command line options with your Mail Transport Agent (MTA)
-            openerp_mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
-            Example configuration for the postfix mta running locally:
-            /etc/postfix/virtual_aliases:
-            @youdomain openerp_mailgate@localhost
-            /etc/aliases:
-            openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
+        self.configuration = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
+odoo-mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
+Example configuration for the postfix mta running locally:
+/etc/postfix/virtual_aliases: @youdomain odoo_mailgate@localhost
+/etc/aliases:
+odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
         """ % conf
 
     @api.model
