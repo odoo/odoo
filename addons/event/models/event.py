@@ -70,7 +70,7 @@ class EventType(models.Model):
     event_type_mail_ids = fields.One2many(
         'event.type.mail', 'event_type_id', string='Mail Schedule',
         copy=False,
-        default=_get_default_event_type_mail_ids)
+        default=lambda self: self._get_default_event_type_mail_ids())
 
     @api.onchange('has_seats_limitation')
     def _onchange_has_seats_limitation(self):
