@@ -8,7 +8,7 @@
             <search string="Search Time Off Type">
                 <field name="name" string="Time Off Types"/>
                 <field name="code"/>
-                <field name="categ_id"/>
+                <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
             </search>
@@ -70,7 +70,7 @@
                             </group>
                          </group>
                         <group name="calendar" string="Calendar" groups="base.group_no_one">
-                            <field name="categ_id"/>
+                            <field name="create_calendar_meeting"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
