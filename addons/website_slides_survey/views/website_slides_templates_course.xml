@@ -7,11 +7,11 @@
             </xpath>
 
             <xpath expr="//div[@id='courseMainTabContent']//div[@id='home']/t" position="before">
-                <div t-if="channel.nbr_certification > 0 and channel.is_member" class="alert alert-success d-flex align-items-center justify-content-between flex-wrap">
+                <t t-set="first_slide" t-value="channel.slide_ids[0] if len(channel.slide_ids) > 0 else None"/>
+                <div t-if="channel.nbr_certification > 0 and channel.is_member and channel.completion == 0" class="alert alert-success d-flex align-items-center justify-content-between flex-wrap">
                     <div>Begin your <b>certification</b> today!</div>
 
-                    <t t-set="first_slide" t-value="category_data[0]['slides'][0]"/>
-                    <a t-attf-href="/slides/slide/#{slug(first_slide)}?fullscreen=1" class="btn btn-success mt-2 mt-sm-0">
+                    <a t-attf-href="#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(first_slide.id) if first_slide.slide_type == 'certification' and channel.total_slides == 1 else '/slides/slide/%s?fullscreen=1' %(slug(first_slide))}" class="btn btn-success mt-2 mt-sm-0">
                         <span>Start Now</span><i class="fa fa-chevron-right ml-2 align-middle"/>
                     </a>
                 </div>
