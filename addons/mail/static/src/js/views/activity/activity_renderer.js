@@ -91,21 +91,29 @@ var ActivityRenderer = AbstractRenderer.extend({
      * @private
      */
     _render: function () {
+        var self = this;
         this.$el.addClass('table-responsive');
         this.$el.html(QWeb.render('mail.ActivityView', { isEmpty: !this.state.activity_types.length }));
-        this.$('table')
-            .append(this._renderHeader())
-            .append(this._renderBody())
-            .append(this._renderFooter());
-        return this._super.apply(this, arguments);
+        return Promise.all([
+            this._super.apply(this, arguments),
+            this._renderHeader(),
+            this._renderBody(),
+        ]).then(function (result) {
+            self.$('table')
+                .append(result[1])
+                .append(result[2])
+                .append(self._renderFooter());
+        });
     },
     /**
      * @private
-     * @returns {jQueryElement} a jquery element <tbody>
+     * @returns {Promise<jQueryElement>} a jquery element <tbody>
      */
     _renderBody: function () {
-        var $rows = _.map(this.state.activity_res_ids, this._renderRow.bind(this));
-        return $('<tbody>').append($rows);
+        var defs = _.map(this.state.activity_res_ids, this._renderRow.bind(this));
+        return Promise.all(defs).then(function ($rows) {
+            return $('<tbody>').append($rows);
+        });
     },
     /**
      * @private
@@ -116,7 +124,7 @@ var ActivityRenderer = AbstractRenderer.extend({
     },
     /**
      * @private
-     * @returns {jQueryElement} a jquery element <thead>
+     * @returns {Promise<jQueryElement>}
      */
     _renderHeader: function () {
         var self = this;
@@ -125,13 +133,17 @@ var ActivityRenderer = AbstractRenderer.extend({
             types: this.state.activity_types,
             activityTypeIDs: _.map(activityTypeIds, Number),
         }));
+        var defs = [];
         activityTypeIds.forEach(function (typeId) {
-            self._renderProgressBar($thead, typeId);
+            defs.push(self._renderProgressBar($thead, typeId));
         });
-        return $thead;
+        return Promise.all(defs).then(function () {
+            return $thead;
+        });
     },
     /**
      * @private
+     * @returns {Promise}
      */
     _renderProgressBar: function ($thead, typeId) {
         var counts = { planned: 0, today: 0, overdue: 0 };
@@ -151,21 +163,22 @@ var ActivityRenderer = AbstractRenderer.extend({
                 counts: counts,
             },
         });
-        progressBar.appendTo($thead.find('th[data-activity-type-id=' + typeId + ']'));
+        return progressBar.appendTo($thead.find('th[data-activity-type-id=' + typeId + ']'));
     },
     /**
      * @private
      * @param {integer} resId
-     * @returns {jQueryElement} a <tr> element
+     * @returns {Promise<jQueryElement>}
      */
     _renderRow: function (resId) {
         var self = this;
+        var defs = [];
         var record = this._getRecord(resId);
         var $nameTD = $('<td>', {
             class: _.contains(this.filteredResIDs, resId) ? 'o_activity_filter_' + this.activeFilter : '',
         });
         var activityRecord = new ActivityRecord(this, record, { qweb: this.qweb });
-        activityRecord.appendTo($nameTD);
+        defs.push(activityRecord.appendTo($nameTD));
 
         var $cells = _.map(this.state.activity_types, function (node) {
             var activity_type_id = node[0];
@@ -181,7 +194,7 @@ var ActivityRenderer = AbstractRenderer.extend({
             if (activity_group.state) {
                 var record = self.getKanbanActivityData(activity_group, resId);
                 var widget = new KanbanActivity(self, "activity_ids", record, {});
-                widget.appendTo($td).then(function() {
+                var def = widget.appendTo($td).then(function () {
                     // replace clock by closest deadline
                     var $date = $('<div class="o_closest_deadline">');
                     var date = new Date(activity_group.o_closest_deadline);
@@ -199,13 +212,16 @@ var ActivityRenderer = AbstractRenderer.extend({
                         }));
                     }
                 });
+                defs.push(def);
             }
             return $td;
         });
-        var $tr = $('<tr/>', {class: 'o_data_row'}).attr('data-res-id', resId)
-            .append($nameTD)
-            .append($cells);
-        return $tr;
+        return Promise.all(defs).then(function () {
+            var $tr = $('<tr/>', {class: 'o_data_row'}).attr('data-res-id', resId)
+                .append($nameTD)
+                .append($cells);
+            return $tr;
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -267,7 +283,10 @@ var ActivityRenderer = AbstractRenderer.extend({
             arrangedRecords = _.union(_.intersection(this.state.activity_res_ids, filteredResIds), this.state.activity_res_ids);
             this.filteredResIDs = filteredResIds;
         }
-        this.$('tbody').html(_.map(arrangedRecords, this._renderRow.bind(this)));
+        var defs = _.map(arrangedRecords, this._renderRow.bind(this));
+        Promise.all(defs).then(function ($rows) {
+            self.$('tbody').html($rows);
+        });
 
         if (this.activeFilter) {
             var $header = this.$('th.o_activity_type_cell[data-activity-type-id=' + data.columnID + ']');
