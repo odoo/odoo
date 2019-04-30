@@ -111,3 +111,10 @@ $o-attachment-margin: 5px;
         transform: translateX(0);
     }
 }
+
+// Attachment Icons (common for chat thread and chat composer)
+.o_attachments_list, .o_attachments_previews {
+    margin: 0 (-$o-attachment-margin) 0;
+    display: flex;
+    flex-flow: row wrap;
+}
