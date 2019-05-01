@@ -7,6 +7,7 @@
 # Martin Trigaux, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:29+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"לא ניתן למצוא חשבון קלט מלאי עבור המוצר %s. עליך להגדיר אחד בקטגוריה של "
+"המוצר, או  במיקום, לפני עיבוד פעולה זו."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -71,6 +74,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"לא ניתן למצוא חשבון פלט מלאי עבור המוצר %s. עליך להגדיר אחד בקטגוריה של "
+"המוצר,או במיקום, לפני עיבוד פעולה זו."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -138,7 +143,7 @@ msgstr "שיטת התמחור"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "חשבון נגדי"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -187,6 +192,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
+"אם מחיר המחיר יגדל, חשבון וריאציה של מלאי יחויב ומלאי הפלט חשבון יזוכה עם ערך = (ההפרש כמות * כמות זמין).\n"
+"אם מחיר העלות ירד, מלאי וריאציה החשבון יהיה מזוכה וחשבון קלט המלאי יחויבו..."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -378,7 +385,7 @@ msgstr "תבנית למוצר"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "מנות"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -528,6 +535,9 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"ממשמש עבור הערכת מלאי בזמן אמת. כאשר מוגדר מיקום וירטואלי (סוג שאינו פנימי),"
+" חשבון זה משמש להחזיק את ערך המוצרים המועברים ממיקום פנימי למיקום זה, במקום "
+"בחשבון המלאי הכללי שנקבע עבור המוצר. אין לכך השפעה על מיקומים פנימיים."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -538,6 +548,10 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"משמש עבור הערכת מלאי בזמן אמת. כאשר הוא מוגדר במיקום וירטואלי (סוג שאינו "
+"פנימי), חשבון זה ישמש לשמירה על ערך המוצרים שמועברים מחוץ למיקום זה ולמיקומו"
+" הפנימי, במקום בחשבון הפלט הכללי של המלאי שמוגדר למוצר. אין לכך השפעה על "
+"מיקומים פנימיים."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -559,6 +573,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת, פריטי היומן המקבילים עבור כל תנועות המלאי "
+"הנכנסות יפורסמו בחשבון זה, אלא אם כן קיים חשבון הערכה ספציפי במיקום המקור. "
+"זהו ערך ברירת המחדל עבור כל המוצרים בקטגוריה זו. זה גם יכול להיות מוגדר "
+"ישירות על כל מוצר"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -569,6 +587,9 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת, פריטי היומן המקבילים עבור כל תנועות המלאי "
+"הנכנסות יפורסמו בחשבון זה, אלא אם כן קיים חשבון הערכה ספציפי במיקום המקור. "
+"כאשר לא מוגדר על מוצר, אחד מקטגוריות המוצר בשימוש."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -579,6 +600,10 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת, פריטי היומן עבור כל תנועות המלאי היוצאות "
+"יפורסמו בחשבון זה, אלא אם כן קיים חשבון הערכה ספציפי במיקום היעד. זהו ערך "
+"ברירת המחדל עבור כל המוצרים בקטגוריה זו. זה גם יכול להיות מוגדר ישירות על כל"
+" מוצר"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -589,6 +614,9 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת, פריטי היומן עבור כל תנועות המלאי היוצאות "
+"יפורסמו בחשבון זה, אלא אם כן קיים חשבון הערכה ספציפי במיקום היעד. כאשר לא "
+"מוגדר על המוצר, אחד מקטגוריות המוצר בשימוש."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
@@ -596,6 +624,8 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת, זהו יומן חשבונאות שבו רשומות יפורסמו באופן "
+"אוטומטי כאשר תנועות מלאי שבוצעו."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -603,6 +633,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"בעת ביצוע הערכת מלאי בזמן אמת פעולת על מוצר, חשבון זה יחזיק את הערך הנוכחי "
+"של המוצרים."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
@@ -625,6 +657,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"אין לך חשבון הערכה של מלאי המוגדר בקטגוריית המוצרים שלך. עליך להגדיר אחד "
+"לפני עיבוד פעולה זו."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
