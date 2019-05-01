@@ -318,8 +318,7 @@ var Followers = AbstractField.extend({
                     method: 'message_subscribe',
                     args: [[this.res_id]],
                     kwargs: kwargs,
-                })
-                .then(this._reload.bind(this));
+                });
         }
     },
 

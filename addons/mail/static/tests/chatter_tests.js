@@ -2082,7 +2082,7 @@ QUnit.test('form activity widget: mark as done and remove', async function (asse
 });
 
 QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (assert) {
-    assert.expect(24);
+    assert.expect(23);
 
     var resID = 2;
     var partnerID = 2;
@@ -2100,7 +2100,12 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', async function (a
         services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
-                    '<field name="foo"/>' +
+                    '<field name="display_name"/>' +
+                    '<notebook>' +
+                        '<page string="Partner page">' +
+                            '<field name="foo"/>' +
+                        '</page>' +
+                    '</notebook>' +
                 '</sheet>' +
                 '<div class="oe_chatter">' +
                     '<field name="message_follower_ids" widget="mail_followers"/>' +
