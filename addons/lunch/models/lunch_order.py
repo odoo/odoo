@@ -51,7 +51,7 @@ class LunchOrder(models.Model):
     def _compute_display_toppings(self):
         for line in self:
             toppings = line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3
-            line.display_toppings = '+ '.join(toppings.mapped('name'))
+            line.display_toppings = ' + '.join(toppings.mapped('name'))
 
     def update_quantity(self, increment):
         for line in self.filtered(lambda line: line.state != 'confirmed'):
