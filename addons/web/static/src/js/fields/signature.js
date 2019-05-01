@@ -13,6 +13,7 @@ odoo.define('web.Signature', function (require) {
 
     var qweb = core.qweb;
     var _t = core._t;
+    var _lt = core._lt;
 
 // The goal of this dialog is to ask the user a signature request.
 // It uses @see SignNameAndSignature for the name and signature fields.
@@ -111,6 +112,7 @@ var SignatureDialog = Dialog.extend({
 });
 
 var FieldBinarySignature = AbstractFieldBinary.extend({
+    description: _lt("Signature"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
         __last_update: {type: 'datetime'},
     }),
