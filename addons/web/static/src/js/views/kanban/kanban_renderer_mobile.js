@@ -194,7 +194,7 @@ KanbanRenderer.include({
                 }
             }
             // handle case of right to left direction
-            if (_t.database.parameters.direction === 'rtl') {
+            if (_t.database.parameters.direction === 'rtl' && this.$('.o_kanban_mobile_tabs').length) {
                 if (scrollToLeft) {
                     scrollToLeft = this.$('.o_kanban_mobile_tabs')[0].scrollWidth - this.$('.o_kanban_mobile_tabs')[0].clientWidth - scrollToLeft;
                 } else {
@@ -234,13 +234,17 @@ KanbanRenderer.include({
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                var moveToIndex = self.activeColumnIndex + 1;
+                // if direction parameter of translation database is rtl
+                // then swipeLeft and swipeRight do reverse
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex - 1 : self.activeColumnIndex + 1;
                 if (moveToIndex < self.widgets.length) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
             },
             swipeRight: function () {
-                var moveToIndex = self.activeColumnIndex - 1;
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex + 1 : self.activeColumnIndex - 1;
                 if (moveToIndex > -1) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
