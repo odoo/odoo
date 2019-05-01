@@ -3,15 +3,16 @@
 # * account_tax_python
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux, 2017
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:16+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"변수 'result'를 설정하여 세금 금액을 계산하십시오.\n"
+"\n"
+":param base_amount: float, 세금이 적용되는 실제 금액\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -49,6 +58,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"변수 'result'를 설정하여 세금 금액을 계산하십시오.\n"
+"\n"
+":param base_amount: float, 세금이 적용되는 실제 금액\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -61,6 +77,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"변수 'result'를 True 또는 False로 설정하여 세금 적용 여부를 결정하십시오.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -72,6 +95,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"변수 'result'를 True 또는 False로 설정하여 세금 적용 여부를 결정하십시오.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute

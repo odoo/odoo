@@ -3,17 +3,18 @@
 # * account_test
 # 
 # Translators:
-# Bohdan Lisnenko, 2016
 # ТАрас <tratatuta@i.ua>, 2016
 # Martin Trigaux, 2016
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
+# Bohdan Lisnenko, 2016
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:16+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,26 +133,26 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Код завжди повинен встановлювати змінну з назвою `результат` з результатом вашого тесту, що може бути списком або\n"
-"словником. Якщо у `результаті` порожній рядок, це означає, що тест був успішним. В іншому випадку \n"
-"він намагатиметься перекласти і роздруковувати те, що знаходиться всередині `результату`.\n"
+"Код завжди повинен встановлювати змінну з назвою `result` з результатом вашого тесту, що може бути списком або\n"
+"словником. Якщо у `result` порожній рядок, це означає, що тест був успішним. В іншому випадку \n"
+"він намагатиметься перекласти і роздруковувати те, що знаходиться всередині `result`.\n"
 "\n"
-"Якщо результат вашого тесту це словник, ви можете встановити змінну з назвою `колонка_порядку`, \n"
-"який порядок ви хочете роздрукувати у вмісті `результат`.\n"
+"Якщо результат вашого тесту це словник, ви можете встановити змінну з назвою `column_order`, \n"
+"який порядок ви хочете роздрукувати у вмісті `result`.\n"
 "\n"
 "Якщо вам це потрібно, ви також можете використовувати наступні змінні у вашому коді:\n"
-"    * cr: курсор до бази даних\n"
-"    * uid: ID поточного користувача\n"
+" * cr: курсор до бази даних\n"
+" * uid: ID поточного користувача\n"
 "\n"
 "Будь-якими способами цей код повинен бути легальною заявою python з правильним відступом (при необхідності).\n"
 "\n"
 "Наприклад: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
+" sql = '''SELECT id, name, ref, date\n"
+" FROM account_move_line \n"
+" WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+" '''\n"
+" cr.execute(sql)\n"
+" result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
