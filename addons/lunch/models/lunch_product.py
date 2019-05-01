@@ -15,24 +15,31 @@ class LunchProductCategory(models.Model):
     name = fields.Char('Product Category', required=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    topping_label_1 = fields.Char('Topping Label 1', required=True, default='Supplements')
-    topping_label_2 = fields.Char('Topping Label 2', required=True, default='Beverages')
-    topping_label_3 = fields.Char('Topping Label 3', required=True, default='Topping Label 3')
+    topping_label_1 = fields.Char('Topping 1 Label', required=True, default='Supplements')
+    topping_label_2 = fields.Char('Topping 2 Label', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Topping 3 Label', required=True, default='Topping Label 3')
     topping_ids_1 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 1)], ondelete='cascade')
     topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 2)], ondelete='cascade')
     topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 3)], ondelete='cascade')
     topping_quantity_1 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 1 Quantity', default='0_more', required=True)
     topping_quantity_2 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 2 Quantity', default='0_more', required=True)
     topping_quantity_3 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
-        ('1', 'Only One')], default='0_more', required=True)
+        ('1', 'Only One')], 'Topping 3 Quantity', default='0_more', required=True)
+    product_count = fields.Integer(compute='_compute_product_count', help="The number of products related to this category")
+
+    def _compute_product_count(self):
+        product_data = self.env['lunch.product'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
+        data = {product['category_id'][0]: product['category_id_count'] for product in product_data}
+        for category in self:
+            category.product_count = data.get(category.id, 0)
 
     @api.model
     def create(self, vals):

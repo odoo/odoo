@@ -12,8 +12,9 @@ class LunchAlert(models.Model):
     given day, weekly or daily. The alert is displayed from start to end hour. """
     _name = 'lunch.alert'
     _description = 'Lunch Alert'
-    _rec_name = 'message'
+    _order = 'write_date desc, id'
 
+    name = fields.Char(required=True)
     message = fields.Html('Message', required=True)
 
     until = fields.Date('Show Until')
@@ -28,7 +29,7 @@ class LunchAlert(models.Model):
     available_today = fields.Boolean('Is Displayed Today',
                                      compute='_compute_available_today', search='_search_available_today')
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean('Active', default=True)
 
     location_ids = fields.Many2many('lunch.location', string='Location')
 
