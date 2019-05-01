@@ -119,10 +119,14 @@ KanbanRenderer.include({
         var currentColumn = this.widgets[this.activeColumnIndex];
         currentColumn.$el.swipe({
             swipeLeft: function () {
-                self._moveToGroup(self.activeColumnIndex + 1, self.ANIMATE);
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex - 1 : self.activeColumnIndex + 1;
+                self._moveToGroup(moveToIndex, self.ANIMATE);
             },
             swipeRight: function () {
-                self._moveToGroup(self.activeColumnIndex - 1, self.ANIMATE);
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex + 1 : self.activeColumnIndex - 1;
+                self._moveToGroup(moveToIndex, self.ANIMATE);
             }
         });
     },
