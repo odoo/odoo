@@ -511,11 +511,25 @@ class Home(http.Controller):
     def switch_to_admin(self):
         uid = request.env.user.id
         if request.env.user._is_system():
+            request.session['last_uid'] = uid
             uid = request.session.uid = odoo.SUPERUSER_ID
             request.env['res.users']._invalidate_session_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return http.local_redirect(self._login_redirect(uid), keep_hash=True)
+
+    @http.route('/web/become_human', type='http', auth='user', sitemap=False)
+    def switch_to_user(self):
+        last_uid = request.session.get('last_uid', False)
+        last_user = request.env['res.users'].browse(last_uid)
+        if last_user.exists() and last_user.active:
+            request.session.pop('last_uid')
+            uid = request.session.uid = last_uid
+            request.env['res.users']._invalidate_session_cache()
+            request.session.session_token = security.compute_session_token(request.session, request.env)
+            return http.local_redirect(self._login_redirect(uid), keep_hash=True)
+        return http.local_redirect('/web/login')
+
 
 class WebClient(http.Controller):
 

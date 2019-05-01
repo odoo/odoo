@@ -62,6 +62,8 @@ var DebugManager = Widget.extend({
         this._has_features = false;
         // whether the current user is an administrator
         this._is_admin = session.is_system;
+        // whether the current user is superuser
+        this._is_superuser = session._is_superuser;
         return Promise.resolve(
             this._rpc({
                     model: 'res.users',
