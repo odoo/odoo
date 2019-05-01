@@ -31,6 +31,7 @@ class AccountAccountType(models.Model):
 class AccountAccountTag(models.Model):
     _name = 'account.account.tag'
     _description = 'Account Tag'
+    _order = 'sequence,id'
 
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
