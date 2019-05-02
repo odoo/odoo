@@ -25,13 +25,32 @@ class account_journal(models.Model):
     def _get_json_activity_data(self):
         for journal in self:
             activities = []
-            for activity in journal.activity_ids:
+            # search activity on move on the journal
+            sql_query = '''
+                SELECT act.id,
+                    act.res_id,
+                    act.res_model,
+                    act.summary,
+                    act_type.name as act_type_name,
+                    act_type.category as activity_category,
+                    act.date_deadline,
+                    CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
+                FROM account_move m
+                    LEFT JOIN mail_activity act ON act.res_id = m.id
+                    LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
+                WHERE act.res_model = 'account.move'
+                    AND m.journal_id = %s
+            '''
+            self.env.cr.execute(sql_query, (journal.id,))
+            for activity in self.env.cr.dictfetchall():
                 activities.append({
-                    'id': activity.id,
-                    'name': activity.summary or activity.activity_type_id.name,
-                    'state': activity.state,
-                    'activity_category': activity.activity_category,
-                    'date': odoo_format_date(self.env, activity.date_deadline)
+                    'id': activity.get('id'),
+                    'res_id': activity.get('res_id'),
+                    'res_model': activity.get('res_model'),
+                    'status': activity.get('status'),
+                    'name': activity.get('summary') or activity.get('act_type_name'),
+                    'activity_category': activity.get('activity_category'),
+                    'date': odoo_format_date(self.env, activity.get('date_deadline'))
                 })
             journal.json_activity_data = json.dumps({'activities': activities})
 
