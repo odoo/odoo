@@ -16,7 +16,7 @@ from lxml import etree
 from lxml.builder import E
 import passlib.context
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, ADMIN_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -461,6 +461,10 @@ class Users(models.Model):
     def write(self, values):
         if values.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
+        if 'active' in values and values['active'] is False:
+            if ADMIN_ID in self._ids:
+                raise UserError(_("You cannot de-activate the Admin user."))
+
         if values.get('active') == False and self._uid in self._ids:
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
@@ -507,7 +511,9 @@ class Users(models.Model):
     @api.multi
     def unlink(self):
         if SUPERUSER_ID in self.ids:
-            raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+            raise UserError(_('You can not remove the Superuser as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+        if ADMIN_ID in self.ids:
+            raise UserError(_('You can not remove the Admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = self._cr.dbname
         for id in self.ids:
             self.__uid_cache[db].pop(id, None)
