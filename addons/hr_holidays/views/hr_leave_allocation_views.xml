@@ -55,11 +55,32 @@
             <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
+                <field name="holiday_type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            class="oe_stat_button"
+                            icon="fa-calendar"
+                            type="action"
+                            attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
+                            name="%(hr_leave_action_all)d"
+                            context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id]}"
+                            help="Leaves Taken/Total Allocated">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="leaves_taken" digits="[42,1]"/>/
+                                    <field name="max_leaves" digits="[42,1]"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Time Off
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h2><field name="display_name"/></h2>
                     </div>
@@ -230,6 +251,8 @@
                 <field name="name"/>
                 <field name="number_of_days"/>
                 <field name="can_approve"/>
+                <field name="state"/>
+                <field name="holiday_status_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click container">
@@ -245,7 +268,7 @@
                                     <span class="badge badge-pill float-right mt4 mr16"><t t-esc="record.number_of_days.value"/> days</span>
                                     <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
                                     <div class="text-muted o_kanban_record_subtitle">
-                                        <t t-esc="record.name.value"/>
+                                        <t t-esc="record.holiday_status_id.value"/>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
                                         <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
@@ -254,12 +277,23 @@
                                         <div class="dropdown-menu" role="menu">
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Allocation</a>
                                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                            <a t-if="record.can_approve.value" name="action_approve" type="object"
-                                                role="menuitem" class="dropdown-item">Approve</a>
-                                            <a t-if="record.can_approve.value" name="action_refuse" type="object"
-                                                role="menuitem" class="dropdown-item">Refuse</a>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
+                                <div class="col-2"/>
+                                <div class="col-10">
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted"/>
+                                    <span t-else="" class="fa fa-ban text-muted"/>
+                                    <span class="text-muted"><t t-esc="record.state.value"/></span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom" t-if="record.can_approve.raw_value" >
+                                <div class="oe_kanban_bottom_left" t-if="record.can_approve.raw_value">
+                                    <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-primary btn-sm mt8">Approve</button>
+                                    <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-primary btn-sm mt8">Validate</button>
+                                    <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-secondary btn-sm mt8">Refuse</button>
                                 </div>
                             </div>
                         </div>
