@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 
 
+# YTI TODO: Split into 2 files
 class Department(models.Model):
 
     _inherit = 'hr.department'
