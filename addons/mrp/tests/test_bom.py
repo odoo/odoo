@@ -628,3 +628,89 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
         # Same math than before but without GPS
         self.assertEqual(report_values['lines']['total'], 210)
+
+    def test_bom_report_recursive_bom(self):
+        """ Test report with recursive BoM and different quantities.
+        BoM 1:
+        product = Finished (units)
+        quantity = 100 units
+        - Semi-Finished 5 kg
+
+        BoM 2:
+        product = Semi-Finished (kg)
+        quantity = 11 kg
+        - Assembly 2 dozens
+
+        BoM 3:
+        product = Assembly (dozens)
+        quantity = 5 dozens
+        - Raw Material 4 litres (product.product 5$/litre)
+
+        Check the Price for 80 units of Finished -> 2.92$:
+        """
+        # Create a products templates
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_litre = self.env.ref('uom.product_uom_litre')
+
+        finished = self.env['product.product'].create({
+            'name': 'Finished',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+
+        semi_finished = self.env['product.product'].create({
+            'name': 'Semi-Finished',
+            'type': 'product',
+            'uom_id': uom_kg.id,
+            'uom_po_id': uom_kg.id,
+        })
+
+        assembly = self.env['product.product'].create({
+            'name': 'Assembly',
+            'type': 'product',
+            'uom_id': uom_dozen.id,
+            'uom_po_id': uom_dozen.id,
+        })
+
+        raw_material = self.env['product.product'].create({
+            'name': 'Raw Material',
+            'type': 'product',
+            'uom_id': uom_litre.id,
+            'uom_po_id': uom_litre.id,
+            'standard_price': 5,
+        })
+
+        #Create bom
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = finished.product_tmpl_id
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = semi_finished
+            line.product_uom_id = uom_kg
+            line.product_qty = 5
+        bom_finished = bom_finished.save()
+
+        bom_semi_finished = Form(self.env['mrp.bom'])
+        bom_semi_finished.product_tmpl_id = semi_finished.product_tmpl_id
+        bom_semi_finished.product_qty = 11
+        with bom_semi_finished.bom_line_ids.new() as line:
+            line.product_id = assembly
+            line.product_uom_id = uom_dozen
+            line.product_qty = 2
+        bom_semi_finished = bom_semi_finished.save()
+
+        bom_assembly = Form(self.env['mrp.bom'])
+        bom_assembly.product_tmpl_id = assembly.product_tmpl_id
+        bom_assembly.product_qty = 5
+        with bom_assembly.bom_line_ids.new() as line:
+            line.product_id = raw_material
+            line.product_uom_id = uom_litre
+            line.product_qty = 4
+        bom_assembly = bom_assembly.save()
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
+
+        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
