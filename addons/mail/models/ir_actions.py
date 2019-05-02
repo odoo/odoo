@@ -112,6 +112,7 @@ class ServerActions(models.Model):
         # with wrong values in subsequent operations
         cleaned_ctx = dict(self.env.context)
         cleaned_ctx.pop('default_type', None)
+        cleaned_ctx.pop('default_parent_id', None)
         action.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
         return False
 
