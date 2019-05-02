@@ -22,6 +22,8 @@ class HrLeave(models.Model):
         vals_list = []
         for leave in self:
             contract = leave.employee_id._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
+            if contract and len(contract) > 0:
+                contract = contract[0]
             start = max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time()))
             end = min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time()))
             benefit_type = leave.holiday_status_id.benefit_type_id
