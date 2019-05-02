@@ -278,7 +278,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable list datetimepicker destroy widget', function (assert) {
+    QUnit.test('editable list datetimepicker destroy widget (edition)', function (assert) {
+        assert.expect(6);
+        var done = assert.async();
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+        list.$el.on({
+            'show.datetimepicker': function () {
+                assert.containsOnce(list, '.o_selected_row');
+                assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
+                list.$('input.o_datepicker_input').trigger($.Event('keydown', {which: $.ui.keyCode.ESCAPE}));
+
+                assert.containsNone(list, '.o_selected_row');
+                assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+
+                done();
+                list.destroy();
+            }
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_selected_row');
+
+        testUtilsDom.click(list.$('.o_data_cell:first'));
+    });
+
+    QUnit.test('editable list datetimepicker destroy widget (new line)', function (assert) {
         assert.expect(7);
         var done = assert.async();
 
@@ -4216,6 +4249,50 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_selected_row');
         assert.hasClass(list.$('.o_selected_row .o_data_cell:first'), 'o_readonly_modifier');
         assert.hasClass(list.$('.o_selected_row .o_data_cell:nth(1)'), 'o_invisible_modifier');
+
+        list.destroy();
+    });
+
+    QUnit.test('readonly boolean in editable list is readonly', function (assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                      '<field name="foo"/>' +
+                      '<field name="bar" attrs="{\'readonly\': [(\'foo\', \'!=\', \'yop\')]}"/>' +
+                  '</tree>',
+        });
+
+        // clicking on disabled checkbox with active row does not work
+        var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
+        testUtils.dom.click($disabledCell.prev());
+        assert.containsOnce($disabledCell, ':disabled:checked');
+        var $disabledLabel = $disabledCell.find('.custom-control-label');
+        testUtils.dom.click($disabledLabel);
+        assert.containsOnce($disabledCell, ':checked',
+            "clicking disabled checkbox did not work"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="text"]'),
+            "disabled checkbox is not focused after click"
+        );
+
+        // clicking on enabled checkbox with active row toggles check mark
+        var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
+        testUtils.dom.click($enabledCell.prev());
+        assert.containsOnce($enabledCell, ':checked:not(:disabled)');
+        var $enabledLabel = $enabledCell.find('.custom-control-label');
+        testUtils.dom.click($enabledLabel);
+        assert.containsNone($enabledCell, ':checked',
+            "clicking enabled checkbox worked and unchecked it"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="checkbox"]'),
+            "enabled checkbox is focused after click"
+        );
 
         list.destroy();
     });

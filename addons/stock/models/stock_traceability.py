@@ -21,7 +21,7 @@ class MrpStockReport(models.TransientModel):
     _description = 'Traceability Report'
 
     @api.model
-    def _get_move_lines(self, move_lines):
+    def _get_move_lines(self, move_lines, line_id=None):
         lines_seen = move_lines
         lines_todo = list(move_lines)
         while lines_todo:
@@ -43,7 +43,8 @@ class MrpStockReport(models.TransientModel):
                 ])
             else:
                 continue
-            lines_todo += list(lines)
+            if line_id is None or line_id in lines.ids:
+                lines_todo += list(lines)
             lines_seen |= lines
         return lines_seen - move_lines
 
@@ -178,7 +179,7 @@ class MrpStockReport(models.TransientModel):
                 lines = move_lines
             else:
                 # Traceability in case of consumed in.
-                lines = self._get_move_lines(move_line)
+                lines = self._get_move_lines(move_line, line_id=line_id)
         for line in lines:
             unfoldable = False
             if line.consume_line_ids or ( line.lot_id and self._get_move_lines(line) and model != "stock.production.lot"):

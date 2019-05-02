@@ -124,7 +124,7 @@
             <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-12 col-lg flex-lg-grow-0 d-print-none'"/>
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
 
                     <t t-set="title">
                         <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
@@ -479,8 +479,8 @@
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                        <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <span class="oe_order_line_price_total" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
@@ -519,7 +519,7 @@
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
                                     <span
-                                        data-id="total_amount"
+                                        data-id="total_untaxed"
                                         t-field="sale_order.amount_untaxed"
                                         t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
                                     />
