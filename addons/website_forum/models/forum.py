@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import misc
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class Forum(models.Model):
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True, sanitize=False)
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
     description = fields.Text(
         'Description',
         translate=True,
