@@ -3217,10 +3217,12 @@ Fields:
 
         for field in self.env['ir.model.fields'].sudo().search(
             [('relation', '=', self._name),
-             ('ttype', '=', 'many2one'),
-             ('on_delete', '=', 'cascade')]):
-            recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
-            recs._unlink_invalidate_cache()
+             ('store','=', True),
+             '|',
+                 '&',
+                    ('ttype', '=', 'many2one'),
+                    ('on_delete', '=', 'cascade'),
+                 ('ttype','=','many2many'),]):
         
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
