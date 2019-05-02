@@ -3164,6 +3164,8 @@ Fields:
             Defaults = self.env['ir.default'].sudo()
             Attachment = self.env['ir.attachment']
             Translation = self.env['ir.translation'].sudo()
+            
+            self._unlink_invalidate_cache()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
@@ -3203,18 +3205,26 @@ Fields:
                     if translations:
                         translations.unlink()
 
-            # invalidate the *whole* cache, since the orm does not handle all
-            # changes made in the database, like cascading delete!
-            self.invalidate_cache()
-
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):
             self.recompute()
 
+        return True
+    
+    def _unlink_invalidate_cache(self):
+        if not self.ids:
+            return
+
+        for field in self.env['ir.model.fields'].sudo().search(
+            [('relation', '=', self._name),
+             ('ttype', '=', 'many2one'),
+             ('on_delete', '=', 'cascade')]):
+            recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
+            recs._unlink_invalidate_cache()
+        
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
-
-        return True
+        self.invalidate_cache(ids=self.ids)
 
     @api.multi
     def write(self, vals):
