@@ -42,7 +42,6 @@ Wizards provided by this module:
         'l10n_multilang',
     ],
     'data': [
-        'data/res.country.state.csv',
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_pcmn_belgium_data.xml',
