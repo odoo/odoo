@@ -19,7 +19,7 @@ from werkzeug.urls import url_encode
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
@@ -458,6 +458,9 @@ class SaleOrder(models.Model):
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'company_id': self.company_id.id,
+            'campaign_id': self.campaign_id.id,
+            'medium_id': self.medium_id.id,
+            'source_id': self.source_id.id,
             'user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],

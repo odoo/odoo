@@ -120,6 +120,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'payment_term_id': order.payment_term_id.id,
             'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
             'team_id': order.team_id.id,
+            'campaign_id': order.campaign_id.id,
+            'medium_id': order.medium_id.id,
+            'source_id': order.source_id.id,
             'user_id': order.user_id.id,
             'comment': order.note,
         })
