@@ -59,7 +59,7 @@ class StockPicking(models.Model):
         return weight_uom_id
 
     @api.one
-    @api.depends('move_line_ids')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
         self.ensure_one()
         packs = set()
@@ -69,7 +69,7 @@ class StockPicking(models.Model):
         self.package_ids = list(packs)
 
     @api.one
-    @api.depends('move_line_ids')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
         weight = 0.0
         for move_line in self.move_line_ids:
