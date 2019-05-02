@@ -3216,8 +3216,11 @@ Fields:
     
     def _unlink_invalidate_cache(self, datas):
         for data in datas:
-            self.env[data['model']].invalidate_cache(ids=data['ids'])
-            _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, data['model'], data['ids'])
+            if data.get('field'):
+                self.env[data['model']].invalidate_cache(fnames=[data['field']])
+            else:
+                self.env[data['model']].invalidate_cache(ids=data['ids'])
+                _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, data['model'], data['ids'])
 
     def _unlink_invalidate_cache_get_data(self):
         if not self.ids:
@@ -3226,14 +3229,18 @@ Fields:
         res = [{'model':self._name, 'ids': self.ids}]
         for field in self.env['ir.model.fields'].sudo().search(
             [('relation', '=', self._name),
-             ('store','=', True),
              '|',
                  '&',
                     ('ttype', '=', 'many2one'),
                     ('on_delete', '=', 'cascade'),
                  ('ttype','=','many2many'),]):
-            recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
-            res.extend(recs._unlink_invalidate_cache_get_data())
+
+            if field.store:
+                recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
+                res.extend(recs._unlink_invalidate_cache_get_data())
+            else:
+                res.append({'model':field.model, 'field':field.name})
+
         return res
 
     @api.multi
