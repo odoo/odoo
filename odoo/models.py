@@ -3164,10 +3164,11 @@ Fields:
             Defaults = self.env['ir.default'].sudo()
             Attachment = self.env['ir.attachment']
             Translation = self.env['ir.translation'].sudo()
-            
-            unlink_datas = self._unlink_invalidate_cache_get_data()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
+                
+                self.browse(sub_ids)._unlink_cascade()
+                
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
                 cr.execute(query, (sub_ids,))
 
@@ -3209,39 +3210,25 @@ Fields:
         if self.env.recompute and self._context.get('recompute', True):
             self.recompute()
             
-        # clear cache
-        self._unlink_invalidate_cache(unlink_datas)
+        # auditing: deletions are infrequent and leave no trace in the database
+        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
+        self.invalidate_cache(ids=self.ids)
 
         return True
     
-    def _unlink_invalidate_cache(self, datas):
-        for data in datas:
-            if data.get('field'):
-                self.env[data['model']].invalidate_cache(fnames=[data['field']])
-            else:
-                self.env[data['model']].invalidate_cache(ids=data['ids'])
-                _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, data['model'], data['ids'])
-
-    def _unlink_invalidate_cache_get_data(self):
+    def _unlink_cascade(self):
         if not self.ids:
-            return []
+            return
 
-        res = [{'model':self._name, 'ids': self.ids}]
         for field in self.env['ir.model.fields'].sudo().search(
             [('relation', '=', self._name),
-             '|',
-                 '&',
-                    ('ttype', '=', 'many2one'),
-                    ('on_delete', '=', 'cascade'),
-                 ('ttype','=','many2many'),]):
+             ('store','=', True),
+             ('on_delete','=','cascade'),
+             ('ttype', '=', 'many2one')]):
 
-            if field.store:
-                recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
-                res.extend(recs._unlink_invalidate_cache_get_data())
-            else:
-                res.append({'model':field.model, 'field':field.name})
+            recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
+            recs.unlink()
 
-        return res
 
     @api.multi
     def write(self, vals):
