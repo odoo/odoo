@@ -1095,3 +1095,12 @@ class Picking(models.Model):
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
         return action
+
+    def action_picking_move_tree(self):
+        action = self.env.ref('stock.stock_move_action').read()[0]
+        action['views'] = [
+            (self.env.ref('stock.view_picking_move_tree').id, 'tree'),
+        ]
+        action['context'] = self.env.context
+        action['domain'] = [('picking_id', 'in', self.ids)]
+        return action

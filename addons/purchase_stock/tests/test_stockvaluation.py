@@ -877,3 +877,244 @@ class TestStockValuationWithCOA(AccountingTestCase):
             exchange_stock_line = reconciled_lines.filtered(lambda l: l.journal_id == exhange_diff_journal)
             self.assertEqual(exchange_stock_line.amount_currency, 0.00)
             self.assertAlmostEqual(exchange_stock_line.balance, 27.86)
+
+    def test_average_realtime_with_two_delivery_anglo_saxon_valuation_multicurrency_different_dates(self):
+        """
+        The PO and invoice are in the same foreign currency.
+        The deliveries occur at different times and rates
+        The invoice is created at an even different date
+        This should create a price difference entry.
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+
+        date_po = '2019-01-01'
+        date_delivery = '2019-01-08'
+        date_delivery1 = '2019-01-10'
+        date_invoice = '2019-01-16'
+        date_invoice1 = '2019-01-20'
+
+        product_avg = self.product1.product_tmpl_id.copy({
+            'valuation': 'real_time',
+            'purchase_method': 'purchase',
+            'cost_method': 'average',
+            'name': 'AVG',
+            'standard_price': 60,
+            'property_account_creditor_price_difference': self.price_diff_account.id
+        }).product_variant_id
+        product_avg.invoice_policy = 'order'
+
+        # SetUp currency and rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_delivery,
+            'rate': 0.7,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+        self.env['res.currency.rate'].create({
+            'name': date_delivery1,
+            'rate': 0.8,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_invoice,
+            'rate': 2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+        self.env['res.currency.rate'].create({
+            'name': date_invoice1,
+            'rate': 2.2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # To allow testing validation of PO
+        def _today(*args, **kwargs):
+            return date_po
+        # To allow testing validation of Delivery
+        delivery_now = date_delivery
+        def _now(*args, **kwargs):
+            return delivery_now + ' 01:00:00'
+
+        patchers = [
+            patch('odoo.fields.Date.context_today', _today),
+            patch('odoo.fields.Datetime.now', _now),
+        ]
+
+        for p in patchers:
+            p.start()
+
+        # Proceed
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'product_id': product_avg.id,
+                    'product_qty': 10.0,
+                    'product_uom': product_avg.uom_po_id.id,
+                    'price_unit': 30.0,
+                    'date_planned': date_po,
+                })
+            ],
+        })
+        po.button_confirm()
+
+        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+
+        picking = po.picking_ids
+        (picking.move_lines
+            .filtered(lambda l: l.purchase_line_id == line_product_avg)
+            .write({'quantity_done': 5.0}))
+
+        picking.button_validate()
+        picking.action_done()  # Create Backorder
+
+        inv = self.env['account.invoice'].create({
+            'type': 'in_invoice',
+            'date_invoice': date_invoice,
+            'currency_id': self.eur_currency.id,
+            'purchase_id': po.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'price_subtotal': 100.0,
+                    'price_unit': 20.0,
+                    'product_id': product_avg.id,
+                    'purchase_id': po.id,
+                    'purchase_line_id': line_product_avg.id,
+                    'quantity': 5.0,
+                    'account_id': self.stock_input_account.id,
+                })
+            ]
+        })
+
+        inv.action_invoice_open()
+
+        backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        delivery_now = date_delivery1
+        (backorder_picking.move_lines
+            .filtered(lambda l: l.purchase_line_id == line_product_avg)
+            .write({'quantity_done': 5.0}))
+        backorder_picking.button_validate()
+
+        inv1 = self.env['account.invoice'].create({
+            'type': 'in_invoice',
+            'date_invoice': date_invoice1,
+            'currency_id': self.eur_currency.id,
+            'purchase_id': po.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'price_subtotal': 200.0,
+                    'price_unit': 40.0,
+                    'product_id': product_avg.id,
+                    'purchase_id': po.id,
+                    'purchase_line_id': line_product_avg.id,
+                    'quantity': 5.0,
+                    'account_id': self.stock_input_account.id,
+                })
+            ]
+        })
+
+        inv1.action_invoice_open()
+
+        for p in patchers:
+            p.stop()
+
+        ##########################
+        #       Invoice 0        #
+        ##########################
+        move_lines = inv.move_id.line_ids
+        self.assertEqual(len(move_lines), 3)
+
+        # PAYABLE CHECK
+        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEqual(payable_line.amount_currency, -100.0)
+        self.assertAlmostEqual(payable_line.balance, -50.00)
+
+        # # PRODUCTS CHECKS
+
+        # DELIVERY DIFFERENCE (AVERAGE)
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.journal_id, inv.journal_id)
+        self.assertEqual(stock_line.amount_currency, 150.00)
+        self.assertAlmostEqual(stock_line.balance, 75.00)
+
+        price_diff_line = move_lines.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(price_diff_line.amount_currency, -50.00)
+        self.assertAlmostEqual(price_diff_line.balance, -25.00)
+
+        full_reconcile = stock_line.full_reconcile_id
+        self.assertTrue(full_reconcile.exists())
+
+        reconciled_lines = full_reconcile.reconciled_line_ids - stock_line
+        self.assertEqual(len(reconciled_lines), 2)
+
+        stock_journal_line = reconciled_lines.filtered(lambda l: l.journal_id == self.stock_journal)
+        self.assertEqual(stock_journal_line.amount_currency, -150)
+        self.assertAlmostEqual(stock_journal_line.balance, -214.29)
+
+        exhange_diff_journal = company.currency_exchange_journal_id.exists()
+        exchange_stock_line = reconciled_lines.filtered(lambda l: l.journal_id == exhange_diff_journal)
+        self.assertEqual(exchange_stock_line.amount_currency, 0.00)
+        self.assertAlmostEqual(exchange_stock_line.balance, 139.29)
+
+        ##########################
+        #       Invoice 1        #
+        ##########################
+        move_lines = inv1.move_id.line_ids
+        self.assertEqual(len(move_lines), 3)
+
+        # PAYABLE CHECK
+        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEqual(payable_line.amount_currency, -200.0)
+        self.assertAlmostEqual(payable_line.balance, -90.91)
+
+        # # PRODUCTS CHECKS
+
+        # DELIVERY DIFFERENCE (AVERAGE)
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.journal_id, inv.journal_id)
+        self.assertEqual(stock_line.amount_currency, 150.00)
+        self.assertAlmostEqual(stock_line.balance, 68.18)
+
+        price_diff_line = move_lines.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(price_diff_line.amount_currency, 50.00)
+        self.assertAlmostEqual(price_diff_line.balance, 22.73)
+
+        full_reconcile = stock_line.full_reconcile_id
+        self.assertTrue(full_reconcile.exists())
+
+        reconciled_lines = full_reconcile.reconciled_line_ids - stock_line
+        self.assertEqual(len(reconciled_lines), 2)
+
+        stock_journal_line = reconciled_lines.filtered(lambda l: l.journal_id == self.stock_journal)
+        self.assertEqual(stock_journal_line.amount_currency, -150)
+        self.assertAlmostEqual(stock_journal_line.balance, -187.5)
+
+        exhange_diff_journal = company.currency_exchange_journal_id.exists()
+        exchange_stock_line = reconciled_lines.filtered(lambda l: l.journal_id == exhange_diff_journal)
+        self.assertEqual(exchange_stock_line.amount_currency, 0.00)
+        self.assertAlmostEqual(exchange_stock_line.balance, 119.32)

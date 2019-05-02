@@ -2235,8 +2235,8 @@ class _RelationalMulti(_Relational):
         elif isinstance(value, (list, tuple)):
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
-            # determine the value ids; by convention empty on new records
-            ids = OrderedSet(record[self.name].ids if record.id else ())
+            # determine the value ids
+            ids = OrderedSet(record[self.name]._ids)
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
