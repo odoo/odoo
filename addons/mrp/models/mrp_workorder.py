@@ -256,6 +256,9 @@ class MrpWorkorder(models.Model):
             self.button_finish()
         return True
 
+    def _get_byproduct_move_to_update(self):
+        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
+
     @api.multi
     def _start_nextworkorder(self):
         rounding = self.product_id.uom_id.rounding

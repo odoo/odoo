@@ -14,12 +14,12 @@ class PurchaseOrderLine(models.Model):
             re['sale_line_id'] = self.sale_line_id.id
         return res
 
-    def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        if values.get('route_ids') and values['route_ids'] == self.env.ref('stock_dropshipping.route_drop_shipping'):
-            return False
-        return super(PurchaseOrderLine, self)._merge_in_existing_line(
-            product_id=product_id, product_qty=product_qty, product_uom=product_uom,
-            location_id=location_id, name=name, origin=origin, values=values)
+    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        # if this is defined, this is a dropshipping line, so no
+        # this is to correctly map delivered quantities to the so lines
+        lines = self.filtered(lambda po_line: po_line.sale_line_id.id == values['sale_line_id']) if values.get('sale_line_id') else self
+        return super(PurchaseOrderLine, lines)._find_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'

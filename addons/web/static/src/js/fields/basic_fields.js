@@ -805,7 +805,7 @@ var FieldBoolean = AbstractField.extend({
      * @returns {jQuery} the focusable checkbox input
      */
     getFocusableElement: function () {
-        return this.$input || $();
+        return this.mode === 'readonly' ? $() : this.$input;
     },
     /**
      * A boolean field is always set since false is a valid value.
@@ -1035,7 +1035,13 @@ var FieldFloatToggle = AbstractField.extend({
      * @returns {float} The current formatted value
      */
     _getDisplayedValue: function () {
-        return parseFloat(this._formatValue(this.value));
+        // this.value is a plain float
+        // Matches what is in Database
+        var usrFormatValue = this._formatValue(this.value);
+        // usrFormatValue is string
+        // contains a float represented in a user specific format
+        // the float is the fraction by [this.factor] of this.value
+        return field_utils.parse['float'](usrFormatValue);
     },
     /**
      * Formats the HTML input tag for edit mode and stores selection status.
@@ -1062,7 +1068,7 @@ var FieldFloatToggle = AbstractField.extend({
      * one is not in the range, the next value of the closest one will be chosen.
      *
      * @private
-     * @returns {number} The next formatted value in the range
+     * @returns {number} The next value in the range
      */
     _nextValue: function () {
         var range = this.nodeOptions.range;
@@ -1091,7 +1097,8 @@ var FieldFloatToggle = AbstractField.extend({
         if (this.mode === 'edit') {
             ev.stopPropagation(); // only stop propagation in edit mode
             var next_val = this._nextValue();
-            this._setValue(next_val.toString()); // will be parsed in _setValue
+            next_val = field_utils.format['float'](next_val);
+            this._setValue(next_val); // will be parsed in _setValue
         }
     },
 

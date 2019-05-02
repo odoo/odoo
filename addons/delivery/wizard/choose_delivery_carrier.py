@@ -53,7 +53,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _compute_available_carrier(self):
         carriers = self.env['delivery.carrier'].search([])
         for rec in self:
-            rec.available_carrier_ids = carriers.available_carriers(rec.partner_id) if rec.partner_id else carriers
+            rec.available_carrier_ids = carriers.available_carriers(rec.order_id.partner_shipping_id) if rec.partner_id else carriers
 
     def update_price(self):
         vals = self.carrier_id.rate_shipment(self.order_id)

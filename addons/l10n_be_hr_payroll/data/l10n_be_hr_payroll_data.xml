@@ -188,7 +188,7 @@ result = bool(contract.ip)
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = - categories.GROSSIP * contract.ip_wage_rate / 100.0
+result = - categories.BASIC * contract.ip_wage_rate / 100.0
         </field>
     </record>
 
@@ -530,7 +530,7 @@ result = -contract.car_atn
         <field name="sequence">172</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result = bool(contract.ip)</field>
-        <field name="amount_python_compute">result = categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+        <field name="amount_python_compute">result = categories.BASIC * contract.ip_wage_rate / 100.0</field>
     </record>
     <record id="hr_salary_rule_ip_deduction" model="hr.salary.rule">
         <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
@@ -542,7 +542,7 @@ result = -contract.car_atn
         <field name="condition_python">result = bool(contract.ip)</field>
         <field name="amount_python_compute">
 tax_rate = 0.15
-ip_amount = categories.GROSSIP * contract.ip_wage_rate / 100.0
+ip_amount = categories.BASIC * contract.ip_wage_rate / 100.0
 if ip_amount &gt;= 0.0 and ip_amount &lt;= 15660:
     tax_rate = tax_rate / 2.0
 elif ip_amount &gt; 15660 and ip_amount &lt;=31320:

@@ -62,8 +62,10 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         """ Tests the case into which we receive the goods first, and then make the invoice.
         """
         test_product = self.test_product_delivery
-        purchase_order = self._create_purchase(test_product, '2018-01-01')
-        self._process_pickings(purchase_order.picking_ids)
+        date_po_and_delivery = '2018-01-01'
+
+        purchase_order = self._create_purchase(test_product, date_po_and_delivery)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
 
         invoice = self._create_invoice_for_po(purchase_order, '2018-02-02')
         self.env['res.currency.rate'].create({
@@ -149,8 +151,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         """ Tests the case into which we receive part of the goods first, then 2 invoices at different rates, and finally the remaining quantities
         """
         test_product = self.test_product_delivery
-        purchase_order = self._create_purchase(test_product, '2017-01-01', quantity=5.0)
-        self._process_pickings(purchase_order.picking_ids, quantity=2.0)
+        date_po_and_delivery0 = '2017-01-01'
+        purchase_order = self._create_purchase(test_product, date_po_and_delivery0, quantity=5.0)
+        self._process_pickings(purchase_order.picking_ids, quantity=2.0, date=date_po_and_delivery0)
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)], order="id asc", limit=1)
 
         invoice = self._create_invoice_for_po(purchase_order, '2017-01-15')
@@ -183,6 +186,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'rate': 12.195747002,
             'name': '2017-04-01',
         })
+        # We don't need to make the date of processing explicit since the very last rate
+        # will be taken
         self._process_pickings(purchase_order.picking_ids.filtered(lambda x: x.state != 'done'), quantity=3.0)
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)], order='id desc', limit=1)
         self.check_reconciliation(invoice2, picking)

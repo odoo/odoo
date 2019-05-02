@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
+from odoo.tests.common import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
@@ -150,3 +151,25 @@ class TestLeaveRequests(TestHrHolidaysBase):
                 'date_to': fields.Datetime.from_string('2017-07-11 19:00:00'),
                 'number_of_days': 1,
             })
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_department_leave(self):
+        """ Create a department leave """
+        self.employee_hrmanager.write({'department_id': self.hr_dept.id})
+        self.assertFalse(self.env['hr.leave'].search([('employee_id', 'in', self.hr_dept.member_ids.ids)]))
+        leave_form = Form(self.env['hr.leave'].sudo(self.user_hrmanager))
+        leave_form.holiday_status_id = self.holidays_type_1
+        leave_form.holiday_type = 'department'
+        leave_form.department_id = self.hr_dept
+        leave = leave_form.save()
+        leave.action_approve()
+        member_ids = self.hr_dept.member_ids.ids
+        self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Leave should be created for members of department")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_allocation_request(self):
+        """ Create an allocation request """
+        # employee should be set to current user
+        allocation_form = Form(self.env['hr.leave.allocation'].sudo(self.user_employee))
+        allocation_form.holiday_status_id = self.holidays_type_1
+        allocation = allocation_form.save()
