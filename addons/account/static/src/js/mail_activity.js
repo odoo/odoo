@@ -11,7 +11,8 @@ var _t = core._t;
 var VatActivity = AbstractField.extend({
     className: 'o_journal_activity_kanban',
     events: {
-        'click .see_all_activities': '_onOpenJournalSettings',
+        'click .see_all_activities': '_onOpenAll',
+        'click .see_activity': '_onOpenActivity',
     },
     init: function () {
         this.MAX_ACTIVITY_DISPLAY = 5;
@@ -35,15 +36,29 @@ var VatActivity = AbstractField.extend({
         this.$el.html(QWeb.render('accountJournalDashboardActivity', info));
     },
 
-    _onOpenJournalSettings: function(e) {
+    _onOpenActivity: function(e) {
         e.preventDefault();
         var self = this;
         self.do_action({
-            target: 'current',
-            res_id: self.res_id,
             type: 'ir.actions.act_window',
-            res_model: 'account.journal',
+            name: _t('Journal Entry'),
+            target: 'current',
+            res_id: $(e.target).data('resId'),
+            res_model:  'account.move',
             views: [[false, 'form']],
+        });
+    },
+
+    _onOpenAll: function(e) {
+        e.preventDefault();
+        var self = this;
+        self.do_action({
+            type: 'ir.actions.act_window',
+            name: _t('Journal Entries'),
+            res_model:  'account.move',
+            views: [[false, 'kanban'], [false, 'form']],
+            search_view_id: [false],
+            domain: [['journal_id', '=', self.res_id], ['activity_ids', '!=', false]],
         });
     }
 })

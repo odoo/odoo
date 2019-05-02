@@ -23,7 +23,12 @@
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
                                     <t t-if="journal_type == 'general'">
-                                        <div class="col-12 o_kanban_primary_left o_general_activity">
+                                        <div class="col-5 o_kanban_primary_left">
+                                            <button type="object" name="action_create_new" class="btn btn-primary">
+                                                <span>New Entry</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-7 o_kanban_primary_right">
                                             <field name="json_activity_data" widget="kanban_vat_activity"/>
                                         </div>
                                     </t>
