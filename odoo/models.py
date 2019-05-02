@@ -3165,7 +3165,7 @@ Fields:
             Attachment = self.env['ir.attachment']
             Translation = self.env['ir.translation'].sudo()
             
-            self._unlink_invalidate_cache()
+            unlink_datas = self._unlink_invalidate_cache_get_data()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
@@ -3208,13 +3208,22 @@ Fields:
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):
             self.recompute()
+            
+        # clear cache
+        self._unlink_invalidate_cache(unlink_datas)
 
         return True
     
-    def _unlink_invalidate_cache(self):
-        if not self.ids:
-            return
+    def _unlink_invalidate_cache(self, datas):
+        for data in datas:
+            self.env[data['model']].invalidate_cache(ids=data['ids'])
+            _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, data['model'], data['ids'])
 
+    def _unlink_invalidate_cache_get_data(self):
+        if not self.ids:
+            return []
+
+        res = [{'model':self._name, 'ids': self.ids}]
         for field in self.env['ir.model.fields'].sudo().search(
             [('relation', '=', self._name),
              ('store','=', True),
@@ -3223,10 +3232,9 @@ Fields:
                     ('ttype', '=', 'many2one'),
                     ('on_delete', '=', 'cascade'),
                  ('ttype','=','many2many'),]):
-        
-        # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
-        self.invalidate_cache(ids=self.ids)
+            recs = self.env[field.model].with_context(active_test=False).sudo().search([(field.name, 'in', self.ids)])
+            res.extend(recs._unlink_invalidate_cache_get_data())
+        return res
 
     @api.multi
     def write(self, vals):
