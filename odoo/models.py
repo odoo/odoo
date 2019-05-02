@@ -2665,6 +2665,29 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
+    def _setup_cascade_unlink(self):
+        cls = type(self)
+
+        field_unlink = defaultdict(list)
+        field_clear_cache = defaultdict(list)
+        for model in self.env.values():
+            for f in model._fields.values():
+                if f.comodel_name == self._name :
+                    if f.type == 'many2one':
+                        if f.store:
+                            if f.ondelete == 'cascade':
+                                field_unlink[model].append(f)
+                            elif f.ondelete == 'set null':
+                                field_clear_cache[model].append(f)
+                        else:
+                            field_clear_cache[model].append(f)
+
+                    elif f.type == 'many2many':
+                        field_clear_cache[model].append(f)
+
+        cls._field_unlink = dict(field_unlink)
+        cls._field_clear_cache = dict(field_clear_cache)
+
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         """ fields_get([fields][, attributes])
@@ -3166,6 +3189,16 @@ Fields:
             Translation = self.env['ir.translation'].sudo()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
+                # Unlink first cascade field
+                # Cascade bypass ACL and Rules, use SQL
+                for model, fields in self._field_unlink.items():
+                    for field in fields:
+                        query = 'SELECT id FROM {table} WHERE {field} IN %s'.format(table=model._table, field=field.name)
+                        cr.execute(query, (sub_ids,))
+                        recs = self.env[model._name].browse([row[0] for row in cr.fetchall()])
+                        if recs:
+                            recs.sudo().unlink()
+
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
                 cr.execute(query, (sub_ids,))
 
@@ -3203,9 +3236,10 @@ Fields:
                     if translations:
                         translations.unlink()
 
-            # invalidate the *whole* cache, since the orm does not handle all
-            # changes made in the database, like cascading delete!
-            self.invalidate_cache()
+            # Soft Invalidate cache
+            for model, fields in self._field_clear_cache.items():
+                self.env[model._name].invalidate_cache(fnames=[f.name for f in fields])
+            self.invalidate_cache(ids=self.ids)
 
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):
@@ -3215,6 +3249,7 @@ Fields:
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
 
         return True
+
 
     @api.multi
     def write(self, vals):

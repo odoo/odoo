@@ -269,6 +269,9 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
+        for model in models:
+            model._setup_cascade_unlink()
+
         self.registry_invalidated = True
 
     def post_init(self, func, *args, **kwargs):

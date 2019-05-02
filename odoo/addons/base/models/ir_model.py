@@ -209,6 +209,7 @@ class IrModel(models.Model):
 
         self._drop_table()
         res = super(IrModel, self).unlink()
+        self.invalidate_cache()
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
@@ -664,6 +665,7 @@ class IrModelFields(models.Model):
         model_names = self.mapped('model')
         self._drop_column()
         res = super(IrModelFields, self).unlink()
+        self.invalidate_cache()
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.

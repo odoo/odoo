@@ -164,6 +164,7 @@ class Page(models.Model):
         # When a website_page is deleted, the ORM does not delete its
         # ir_ui_view. So we got to delete it ourself, but only if the
         # ir_ui_view is not used by another website_page.
+        unlink_view = self.env['ir.ui.view']
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
             pages_linked_to_iruiview = self.search(
@@ -171,8 +172,10 @@ class Page(models.Model):
             )
             if not pages_linked_to_iruiview and not page.view_id.inherit_children_ids:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
-                page.view_id.unlink()
-        return super(Page, self).unlink()
+                unlink_view |= page.view_id
+        res = super(Page, self).unlink()
+        unlink_view.unlink()
+        return res
 
     @api.multi
     def write(self, vals):
