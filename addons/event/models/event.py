@@ -22,6 +22,7 @@ except ImportError:
 class EventType(models.Model):
     _name = 'event.type'
     _description = 'Event Category'
+    _order = 'sequence, id'
 
     @api.model
     def _get_default_event_type_mail_ids(self):
@@ -42,6 +43,7 @@ class EventType(models.Model):
         })]
 
     name = fields.Char('Event Category', required=True, translate=True)
+    sequence = fields.Integer()
     # registration
     has_seats_limitation = fields.Boolean(
         'Limited Seats', default=False)
