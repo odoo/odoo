@@ -48,7 +48,6 @@ class AccountInvoice(models.Model):
                         inv.currency_id,
                         company=inv.company_id, date=fields.Date.today(), round=False,
                     )
-                    line_quantity = line['quantity']
 
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         po_currency = i_line.purchase_id.currency_id
@@ -86,7 +85,6 @@ class AccountInvoice(models.Model):
                             # in Stock Move, price unit is in company_currency
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
-                            line_quantity = valuation_total_qty
 
                         elif i_line.product_id.cost_method == 'fifo':
                             # In this condition, we have a real price-valuated product which has not yet been received
@@ -95,7 +93,7 @@ class AccountInvoice(models.Model):
                                 company=po_company, date=inv.date or inv.date_invoice, round=False,
                             )
 
-                    interim_account_price = valuation_price_unit * line_quantity
+                    interim_account_price = valuation_price_unit * line['quantity']
                     invoice_cur_prec = inv.currency_id.decimal_places
 
                     if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
@@ -126,7 +124,7 @@ class AccountInvoice(models.Model):
                                 'type': 'src',
                                 'name': i_line.name[:64],
                                 'price_unit': price_unit_val_dif,
-                                'quantity': line_quantity,
+                                'quantity': line['quantity'],
                                 'price': inv.currency_id.round(price_val_dif),
                                 'account_id': acc,
                                 'product_id': line['product_id'],

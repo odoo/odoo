@@ -994,7 +994,7 @@ class AccountMoveLine(models.Model):
 
         partner_id = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
         company_currency = self[0].account_id.company_id.currency_id
-        writeoff_currency = self[0].currency_id or company_currency
+        writeoff_currency = self[0].account_id.currency_id or company_currency
         line_to_reconcile = self.env['account.move.line']
         # Iterate and create one writeoff by journal
         writeoff_moves = self.env['account.move']

@@ -360,6 +360,9 @@ class ProductTemplate(models.Model):
                 related_vals['volume'] = vals['volume']
             if vals.get('weight'):
                 related_vals['weight'] = vals['weight']
+            # Please do forward port
+            if vals.get('packaging_ids'):
+                related_vals['packaging_ids'] = vals['packaging_ids']
             if related_vals:
                 template.write(related_vals)
 
