@@ -33,6 +33,7 @@
                 <field name="depreciation_date"/>
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Assets in draft state"/>
                 <filter string="Running" name="running" domain="[('state','=','open')]" help="Assets in running state"/>
+                <filter string="Not archived" name="only_active" domain="[('asset_id.active','=', True)]"/>
                 <separator/>
                 <filter string="Posted" name="posted" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
                 <field name="asset_id"/>
@@ -62,7 +63,7 @@
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="view_asset_asset_report_search"/>
         <field name="domain">[('asset_category_id.type', '=', 'purchase')]</field>
-        <field name="context">{}</field>  <!-- force empty -->
+        <field name="context">{'search_default_only_active': 1}</field>
         <field name="help" type="html">
           <p>
             From this report, you can have an overview on all depreciations. The
