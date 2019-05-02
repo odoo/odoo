@@ -70,6 +70,12 @@ class AccountInvoice(models.Model):
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
+    def _compute_sign_taxes(self):
+        for invoice in self:
+            sign = invoice.type in ['in_refund', 'out_refund'] and -1 or 1
+            invoice.amount_untaxed_invoice_signed = invoice.amount_untaxed * sign
+            invoice.amount_tax_signed = invoice.amount_tax * sign
+
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
         for inv in self:
@@ -324,8 +330,12 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount in Company Currency', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount')
+    amount_untaxed_invoice_signed = fields.Monetary(string='Untaxed Amount in Invoice Currency', currency_field='currency_id',
+        readonly=True, compute='_compute_sign_taxes')
     amount_tax = fields.Monetary(string='Tax',
         store=True, readonly=True, compute='_compute_amount')
+    amount_tax_signed = fields.Monetary(string='Tax in Invoice Currency', currency_field='currency_id',
+        readonly=True, compute='_compute_sign_taxes')
     amount_total = fields.Monetary(string='Total',
         store=True, readonly=True, compute='_compute_amount')
     amount_total_signed = fields.Monetary(string='Total in Invoice Currency', currency_field='currency_id',
