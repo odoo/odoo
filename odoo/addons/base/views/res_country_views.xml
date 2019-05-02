@@ -54,6 +54,21 @@
             </field>
         </record>
 
+        <record id="view_country_search" model="ir.ui.view">
+            <field name="name">res.country.search</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <search string="Search country">
+                    <field name="name" string="Country Name"/>
+                    <field name="code"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Currency" name="currency" context="{'group_by': 'currency_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_country" model="ir.actions.act_window">
             <field name="name">Countries</field>
             <field name="type">ir.actions.act_window</field>
@@ -124,6 +139,22 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_country_state_search" model="ir.ui.view">
+            <field name="name">res.country.state.search</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <search string="Search country state">
+                    <field name="name" string="Country state name"/>
+                    <field name="country_id"/>
+                    <field name="code"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Country" name="country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
