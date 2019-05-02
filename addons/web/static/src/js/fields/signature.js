@@ -116,6 +116,7 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
         __last_update: {type: 'datetime'},
     }),
+    resetOnAnyFieldChange: true,
     custom_events: _.extend({}, AbstractFieldBinary.prototype.custom_events, {
         upload_signature: '_onUploadSignature',
     }),
@@ -231,18 +232,13 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
             };
 
             if (this.nodeOptions.full_name) {
-                var $search = $("[name='" + this.nodeOptions.full_name + "']");
-                // If full_name correspond to field in read-only mode
-                var signName = $($search).text();
-
-                // If full_name correspond to field to fill
-                if (!signName && $($search)[0]) {
-                    signName = $($search)[0].value;
-                }
-                if (!signName) {
-                    // If full_name is in the recordData. Last option because this value might not be the last value.
-                    signName = this.recordData[this.nodeOptions.full_name] || '';
-                }
+                var signName;
+                if (this.fields[this.nodeOptions.full_name].type === 'many2one') {
+                    // If m2o is empty, it will have falsy value in recordData
+                    signName = this.recordData[this.nodeOptions.full_name] && this.recordData[this.nodeOptions.full_name].data.display_name;
+                } else {
+                     signName = this.recordData[this.nodeOptions.full_name];
+                 }
                 nameAndSignatureOptions.defaultName = (signName === '') ? undefined : signName;
             }
 
