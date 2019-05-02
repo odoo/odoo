@@ -20,7 +20,6 @@
         'data/account.account.template.csv',
         'data/account.chart.template.csv',
         'data/account_tax_data.xml',
-        'data/res.country.state.csv',
         'data/account_chart_template_configuration_data.xml',
     ],
 }
