@@ -30,6 +30,7 @@ class TestOutOfOffice(TestHrHolidaysBase):
             'number_of_days': 4,
         })
         leave.action_approve()
+        leave.invalidate_cache()
         self.assertEqual(self.employee_hruser.user_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
         self.assertEqual(self.employee_hruser.user_id.partner_id.im_status, 'leave_offline', 'user should be out (leave_offline)')
 
