@@ -169,11 +169,29 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     start: function () {
         var def = this._super.apply(this, arguments);
 
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            var params = $.deparam(hash);
+            if (params['attr']) {
+                var attributeIds = params['attr'].split(',');
+                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+                _.each(attributeIds, function (id) {
+                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                    if ($toSelect.is('input[type="radio"]')) {
+                        $toSelect.prop('checked', true);
+                    } else if ($toSelect.is('option')) {
+                        $toSelect.prop('selected', true);
+                    }
+                });
+                this._changeColorAttribute();
+            }
+        }
+
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
         });
 
-        // This has to be triggered to compute the "out of stock" feature
+        // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
 
         this.$('select[name="country_id"]').change();
@@ -209,6 +227,28 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Sets the url hash from the selected product options.
+     *
+     * @private
+     */
+    _setUrlHash: function ($parent) {
+        var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
+        var attributeIds = _.map($attributes, function (elem) {
+            return $(elem).data('value_id');
+        });
+        history.replaceState(undefined, undefined, '#attr=' + attributeIds.join(','));
+    },
+    /**
+     * Set the checked color active.
+     *
+     * @private
+     */
+    _changeColorAttribute: function () {
+        $('.css_attribute_color').removeClass("active")
+                                 .filter(':has(input:checked)')
+                                 .addClass("active");
+    },
     /**
      * @private
      */
@@ -607,9 +647,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @param {Event} ev
      */
     _onChangeColorAttribute: function (ev) { // highlight selected color
-        $('.css_attribute_color').removeClass("active")
-                                 .filter(':has(input:checked)')
-                                 .addClass("active");
+        this._changeColorAttribute();
     },
     /**
      * @private
@@ -677,6 +715,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             var $el = $(this);
             $el.attr('selected', $el.is(':selected'));
         });
+
+        this._setUrlHash($component);
 
         return VariantMixin.onChangeVariant.apply(this, arguments);
     },
