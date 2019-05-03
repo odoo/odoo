@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.mobile.scss"/>
 
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
@@ -121,6 +122,7 @@
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html_mobile.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js"/>
     </xpath>
 </template>
@@ -158,6 +160,24 @@
         <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_tests.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_keyboard_tests.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_snippets_tests.js"/>
+    </xpath>
+</template>
+
+<template id="qunit_mobile_suite" inherit_id="web.qunit_mobile_suite">
+    <xpath expr="//t[@t-set='head']" position="inside">
+        <script type="text/javascript">
+            odoo.define('web_editor.wysiwyg.root.test', function (require) {
+            'use strict';
+            var WysiwygRoot = require('web_editor.wysiwyg.root');
+            WysiwygRoot.include({
+            assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
+            });
+            });
+        </script>
+        <t t-call="web_editor.compiled_assets_wysiwyg"/>
+
+        <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
+        <script type="text/javascript" src="/web_editor/static/tests/field_html_mobile_tests.js"/>
     </xpath>
 </template>
 
