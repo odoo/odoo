@@ -356,7 +356,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
             assert.containsOnce(form, 'button.o_external_button:visible',
