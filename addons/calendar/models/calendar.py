@@ -409,9 +409,8 @@ class AlarmManager(models.AbstractModel):
 
         all_meetings = self.get_next_potential_limit_alarm('notification', partner_id=partner.id)
         time_limit = 3600 * 24  # return alarms of the next 24 hours
-        for event_id in all_meetings:
-            max_delta = all_meetings[event_id]['max_duration']
-            meeting = self.env['calendar.event'].browse(event_id)
+        for meeting in self.env['calendar.event'].search([('id', 'in', list(all_meetings))]):  # cannot browse
+            max_delta = all_meetings[meeting.id]['max_duration']
             if meeting.recurrency:
                 b_found = False
                 last_found = False

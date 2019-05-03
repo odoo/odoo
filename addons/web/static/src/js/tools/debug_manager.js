@@ -433,6 +433,7 @@ DebugManager.include({
         var fields = state.fields;
         var fieldsInfo = state.fieldsInfo.form;
         var fieldNamesInView = state.getFieldNames();
+        var fieldNamesOnlyOnView = ['message_attachment_count'];
         var fieldsValues = state.data;
         var modifierDatas = {};
         _.each(fieldNamesInView, function (fieldName) {
@@ -441,6 +442,7 @@ DebugManager.include({
             });
         });
         this.fields = _.chain(fieldNamesInView)
+            .difference(fieldNamesOnlyOnView)
             .map(function (fieldName) {
                 var modifierData = modifierDatas[fieldName];
                 var invisibleOrReadOnly;

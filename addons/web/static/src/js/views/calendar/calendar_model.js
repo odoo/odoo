@@ -60,10 +60,11 @@ return AbstractModel.extend({
             end.add(-1, 'days');
         }
 
+        var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
