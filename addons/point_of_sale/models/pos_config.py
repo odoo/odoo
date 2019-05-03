@@ -40,7 +40,7 @@ class PosConfig(models.Model):
     _description = 'Point of Sale Configuration'
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
@@ -53,9 +53,6 @@ class PosConfig(models.Model):
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.company.currency_id.id)], limit=1)
-
-    def _get_default_location(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
@@ -79,9 +76,6 @@ class PosConfig(models.Model):
         default=_default_picking_type_id,
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]")
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
-    stock_location_id = fields.Many2one(
-        'stock.location', string='Stock Location',
-        domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
@@ -227,11 +221,6 @@ class PosConfig(models.Model):
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
 
-    @api.constrains('company_id', 'stock_location_id')
-    def _check_company_location(self):
-        if self.stock_location_id.company_id and self.stock_location_id.company_id.id != self.company_id.id:
-            raise ValidationError(_("The stock location and the point of sale must belong to the same company."))
-
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
@@ -273,11 +262,6 @@ class PosConfig(models.Model):
     def _onchange_module_account(self):
         if self.module_account:
             self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
-
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_id(self):
-        if self.picking_type_id.default_location_src_id.usage == 'internal' and self.picking_type_id.default_location_dest_id.usage == 'customer':
-            self.stock_location_id = self.picking_type_id.default_location_src_id.id
 
     @api.onchange('use_pricelist')
     def _onchange_use_pricelist(self):
@@ -448,7 +432,6 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
-            self._check_company_location()
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
