@@ -16,6 +16,7 @@ from . import mail_blacklist
 from . import mail_channel
 from . import mail_template
 from . import mail_shortcode
+from . import models
 from . import res_partner
 from . import res_users
 from . import res_company

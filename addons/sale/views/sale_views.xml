@@ -94,6 +94,23 @@
         <menuitem action="uom.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="uom.group_uom" active="False"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3" active="False"/>
 
+        <record id="sale_order_view_activity" model="ir.ui.view">
+            <field name="name">sale.order.activity</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <activity string="Sales Orders">
+                    <templates>
+                        <div t-name="activity-box">
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="partner_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>

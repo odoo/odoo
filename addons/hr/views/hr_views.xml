@@ -383,6 +383,25 @@
             </field>
         </record>
 
+        <record id="hr_employee_view_activity" model="ir.ui.view">
+            <field name="name">hr.employee.activity</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <activity string="Employees">
+                    <field name="id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('hr.employee', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="job_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
