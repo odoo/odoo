@@ -12,4 +12,5 @@
         'views/payment_alipay_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
+    'post_init_hook': 'create_missing_journal_for_acquirers',
 }
