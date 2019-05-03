@@ -135,13 +135,12 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" editable="bottom">
                     <field name="date"/>
-                    <field name="move_id" required="0" groups="account.group_account_user"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]" groups="account.group_account_user"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_account_id" groups="account.group_account_user"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="reconciled" invisible="1"/>
@@ -154,6 +153,7 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="parent_state" invisible="1"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
                         <button name="edit" type="edit" string="Edit"/>
