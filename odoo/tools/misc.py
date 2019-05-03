@@ -467,7 +467,7 @@ def human_size(sz):
     """
     if not sz:
         return False
-    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    units = ('bytes', 'Kb', 'Mb', 'Gb', 'Tb')
     if isinstance(sz, str):
         sz=len(sz)
     s, i = float(sz), 0
