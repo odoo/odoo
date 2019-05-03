@@ -928,11 +928,19 @@
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='(line.discount === 0 and line.unit_name === "Units" and line.quantity === 1 and !discount_to_show and !(line.display_discount_policy == "without_discount" &amp;&amp; line.price != line.price_lst))' />
                     <t t-if='simple'>
+<<<<<<< HEAD
                         <div>
                             <t t-esc='line.product_name_wrapped[0]' />
                             <span t-esc='widget.format_currency_no_symbol(line.price_display)' class="price_display pos-receipt-right-align"/>
                         </div>
                         <t t-call="OrderReceiptWrappedProductNameLines"/>
+=======
+                        <line>
+                            <left><t t-esc='line.product_name_wrapped[0]' /></left>
+                            <right><t t-esc='widget.format_currency_no_symbol(line.price_display, pos.dp["Product Price"])'/></right>
+                        </line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
                     </t>
                     <t t-if='!simple'>
                         <div t-esc='line.product_name_wrapped[0]'/>
@@ -959,6 +967,7 @@
                                 Discount: <t t-esc='line.discount' />%
                             </div>
                         </t>
+<<<<<<< HEAD
                         <div class="pos-receipt-left-padding">
                             <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
                             <t t-if='line.unit_name !== "Units"' t-esc='line.unit_name'/>
@@ -968,6 +977,23 @@
                                 <t t-esc='widget.format_currency_no_symbol(line.price_display)'/>
                             </span>
                         </div>
+=======
+                        <line indent='1'>
+                            <left>
+                                <value t-att-value-decimals='pos.dp["Product Unit of Measure"]' value-autoint='on'>
+                                    <t t-esc='line.quantity' />
+                                </value>
+                                <t t-if='line.unit_name !== "Units"'>
+                                    <t t-esc='line.unit_name' />
+                                </t>
+                                x
+                                <t t-esc='widget.format_currency_no_symbol(line.price_display_one, pos.dp["Product Price"])'/>
+                            </left>
+                            <right>
+                                <t t-esc='widget.format_currency_no_symbol(line.price_display, pos.dp["Product Price"])'/>
+                            </right>
+                        </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
                     </t>
                 </t>
             </div>
@@ -976,6 +1002,7 @@
 
             <t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001' />
             <t t-if='!taxincluded'>
+<<<<<<< HEAD
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
                 <div>Subtotal<span t-esc='widget.format_currency(receipt.subtotal)' class="pos-receipt-right-align"/></div>
@@ -984,21 +1011,40 @@
                         <t t-esc='tax.name' />
                         <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
                     </div>
+=======
+                <line><right>--------</right></line>
+                <line><left>Subtotal</left><right><t t-esc='widget.format_currency_no_symbol(receipt.subtotal)'/></right></line>
+                <t t-foreach='receipt.tax_details' t-as='tax'>
+                    <line>
+                        <left><t t-esc='tax.name' /></left>
+                        <right><t t-esc='widget.format_currency_no_symbol(tax.amount)'/></right>
+                    </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
                 </t>
             </t>
 
             <!-- Total -->
+<<<<<<< HEAD
             <div class="pos-receipt-right-align">--------</div>
             <br/>
             <div class="pos-receipt-amount">
                 TOTAL
                 <span t-esc='widget.format_currency(receipt.total_with_tax)' class="pos-receipt-right-align"/>
             </div>
+=======
+
+            <line><right>--------</right></line>
+            <line class='total' size='double-height'>
+                <left><pre>        TOTAL</pre></left>
+                <right><t t-esc='widget.format_currency_no_symbol(receipt.total_with_tax)'/></right>
+            </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
             <br/><br/>
 
             <!-- Payment Lines -->
 
             <t t-foreach='paymentlines' t-as='line'>
+<<<<<<< HEAD
                 <div>
                     <t t-esc='line.name' />
                     <span t-esc='widget.format_currency_no_symbol(line.get_amount())' class="pos-receipt-right-align"/>
@@ -1010,11 +1056,25 @@
                 CHANGE
                 <span t-esc='widget.format_currency(receipt.change)' class="pos-receipt-right-align"/>
             </div>
+=======
+                <line>
+                    <left><t t-esc='line.name' /></left>
+                    <right><t t-esc='widget.format_currency_no_symbol(line.get_amount())'/></right>
+                </line>
+            </t>
+            <br/>
+
+            <line size='double-height'>
+                <left><pre>        CHANGE</pre></left>
+                <right><t t-esc='widget.format_currency_no_symbol(receipt.change)'/></right>
+            </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
             <br/>
 
             <!-- Extra Payment Info -->
 
             <t t-if='receipt.total_discount'>
+<<<<<<< HEAD
                 <div>
                     Discounts
                     <span t-esc='widget.format_currency(receipt.total_discount)' class="pos-receipt-right-align"/>
@@ -1031,6 +1091,24 @@
                     Total Taxes
                     <span t-esc='widget.format_currency(receipt.total_tax)' class="pos-receipt-right-align"/>
                 </div>
+=======
+                <line>
+                    <left>Discounts</left>
+                    <right><t t-esc='widget.format_currency_no_symbol(receipt.total_discount)'/></right>
+                </line>
+            </t>
+            <t t-if='taxincluded'>
+                <t t-foreach='receipt.tax_details' t-as='tax'>
+                    <line>
+                        <left><t t-esc='tax.name' /></left>
+                        <right><t t-esc='widget.format_currency_no_symbol(tax.amount)'/></right>
+                    </line>
+                </t>
+                <line>
+                    <left>Total Taxes</left>
+                    <right><t t-esc='widget.format_currency_no_symbol(receipt.total_tax)'/></right>
+                </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
             </t>
 
             <div class='before-footer' />
@@ -1090,10 +1168,18 @@
                             <t t-if='line.uom !== "Units"'>
                                 <t t-esc='line.uom' />
                             </t>
+<<<<<<< HEAD
                             x
                             <t t-esc='widget.format_currency_no_symbol(line.price_unit)' />
                         </span>
                     </div>
+=======
+                        </right>
+                        <right>
+                            <t t-esc='widget.format_currency_no_symbol(line.price_unit)'/>
+                        </right>
+                    </line>
+>>>>>>> [FIX] pos: Receipt T-seperator and line break issues
                     <t t-if='line.discount !== 0'>
                         <div class="pos-receipt-left-padding">Discount: <t t-esc='line.discount' />%</div>
                     </t>
