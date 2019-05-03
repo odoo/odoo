@@ -378,7 +378,7 @@ class HolidaysRequest(models.Model):
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
         if self.date_from and self.date_to:
-            self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)
+            self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)['days']
         else:
             self.number_of_days = 0
 
@@ -398,7 +398,7 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             calendar = holiday._get_calendar()
             if holiday.date_from and holiday.date_to:
-                number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
+                number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
             else:
                 holiday.number_of_hours_display = 0
@@ -466,14 +466,16 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            return employee._get_work_days_data(date_from, date_to)['days']
+            return employee._get_work_days_data(date_from, date_to)
 
         today_hours = self.env.company.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
             datetime.combine(date_from.date(), time.max),
             False)
 
-        return self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
+        hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
+
+        return {'days': hours / (today_hours or HOURS_PER_DAY), 'hours': hours}
 
     ####################################################
     # ORM Overrides methods
