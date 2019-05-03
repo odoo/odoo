@@ -32,6 +32,7 @@
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                         <field name="ref"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </group>
                 <notebook>
@@ -65,6 +66,7 @@
                     <group name="main_group">
                         <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <field name="ref"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -84,6 +86,7 @@
                 <field name="name"/>
                 <field name="ref"/>
                 <field name="product_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="create_date"/>
             </tree>
         </field>

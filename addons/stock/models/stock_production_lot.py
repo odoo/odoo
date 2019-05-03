@@ -23,9 +23,10 @@ class ProductionLot(models.Model):
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.user.company_id)
 
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
+        ('name_ref_uniq', 'unique (name, product_id, company_id)', 'The combination of serial number, product and company must be unique !'),
     ]
 
     def _check_create(self):
