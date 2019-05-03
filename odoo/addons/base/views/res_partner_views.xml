@@ -95,7 +95,7 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}' readonly="1"/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -133,7 +133,7 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <sheet>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
@@ -210,7 +210,7 @@
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
