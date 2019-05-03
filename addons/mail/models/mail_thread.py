@@ -1533,10 +1533,10 @@ class MailThread(models.AbstractModel):
             msg_dict['subject'] = tools.decode_smtp_header(message.get('Subject'))
 
         # Envelope fields not stored in mail.message but made available for message_new()
-        msg_dict['from'] = tools.decode_smtp_header(message.get('from'))
+        msg_dict['from'] = tools.decode_smtp_header_from(message.get('from'))
         msg_dict['to'] = tools.decode_smtp_header(message.get('to'))
         msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'))
-        msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
+        msg_dict['email_from'] = tools.decode_smtp_header_from(message.get('from'))
         partner_ids = self._message_find_partners(message, ['To', 'Cc'])
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 

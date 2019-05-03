@@ -535,6 +535,30 @@ def decode_smtp_header(smtp_header):
         return sep.join([ustr(x[0], x[1]) for x in text])
     return u''
 
+
+def decode_smtp_header_from(smtp_header):
+    """We need to get rid of commas in the name of the sender.
+    The email_from is used afterwards and given to getadresses,
+    which fails if it contains a comma (',').
+    E.g. '\u1f980, crab <crab@snip.com>' is parsed as ('', '\u1f980') and
+    ('crab', '<crab@snip.com>').
+    The name is incorrect in the second, and '\u1f980' is not a valid address.
+    Since the return value squash the tokens, we lose the info on significant commas
+    """
+    if isinstance(smtp_header, Header):
+        smtp_header = ustr(smtp_header)
+    if smtp_header:
+        text = decode_header(smtp_header.replace('\r', ''))
+        # The joining space will not be needed as of Python 3.3
+        # See https://github.com/python/cpython/commit/07ea53cb218812404cdbde820647ce6e4b2d0f8e
+        f = lambda s: ('"' + s + '"') if ',' in s else s
+        sep = ' ' if pycompat.PY2 else ''
+        # we could also replace the commas by another unicode small comma instead
+        # return sep.join([ustr(ustr(x[0]).replace(',', '\ufe50'), x[1]) for x in text])
+        return sep.join([ustr(f(ustr(x[0])), x[1]) for x in text])
+    return u''
+
+
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
