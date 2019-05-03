@@ -127,7 +127,7 @@
                     <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
 
                     <t t-set="title">
-                        <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
+                        <h2 class="mb-0"><b t-field="sale_order.amount_total" data-id="total_amount"/> </h2>
                     </t>
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
@@ -167,14 +167,15 @@
                                         <b t-field="sale_order.amount_undiscounted"
                                             t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             style="text-decoration: line-through"
-                                            class="d-block mt-1"/>
+                                            class="d-block mt-1"
+                                            data-id="amount_undiscounted" />
                                     </small>
                                     <t t-if="sale_order.amount_untaxed == sale_order.amount_total">
-                                        <h4 t-field="sale_order.amount_total" class="text-success"/>
+                                        <h4 t-field="sale_order.amount_total" class="text-success" data-id="total_amount"/>
                                     </t>
                                     <t t-else="">
-                                        <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0"/>
-                                        <small>(<span t-field="sale_order.amount_total"/> Incl. tax)</small>
+                                        <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0" data-id="total_untaxed"/>
+                                        <small>(<span t-field="sale_order.amount_total" data-id="total_amount"/> Incl. tax)</small>
                                     </t>
                                 </li>
                             </t>
@@ -374,7 +375,7 @@
                     </t>
                 </div>
                 <div class="mb-3">
-                    <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
+                    <strong>Date:</strong> <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                 </div>
                 <div class="mb-3" t-if="sale_order.validity_date">
                     <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
@@ -514,6 +515,7 @@
 
                 <div id="total" class="row" name="total" style="page-break-inside: avoid;">
                     <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                        <!-- Should be replaced in master by t-call="sale.sale_order_portal_content_totals_table" -->
                         <table class="table table-sm">
                             <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                 <td><strong>Subtotal</strong></td>
@@ -577,4 +579,47 @@
         </div>
     </template>
 
+    <template id="sale_order_portal_content_totals_table">
+        <table class="table table-sm">
+            <tr class="border-black">
+                <td><strong>Subtotal</strong></td>
+                <td class="text-right">
+                    <span
+                        data-id="total_untaxed"
+                        t-field="sale_order.amount_untaxed"
+                        t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
+                    />
+                </td>
+            </tr>
+            <t t-foreach="sale_order.amount_by_group" t-as="amount_by_group">
+                <tr>
+                    <t t-if="amount_by_group[3] == 1 and sale_order.amount_untaxed == amount_by_group[2]">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/></span>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                    <t t-else ="">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+            <tr class="border-black">
+                <td><strong>Total</strong></td>
+                <td class="text-right">
+                    <span data-id="total_amount" t-field="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                </td>
+            </tr>
+        </table>
+    </template>
 </odoo>
