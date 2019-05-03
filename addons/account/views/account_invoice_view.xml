@@ -40,6 +40,23 @@
             </field>
         </record>
 
+        <record id="account_invoice_view_activity" model="ir.ui.view">
+            <field name="name">account.invoice.activity</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <activity string="Invoices">
+                    <templates>
+                        <div t-name="activity-box">
+                            <div>
+                                <field name="reference" display="full"/>
+                                <field name="partner_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>

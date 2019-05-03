@@ -323,6 +323,26 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_activity" model="ir.ui.view">
+            <field name="name">crm.lead.view.activity</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <activity string="Leads or Opportunities">
+                    <field name="user_id"/>
+                    <field name="company_currency"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="planned_revenue" widget="monetary" display="full" muted="1"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="crm_case_kanban_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.kanban.lead</field>
             <field name="model">crm.lead</field>

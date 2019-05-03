@@ -1,14 +1,33 @@
 odoo.define('mail.ActivityController', function (require) {
 "use strict";
 
-var AbstractController = require('web.AbstractController');
+var BasicController = require('web.BasicController');
+var core = require('web.core');
+var field_registry = require('web.field_registry');
+var ViewDialogs = require('web.view_dialogs');
 
-var ActivityController = AbstractController.extend({
-    custom_events: _.extend({}, AbstractController.prototype.custom_events, {
+var KanbanActivity = field_registry.get('kanban_activity');
+var _t = core._t;
+
+var ActivityController = BasicController.extend({
+    custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        empty_cell_clicked: '_onEmptyCell',
         send_mail_template: '_onSendMailTemplate',
-        open_view_form: '_onOpenViewForm',
-        reload: '_onReload',
+        schedule_activity: '_onScheduleActivity',
     }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Overridden to remove the pager as it makes no sense in this view.
+     *
+     * @override
+     */
+    renderPager: function () {
+        return Promise.resolve();
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -16,19 +35,47 @@ var ActivityController = AbstractController.extend({
 
     /**
      * @private
-     * @param {OdooEvent} event
-     * @param {string} event.name
-     * @param {Object} event.data
-     * @param {boolean} [event.data.activity]
-     * @param {boolean} [event.data.followers]
-     * @param {boolean} [event.data.thread]
      */
-    _onReload: function (event) {
-        event.stopPropagation();
+    _onScheduleActivity: function () {
         var self = this;
-        this.model.reload().then(self.reload());
-    },
 
+        var state = this.model.get(this.handle);
+        new ViewDialogs.SelectCreateDialog(this, {
+            res_model: state.model,
+            domain: this.model.originalDomain,
+            title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
+            no_create: !this.activeActions.create,
+            disable_multiple_selection: true,
+            on_selected: function (record) {
+                var fakeRecord = self.renderer.getKanbanActivityData({}, record[0]);
+                var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
+                widget.scheduleActivity();
+            },
+        }).open();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEmptyCell: function (ev) {
+        var state = this.model.get(this.handle);
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.activity',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: ev.data.resId,
+                default_res_model: state.model,
+                default_activity_type_id: ev.data.activityTypeId,
+            },
+            res_id: false,
+        }, {
+            on_close: this.reload.bind(this),
+        });
+    },
     /**
      * @private
      * @param {OdooEvent} ev
@@ -36,8 +83,8 @@ var ActivityController = AbstractController.extend({
     _onSendMailTemplate: function (ev) {
         var templateID = ev.data.templateID;
         var activityTypeID = ev.data.activityTypeID;
-        var state = this.model.get();
-        var groupedActivities = state.data.grouped_activities;
+        var state = this.model.get(this.handle);
+        var groupedActivities = state.grouped_activities;
         var resIDS = [];
         Object.keys(groupedActivities).forEach(function (resID) {
             var activityByType = groupedActivities[resID];
@@ -50,21 +97,6 @@ var ActivityController = AbstractController.extend({
             model: this.model.modelName,
             method: 'activity_send_mail',
             args: [resIDS, templateID],
-        });
-    },
-    /**
-    * @private
-    * @override
-    * @param {MouseEvent} ev
-    */
-    _onOpenViewForm: function (ev) {
-        var resID = ev.data.resID;
-        this.do_action({
-            type: 'ir.actions.act_window',
-            res_model: this.model.modelName,
-            res_id: resID,
-            views: [[false, 'form']],
-            target: 'current'
         });
     },
 });

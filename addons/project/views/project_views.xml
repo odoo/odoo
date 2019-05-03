@@ -680,6 +680,25 @@
             </field>
         </record>
 
+        <record id="project_task_view_activity" model="ir.ui.view">
+            <field name="name">project.task.activity</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <activity string="Project Tasks">
+                    <field name="user_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>

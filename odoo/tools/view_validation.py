@@ -48,7 +48,7 @@ def relaxng(view_type):
     return _relaxng_cache[view_type]
 
 
-@validate('calendar', 'diagram', 'gantt', 'graph', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'gantt', 'graph', 'pivot', 'search', 'tree', 'activity')
 def schema_valid(arch):
     """ Get RNG validator and validate RNG file."""
     validator = relaxng(arch.tag)
@@ -84,7 +84,7 @@ def valid_field_in_tree(arch):
     )
 
 
-@validate('form', 'graph', 'tree')
+@validate('form', 'graph', 'tree', 'activity')
 def valid_att_in_field(arch):
     """ ``field`` nodes must all have a ``@name`` """
     return not arch.xpath('//field[not(@name)]')
@@ -118,14 +118,14 @@ def valid_type_in_col(arch):
         for attrib in arch.xpath('//@col')
     )
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_alternative_image_text(arch):
     """An `img` tag must have an alt value."""
     if arch.xpath('//img[not(@alt or @t-att-alt or @t-attf-alt)]'):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_alternative_icon_text(arch):
     """An icon with fa- class or in a button must have aria-label in its tag, parents, descendants or have text."""
     valid_aria_attrs = {
@@ -166,7 +166,7 @@ def valid_alternative_icon_text(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_title_icon(arch):
     """An icon with fa- class or in a button must have title in its tag, parents, descendants or have text."""
     valid_title_attrs = {'title', 't-att-title', 't-attf-title'}
@@ -205,7 +205,7 @@ def valid_title_icon(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_button(arch):
     """A simili button must be tagged with "role='button'"."""
     # Select elements with class 'btn'
@@ -217,7 +217,7 @@ def valid_simili_button(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_dropdown(arch):
     """A simili dropdown must be tagged with "role='menu'"."""
     xpath = '//*[contains(concat(" ", @class, " "), " dropdown-menu ")'
@@ -228,7 +228,7 @@ def valid_simili_dropdown(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_progressbar(arch):
     """A simili progressbar must be tagged with "role='progressbar'" and have
     aria-valuenow, aria-valuemin and aria-valuemax attributes."""
@@ -245,7 +245,7 @@ def valid_simili_progressbar(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_dialog(arch):
     """A dialog must use role="dialog" and its header, body and footer contents must use <header/>, <main/> and <footer/>."""
     # Select elements with class 'btn'
@@ -278,7 +278,7 @@ def valid_dialog(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_tabpanel(arch):
     """A tab panel with tab-pane class must have role="tabpanel"."""
     # Select elements with class 'btn'
@@ -290,7 +290,7 @@ def valid_simili_tabpanel(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_tab(arch):
     """A tab link must have role="tab", a link to an id (without #) by aria-controls."""
     # Select elements with class 'btn'
@@ -302,7 +302,7 @@ def valid_simili_tab(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_simili_tablist(arch):
     """A tab list with class nav-tabs must have role="tablist"."""
     # Select elements with class 'btn'
@@ -314,7 +314,7 @@ def valid_simili_tablist(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_focusable_button(arch):
     """A simili button must be with a `button`, an `input` (with type `button`, `submit` or `reset`) or a `a` tag."""
     xpath = '//*[contains(concat(" ", @class), " btn")'
@@ -339,7 +339,7 @@ def valid_focusable_button(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_prohibited_none_role(arch):
     """A role can't be `none` or `presentation`. All your elements must be accessible with screen readers, describe it."""
     xpath = '//*[@role="none" or @role="presentation"]'
@@ -347,7 +347,7 @@ def valid_prohibited_none_role(arch):
         return "Warning"
     return True
 
-@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree')
+@validate('calendar', 'diagram', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
 def valid_alerts(arch):
     """An alert (class alert-*) must have an alert, alertdialog or status role. Please use alert and alertdialog only for what expects to stop any activity to be read immediatly."""
     xpath = '//*[contains(concat(" ", @class), " alert-")'

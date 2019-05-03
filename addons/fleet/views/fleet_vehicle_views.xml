@@ -270,6 +270,24 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_view_activity" model="ir.ui.view">
+        <field name="name">fleet.vehicle.activity</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <activity string="Vehicles">
+                <field name="license_plate"/>
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('fleet.vehicle', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="license_plate"/> : <field name="model_id"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
 
     <record id='fleet_vehicle_action' model='ir.actions.act_window'>
         <field name="name">Vehicles</field>

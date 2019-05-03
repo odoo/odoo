@@ -1269,15 +1269,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return E.tree(element, string=self._description)
 
     @api.model
-    def _get_default_activity_view(self):
-        """ Generates an empty activity view.
-
-        :returns: a activity view as an lxml document
-        :rtype: etree._Element
-        """
-        return E.activity(string=self._description)
-
-    @api.model
     def _get_default_pivot_view(self):
         """ Generates an empty pivot view.
 
