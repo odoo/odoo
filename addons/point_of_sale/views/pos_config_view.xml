@@ -457,21 +457,11 @@
                             <div class="o_setting_right_pane">
                                 <label for="picking_type_id" string="Operation Type"/>
                                 <div class="text-muted">
-                                    Operation type used to record product pickings
+                                    Operation type used to record product pickings <br/>
+                                    Products will be taken from the default source location of this operation type
                                 </div>
                                 <div class="content-group mt16">
                                     <field name="picking_type_id" required="1"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" groups="stock.group_stock_multi_locations">
-                            <div class="o_setting_right_pane">
-                                <label for="stock_location_id"/>
-                                <div class="text-muted">
-                                    Stock location used for the inventory
-                                </div>
-                                <div>
-                                    <field name="stock_location_id" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -509,7 +499,7 @@
         <field name="arch" type="xml">
             <tree string="Point of Sale Configuration">
                 <field name="name" />
-                <field name="stock_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                <field name="picking_type_id"/>
             </tree>
         </field>
     </record>
@@ -521,7 +511,7 @@
             <search string="Point of Sale Config">
                 <field name="name"/>
                 <filter string="Inactive" name="inactive" domain="[('active', '=', False)]" />
-                <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
+                <field name="picking_type_id" />
             </search>
         </field>
     </record>

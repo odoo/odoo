@@ -51,7 +51,6 @@ exports.PosModel = Backbone.Model.extend({
         this.company_logo = null;
         this.company_logo_base64 = '';
         this.currency = null;
-        this.shop = null;
         this.company = null;
         this.user = null;
         this.users = [];
@@ -278,11 +277,6 @@ exports.PosModel = Backbone.Model.extend({
                 self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
             }
        },
-    },{
-        model: 'stock.location',
-        fields: [],
-        ids:    function(self){ return [self.config.stock_location_id[0]]; },
-        loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
@@ -2243,7 +2237,6 @@ exports.Order = Backbone.Model.extend({
         var client  = this.get('client');
         var cashier = this.pos.get_cashier();
         var company = this.pos.company;
-        var shop    = this.pos.shop;
         var date    = new Date();
 
         function is_xml(subreceipt){
@@ -2304,9 +2297,6 @@ exports.Order = Backbone.Model.extend({
                 name: company.name,
                 phone: company.phone,
                 logo:  this.pos.company_logo_base64,
-            },
-            shop:{
-                name: shop.name,
             },
             currency: this.pos.currency,
         };
