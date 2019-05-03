@@ -62,4 +62,91 @@
 
         }
     }
+
+    // adapt dialog select media
+    .o_technical_modal > .o_select_media_dialog {
+
+        max-width: inherit !important;
+
+        .modal-dialog, .model-content {
+            height: 100%;
+        }
+
+        .modal-body {
+            .nav .nav-item.search {
+                width: 100%;
+
+                .btn-group {
+                    display: flex;
+                    justify-content: space-around;
+                    padding: 5px;
+                }
+            }
+
+            // center pictogram
+            .font-icons-icons {
+                text-align: center;
+            }
+
+            // fix search image
+            .form-control.o_we_search {
+                height: inherit;
+            }
+
+            .form-inline {
+                .btn-group {
+                    width: 100%;
+
+                    .btn.btn-primary:not(.dropdown-toggle) {
+                        width: 90%;
+                    }
+                }
+
+                > .input-group.ml-2 {
+                    margin-left: 0 !important;
+
+                    > .input-group-append {
+                        width: 100%;
+
+                        > .btn {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
+            // attachment cells
+            .existing-attachments > .row {
+                flex-direction: column;
+
+                > .o_existing_attachment_cell {
+                    flex: initial;
+                    max-width: 100%;
+
+                    > .o_existing_attachment_remove {
+                        opacity: inherit;
+                        top: 10px;
+                    }
+                }
+            }
+
+            // select media dialog unsplash error
+            #editor-media-image {
+                .unsplash_img_container {
+                    .unsplash_error {
+                        .mx-auto {
+                            width: 100%;
+
+                            .form-group {
+                                input.w-100 {
+                                    min-width: 100px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 }
