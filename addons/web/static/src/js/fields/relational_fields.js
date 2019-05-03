@@ -465,7 +465,10 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        var value = _.escape((this.m2o_value || "").trim()).split("\n").join("<br/>");
+        var escapedValue = _.escape((this.m2o_value || "").trim());
+        var value = escapedValue.split('\n').map(function (line) {
+            return '<span>' + line + '</span>';
+        }).join('<br/>');
         this.$el.html(value);
         if (!this.noOpen && this.value) {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
