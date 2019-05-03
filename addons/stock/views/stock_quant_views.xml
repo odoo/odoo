@@ -69,19 +69,57 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_stock_quant_tree_editable">
+        <field name="name">stock.quant.tree.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree decoration-danger="inventory_quantity &lt; 0" editable="top"
+                  create="1" edit="1">
+                <field name="id" invisible="1"/>
+                <field name="tracking" invisible="1"/>
+                <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
+                       readonly="context.get('single_product', False)" force_save="1"
+                       options="{'no_create': True}"/>
+                <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}"
+                       invisible="context.get('hide_location', False)"
+                       options="{'no_create': True}"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                       attrs="{
+                            'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])],
+                            'required': [('tracking', '!=', 'none')]
+                       }"
+                       context="{'default_product_id': product_id}"
+                       domain="[('product_id', '=', product_id)]"/>
+                <field name="package_id" groups="stock.group_tracking_lot"
+                       attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"
+                       attrs="{'readonly': [('id', '!=', False)]}"
+                       options="{'no_create': True}"/>
+                <field name="reserved_quantity"/>
+                <field name="quantity" string="On Hand Quantity"
+                       invisible="1"/>
+                <field name="inventory_quantity" string="On Hand Quantity"
+                       readonly="0"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name='company_id' groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_stock_quant_tree">
         <field name="name">stock.quant.tree</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Inventory Valuation" create="0" delete="0" decoration-danger="quantity &lt; 0">
+            <tree create="0" delete="0" decoration-danger="quantity &lt; 0">
                 <field name="product_id"/>
-                <field name="location_id" options="{'no_create': True}"/>
+                <field name="location_id" invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
-                <field name="reserved_quantity" string="Reserved"/>
-                <field name="quantity" string="On Hand"/>
+                <field name="reserved_quantity"/>
+                <field name="quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
@@ -134,11 +172,6 @@
         <field name="name">Stock On Hand</field>
         <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
         <field name="domain">[('product_id.product_tmpl_id', '=', active_id)]</field>
-        <field name="res_model">stock.quant</field>
-    </record>
-     <record model="ir.actions.act_window" id="product_open_quants"> <!-- product_view + python -->
-        <field name="name">Stock On Hand</field>
-       <field name="domain">[('product_id', '=', active_id)]</field>
         <field name="res_model">stock.quant</field>
     </record>
     <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->

@@ -128,22 +128,22 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for waiting state')
 
         # Update Inventory
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
-            'new_quantity': 2.0,
+            'inventory_quantity': 2.0,
+            'location_id': self.ref('stock.stock_location_14')
         })
-        inventory_wizard.change_product_qty()
 
         production_2.action_assign()
         # check sub product availability state is partially available
         self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for partially available state')
 
         # Update Inventory
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_2.id,
-            'new_quantity': 5.0,
+            'inventory_quantity': 5.0,
+            'location_id': self.ref('stock.stock_location_14')
         })
-        inventory_wizard.change_product_qty()
 
         production_2.action_assign()
         # check sub product availability state is assigned

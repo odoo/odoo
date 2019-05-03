@@ -307,11 +307,11 @@ class TestWorkOrderProcess(TestMrpCommon):
         man_order = man_order_form.save()
         # reset quantities
         self.product_1.type = "product"
-        self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_1.id,
-            'new_quantity': 0.0,
+            'inventory_quantity': 0.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
-        }).change_product_qty()
+        })
 
         (self.product_2 | self.product_4).write({
             'tracking': 'none',

@@ -59,7 +59,7 @@ class ProductionLot(models.Model):
         self.product_qty = sum(quants.mapped('quantity'))
 
     def action_lot_open_quants(self):
-        self.env['stock.quant']._quant_tasks()
-        action = self.env.ref('stock.lot_open_quants').read()[0]
-        action['context'] = {'search_default_lot_id': self.id}
-        return action
+        self = self.with_context(search_default_lot_id=self.id)
+        if self.user_has_groups('stock.group_stock_manager'):
+            self = self.with_context(inventory_mode=True)
+        return self.env['stock.quant']._get_quants_action()
