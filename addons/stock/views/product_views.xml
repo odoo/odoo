@@ -172,7 +172,6 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="action_update_quantity_on_hand" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_id': id}"
@@ -198,10 +197,6 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside">
-                        <button string="Update Qty On Hand"
-                            type="object"
-                            name="action_update_quantity_on_hand"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_id': id}"
@@ -292,7 +287,6 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="action_update_quantity_on_hand" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_tmpl_id': id}"
