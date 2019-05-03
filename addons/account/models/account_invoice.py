@@ -70,6 +70,12 @@ class AccountInvoice(models.Model):
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
+    def _compute_sign_taxes(self):
+        for invoice in self:
+            sign = invoice.type in ['in_refund', 'out_refund'] and -1 or 1
+            invoice.amount_untaxed_invoice_signed = invoice.amount_untaxed * sign
+            invoice.amount_tax_signed = invoice.amount_tax * sign
+
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
         for inv in self:
@@ -347,8 +353,12 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount', tracking=True)
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount in Company Currency', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount')
+    amount_untaxed_invoice_signed = fields.Monetary(string='Untaxed Amount in Invoice Currency', currency_field='currency_id',
+        readonly=True, compute='_compute_sign_taxes')
     amount_tax = fields.Monetary(string='Tax',
         store=True, readonly=True, compute='_compute_amount')
+    amount_tax_signed = fields.Monetary(string='Tax in Invoice Currency', currency_field='currency_id',
+        readonly=True, compute='_compute_sign_taxes')
     amount_total = fields.Monetary(string='Total',
         store=True, readonly=True, compute='_compute_amount')
     amount_total_signed = fields.Monetary(string='Total in Invoice Currency', currency_field='currency_id',
@@ -1790,14 +1800,14 @@ class AccountInvoiceLine(models.Model):
     def _set_taxes(self):
         """ Used in on_change to set taxes and price"""
         self.ensure_one()
-        if self.invoice_id.type in ('out_invoice', 'out_refund'):
-            taxes = self.product_id.taxes_id or self.account_id.tax_ids or self.invoice_id.company_id.account_sale_tax_id
-        else:
-            taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids or self.invoice_id.company_id.account_purchase_tax_id
 
         # Keep only taxes of the company
         company_id = self.company_id or self.env.user.company_id
-        taxes = taxes.filtered(lambda r: r.company_id == company_id)
+
+        if self.invoice_id.type in ('out_invoice', 'out_refund'):
+            taxes = self.product_id.taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or self.invoice_id.company_id.account_sale_tax_id
+        else:
+            taxes = self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or self.invoice_id.company_id.account_purchase_tax_id
 
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes, self.product_id, self.invoice_id.partner_id)
 

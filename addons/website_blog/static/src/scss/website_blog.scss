@@ -262,13 +262,10 @@
     }
 }
 
-$s-latest-posts-big-picture-figure-bg: $white !default;
-
 .s_latest_posts_big_picture {
     .s_latest_posts_post {
         position: relative;
         height: 250px;
-        background: $s-latest-posts-big-picture-figure-bg;
         text-align: center;
         cursor: pointer;
         transition: all 300ms;
@@ -281,9 +278,11 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
             position: relative;
             display: block;
             width: 100%;
+            max-width: 100% !important;
             height: 100%;
             padding: 0;
             opacity: 0.8;
+            overflow: hidden;
 
             > .o_blog_cover_component {
                 @include o-position-absolute(0, 0, 0, 0);
@@ -293,15 +292,17 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
                 background-position: center;
             }
         }
-        > div, > div > a {
-            @include o-position-absolute(0, 0, 0, 0);
-            padding: 2em;
-            color: $white;
-            text-transform: uppercase;
-            font-size: 1.25em;
-            backface-visibility: hidden;
-            &::after, &::before {
-                pointer-events: none;
+        > div:not(.o_blog_cover_container):not(.js-loading) {
+            &, & > a {
+                @include o-position-absolute(0, $grid-gutter-width/2, 0, $grid-gutter-width/2);
+                padding: 2em;
+                color: $white;
+                text-transform: uppercase;
+                font-size: 1.25em;
+                backface-visibility: hidden;
+                &::after, &::before {
+                    pointer-events: none;
+                }
             }
 
             > a {
@@ -328,7 +329,9 @@ $s-latest-posts-big-picture-figure-bg: $white !default;
         @include s-latest-posts-figure-hook;
     }
 
-    @include s-latest-posts-js-get-posts-hook;
+    .js_get_posts {
+        @include s-latest-posts-js-get-posts-hook;
+    }
 }
 
 .s_latest_posts, .s_latest_posts_big_picture {
