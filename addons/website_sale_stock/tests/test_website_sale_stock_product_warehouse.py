@@ -44,20 +44,18 @@ class TestWebsiteSaleStockProductWarehouse(TestWebsiteSaleProductAttributeValueC
         })
 
         # Update quantity of Product A in Warehouse 1
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product_1.id,
-            'new_quantity': 10.0,
+            'inventory_quantity': 10.0,
             'location_id': warehouse_1.lot_stock_id.id,
         })
-        inventory_wizard.change_product_qty()
 
         # Update quantity of Product B in Warehouse 2
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product_2.id,
-            'new_quantity': 10.0,
+            'inventory_quantity': 10.0,
             'location_id': warehouse_2.lot_stock_id.id,
         })
-        inventory_wizard.change_product_qty()
 
         # Get current website and set warehouse_id of Warehouse 1
         current_website = self.env['website'].get_current_website()

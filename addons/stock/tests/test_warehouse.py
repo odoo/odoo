@@ -7,12 +7,11 @@ from odoo.tests import Form
 class TestWarehouse(TestStockCommon):
     def test_inventory_product(self):
         self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
+        product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product_1.id,
-            'new_quantity': 50.0,
+            'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory_wizard.change_product_qty()
         inventory = self.env['stock.inventory'].sudo(self.user_stock_manager).create({
             'name': 'Starting for product_1',
             'filter': 'product',
@@ -46,32 +45,6 @@ class TestWarehouse(TestStockCommon):
 
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
-
-    def test_inventory_wizard(self):
-        self.product_1.type = 'product'
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': self.product_1.id,
-            'new_quantity': 50.0,
-            'location_id': self.warehouse_1.lot_stock_id.id,
-        })
-        inventory_wizard.change_product_qty()
-        # Check inventory performed in setup was effectivley performed
-        self.assertEqual(self.product_1.virtual_available, 50.0)
-        self.assertEqual(self.product_1.qty_available, 50.0)
-
-        # Check inventory obj details (1 inventory with 1 line, because 1 product change)
-        inventory = self.env['stock.inventory'].search([('id', 'not in', self.existing_inventories.ids)])
-        self.assertEqual(len(inventory), 1)
-        self.assertIn('INV: %s' % self.product_1.display_name, inventory.name)
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.product_id, self.product_1)
-        self.assertEqual(inventory.line_ids.product_qty, 50.0)
-
-        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
-        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 2)
-        # print quant.name, quant.product_id, quant.location_id
-        # TDE TODO: expand this test
 
     def test_basic_move(self):
         product = self.product_3.sudo(self.user_stock_manager)
