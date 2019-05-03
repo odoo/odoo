@@ -91,10 +91,15 @@ KanbanRenderer.include({
         var index = _.findIndex(this.widgets, {db_id: localID});
         var $column = this.widgets[index].$el;
         var left = $column.css('left');
+        var right = $column.css('right');
         var scrollTop = $column.scrollTop();
         return this._super.apply(this, arguments).then(function () {
             $column = self.widgets[index].$el;
-            $column.css({left: left});
+            if (_t.database.parameters.direction === 'rtl') {
+                $column.css({right: right});
+            } else {
+                $column.css({left: left});
+            }
             $column.scrollTop(scrollTop); // required when clicking on 'Load More'
             self._enableSwipe();
         });
@@ -113,21 +118,26 @@ KanbanRenderer.include({
     _computeColumnPosition: function (animate) {
         if (this.widgets.length) {
             var self = this;
+            var isRTL = _t.database.parameters.direction === 'rtl';
+            var direction = isRTL ? 'right' : 'left';
             var moveToIndex = this.activeColumnIndex;
             var updateFunc = animate ? 'animate' : 'css';
+            var updateColumn = function ($column, val) {
+                isRTL ? $column[updateFunc]({right: val}) : $column[updateFunc]({left: val});
+            };
             _.each(this.widgets, function (column, index) {
                 var columnID = column.id || column.db_id;
                 var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
                 if (index === moveToIndex - 1) {
-                    $column[updateFunc]({left: '-100%'});
+                    updateColumn($column, '-100%');
                 } else if (index === moveToIndex + 1) {
-                    $column[updateFunc]({left: '100%'});
+                    updateColumn($column, '100%');
                 } else if (index === moveToIndex) {
-                    $column[updateFunc]({left: '0%'});
+                    updateColumn($column, '0%');
                 } else if (index < moveToIndex) {
-                    $column.css({left: '-100%'});
+                    $column.css(direction, '-100%');
                 } else if (index > moveToIndex) {
-                    $column.css({left: '100%'});
+                    $column.css(direction, '100%');
                 }
             });
         }
@@ -183,6 +193,14 @@ KanbanRenderer.include({
                     scrollToLeft += columnWidth;
                 }
             }
+            // handle case of right to left direction
+            if (_t.database.parameters.direction === 'rtl' && this.$('.o_kanban_mobile_tabs').length) {
+                if (scrollToLeft) {
+                    scrollToLeft = this.$('.o_kanban_mobile_tabs')[0].scrollWidth - this.$('.o_kanban_mobile_tabs')[0].clientWidth - scrollToLeft;
+                } else {
+                    scrollToLeft = this.$('.o_kanban_mobile_tabs')[0].scrollWidth;
+                }
+            }
             // Apply the scroll x on the tabs
             this.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
         }
@@ -216,13 +234,17 @@ KanbanRenderer.include({
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                var moveToIndex = self.activeColumnIndex + 1;
+                // if direction parameter of translation database is rtl
+                // then swipeLeft and swipeRight do reverse
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex - 1 : self.activeColumnIndex + 1;
                 if (moveToIndex < self.widgets.length) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
             },
             swipeRight: function () {
-                var moveToIndex = self.activeColumnIndex - 1;
+                var moveToIndex = _t.database.parameters.direction === 'rtl' ?
+                    self.activeColumnIndex + 1 : self.activeColumnIndex - 1;
                 if (moveToIndex > -1) {
                     self._moveToGroup(moveToIndex, self.ANIMATE);
                 }
