@@ -1,0 +1,65 @@
+@include media-breakpoint-down(md) {
+
+    .o_form_sheet {
+        width: 100% !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    .note-editor {
+        // Use for provide display to user a scroll
+        .note-toolbar-scrollable.note-toolbar-wrapper {
+            &.scrollable-start::before {
+                position: absolute;
+                width: 12px;
+                height: $o-wysiwyg-toolbar-height;
+                padding: 6px 0;
+                top: 0;
+                left: 0;
+                text-align: center;
+                background-color: $o-tooltip-arrow-color;
+                color: $o-tooltip-color;
+                opacity: 0.6;
+                content: '<';
+                z-index: 1;
+            }
+
+            &.scrollable-end::after {
+                position: absolute;
+                width: 12px;
+                height: $o-wysiwyg-toolbar-height;
+                padding: 6px 0;
+                top: 0;
+                right: 0;
+                text-align: center;
+                background-color: $o-tooltip-arrow-color;
+                color: $o-tooltip-color;
+                opacity: 0.6;
+                content: '>';
+            }
+        }
+
+        .note-toolbar {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+
+            .note-btn-group .note-btn-group.show > .dropdown-menu.show {
+                position: fixed !important;
+            }
+
+            .btn-group {
+                display: contents;
+            }
+
+            // Area of editable text
+            .note-editable {
+                width: 100%;
+                min-height: 400px !important;
+                @media (orientation: landscape) {
+                    min-height: 350px !important;
+                }
+            }
+
+        }
+    }
+}
