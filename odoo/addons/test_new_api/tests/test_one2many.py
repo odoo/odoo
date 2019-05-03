@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class One2manyCase(TransactionCase):
@@ -51,6 +51,8 @@ class One2manyCase(TransactionCase):
         self.multi.lines = self.multi.lines[:-1]
         self.assertEqual(len(self.multi.lines), 9)
         self.assertIn("hello", self.multi.lines.mapped('name'))
+        if not self.multi.id:
+            return
         # Invalidate the cache and check again; this crashes if the value
         # of self.multi.lines in cache contains new records
         self.multi.invalidate_cache()
@@ -89,8 +91,23 @@ class One2manyCase(TransactionCase):
             self.multi.lines = [(0, 0, {"name": str(name)})]
         self.operations()
 
+    def test_rpcstyle_one_by_one_on_new(self):
+        self.multi = self.env["test_new_api.multi"].new({
+            "name": "What is up?"
+        })
+        for name in range(10):
+            self.multi.lines = [(0, 0, {"name": str(name)})]
+        self.operations()
+
     def test_rpcstyle_single(self):
         """Check lines created with RPC style and added in one step"""
+        self.multi.lines = [(0, 0, {'name': str(name)}) for name in range(10)]
+        self.operations()
+
+    def test_rpcstyle_single_on_new(self):
+        self.multi = self.env["test_new_api.multi"].new({
+            "name": "What is up?"
+        })
         self.multi.lines = [(0, 0, {'name': str(name)}) for name in range(10)]
         self.operations()
 

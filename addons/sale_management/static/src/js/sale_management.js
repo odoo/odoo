@@ -39,7 +39,7 @@ if (!$('.o_portal_sale_sidebar').length) {
             var order_id = href.match(/my\/orders\/([0-9]+)/);
             var line_id = href.match(/update_line\/([0-9]+)/);
             var params = {
-                'line_id': line_id[1],
+                'line_id': parseInt(line_id[1]),
                 'remove': this.$el.is('[href*="remove"]'),
                 'unlink': this.$el.is('[href*="unlink"]'),
                 'input_quantity': quantity >= 0 ? quantity : false,
@@ -49,6 +49,7 @@ if (!$('.o_portal_sale_sidebar').length) {
                 params.access_token = token;
             }
 
+            order_id = parseInt(order_id[1])
             this._callUpdateLineRoute(order_id, params).then(this._updateOrderValues.bind(this));
             return false;
         },
@@ -66,19 +67,20 @@ if (!$('.o_portal_sale_sidebar').length) {
          * when the quantity of a product has changed
          *
          * @private
+         * @param {integer} order_id
          * @param {Object} params
          * @return {Deferred}
          */
         _callUpdateLineRoute: function (order_id, params) {
             var def = new $.Deferred();
-            var url = "/my/orders/" + parseInt(order_id[1]) + "/update_line_dict";
+            var url = "/my/orders/" + order_id + "/update_line_dict";
             ajax.jsonRpc(url, 'call', params)
                 .then(def.resolve.bind(def))
                 .fail(function () {
                     // Compatibility: the server may not have been restarted
                     // So the real route may not exist
                     delete params.input_quantity;
-                    ajax.jsonRpc("/quote/update_line", 'call', params)
+                    ajax.jsonRpc("/my/orders/" + order_id + "/update_line", 'call', params)
                         .fail(def.reject.bind(def))
                         .then(function (data) {
                             // Data is an array, convert it to a dict
@@ -108,6 +110,8 @@ if (!$('.o_portal_sale_sidebar').length) {
             var orderAmountTotal = data.order_amount_total;
             var orderAmountUntaxed = data.order_amount_untaxed;
             var orderAmountTax = data.order_amount_tax;
+            var orderAmountUndiscounted = data.order_amount_undiscounted;
+            var orderTotalsTable = $(data.order_totals_table);
 
             var lineProductUomQty = data.order_line_product_uom_qty;
             var linePriceTotal = data.order_line_price_total;
@@ -129,6 +133,13 @@ if (!$('.o_portal_sale_sidebar').length) {
             if (orderAmountTotal !== undefined) {
                 this.elems.$orderAmountTotal.text(orderAmountTotal);
             }
+
+            if (orderAmountUndiscounted !== undefined) {
+                this.elems.$orderAmountUndiscounted.text(orderAmountUndiscounted);
+            }
+            if (orderTotalsTable) {
+                this.elems.$orderTotalsTable.find('table').replaceWith(orderTotalsTable);
+            }
         },
         /**
          * Locate in the DOM the elements to update
@@ -147,12 +158,13 @@ if (!$('.o_portal_sale_sidebar').length) {
                 $linePriceTotal = $linePriceSubTotal = $parentTr.find('.oe_currency_value').last();
             }
 
-            var $orderAmountUntaxed = $('[data-id="total_untaxed"]>span');
-            var $orderAmountTotal = $('[data-id="total_amount"]>span');
+            var $orderAmountUntaxed = $('[data-id="total_untaxed"]').find('span, b');
+            var $orderAmountTotal = $('[data-id="total_amount"]').find('span, b');
+            var $orderAmountUndiscounted = $('[data-id="amount_undiscounted"]').find('span, b');
 
             if (!$orderAmountUntaxed.length) {
                 $orderAmountUntaxed = $orderAmountTotal.eq(1);
-                $orderAmountTotal = $orderAmountTotal.eq(0).add($orderAmountTotal.eq(3));
+                $orderAmountTotal = $orderAmountTotal.eq(0).add($orderAmountTotal.eq(2));
             }
 
             return {
@@ -161,6 +173,8 @@ if (!$('.o_portal_sale_sidebar').length) {
                 $linePriceTotal: $linePriceTotal,
                 $orderAmountUntaxed: $orderAmountUntaxed,
                 $orderAmountTotal: $orderAmountTotal,
+                $orderTotalsTable: $('#total'),
+                $orderAmountUndiscounted: $orderAmountUndiscounted,
             }
         }
     });
