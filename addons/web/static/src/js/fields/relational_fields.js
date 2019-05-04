@@ -124,8 +124,9 @@ var FieldMany2One = AbstractField.extend({
 
         // should normally also be set, except in standalone M20
         this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
-            !this.nodeOptions.no_create;
-        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+            !this.nodeOptions.no_create && !this.nodeOptions.no_create_edit;
+        this.can_write = ('can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true) &&
+            !this.nodeOptions.no_create_edit;
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
@@ -154,7 +155,7 @@ var FieldMany2One = AbstractField.extend({
         this.createDef = undefined;
     },
     start: function () {
-        // booleean indicating that the content of the input isn't synchronized
+        // boolean indicating that the content of the input isn't synchronized
         // with the current m2o value (for instance, the user is currently
         // typing something in the input, and hasn't selected a value yet).
         this.floating = false;
@@ -562,10 +563,9 @@ var FieldMany2One = AbstractField.extend({
                         classname: 'o_m2o_dropdown_option',
                     });
                 }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
                 // quick create
                 var raw_result = _.map(result, function (x) { return x[1]; });
-                if (create_enabled && !self.nodeOptions.no_quick_create &&
+                if (self.can_create && !self.nodeOptions.no_quick_create &&
                     search_val.length > 0 && !_.contains(raw_result, search_val)) {
                     values.push({
                         label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
@@ -575,7 +575,7 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
                 // create and edit ...
-                if (create_enabled && !self.nodeOptions.no_create_edit) {
+                if (self.can_create) {
                     var createAndEditAction = function () {
                         // Clear the value in case the user clicks on discard
                         self.$('input').val('');
