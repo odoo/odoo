@@ -128,9 +128,9 @@ class Attendee(models.Model):
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
         help="Status of the attendee's participation")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
-    partner_id = fields.Many2one('res.partner', 'Contact', readonly="True")
+    partner_id = fields.Many2one('res.partner', 'Contact', readonly=True)
     email = fields.Char('Email', help="Email of Invited Person")
-    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True")
+    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     event_id = fields.Many2one('calendar.event', 'Meeting linked', ondelete='cascade')
 
