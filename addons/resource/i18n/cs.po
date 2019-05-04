@@ -7,7 +7,7 @@
 # Martin Trigaux, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average hour per day"
-msgstr ""
+msgstr "Průměrná hodina denně"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
@@ -157,7 +157,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:165
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Páteční ráno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -284,12 +284,12 @@ msgstr ""
 #: code:addons/resource/models/resource.py:157
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Pondělní ráno"
 
 #. module: resource
 #: selection:resource.calendar.attendance,day_period:0
 msgid "Morning"
-msgstr ""
+msgstr "Ráno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__name
@@ -411,7 +411,7 @@ msgstr "Hledat pracovní dobu"
 #: code:addons/resource/models/res_company.py:22
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Standardní 40 hodin týdně"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
@@ -466,6 +466,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -476,6 +478,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Toto pole slouží k výpočtu očekávané doby trvání zakázky v tomto pracovišti."
+" Pokud například pracovní příkaz trvá jednu hodinu a faktor účinnosti je "
+"100%, předpokládaná doba trvání bude jedna hodina. Pokud je faktor účinnosti"
+" 200%, předpokládaná doba trvání je 30 minut."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -527,7 +533,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:159
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Úterní ráno"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -554,7 +560,7 @@ msgstr "Středa"
 #: code:addons/resource/models/resource.py:162
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Večer ve středu"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:161
@@ -567,6 +573,7 @@ msgstr ""
 msgid ""
 "Whether this should be computed as a holiday or as work time (eg: formation)"
 msgstr ""
+"Zda to má být počítáno jako svátek nebo jako pracovní den (např.: Formace)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

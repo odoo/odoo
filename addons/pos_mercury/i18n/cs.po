@@ -33,7 +33,7 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Koupit čtečku karet"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -89,29 +89,29 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "Značka karty"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_number
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
 msgid "Card Number"
-msgstr ""
+msgstr "Číslo karty"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "Předčíslí čísla karty"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr ""
+msgstr "Jméno majitele karty"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
-msgstr ""
+msgstr "Čtečka karet"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -126,14 +126,14 @@ msgstr "Klient"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr ""
+msgstr "Konfigurovat čtečku karet"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
 #, python-format
 msgid "Could not read card"
-msgstr ""
+msgstr "Kartu nelze přečíst"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_uid
@@ -161,6 +161,9 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+"Vrácení na kreditní kartu není podporováno. Místo toho vyberte způsob platby"
+" kreditní kartou, klikněte na tlačítko Ověřit a vrácení původní platby ručně"
+" prostřednictvím backendu Vantiv."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -193,7 +196,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr ""
+msgstr "Chcete-li použít platební kartu, přejděte na obrazovku platby"
 
 #. module: pos_mercury
 #. openerp-web
@@ -223,7 +226,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "Číslo faktury od Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -261,7 +264,7 @@ msgstr "Dávka"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "Merchant ID"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
@@ -282,7 +285,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "Číslo faktury Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_record_no
@@ -292,7 +295,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Referenční číslo Mercury"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
@@ -328,7 +331,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "Žádná odpověď ze serveru (jste připojeni k síti?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -336,7 +339,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "Odoo chyba při zpracování transakce."
 
 #. module: pos_mercury
 #. openerp-web
@@ -362,7 +365,7 @@ msgstr "Balení"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "Částečně schváleno"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
@@ -445,12 +448,12 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "Značka platební karty (např. Visa, MasterCard, American Express...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr ""
+msgstr "Číslo karty použité pro platbu."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal__pos_mercury_config_id
@@ -460,12 +463,12 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "Poslední 4 čísla karty použité k platbě"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "Jméno vlastníka karty"
 
 #. module: pos_mercury
 #. openerp-web
@@ -481,7 +484,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "Transakce byla schválena"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type

@@ -11,7 +11,7 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2018
 # Felix Yuen <fyu@odoo.com>, 2018
 # Henry Zhou <zhouhenry@live.com>, 2018
-# 葫芦 糖 <39181819@qq.com>, 2018
+# wangting <39181819@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Siyuan Gu <siyuancn@hotmail.com>, 2018
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018
@@ -27,13 +27,13 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2018
-# snow wang <147156565@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Liping Wang <lynn.config@gmail.com>, 2019
 # 黎伟杰 <674416404@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Martin Trigaux, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# snow wang <147156565@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +86,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>基于</span>&amp;nbsp;"
 
@@ -305,6 +306,15 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">已售</span>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">合计</span>\n"
+"                          <span groups=\"account.group_show_line_subtotals_tax_included\">总价</span>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
 msgstr "<span>同意，代表:</span>"
@@ -415,6 +425,7 @@ msgstr "<strong>签名</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>小计</strong>"
 
@@ -446,6 +457,7 @@ msgstr "<strong>总计:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Total</strong>"
 msgstr "<strong>总计</strong>"
 
@@ -3222,6 +3234,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "允许产品使用多计量单位进行采购与销售。"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr "销售数字产品 - 在你的客户门户网站提供可下载的内容"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
