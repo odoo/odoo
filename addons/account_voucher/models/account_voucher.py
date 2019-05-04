@@ -497,12 +497,12 @@ class AccountVoucherLine(models.Model):
         }
 
         if type == 'purchase':
-            values['price_unit'] = price_unit or product.standard_price
+            values['price_unit'] = price_unit
             taxes = product.supplier_taxes_id or account.tax_ids
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = price_unit or product.lst_price
+            values['price_unit'] = price_unit
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -512,7 +512,7 @@ class AccountVoucherLine(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = price_unit or product.standard_price
+                    values['price_unit'] = price_unit
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}
