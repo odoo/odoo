@@ -27,13 +27,13 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Rozbalit' if categ.id in parent_category_ids else 'Sbalit'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "&amp; Shipping"
-msgstr ""
+msgstr "&amp; Doprava"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -41,6 +41,8 @@ msgid ""
 ",\n"
 "                the #1"
 msgstr ""
+",\n"
+"                číslo 1"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -173,7 +175,7 @@ msgstr "<b>Doprava: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr ""
+msgstr "<b>Vaše objednávka: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -183,7 +185,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "<i class=\"fa fa-check\"/> Ship to this address"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Doručit na tuto adresu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -202,7 +204,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-edit\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-edit\"/> Upravit"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -210,6 +212,8 @@ msgid ""
 "<i class=\"fa fa-plus-square\"/>\n"
 "                                                        <span>Add an address</span>"
 msgstr ""
+"<i class=\"fa fa-plus-square\"/>\n"
+"                                                        <span>Přidat adresu</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -337,11 +341,13 @@ msgid ""
 "<span>Next</span>\n"
 "                                            <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>Další</span>\n"
+"                                            <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr ""
+msgstr "<span>Objednávka</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -421,6 +427,8 @@ msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
 msgstr ""
+"Produkt může být buď fyzický produkt nebo služba, kterou prodáváte svým "
+"zákazníkům."
 
 #. module: website_sale
 #. openerp-web
@@ -455,7 +463,7 @@ msgstr "Opuštěné košíky k obnově"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_abandoned_delay
 msgid "Abandoned Delay"
-msgstr ""
+msgstr "Zpoždění opuštění"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -670,7 +678,7 @@ msgstr "Množství košíku"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr ""
+msgstr "E-mail pro obnovení košíku"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -680,7 +688,7 @@ msgstr "Košík je opuštěn po"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr ""
+msgstr "E-mail na obnovu košíku byl již odeslán"
 
 #. module: website_sale
 #. openerp-web
@@ -765,7 +773,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:63
 #, python-format
 msgid "Click on this button so your customers can see it."
-msgstr ""
+msgstr "Klikněte na toto tlačítko, aby vás zákazníci mohli vidět."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -800,7 +808,7 @@ msgstr "Spočítej dopravní náklady a odešli přes FedEx"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Spočítej dopravní náklady a odešli přes UPS"
+msgstr "Spočítat dopravní náklady a odeslat přes UPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -830,7 +838,7 @@ msgstr "Potvrdit objednávku"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "Potvrdit objednávku <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #. openerp-web
@@ -848,7 +856,7 @@ msgstr "Datum potvrzení"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed Orders"
-msgstr ""
+msgstr "Potvrzené objednávky"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -965,7 +973,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
-msgstr ""
+msgstr "Popis k webové straně"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks
@@ -1029,7 +1037,7 @@ msgstr "Šuplíky"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
-msgstr ""
+msgstr "Propagační kód e-shopu"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_europe
@@ -1089,7 +1097,7 @@ msgstr "Chyba! Nelze vytvořit rekurzivní kategorie."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Extra Images"
-msgstr ""
+msgstr "Obrázky navíc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1104,7 +1112,7 @@ msgstr "FedEx"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
-msgstr ""
+msgstr "Z webové strany"
 
 #. module: website_sale
 #. openerp-web
@@ -1152,7 +1160,7 @@ msgstr "HTTP Routing"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "I agree to the"
-msgstr ""
+msgstr "Souhlasím s"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
@@ -1270,7 +1278,7 @@ msgstr "Naposled změněno"
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
 #: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
-msgstr ""
+msgstr "Poslední objednávka online"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
@@ -1303,7 +1311,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:15
 #, python-format
 msgid "Let's create your first product."
-msgstr ""
+msgstr "Vytvořme si svůj první produkt."
 
 #. module: website_sale
 #. openerp-web
@@ -1322,7 +1330,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
-msgstr ""
+msgstr "Přihlásit se"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1409,7 +1417,7 @@ msgstr "Další <span class=\"fa fa-chevron-right\"/>"
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr ""
+msgstr "Nenalezeny žádné opuštěné košíky"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1424,7 +1432,7 @@ msgstr ""
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
 msgid "No shipping management on website"
-msgstr ""
+msgstr "Na webu není správa přepravy"
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -1439,7 +1447,7 @@ msgstr "Počet opuštěných košíků"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Number of hours after which the cart is considered abandoned."
-msgstr ""
+msgstr "Počet hodin, po kterých je vozík považován za opuštěný."
 
 #. module: website_sale
 #. openerp-web
@@ -1458,7 +1466,7 @@ msgstr "Odoo"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:58
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr ""
+msgstr "Jakmile kliknete na <b>Uložit</b>, váš produkt je aktualizovaný."
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:39
@@ -1537,7 +1545,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "Order Total"
-msgstr ""
+msgstr "Objednávka celkem"
 
 #. module: website_sale
 #. openerp-web
@@ -1588,12 +1596,12 @@ msgstr "Zaplať nyní"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "Zaplatit <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay with"
-msgstr "Zaplať s"
+msgstr "Platit s"
 
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -1603,7 +1611,7 @@ msgstr ""
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Platit jiným příjemcem plateb"
 
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -1628,7 +1636,7 @@ msgstr "Ikony platebních služeb"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Platební pokyny"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -1665,7 +1673,7 @@ msgstr "Telefon"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr ""
+msgstr "Pokračujte prosím v aktuálním košíku."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -1682,7 +1690,7 @@ msgstr "Předchozí měsíc"
 #: code:addons/website_sale/controllers/backend.py:111
 #, python-format
 msgid "Previous Week"
-msgstr ""
+msgstr "Minulý týden"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:115
@@ -1745,7 +1753,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
 msgid "Product"
-msgstr "Výrobek"
+msgstr "Produkt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1755,7 +1763,7 @@ msgstr "Kategorie výrobku"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr ""
+msgstr "Nástroj pro porovnání produktů"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -1776,12 +1784,12 @@ msgstr "Název výrobku"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Prices"
-msgstr ""
+msgstr "Ceny produktu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr ""
+msgstr "Veřejné kategorie produktů"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
@@ -1806,7 +1814,7 @@ msgstr "Produkt nenalezen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr ""
+msgstr "Ceny produktů zobrazované ve webovém katalogu"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -1821,7 +1829,7 @@ msgstr "Produkty"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
-msgstr ""
+msgstr "Propagovat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1831,6 +1839,10 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"Poskytněte zákazníkům odkazy na konkrétní produkt nebo obsah ke stažení na "
+"potvrzovací stránce procesu platby, pokud se platba uskuteční. Chcete-li to "
+"provést, připojte některé soubory k produktu pomocí nového tlačítka Soubory "
+"a publikujte je."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -1840,7 +1852,7 @@ msgstr "Publikováno"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Push down"
-msgstr ""
+msgstr "Posunout dolu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
@@ -1855,12 +1867,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Push up"
-msgstr ""
+msgstr "Posunout nahoru"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Qty:"
-msgstr ""
+msgstr "Množství:"
 
 #. module: website_sale
 #. openerp-web
@@ -1879,17 +1891,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr ""
+msgstr "Obnovovací e-mail k odeslání"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Related Product"
-msgstr ""
+msgstr "Související produkt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove from cart"
-msgstr ""
+msgstr "Odstranit z košíku"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -1916,7 +1928,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Return to the product list."
-msgstr ""
+msgstr "Zpět k seznamu produktů"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1972,7 +1984,7 @@ msgstr "Řádek potvrzení objednávky"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Report"
-msgstr ""
+msgstr "Výkaz prodeje"
 
 #. module: website_sale
 #. openerp-web
@@ -1980,7 +1992,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:47
 #, python-format
 msgid "Sales Since Last"
-msgstr ""
+msgstr "Prodeje od posledního"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
@@ -1998,7 +2010,7 @@ msgstr "Obchodník"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "Uložená platební data"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2042,7 +2054,7 @@ msgstr "Odeslat e-mail pro obnovu košíku"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "Odeslat e-mail pro obnovení"
 
 #. module: website_sale
 #. openerp-web
@@ -2054,7 +2066,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a recovery email when a cart is abandoned"
-msgstr ""
+msgstr "Při opuštění košíku odešlete e-mail pro jeho obnovení"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
@@ -2098,7 +2110,7 @@ msgstr "Náklady na dopravu"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
 msgid "Shipping Management"
-msgstr ""
+msgstr "Správa přepravy"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2115,7 +2127,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Shop - Confirmed"
-msgstr ""
+msgstr "Obchod  - Potvrzený"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2216,7 +2228,7 @@ msgstr "Ulice 2"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
-msgstr ""
+msgstr "Ulice <span class=\"d-none d-md-inline\"> a číslo </span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
@@ -2256,12 +2268,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr ""
+msgstr "Doporučené příslušenství:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr ""
+msgstr "TIN / VAT"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2271,12 +2283,12 @@ msgstr "Daně:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
 msgid "Terms &amp;amp; Conditions"
-msgstr ""
+msgstr "Obchodní podmínky"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr ""
+msgstr "Děkuji za Vaši objednávku."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -2324,12 +2336,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
-msgstr ""
+msgstr "Čas od kdy bude košík označen za opuštěný lze změnit v nastavení."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr ""
+msgstr "Z webových stránek není potvrzena objednávka"
 
 #. module: website_sale
 #. openerp-web
@@ -2342,7 +2354,7 @@ msgstr "Není tu žádná nedávno potvrzená objednávka."
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr ""
+msgstr "Z webových stránek zatím není žádná nezaplacená objednávka"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2367,11 +2379,13 @@ msgid ""
 "This field holds the image used as image for the category, limited to "
 "1024x1024px."
 msgstr ""
+"Toto pole obsahuje obrázek použitý jako obrázek pro kategorii, omezený na "
+"1024x1024px."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr ""
+msgstr "Toto je váš aktuální košík."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2386,7 +2400,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "This product is unpublished."
-msgstr ""
+msgstr "Tento produkt je nepublikovaný. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -2442,7 +2456,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:45
 #, python-format
 msgid "Upload an image from your local library."
-msgstr ""
+msgstr "Nahrát obrázek z vašeho lokálního umístění"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2483,7 +2497,7 @@ msgstr "Webová strana"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "Produktová kategorie webu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
@@ -2499,7 +2513,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr ""
+msgstr "Webový obchod"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -2525,7 +2539,7 @@ msgstr "opengraph obrázek webových stránek"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_price
 msgid "Website price"
-msgstr ""
+msgstr "Webová cena"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_price_difference
@@ -2542,7 +2556,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_invoice__website_id
 msgid "Website through which this invoice was created."
-msgstr ""
+msgstr "Webové stránky, jejichž prostřednictvím byla tato faktura vytvořena."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
@@ -2557,7 +2571,7 @@ msgstr "Weby"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team__website_ids
 msgid "Websites using this Sales Team"
-msgstr ""
+msgstr "Webové strany používající tým obchodníků"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
@@ -2586,7 +2600,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr ""
+msgstr "Nemáte žádnou objednávku z webových stránek"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
@@ -2596,7 +2610,7 @@ msgstr ""
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr ""
+msgstr "Nechal jste položky v košíku!"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -2617,6 +2631,8 @@ msgid ""
 "Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
+"Vaše adresa\n"
+"                                        <small> nebo </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -2628,7 +2644,7 @@ msgstr "Vaše reference"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "Your cart is empty!"
-msgstr ""
+msgstr "váš košík je prázdný!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2643,39 +2659,39 @@ msgstr "PSČ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
-msgstr ""
+msgstr "bpost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
-msgstr ""
+msgstr "kód..."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce"
-msgstr "eCommerce"
+msgstr "e-shop"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
-msgstr ""
+msgstr "kategorie"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
 msgid "eCommerce Sales"
-msgstr ""
+msgstr "prodeje e-shopu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
 msgid "eCommerce Shipping Costs"
-msgstr ""
+msgstr "Přepravní náklady e-shopu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search count
 msgid "found)"
-msgstr ""
+msgstr "nalezeno)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2685,7 +2701,7 @@ msgstr "hodin(y)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
-msgstr ""
+msgstr "Pokud chcete sloučit svůj předchozí košík do aktuálního košíku."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2693,6 +2709,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"Pokud chcete obnovit předchozí košík. Váš současný košík bude nahrazen vaším"
+" předchozím košíkem."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2709,7 +2727,7 @@ msgstr "kg"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "ml-2"
-msgstr ""
+msgstr "ml-2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

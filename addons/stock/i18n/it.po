@@ -24,9 +24,9 @@
 # Paolo Valier, 2018
 # nle_odoo, 2018
 # Davide Corio <enlightx@gmail.com>, 2019
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Mario Riva <mario.riva@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
@@ -111,7 +111,7 @@ msgstr "%s: Fornisci il prodotto da %s"
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: luogo di transito"
+msgstr "%s: ubicazione di transito"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -141,14 +141,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Luogo fornitore: luogo virtuale che corrisponde al luogo di origine per i prodotti provenienti dai fornitori\n"
-"* Vista: luogo virtuale usato per creare strutture gerarchiche per il tuo magazzino, aggregando le posizioni figli; non può contenere direttamente i prodotti\n"
-"* Luogo interno: luogo fisico nel tuo magazzino\n"
-"* Luogo cliente: luogo virtuale che corrisponde al luogo di destinazione dei prodotti inviati ai tuoi clienti\n"
-"* Perdita inventario: luogo virtuale che funge da contraparte per le operazioni di inventario usate per correggere i livelli delle scorte (inventari fisici)\n"
-"* Approvvigionamento: luogo virtuale che funge da controparte temporanea per le operazioni di approvvigionamento quando la fonte (fornitore o produzione) non è ancore conosciuta. Questo luogo dovrebbe essere vuoto quando lo scheduler di approvvigionamento ha terminato di funzionare\n"
-"* Produzione: luogo virtuale di controparte per le operazioni di produzione: questo luogo consuma la materia prima e produce prodotti finiti\n"
-"* Luogo di transito: luogo di controparte da usare nelle operazioni interaziendali o inter-magazzini."
+"* Ubicazione fornitore: ubicazione virtuale che corrisponde all'ubicazione di origine per i prodotti provenienti dai fornitori\n"
+"* Vista: ubicazione virtuale usato per creare strutture gerarchiche per il tuo magazzino, aggregando le posizioni figli; non può contenere direttamente i prodotti\n"
+"* Ubicazione interna: ubicazione fisica nel tuo magazzino\n"
+"* Ubicazione cliente: ubicazione virtuale che corrisponde all'ubicazione di destinazione dei prodotti inviati ai tuoi clienti\n"
+"* Perdita inventario: ubicazione virtuale che funge da contraparte per le operazioni di inventario usate per correggere i livelli delle scorte (inventari fisici)\n"
+"* Approvvigionamento: ubicazione virtuale che funge da controparte temporanea per le operazioni di approvvigionamento quando la fonte (fornitore o produzione) non è ancore conosciuta. Questa ubicazione dovrebbe essere vuota quando lo scheduler di approvvigionamento ha terminato di funzionare\n"
+"* Produzione: ubicazione virtuale di controparte per le operazioni di produzione: questa ubicazione consuma la materia prima e produce prodotti finiti\n"
+"* Ubicazione di transito: ubicazione di controparte da usare nelle operazioni interaziendali o inter-magazzini."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -884,7 +884,7 @@ msgstr "Vista del calendario"
 #: code:addons/stock/models/stock_warehouse.py:520
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "Impossibile trovare la posizione di un cliente o fornitore."
+msgstr "Impossibile trovare ubicazioni cliente o fornitore."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:256
@@ -1215,7 +1215,7 @@ msgstr "Conta i Picking  in attesa"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr "Posizioni di contropartita"
+msgstr "Ubicazioni di contropartita"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1457,12 +1457,12 @@ msgstr "Tempi di consegna Cliente"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Location dei Clienti"
+msgstr "Ubicazione cliente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Punti di stoccaggio dei Clienti"
+msgstr "Ubicazioni dei clienti"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -1539,7 +1539,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
-msgstr "Location predefinita di Destinazione"
+msgstr "Ubicazione predefinita di destinazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -1549,7 +1549,7 @@ msgstr "Proprietario predefinito"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
-msgstr "Posizione di origine predefinita"
+msgstr "Ubicazione di origine predefinita"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -1781,12 +1781,12 @@ msgstr "Indirizzo di destinazione "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Destination Location"
-msgstr "Location di Destinazione"
+msgstr "Ubicazione di destinazione"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr "Location di Destinazione:"
+msgstr "Ubicazione di destinazione:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
@@ -2038,7 +2038,7 @@ msgstr "Ubicazione fissa per prodotto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr "Locations fisse per categorie Prodotti"
+msgstr "Ubicazioni fisse per categorie Prodotti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
@@ -2124,7 +2124,7 @@ msgstr "Dal Fornitore"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr "Nome Completo della Location"
+msgstr "Nome Completo dell'ubicazione"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2540,7 +2540,7 @@ msgstr "Input"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "Location di Input"
+msgstr "Ubicazione di Input"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:138
@@ -2558,13 +2558,13 @@ msgstr "Interno"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Location Interna"
+msgstr "Ubicazione Interna"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Internal Locations"
-msgstr "Punti di stoccaggio interni"
+msgstr "Ubicazioni interne"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__ref
@@ -2581,7 +2581,7 @@ msgstr "Trasferimenti interni"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "Posizione di transito interno"
+msgstr "Ubicazione di transito interna"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
@@ -2618,7 +2618,7 @@ msgstr "Operando destro del dominio non valido %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__location_id
 msgid "Inventoried Location"
-msgstr "Location Inventariata"
+msgstr "Ubicazione Inventariata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__lot_id
@@ -2701,12 +2701,12 @@ msgstr "Righe di Inventario"
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_location_id
 msgid "Inventory Location"
-msgstr "Location di Inventario"
+msgstr "Ubicazione magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Inventario dei punti di stoccaggio"
+msgstr "Ubicazioni di magazzino"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -2716,7 +2716,7 @@ msgstr "Perdita di inventario"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr "Panoramica inventario"
+msgstr "Panoramica magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -2787,12 +2787,12 @@ msgstr "È bloccato"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "È una location di Restituzione?"
+msgstr "È una ubicazione di Restituzione?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "E’ una Location di Scarto?"
+msgstr "E’ una ubicazione di Scarto?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -3012,7 +3012,8 @@ msgstr "Legenda"
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
 #: model:ir.model.fields,help:stock.field_stock_quant__company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr "Lascia vuoto questo campo se questa posizione è condivisa tra aziende"
+msgstr ""
+"Lascia vuoto questo campo se questa ubicazione è condivisa tra aziende"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -3054,17 +3055,17 @@ msgstr "Individuare"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr "Location"
+msgstr "Ubicazione"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location Barcode"
-msgstr "Codice a barre del punto di stoccaggio"
+msgstr "Codice a barre dell'ubicazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
-msgstr "Nome della Location"
+msgstr "Nome dell'ubicazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
@@ -3074,12 +3075,12 @@ msgstr "Ubicazione Stock"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
 msgid "Location Type"
-msgstr "Tipo di Location"
+msgstr "Tipo di ubicazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Posizione in cui il sistema immagazzinerà i prodotti finiti."
+msgstr "Ubicazione in cui il sistema immagazzinerà i prodotti finiti."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3089,7 +3090,7 @@ msgstr "Posizione in cui il sistema immagazzinerà i prodotti finiti."
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Locations"
-msgstr "Punti di stoccaggio"
+msgstr "Ubicazioni"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3214,7 +3215,7 @@ msgstr "Gestisci Lotti / Numeri di serie"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr "Gestisci Locations di Stoccaggio Multiple"
+msgstr "Gestisci ubicazioni multiple"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
@@ -3813,7 +3814,7 @@ msgstr "Origine dei Movimenti di Ritorno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "Posizione originale"
+msgstr "Ubicazione originale"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -3846,7 +3847,7 @@ msgstr "In Uscita"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "Location di uscita"
+msgstr "Ubicazione di uscita"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -3891,7 +3892,7 @@ msgstr "Proprietario :"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__partner_id
 msgid "Owner of the location if not internal"
-msgstr "Proprietario della location di magazzino se non è interna"
+msgstr "Proprietario dell'ubicazione se non interna"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
@@ -4033,7 +4034,7 @@ msgstr "Imballaggio"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr "Posizione dell’imballaggio"
+msgstr "Ubicazione dell’imballaggio"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:447
@@ -4051,7 +4052,7 @@ msgstr "Parametri"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "Posizione Genitore"
+msgstr "Ubicazione genitore"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
@@ -4437,7 +4438,7 @@ msgstr "Produzione"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "Location della Produzione"
+msgstr "Ubicazione della Produzione"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:181
@@ -4558,7 +4559,7 @@ msgstr "Controllo Qualità"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr "Posizione del controllo di qualità"
+msgstr "Ubicazione del controllo di qualità"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__quant_ids
@@ -4646,9 +4647,9 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 "Quantità dei prodotti in arrivo pianificati.\n"
-"In un contesto con una singola Location dello stock, ciò include le merci che arrivano in questa posizione o uno dei suoi figli.\n"
-"In un contesto con un singolo Magazzino, ciò include le merci che arrivano alla Posizione dello stock di questo Magazzino o uno dei suoi figli.\n"
-"Altrimenti, ciò include le merci che arrivano a qualsiasi location di magazzino con tipo “interno”."
+"In un contesto con una singola ubicazione, ciò include le merci che arrivano in questa ubicazione o uno dei suoi figli.\n"
+"In un contesto con un singolo Magazzino, ciò include le merci che arrivano alla ubicazione di questo Magazzino o uno dei suoi figli.\n"
+"Altrimenti, ciò include le merci che arrivano a qualsiasi ubicazione con tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -4659,9 +4660,9 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "Quantità dei prodotti in uscita pianificati.\n"
-"In un contesto con un singolo punto di stoccaggio, ciò include le merci che escono da questo luogo o da uno dei suoi figli.\n"
-"In un contesto con un singolo magazzino, ciò include le merci che escono dal luogo delle scorte di questo magazzino o da uno dei suoi figli.\n"
-"Altrimenti, ciò include le merci che escono da qualsiasi punto di stoccaggio di tipo “interno”."
+"In un contesto con una singola ubicazione, ciò include le merci che escono da questa ubicazione o da uno dei suoi figli.\n"
+"In un contesto con un singolo magazzino, ciò include le merci che escono dall'ubicazione di questo magazzino o da uno dei suoi figli.\n"
+"Altrimenti, ciò include le merci che escono da qualsiasi ubicazione di tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -4828,7 +4829,7 @@ msgstr "Registrare una ricevuta del prodotto"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
-msgstr "Registrare lotti, pacchetti, luoghi"
+msgstr "Registrare lotti, pacchetti, ubicazioni"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4996,7 +4997,7 @@ msgstr "Rientro"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "Luogo di restituzione"
+msgstr "Ubicazione di restituzione"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -5477,12 +5478,12 @@ msgstr "Documento di origine"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Source Location"
-msgstr "Location di Provenienza"
+msgstr "Ubicazione di Provenienza"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "Luogo di origine"
+msgstr "Ubicazione di origine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
@@ -5608,12 +5609,12 @@ msgstr "Previsione del livello delle scorte"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_tree2
 msgid "Stock Location"
-msgstr "Punto di stoccaggio"
+msgstr "Ubicazione di magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "Punti di stoccaggio dei prodotti"
+msgstr "Ubicazioni di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -5741,7 +5742,7 @@ msgstr "Prodotto immagazzinabile"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
 msgid "Storage Locations"
-msgstr "Luogo di stoccaggio"
+msgstr "Ubicazioni di stoccaggio"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -6669,12 +6670,12 @@ msgstr "Fornitore"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr "Location del fornitore"
+msgstr "Ubicazione del fornitore"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Punti di stoccaggio del fornitore"
+msgstr "Ubicazioni del fornitore"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
