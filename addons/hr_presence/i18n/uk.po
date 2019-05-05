@@ -25,7 +25,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr ""
+msgstr "к-сть листів на відправлення"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -40,6 +40,15 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"                    Щановний(а) ${object.name},<br/><br/>\n"
+"                    Виняток зроблений, якщо була наша помилка, здається, що ви не в своєму кабінеті і від вас немає запиту на відпустку.<br/>\n"
+"                    Будь ласка, вживайте належних заходів для виконання цієї роботи.<br/>\n"
+"                    Не соромтеся звертатися до свого менеджера або відділу кадрівt.\n"
+"                    <br/>З найкращими побажаннями,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -47,6 +56,8 @@ msgid ""
 "<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
 "title=\"Absent\" name=\"presence_absent\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
+"title=\"Absent\" name=\"presence_absent\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -54,6 +65,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
 "label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
+"label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -61,6 +74,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"To define\" name=\"presence_to_define\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"To define\" name=\"presence_to_define\"/>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
@@ -69,26 +84,29 @@ msgid ""
 "                            Last Activity\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Остання дія\n"
+"                        </span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_form
 msgid "<span class=\"o_stat_text\">Connected</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">З'єднано</span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span> sent emails</span>"
-msgstr ""
+msgstr "<span>надіслані листи</span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span>At least </span>"
-msgstr ""
+msgstr "<span>Принаймні </span>"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.res_config_settings_view_form
 msgid "<span>IP List (comma separated):</span>"
-msgstr ""
+msgstr "<span>Список IP (через кому):</span>"
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
@@ -129,7 +147,7 @@ msgstr "Створити електронний лист"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr ""
+msgstr "Обчислення присутності та відкритого перегляду присутності"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
@@ -144,7 +162,7 @@ msgstr "Контроль присутності співробітників"
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Створити Uid"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
@@ -154,7 +172,7 @@ msgstr "Співробітник"
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr ""
+msgstr "Присутність співробітника"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -169,16 +187,19 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
+"Виняток зроблений, якщо була наша помилка, здається, що ви не в своєму кабінеті і від вас немає запиту на відпустки.\n"
+"Будь ласка, вживайте належних заходів для виконання цієї роботи.\n"
+"Не соромтеся звертатися до свого менеджера або відділу кадрів."
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr ""
+msgstr "Остання дата обчислення присутності відділу кадрів"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "Стан присутності відділу кадрів"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -198,7 +219,7 @@ msgstr "Недоступний"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "Присутність"
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
@@ -214,23 +235,23 @@ msgstr "Звіти"
 #: code:addons/hr_presence/models/hr_employee.py:152
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr ""
+msgstr "Немає робочої адреси електронної пошти для цього співробітника."
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:130
 #, python-format
 msgid "There is no professional phone for this employee."
-msgstr ""
+msgstr "Немає робочого телефону для цього співробітника."
 
 #. module: hr_presence
 #: selection:hr.employee,hr_presence_state:0
 msgid "To Define"
-msgstr ""
+msgstr "Визначити"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "Несподівана відстуність"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -241,7 +262,7 @@ msgstr "Журнал користувачів"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_control_ip_list
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__hr_presence_control_ip_list
 msgid "Valid IP addresses"
-msgstr ""
+msgstr "Перевірити IP-адреси"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:112
@@ -249,4 +270,4 @@ msgstr ""
 #: code:addons/hr_presence/models/hr_employee.py:150
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
-msgstr ""
+msgstr "У вас немає прав для цього. Зв'яжіться з адміністратором."

@@ -3,9 +3,9 @@
 # * hr_timesheet
 # 
 # Translators:
+# Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
 # Martin Trigaux, 2019
-# Bohdan Lisnenko, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
@@ -127,6 +127,9 @@ msgid ""
 "management.Use an analytic account to record cost and revenue on your "
 "project."
 msgstr ""
+"Аналітичний рахунок, з яким цей проект пов'язаний для фінансового "
+"менеджменту. Використовуйте аналітичний рахунок для реєстрації витрат і "
+"доходів вашого проекту."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -148,7 +151,7 @@ msgstr "По співробітникам"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "Проектом"
+msgstr "За проектом"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
@@ -164,7 +167,7 @@ msgstr "Компанії"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__company_uom_id
 msgid "Company UOM"
-msgstr "Компанія UOM"
+msgstr "Одиниця вимірювання компанії"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
@@ -239,7 +242,7 @@ msgstr "Співробітник"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
 msgid "Enable timesheeting on the project."
-msgstr ""
+msgstr "Увімкнути ведення табелю на проекті."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -338,13 +341,13 @@ msgstr "Проект -"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr "Кількість проектів"
+msgstr "Підрахунок проектів"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
-msgstr "Одиниця виміру часу проекту"
+msgstr "Одиниця часу проекту"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_ids
@@ -435,7 +438,7 @@ msgid ""
 "account. Set one on the project configuration."
 msgstr ""
 "Проект, у якому ви ведете табель, не пов'язаний з активним аналітичним "
-"обліковим записом. Встановіть його у налаштуваннях проекту."
+"рахунком. Встановіть його у налаштуваннях проекту."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:147
@@ -456,7 +459,7 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Це встановить одиницю вимірювання, що використовується в проектах та завданнях.\n"
-"Якщо ви використовуєте розклад, пов'язаний з проектами, не забувайте встановлювати потрібну одиницю вимірювання вашим співробітникам."
+"Якщо ви використовуєте табель, пов'язаний з проектами, не забувайте встановлювати потрібну одиницю вимірювання вашим співробітникам."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__timesheet_encode_uom_id
@@ -485,7 +488,7 @@ msgstr "Час вийшов"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Табель часу"
+msgstr "Табель"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -543,8 +546,8 @@ msgstr "На цьому завданні можна записувати таб�
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
-"Щоб дозволити розклад часу, ваш проект %s повинен мати встановлені "
-"аналітичні облікові записи."
+"Щоб дозволити табель, ваш проект %s повинен мати встановлені аналітичні "
+"рахунки."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -579,7 +582,7 @@ msgstr "Користувач"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Validated time off create timesheets automatically."
-msgstr ""
+msgstr "Підтверджене відключення автоматично створює табелі."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
