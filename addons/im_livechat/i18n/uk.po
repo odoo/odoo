@@ -31,12 +31,12 @@ msgstr "К-сть повідомлень"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "# of Sessions"
-msgstr "# Сессії"
+msgstr "К-сть сесій"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr "К-сть розмовників"
+msgstr "К-сть спікерів"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -74,10 +74,10 @@ msgid ""
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
 msgstr ""
-"<span>Визначте правила для вашого прямого каналу підтримки. Ви можете "
+"<span>Визначте правила для вашого онлайн-каналу підтримки. Ви можете "
 "застосувати дію (відключити підтримку, автоматично відкрити вашу підтримку "
 "або просто зробити доступною кнопкою) для вказаної URL-адреси та кожної "
-"країни.<br/>Щоб визначити країну, GeoIP має бути встановлений на вашому "
+"країни. <br/>Щоби визначити країну, GeoIP має бути встановлений на вашому "
 "сервері, інакше країни правила не будуть враховуватися.</span>"
 
 #. module: im_livechat
@@ -86,6 +86,8 @@ msgid ""
 "A session is without answer if the operator did not answer. \n"
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
+"Сесія не відповідає, якщо оператор не відповів.\n"
+"                                      Якщо відвідувач також є оператором, то сесія завжди буде відповідати."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
@@ -123,12 +125,12 @@ msgstr "Гості"
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Auto popup"
-msgstr "Авто-виринання"
+msgstr "Автоматично спливаюче вікно"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Auto popup timer"
-msgstr "Таймер автоматичного виринання"
+msgstr "Таймер автоматичного спливаючого вікна"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_autovacuum
@@ -154,7 +156,7 @@ msgstr "Середнє повідомлення"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Average time in seconds to give the first answer to the visitor"
-msgstr ""
+msgstr "Середній час у секундах, щоб дати першу відповідь відвідувачу"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
@@ -183,7 +185,7 @@ msgid ""
 "                it before sending."
 msgstr ""
 "Запитані відповіді дозволяють вставити попередньо записані відповіді у\n"
-"ваші повідомлення, набравши <i>:ярлик</i>. Ярлик\n"
+"ваші повідомлення, набравши <i>:shortcut</i>. Ярлик\n"
 "замінено безпосередньо у вашому повідомленні, так що ви все одно можете редагувати\n"
 "це перед відправленням."
 
@@ -228,7 +230,7 @@ msgstr "Канали"
 #. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "Опис чату"
+msgstr "Опис обговорення"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
@@ -281,12 +283,12 @@ msgstr "Країна"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
 msgid "Country of the visitor"
-msgstr ""
+msgstr "Країна відвідувача"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__country_id
 msgid "Country of the visitor of the channel"
-msgstr ""
+msgstr "Країна відвідувача каналу"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -336,17 +338,17 @@ msgstr "Оцінювання клієнта"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
 msgid "Day Number"
-msgstr ""
+msgstr "Номер дня"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__day_number
 msgid "Day number of the session (1 is Monday, 7 is Sunday)"
-msgstr ""
+msgstr "Номер дня сесії (1 це понеділок, 7 це Неділя)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__days_of_activity
 msgid "Days of activity"
-msgstr ""
+msgstr "Дні дій"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
@@ -407,12 +409,12 @@ msgid ""
 "                your customers in order to start chatting with you."
 msgstr ""
 "У кожного каналу є власна URL-адреса, яку ви можете надіслати електронною поштою\n"
-"вашим клієнтам, щоб почати спілкуватися з вами."
+"вашим клієнтам, для початку розмови."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Empty Sessions"
-msgstr "Чисті сесії"
+msgstr "Пусті сесії"
 
 #. module: im_livechat
 #. openerp-web
@@ -514,7 +516,7 @@ msgstr "Зображення"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
-msgstr ""
+msgstr "Чи відвідувач анонім"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -601,12 +603,12 @@ msgstr "Розмова у живому чаті"
 #. module: im_livechat
 #: sql_constraint:mail.channel:0
 msgid "Livechat Operator ID is required for a channel of type livechat."
-msgstr ""
+msgstr "ID оператора живого чату необхідний для каналу типу живого чату."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Livechat Preferences"
-msgstr ""
+msgstr "Налаштування живого чату"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -621,9 +623,9 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"Статистика каналів підтримки Живого журналу дозволяє вам легко перевірити та"
-" проаналізувати сессію живого чату вашої компанії. Витягувати інформацію про"
-" пропущені сессії, аудиторію, тривалість сессії тощо."
+"Статистика каналів підтримки живого чату дозволяє вам легко перевірити та "
+"проаналізувати сесію живого чату вашої компанії. Витягувати інформацію про "
+"пропущені сесії, аудиторію, тривалість сесії тощо."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
@@ -641,7 +643,7 @@ msgstr "Статистика підтримки живого чату"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_username
 msgid "Livechat Username"
-msgstr ""
+msgstr "Ім'я користувача живого чату"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -702,6 +704,8 @@ msgstr "Історія не знайдена"
 msgid ""
 "None of our collaborators seem to be available, please try again later."
 msgstr ""
+"Ніхто з наших співробітників, здається, не доступний. Повторіть спробу "
+"пізніше."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
@@ -712,7 +716,7 @@ msgstr "Кількість розмов"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__days_of_activity
 msgid "Number of days since the first session of the operator"
-msgstr ""
+msgstr "Кількість днів після першого сеансу оператора"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
@@ -749,7 +753,7 @@ msgstr "Аналіз оператора"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__livechat_operator_id
 msgid "Operator for this specific channel"
-msgstr ""
+msgstr "Оператор для цього конкретного каналу"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -858,7 +862,7 @@ msgstr "Сумне обличчя"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
 msgid "Satisfaction Rate"
-msgstr ""
+msgstr "Швидкість задоволення"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
@@ -902,12 +906,12 @@ msgstr "Статистика сессії"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
 msgid "Session not rated"
-msgstr ""
+msgstr "Сесію не оцінено"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_without_answer
 msgid "Session(s) without answer"
-msgstr ""
+msgstr "Сесія(ї) без відповіді"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
@@ -920,7 +924,7 @@ msgstr "Сесії"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.session_history
 msgid "Sessions History"
-msgstr "Історія сессій"
+msgstr "Історія сесій"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image_small
@@ -943,12 +947,12 @@ msgstr "Початкова дата"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start Date of session"
-msgstr "Дата початку сессії"
+msgstr "Дата початку сесії"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
 msgid "Start Hour of session"
-msgstr ""
+msgstr "Година початку сесії"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__start_date
@@ -959,7 +963,7 @@ msgstr "Дата початку розмови"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__start_hour
 msgid "Start hour of the conversation"
-msgstr ""
+msgstr "Година початку розмови"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
@@ -1032,6 +1036,8 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_username
 msgid "This username will be used as your name in the livechat channels."
 msgstr ""
+"Це ім'я користувача буде використовуватися як ваше ім'я в каналах живого "
+"чату."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_small
@@ -1046,7 +1052,7 @@ msgstr "Час відповісти"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Time to answer (sec)"
-msgstr ""
+msgstr "Час на відповідь (сек)"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -1095,7 +1101,7 @@ msgstr "Відвідувач"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr ""
+msgstr "Відвідувач щасливий"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -1110,7 +1116,7 @@ msgstr "Чат-канали веб-сайту"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
 msgid "Welcome Message"
-msgstr "Привітальне пвідомлення"
+msgstr "Привітальне повідомлення"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
