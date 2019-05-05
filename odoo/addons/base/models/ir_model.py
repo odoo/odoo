@@ -95,7 +95,7 @@ class IrModel(models.Model):
         return [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char'})]
 
     name = fields.Char(string='Model Description', translate=True, required=True)
-    model = fields.Char(default='x_', required=True, index=True)
+    model = fields.Char(default='x_', required=True)
     info = fields.Text(string='Information')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
                                default=_default_field_id)

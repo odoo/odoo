@@ -24,7 +24,7 @@ class BusPresence(models.Model):
 
     _sql_constraints = [('bus_user_presence_unique', 'unique(user_id)', 'A user can only have one IM status.')]
 
-    user_id = fields.Many2one('res.users', 'Users', required=True, index=True, ondelete='cascade')
+    user_id = fields.Many2one('res.users', 'Users', required=True, ondelete='cascade')
     last_poll = fields.Datetime('Last Poll', default=lambda self: fields.Datetime.now())
     last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
     status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
