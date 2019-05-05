@@ -3,14 +3,15 @@
 # * base_address_extended
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +25,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Izmijenite kako sustav izračunava puni naziv ulice bazirano na različitim "
+"poljima."
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -57,6 +60,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Format naziva ulice prema državama.\n"
+"\n"
+"Možete koristiti python-stil uzorka sa svim poljima za naziv ulice(npr., koristite '%(street_name)s, %(street_number)s' ako želite prikazati naziv ulice, a kućni broj iza zareza)\n"
+"%(street_name)s: naziv ulice\n"
+"%(street_number)s: kućni broj\n"
+"%(street_number2)s: slovo"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
@@ -68,30 +77,30 @@ msgstr "Kućni broj"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Format ulice"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Naziv ulice"
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Naziv ulice..."
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Format ulice..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:60
 #: code:addons/base_address_extended/models/base_address_extended.py:126
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Nepoznato polje %s u formatu ulice."
