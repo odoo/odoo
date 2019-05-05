@@ -4690,7 +4690,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     #
 
     def ensure_one(self):
-        """ Verifies that the current recorset holds a single record. Raises
+        """ Verifies that the current recordset holds a single record. Raises
         an exception otherwise.
         """
         try:
