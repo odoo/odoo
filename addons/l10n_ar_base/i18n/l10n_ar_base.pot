@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-02 21:51+0000\n"
-"PO-Revision-Date: 2019-05-02 21:51+0000\n"
+"POT-Creation-Date: 2019-05-06 20:01+0000\n"
+"PO-Revision-Date: 2019-05-06 20:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,6 +52,19 @@ msgid "Bank Accounts"
 msgstr ""
 
 #. module: l10n_ar_base
+#: code:addons/l10n_ar_base/models/res_partner_bank.py:24
+#, python-format
+msgid "CBU"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_company__l10n_ar_cuit
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_cuit
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_cuit
+msgid "CUIT"
+msgstr ""
+
+#. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_res_country__l10n_ar_cuit_juridica
 msgid "CUIT Legal Entity"
 msgstr ""
@@ -82,7 +95,7 @@ msgid "CUIT defined by AFIP in order to recognize partners from this country tha
 msgstr ""
 
 #. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner.py:126
+#: code:addons/l10n_ar_base/models/res_partner.py:140
 #, python-format
 msgid "Can not define CUIT for contacts, you can set cuit to Commercial Entity. Check contacts: %s"
 msgstr ""
@@ -95,6 +108,19 @@ msgstr ""
 #. module: l10n_ar_base
 #: model:ir.model,name:l10n_ar_base.model_res_company
 msgid "Companies"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_cuit
+#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_cuit
+#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_cuit
+msgid "Computed field that returns cuit or nothing if this one is not set for the partner"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_formated_cuit
+#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_formated_cuit
+msgid "Computed field that will convert the given cuit number to the format {person_category:2}-{number:10}-{validation_number:1}"
 msgstr ""
 
 #. module: l10n_ar_base
@@ -120,6 +146,12 @@ msgstr ""
 #. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_formated_cuit
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_formated_cuit
+msgid "Formated CUIT"
 msgstr ""
 
 #. module: l10n_ar_base
@@ -167,19 +199,6 @@ msgid "Inactive"
 msgstr ""
 
 #. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_company__l10n_ar_cuit
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_cuit
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_cuit
-msgid "L10N Ar Cuit"
-msgstr ""
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_formated_cuit
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_formated_cuit
-msgid "L10N Ar Formated Cuit"
-msgstr ""
-
-#. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -205,7 +224,7 @@ msgid "Name of this ID type. For example: 'Passport'"
 msgstr ""
 
 #. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner.py:76
+#: code:addons/l10n_ar_base/models/res_partner.py:90
 #, python-format
 msgid "No CUIT configured for partner [%i] %s"
 msgstr ""
@@ -214,6 +233,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_company_form
 #: model_terms:ir.ui.view,arch_db:l10n_ar_base.view_partner_form
 msgid "Number"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_id_number
+#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_id_number
+#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_id_number
+msgid "Number that appears in the person/legal entity identification document. Number should be expressed completely in integers"
 msgstr ""
 
 #. module: l10n_ar_base
@@ -243,9 +269,22 @@ msgid "Show inactive identification types"
 msgstr ""
 
 #. module: l10n_ar_base
+#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_same_id_number_partner
+#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_same_id_number_partner
+msgid "Technical field used to show a warning when trying to create a  a partner with a identification number already used by another partner. Parent/child partners could share identification number so for this cases not warning will appears"
+msgstr ""
+
+#. module: l10n_ar_base
 #: code:addons/l10n_ar_base/models/res_partner_bank.py:17
 #, python-format
 msgid "The CBU \"%s\" is not valid"
+msgstr ""
+
+#. module: l10n_ar_base
+#: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_identification_type_id
+#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_identification_type_id
+#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_identification_type_id
+msgid "The type od identifications defined by AFIP that could identify a person or a legal entity when trying to made operations"
 msgstr ""
 
 #. module: l10n_ar_base
