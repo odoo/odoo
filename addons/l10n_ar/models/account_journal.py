@@ -153,11 +153,7 @@ class AccountJournal(models.Model):
             if self.type == 'sale':
                 # Si es nota de debito nota de credito y same sequence,
                 # no creamos la secuencia, buscamos una que exista
-                if (
-                        document_type.internal_type in [
-                        'debit_note', 'credit_note'] and
-                        self.document_sequence_type == 'same_sequence'
-                ):
+                if (document_type.internal_type in ['debit_note', 'credit_note']):
                     journal_document = self.l10n_latam_journal_mapping_ids.search([
                         ('document_type_id.l10n_ar_letter', '=',
                             document_type.l10n_ar_letter),
