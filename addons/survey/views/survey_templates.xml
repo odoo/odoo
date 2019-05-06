@@ -120,7 +120,7 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 mt16 fade show d-print-none css_editable_mode_hidden">
             <div t-ignore="true" class="text-center">
                 <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
             </div>
@@ -145,7 +145,7 @@
                 <t t-call-assets="survey.survey_assets"/>
             </t>
             <body>
-                <header>
+                <header t-if="not survey.certificate">
                     <div><title>Odoo</title></div>
                     <div class="text-center">
                         <img t-attf-src="/web/binary/company_logo" alt="Logo"/>
@@ -156,17 +156,15 @@
                     <t t-raw="0"/>
                 </main>
             </body>
-            <xpath expr="//footer" position="replace">
-                <div class="container mt16 mb8">
-                    <div class="float-right" t-ignore="true" t-if="not editable">
-                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
-                        <a target="_blank" class="badge badge-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
-                    </div>
-                    <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
-                    </div>
+            <div t-if="not survey.certificate" class="container mt16 mb8">
+                <div class="float-right" t-ignore="true" t-if="not editable">
+                    Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                    <a target="_blank" class="badge badge-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
                 </div>
-            </xpath>
+                <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                </div>
+            </div>
         </t>
     </template>
 

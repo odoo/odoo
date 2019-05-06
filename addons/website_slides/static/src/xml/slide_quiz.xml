@@ -8,7 +8,7 @@
                 </div>
 
                 <div t-foreach="widget.quiz.questions" t-as="question"
-                     t-attf-class="o_wslides_js_lesson_quiz_question my-3 #{widget.slide.completed ? 'disabled' : ''}"
+                     t-attf-class="o_wslides_js_lesson_quiz_question my-3 #{widget.readonly ? 'disabled' : ''} #{widget.slide.completed ? 'completed-disabled' : ''}"
                      t-att-data-question-id="question.id" t-att-data-title="question.question">
                     <div class="h4">
                         <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question.question"/>
@@ -17,7 +17,7 @@
                         <t t-foreach="question.answers" t-as="answer">
                             <a t-att-data-answer-id="answer.id" href="#"
                                 t-att-data-text="answer.text_value"
-                                t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center #{widget.slide.completed ? 'disabled bg-transparent' : 'list-group-item-action' } #{widget.slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
+                                t-attf-class="o_wslides_quiz_answer list-group-item d-flex align-items-center #{widget.readonly ? 'disabled bg-transparent' : 'list-group-item-action'} #{widget.slide.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
 
                                 <label class="my-0 d-flex align-items-center justify-content-center mr-2">
                                     <input type="radio"
@@ -98,8 +98,7 @@
                                 <button type="button" class="btn btn-light border o_wslides_quiz_btn align-self-end">Next <i class="fa fa-chevron-right"/></button>
                             </t>
                             <t t-else="">
-                                <!-- TODO: end course if no slide left -->
-                                <a type="button" class="btn btn-light border align-self-end">End course</a>
+                                <a type="button" href="/slides" class="btn btn-light border align-self-end">End course</a>
                             </t>
                         </div>
                     </div>

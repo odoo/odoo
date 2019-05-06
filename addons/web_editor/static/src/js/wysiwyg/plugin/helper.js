@@ -109,12 +109,14 @@ var HelperPlugin = AbstractPlugin.extend({
         this.orderStyle(node);
         this.orderClass(otherNode);
         this.orderStyle(otherNode);
-        if (node.attributes.length !== otherNode.attributes.length) {
+        var nodeAttributes = this._getAttrsNoID(node);
+        var otherNodeAttributes = this._getAttrsNoID(otherNode);
+        if (nodeAttributes.length !== otherNodeAttributes.length) {
             return false;
         }
-        for (var i = 0; i < node.attributes.length; i++) {
-            var attr = node.attributes[i];
-            var otherAttr = otherNode.attributes[i];
+        for (var i = 0; i < nodeAttributes.length; i++) {
+            var attr = nodeAttributes[i];
+            var otherAttr = otherNodeAttributes[i];
             if (attr.name !== otherAttr.name || attr.value !== otherAttr.value) {
                 return false;
             }
@@ -306,6 +308,7 @@ var HelperPlugin = AbstractPlugin.extend({
         var range = this.context.invoke('editor.createRange');
 
         var spaceToRemove = [];
+        var offset;
         while ((node = nodes.pop())) {
             next = node[prevOrNext];
             while (next && !next.tagName) {
@@ -316,6 +319,31 @@ var HelperPlugin = AbstractPlugin.extend({
                 }
                 break;
             }
+
+            // handle merge of text with p (useful in case of <li>text</li> with <li><p>text</p></li>)
+            if (next && dom.isText(node) && this.isNodeBlockType(next)) {
+                node = [next, next = node][0]; // swap node and next
+                direction = direction === 'next' ? 'prev' : 'next'; // switch direction
+            }
+            if (next && dom.isText(next) && this.isNodeBlockType(node)) {
+                if (this.isBlankNode(node, true)) {
+                    $(node).empty();
+                }
+                $(node)[direction === 'next' ? 'append' : 'prepend'](next);
+                offset = direction === 'next' ? 0 : dom.nodeLength(next);
+                if (dom.isText(next[prevOrNext])) {
+                    // merge text if needed
+                    var sib = next[prevOrNext];
+                    var firstText = (direction === 'next' ? sib : next).textContent;
+                    var secondText = (direction === 'next' ? next : sib).textContent;
+                    next.textContent = firstText + secondText;
+                    $(sib).remove();
+                    offset = firstText.length;
+                }
+                result = this.makePoint(next, offset);
+                break;
+            }
+
             if (
                 !next ||
                 !(node.tagName || next.tagName === 'BR') ||
@@ -328,7 +356,7 @@ var HelperPlugin = AbstractPlugin.extend({
                 var newNext = next[prevOrNext];
                 $(next).remove();
                 next = newNext;
-                var offset = (next ? direction === 'prev' : direction === 'next') ? dom.nodeLength(next) : 0;
+                offset = (next ? direction === 'prev' : direction === 'next') ? dom.nodeLength(next) : 0;
                 result = this.makePoint(next || node, offset);
                 if (!ifBrRemovedAndMerge) {
                     continue;
@@ -453,6 +481,11 @@ var HelperPlugin = AbstractPlugin.extend({
         ) {
             $(blockToMergeInto).remove();
             return this.makePoint(this.firstLeaf(blockToMergeFrom), 0);
+        }
+
+        // UL/OL can only have LI, UL or OR as direct children
+        if (dom.isList(blockToMergeInto) && !dom.isLi(blockToMergeFrom) && !dom.isList(blockToMergeFrom)) {
+            return;
         }
 
         return this.mergeNonSimilarBlocks(blockToMergeFrom, blockToMergeInto);
@@ -601,22 +634,24 @@ var HelperPlugin = AbstractPlugin.extend({
         var li = dom.ancestor(node, function (n) {
             return n !== node && self.isNodeBlockType(n) || dom.isLi(n);
         });
+        var nextElementSibling = direction === 'next' ? 'nextElementSibling' : 'previousElementSibling';
         li = li && dom.isLi(li) ? li : undefined;
-        if (li && direction === 'next') {
-            if (li.nextElementSibling) {
+        if (li) {
+            if (li[nextElementSibling]) {
                 node = li;
             } else {
                 node = dom.ancestor(node, function (n) {
-                    return ((n.tagName === 'UL' || n.tagName === 'OL') && n.nextElementSibling);
+                    return ((n.tagName === 'UL' || n.tagName === 'OL') && n[nextElementSibling] &&
+                        (direction === 'next' || dom.isList(n[nextElementSibling])));
                 });
             }
         }
 
-        if (!node || !node[direction === 'next' ? 'nextElementSibling' : 'previousElementSibling']) {
+        if (!node || !node[nextElementSibling]) {
             return false;
         }
 
-        node = node[direction === 'next' ? 'nextElementSibling' : 'previousElementSibling'];
+        node = node[nextElementSibling];
 
         var ulFoldedSnippetNode = dom.ancestor(node, function (n) {
             return $(n).hasClass('o_ul_folded');
@@ -633,7 +668,7 @@ var HelperPlugin = AbstractPlugin.extend({
 
         node = this.firstBlockAncestor(node);
 
-        li = dom.ancestor(node, function (n) {
+        li = dom.isList(node) ? undefined : dom.ancestor(node, function (n) {
             return n !== node && self.isNodeBlockType(n) || dom.isLi(n);
         });
         li = li && dom.isLi(li) ? li : undefined;
@@ -1051,9 +1086,15 @@ var HelperPlugin = AbstractPlugin.extend({
      * but without any.
      *
      * @param {Node} node
+     * @param {Boolean} brIsBlank true to consider nodes with BR element
+     *  as ultimate only child to be blank
      * @returns {Boolean}
      */
-    isBlankNode: function (node) {
+    isBlankNode: function (node, brIsBlank) {
+        var self = this;
+        if (brIsBlank && dom.isBR(node)) {
+            return true;
+        }
         if (dom.isVoid(node) || dom.isIcon(node)) {
             return false;
         }
@@ -1062,7 +1103,10 @@ var HelperPlugin = AbstractPlugin.extend({
             }).test(node[dom.isText(node) ? 'textContent' : 'innerHTML'])) {
             return true;
         }
-        if (node.childNodes.length && _.all(node.childNodes, this.isBlankNode.bind(this))) {
+        var areAllChildrenBlank = _.all(node.childNodes, function (node) {
+            return self.isBlankNode(node, brIsBlank);
+        });
+        if (node.childNodes.length && areAllChildrenBlank) {
             return true;
         }
         return false;
@@ -1306,7 +1350,7 @@ var HelperPlugin = AbstractPlugin.extend({
                     $lastContents.after($contents);
                 }
             }
-            while (mergeFromBlock.parentNode && this.isBlankNode(mergeFromBlock.parentNode)) {
+            while (mergeFromBlock.parentNode && this.isBlankNode(mergeFromBlock.parentNode, true)) {
                 mergeFromBlock = mergeFromBlock.parentNode;
             }
             $(mergeFromBlock).remove();
@@ -1478,7 +1522,7 @@ var HelperPlugin = AbstractPlugin.extend({
         if (isAfterBlank) {
             $(node.previousSibling).remove();
         }
-        var isBeforeBlank = node.nextSibling && this.isBlankNode(node.nextSibling)
+        var isBeforeBlank = node.nextSibling && this.isBlankNode(node.nextSibling);
         if (isBeforeBlank) {
             $(node.nextSibling).remove();
         }
@@ -1733,6 +1777,15 @@ var HelperPlugin = AbstractPlugin.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    _getAttrsNoID: function (node) {
+        var nodeAttributes = [];
+        for (var i = 0; i < node.attributes.length; i++) {
+            if (node.attributes[i].name !== 'id') {
+                nodeAttributes.push(node.attributes[i]);
+            }
+        }
+        return nodeAttributes;
+    },
     _insertTextNodeInEditableArea: function (range, text) {
         // try to insert the text node in editable area
         var textNode = this.document.createTextNode(text);

@@ -167,19 +167,21 @@
                                         </h5>
                                         <div class="col-lg-12">
                                             <div class="row">
-                                                <div class="col-lg-4 pl-0 pr-0">
-                                                    <img t-attf-src='/rating/static/src/img/rating_10.png' alt="Great" width="16px" height="16px"/>
-                                                    <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['great']"/>%</span>
-                                                </div>
-                                                <div class="col-lg-4 pl-0 pr-0">
-                                                    <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Okay" width="16px" height="16px"/>
-                                                    <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
-                                                </div>
-                                                <div class="col-lg-4 pl-0 pr-0">
-                                                    <img t-attf-src='/rating/static/src/img/rating_1.png' alt="Bad" width="16px" height="16px"/>
-                                                    <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['bad']"/>%</span>
-                                                </div>
-                                                <t t-if="user.partner_id.id not in ratings_per_user">
+                                                <t t-if="user.partner_id.id in ratings_per_user">
+                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                        <img t-attf-src='/rating/static/src/img/rating_10.png' alt="Great" width="16px" height="16px"/>
+                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['great']"/>%</span>
+                                                    </div>
+                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                        <img t-attf-src='/rating/static/src/img/rating_5.png' alt="Okay" width="16px" height="16px"/>
+                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['okay']"/>%</span>
+                                                    </div>
+                                                    <div class="col-lg-4 pl-0 pr-0">
+                                                        <img t-attf-src='/rating/static/src/img/rating_1.png' alt="Bad" width="16px" height="16px"/>
+                                                        <span class="align-middle"><t t-esc="ratings_per_user[user.partner_id.id]['bad']"/>%</span>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
                                                     <div class="col-lg-12 pl-0 pr-0 o_livechat_no_rating">Not rated yet</div>
                                                 </t>
                                             </div>

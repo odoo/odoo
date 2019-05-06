@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class StockRule(models.Model):
@@ -132,3 +133,8 @@ class ProcurementGroup(models.Model):
             else:
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit)
+
+    def _get_moves_to_assign_domain(self):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+        domain = expression.AND([domain, [('production_id', '=', False)]])
+        return domain

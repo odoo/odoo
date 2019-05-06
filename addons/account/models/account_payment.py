@@ -108,6 +108,16 @@ class account_payment(models.Model):
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
+        # Check if, in batch payments, there are not negative invoices and positive invoices
+        dtype = invoices[0].type
+        for inv in invoices[1:]:
+            if inv.type != dtype:
+                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
+                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
         rec.update({
@@ -659,6 +669,20 @@ class account_payment(models.Model):
             })
 
         return vals
+
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_payments_vals()
+            if data['account_payment_id'] == self.id
+        ])
 
 
 class payment_register(models.TransientModel):
