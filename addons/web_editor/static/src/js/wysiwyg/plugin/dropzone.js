@@ -150,7 +150,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
             route: '/web_editor/add_image_base64',
             params: {
                 res_model: options.res_model,
-                res_id: options.res_id,
+                res_id: options.res_id || 0,
                 image_base64: imageBase64.split(';base64,').pop(),
                 filename: fileName,
             },
