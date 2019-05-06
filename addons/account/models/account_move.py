@@ -608,17 +608,6 @@ class AccountMoveLine(models.Model):
             currency = self.env['account.journal'].browse(context['default_journal_id']).currency_id
         return currency
 
-    @api.depends('debit', 'credit', 'move_id.matched_percentage', 'move_id.journal_id')
-    def _compute_cash_basis(self):
-        for move_line in self:
-            if move_line.journal_id.type in ('sale', 'purchase'):
-                move_line.debit_cash_basis = move_line.debit * move_line.move_id.matched_percentage
-                move_line.credit_cash_basis = move_line.credit * move_line.move_id.matched_percentage
-            else:
-                move_line.debit_cash_basis = move_line.debit
-                move_line.credit_cash_basis = move_line.credit
-            move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
-
     @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
     def _compute_tax_base_amount(self):
         for move_line in self:
@@ -642,10 +631,6 @@ class AccountMoveLine(models.Model):
     credit = fields.Monetary(default=0.0, currency_field='company_currency_id')
     balance = fields.Monetary(compute='_store_balance', store=True, currency_field='company_currency_id',
         help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
-    debit_cash_basis = fields.Monetary(currency_field='company_currency_id', compute='_compute_cash_basis', store=True)
-    credit_cash_basis = fields.Monetary(currency_field='company_currency_id', compute='_compute_cash_basis', store=True)
-    balance_cash_basis = fields.Monetary(compute='_compute_cash_basis', store=True, currency_field='company_currency_id',
-        help="Technical field holding the debit_cash_basis - credit_cash_basis in order to open meaningful graph views from reports")
     amount_currency = fields.Monetary(default=0.0, help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True,
         help='Utility field to express amount currency', store=True)
