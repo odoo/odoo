@@ -46,3 +46,10 @@ class ResCompany(models.Model):
         for rec in self.filtered(
                 lambda x: x.l10n_ar_afip_responsability_type in ['1', '1FM']):
             rec.l10n_ar_company_requires_vat = True
+
+    def _localization_use_documents(self):
+        """ Argentinian localization use documents
+        """
+        self.ensure_one()
+        return True if self.country_id.code == 'AR' \
+                else super()._localization_use_documents()

@@ -80,7 +80,11 @@ class AccountJournal(models.Model):
                 '13': ['B', 'C'],
             },
         }
-        letters = letters_data['issued' if 'sale' else 'received'][
+        if not company.l10n_ar_afip_responsability_type:
+            raise UserError(_(
+                'Need to configure your company AFIP responsability first!'))
+        letters = letters_data[
+            'issued' if journal_type == 'sale' else 'received'][
             company.l10n_ar_afip_responsability_type]
         if counterpart_partner:
             counterpart_letters = letters_data[
@@ -142,9 +146,8 @@ class AccountJournal(models.Model):
 
         # take out documents that already exists
         document_types = document_types - self.mapped(
-            'journal_document_type_ids.document_type_id')
+            'l10n_latam_journal_mapping_ids.document_type_id')
 
-        sequence = 10
         for document_type in document_types:
             sequence_id = False
             if self.type == 'sale':
@@ -155,18 +158,23 @@ class AccountJournal(models.Model):
                         'debit_note', 'credit_note'] and
                         self.document_sequence_type == 'same_sequence'
                 ):
-                    journal_document = self.journal_document_type_ids.search([
+                    journal_document = self.l10n_latam_journal_mapping_ids.search([
                         ('document_type_id.l10n_ar_letter', '=',
                             document_type.l10n_ar_letter),
                         ('journal_id', '=', self.id)], limit=1)
                     sequence_id = journal_document.sequence_id.id
                 else:
-                    sequence_id = self.env['ir.sequence'].create(
-                        document_type.get_document_sequence_vals(self)).id
-            self.journal_document_type_ids.create({
-                'document_type_id': document_type.id,
-                'sequence_id': sequence_id,
-                'journal_id': self.id,
-                'sequence': sequence,
-            })
-            sequence += 10
+                    vals = {}
+                    if self.company_id.l10n_ar_country_code == 'AR':
+                        vals.update({
+                            'name': document_type.name + ' - ' + self.name,
+                            'padding': 8,
+                            'implementation': 'no_gap',
+                            'prefix': "%04i-" % (self.l10n_ar_afip_pos_number),
+                        })
+                    sequence_id = self.env['ir.sequence'].create(vals).id
+                    self.l10n_latam_journal_mapping_ids.create({
+                        'document_type_id': document_type.id,
+                        'sequence_id': sequence_id,
+                        'journal_id': self.id,
+                    })
