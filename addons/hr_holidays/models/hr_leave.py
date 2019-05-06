@@ -351,11 +351,17 @@ class HolidaysRequest(models.Model):
             self.mode_company_id = False
             self.department_id = False
 
+    @api.multi
+    def _sync_employee_details(self):
+        for holiday in self:
+            holiday.manager_id = holiday.employee_id.parent_id.id
+            if holiday.employee_id:
+                holiday.department_id = holiday.employee_id.department_id
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.manager_id = self.employee_id.parent_id.id
-        if self.employee_id:
-            self.department_id = self.employee_id.department_id
+        self._sync_employee_details()
+        self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
@@ -520,7 +526,7 @@ class HolidaysRequest(models.Model):
         if not self._context.get('leave_fast_create'):
             holiday.add_follower(employee_id)
             if 'employee_id' in values:
-                holiday._onchange_employee_id()
+                holiday._sync_employee_details()
             if not self._context.get('import_file'):
                 holiday.activity_update()
         return holiday
@@ -552,7 +558,7 @@ class HolidaysRequest(models.Model):
         if not self.env.context.get('leave_fast_create'):
             self.add_follower(employee_id)
             if 'employee_id' in values:
-                self._onchange_employee_id()
+                self._sync_employee_details()
         return result
 
     @api.multi
