@@ -112,6 +112,8 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
+    group_ids = fields.Many2many('res.groups', string='Groups')
+
     @api.one
     def _compute_count_posts_waiting_validation(self):
         domain = [('forum_id', '=', self.id), ('state', '=', 'pending')]
