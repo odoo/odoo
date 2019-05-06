@@ -74,7 +74,7 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', required=True,
+        'ir.ui.view', 'Form Button Template',
         default=_get_default_view_template_id)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
@@ -369,6 +369,9 @@ class PaymentAcquirer(models.Model):
         """
         if values is None:
             values = {}
+
+        if not self.view_template_id:
+            return None
 
         values.setdefault('return_url', '/payment/process')
         # reference and amount
