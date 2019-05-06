@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-29 01:29+0000\n"
-"PO-Revision-Date: 2019-04-29 01:29+0000\n"
+"POT-Creation-Date: 2019-05-02 21:51+0000\n"
+"PO-Revision-Date: 2019-05-02 21:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,18 +47,8 @@ msgid "Afip Code"
 msgstr ""
 
 #. module: l10n_ar_base
-#: model:ir.model.fields,help:l10n_ar_base.field_res_partner_bank__l10n_ar_cbu
-msgid "Argentine Banking Unique Code"
-msgstr ""
-
-#. module: l10n_ar_base
 #: model:ir.model,name:l10n_ar_base.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner_bank__l10n_ar_cbu
-msgid "CBU"
 msgstr ""
 
 #. module: l10n_ar_base
@@ -92,6 +82,12 @@ msgid "CUIT defined by AFIP in order to recognize partners from this country tha
 msgstr ""
 
 #. module: l10n_ar_base
+#: code:addons/l10n_ar_base/models/res_partner.py:126
+#, python-format
+msgid "Can not define CUIT for contacts, you can set cuit to Commercial Entity. Check contacts: %s"
+msgstr ""
+
+#. module: l10n_ar_base
 #: model:ir.model.fields,field_description:l10n_ar_base.field_l10n_ar_identification_type__code
 msgid "Code"
 msgstr ""
@@ -109,13 +105,6 @@ msgstr ""
 #. module: l10n_ar_base
 #: model:ir.model,name:l10n_ar_base.model_res_country
 msgid "Country"
-msgstr ""
-
-#. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_company__l10n_ar_country_code
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_country_code
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_country_code
-msgid "Country code"
 msgstr ""
 
 #. module: l10n_ar_base
@@ -216,7 +205,7 @@ msgid "Name of this ID type. For example: 'Passport'"
 msgstr ""
 
 #. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner.py:75
+#: code:addons/l10n_ar_base/models/res_partner.py:76
 #, python-format
 msgid "No CUIT configured for partner [%i] %s"
 msgstr ""
@@ -228,8 +217,8 @@ msgid "Number"
 msgstr ""
 
 #. module: l10n_ar_base
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__same_id_number_partner
-#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__same_id_number_partner
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_partner__l10n_ar_same_id_number_partner
+#: model:ir.model.fields,field_description:l10n_ar_base.field_res_users__l10n_ar_same_id_number_partner
 msgid "Partner with same Identification Number"
 msgstr ""
 
@@ -254,14 +243,7 @@ msgid "Show inactive identification types"
 msgstr ""
 
 #. module: l10n_ar_base
-#: model:ir.model.fields,help:l10n_ar_base.field_res_company__l10n_ar_country_code
-#: model:ir.model.fields,help:l10n_ar_base.field_res_partner__l10n_ar_country_code
-#: model:ir.model.fields,help:l10n_ar_base.field_res_users__l10n_ar_country_code
-msgid "Technical field use it in view attrs to show or not localization fields"
-msgstr ""
-
-#. module: l10n_ar_base
-#: code:addons/l10n_ar_base/models/res_partner_bank.py:22
+#: code:addons/l10n_ar_base/models/res_partner_bank.py:17
 #, python-format
 msgid "The CBU \"%s\" is not valid"
 msgstr ""

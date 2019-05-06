@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+import re
 
 
 class ResPartner(models.Model):
@@ -9,31 +10,48 @@ class ResPartner(models.Model):
 
     l10n_ar_cuit = fields.Char(
         compute='_compute_l10n_ar_cuit',
+        string="CUIT",
+        help='Computed field that returns cuit or nothing if this one is not'
+        ' set for the partner',
     )
     l10n_ar_formated_cuit = fields.Char(
         compute='_compute_l10n_ar_formated_cuit',
+        string="Formated CUIT",
+        help='Computed field that will convert the given cuit number to the'
+        ' format {person_category:2}-{number:10}-{validation_number:1}',
     )
     l10n_ar_id_number = fields.Char(
         string='Identification Number',
+        help='Number that appears in the person/legal entity identification'
+        ' document. Number should be expressed completely in integers',
     )
     l10n_ar_identification_type_id = fields.Many2one(
         string="Identification Type",
         comodel_name='l10n_ar.identification.type',
         index=True,
         auto_join=True,
+        help='The type od identifications defined by AFIP that could identify'
+        ' a person or a legal entity when trying to made operations',
     )
-    same_id_number_partner = fields.Html(
+    l10n_ar_same_id_number_partner = fields.Html(
         string='Partner with same Identification Number',
-        compute='_compute_same_same_id_number_partner',
+        compute='_compute_l10n_ar_same_id_number_partner',
         store=False,
+        help='Technical field used to show a warning when trying to create a '
+        ' a partner with a identification number already used by another'
+        ' partner. Parent/child partners could share identification number'
+        ' so for this cases not warning will appears',
     )
 
     @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
-    def _compute_same_same_id_number_partner(self):
+    def _compute_l10n_ar_same_id_number_partner(self):
+        cuit_id_type = self.env.ref('l10n_ar_base.dt_CUIT')
         for partner in self:
             partner_id = partner.id
             partner_id_number = partner.l10n_ar_id_number
             partner_id_type = partner.l10n_ar_identification_type_id
+            if partner_id_type != cuit_id_type:
+                continue
             if isinstance(partner_id, models.NewId):
                 # deal with onchange(), which is always called on a single
                 # record
@@ -48,7 +66,7 @@ class ResPartner(models.Model):
                 domain += [('id', 'not in', related_partners.ids)]
             same_number_partner = self.env['res.partner'].search(
                 domain, limit=1)
-            partner.same_id_number_partner = \
+            partner.l10n_ar_same_id_number_partner = \
                 "<a href='/web#id={}&model=res.partner' target='_blank'>{}"\
                 "</a>".format(
                     same_number_partner.id, same_number_partner.name) \
@@ -107,43 +125,23 @@ class ResPartner(models.Model):
             if rec.l10n_ar_identification_type_id.afip_code == 80:
                 rec.l10n_ar_cuit = rec.l10n_ar_id_number
 
-    @api.model
-    def create(self, values):
-        """ Generate the vat field value with the information in
-        the l10n_ar_id_number and l10n_ar_identification_type_id fields
+    @api.constrains('parent_id', 'commercial_partner_id',
+                    'l10n_ar_identification_type_id', 'l10n_ar_id_number')
+    def check_cuit_commercial_partner(self):
+        """ Can not set CUIT for non commercial partners
         """
-        self._update_vat(values)
-        return super(ResPartner, self).create(values)
-
-    @api.multi
-    def write(self, values):
-        """ Generate the vat field value with the information in
-        the l10n_ar_id_number and l10n_ar_identification_type_id fields
-        """
-        self._update_vat(values)
-        return super(ResPartner, self).write(values)
-
-    @api.multi
-    def _update_vat(self, values):
-        """ Update the vat field value using the information we have in
-        l10n_ar_id_number and l10n_ar_identification_type_id fields
-
-        When the vat has been set using _commercial_sync_to_children we do not
-        update it
-        """
-        if 'vat' in values or 'commercial_partner_id' in values:
-            return values
-        id_number = values.get(
-            'l10n_ar_id_number', self.l10n_ar_id_number or False)
-        id_type = values.get(
-            'l10n_ar_identification_type_id',
-            self.l10n_ar_identification_type_id.id or False)
-        if id_type:
-            id_type = self.env['l10n_ar.identification.type'].browse(id_type)
-
-        if id_number and id_type and id_type.afip_code == 80:
-            values.update({'vat': 'AR' + id_number})
-        return values
+        cuit_id_type = self.env.ref('l10n_ar_base.dt_CUIT')
+        contacts_with_cuit = self.filtered(
+            lambda x: x.l10n_ar_id_number and
+            x.l10n_ar_identification_type_id == cuit_id_type and
+            x.id != x.commercial_partner_id.id
+        )
+        if contacts_with_cuit:
+            raise ValidationError(_(
+                'Can not define CUIT for contacts, you can set cuit'
+                ' to Commercial Entity. Check contacts: %s') % ', '.join(
+                    contacts_with_cuit.mapped('name'))
+            )
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100,
