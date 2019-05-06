@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_base_validator_form" model="ir.ui.view">
+            <field name="name">base.validator.form</field>
+            <field name="model">base.validator</field>
+            <field name="arch" type="xml">
+                <form string="Validations">
+                    <group>
+                        <field name="name"/>
+                        <field name='validation_code' widget="ace" options="{'mode': 'python'}"/>
+                        <field name='help_message'/>
+                        <field name='input_test_string'/>
+                        <field name='output_test_string'/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_base_validator_tree" model="ir.ui.view">
+            <field name="name">base.validator.tree</field>
+            <field name="model">base.validator</field>
+            <field name="arch" type="xml">
+                <tree string="Validations">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_base_validator_filter" model="ir.ui.view">
+            <field name="name">base.validator.filter</field>
+            <field name="model">base.validator</field>
+            <field name="arch" type="xml">
+                <search string="Validations">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_base_validator">
+            <field name="name">Validations</field>
+            <field name="res_model">base.validator</field>
+        </record>
+
+        <menuitem action="action_base_validator" id="menu_base_validator" sequence="20" parent="base.next_id_9"/>
+
+</odoo>

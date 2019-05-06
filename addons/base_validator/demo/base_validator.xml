@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base_validator_demo" model="base.validator">
+        <field name="name">Test Validator</field>
+        <field name="validation_code"># Python code. Use:
+#  -  failed = True: specify that the value is not valid.
+#  -  value = 'something': overwrite value value (for formatting for eg.).
+# You can use the following:
+#  - re: regex Python library
+#  - self: browse_record of the current document type browse_record
+#  - value: string with the value to validate
+if value:
+    if len(value) != 16:
+        failed = True
+    parts = [value]
+        </field>
+        <field name="help_message">The number should have 16 char length</field>
+    </record>
+
+</odoo>
