@@ -204,7 +204,9 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onDropRecord: function (event) {
-        this._updateRecord(event.data);
+        this._updateRecord(_.extend({}, event.data, {
+            'drop': true,
+        }));
     },
     /**
      * @private
