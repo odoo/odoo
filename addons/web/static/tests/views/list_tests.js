@@ -4683,10 +4683,10 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('readonly boolean in editable list is readonly', function (assert) {
+    QUnit.test('readonly boolean in editable list is readonly', async function (assert) {
         assert.expect(6);
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'foo',
             data: this.data,
@@ -4698,10 +4698,10 @@ QUnit.module('Views', {
 
         // clicking on disabled checkbox with active row does not work
         var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
-        testUtils.dom.click($disabledCell.prev());
+        await testUtils.dom.click($disabledCell.prev());
         assert.containsOnce($disabledCell, ':disabled:checked');
         var $disabledLabel = $disabledCell.find('.custom-control-label');
-        testUtils.dom.click($disabledLabel);
+        await testUtils.dom.click($disabledLabel);
         assert.containsOnce($disabledCell, ':checked',
             "clicking disabled checkbox did not work"
         );
@@ -4712,10 +4712,10 @@ QUnit.module('Views', {
 
         // clicking on enabled checkbox with active row toggles check mark
         var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
-        testUtils.dom.click($enabledCell.prev());
+        await testUtils.dom.click($enabledCell.prev());
         assert.containsOnce($enabledCell, ':checked:not(:disabled)');
         var $enabledLabel = $enabledCell.find('.custom-control-label');
-        testUtils.dom.click($enabledLabel);
+        await testUtils.dom.click($enabledLabel);
         assert.containsNone($enabledCell, ':checked',
             "clicking enabled checkbox worked and unchecked it"
         );

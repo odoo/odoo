@@ -2325,7 +2325,7 @@ QUnit.module('Views', {
     QUnit.test('timzeone does not affect calendar with date field', async function (assert) {
         assert.expect(8);
 
-        var calendar = await createView({
+        var calendar = await createCalendarView({
             View: CalendarView,
             model: 'event',
             data: this.data,
@@ -2364,23 +2364,25 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal button.btn:contains(Create)'));
         await testUtils.nextTick();
 
-        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "12/20/2016")
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "12/20/2016");
 
         // Move event to another day (on 27 november)
-        testUtils.dragAndDrop(
+        await testUtils.dragAndDrop(
             calendar.$('.fc-event').first(),
             calendar.$('.fc-day-top').first()
         );
+        await testUtils.nextTick();
         assert.verifySteps(["2016-11-27 00:00:00"]);
-        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "11/27/2016")
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "11/27/2016");
 
         // Move event to last day (on 7 january)
         await testUtils.dragAndDrop(
             calendar.$('.fc-event').first(),
             calendar.$('.fc-day-top').last()
         );
-        assert.verifySteps(["2016-11-27 00:00:00", "2017-01-07 00:00:00"]);
-        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "01/07/2017")
+        await testUtils.nextTick();
+        assert.verifySteps(["2017-01-07 00:00:00"]);
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "01/07/2017");
 
         calendar.destroy();
     });
