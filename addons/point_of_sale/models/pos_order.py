@@ -363,7 +363,7 @@ class PosOrder(models.Model):
                             account_analytic=account_analytic)
                     if res:
                         line1, line2 = res
-                        line1 = Product._convert_prepared_anglosaxon_line(line1, order.partner_id)
+                        line1 = Product._convert_prepared_anglosaxon_line(line1, line['partner_id'])
                         insert_data('counter_part', {
                             'name': line1['name'],
                             'account_id': line1['account_id'],
@@ -373,7 +373,7 @@ class PosOrder(models.Model):
 
                         })
 
-                        line2 = Product._convert_prepared_anglosaxon_line(line2, order.partner_id)
+                        line2 = Product._convert_prepared_anglosaxon_line(line2, line['partner_id'])
                         insert_data('counter_part', {
                             'name': line2['name'],
                             'account_id': line2['account_id'],
@@ -400,7 +400,6 @@ class PosOrder(models.Model):
             def insert_data(data_type, values):
                 # if have_to_group_by:
                 values.update({
-                    'partner_id': partner_id,
                     'move_id': move.id,
                 })
 
@@ -755,7 +754,7 @@ class PosOrder(models.Model):
 
             try:
                 pos_order.action_pos_order_paid()
-            except psycopg2.OperationalError:
+            except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
@@ -763,7 +762,7 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().action_invoice_open()
+                pos_order.invoice_id.sudo().with_context(force_company=self.env.user.company_id.id).action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
         return order_ids
 

@@ -99,8 +99,9 @@
         <t t-call-assets="web.pdf_js_lib" t-css="false"/>
         <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
     </t>
+    <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
-        <div class="wrap o_wslides_wrap">
+        <div id="wrap" t-attf-class="wrap mt-0">
             <t t-set="main_object" t-value="channel"/>
 
             <div t-attf-class="o_wslides_course_header o_wslides_gradient position-relative text-white pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
@@ -111,7 +112,7 @@
                         <!-- ==== Header Left ==== -->
                         <div class="col-12 col-md-4 col-lg-3">
                             <div class="d-flex align-items-start justify-content-around h-100">
-                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image:url(/web/image/slide.channel/#{channel.id}/image)"/>
+                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image:url(/web/image/slide.channel/#{channel.id}/image)" t-ignore="True"/>
                             </div>
                         </div>
 
@@ -232,7 +233,7 @@
 
 <template id="course_sidebar" name="Course Sidebar (infos, CTA)">
     <!-- Training-only: Channel sidebar (aka general information + CTAs) -->
-    <div class="bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+    <div class="o_wslides_course_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
 
         <div class="o_wslides_sidebar_top d-flex justify-content-between">
             <div class="o_wslides_js_course_join flex-grow-1">
@@ -364,17 +365,17 @@
                 </li>
             </t>
         </ul>
-        <div t-if="channel.can_upload" class="o_wslides_content_actions">
-            <a  class="o_wslides_js_slide_upload mr-1 border btn btn-light text-muted"
+        <div t-if="channel.can_upload" class="o_wslides_content_actions btn-group">
+            <a  class="o_wslides_js_slide_upload mr-1 border btn btn-light bg-white"
                 role="button"
                 aria-label="Upload Presentation"
                 href="#"
                 t-att-data-channel-id="channel.id"
                 t-att-data-can-upload="channel.can_upload"
-                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1"/>Add Content</a>
-            <a class="o_wslides_js_slide_section_add border btn btn-light text-muted" t-attf-channel_id="#{channel.id}"
+                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1 align-middle"/><span>Add Content</span></a>
+            <a class="o_wslides_js_slide_section_add border btn btn-light bg-white" t-attf-channel_id="#{channel.id}"
                 href="#" role="button"
-                groups="website.group_website_publisher"><i class="fa fa-folder-o mr-1"/>Add Section</a>
+                groups="website.group_website_publisher"><i class="fa fa-folder-o mr-1 align-middle"/><span>Add Section</span></a>
         </div>
     </div>
     <div t-field="channel.description_html"/>
@@ -514,35 +515,30 @@
         </a>
     </div>
     <!-- Featured lesson  -->
-    <div t-if="not search and not search_slide_type and slide_promoted" class="container mb-3">
-        <div class="card">
-            <div class="card-body d-flex flex-column flex-lg-row">
-                <t t-set="image_url" t-value="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
+    <div t-if="not search and not search_slide_type and slide_promoted" class="container py-1 mb-2">
+        <div class="card flex-column flex-lg-row">
+            <t t-set="image_url" t-value="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
 
-                <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
-                    <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="w-100 w-lg-50 mr-0 mr-lg-4 mb-3 mb-lg-0 flex-shrink-0 rounded border">
-                        <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
-                    </a>
-                </t>
-                <t t-else="">
-                    <div class="w-100 w-lg-50 mr-0 mr-lg-4 mb-3 mb-lg-0 flex-shrink-0 rounded border">
-                        <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
-                    </div>
-                </t>
+            <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
+               t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+            </a>
+            <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+            </div>
 
-                <div>
-                    <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
-                       t-attf-href="/slides/slide/#{slug(slide_promoted)}"
-                       class="h4 d-block" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
-                    <h4 t-else="" class="text-muted" t-field="slide_promoted.name"/>
+            <div class="card-body">
+                <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
+                   t-attf-href="/slides/slide/#{slug(slide_promoted)}"
+                   class="h4 d-block" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
+                <h4 t-else="" class="text-muted" t-field="slide_promoted.name"/>
 
-                    <div t-if="slide_promoted.tag_ids" class="border-top mt-2 pt-1">
-                        <t t-foreach="slide_promoted.tag_ids" t-as="tag">
-                            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide_promoted.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
-                        </t>
-                    </div>
-                    <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
+                <div t-if="slide_promoted.tag_ids" class="border-top mt-2 pt-1">
+                    <t t-foreach="slide_promoted.tag_ids" t-as="tag">
+                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide_promoted.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
+                    </t>
                 </div>
+                <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
             </div>
         </div>
     </div>
@@ -561,9 +557,10 @@
         <t t-foreach="category_data" t-as="category">
             <div class="mb-2" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['name'] != 'Uncategorized'">
-                    <h5 class="m-0"><t t-esc="category['name']"/></h5>
-                    <a t-if="category['id']" t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])">View all</a>
-                    <a t-else="" t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
+                    <t t-set="is_empty_editable" t-value="not category['slides'] and channel.can_publish"/>
+                    <h5 t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
+                    <a t-if="category['id'] and not is_empty_editable" t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])">View all</a>
+                    <a t-elif="not is_empty_editable" t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
@@ -613,9 +610,9 @@
             <div t-else="" class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
         </t>
 
-        <div class="card-body">
-            <a t-if="can_access" class="card-title h5" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
-            <span t-else="" class="card-title h5 text-muted" t-esc="slide.name"/>
+        <div class="card-body p-3">
+            <a t-if="can_access" class="card-title h5 mb-2o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
+            <span t-else="" class="card-title h5 mb-2 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
             <div class="card-subtitle mb-2 text-muted" t-if="slide.is_preview or (not slide.is_published and user.has_group('website.group_website_publisher'))">
                 <t t-if="slide.is_preview">
                     <span class="badge badge-info">Free preview</span>
@@ -626,14 +623,14 @@
             </div>
             <div class="card-text pt-2">
                 <div class="o_wslides_desc_truncate_3 font-weight-light oe_no_empty" t-field="slide.description"/>
-                <div t-if="slide.tag_ids" class="border-top mt-2 pt-1">
+                <div t-if="slide.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="slide.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge badge-light" t-esc="tag.name"/>
+                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
         </div>
-        <div class="card-footer border-top-0 text-600">
+        <div class="card-footer bg-white text-600">
             <div class="d-flex align-items-center small">
                 <span class="font-weight-bold mr-auto" t-field="slide.completion_time" t-options='{"widget": "float_time"}'/>
                 <div class="o_wslides_js_slide_like mr-2">

@@ -12,5 +12,11 @@
                 </div>
             </xpath>
         </template>
+
+        <template id="o_wss_certification_icon">
+            <t t-set="icon_url" t-value="icon_url if icon_url else '/website_slides_survey/static/src/img/certification.svg'"/>
+            <t t-set="icon_classes" t-value="icon_classes if icon_classes else 'o_wss_certification_icon'"/>
+            <img t-att-class="icon_classes" t-att-src="icon_url" alt="Certification icon"/>
+        </template>
     </data>
 </odoo>

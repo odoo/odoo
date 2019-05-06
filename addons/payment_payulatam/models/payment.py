@@ -48,13 +48,13 @@ class PaymentAcquirerPayulatam(models.Model):
         # payulatam will not allow any payment twise even if payment was failed last time.
         # so, replace reference code if payment is not done or pending.
         if tx.state not in ['done', 'pending']:
-            tx.acquirer_reference = str(uuid.uuid4())
+            tx.reference = str(uuid.uuid4())
         payulatam_values = dict(
             values,
             merchantId=self.payulatam_merchant_id,
             accountId=self.payulatam_account_id,
             description=values.get('reference'),
-            referenceCode=tx.acquirer_reference,
+            referenceCode=tx.reference,
             amount=values['amount'],
             tax='0',  # This is the transaction VAT. If VAT zero is sent the system, 19% will be applied automatically. It can contain two decimals. Eg 19000.00. In the where you do not charge VAT, it should should be set as 0.
             taxReturnBase='0',
@@ -101,8 +101,8 @@ class PaymentTransactionPayulatam(models.Model):
     def _payulatam_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
-        if self.acquirer_reference and data.get('referenceCode') != self.acquirer_reference:
-            invalid_parameters.append(('Reference code', data.get('referenceCode'), self.acquirer_reference))
+        if self.acquirer_reference and data.get('transactionId') != self.acquirer_reference:
+            invalid_parameters.append(('Reference code', data.get('transactionId'), self.acquirer_reference))
         if float_compare(float(data.get('TX_VALUE', '0.0')), self.amount, 2) != 0:
             invalid_parameters.append(('Amount', data.get('TX_VALUE'), '%.2f' % self.amount))
         if data.get('merchantId') != self.acquirer_id.payulatam_merchant_id:

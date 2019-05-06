@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
 import uuid
 
 from odoo import api, fields, models, tools, _
@@ -237,7 +236,7 @@ class Channel(models.Model):
         for record in self:
             completed, completion = mapped_data.get(record.id, (False, 0))
             record.completed = completed
-            record.completion = math.ceil(100.0 * completion / (record.total_slides or 1))
+            record.completion = round(100.0 * completion / (record.total_slides or 1))
 
     @api.depends('upload_group_ids', 'user_id')
     def _compute_can_upload(self):

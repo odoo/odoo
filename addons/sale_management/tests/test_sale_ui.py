@@ -7,3 +7,5 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_sale_tour(self):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_tour.ready", login="admin")
+
+        self.env.ref('account.group_show_line_subtotals_tax_included').users |= admin

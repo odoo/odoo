@@ -2,9 +2,11 @@
 <odoo>
     <data>
         <template id="assets_frontend" inherit_id="website.assets_frontend" name="Slides Certification">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/website_slides_survey/static/src/scss/website_slides_survey.scss"/>
+            </xpath>
             <xpath expr="//script[last()]" position="after">
                 <script type="text/javascript" src="/website_slides_survey/static/src/js/slides_upload.js"/>
-                <link rel="stylesheet" type="text/scss" href="/website_slides_survey/static/src/scss/website_profile.scss"/>
                 <script type="text/javascript" src="/website_slides_survey/static/src/js/slides_course_fullscreen_player.js"/>
             </xpath>
         </template>

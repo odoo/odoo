@@ -1,7 +1,11 @@
-$owprofile-color-bg: desaturate(map-get($grays, "200"), 80%);
-$owprofile-tabs-height: 36px;
+// Retrive the tab's height by summ its properties
+$owprofile-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
 
-.o_wprofile_wrap {
+// Overal page bg-color: Blend it 'over' the color choosen by the user
+// ($body-bg), rather than force it replacing the variable's value.
+$owprofile-color-bg: mix($body-bg, #efeff4);
+
+.o_wprofile_body {
     background-color: $owprofile-color-bg;
 }
 
@@ -10,16 +14,15 @@ $owprofile-tabs-height: 36px;
 }
 
 .o_wprofile_pict {
-    @include size(30%);
-    border-radius: 100%;
+    @include size(100%);
     padding-top: 30%;
     background-size: cover;
     background-position: center;
 
     @include media-breakpoint-up(md)  {
-        @include size(100%);
-        border-radius: 0;
-        padding-top: 100%;
+        padding-top: 70%;
+        border: 1px solid darken(#875A7B, 10%);
+        border-bottom-width: 0;
     }
 }
 
@@ -34,6 +37,14 @@ $owprofile-tabs-height: 36px;
     }
 }
 
+.o_wprofile_sidebar {
+    border: 1px solid $border-color;
+
+    @include media-breakpoint-up(md) {
+        border-top-width: 0;
+    }
+}
+
 .o_wprofile_nav_tabs {
     @include media-breakpoint-up(md)  {
         margin-top: $owprofile-tabs-height * -1;
@@ -42,6 +53,7 @@ $owprofile-tabs-height: 36px;
         .nav-link {
             border-radius: 0;
             border-width: 0 1px;
+            line-height: $line-height-base;
             @include o-hover-text-color(rgba(white, 0.8), white);
 
             &, &:hover {

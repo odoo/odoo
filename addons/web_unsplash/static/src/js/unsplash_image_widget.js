@@ -229,7 +229,8 @@ widgetsMedia.ImageWidget.include({
                     params: params,
                 }).then(function () {
                     self.unsplashAPI.clientId = key;
-                    self._renderImages();
+                    self._unsplash.error = false;
+                    self.search(self._unsplash.query);
                 });
             }
         }

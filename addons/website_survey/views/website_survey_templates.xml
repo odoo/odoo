@@ -10,5 +10,9 @@
                 <t t-raw="0"/>
             </t>
         </xpath>
+        <xpath expr="t" position="before">
+            <t t-set="hide_header" t-value="survey.certificate" />
+            <t t-set="hide_footer" t-value="survey.certificate" />
+        </xpath>
     </template>
 </odoo>

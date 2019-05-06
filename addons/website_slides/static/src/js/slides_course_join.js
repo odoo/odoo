@@ -65,7 +65,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
-    selector: '.o_wslides_wrap',
+    selector: '.o_wslides_js_course_join_link',
 
     /**
      * @override

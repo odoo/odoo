@@ -3,17 +3,6 @@
 
     <data noupdate="1">
 
-        <record id="account_analytic_line_rule_billing_user" model="ir.rule">
-            <field name="name">account.analytic.line.billing.user</field>
-            <field name="model_id" ref="analytic.model_account_analytic_line"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
-            <field name="perm_create" eval="1"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_unlink" eval="1"/>
-            <field name="perm_read" eval="0"/>
-        </record>
-
         <record id="sale_order_line_rule_project_manager" model="ir.rule">
             <field name="name">Project Manager Sales Orders Line</field>
             <field name="model_id" ref="sale.model_sale_order_line"/>
