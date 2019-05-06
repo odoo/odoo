@@ -548,7 +548,7 @@ class Warehouse(models.Model):
         avoid mistakes during picking types and rules creation.
         """
         for warehouse in self:
-            sub_locations = self._get_locations_values(vals, warehouse.code)
+            sub_locations = warehouse._get_locations_values(vals, warehouse.code)
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
