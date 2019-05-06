@@ -732,13 +732,13 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
-    QUnit.test('Filter with JSON-parsable domain works', function (assert) {
+    QUnit.test('Filter with JSON-parsable domain works', async function (assert) {
         assert.expect(1);
 
         var domain = [['foo' ,'=', 'Gently Weeps']];
         var xml_domain = JSON.stringify(domain);
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -758,7 +758,7 @@ QUnit.module('Search View', {
         this.actions[0].search_view_id = [5, 'search'];
         this.actions[0].context = {search_default_gently_weeps: true};
 
-        actionManager.doAction(1);
+        await actionManager.doAction(1);
 
         actionManager.destroy();
     });

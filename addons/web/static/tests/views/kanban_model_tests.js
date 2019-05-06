@@ -303,7 +303,7 @@ QUnit.module('Views', {
 
     });
 
-    QUnit.test('call get (raw: true) before loading x2many data', function (assert) {
+    QUnit.test('call get (raw: true) before loading x2many data', async function (assert) {
         // Sometimes, get can be called on a datapoint that is currently being
         // reloaded, and thus in a partially updated state (e.g. in a kanban
         // view, the user interacts with the searchview, and before the view is
@@ -319,6 +319,7 @@ QUnit.module('Views', {
         // second (and thus, the read of the one2many hasn't started yet).
         // Note: this test can be removed as soon as search_reads are performed
         // alongside read_group.
+        var done = assert.async();
         assert.expect(2);
 
         this.data.partner.records[1].product_ids = [37, 41];
@@ -338,7 +339,7 @@ QUnit.module('Views', {
 
         var block;
         var def = testUtils.makeTestPromise();
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route) {
@@ -362,9 +363,10 @@ QUnit.module('Views', {
 
             state = model.get(handle, {raw: true});
             assert.strictEqual(state.count, 2);
+        }).then(function() {
+            model.destroy();
+            done();
         });
-
-        model.destroy();
     });
 });
 
