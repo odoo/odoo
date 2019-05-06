@@ -191,17 +191,6 @@
             </field>
         </record>
 
-        <record id="account_move_line_graph_date_cash_basis" model="ir.ui.view">
-            <field name="name">account.move.line.graph</field>
-            <field name="model">account.move.line</field>
-            <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
-                    <field name="date"/>
-                    <field name="balance_cash_basis" operator="+" type='measure'/>
-                </graph>
-            </field>
-        </record>
-
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">account.move.line.search</field>
             <field name="model">account.move.line</field>
@@ -487,22 +476,6 @@
             <field name="name">Journal Items</field>
             <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="account_move_line_graph_date"/>
-            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
-            <field name="res_model">account.move.line</field>
-        </record>
-
-        <record id="action_move_line_graph_cash_basis" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
-            <field name="res_model">account.move.line</field>
-        </record>
-
-        <record id="action_move_line_graph_cash_basis_posted" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date_cash_basis"/>
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
             <field name="res_model">account.move.line</field>
         </record>
