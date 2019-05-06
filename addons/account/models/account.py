@@ -230,7 +230,16 @@ class AccountAccount(models.Model):
     def name_get(self):
         result = []
         for account in self:
-            name = account.code + ' ' + account.name
+            name = ''
+            if not account.group_id:
+                name = '[' + account.code + '] ' + account.name
+            if account.group_id.name == account.name:
+                name = account.group_id.display_name.replace(
+                    account.group_id.code_prefix, account.code)
+            if not name:
+                element = account.group_id.display_name.replace(
+                    account.group_id.code_prefix, account.code)
+                name = element + ': ' + account.name
             result.append((account.id, name))
         return result
 
@@ -374,10 +383,20 @@ class AccountGroup(models.Model):
     def name_get(self):
         result = []
         for group in self:
+            me = group
             name = group.name
-            if group.code_prefix:
-                name = group.code_prefix + ' ' + name
+            if group.code_prefix and not group.parent_id:
+                code = '[' + group.code_prefix + '] '
+                name = code + name
             result.append((group.id, name))
+            if not group.parent_id:
+                continue
+            while group.parent_id:
+                group = group.parent_id
+                if not name:
+                    raise UserError(_('You have to set a name for this group.'))
+                name = group.name + "/ " + name
+            result.append((me.id, "[%s] %s" % (me.code_prefix, name)))
         return result
 
     @api.model
