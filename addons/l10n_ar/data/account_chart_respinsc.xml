@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <!-- Chart template -->
+    <record id="l10nar_ri_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Argentina para Responsables Inscriptos</field>
+        <field name="parent_id" ref="l10nar_ex_chart_template"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.10.00.</field>
+        <field name="cash_account_code_prefix">1.1.10.00.</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+        <field name="code_digits">13</field>
+    </record>
+
+        <!-- 1.1.04.01 (iva) --> 
+
+            <!-- ex saldo libre disponibilidad, vimos que este saldo libre dispniilidad es exclusivo de iva y no se mezcla con ganancias si bien se puede usar para pagar ganancias -->
+            <record model="account.account.template" id="ri_saldo_2do_parrafo_iva">
+                <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+                <field name="code">1.1.04.00.010</field>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="name">IVA 2do Parráfo a favor</field>
+            </record>
+
+            <record model="account.account.template" id="ri_retencion_iva_sufrida">
+                <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+                <field name="code">1.1.04.01.010</field>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="name">Retención IVA Sufrida</field>
+                <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_iva')])]"/>
+            </record>
+
+            <record model="account.account.template" id="ri_percepcion_iva_sufrida">
+                <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+                <field name="code">1.1.04.01.020</field>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="name">Percepción IVA Sufrida</field>
+                <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_iva')])]"/>
+            </record>
+
+            <record model="account.account.template" id="ri_iva_credito_fiscal">
+                <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+                <field name="code">1.1.04.01.030</field>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="name">IVA crédito fiscal</field>
+                <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_iva_primer_parrafo')])]"/>
+            </record>
+
+            <!-- cambiamos el nombre a primer parrafo porque seria mas claro y se mantiene similar al de 2do parrafo -->
+            <record model="account.account.template" id="ri_iva_saldo_tecnico_favor">
+                <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+                <field name="code">1.1.04.01.040</field>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="name">IVA 1er Parráfo a favor</field>
+                <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_iva_primer_parrafo')])]"/>
+            </record>
+
+
+        <!-- (IVA) --> 
+
+        <record model="account.account.template" id="ri_iva_debito_fiscal">
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+            <field name="code">2.1.02.00.010</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="name">IVA débito fiscal</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_iva_primer_parrafo')])]"/>
+        </record>
+
+        <record model="account.account.template" id="ri_iva_saldo_a_pagar">
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+            <field name="code">2.1.02.00.020</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="name">IVA saldo a pagar</field>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+</odoo>

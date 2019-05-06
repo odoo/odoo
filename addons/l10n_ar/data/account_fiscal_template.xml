@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<!-- SOLO RI por ahora, si se necesita para ex o mono tenemos que hacer nuevas por mapeo de impuestos -->
+    <!-- Exportaciones a la zona franca -->
+        <record model='account.fiscal.position.template' id='fiscal_position_template_zona_franca'>
+            <field name='l10n_ar_afip_code'>Z</field>
+            <field name='name'>Exportaciones a la zona franca</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+            <field name="country_id" ref="base.ar"/>
+            <field name="zip_from">9410</field>
+            <field name="zip_to">9410</field>
+        </record>
+        <record id="fiscal_position_template_zona_franca_tax_0" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_zona_franca"/>
+            <field name="tax_src_id" ref="ri_tax_vat_0_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_zona_franca_tax_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_zona_franca"/>
+            <field name="tax_src_id" ref="ri_tax_vat_10_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_zona_franca_tax_21" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_zona_franca"/>
+            <field name="tax_src_id" ref="ri_tax_vat_21_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_zona_franca_tax_27" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_zona_franca"/>
+            <field name="tax_src_id" ref="ri_tax_vat_27_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+
+    <!-- Exportaciones a la zona franca -->
+        <record model='account.fiscal.position.template' id='fiscal_position_template_exportaciones_al_exterior'>
+            <field name='l10n_ar_afip_code'>X</field>
+            <field name='name'>Exportaciones al exterior</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+            <field name="country_group_id" ref="not_argentina"/>
+        </record>
+        <record id="fiscal_position_template_exportaciones_al_exterior_tax_0" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_exportaciones_al_exterior"/>
+            <field name="tax_src_id" ref="ri_tax_vat_0_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_exportaciones_al_exterior_tax_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_exportaciones_al_exterior"/>
+            <field name="tax_src_id" ref="ri_tax_vat_10_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_exportaciones_al_exterior_tax_21" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_exportaciones_al_exterior"/>
+            <field name="tax_src_id" ref="ri_tax_vat_21_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_exportaciones_al_exterior_tax_27" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_exportaciones_al_exterior"/>
+            <field name="tax_src_id" ref="ri_tax_vat_27_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+
+    <!-- Operaciones exentas -->
+        <record model='account.fiscal.position.template' id='fiscal_position_template_operaciones_exentas'>
+            <field name='l10n_ar_afip_code'>E</field>
+            <field name='name'>Operaciones exentas</field>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+        </record>
+        <record id="fiscal_position_template_operaciones_exentas_tax_0" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_operaciones_exentas"/>
+            <field name="tax_src_id" ref="ri_tax_vat_0_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_operaciones_exentas_tax_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_operaciones_exentas"/>
+            <field name="tax_src_id" ref="ri_tax_vat_10_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_operaciones_exentas_tax_21" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_operaciones_exentas"/>
+            <field name="tax_src_id" ref="ri_tax_vat_21_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+        <record id="fiscal_position_template_operaciones_exentas_tax_27" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_operaciones_exentas"/>
+            <field name="tax_src_id" ref="ri_tax_vat_27_ventas"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+        </record>
+
+        <record model='account.fiscal.position.template' id='fiscal_position_template_no_gravado'>
+            <field name='l10n_ar_afip_code'>N</field>
+            <field name='name'>No gravado</field>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+        </record>
+
+        <record model='account.fiscal.position.template' id='fiscal_position_template_operaciones_de_canje'>
+            <field name='l10n_ar_afip_code'>C</field>
+            <field name='name'>Operaciones de Canje</field>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+        </record>
+
+    <!-- IVA no corresponde -->
+        <record model='account.fiscal.position.template' id='fiscal_position_template_iva_no_corresponde'>
+            <field name='l10n_ar_afip_code'></field>
+            <field name='name'>IVA Compras no corresponde</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_tax_0" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_0_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_tax_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_10_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_tax_21" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_21_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_tax_27" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_27_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_exento" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_exento_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+        <record id="fiscal_position_template_iva_no_corresponde_no_gravado" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+            <field name="tax_src_id" ref="ri_tax_vat_no_gravado_compras"/>
+            <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+        </record>
+
+</odoo>

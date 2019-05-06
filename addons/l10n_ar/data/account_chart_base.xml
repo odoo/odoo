@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <record id="l10nar_base_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Argentina Monotributista / Base</field>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.10.00.</field>
+        <field name="cash_account_code_prefix">1.1.10.00.</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+        <field name="code_digits">13</field>
+    </record>
+
+    <!-- 1.1.02 (créditos comerciales) -->
+
+    <record model="account.account.template" id="base_deudores_por_ventas">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.02.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="name">Deudores por ventas</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_deudores_morosos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.02.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="name">Deudores morosos</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_deudores_gestion_judicial">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.02.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="name">Deudores en gestión judicial</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_cheques_rechazados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.02.00.040</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Cheques Rechazados</field>
+    </record>
+
+    <!-- 1.1.03 (otros créditos) -->
+
+    <record model="account.account.template" id="base_deudores_varios">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.03.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Deudores varios</field>
+    </record>
+
+    <record model="account.account.template" id="base_anticipos_gastos_rendir">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.03.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Anticipos de gastos a rendir</field>
+    </record>
+
+    <!-- 1.1.04 (créditos por impuestos) -->
+
+    <record model="account.account.template" id="base_retencion_suss_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención SUSS Sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_saldo_a_favor_suss">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.00.025</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor SUSS</field>
+    </record>
+
+    <record model="account.account.template" id="base_itc">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">ITC</field>
+    </record>
+
+    <record model="account.account.template" id="base_sircreb">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.00.040</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">SIRCREB</field>
+    </record>
+
+    <!-- 1.1.04.02 (ganancias) -->
+
+    <record model="account.account.template" id="base_retencion_ganancias_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención ganancias Sufrida</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_ganancias')])]"/>
+    </record>
+
+    <record model="account.account.template" id="base_percepcion_ganancias_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Percepción ganancias Sufrida</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_ganancias')])]"/>
+    </record>
+
+    <record model="account.account.template" id="base_anticipo_ganancias">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.02.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Anticipo ganancias</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_ganancias')])]"/>
+    </record>
+
+    <!-- este es libre disponibilidad de ganancias -->
+    <record model="account.account.template" id="base_saldo_favor_ganancias">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.02.040</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor Ganancias</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_ganancias')])]"/>
+    </record>
+
+    <record model="account.account.template" id="base_imp_debitos_computables">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.02.050</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Impuesto a los débitos computables</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_a_cuenta_ganancias')])]"/>
+    </record>
+
+    <!-- 1.1.04.03 (ibbb caba) -->
+
+    <record model="account.account.template" id="base_percepcion_iibb_caba_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.03.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Percepción IIBB CABA sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_retencion_iibb_caba_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.03.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención IIBB CABA sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_saldo_favor_iibb_caba">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.03.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor IIBB p. CABA</field>
+    </record>
+
+    <!-- 1.1.04.04 (ibbb Buenos Aires) -->
+
+    <record model="account.account.template" id="base_percepcion_iibb_ba_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.04.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Percepción IIBB p. Buenos Aires sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_retencion_iibb_ba_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.04.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención IIBB p. Buenos Aires sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_saldo_favor_iibb_ba">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.04.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor IIBB p. Buenos Aires</field>
+    </record>
+
+    <!-- 1.1.04.05 (ibbb Córdoba) -->
+
+    <record model="account.account.template" id="base_percepcion_iibb_co_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.05.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Percepción IIBB p. Córdoba sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_retencion_iibb_co_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.05.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención IIBB p. Córdoba sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_saldo_favor_iibb_co">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.05.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor IIBB p. Córdoba</field>
+    </record>
+
+    <!-- 1.1.04.06 (ibbb Santa Fé) -->
+
+    <record model="account.account.template" id="base_percepcion_iibb_sf_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.06.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Percepción IIBB p. Santa Fé sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_retencion_iibb_sf_sufrida">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.06.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Retención IIBB p. Santa Fé sufrida</field>
+    </record>
+
+    <record model="account.account.template" id="base_saldo_favor_iibb_sf">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.04.06.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Saldo a favor IIBB p. Santa Fé</field>
+    </record>
+
+    <!-- 1.1.05 (Bienes de cambio) -->
+
+    <record model="account.account.template" id="base_anticipo_proveedores">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.05.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Anticipo a Proveedores</field>
+    </record>
+
+    <!-- 1.1.05.01 (Mercadería) -->
+
+    <record model="account.account.template" id="base_mercaderia_reventa">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.05.01.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Mercaderia de reventa</field>
+    </record>
+
+    <record model="account.account.template" id="base_productos_terminados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.05.01.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Productos terminados</field>
+    </record>
+
+    <record model="account.account.template" id="base_materia_prima">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.05.01.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Materia Prima</field>
+    </record>
+
+    <record model="account.account.template" id="base_productos_en_proceso">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.1.05.01.040</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Productos en proceso</field>
+    </record>
+
+    <!-- 1.2 (Activo no corriente) -->
+
+    <!-- 1.2.01 (Bienes de uso) -->
+
+    <!-- 1.2.01.01 (Bienes de uso) -->
+
+    <record model="account.account.template" id="base_maq_y_equipos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.010</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Maquinarias y equipos</field>
+    </record>
+
+    <record model="account.account.template" id="base_instalaciones">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.020</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Instalaciones</field>
+    </record>
+
+    <record model="account.account.template" id="base_muebles_y_utiles">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.030</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Muebles y útiles</field>
+    </record>
+
+    <record model="account.account.template" id="base_rodados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.040</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Rodados</field>
+    </record>
+
+    <record model="account.account.template" id="base_rodados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.050</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Obras en curso</field>
+    </record>
+
+    <record model="account.account.template" id="base_rodados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.01.060</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Terrenos</field>
+    </record>
+
+    <!-- 1.2.02 (Amortizaciones acumuladas Bienes de uso) -->
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_maq_y_equipos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada maquinarias y equipos</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_instalaciones">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada instalaciones</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_muebles_utiles">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.02.030</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada muebles y útiles</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_rodados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.01.02.040</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada rodados</field>
+    </record>
+
+    <!-- 1.2.02 (Intangibles) -->
+
+    <!-- 1.2.02.01 (Intangibles) -->
+
+    <record model="account.account.template" id="base_software">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.01.010</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Software</field>
+    </record>
+
+    <record model="account.account.template" id="base_derechos_de_marca">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.01.020</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Derechos de marca</field>
+    </record>
+
+    <record model="account.account.template" id="base_gastos_de_organizacion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.01.030</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Gastos de organización</field>
+    </record>
+
+    <!-- 1.2.02.02 (Amortización Intangibles) -->
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_software">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada software</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_derechos_de_marca">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada Derechos de marca</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_acumulada_gastos_de_organizacion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">1.2.02.02.030</field>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="name">Amortización acumulada Derechos de uso</field>
+    </record>
+
+    <!-- 2 (Pasivo) -->
+
+    <!-- 2.1 (Pasivo corriente) -->
+
+    <!-- 2.1.01 (Deudas sociales) -->
+
+    <record model="account.account.template" id="base_sueldos_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.01.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Sueldos a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_suss_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.01.00.040</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">SUSS a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_aportes_sindicales_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.01.00.050</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Aportes sindicales a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_otras_cargas_sociales_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.01.00.060</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Otras cargas sociales a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <!-- 2.1.02 (Deudas fiscales) -->
+
+    <!-- (Ganancias) -->
+
+    <record model="account.account.template" id="base_impuesto_ganancias_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.02.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Impuesto a las ganancias a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <!-- (IIBB) -->
+
+    <record model="account.account.template" id="base_iibb_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.02.00.100</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">IIBB a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <!-- usamos un solo a pagar para hacer mas facil la liquidacion -->
+
+    <record model="account.account.template" id="base_drei_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.02.00.080</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">DREI a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <!-- 2.1.02.01 (SICORE Ganancias e IVA)  -->
+
+    <!-- 2.1.03 (Deudas Comerciales) -->
+
+    <!-- 2.1.03.01 (Comunes) -->
+
+    <record model="account.account.template" id="base_proveedores">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.01.010</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Proveedores</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_alquileres_a_pagar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.01.020</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Alquileres a pagar</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_acreedores_varios">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.01.030</field>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="name">Acreedores varios</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_anticipos_de_clientes">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.01.040</field>
+        <!-- no tiene sentido que sea a pagar ya que se usa como líneas de facturas y odoo luego la resta -->
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <!-- <field name="user_type_id" ref="account.data_account_type_payable"/> -->
+        <field name="name">Anticipos de clientes</field>
+        <!-- <field name="reconcile" eval="True"/> -->
+    </record>
+
+    <!-- 2.1.03.02 (Documentadas) -->
+
+    <record model="account.account.template" id="base_cheques_diferidos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="name">Cheques diferidos</field>
+        <!-- para poder debitar desde extracto -->
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record model="account.account.template" id="base_otras_deudas_documentadas">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.03.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="name">Otras deudas documentadas</field>
+    </record>
+
+    <!-- 2.1.04 (Bancarias) -->
+
+    <record model="account.account.template" id="base_giro_en_descubierto">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.04.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="name">Giro en descubierto Banco xxxxx</field>
+    </record>
+
+    <!-- 2.1.05 (Previsiones varias) -->
+
+    <record model="account.account.template" id="base_prevision_gastos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.05.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="name">Prevision gastos</field>
+    </record>
+
+    <!-- 2.1.06 (Cuentas Particulares) -->
+
+    <record model="account.account.template" id="base_cta_particular_socio_x">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.1.06.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="name">Cta particular socio x</field>
+    </record>
+
+    <!-- 2.2 (Pasivo no corriente) -->
+
+    <record model="account.account.template" id="base_proveedores_largo_plazo">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.2.00.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="name">Deudas proveedores a largo plazo</field>
+    </record>
+
+    <record model="account.account.template" id="base_planes_a_pagar_afip">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.2.00.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="name">Planes a pagar afip</field>
+    </record>
+
+    <record model="account.account.template" id="base_prestamo_banco_x">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">2.2.00.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="name">Prestamo Banco xxxxx</field>
+    </record>
+
+    <!-- 3 (Patrimonio neto) -->
+
+    <!-- 3.1 (Aportes de los propietarios) -->
+
+    <record model="account.account.template" id="base_capital">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.1.00.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Capital susctipto</field>
+    </record>
+
+    <record model="account.account.template" id="base_ajustes_de_capital">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.1.00.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Ajustes de capital</field>
+    </record>
+
+    <record model="account.account.template" id="base_aportes_no_capitalizados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.1.03.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Aportes no capitalizados</field>
+    </record>
+
+    <!-- 3.2 (Aportes de los propietarios) -->
+
+    <record model="account.account.template" id="base_reserva_legal">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.2.00.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Reserva legal</field>
+    </record>
+
+    <record model="account.account.template" id="base_reserva_estatuitaria">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.2.00.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Reserva estatuitaria</field>
+    </record>
+
+    <record model="account.account.template" id="base_futuras_inversiones">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.2.00.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Reserva futuras inversiones</field>
+    </record>
+
+    <!-- 3.3 (Resultados) -->
+
+    <record model="account.account.template" id="base_resultado_del_ejercicio">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.3.00.00.010</field>
+        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
+        <field name="name">Resultado del ejercicio</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_unaffected_earnings')])]"/>
+    </record>
+
+    <record model="account.account.template" id="base_resultado_acumulados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.3.00.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Resultado acumlados</field>
+    </record>
+
+    <record model="account.account.template" id="base_ajuste_resultados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">3.3.00.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="name">Ajuste resultados ejercicios anteriores</field>
+    </record>
+
+    <!-- 4 (Resultado Neto) -->
+
+    <!-- 4.1 (Resultado Operativo) -->
+
+    <!-- 4.1.01 (Margen bruto) -->
+
+    <!-- 4.1.01.01 (Ventas) -->
+
+    <record model="account.account.template" id="base_venta_de_mercaderia">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="name">Venta de mercaderia</field>
+    </record>
+
+    <record model="account.account.template" id="base_venta_de_servicios">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="name">Venta de servicios</field>
+    </record>
+
+    <!-- 4.1.01.02 (Costos directos) -->
+
+    <record model="account.account.template" id="base_compra_mercaderia">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">Compra de mercadería</field>
+    </record>
+
+    <record model="account.account.template" id="base_cmv">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">Costo de Mercadería Vendida</field>
+    </record>
+
+    <record model="account.account.template" id="base_descuentos_clientes">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.02.030</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">Descuentos a clientes</field>
+    </record>
+
+    <record model="account.account.template" id="base_comisiones">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.02.040</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">Comisiones</field>
+    </record>
+
+    <!-- 4.1.01.03 (Impuestos Directos) -->
+
+    <record model="account.account.template" id="base_impuestos_iibb_caba">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.03.010</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">IIBB CABA</field>
+    </record>
+
+    <record model="account.account.template" id="base_impuestos_iibb_ba">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.03.020</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">IIBB Prov. Bs. As.</field>
+    </record>
+
+    <record model="account.account.template" id="base_impuestos_iibb_co">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.03.030</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">IIBB Prov. Córdoba</field>
+    </record>
+
+    <record model="account.account.template" id="base_impuestos_iibb_sf">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.03.040</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">IIBB Prov. Santa Fé</field>
+    </record>
+
+    <record model="account.account.template" id="base_drei">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.01.03.050</field>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="name">DREI</field>
+    </record>
+
+    <!-- 4.1.02 (Gastos Fijos) -->
+
+    <!-- 4.1.02.01 (Administrativos) -->
+
+    <record model="account.account.template" id="base_haberes_administrativos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.010</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Sueldos y SAC Administrativos</field>
+    </record>
+
+    <record model="account.account.template" id="base_cargas_sociales_administrativos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.020</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Cargas Sociales Administrativos</field>
+    </record>
+
+    <record model="account.account.template" id="base_gastos_varios_administrativos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.030</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Gastos varios Administrativos</field>
+    </record>
+
+    <record model="account.account.template" id="base_alquileres_administrativos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.040</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Alquileres Administrativos</field>
+    </record>
+
+    <record model="account.account.template" id="base_servicios_agua_luz_etc_administrativos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.050</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Servicios de luz, agua, etc. Administrativos</field>
+    </record>
+
+    <record model="account.account.template" id="base_sistema_y_software">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.060</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Sistema y Software</field>
+    </record>
+
+    <record model="account.account.template" id="base_impuestos_debitos_y_creditos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.01.070</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Impuestos a los débitos y créditos bancarios</field>
+    </record>
+
+    <!-- 4.1.02.02 (Comerciales) -->
+
+    <record model="account.account.template" id="base_haberes_comerciales">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.010</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Sueldos y SAC Comerciales</field>
+    </record>
+
+    <record model="account.account.template" id="base_cargas_sociales_comerciales">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.020</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Cargas Sociales Comerciales</field>
+    </record>
+
+    <record model="account.account.template" id="base_gastos_varios_comerciales">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.030</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Gastos varios Comerciales</field>
+    </record>
+
+    <record model="account.account.template" id="base_alquileres_comerciales">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.040</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Alquileres Comerciales</field>
+    </record>
+
+    <record model="account.account.template" id="base_servicios_agua_luz_etc_comerciales">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.050</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Servicios de luz, agua, etc. Comerciales</field>
+    </record>
+
+    <record model="account.account.template" id="base_publicidad">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.02.060</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Publicidad</field>
+    </record>
+
+    <!-- 4.1.02.03 (De Operación / Producción) -->
+
+    <record model="account.account.template" id="base_haberes_produccion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.03.010</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Sueldos y SAC Producción</field>
+    </record>
+
+    <record model="account.account.template" id="base_cargas_sociales_produccion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.03.020</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Cargas Sociales Producción</field>
+    </record>
+
+    <record model="account.account.template" id="base_gastos_varios_produccion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.03.030</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Gastos varios produccion</field>
+    </record>
+
+    <record model="account.account.template" id="base_alquileres_produccion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.03.040</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Alquileres produccion</field>
+    </record>
+
+    <record model="account.account.template" id="base_servicios_agua_luz_etc_produccion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.1.02.03.050</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Servicios de luz, agua, etc. produccion</field>
+    </record>
+
+    <!-- 4.2 (Resultado Financiero) -->
+
+    <!-- 4.2.01 (Ingresos Financieros) -->
+
+    <record model="account.account.template" id="base_resultado_intereses_ganados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.2.01.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Intereses ganados</field>
+    </record>
+
+    <record model="account.account.template" id="base_diferencias_de_cambio">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.2.01.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Diferencias de cambio</field>
+    </record>
+
+    <!-- 4.2.02 (Egresos Financieros) -->
+
+    <record model="account.account.template" id="base_resultado_intereses_y_recargos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.2.02.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Intereses y recargos</field>
+    </record>
+
+    <record model="account.account.template" id="base_gastos_prestamos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.2.02.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Gastos préstamos</field>
+    </record>
+
+    <!-- 4.3 (Resultados Extraordinarios) -->
+
+    <record model="account.account.template" id="base_resultado_venta_bienes_de_uso">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.3.00.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Resultado venta bienes de uso</field>
+    </record>
+
+    <record model="account.account.template" id="base_ajuste_por_redondeo">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.3.00.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Ajuste por redondeo</field>
+    </record>
+
+    <record model="account.account.template" id="base_descuentos_obtenidos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.3.00.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Descuentos obtenidos</field>
+    </record>
+
+    <record model="account.account.template" id="base_recupero_de_gastos">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.3.00.00.040</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Recupero de gastos</field>
+    </record>
+
+    <record model="account.account.template" id="base_aportes_no_reembolsables">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.3.00.00.050</field>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="name">Aportes no reeombolsables (subsidios)</field>
+    </record>
+
+    <!-- 4.4 (Amortizaciones) -->
+
+    <!-- 4.4.01 (Bienes de uso) -->
+
+    <record model="account.account.template" id="base_amortizacion_equipos_computacion">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.01.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización maquinaria y equipos</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_instalaciones">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.01.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización instalaciones</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_muebles_y_utiles">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.01.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización muebles y útiles</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_rodados">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.01.00.040</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización rodados</field>
+    </record>
+
+    <!-- 4.4.02 (Intangibles) -->
+
+    <record model="account.account.template" id="base_amortizacion_software">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.02.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización software</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_derechos_de_marca">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.02.00.020</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización Derechos de marca</field>
+    </record>
+
+    <record model="account.account.template" id="base_amortizacion_derechos_de_uso">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.4.02.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="name">Amortización Derechos de uso</field>
+    </record>
+
+    <!-- 4.5 (Impuesto a las ganancias) -->
+
+    <record model="account.account.template" id="base_impuestos_a_las_ganancias">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">4.5.00.00.010</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="name">Impuestos a las ganancias</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('l10n_ar.tag_impuestos_a_las_ganancias')])]"/>
+    </record>
+
+    <!-- 6 (Transitorias) -->
+
+    <!-- transfererncias internas creadas al principio -->
+
+    <record model="account.account.template" id="base_contrapartida_auxiliar">
+        <field name="chart_template_id" ref="l10nar_base_chart_template"/>
+        <field name="code">6.0.00.00.030</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="name">Contrapartida Auxiliar</field>
+        <!-- <field name="reconcile" eval="True"/> -->
+    </record>
+
+    <!-- Update chart template -->
+    <record id="l10nar_base_chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="base_deudores_por_ventas"/>
+        <field name="property_account_payable_id" ref="base_proveedores"/>
+        <field name="property_account_expense_categ_id" ref="base_compra_mercaderia"/>
+        <field name="property_account_income_categ_id" ref="base_venta_de_mercaderia"/>
+        <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+        <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+    </record>
+
+</odoo>

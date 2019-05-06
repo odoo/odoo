@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="name">account.journal.form</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_ar_country_code" invisible="1"/>
+            </form>
+            <field name="type" position="after">
+                <field name="l10n_ar_afip_pos_type" attrs="{'invisible':['|', '|', ('l10n_ar_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_ar_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
+                <field name="l10n_ar_afip_pos_number" attrs="{'invisible':['|', '|', ('l10n_ar_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_ar_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

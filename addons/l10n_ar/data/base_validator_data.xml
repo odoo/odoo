@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model='base.validator' id='validator_numero_factura'>
+        <field name='name'>Numero de Factura</field>
+        <field name='input_test_string'>123-123</field>
+        <field name="validation_code"><![CDATA[
+# Python code. Use:
+#  -  failed = True: specify that the l10n_latam_l10n_latam_document_number is not valid.
+#  -  l10n_latam_l10n_latam_document_number = 'something': overwrite l10n_latam_l10n_latam_document_number value (for formatting for eg.).
+# You can use the following:
+#  - re: regex Python library
+#  - self: browse_record of the current document type browse_record
+#  - l10n_latam_document_number: string with the l10n_latam_l10n_latam_document_number to validate
+if value:
+    args = value.split('-')
+    if len(args) != 2:
+        failed=True
+    else:
+        pos, number = args
+        if len(pos) > 5 or not pos.isdigit():
+            failed=True
+        elif len(number) >8 or not number.isdigit():
+            failed=True
+        value = '{:>04s}-{:>08s}'.format(pos, number)
+        parts = [pos, number]
+        ]]></field>
+        <field name='help_message'><![CDATA[
+El número de facturas debe ingresarse con un guión (-) y máximo 5 caracteres para la primer parte y 8 para la segunda. Los siguientes son ejemplos de números válidos:
+* 1-1
+* 0001-00000001
+* 00001-00000001
+        ]]></field>
+        </record>
+
+    <record model='base.validator' id='validator_despacho'>
+        <field name='name'>Despacho de importación</field>
+        <field name='input_test_string'>16052IC04000605L</field>
+        <field name="validation_code"><![CDATA[
+# Python code. Use:
+#  -  failed = True: specify that the value is not valid.
+#  -  value = 'something': overwrite value value (for formatting for eg.).
+# You can use the following:
+#  - re: regex Python library
+#  - self: browse_record of the current document type browse_record
+#  - value: string with the value to validate
+if value:
+    if len(value) != 16:
+        failed = True
+    parts = [value]
+        ]]></field>
+        <field name='help_message'><![CDATA[
+El número de despacho de importación debe tener 16 caractéres
+        ]]></field>
+    </record>
+
+</odoo>

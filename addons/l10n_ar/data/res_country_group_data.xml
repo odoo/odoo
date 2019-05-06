@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model='res.country.group' id='not_argentina'>
+        <field name='name'>Outside Argentina</field>
+        <field name='country_ids' search="[('code', '!=', 'AR')]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_filter" model="ir.ui.view">
+        <field name="name">account.move.filter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_ar_afip_responsability_type"/>
+            </field>
+            <group>
+                <filter string="AFIP Responsability Type" domain="[]" name="l10n_ar_afip_responsability_type_filter" context="{'group_by':'l10n_ar_afip_responsability_type'}"/>
+            </group>
+        </field>
+    </record>
+</odoo>

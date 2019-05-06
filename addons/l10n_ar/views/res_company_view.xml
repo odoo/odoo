@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_company_form">
+        <field name="name">res.company.form.inherit</field>
+        <field name="inherit_id" ref="l10n_ar_base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_ar_country_code" invisible="1"/>
+            </form>
+            <!-- extendemos l10n_ar_base para hacer obligatorio si cia argentina -->
+            <field name="l10n_ar_identification_type_id" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+            <field name="l10n_ar_id_number" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+
+            <!-- hacemos otros campos requeridos si cia argentina -->
+            <field name="state_id" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+            <field name="country_id" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+            <field name="street" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+            <field name="zip" position="attributes">
+                <attribute name="attrs">{'required': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </field>
+
+            <field name="vat" position="after">
+                <field name="l10n_ar_afip_responsability_type" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')], 'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
+                <label for="l10n_ar_gross_income_number" string="Gross Income" attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
+                <div attrs="{'invisible': [('l10n_ar_country_code', '!=', 'AR')]}" name="gross_income">
+                    <field name="l10n_ar_gross_income_type" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')]}" class="oe_inline"/>
+                    <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'in', [False, 'no_liquida'])], 'required': [('l10n_ar_gross_income_type', 'not in', [False, 'no_liquida'])]}"/>
+                </div>
+                <field name="l10n_ar_start_date" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')], 'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

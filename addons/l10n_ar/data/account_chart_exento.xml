@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <!-- Chart template -->
+    <record id="l10nar_ex_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Argentina para Exentos</field>
+        <field name="parent_id" ref="l10nar_base_chart_template"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.10.00.</field>
+        <field name="cash_account_code_prefix">1.1.10.00.</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+        <field name="code_digits">13</field>
+    </record>
+
+        <!-- 2.1.02.01 (SICORE Ganancias e IVA)  -->
+
+            <record model="account.account.template" id="ri_retencion_ganancias_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.010</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Retención ganancias aplicada</field>
+            </record>
+
+            <record model="account.account.template" id="ri_percepcion_ganancias_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.020</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Percepción ganancias aplicada</field>
+            </record>
+
+            <record model="account.account.template" id="ri_retencion_iva_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.030</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Retención IVA aplicada</field>
+            </record>
+
+            <record model="account.account.template" id="ri_percepcion_iva_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.040</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Percepción IVA aplicada</field>
+            </record>
+
+<!--                 <record model="account.account.template" id="ri_retencion_ganancias_a_pagar">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.050</field>
+                <field name="user_type_id" ref="account.data_account_type_payable"/>
+                <field name="name">Retención/Percepción ganancias a pagar</field>
+                <field name="reconcile" eval="True"/>
+            </record>
+
+            <record model="account.account.template" id="ri_retencion_iva_a_pagar">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.060</field>
+                <field name="user_type_id" ref="account.data_account_type_payable"/>
+                <field name="name">Retención/Percepción IVA a pagar</field>
+                <field name="reconcile" eval="True"/>
+            </record> -->
+
+            <record model="account.account.template" id="ri_retencion_sicore_a_pagar">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.01.060</field>
+                <field name="user_type_id" ref="account.data_account_type_payable"/>
+                <field name="name">Retención/Percepción SICORE a pagar</field>
+                <field name="reconcile" eval="True"/>
+            </record>
+
+        <!-- iibb ret/perc aplicadas -->
+
+            <record model="account.account.template" id="ri_retencion_iibb_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.02.010</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Retención IIBB aplicada</field>
+            </record>
+
+            <record model="account.account.template" id="ri_percepcion_iibb_aplicada">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.02.020</field>
+                <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+                <field name="name">Percepción IIBB aplicada</field>
+            </record>
+
+            <record model="account.account.template" id="ri_retencion_iibb_a_pagar">
+                <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
+                <field name="code">2.1.02.02.030</field>
+                <field name="user_type_id" ref="account.data_account_type_payable"/>
+                <field name="name">Retención/Percepción IIBB a pagar</field>
+                <field name="reconcile" eval="True"/>
+            </record>
+
+</odoo>
