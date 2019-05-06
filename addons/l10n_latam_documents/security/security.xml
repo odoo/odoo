@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="receiptbook_comp_rule" model="ir.rule">
+        <field name="name">Receiptbook Line multi-company</field>
+        <field name="model_id" ref="model_l10n_latam_payment_receiptbook"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+</odoo>

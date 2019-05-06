@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">invoice.search</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="number" position="attributes">
+                <attribute name="filter_domain">['|','|','|','|', ('l10n_latam_document_number','ilike',self), ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="l10n_latam_document_type_id"/>
+            </field>
+            <group position="inside">
+                <filter string="Document Type" domain="[]" name="l10n_latam_document_type" context="{'group_by':'l10n_latam_document_type_id'}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="invoice_tree" model="ir.ui.view">
+        <field name="name">account.document.invoice.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="number" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="number" position="after">
+                <field name="display_name"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_tree" model="ir.ui.view">
+        <field name="name">account.document.invoice.supplier.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <field name="number" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="number" position="after">
+                <field name="display_name"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_invoice_form" model="ir.ui.view">
+        <field name="name">account.document invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_journal_mapping_id" invisible="1"/>
+                <field name="l10n_latam_use_documents" invisible="1"/>
+                <field name="l10n_latam_document_sequence_id" invisible="1"/>
+            </form>
+
+            <field name="date_invoice" position="before">
+                <field name="l10n_latam_journal_mapping_id" attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('move_name', '!=', False)]}" domain="[('id', 'in', l10n_latam_journal_mapping_id)]"/>
+                <field name="l10n_latam_document_number" attrs="{'invisible': ['|', ('l10n_latam_document_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_document_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('move_name', '!=', False)]}"/>
+            </field>
+
+            <field name="number" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="number" position="before">
+                <field name="display_name" attrs="{'invisible': [('display_name', '=', False)]}" class="oe_inline"/>
+                <span attrs="{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}" class="oe_inline">- Next Number:</span>
+                <field name="l10n_latam_next_number" attrs="{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}" class="oe_inline"/>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_supplier_invoice_form" model="ir.ui.view">
+        <field name="name">account.document supplier.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_journal_mapping_id" invisible="1"/>
+                <field name="l10n_latam_use_documents" invisible="1"/>
+                <field name="l10n_latam_document_sequence_id" invisible="1"/>
+            </form>
+
+            <field name="date_invoice" position="before">
+                <field name="l10n_latam_journal_mapping_id" attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('move_name', '!=', False)]}" domain="[('id', 'in', l10n_latam_journal_mapping_id)]"/>
+                <field name="l10n_latam_document_number" attrs="{'invisible': ['|', ('l10n_latam_document_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_document_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('move_name', '!=', False)]}"/>
+            </field>
+
+            <field name="number" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <h1 class="mt0" position="before">
+                <span attrs="{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}" class="oe_inline">- Next Number: </span>
+                <field name="l10n_latam_next_number" attrs="{'invisible': [('l10n_latam_next_number', 'in', (0, False))]}" class="oe_inline"/>
+            </h1>
+            <field name="number" position="before">
+                <field name="display_name" attrs="{'invisible': [('display_name', '=', False)]}" class="oe_inline"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

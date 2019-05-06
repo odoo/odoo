@@ -1,0 +1,54 @@
+<odoo>
+    <template id="invoices" inherit_id="account.portal_my_invoices" name="Invoices and Payments">
+        <xpath expr="//a" position="attributes">
+        <attribute name="t-att-title">invoice.display_name</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc='invoice.number']" position="attributes">
+        <attribute name="t-esc">invoice.display_name</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_page" inherit_id="account.portal_invoice_page" name="Invoice Portal Template">
+        <xpath expr="//span[@t-field='invoice.number']" position="attributes">
+            <attribute name="t-field">invoice.display_name</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_invoice" inherit_id="account.portal_my_home_menu_invoice" name="Portal layout : invoice menu entries">
+        <xpath expr="//t[@t-esc='invoice.number']" position="attributes">
+            <attribute name="t-esc">invoice.display_name</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_report" inherit_id="account.portal_invoice_report" name="Invoice Portal Report">
+        <xpath expr="//span[@t-field='l.price_unit']" position="attributes">
+            <attribute name="t-field">l.report_price_unit</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='l.price_subtotal']" position="attributes">
+            <attribute name="t-field">l.report_price_subtotal</attribute>
+        </xpath>
+        <xpath expr="//table[hasclass('table-condensed')][1]/thead/tr/th[last()-1]" position="attributes">
+            <attribute name="t-if">invoice.report_tax_line_ids</attribute>
+        </xpath>
+        <xpath expr="//span[contains(@t-esc, 'l.invoice_line_tax_ids')]" position="attributes">
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), l.report_invoice_line_tax_ids))</attribute>
+        </xpath>
+        <xpath expr="//span[contains(@t-esc, 'l.report_invoice_line_tax_ids')]/.." position="attributes">
+            <attribute name="t-if">l.report_invoice_line_tax_ids</attribute>
+        </xpath>
+        <xpath expr="//t[@t-as='amount_by_group']" position="replace">
+            <tr t-foreach="invoice.report_tax_line_ids" t-as="t">
+                <td><span t-field="t.tax_id.description"/></td>
+                <td class="text-right">
+                    <span t-field="t.amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: invoice.currency_id}"/>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//div[@t-if='len(invoice.tax_line_ids) &gt; 0']" position="replace">
+        </xpath>
+        <xpath expr="//span[@t-field='invoice.amount_untaxed']/../.." position="attributes">
+            <attribute name="t-if">invoice.report_tax_line_ids</attribute>
+        </xpath>
+    </template>
+
+</odoo>

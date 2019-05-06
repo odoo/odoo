@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="name">account.journal.form</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="l10n_latam_use_documents" attrs="{'invisible': [('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}"/>
+            </field>
+            <notebook position="inside">
+                <page string="Documents" attrs="{'invisible': ['|',('l10n_latam_use_documents','=',False),('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}">
+                    <group>
+                        <!-- por ahora solo se usa en sale -->
+                        <!-- TODO: THIS FIELD WAS ELIMINATED?
+                        <field name='document_sequence_type' attrs="{'required': [('l10n_latam_use_documents', '=', True), ('type', '!=', 'sale')]}"/> -->
+                    </group>
+                    <button name="update_journal_document_types" type="object" string="Update Documents"/>
+                    <field name='l10n_latam_journal_mapping_ids'/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

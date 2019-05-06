@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_receipt_receiptbook_search" model="ir.ui.view">
+        <field name="name">l10n_latam.payment.receiptbook.search</field>
+        <field name="model">l10n_latam.payment.receiptbook</field>
+        <field name="arch" type="xml">
+            <search string="Receipt Books">
+                <field name="name"/>
+                <field name="sequence_type"/>
+                <field name="partner_type"/>
+                <field name="document_type_id"/>
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_receipt_receiptbook_tree" model="ir.ui.view">
+        <field name="name">l10n_latam.payment.receiptbook.tree</field>
+        <field name="model">l10n_latam.payment.receiptbook</field>
+        <field name="arch" type="xml">
+            <tree string="Receipt Books">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="sequence_type"/>
+                <field name="partner_type"/>
+                <field name="document_type_id"/>
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_receipt_receiptbook_form" model="ir.ui.view">
+        <field name="name">l10n_latam.payment.receiptbook.form</field>
+        <field name="model">l10n_latam.payment.receiptbook</field>
+        <field name="arch" type="xml">
+            <form string="Receipt Books"> 
+                <sheet string="Receipt Books">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_type"/>
+                            <field name="sequence_type"/>
+                            <field name="padding" attrs="{'invisible':[('sequence_type','!=','manual')],'required':[('sequence_type','=','manual')]}"/>
+                            <field name="prefix"/>
+                        </group>
+                        <group>
+                            <field name="document_type_id"/>
+                            <field name="sequence_id" attrs="{'invisible':[('sequence_type','!=','automatic')]}"/>
+                            <field name="next_number" attrs="{'invisible':[('sequence_type','!=','automatic')]}"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_receiptbook_form" model="ir.actions.act_window">
+        <field name="name">Receiptbooks</field>
+        <field name="res_model">l10n_latam.payment.receiptbook</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_receipt_receiptbook_search"/>
+    </record>
+
+    <menuitem action="action_receiptbook_form" id="menu_receiptbook_form" sequence="25" parent="account.account_account_menu"/>
+
+</odoo>

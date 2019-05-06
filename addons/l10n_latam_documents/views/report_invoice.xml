@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_invoice_document" inherit_id="account.report_invoice_document">
+
+    <xpath expr="//h2" position="attributes">
+        <attribute name="t-if">not o.l10n_latam_use_documents</attribute>
+    </xpath>
+
+    <xpath expr="//h2" position="after">
+        <h2 t-if="o.l10n_latam_use_documents">
+            <span t-field="o.l10n_latam_document_type_id.report_name"/>
+            <span t-field="o.l10n_latam_document_number"/>
+        </h2>
+    </xpath>
+
+    <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+        <attribute name="t-field">line.l10n_latam_price_unit</attribute>
+    </xpath>
+
+<!-- TODO aca podriamos imprimir los l10n_latam_tax_ids -->
+<!--     <xpath expr="//thead/tr/th[5]" position="attributes">
+        <attribute name="t-if">line.l10n_latam_invoice_line_tax_ids</attribute>
+    </xpath>
+
+    <xpath expr="//tr[@t-foreach='o.invoice_line_ids']/td[5]" position="attributes">
+        <attribute name="t-if">line.l10n_latam_invoice_line_tax_ids</attribute>
+    </xpath> -->
+
+
+    <!-- por fines de migracion y porque no se usa por el momento se comentan este bloque
+    <xpath expr="//span[@t-field='line.price_subtotal']" position="attributes">
+        <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
+    </xpath>
+
+    <xpath expr="//span[@t-field='o.amount_untaxed']" position="attributes">
+        <attribute name="t-field">o.l10n_latam_amount_untaxed</attribute>
+    </xpath>
+
+    <xpath expr="//div[@t-if='o.tax_line_ids']" position="attributes">
+        <attribute name="t-if">o.l10n_latam_tax_line_ids</attribute>
+    </xpath>
+
+    <xpath expr="//tr[@t-foreach='o.tax_line_ids']" position="attributes">
+        <attribute name="t-foreach">o.l10n_latam_tax_line_ids</attribute>
+    </xpath>
+    FIN DE BLOQUE COMENTADO-->
+</template>
+
+</odoo>
