@@ -3375,6 +3375,37 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab in editable list with only readonly fields', async function (assert) {
+        assert.expect(6);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="m2o" attrs="{\'readonly\': [(\'int_field\', \'>\', 9)]}"/>' +
+                    '<field name="int_field" readonly="1"/>' +
+                '</tree>',
+        });
+
+        assert.hasClass(list.$('.o_data_row:first .o_data_cell:first'), 'o_readonly_modifier');
+        assert.doesNotHaveClass(list.$('.o_data_row:nth(1) .o_data_cell:first'), 'o_readonly_modifier');
+
+        // try to enter first row in edition
+        await testUtils.dom.click(list.$('.o_data_row .o_data_cell:first'));
+
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_selected_row .o_field_widget[name=m2o]').get(0));
+
+        // press tab to move to next focusable field (next line here)
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        await testUtils.nextTick();
+        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+        assert.strictEqual(document.activeElement, list.$('.o_selected_row .o_field_many2one input').get(0));
+
+        list.destroy();
+    });
+
     QUnit.test('edition, then navigation with tab (with a readonly field)', async function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we edit and press TAB,
