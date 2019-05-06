@@ -1127,27 +1127,6 @@ ListRenderer.include({
         }
     },
     /**
-     * It will returns the last visible widget that is editable
-     *
-     * @private
-     * @returns {Class} Widget returns last widget
-     */
-    _getLastWidget: function () {
-        var recordID = this._getRecordID(this.currentRow);
-        var recordWidgets = this.allFieldWidgets[recordID];
-        var lastWidget = _.chain(recordWidgets).filter(function (widget) {
-            var isLast =
-                widget.$el.is(':visible') &&
-                (
-                    widget.$('input').length > 0 || widget.tagName === 'input' ||
-                    widget.$('textarea').length > 0 || widget.tagName === 'textarea'
-                ) &&
-                !widget.$el.hasClass('o_readonly_modifier');
-            return isLast;
-        }).last().value();
-        return lastWidget;
-    },
-    /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
      * - previous: move to the first activable cell on the left if any, if not
@@ -1175,18 +1154,12 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                var column = this.columns[this.currentFieldIndex];
-                var lastWidget = this._getLastWidget();
-                if (column.attrs.name === lastWidget.name) {
-                    this._moveToNextLine();
+                if (this.currentFieldIndex + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
+                        .guardedCatch(this._moveToNextLine.bind(this));
                 } else {
-                    if (this.currentFieldIndex + 1 < this.columns.length) {
-                        this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
-                            .guardedCatch(this._moveToNextLine.bind(this));
-                    } else {
-                        this._moveToNextLine();
-                    }
-                 }
+                    this._moveToNextLine();
+                }
                 break;
             case 'next_line':
                 this._moveToNextLine({forceCreate: true});
