@@ -23,6 +23,13 @@ Argentinian accounting chart and tax localization.
     * Tax Group
     * Fiscal Position
     * Fiscal Position Template
+
+Follow the next configuration steps
+
+1. Go to your company and your CUIT Number and your AFIP Responsability
+2. Go to Invoicing / Configuration and set the Chart of Account you will like
+   to use.
+3. Create your sale journals taking into account AFIP info if needed.
 """,
     'author': ['ADHOC SA'],
     'category': 'Localization',
