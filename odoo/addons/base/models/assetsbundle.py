@@ -227,7 +227,8 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
-            type=type
+            sep='',
+            type='.%s' % type
         )
         domain = [
             ('url', '=like', url),
