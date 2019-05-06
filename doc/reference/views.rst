@@ -1970,6 +1970,64 @@ assuming ``foo`` is a field and ``bar`` is a filter an action context of:
 will automatically enable the ``bar`` filter and search the ``foo`` field for
 *acro*.
 
+.. _reference/views/map:
+
+Map
+===
+
+This view is able to display records on a map and the routes between them. The record are represented by pins. It also allows the visualization of fields from the model in a popup tied to the record's pin. 
+
+.. note::
+    
+    The model on which the view is applied should contains a res.partner many2one since the view relies on the res.partner's address and coordinates fields to localize the records.
+
+.. warning::
+
+   The Map view is only available in Odoo Enterprise
+
+.. _reference/views/map/api:
+
+Api
+---
+
+The view uses location data platforms' api to fetch the tiles (the map's background), do the geoforwarding (converting addresses to a set of coordinates) and fetch the routes.
+The view implements two api, the default one, openstreet map is able to fetch `tiles`_ and do `geoforwarding`_. This api does not require a token. 
+As soon as a valid `MapBox`_ token is provided in the general settings the view switches to the Mapbox api. This api is faster and allows the computation of routes. The token are available by `signing up`_ to MapBox
+
+
+
+.. _reference/views/structural components:
+
+Structural components
+---------------------
+
+The view's root element is ``<map>`` multiple attributes are allowed
+
+``res_partner``
+    Contains the res.partner many2one. If not provided the view will resort to create an empty  map.
+``default_order``
+    If a field is provided the view will override the model's default order. The field must be apart of the model on which the view is applied not from res.partner
+``routing`` 
+    if ``true`` the routes between the records will be shown. The view still needs a valid MapBox token and at least two located records. (i.e the records has a res.partner many2one and the partner has a address or valid coordinates)   
+
+The only element allowed within the ``<map>`` element is the ``<marker-popup>``. This element is able to contain multiple ``<field>`` elements. Each of these elements will be interpreted as a line in the marker's popup. The field's attributes are the following:
+
+``name``
+    The field to display.
+``string``
+    This string will be displayed before the field's content. It Can be used as a description.
+
+No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
+
+For example here is a map:
+    .. code-block:: xml
+
+        <map res_partner="partner_id" default_order="date_begin" routing="true">
+            <marker-popup>
+                <field name="name" string="Task: "/>
+            </marker-popup>
+        </map>
+
 .. _reference/views/qweb:
 
 QWeb
@@ -2026,6 +2084,10 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
                        should only contain xpath elements
                        <reference/views/inheritance>`
 
+.. _geoforwarding: https://nominatim.org/release-docs/develop/ 
+.. _tiles: https://wiki.openstreetmap.org/wiki/Tile_data_server
+.. _MapBox: https://docs.mapbox.com/api/
+.. _signing up: https://account.mapbox.com/auth/signup/
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
 .. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits
 .. _floats: https://developer.mozilla.org/en-US/docs/Web/CSS/float
