@@ -843,3 +843,6 @@ class AccountBankStatementLine(models.Model):
 
     def _check_invoice_state(self, invoice):
         invoice._compute_amount()
+
+    def button_confirm_bank(self):
+        self.statement_id.button_confirm_bank()

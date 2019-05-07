@@ -109,6 +109,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -129,6 +130,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': []},
         })
@@ -209,6 +211,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -223,6 +226,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
@@ -252,6 +256,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             self.bank_line_2.id: {'aml_ids': [
                 self.invoice_line_2.id,
                 self.invoice_line_3.id,
+                self.invoice_line_1.id,
             ], 'model': self.rule_1},
             self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
         })
