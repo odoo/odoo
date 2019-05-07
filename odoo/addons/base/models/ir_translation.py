@@ -776,7 +776,7 @@ class IrTranslation(models.Model):
                 'view_id': self.env.ref('base.view_translation_field_wizard').id,
                 'target': 'new',
                 'view_mode': 'form',
-                'context': {'model': model, 'id': id, 'field': field}
+                'context': {'default_model': model, 'default_id': id, 'field': field}
             })
 
         return action

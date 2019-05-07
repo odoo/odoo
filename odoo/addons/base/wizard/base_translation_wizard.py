@@ -1,5 +1,6 @@
 from odoo import api, models, fields
 from odoo.exceptions import AccessError
+from odoo.osv import expression
 
 
 class TranslationWizard(models.TransientModel):
@@ -13,20 +14,20 @@ class TranslationWizard(models.TransientModel):
         res = super(TranslationWizard, self).default_get(fields_list)
         IrTranslation = self.env['ir.translation']
 
-        domain = self._prepare_domain()
+        domain = self._prepare_domain_to_get_records()
         translations = IrTranslation.search(domain)
-        res['translation_lines'] = [[0, False, {
+        res['translation_lines'] = [(0, False, {
             'value': line.value or line.source,
             'lang': line.lang,
             'ir_translation_id': line.id,
-        }] for line in translations]
+        }) for line in translations]
         return res
 
-    def _prepare_domain(self):
+    def _prepare_domain_to_get_records(self):
         """ Prepares domain to find records from ir.translation for given field in context
         """
-        model = self.env.context['model']
-        recordID = self.env.context['id']
+        model = self.env.context['default_model']
+        recordID = self.env.context['default_id']
         field = self.env.context['field']
         record = self.env[model].with_context(lang='en_US').browse(recordID)
 
@@ -55,19 +56,16 @@ class TranslationWizard(models.TransientModel):
         if field:
             fld = record._fields[field]
             if not fld.related:
-                domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
-                            ('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]
+                domain += expression.OR([[('name', '=',  "%s,%s" % (fld.model_name, fld.name))], [('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]])
             else:
                 rec = record
                 try:
                     while fld.related:
                         rec, fld = fld.traverse_related(rec)
                     if rec:
-                        domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
-                            ('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]
+                        domain += expression.OR([[('name', '=',  "%s,%s" % (fld.model_name, fld.name))], [('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]])
                 except AccessError:
                     pass
-        domain += [('lang', '!=', self.env.context.get('lang'))]
         return domain
 
     @api.multi
