@@ -692,7 +692,7 @@ class AccountInvoice(models.Model):
             return self.env.ref('account.account_invoices_without_payment').report_action(self)
 
     @api.multi
-    def action_reconcile_to_check(self, params):
+    def action_reconcile_to_check(self):
         self.ensure_one()
         domain = self._get_domain_edition_mode_available()
         ids = self.env['account.move.line'].search(domain).mapped('statement_line_id').ids
