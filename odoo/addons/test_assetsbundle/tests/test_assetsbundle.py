@@ -50,6 +50,13 @@ class TestJavascriptAssetsBundle(TransactionCase):
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
+    def _node_to_list(self, nodes):
+        res = []
+        for index, (tagName, t_attrs, content) in enumerate(nodes):
+            for name, value in t_attrs.items():
+                res.append(value)
+        return res
+
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
         for the first time.
@@ -154,7 +161,8 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Checks that a bundle rendered in debug mode outputs non-minified assets.
         """
         debug_bundle = self._get_asset(self.jsbundle_xmlid)
-        content = debug_bundle.to_html(debug='assets')
+        nodes = debug_bundle.to_node(debug='assets')
+        content = self._node_to_list(nodes)
         # find back one of the original asset file
         self.assertIn('/test_assetsbundle/static/src/js/test_jsfile1.js', content)
 
@@ -234,7 +242,8 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
         debug_bundle = self._get_asset(self.cssbundle_xmlid)
-        content = debug_bundle.to_html(debug='assets')
+        nodes = debug_bundle.to_node(debug='assets')
+        content = self._node_to_list(nodes)
         # find back one of the original asset file
         self.assertIn('/test_assetsbundle/static/src/css/test_cssfile1.css', content)
 
@@ -256,8 +265,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(ira0.store_fname, ira1.store_fname)
 
         # the ir.attachment records should be deduplicated in the bundle's content
-        content = bundle0.to_html()
-        self.assertEqual(content.count('test_assetsbundle.bundle2.css'), 1)
+        nodes = bundle0.to_node()
+        content = self._node_to_list(nodes)
+        self.assertEqual(content[2].count('test_assetsbundle.bundle2.css'), 1)
 
     # Language direction specific tests
 
@@ -448,7 +458,8 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Checks that a bundle rendered in debug mode(assets) with right to left language direction stores css files in assets bundle.
         """
         debug_bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'lang': 'ar_SY'}))
-        content = debug_bundle.to_html(debug='assets')
+        nodes = debug_bundle.to_node(debug='assets')
+        content = self._node_to_list(nodes)
 
         # css file should be available in assets bundle as user's lang direction is rtl
         self.assertIn('/test_assetsbundle/static/src/css/test_cssfile1/rtl/{0}.css'.format(self.cssbundle_xmlid), content)
@@ -562,11 +573,11 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
 
     def _get_asset(self):
         files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
-        return AssetsBundle(self.stylebundle_xmlid, files, remains, env=self.env)
+        return AssetsBundle(self.stylebundle_xmlid, files, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
         self.counter.clear()
-        asset.to_html(debug='assets')
+        asset.to_node(debug='assets')
         self.assertEquals(self.counter['create'], int(should_create))
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
