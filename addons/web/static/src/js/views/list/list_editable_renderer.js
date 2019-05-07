@@ -257,7 +257,7 @@ ListRenderer.include({
      */
     focusLastActivatedWidget: function () {
         if (this.currentRow !== null) {
-            this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
+            this._selectCell(this.currentRow, this.currentFieldIndex, {wrap: false, force: true})
         }
     },
     /**

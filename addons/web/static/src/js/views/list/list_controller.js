@@ -23,6 +23,7 @@ var ListController = BasicController.extend({
         button_clicked: '_onButtonClicked',
         edit_line: '_onEditLine',
         focus_searchview: '_onFocusSearchView',
+        form_dialog_discarded: '_onFormDialogDiscarded',
         save_line: '_onSaveLine',
         resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
@@ -494,6 +495,16 @@ var ListController = BasicController.extend({
         if (this.searchView) {
             this.searchView.focusInput();
         }
+    },
+    /**
+     * Reset the focus on the control that openned a Dialog after it was closed
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFormDialogDiscarded: function(e) {
+        e.stopPropagation();
+        this.renderer.focusLastActivatedWidget();
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
