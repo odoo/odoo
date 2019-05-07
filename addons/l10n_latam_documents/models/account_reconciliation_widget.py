@@ -18,7 +18,7 @@ class AccountReconciliation(models.AbstractModel):
         """ Allow to search by display_name on bank statements and partner
         debt reconcile
         """
-        _super = super(AccountMoveLine, self)
+        _super = super(AccountReconciliation, self)
         _get_domain = _super._domain_move_lines_for_reconciliation
         domain = _get_domain(
             self, st_line, aml_accounts, partner_id, excluded_ids=excluded_ids,

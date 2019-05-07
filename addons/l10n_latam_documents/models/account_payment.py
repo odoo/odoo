@@ -147,7 +147,9 @@ class AccountPayment(models.Model):
         vals = super(AccountPayment, self)._get_move_vals()
         vals.update({
             'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
-            'l10n_latam_document_number': document_number,
+            'l10n_latam_document_number':
+            self.l10n_latam_document_number if self.payment_type != 'transfer'
+            else self.name,
         })
         return vals
 

@@ -65,6 +65,7 @@ class L10nLatamAccountPaymentReceiptbook(models.Model):
         """ If user change prefix/padding we change prefix of sequence.
         """
         prefix = vals.get('prefix')
+        padding = vals.get('padding')
         for rec in self:
             if prefix and rec.sequence_id:
                 rec.sequence_id.prefix = prefix

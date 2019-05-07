@@ -339,7 +339,7 @@ class AccountInvoice(models.Model):
                     self.env['l10n_latam.journal.mapping'],
             }
         raise UserError(_(
-            'Method ot implemented by localization of %s') % (
+            'Method not implemented by localization of %s') % (
                 journal.company_id.country_id.name))
 
     @api.constrains('l10n_latam_document_type_id', 'l10n_latam_document_number')
