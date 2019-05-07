@@ -282,6 +282,7 @@
             <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
             <label t-att-for="inputId" class="o_search_panel_label custom-control-label d-block" t-att-title="group.tooltip">
                 <i t-att-class="'fa fa-fw pull-right o_toggle_fold ' + (group.folded ? 'fa-caret-left' : 'fa-caret-down')"/>
+                <span t-if="group.hex_color" t-att-style="'color: ' + group.hex_color + ';'">●</span>
                 <span class="o_search_panel_label_title"><t t-esc="group.name"/></span>
             </label>
         </div>
