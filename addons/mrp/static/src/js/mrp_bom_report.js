@@ -195,10 +195,7 @@ var MrpBomReport = stock_report_generic.extend({
     _reload_report_type: function () {
         this.$('.o_mrp_bom_cost.o_hidden, .o_mrp_prod_cost.o_hidden').toggleClass('o_hidden');
         if (this.given_context.report_type === 'bom_structure') {
-            this.$('.o_mrp_bom_cost').toggleClass('o_hidden');
-        }
-        if (this.given_context.report_type === 'bom_cost') {
-            this.$('.o_mrp_prod_cost').toggleClass('o_hidden');
+           this.$('.o_mrp_bom_cost, .o_mrp_prod_cost').toggleClass('o_hidden');
         }
     },
     _removeLines: function ($el) {
