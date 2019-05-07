@@ -86,8 +86,7 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    # remains attribute is depreciated and will remove after v11
-    def __init__(self, name, files, remains=None, env=None):
+    def __init__(self, name, files, env=None):
         self.name = name
         self.env = request.env if env is None else env
         self.javascripts = []
@@ -109,26 +108,6 @@ class AssetsBundle(object):
                 self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
-
-    # depreciated and will remove after v11
-    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, url_for=(lambda url: url)):
-        nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
-
-        if sep is None:
-            sep = u'\n            '
-        response = []
-        for tagName, attributes, content in nodes:
-            html = u"<%s " % tagName
-            for name, value in attributes.items():
-                if value or isinstance(value, str):
-                    html += u' %s="%s"' % (name, escape(to_text(value)))
-            if content is None:
-                html += u'/>'
-            else:
-                html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-            response.append(html)
-
-        return sep + sep.join(response)
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
@@ -598,19 +577,6 @@ class WebAsset(object):
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
-
-    # depreciated and will remove after v11
-    def to_html(self):
-        tagName, attributes, content = self.to_node()
-        html = u"<%s " % tagName
-        for name, value in attributes.items():
-            if value or isinstance(value, str):
-                html += u' %s="%s"' % (name, escape(to_text(value)))
-        if content is None:
-            html += u'/>'
-        else:
-            html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-        return html
 
     def to_node(self):
         raise NotImplementedError()

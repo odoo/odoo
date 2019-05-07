@@ -34,8 +34,8 @@ class QWeb(models.AbstractModel):
         'img':    'src',
     }
 
-    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
-        return AssetsBundleMultiWebsite(xmlid, files, remains=remains, env=env)
+    def get_asset_bundle(self, xmlid, files, env=None):
+        return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):
