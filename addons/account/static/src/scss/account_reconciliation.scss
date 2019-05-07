@@ -1,30 +1,20 @@
-.o_reconciliation {
-    h1 {
-        margin: 0 0 25px 0;
-        float: left;
-        font-size: 2em;
-        height: 1.5em;
-        line-height: 1.5em;
-        &.statement_name {
-            @include o-text-overflow;
-            &.editable:hover {
-                outline: 1px dashed $o-brand-primary;
-                outline-offset: -1px;
-                cursor: pointer;
-            }
-        }
-        &.statement_name_edition input {
-            width: 85%;
+.progress-reconciliation {
+    .progress-bar {
+        font-size: 1.08333333rem;
+        height: 14px;
+        background-color: $o-enterprise-color;
+        span {
+            display: contents;
         }
     }
+}
+
+.o_reconciliation {
 
     .o_filter_input_wrapper {
         position: relative;
-        float: right;
         width: 150px;
-        margin-top: 0px;
-        margin-bottom: 20px;
-        float: right;
+        margin: 0.5rem !important;
         .searchIcon {
             position: absolute;
             right: 10px;
@@ -34,27 +24,9 @@
             border-bottom: 1px black solid;
         }
     }
-    
-    .progress {
-        width: 100%;
-        margin: 10px 0 2px 0;
-        float: right;
-        position: relative;
-        display: inline-block;
-        .progress-bar {
-            background-color: $o-community-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
-        }
-        .progress-text {
-            text-align: center;
-            position: absolute;
-            width: 100%;
-        }
-    }
 
-    h1, .progress {
-        @media screen and (min-width: 480px) { // FIXME 
-            width: 48%;
-        }
+    .import_to_suspense {
+        margin: 0.5rem !important;
     }
 
     .notification_area {
@@ -84,6 +56,15 @@
         }
         .strike_amount {
             text-decoration: line-through;
+        }
+        tbody tr:hover .cell_account_code::before {
+            content: "\f068";
+            font-family: FontAwesome;
+            position: relative;
+            margin-left: -17px;
+            left: -4px;
+            line-height: 0;
+            padding: 3px 2px 5px 5px;
         }
 
     }
@@ -122,7 +103,7 @@
             width: 100%;
             vertical-align: top;
         }
-        tr {
+        tbody tr {
             cursor: pointer;
         }
         tr.already_reconciled {
@@ -165,6 +146,7 @@
         }
         .cell_account_code {
             width: 80px;
+            padding-left: 5px;
         }
         .cell_due_date {
             width: 100px;
@@ -232,24 +214,25 @@
         }
 
         /* Match view & Create view */
-
-        > .match, > .create {
+        > .o_notebook {
             display: none;
-            max-height: 0px;
-            overflow: hidden;
-            margin-bottom: 5px;
-            transition: max-height 250ms ease 0s;
         }
-        &[data-mode="match"] > .match {
-            display: block;
-            max-height: none;
-            overflow: visible;
-            transition: max-height 400ms ease 0s;
+
+        > .o_notebook > .tab-content > div {
+            border: 1px solid #ddd;
+            border-top: 0;
         }
-        &[data-mode="create"] > .create {
+
+        > .o_notebook .match table tr:hover {
+            background-color: #eee;
+        }
+
+        &:not([data-mode="inactive"]) > .o_notebook {
             display: block;
-            max-height: 210px;
-            transition: max-height 400ms ease 0s;
+        }
+
+        &:not(:focus-within) .o_web_accesskey_overlay {
+            display: none;
         }
     }
 
@@ -260,12 +243,6 @@
     /* Match view */
 
     .match {
-        > div {
-            padding: 5px 6px 10px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            margin: 5px 0 0 0;
-        }
         .cell_action .fa-add-remove:before {
             content: "";
         }
@@ -303,38 +280,21 @@
 
     /* Create view */
     .create {
-        > div {
-            margin: 0 0 0 $o-account-action-col-width;
-            padding: 5px 10px;
+        > div > div.quick_add > .o_reconcile_models {
+            max-height: 54px;
             overflow: auto;
-            border: 1px solid #ddd;
-            border-radius: 0 0 5px 5px;
-            > div.quick_add > .o_reconcile_models {
-                max-height: 54px;
-                overflow: auto;
-            }
         }
         .quick_add {
             margin-bottom: 7px;
+            padding: 0 8px;
         }
-        table {
+        .o_group table.o_group_col_6 {
             width: 49%;
             margin: 0;
             vertical-align: top;
         }
-        td {
-            width: 99%;
-            padding-left: 8px;
-        }
-        tr .o_td_label {
-            vertical-align: top;
-            line-height: 26px;
-            font-weight: bold;
-            padding-right: 8px;
-            min-width: 100px;
-            border-right: 1px solid #ddd;
-            white-space: nowrap;
-            width: 1%;
+        .o_group table.o_group_col_6:first-child {
+            margin-left: 8px;
         }
         .btn {
             padding-top: 0;
@@ -343,9 +303,13 @@
         .add_line_container {
             text-align: center;
             clear: both;
-            color: $o-account-info-color;
+            color: $o-enterprise-primary-color;
             cursor: pointer;
         }
+    }
+
+    .o_notebook .tab-content > .tab-pane {
+        padding: 5px 0;
     }
 }
 
@@ -353,7 +317,7 @@
 .o_manual_statement {
     .accounting_view {
         td[colspan="3"] span:first-child {
-            width: 50%;
+            width: 100%;
             display: inline-block;
         }
         td[colspan="2"] {

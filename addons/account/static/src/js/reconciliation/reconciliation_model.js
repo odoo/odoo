@@ -19,7 +19,7 @@ var _t = core._t;
  *  {
  *      valuenow: integer
  *      valuenow: valuemax
- *      [bank_statement_id]: {
+ *      [bank_statement_line_id]: {
  *          id: integer
  *          display_name: string
  *      }
@@ -40,7 +40,7 @@ var _t = core._t;
  *          partner_id: integer
  *          partner_name: string
  *      }
- *      mode: string ('inactive', 'match', 'create')
+ *      mode: string ('inactive', 'match_rp', 'match_other', 'create')
  *      reconciliation_proposition: {
  *          id: number|string
  *          partial_amount: number
@@ -65,7 +65,8 @@ var _t = core._t;
  *          [to_check]: boolean
  *          [amount_currency_str]: string|false (amount in record currency)
  *      }
- *      mv_lines: object - idem than reconciliation_proposition
+ *      mv_lines_match_rp: object - idem than reconciliation_proposition
+ *      mv_lines_match_other: object - idem than reconciliation_proposition
  *      offset: integer
  *      limitMoveLines: integer
  *      filter: string
@@ -97,6 +98,9 @@ var StatementModel = BasicModel.extend({
     avoidCreate: false,
     quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_ids', 'force_tax_included', 'analytic_tag_ids', 'to_check'],
 
+    // overridden in ManualModel
+    modes: ['create', 'match_rp', 'match_other'],
+
     /**
      * @override
      *
@@ -110,8 +114,10 @@ var StatementModel = BasicModel.extend({
         this.valuenow = 0;
         this.valuemax = 0;
         this.alreadyDisplayed = [];
+        this.domain = [];
         this.defaultDisplayQty = options && options.defaultDisplayQty || 10;
         this.limitMoveLines = options && options.limitMoveLines || 15;
+        this.display_context = 'init';
     },
 
     //--------------------------------------------------------------------------
@@ -130,20 +136,23 @@ var StatementModel = BasicModel.extend({
     addProposition: function (handle, mv_line_id) {
         var self = this;
         var line = this.getLine(handle);
-        var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
+        var prop = _.clone(_.find(line['mv_lines_'+line.mode], {'id': mv_line_id}));
         this._addProposition(line, prop);
-        line.limit_override = (line.offset + 1) * this.limitMoveLines;
+        line.limit_override = (line.offset + 1) + this.limitMoveLines;
+
+        // remove all non valid lines
+        line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (prop) {return !prop.invalid;});
 
         // Onchange the partner if not already set on the statement line.
         if(!line.st_line.partner_id && line.reconciliation_proposition
             && line.reconciliation_proposition.length == 1 && prop.partner_id && line.type === undefined){
             return this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)
                 .then(function () {
-                    return Promise.all([self._computeLine(line), self._performMoveLine(handle)]);
+                    return Promise.all([self._computeLine(line), self._performMoveLine(handle, 'match_rp'), self._performMoveLine(handle, 'match_other')]);
                 });
         }
 
-        return Promise.all([this._computeLine(line), this._performMoveLine(handle)]);
+        return Promise.all([this._computeLine(line), this._performMoveLine(handle, 'match_rp'), self._performMoveLine(handle, 'match_other')]);
     },
     /**
      * change the filter for the target line and fetch the new matched lines
@@ -154,55 +163,53 @@ var StatementModel = BasicModel.extend({
      */
     changeFilter: function (handle, filter) {
         var line = this.getLine(handle);
-        line.filter = filter;
+        line['filter_'+line.mode] = filter;
         line.offset = 0;
-        return this._performMoveLine(handle);
+        return this._performMoveLine(handle, line.mode);
     },
     /**
-     * change the mode line ('inactive', 'match', 'create'), and fetch the new
-     * matched lines or prepare to create a new line
+     * change the mode line ('inactive', 'match_rp', 'match_other', 'create'),
+     * and fetch the new matched lines or prepare to create a new line
      *
-     * ``match``
-     *   display the matched lines, the user can select the lines to apply
+     * ``match_rp``
+     *   display the matched lines from receivable/payable accounts, the user
+     *   can select the lines to apply there as proposition
+     * ``match_other``
+     *   display the other matched lines, the user can select the lines to apply
      *   there as proposition
      * ``create``
      *   display fields and quick create button to create a new proposition
      *   for the reconciliation
      *
      * @param {string} handle
-     * @param {'inactive' | 'match' | 'create'} mode
+     * @param {'inactive' | 'match_rp' | 'create'} mode
      * @returns {Promise}
      */
     changeMode: function (handle, mode) {
+        var self = this;
         var line = this.getLine(handle);
-        if (line.mode  === 'create') {
-            this._blurProposition(handle);
-            line.createForm = null;
+        if (mode === 'default') {
+            var match_requests = self.modes.filter(x => x.startsWith('match')).map(x => this._performMoveLine(handle, x))
+            return Promise.all(match_requests).then(function() {
+                return self.changeMode(handle, self._getDefaultMode(handle));
+            });
         }
-        if (mode  === 'create' && this.avoidCreate) {
-            mode = 'match';
+        if (mode === 'next') {
+            var available_modes = self._getAvailableModes(handle)
+            mode = available_modes[(available_modes.indexOf(line.mode) + 1) % available_modes.length];
         }
         line.mode = mode;
-        if (mode === 'match') {
-            return this._performMoveLine(handle);
+        if (['match_rp', 'match_other'].includes(line.mode)) {
+            if (!(line['mv_lines_' + line.mode] && line['mv_lines_' + line.mode].length)) {
+                return this._performMoveLine(handle, line.mode);
+            } else {
+                return this._formatMoveLine(handle, line.mode, line['mv_lines_' + line.mode]);
+            }
         }
         if (line.mode === 'create') {
             return this.createProposition(handle);
         }
         return Promise.resolve();
-    },
-    /**
-     * call 'write' method on the 'account.bank.statement'
-     *
-     * @param {string} name
-     * @returns {Promise}
-     */
-    changeName: function (name) {
-        return this._rpc({
-                model: 'account.bank.statement',
-                method: 'write',
-                args: [this.bank_statement_id.id, {name: name}],
-            });
     },
     /**
      * change the offset for the matched lines, and fetch the new matched lines
@@ -212,8 +219,9 @@ var StatementModel = BasicModel.extend({
      * @returns {Promise}
      */
     changeOffset: function (handle, offset) {
-        this.getLine(handle).offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
-        return this._performMoveLine(handle);
+        var line = this.getLine(handle);
+        line.offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
+        return this._performMoveLine(handle, line.mode);
     },
     /**
      * change the partner on the line and fetch the new matched lines
@@ -243,13 +251,8 @@ var StatementModel = BasicModel.extend({
                     return self._computeLine(line);
                 })
                 .then(function () {
-                    if (!preserveMode)
-                        return self.changeMode(handle, 'match');
-                    return false;
+                    return self.changeMode(handle, preserveMode ? line.mode : 'default', true);
                 })
-                .then(function () {
-                    return line.mode === 'create' ? self.createProposition(handle) : false;
-                });
 
     },
     /**
@@ -259,12 +262,12 @@ var StatementModel = BasicModel.extend({
     closeStatement: function () {
         var self = this;
         return this._rpc({
-                model: 'account.bank.statement',
+                model: 'account.bank.statement.line',
                 method: 'button_confirm_bank',
-                args: [self.bank_statement_id.id],
+                args: [self.bank_statement_line_id.id],
             })
             .then(function () {
-                return self.bank_statement_id.id;
+                return self.bank_statement_line_id.id;
             });
     },
     /**
@@ -310,6 +313,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Return a boolean telling if load button needs to be displayed or not
+     * overridden in ManualModel
      *
      * @returns {boolean} true if load more button needs to be displayed
      */
@@ -337,18 +341,29 @@ var StatementModel = BasicModel.extend({
      * - 'account.account' fetch all account code
      * - 'account.reconciliation.widget' fetch each line data
      *
+     * overridden in ManualModel
      * @param {Object} context
      * @param {number[]} context.statement_line_ids
      * @returns {Promise}
      */
     load: function (context) {
         var self = this;
-        this.statement_line_ids = context.statement_line_ids;
-        if (!this.statement_line_ids) {
-            return Promise.resolve();
-        }
         this.context = context;
-        return self.reload();
+        this.statement_line_ids = context.statement_line_ids;
+        if (this.statement_line_ids === undefined) {
+            // This could be undefined if the user pressed F5, take everything as fallback instead of rainbowman
+            return self._rpc({
+                model: 'account.bank.statement.line',
+                method: 'search_read',
+                fields: ['id'],
+                domain: [['journal_id', '=?', context.active_id]],
+            }).then(function (result) {
+                self.statement_line_ids = result.map(r => r.id);
+                return self.reload()
+            })
+        } else {
+            return self.reload();
+        }
 
     },
     /**
@@ -368,6 +383,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * RPC method to load informations on lines
+     * overridden in ManualModel
      *
      * @param {Array} ids ids of bank statement line passed to rpc call
      * @param {Array} excluded_ids list of move_line ids that needs to be excluded from search
@@ -391,17 +407,15 @@ var StatementModel = BasicModel.extend({
         self.alreadyDisplayed = [];
         self.lines = {};
         self.pagerIndex = 0;
-        // FIXME: model should not be tied to the DOM !
-        self.search_str = $('.reconciliation_search_input').val();
         var def_statement = this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_bank_statement_data',
-                kwargs: {"bank_statement_line_ids":self.statement_line_ids, "search_str":self.search_str},
+                kwargs: {"bank_statement_line_ids":self.statement_line_ids, "srch_domain":self.domain},
                 context: self.context,
             })
             .then(function (statement) {
                 self.statement = statement;
-                self.bank_statement_id = self.statement_line_ids.length === 1 ? {id: self.statement_line_ids[0], display_name: statement.statement_name} : false;
+                self.bank_statement_line_id = self.statement_line_ids.length === 1 ? {id: self.statement_line_ids[0], display_name: statement.statement_name} : false;
                 self.valuenow = self.valuenow || statement.value_min;
                 self.valuemax = self.valuemax || statement.value_max;
                 self.context.journal_id = statement.journal_id;
@@ -413,9 +427,11 @@ var StatementModel = BasicModel.extend({
                         handle: handle,
                         reconciled: false,
                         mode: 'inactive',
-                        mv_lines: [],
+                        mv_lines_match_rp: [],
+                        mv_lines_match_other: [],
                         offset: 0,
-                        filter: "",
+                        filter_match_rp: "",
+                        filter_match_other: "",
                         reconciliation_proposition: [],
                         reconcileModels: [],
                     };
@@ -552,7 +568,8 @@ var StatementModel = BasicModel.extend({
         return this._computeLine(line);
     },
     /**
-     * Remove a proposition and switch to an active mode ('create' or 'match')
+     * Remove a proposition and switch to an active mode ('create' or 'match_rp' or 'match_other')
+     * overridden in ManualModel
      *
      * @param {string} handle
      * @param {number} id (move line id)
@@ -563,29 +580,27 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var defs = [];
         // new limit = previous limit + 1, the one put back
-        line.limit_override = (line.offset + 1) * this.limitMoveLines;
+        line.limit_override = (line.offset + 1) + this.limitMoveLines;
         var prop = _.find(line.reconciliation_proposition, {'id' : id});
         if (prop) {
             line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
                 return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
             });
+            if (['receivable', 'payable', 'liquidity'].includes(prop.account_type)) {
+                line.mv_lines_match_rp.unshift(prop);
+            } else {
+                line.mv_lines_match_other.unshift(prop);
+            }
 
             // No proposition left and then, reset the st_line partner.
             if(line.reconciliation_proposition.length == 0 && line.st_line.has_no_partner)
                 defs.push(self.changePartner(line.handle));
         }
-        line.mode = (id || line.mode !== "create") && isNaN(id) && !this.avoidCreate ? 'create' : 'match';
+        line.mode = (id || line.mode !== "create") && isNaN(id) ? 'create' : 'match_rp';
         defs.push(this._computeLine(line));
-        if (line.mode === 'create') {
-            return Promise.all(defs).then(function () {
-                return self.createProposition(handle);
-            });
-        } else if (line.mode === 'match') {
-            return Promise.all(defs).then(function () {
-                return self._performMoveLine(handle);
-            });
-        }
-        return Promise.all(defs);
+        return Promise.all(defs).then(function() {
+            return self.changeMode(handle, line.mode, true);
+        })
     },
     getPartialReconcileAmount: function(handle, data) {
         var line = this.getLine(handle);
@@ -730,6 +745,7 @@ var StatementModel = BasicModel.extend({
     /**
      * Format the value and send it to 'account.reconciliation.widget' model
      * Update the number of validated lines
+     * overridden in ManualModel
      *
      * @param {(string|string[])} handle
      * @returns {Promise<Object>} resolved with an object who contains
@@ -737,6 +753,7 @@ var StatementModel = BasicModel.extend({
      */
     validate: function (handle) {
         var self = this;
+        this.display_context = 'validate';
         var handles = [];
         if (handle) {
             handles = [handle];
@@ -799,6 +816,17 @@ var StatementModel = BasicModel.extend({
                 line.reconciled = true;
                 self.valuenow++;
             }));
+
+            _.each(self.lines, function(other_line) {
+                if (other_line != line) {
+                    var filtered_prop = other_line.reconciliation_proposition.filter(p => !line.reconciliation_proposition.map(l => l.id).includes(p.id));
+                    if (filtered_prop.length != other_line.reconciliation_proposition.length) {
+                        other_line.need_update = true;
+                        other_line.reconciliation_proposition = filtered_prop;
+                    }
+                    self._computeLine(line);
+                }
+            })
         });
 
         return Promise.all(handlesPromises).then(function() {
@@ -874,6 +902,7 @@ var StatementModel = BasicModel.extend({
      * Calculates the balance; format each proposition amount_str and mark as
      * invalid the line with empty account_id, amount or label
      * Check the taxes server side for each updated propositions with tax_ids
+     * extended by ManualModel
      *
      * @private
      * @param {Object} line
@@ -1036,6 +1065,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Format each propositions (amount, label, account_id)
+     * extended in ManualModel
      *
      * @private
      * @param {Object} line
@@ -1055,6 +1085,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Format each server lines and propositions and compute all lines
+     * overridden in ManualModel
      *
      * @see '_computeLine'
      *
@@ -1119,6 +1150,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Format the server value then compute the line
+     * overridden in ManualModel
      *
      * @see '_computeLine'
      *
@@ -1127,20 +1159,20 @@ var StatementModel = BasicModel.extend({
      * @param {Object[]} mv_lines
      * @returns {Promise}
      */
-    _formatMoveLine: function (handle, mv_lines) {
+    _formatMoveLine: function (handle, mode, mv_lines) {
         var self = this;
         var line = this.getLine(handle);
         if (line.offset === 0 || line.limit_override) {
-            line.mv_lines = mv_lines;
+            line['mv_lines_'+mode] = mv_lines;
             delete line.limit_override;
         } else {
-            line.mv_lines = line.mv_lines.concat(mv_lines);
+            line['mv_lines_'+mode] = line['mv_lines_'+mode].concat(mv_lines);
         }
         this._formatLineProposition(line, mv_lines);
 
-        if (line.mode !== 'create' && !line.mv_lines.length && !line.filter.length) {
-            line.mode = this.avoidCreate || !line.balance.amount ? 'inactive' : 'create';
-            if (line.mode === 'create') {
+        if ((line.mode == 'match_other' || line.mode == "match_rp") && !line['mv_lines_'+mode].length && !line['filter_'+mode].length) {
+            line.mode = self._getDefaultMode(handle);
+            if (line.mode !== 'match_rp' && line.mode !== 'match_other' && line.mode !== 'inactive') {
                 return this._computeLine(line).then(function () {
                     return self.createProposition(handle);
                 });
@@ -1150,8 +1182,39 @@ var StatementModel = BasicModel.extend({
         }
     },
     /**
+     * overridden in ManualModel
+     */
+    _getDefaultMode: function(handle) {
+        var line = this.getLine(handle);
+        if (line.balance.amount === 0
+            && (!line.st_line.mv_lines_match_rp || line.st_line.mv_lines_match_rp.length === 0)
+            && (!line.st_line.mv_lines_match_other || line.st_line.mv_lines_match_other.length === 0)) {
+            return 'inactive';
+        }
+        if (line.mv_lines_match_rp && line.mv_lines_match_rp.length) {
+            return 'match_rp';
+        }
+        if (line.mv_lines_match_other && line.mv_lines_match_other.length) {
+            return 'match_other';
+        }
+        return 'create';
+    },
+    _getAvailableModes: function(handle) {
+        var line = this.getLine(handle);
+        var modes = []
+        if (line.mv_lines_match_rp && line.mv_lines_match_rp.length) {
+            modes.push('match_rp')
+        }
+        if (line.mv_lines_match_other && line.mv_lines_match_other.length) {
+            modes.push('match_other')
+        }
+        modes.push('create')
+        return modes
+    },
+    /**
      * Apply default values for the proposition, format datas and format the
      * base_amount with the decimal number from the currency
+     * extended in ManualModel
      *
      * @private
      * @param {Object} line
@@ -1224,6 +1287,7 @@ var StatementModel = BasicModel.extend({
      * Defined whether the line is to be displayed or not. Here, we only display
      * the line if it comes from the server or if an account is defined when it
      * is created
+     * extended in ManualModel
      *
      * @private
      * @param {object} prop
@@ -1233,6 +1297,7 @@ var StatementModel = BasicModel.extend({
         return !isNaN(prop.id) || !!prop.account_id;
     },
     /**
+     * extended in ManualModel
      * @private
      * @param {object} prop
      * @returns {Boolean}
@@ -1242,6 +1307,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Fetch 'account.reconciliation.widget' propositions.
+     * overridden in ManualModel
      *
      * @see '_formatMoveLine'
      *
@@ -1249,14 +1315,12 @@ var StatementModel = BasicModel.extend({
      * @param {string} handle
      * @returns {Promise}
      */
-    _performMoveLine: function (handle) {
+    _performMoveLine: function (handle, mode) {
         var line = this.getLine(handle);
-        var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
-            return _.map(line.reconciliation_proposition, function (prop) {
-                return _.isNumber(prop.id) ? prop.id : null;
-            });
-        })));
-        var filter = line.filter || "";
+        var excluded_ids = _.map(line.reconciliation_proposition, function (prop) {
+            return _.isNumber(prop.id) ? prop.id : null;
+        }).filter(id => id != null);
+        var filter = line['filter_'+mode] || "";
         var limit = this.limitMoveLines;
         var offset = line.offset;
         if (line.limit_override) {
@@ -1270,13 +1334,14 @@ var StatementModel = BasicModel.extend({
         return this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_bank_statement_line',
-                args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
+                args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit, mode === 'match_rp' ? 'rp' : 'other'],
                 context: this.context,
             })
-            .then(this._formatMoveLine.bind(this, handle));
+            .then(this._formatMoveLine.bind(this, handle, mode));
     },
     /**
      * format the proposition to send information server side
+     * extended in ManualModel
      *
      * @private
      * @param {object} line
@@ -1320,6 +1385,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     _validatePostProcess: function (data) {
+        var self = this;
         return Promise.resolve();
     },
 });
@@ -1331,6 +1397,8 @@ var StatementModel = BasicModel.extend({
  */
 var ManualModel = StatementModel.extend({
     quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_ids', 'force_tax_included', 'analytic_tag_ids', 'date', 'to_check'],
+
+    modes: ['create', 'match'],
 
     //--------------------------------------------------------------------------
     // Public
@@ -1445,6 +1513,7 @@ var ManualModel = StatementModel.extend({
     },
     /**
      * Load more partners/accounts
+     * overridden in ManualModel
      *
      * @param {integer} qty quantity to load
      * @returns {Promise}
@@ -1541,8 +1610,8 @@ var ManualModel = StatementModel.extend({
                 }
                 line.filter = "";
                 line.offset = 0;
-                defs.push(self._performMoveLine(handle).then(function () {
-                    if(!line.mv_lines.length) {
+                defs.push(self._performMoveLine(handle, 'match').then(function () {
+                    if(!line.mv_lines_match.length) {
                         self.valuenow++;
                         reconciled.push(handle);
                         line.reconciled = true;
@@ -1565,6 +1634,28 @@ var ManualModel = StatementModel.extend({
                 return {reconciled: reconciled, updated: _.difference(handles, reconciled)};
             });
         });
+    },
+    removeProposition: function (handle, id) {
+        var self = this;
+        var line = this.getLine(handle);
+        var defs = [];
+        // new limit = previous limit + 1, the one put back
+        var prop = _.find(line.reconciliation_proposition, {'id' : id});
+        if (prop) {
+            line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
+                return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
+            });
+            line.mv_lines_match.unshift(prop);
+
+            // No proposition left and then, reset the st_line partner.
+            if(line.reconciliation_proposition.length == 0 && line.st_line.has_no_partner)
+                defs.push(self.changePartner(line.handle));
+        }
+        line.mode = (id || line.mode !== "create") && isNaN(id) ? 'create' : 'match';
+        defs.push(this._computeLine(line));
+        return Promise.all(defs).then(function() {
+            return self.changeMode(handle, line.mode, true);
+        })
     },
 
     //--------------------------------------------------------------------------
@@ -1686,13 +1777,11 @@ var ManualModel = StatementModel.extend({
      * @param {string} handle
      * @returns {Promise}
      */
-    _performMoveLine: function (handle) {
+    _performMoveLine: function (handle, mode) {
         var line = this.getLine(handle);
-        var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
-            return _.map(line.reconciliation_proposition, function (prop) {
-                return _.isNumber(prop.id) ? prop.id : null;
-            });
-        })));
+        var excluded_ids = _.map(line.reconciliation_proposition, function (prop) {
+            return _.isNumber(prop.id) ? prop.id : null;
+        }).filter(id => id != null);
         var filter = line.filter || "";
         var limit = this.limitMoveLines;
         var offset = line.offset;
@@ -1707,13 +1796,42 @@ var ManualModel = StatementModel.extend({
                 args: args,
                 context: this.context,
             })
-            .then(this._formatMoveLine.bind(this, handle));
+            .then(this._formatMoveLine.bind(this, handle, ''));
     },
 
     _formatToProcessReconciliation: function (line, prop) {
         var result = this._super(line, prop);
         result['date'] = prop.date;
         return result;
+    },
+    _getDefaultMode: function(handle) {
+        var line = this.getLine(handle);
+        if (line.balance.amount === 0 && (!line.st_line.mv_lines_match || line.st_line.mv_lines_match.length === 0)) {
+            return 'inactive';
+        }
+        return line.mv_lines_match.length > 0 ? 'match' : 'create';
+    },
+    _formatMoveLine: function (handle, mode, mv_lines) {
+        var self = this;
+        var line = this.getLine(handle);
+        if (line.offset === 0 || line.limit_override) {
+            line.mv_lines_match = mv_lines;
+            delete line.limit_override;
+        } else {
+            line.mv_lines_match = line.mv_lines_match.concat(mv_lines);
+        }
+        this._formatLineProposition(line, mv_lines);
+
+        if (line.mode !== 'create' && !line.mv_lines_match.length && !line.filter.length) {
+            line.mode = this.avoidCreate || !line.balance.amount ? 'inactive' : 'create';
+            if (line.mode === 'create') {
+                return this._computeLine(line).then(function () {
+                    return self.createProposition(handle);
+                });
+            }
+        } else {
+            return this._computeLine(line);
+        }
     },
 });
 

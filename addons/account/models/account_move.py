@@ -970,11 +970,12 @@ class AccountMove(models.Model):
                 amount_currency = 0.0
 
             for line in move.line_ids:
-                to_write.append((1, line.id, {
-                    'debit': line.balance > 0.0 and balance or 0.0,
-                    'credit': line.balance < 0.0 and balance or 0.0,
-                    'amount_currency': line.balance > 0.0 and amount_currency or -amount_currency,
-                }))
+                if abs(line.balance) != balance:
+                    to_write.append((1, line.id, {
+                        'debit': line.balance > 0.0 and balance or 0.0,
+                        'credit': line.balance < 0.0 and balance or 0.0,
+                        'amount_currency': line.balance > 0.0 and amount_currency or -amount_currency,
+                    }))
 
             move.write({'line_ids': to_write})
 
@@ -1121,7 +1122,7 @@ class AccountMove(models.Model):
                         'id': line.id,
                         'position': currency_id.position,
                         'digits': [69, move.currency_id.decimal_places],
-                        'payment_date': fields.Date.to_string(line.date), 
+                        'payment_date': fields.Date.to_string(line.date),
                     })
                 info['title'] = type_payment
                 move.invoice_outstanding_credits_debits_widget = json.dumps(info)
@@ -2036,9 +2037,9 @@ class AccountMove(models.Model):
     def action_switch_invoice_into_refund_credit_note(self):
         if any(move.type not in ('in_invoice', 'out_invoice') for move in self):
             raise ValidationError(_("This action isn't available for this document."))
-        
+
         for move in self:
-            move.type = move.type.replace('invoice', 'refund')       
+            move.type = move.type.replace('invoice', 'refund')
             reversed_move = move._reverse_move_vals({}, False)
             new_invoice_line_ids = []
             for cmd, virtualid, line_vals in reversed_move['line_ids']:

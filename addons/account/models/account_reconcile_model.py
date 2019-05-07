@@ -681,8 +681,6 @@ class AccountReconcileModel(models.Model):
                 if not grouped_candidates.get(line.id) or not grouped_candidates[line.id].get(model.id):
                     continue
 
-                excluded_lines_found = False
-
                 if model.rule_type == 'invoice_matching':
                     candidates = grouped_candidates[line.id][model.id]
 
@@ -690,18 +688,26 @@ class AccountReconcileModel(models.Model):
                     # Otherwise, suggest all invoices having the same partner.
                     # N.B: The only way to match a line without a partner is through the communication.
                     first_batch_candidates = []
+                    first_batch_candidates_proposed = []
                     second_batch_candidates = []
+                    second_batch_candidates_proposed = []
                     for c in candidates:
                         # Don't take into account already reconciled lines.
                         if c['aml_id'] in reconciled_amls_ids:
                             continue
 
                         # Dispatch candidates between lines matching invoices with the communication or only the partner.
-                        if c['communication_flag']:
-                            first_batch_candidates.append(c)
+                        elif c['communication_flag']:
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                first_batch_candidates_proposed.append(c)
+                            else:
+                                first_batch_candidates.append(c)
                         elif not first_batch_candidates:
-                            second_batch_candidates.append(c)
-                    available_candidates = first_batch_candidates or second_batch_candidates
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                second_batch_candidates_proposed.append(c)
+                            else:
+                                second_batch_candidates.append(c)
+                    available_candidates = first_batch_candidates + first_batch_candidates_proposed or second_batch_candidates + second_batch_candidates_proposed
 
                     # Special case: the amount are the same, submit the line directly.
                     for c in available_candidates:
@@ -717,19 +723,8 @@ class AccountReconcileModel(models.Model):
 
                         # Add candidates to the result.
                         for candidate in available_candidates:
-
-                            # Special case: the propositions match the rule but some of them are already consumed by
-                            # another one. Then, suggest the remaining propositions to the user but don't make any
-                            # automatic reconciliation.
-                            if candidate['aml_id'] in amls_ids_to_exclude:
-                                excluded_lines_found = True
-                                continue
-
                             results[line.id]['aml_ids'].append(candidate['aml_id'])
                             amls_ids_to_exclude.add(candidate['aml_id'])
-
-                        if excluded_lines_found:
-                            break
 
                         # Create write-off lines.
                         move_lines = self.env['account.move.line'].browse(results[line.id]['aml_ids'])

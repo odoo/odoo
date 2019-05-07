@@ -5,6 +5,7 @@ var AbstractAction = require('web.AbstractAction');
 var ReconciliationModel = require('account.ReconciliationModel');
 var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var core = require('web.core');
+var QWeb = core.qweb;
 
 
 /**
@@ -12,6 +13,8 @@ var core = require('web.core');
  */
 var StatementAction = AbstractAction.extend({
     hasControlPanel: true,
+    withSearchBar: true,
+    loadControlPanel: true,
     title: core._t('Bank Reconciliation'),
     contentTemplate: 'reconciliation',
     custom_events: {
@@ -27,13 +30,11 @@ var StatementAction = AbstractAction.extend({
         quick_create_proposition: '_onAction',
         partial_reconcile: '_onAction',
         validate: '_onValidate',
-        change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
         load_more: '_onLoadMore',
         reload: 'reload',
-    },
-    events: {
-        'change .reconciliation_search_input': '_onSearch',
+        search: '_onSearch',
+        navigation_move:'_onNavigationMove',
     },
     config: _.extend({}, AbstractAction.prototype.config, {
         // used to instantiate the model
@@ -50,6 +51,25 @@ var StatementAction = AbstractAction.extend({
         limitMoveLines: 15,
     }),
 
+    _onNavigationMove: function (ev) {
+        var non_reconciled_keys = _.keys(_.pick(this.model.lines, function(value, key, object) {return !value.reconciled}));
+        var currentIndex = _.indexOf(non_reconciled_keys, ev.data.handle);
+        var widget = false;
+        switch (ev.data.direction) {
+            case 'up':
+            case 'previous':
+                ev.stopPropagation();
+                widget = this._getWidget(non_reconciled_keys[currentIndex-1]);
+                break;
+            case 'down':
+            case 'next':
+                ev.stopPropagation();
+                widget = this._getWidget(non_reconciled_keys[currentIndex+1]);
+                break;
+        }
+        if (widget) widget.$el.focus();
+    },
+
     /**
      * @override
      * @param {Object} params
@@ -60,6 +80,7 @@ var StatementAction = AbstractAction.extend({
         this._super.apply(this, arguments);
         this.action_manager = parent;
         this.params = params;
+        this.controlPanelParams.modelName = 'account.bank.statement.line';
         this.model = new this.config.Model(this, {
             modelName: "account.reconciliation.widget",
             defaultDisplayQty: params.params && params.params.defaultDisplayQty || this.config.defaultDisplayQty,
@@ -88,31 +109,71 @@ var StatementAction = AbstractAction.extend({
         var self = this;
         var def = this.model.load(this.params.context).then(this._super.bind(this));
         return def.then(function () {
-                var title = self.model.bank_statement_id  && self.model.bank_statement_id.display_name;
-                self._setTitle(title);
-                self.renderer = new self.config.ActionRenderer(self, self.model, {
-                    'bank_statement_id': self.model.bank_statement_id,
-                    'valuenow': self.model.valuenow,
-                    'valuemax': self.model.valuemax,
-                    'defaultDisplayQty': self.model.defaultDisplayQty,
-                    'title': title,
-                });
+                if (!self.model.context || !self.model.context.active_id) {
+                    self.model.context = {'active_id': self.params.context.active_id};
+                }
+                if (self.params.context.journal_id) {
+                    self.model.context.active_id = self.params.context.journal_id;
+                }
+                if (self.model.context.active_id) {
+                    var promise = self._rpc({
+                            model: 'account.journal',
+                            method: 'read',
+                            args: [self.model.context.active_id, ['display_name']],
+                        });
+                } else {
+                    var promise = Promise.resolve();
+                }
+                return promise.then(function (result) {
+                        var title = result && result[0] ? result[0]['display_name'] : self.params.display_name || ''
+                        self._setTitle(title);
+                        self.renderer = new self.config.ActionRenderer(self, self.model, {
+                            'bank_statement_line_id': self.model.bank_statement_line_id,
+                            'valuenow': self.model.valuenow,
+                            'valuemax': self.model.valuemax,
+                            'defaultDisplayQty': self.model.defaultDisplayQty,
+                            'title': title,
+                        });
+                    });
             });
     },
 
     reload: function() {
         // On reload destroy all rendered line widget, reload data and then rerender widget
         var self = this;
+
+        self.$('.o_reconciliation_lines').addClass('d-none'); // prevent the browser from recomputing css after each destroy for HUGE perf improvement on a lot of lines
         _.each(this.widgets, function(widget) {
             widget.destroy();
         });
         this.widgets = [];
-        this.model.reload()
-            .then(function() {
-                self.$('.o_reconciliation_lines').html('');
-                self._renderLines();
+        self.$('.o_reconciliation_lines').removeClass('d-none');
+        return this.model.reload().then(function() {
+            return self._renderLinesOrRainbow();
+        });
+    },
+
+    _renderLinesOrRainbow: function() {
+        var self = this;
+        return self._renderLines().then(function() {
+            var initialState = self.renderer._initialState;
+            var valuenow = self.model.statement ? self.model.statement.value_min : initialState.valuenow;
+            var valuemax = self.model.statement ? self.model.statement.value_max : initialState.valuemax;
+            // No more lines to reconcile, trigger the rainbowman.
+            if(valuenow === valuemax){
+                initialState.valuenow = valuenow;
+                initialState.context = self.model.getContext();
+                self.renderer.showRainbowMan(initialState);
+                self.remove_cp();
+            }else{
+                // Create a notification if some lines have been reconciled automatically.
+                if(initialState.valuenow > 0)
+                    self.renderer._renderNotifications(self.model.statement.notifications);
                 self._openFirstLine();
-            });
+                self.renderer.$('[data-toggle="tooltip"]').tooltip();
+                self.do_show();
+            }
+        });
     },
 
     /**
@@ -126,19 +187,8 @@ var StatementAction = AbstractAction.extend({
         var sup = this._super;
 
         return this.renderer.prependTo(self.$('.o_form_sheet')).then(function() {
-            return self._renderLines().then(function() {
-                // No more lines to reconcile, trigger the rainbowman.
-                var initialState = self.renderer._initialState;
-                if(initialState.valuenow === initialState.valuemax){
-                    initialState.context = self.model.getContext();
-                    self.renderer.showRainbowMan(initialState);
-                }else{
-                    // Create a notification if some lines has been reconciled automatically.
-                    if(initialState.valuenow > 0)
-                        self.renderer._renderNotifications(self.model.statement.notifications);
-                    self._openFirstLine();
-                }
-
+            return self._renderLinesOrRainbow().then(function() {
+                self.do_show();
                 return sup.apply(self, args);
             });
         });
@@ -152,12 +202,22 @@ var StatementAction = AbstractAction.extend({
     do_show: function () {
         this._super.apply(this, arguments);
         if (this.action_manager) {
-            this.updateControlPanel({clear: true});
-            this.action_manager.do_push_state({
-                action: this.params.tag,
-                active_id: this.params.res_id,
+            this.$pager = $(QWeb.render('reconciliation.control.pager', {widget: this.renderer}));
+            this.updateControlPanel({
+                clear: true,
+                cp_content: {
+                    $pager: this.$pager,
+                },
             });
+            this.renderer.$progress = this.$pager;
+            $(this.renderer.$progress).parent().css('width', '100%').css('padding-left', '0');
         }
+    },
+
+    remove_cp: function() {
+        this.updateControlPanel({
+            clear: true,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -195,13 +255,24 @@ var StatementAction = AbstractAction.extend({
             }))[0];
         if (handle) {
             var line = this.model.getLine(handle);
-            this.model.changeMode(handle, 'match').then(function () {
+            this.model.changeMode(handle, 'default').then(function () {
                 self._getWidget(handle).update(line);
             }).guardedCatch(function(){
                 self._getWidget(handle).update(line);
             });
         }
         return handle;
+    },
+
+    _forceUpdate: function() {
+        var self = this;
+        _.each(this.model.lines, function(handle) {
+            var widget = self._getWidget(handle['handle']);
+            if (widget && handle.need_update) {
+                widget.update(handle);
+                widget.need_update = false;
+            }
+        })
     },
     /**
      * render line widget and append to view
@@ -234,7 +305,8 @@ var StatementAction = AbstractAction.extend({
     /**
      * dispatch on the camelcased event name to model method then update the
      * line renderer with the new state. If the mode was switched from 'inactive'
-     * to 'create' or 'match', the other lines switch to 'inactive' mode
+     * to 'create' or 'match_rp' or 'match_other', the other lines switch to
+     * 'inactive' mode
      *
      * @private
      * @param {OdooEvent} event
@@ -242,11 +314,13 @@ var StatementAction = AbstractAction.extend({
     _onAction: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var line = this.model.getLine(handle);
-        var mode = line.mode;
+        var current_line = this.model.getLine(handle);
         this.model[_.str.camelize(event.name)](handle, event.data.data).then(function () {
-            self._getWidget(handle).update(line);
-            if (mode === 'inactive' && line.mode !== 'inactive') {
+            var widget = self._getWidget(handle);
+            if (widget) {
+                widget.update(current_line);
+            }
+            if (current_line.mode !== 'inactive') {
                 _.each(self.model.lines, function (line, _handle) {
                     if (line.mode !== 'inactive' && _handle !== handle) {
                         self.model.changeMode(_handle, 'inactive');
@@ -267,7 +341,14 @@ var StatementAction = AbstractAction.extend({
     _onSearch: function (ev) {
         var self = this;
         ev.stopPropagation();
-        this.reload();
+        this.model.domain = ev.data.domain;
+        this.model.display_context = 'search';
+        self.reload().then(function() {
+            self.renderer._updateProgressBar({
+                'valuenow': self.model.valuenow,
+                'valuemax': self.model.valuemax,
+            });
+        });
     },
 
     _onActionPartialAmount: function(event) {
@@ -278,25 +359,6 @@ var StatementAction = AbstractAction.extend({
         self._getWidget(handle).updatePartialAmount(event.data.data, amount);
     },
 
-    /**
-     * call 'changeName' model method
-     *
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onChangeName: function (event) {
-        var self = this;
-        var title = event.data.data;
-        this.model.changeName(title).then(function () {
-            self.title = title;
-            self.set("title", title);
-            self.renderer.update({
-                'valuenow': self.model.valuenow,
-                'valuemax': self.model.valuemax,
-                'title': title,
-            });
-        });
-    },
     /**
      * call 'closeStatement' model method
      *
@@ -314,6 +376,7 @@ var StatementAction = AbstractAction.extend({
                 type: 'ir.actions.act_window',
                 view_mode: 'form',
             });
+            $('.o_reward').remove();
         });
     },
     /**
@@ -344,6 +407,7 @@ var StatementAction = AbstractAction.extend({
                 'notifications': result.notifications,
                 'context': self.model.getContext(),
             });
+            self._forceUpdate();
             _.each(result.handles, function (handle) {
                 var widget = self._getWidget(handle);
                 if (widget) {
@@ -370,6 +434,7 @@ var StatementAction = AbstractAction.extend({
  */
 var ManualAction = StatementAction.extend({
     title: core._t('Journal Items to Reconcile'),
+    withSearchBar: false,
     config: _.extend({}, StatementAction.prototype.config, {
         Model: ReconciliationModel.ManualModel,
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
