@@ -705,20 +705,23 @@ class AccountMoveLine(models.Model):
             return rec
 
         #compute the default credit/debit of the next line in case of a manual entry
+        move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
         balance = 0
-        for line in self.move_id.resolve_2many_commands(
-                'line_ids', self._context['line_ids'], fields=['credit', 'debit']):
-            balance += line.get('debit', 0) - line.get('credit', 0)
-        if len(self._context['line_ids']) > 1:
-            lines = self.move_id.resolve_2many_commands('line_ids', self._context['line_ids'][-2:], fields=['partner_id', 'account_id'])
-            if lines[0].get('partner_id', False) == lines[1].get('partner_id', False):
-                rec.update({'partner_id': lines[0].get('partner_id', False)})
-            if lines[0].get('account_id', False) == lines[1].get('account_id', False):
-                rec.update({'account_id': lines[0].get('account_id', False)})
+        for line in move.line_ids:
+            balance += line.debit - line.credit
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:
             rec.update({'credit': balance})
+
+        # Set the partner/account to the same value as the two last lines if they are equal
+        if len(move.line_ids) > 1:
+            last_lines = move.line_ids[-2:]
+            if last_lines[0].account_id == last_lines[1].account_id:
+                rec['account_id'] = last_lines[0].account_id.id
+            if last_lines[0].partner_id == last_lines[1].partner_id:
+                rec['partner_id'] = last_lines[0].partner_id.id
+
         return rec
 
     @api.multi
