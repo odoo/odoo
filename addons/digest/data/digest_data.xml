@@ -15,7 +15,7 @@
             <field name="sequence">1</field>
             <field name="tip_description" type="html">
 <div>
-    % set users = object.env['res.users'].search([], limit=10, order='id desc')
+    % set users = object.env['res.users'].search([('share', '=' , False)], limit=10, order='id desc')
     % set channel_id = object.env.ref('mail.channel_all_employees').id
     <strong style="font-size: 16px;">Did you know...?</strong>
     <div style="font-size: 14px;">You can ping colleagues by tagging them in your messages using "@". They will be instantly notified.<br/>
