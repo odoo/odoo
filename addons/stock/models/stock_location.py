@@ -42,7 +42,7 @@ class Location(models.Model):
              "\n* Internal Location: Physical locations inside your own warehouses,"
              "\n* Customer Location: Virtual location representing the destination location for products sent to your customers"
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
-             "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
+             "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',

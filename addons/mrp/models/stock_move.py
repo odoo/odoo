@@ -59,7 +59,7 @@ class StockMove(models.Model):
     production_id = fields.Many2one(
         'mrp.production', 'Production Order for finished products')
     raw_material_production_id = fields.Many2one(
-        'mrp.production', 'Production Order for raw materials')
+        'mrp.production', 'Production Order for components')
     unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Disassembly Order')
     consume_unbuild_id = fields.Many2one(
