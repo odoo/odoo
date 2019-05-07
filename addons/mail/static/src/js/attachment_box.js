@@ -35,7 +35,8 @@ var AttachmentBox = Widget.extend({
 
         _.each(attachments, function (attachment) {
             // required for compatibility with the chatter templates.
-            attachment.url = '/web/content/' + attachment.id + '?download=true';
+            if (attachment.type === 'binary' || attachment.url == false)
+                attachment.url = '/web/content/' + attachment.id + '?download=true';
             attachment.filename = attachment.datas_fname || 'unnamed';
         });
         var sortedAttachments = _.partition(attachments, function (att) {

@@ -47,9 +47,9 @@ var DocumentViewer = Widget.extend({
         var match = attachment.type == 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
 
             if (match) {
-                attachment.type = match[1];
+                attachment.file_type = match[1];
                 if (match[1].match("(.png|.jpg|.gif)")) {
-                    attachment.type = 'image';
+                    attachment.file_type = 'image';
                 }
                 if (match[1] === 'youtu') {
                     var youtube_array = attachment.url.split('/');
@@ -200,7 +200,10 @@ var DocumentViewer = Widget.extend({
      */
     _onDownload: function (e) {
         e.preventDefault();
-        window.location = '/web/content/' + this.activeAttachment.id + '?download=true';
+        if (this.activeAttachment.type === 'url')
+            window.open(this.activeAttachment.url, '_blank');
+        else
+            window.location = '/web/content/' + this.activeAttachment.id + '?download=true';
     },
     /**
      * @private

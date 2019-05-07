@@ -37,12 +37,14 @@
         <div class="o_viewer_content">
             <div class="o_viewer-header">
                 <span class="o_image_caption">
-                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.type == 'image'" role="img" aria-label="Image" title="Image"/>
-                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.type == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
-                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.file_type == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.file_type == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.file_type == 'video'" role="img" aria-label="Video" title="Video"/>
                     <t t-esc="widget.activeAttachment.name"/>
-                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
-                    <span t-if="widget.activeAttachment.type == 'application/pdf'" class="o_split_pdf_area">
+                    <t t-set="type_url" t-value="widget.activeAttachment.type === 'url'"/>
+                    <a t-if="type_url" role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Open"><i class="fa fa-fw fa-globe" role="img" aria-label="Open"/></a>
+                    <a t-else="" role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <span t-if="widget.activeAttachment.file_type == 'application/pdf'" class="o_split_pdf_area">
                         <label for="Indices">Extract pages:&amp;nbsp;</label><input class="o_page_number_input" name="Indices" placeholder="e.g. 1-5, 7, 8-9"/>
                         <label for="remainder">All pages:&amp;nbsp;</label><input class="o_remainder_input" type="checkbox" name="remainder" value="remainder"/>
                         <button class="btn btn-sm btn-primary o_split_btn" data-toggle="tooltip" title="Split">Split</button>
@@ -52,19 +54,19 @@
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
-                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
+                    <div t-if="widget.activeAttachment.file_type == 'image'" class="o_loading_img text-center">
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
-                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}" alt="Viewer"/>
-                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
-                    <iframe class="mt32 o_viewer_text" t-if="(widget.activeAttachment.type || '').indexOf('text') !== -1" t-attf-src="/web/content/#{widget.activeAttachment.id}" />
-                    <iframe class="mt32 o_viewer_text" t-if="widget.activeAttachment.type == 'youtu'" allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
-                    <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
+                    <img t-if="widget.activeAttachment.file_type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}" alt="Viewer"/>
+                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.file_type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_text" t-if="(widget.activeAttachment.file_type || '').indexOf('text') !== -1" t-attf-src="/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_text" t-if="widget.activeAttachment.file_type == 'youtu'" allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
+                    <video t-if="widget.activeAttachment.file_type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
                 </div>
             </div>
-            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
+            <div t-if="widget.activeAttachment.file_type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
                 <div class="btn-group ml0" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
@@ -75,7 +77,9 @@
                 </div>
                 <div class="btn-group ml8" role="group">
                     <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <t t-set="type_url" t-value="widget.activeAttachment.type === 'url'"/>
+                    <a t-if="type_url" role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Open"><i class="fa fa-fw fa-globe" role="img" aria-label="Open"/></a>
+                    <a t-else="" role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </div>
             </div>
         </div>
@@ -479,7 +483,11 @@
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
                         <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
-                        <a class="o_attachment_download" t-att-href='attachment.url'>
+                        <t t-set="type_url" t-value="attachment.type === 'url'"/>
+                        <a t-if="type_url" class="o_attachment_download" t-att-href='attachment.url' target="'_blank'">
+                            <i t-attf-class="fa fa-globe text-white" t-att-title="'Open ' + attachment.url" role="img" aria-label="Open"></i>
+                        </a>
+                        <a t-else="" class="o_attachment_download" t-att-href='attachment.url'>
                             <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
                         </a>
                     </div>
@@ -502,7 +510,9 @@
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
                 <span t-if="!editable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
-                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
+                <t t-set="type_url" t-value="attachment.type === 'url'"/>
+                <t t-set="match" t-value="type_url ? attachment.url.match('(youtu|.png|.jpg|.gif)') : attachment.mimetype.match('(image|video|application/pdf|text)')"/>
+                <t t-set="has_preview" t-value="match ? true : false"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
                 <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
@@ -511,7 +521,7 @@
                          t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
                          t-att-data-mimetype="attachment.mimetype">
                     </div>
-                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download">
+                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download" t-att-target="type_url ? '_blank' : ''">
                         <span class="o_image o_hover" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
                     </a>
                     <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext" role="img" aria-label="Document not downloadable"/>
@@ -519,7 +529,7 @@
 
                 <div class="caption">
                     <span t-if="has_preview or editable" t-attf-class="ml4 #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc='attachment.name'/></span>
-                    <a t-else="" class="ml4" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><t t-esc='attachment.name'/></a>
+                    <a t-else="" class="ml4" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name" t-att-target="type_url ? '_blank' : ''"><t t-esc='attachment.name'/></a>
                 </div>
                 <div t-if="editable" class="caption small">
                     <b t-attf-class="ml4 small text-uppercase #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
@@ -528,9 +538,12 @@
                     </div>
                 </div>
                 <div t-if="!editable" class="caption small">
-                    <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
-                    <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                    <t t-if="!type_url">
+                        <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
+                        <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
+                    </t>
+                    <a t-if="type_url" class="ml4 float-right" t-att-title="'Open ' + attachment.url" t-att-href='attachment.url' target="_blank"><i t-attf-class="fa fa-globe" role="img" aria-label="Open"/></a>
+                    <a t-else="" class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
                 </div>
                 <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
