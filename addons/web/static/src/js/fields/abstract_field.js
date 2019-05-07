@@ -77,6 +77,11 @@ var AbstractField = Widget.extend({
      */
     description: "",
     /**
+     * Currently only used in list view.
+     * If this flag is set to true, the list column name will be empty.
+     */
+    noLabel: false,
+    /**
      * Abstract field class
      *
      * @constructor
