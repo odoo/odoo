@@ -2,10 +2,11 @@
     .o_graph_container {
         height: 100%;
         overflow: auto;
+        display: flex;
         .o_graph_svg_container {
             direction: ltr#{"/*rtl:ignore*/"};
             height: 100%;
-            overflow: auto;
+            flex: 1 1 auto;
             svg {
                 background-color: $o-view-background-color;
                 .nv-y {
@@ -32,6 +33,9 @@
                         text-anchor: end !important;
                     }
                 }
+            }
+            label {
+                position: absolute;
             }
 
             /* Use less than 50% of the screen area for tooltip and show legends in 3 column of 33% each */
