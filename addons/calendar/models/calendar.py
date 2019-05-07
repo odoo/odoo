@@ -323,6 +323,12 @@ class AlarmManager(models.AbstractModel):
                 'rrule': rule
             }
 
+        # determine accessible events
+        events = self.env['calendar.event'].browse(result)
+        result = {
+            key: result[key]
+            for key in set(events._filter_access_rules('read').ids)
+        }
         return result
 
     def do_check_alarm_for_one_date(self, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False):
