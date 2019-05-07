@@ -20,6 +20,7 @@
             - 'acquirers' the list of both server2server and form payment acquirers
             - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
             - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
+            - 'show_manage_btn' if True, a button is added in the footer to manage payment methods
         -->
         <form t-if="pms or acquirers" method="post" class="o_payment_form mt-3 clearfix"
                 t-att-action="form_action if form_action else '#'"
@@ -145,6 +146,9 @@
                         <i class="fa fa-lock"/> Pay
                     </t>
                 </button>
+                <t t-if="show_manage_btn">
+                    <a class="btn btn-link mb8 mt8" href="/my/payment_method">Manage your payment methods</a>
+                </t>
                 <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"/> Add new card
                 </button>
