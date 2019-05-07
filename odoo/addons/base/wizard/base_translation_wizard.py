@@ -14,7 +14,7 @@ class TranslationWizard(models.TransientModel):
         res = super(TranslationWizard, self).default_get(fields_list)
         IrTranslation = self.env['ir.translation']
 
-        domain = self._prepare_domain_to_get_records()
+        domain = self._prepare_translation_domain()
         translations = IrTranslation.search(domain)
         res['translation_lines'] = [(0, False, {
             'value': line.value or line.source,
@@ -23,7 +23,7 @@ class TranslationWizard(models.TransientModel):
         }) for line in translations]
         return res
 
-    def _prepare_domain_to_get_records(self):
+    def _prepare_translation_domain(self):
         """ Prepares domain to find records from ir.translation for given field in context
         """
         model = self.env.context['default_model']
