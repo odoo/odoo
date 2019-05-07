@@ -512,6 +512,18 @@ class Task(models.Model):
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
+    @api.model
+    def write_by_domain(self, domain, vals, **kw):
+        if self._context.get('active_id'):
+            domain.append(['project_id', '=', self._context.get('active_id')])
+        return super(Task, self).write_by_domain(domain, vals, **kw)
+
+    @api.model
+    def get_record_count(self, **kw):
+        if self._context.get('active_id') and kw.get('domain'):
+            kw['domain'].append(['project_id', '=', self._context.get('active_id')])
+        return super(Task, self).get_record_count(**kw)
+
     @api.multi
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):

@@ -265,6 +265,31 @@ var KanbanModel = BasicModel.extend({
         });
     },
     /**
+     * Write multiple records in batch.
+     *
+     * @param {array} domain domain to update records
+     * @param {string} vals values to write
+     * @param {string} parentID localID of the parent
+     * @returns {Deferred}
+     */
+    onWriteByDomain: function (column, vals, parentID, relatedModelName) {
+        var self = this;
+        var parent = this.localData[parentID];
+        var records = _.map([parentID], function (id) { return self.localData[id]; });
+        var domain = [[column.groupedBy, '=', column.id]];
+        return this._rpc({
+            model: parent.model,
+            method: 'write_by_domain',
+            args: [domain, vals],
+            kwargs: {'record_ids': _.pluck(records, 'res_id'), 'related_model': relatedModelName},
+            context: column.data.context,
+        }).then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                self.reload(parentID);
+        });
+    },
+    /**
      * @override
      */
     reload: function (id, options) {
