@@ -926,7 +926,7 @@ QUnit.test("Dashboard should use correct groupby", async function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route, args) {
-            if (args.method === 'read_group') {
+            if (args.method === 'web_read_group') {
                 assert.deepEqual(args.kwargs.groupby, ['bar'],
                     'user defined groupby should have precedence on action groupby');
             }
@@ -950,9 +950,9 @@ QUnit.test("Dashboard should use correct groupby", async function (assert) {
     form.destroy();
 });
 
-QUnit.test("Dashboard should use correct groupby when defined as a string of one field", function (assert) {
+QUnit.test("Dashboard should use correct groupby when defined as a string of one field", async function (assert) {
     assert.expect(1);
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
