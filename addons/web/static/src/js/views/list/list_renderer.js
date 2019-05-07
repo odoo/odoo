@@ -716,7 +716,7 @@ var ListRenderer = BasicRenderer.extend({
                 name: name,
                 string: description || name,
                 record: this.state,
-                attrs: node.attrs,
+                attrs: _.extend({}, node.attrs, this.state.fieldsInfo.list[name]),
             };
             this._addFieldTooltip(fieldDescr, $th);
         } else {
