@@ -162,8 +162,11 @@ class ImLivechatChannel(models.Model):
         operator_partner_id = operator.partner_id.id
         # partner to add to the mail.channel
         channel_partner_to_add = [(4, operator_partner_id)]
-        if self.env.user and self.env.user.active:  # valid session user (not public)
-            channel_partner_to_add.append((4, self.env.user.partner_id.id))
+        visitor_user = False
+        if user_id:
+            visitor_user = self.env['res.users'].browse(user_id)
+            if visitor_user and visitor_user.active:  # valid session user (not public)
+                channel_partner_to_add.append((4, visitor_user.partner_id.id))
         # create the session, and add the link with the given channel
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
             'channel_partner_ids': channel_partner_to_add,
@@ -172,7 +175,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([self.env['res.users'].browse(user_id).name if user_id else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
+            'name': ', '.join([visitor_user.name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
         })
