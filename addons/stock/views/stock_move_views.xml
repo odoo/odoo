@@ -172,7 +172,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="product_uom_qty==qty_done" decoration-danger="qty_done &gt; product_uom_qty and state != 'done'">
+                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="product_uom_qty==qty_done" decoration-danger="qty_done &gt; product_uom_qty and state != 'done' and self.picking_type_id.code != 'incoming'">
                     <field name="picking_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="package_level_id" invisible="1"/>
@@ -187,6 +187,7 @@
                     <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
+                    <field name="picking_code" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|', '|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
                     <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" string="Unit of Measure" groups="uom.group_uom"/>
                 </tree>

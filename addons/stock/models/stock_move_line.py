@@ -42,6 +42,7 @@ class StockMoveLine(models.Model):
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
+    picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
     state = fields.Selection(related='move_id.state', store=True, related_sudo=False, readonly=False)
