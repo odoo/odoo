@@ -78,7 +78,7 @@ class MrpProduction(models.Model):
         'stock.picking.type', 'Operation Type',
         default=_get_default_picking_type, required=True)
     location_src_id = fields.Many2one(
-        'stock.location', 'Raw Materials Location',
+        'stock.location', 'Components Location',
         default=_get_default_location_src_id,
         readonly=True,  required=True,
         states={'draft': [('readonly', False)]},
@@ -115,7 +115,7 @@ class MrpProduction(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
-        help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
+        help="Bill of Materials allow you to define the list of required components to make a finished product.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
         readonly=True, compute='_compute_routing', store=True,
@@ -153,7 +153,7 @@ class MrpProduction(models.Model):
             defined on the BoM.")
 
     move_raw_ids = fields.One2many(
-        'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
+        'stock.move', 'raw_material_production_id', 'Components', oldname='move_lines',
         copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
@@ -735,14 +735,14 @@ class MrpProduction(models.Model):
         return workorders
 
     def _check_lots(self):
-        # Check that the raw materials were consumed for lots that we have produced.
+        # Check that the components were consumed for lots that we have produced.
         if self.product_id.tracking != 'none':
             finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
             raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
             if not (raw_finished_lots <= finished_lots):
                 lots_short = raw_finished_lots - finished_lots
                 error_msg = _(
-                    'Some raw materials have been consumed for a lot/serial number that has not been produced. '
+                    'Some components have been consumed for a lot/serial number that has not been produced. '
                     'Unlock the MO and click on the components lines to correct it.\n'
                     'List of the components:\n'
                 )
