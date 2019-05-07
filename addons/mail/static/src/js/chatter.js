@@ -257,7 +257,7 @@ var Chatter = Widget.extend({
             model: 'ir.attachment',
             method: 'search_read',
             domain: domain,
-            fields: ['id', 'name', 'datas_fname', 'mimetype'],
+            fields: ['id', 'name', 'datas_fname', 'mimetype', 'type', 'url'],
         }).then(function (result) {
             self._areAttachmentsLoaded = true;
             self.attachments = result;
