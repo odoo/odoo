@@ -17,7 +17,7 @@ class TranslationWizard(models.TransientModel):
         domain = self._prepare_translation_domain()
         translations = IrTranslation.search(domain)
         res['translation_lines'] = [(0, False, {
-            'value': line.value or line.source,
+            'value': line.value or '',
             'lang': line.lang,
             'ir_translation_id': line.id,
         }) for line in translations]
