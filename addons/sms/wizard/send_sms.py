@@ -62,24 +62,25 @@ class SendSMS(models.TransientModel):
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
 
-        active_model = self.env.context.get('active_model')
-        model = self.env[active_model]
+        if 'recipients' in fields:
+            active_model = self.env.context.get('active_model')
+            model = self.env[active_model]
 
-        records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients'):
-            partners = records._get_default_sms_recipients()
-            phone_numbers = []
-            no_phone_partners = []
-            for partner in partners:
-                number = self._sms_sanitization(partner, self.env.context.get('field_name') or 'mobile')
-                if number:
-                    phone_numbers.append(number)
-                else:
-                    no_phone_partners.append(partner.name)
-            if len(partners) > 1:
-                if no_phone_partners:
-                    raise UserError(_('Missing mobile number for %s.') % ', '.join(no_phone_partners))
-            result['recipients'] = ', '.join(phone_numbers)
+            records = self._get_records(model)
+            if getattr(records, '_get_default_sms_recipients'):
+                partners = records._get_default_sms_recipients()
+                phone_numbers = []
+                no_phone_partners = []
+                for partner in partners:
+                    number = self._sms_sanitization(partner, self.env.context.get('field_name') or 'mobile')
+                    if number:
+                        phone_numbers.append(number)
+                    else:
+                        no_phone_partners.append(partner.name)
+                if len(partners) > 1:
+                    if no_phone_partners:
+                        raise UserError(_('Missing mobile number for %s.') % ', '.join(no_phone_partners))
+                result['recipients'] = ', '.join(phone_numbers)
         return result
 
     def action_send_sms(self):
