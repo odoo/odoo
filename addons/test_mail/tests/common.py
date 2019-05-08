@@ -27,15 +27,29 @@ class BaseFunctionalTest(common.SavepointCase):
     def setUpClass(cls):
         super(BaseFunctionalTest, cls).setUpClass()
 
-        cls.user_employee = mail_new_test_user(cls.env, login='ernest', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
+        cls.user_employee = mail_new_test_user(cls.env, login='employee', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
         cls.partner_employee = cls.user_employee.partner_id
 
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.partner_admin = cls.env.ref('base.partner_admin')
 
+    @classmethod
+    def _create_channel_listener(cls):
         cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+    @classmethod
+    def _create_portal_user(cls):
+        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        cls.partner_portal = cls.user_portal.partner_id
+
+    @classmethod
+    def _init_mail_gateway(cls):
+        cls.alias_domain = 'test.com'
+        cls.alias_catchall = 'catchall.test'
+        cls.alias_bounce = 'bounce.test'
+        cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
 
     @contextmanager
     def assertNotifications(self, **counters):
@@ -51,6 +65,8 @@ class BaseFunctionalTest(common.SavepointCase):
                     init[partner] = {
                         'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
+            if hasattr(self, '_init_mock_build_email'):
+                self._init_mock_build_email()
             yield
         finally:
             new_notifications = self.env['mail.notification'].sudo().search([
