@@ -128,6 +128,7 @@ class AccountInvoice(models.Model):
             lines_elements = tree.xpath('//cac:InvoiceLine', namespaces=namespaces)
             for eline in lines_elements:
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
+                    invoice_line_form.account_id = invoice_line_form.account_id or self.env['account.account'].browse(self.with_context(journal_id=journal_id.id).env['account.invoice.line']._default_account())
                     # Quantity
                     elements = eline.xpath('cbc:InvoicedQuantity', namespaces=namespaces)
                     quantity = elements and float(elements[0].text) or 1.0
@@ -164,12 +165,11 @@ class AccountInvoice(models.Model):
                     for etax in taxes_elements:
                         elements = etax.xpath('cbc:Percent', namespaces=namespaces)
                         if elements:
-                            tax = self.env['account.tax'].search([('amount', '=', float(elements[0].text)), ('type_tax_use', '=', journal_id.type)], order='sequence ASC', limit=1)
+                            tax = self.env['account.tax'].search([('company_id', '=', self.env.user.company_id.id), ('amount', '=', float(elements[0].text)), ('type_tax_use', '=', journal_id.type)], order='sequence ASC', limit=1)
                             if tax:
                                 invoice_line_form.invoice_line_tax_ids.add(tax)
-                    invoice_line_form.account_id = invoice_line_form.account_id or self.env['account.account'].browse(self.with_context(journal_id=journal_id.id).env['account.invoice.line']._default_account())
 
-        return invoice_form.save
+        return invoice_form.save()
 
     @api.model
     def _get_xml_decoders(self):
