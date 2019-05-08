@@ -51,8 +51,8 @@
                             attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"
                         />
                         <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name" string="Content Title"/>
+                            <div>
+                                <label for="name" string="Name"/>
                             </div>
                             <h1>
                                 <field name="name" default_focus="1" placeholder="Title"/>
@@ -90,7 +90,7 @@
                             <page string="External Links" name="external_links" >
                                 <group>
                                     <field name="link_ids" widget="one2many" nolabel="1">
-                                         <tree editable="top">
+                                        <tree editable="top">
                                             <field name="name"/>
                                             <field name="link" widget="url"/>
                                         </tree>
