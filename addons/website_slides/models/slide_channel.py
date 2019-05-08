@@ -113,16 +113,16 @@ class Channel(models.Model):
         ('most_viewed', 'Most Viewed')],
         string="Featuring Policy", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-    nbr_presentation = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
-    nbr_document = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
-    nbr_video = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
-    nbr_infographic = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
-    nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
+    nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
+    nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
+    nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
+    nbr_webpage = fields.Integer("Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
-    total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True)
-    total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
-    total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
-    total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
+    total_slides = fields.Integer('Content', compute='_compute_slides_statistics', store=True)
+    total_views = fields.Integer('Visits', compute='_compute_slides_statistics', store=True)
+    total_votes = fields.Integer('Votes', compute='_compute_slides_statistics', store=True)
+    total_time = fields.Float('Duration', compute='_compute_slides_statistics', digits=(10, 2), store=True)
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1))
     # configuration
     allow_comment = fields.Boolean(
@@ -131,7 +131,7 @@ class Channel(models.Model):
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
     publish_template_id = fields.Many2one(
-        'mail.template', string='Published Template',
+        'mail.template', string='New Content Email',
         help="Email template to send slide publication through email",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
@@ -169,9 +169,9 @@ class Channel(models.Model):
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
     # Karma based actions
-    karma_review = fields.Integer('Add a review', default=10, help="Karma needed to add a review on the course")
-    karma_slide_comment = fields.Integer('Add a comment', default=3, help="Karma needed to add a comment on a slide of this course")
-    karma_slide_vote = fields.Integer('Vote on slide', default=3, help="Karma needed to like/dislike a slide of this course.")
+    karma_review = fields.Integer('Add Review', default=10, help="Karma needed to add a review on the course")
+    karma_slide_comment = fields.Integer('Add Comment', default=3, help="Karma needed to add a comment on a slide of this course")
+    karma_slide_vote = fields.Integer('Vote', default=3, help="Karma needed to like/dislike a slide of this course.")
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')

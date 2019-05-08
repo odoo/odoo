@@ -45,6 +45,18 @@ class Slide(models.Model):
         ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
+    @api.onchange('survey_id')
+    def _on_change_survey_id(self):
+        if self.survey_id:
+            self.slide_type = 'certification'
+
+    @api.model
+    def create(self, values):
+        rec = super(Slide, self).create(values)
+        if rec.survey_id:
+            rec.slide_type = 'certification'
+        return rec
+
     def _generate_certification_url(self):
         """ get a map of certification url for certification slide from `self`. The url will come from the survey user input:
                 1/ existing and not done user_input for member of the course

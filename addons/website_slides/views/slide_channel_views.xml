@@ -14,12 +14,30 @@
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_redirect_to_done_members"
+                                type="object"
+                                icon="fa-trophy"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="members_done_count" nolabel="1"/></span>
+                                    <span name="stat_label" class="o_stat_text">Finished</span>
+                                </div>
+                            </button>
                             <button name="action_redirect_to_members"
                                 type="object"
                                 icon="fa-users"
                                 class="oe_stat_button"
                                 groups="website.group_website_publisher">
                                 <field name="members_count" string="Attendees" widget="statinfo"/>
+                            </button>
+                             <button name="action_view_ratings"
+                                type="object"
+                                icon="fa-star"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher"
+                                attrs="{'invisible': [('allow_comment', '=', False)]}">
+                                <field name="rating_count" string="Reviews" widget="statinfo"/>
                             </button>
                             <button class="oe_stat_button" name="website_publish_button"
                                     type="object" icon="fa-globe">
@@ -28,74 +46,94 @@
                         </div>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Name"/>
-                            <h1><field name="name" default_focus="1" placeholder="Name"/></h1>
+                            <label for="name" class="oe_edit_only" string="Course Title"/>
+                            <h1><field name="name" default_focus="1" placeholder="Course Title"/></h1>
                         </div>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="enroll" widget="radio" options="{'horizontal': true}"/>
                                 <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
-                                <field name="user_id"/>
                             </group>
                         </group>
                         <notebook colspan="4">
+                            <page string="Content">
+                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" context="{'default_channel_id': active_id}">
+                                     <tree decoration-bf="is_category" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="slide_type" attrs="{'invisible': [('slide_type', '=', 'category')]}"/>
+                                        <field name="completion_time" attrs="{'invisible': [('slide_type', '=', 'category')]}"/>
+                                        <field name="total_views" attrs="{'invisible': [('slide_type', '=', 'category')]}"/>
+                                        <field name="is_category" invisible="1"/>
+
+                                        <control>
+                                            <create name="add_slide_section" string="Add Section" context="{'default_is_category': True}"/>
+                                            <create name="add_slide_lesson" string="Add Content"/>
+                                        </control>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Description">
                                 <field name="description" colspan="4" nolabel="1"/>
                             </page>
                             <page string="Options">
                                 <group>
-                                    <group>
-                                        <field name="channel_type" widget="radio"/>
+                                    <group string="Course">
+                                        <field string="Type" name="channel_type" widget="radio"/>
+                                        <field name="user_id"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                                        <field name="promote_strategy" widget="radio"/>
                                     </group>
-                                    <group>
-                                        <field name="upload_group_ids" widget="many2many_tags"/>
+                                    <group string="Access Rights">
+                                        <field name="enroll" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="upload_group_ids" string="New Content" widget="many2many_tags"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                                        <field name="visibility"  widget="radio" groups="base.group_no_one"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Communication">
+                                        <field string="Allow Rating" name="allow_comment"/>
                                         <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]"/>
                                     </group>
+                                    <group string="Display">
+                                        <field name="visibility" widget="radio"/>
+                                        <field name="promote_strategy" widget="radio"/>
+                                    </group>
                                 </group>
-                                <group colspan="4">
+                                <div attrs="{'invisible': [('enroll', '!=', 'invite')]}">
                                     <label for="enroll_msg"/>
                                     <field name="enroll_msg" colspan="4" nolabel="1"/>
-                                </group>
-                            </page>
-                            <page string="Communication">
-                                <group>
-                                    <field name="allow_comment"/>
-                                </group>
+                                </div>
                             </page>
                             <page string="Karma Rules" name="karma_rules">
                                 <group>
-                                    <group string="Karma generation">
-                                        <field name="karma_gen_slide_vote"/>
-                                        <field name="karma_gen_channel_rank"/>
-                                        <field name="karma_gen_channel_finish"/>
-                                    </group>
-                                    <group string="Karma based actions">
-                                        <field name="karma_review"/>
-                                        <field name="karma_slide_comment"/>
-                                        <field name="karma_slide_vote"/>
-                                    </group>
+                                    <field name="karma_gen_channel_rank" string="Rank Course"/>
+                                    <field name="karma_gen_channel_finish" string="Finish Course"/>
+                                    <field name="karma_review" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
+                                    <field name="karma_slide_comment" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
+                                    <field name="karma_slide_vote" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
                                 </group>
                             </page>
-                            <page string="Statistics" groups="base.group_no_one">
+                            <page string="Statistics">
                                 <group>
-                                    <group>
+                                    <group class="col-4">
                                         <field name="nbr_presentation"/>
                                         <field name="nbr_document"/>
                                         <field name="nbr_video"/>
                                         <field name="nbr_infographic"/>
+                                        <field name="nbr_quiz" string="Quizzes"/>
                                         <field name="nbr_webpage"/>
+                                        <separator/>
                                         <field name="total_slides"/>
                                     </group>
                                     <group>
-                                        <field name="total_views"/>
-                                        <field name="total_votes"/>
-                                        <field name="total_time"/>
+                                        <field name="total_views" string="Visits"/>
+                                        <field string="Rating" name="rating_avg" widget="field_float_rating"/>
+                                        <label for="total_time" string="Watch Time"/>
+                                        <div>
+                                            <field name="total_time"/>
+                                            <span class="ml-2">Hours</span>
+                                        </div>
                                     </group>
                                 </group>
                             </page>
