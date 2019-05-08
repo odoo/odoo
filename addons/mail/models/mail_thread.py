@@ -1923,7 +1923,7 @@ class MailThread(models.AbstractModel):
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
-    def message_post_with_template(self, template_id, email_layout_xmlid=None, **kwargs):
+    def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
             :param template_id : the id of the template to render to create the body of the message
             :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
@@ -1952,7 +1952,7 @@ class MailThread(models.AbstractModel):
         if template_id:
             update_values = composer.onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
             composer.write(update_values)
-        return composer.send_mail()
+        return composer.send_mail(auto_commit=auto_commit)
 
     def message_notify(self, partner_ids=False, parent_id=False, model=False, res_id=False,
                        author_id=None, email_from=None, body='', subject=False, **kwargs):
