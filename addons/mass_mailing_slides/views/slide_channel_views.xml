@@ -5,7 +5,7 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_redirect_to_members']" position="before">
+            <xpath expr="//button[@name='action_redirect_to_done_members']" position="before">
                 <button class="oe_stat_button" type="object"
                         name="action_mass_mailing_attendees"
                         icon="fa-envelope-o"
