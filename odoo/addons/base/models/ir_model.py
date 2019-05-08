@@ -1211,7 +1211,7 @@ class IrModelAccess(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, model, mode='read', raise_exception=True):
-        if self._uid == 1:
+        if self._uid == SUPERUSER_ID:
             # User root have all accesses
             return True
 
