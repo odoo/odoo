@@ -7,26 +7,10 @@ from odoo.addons.test_mail.tests import common
 
 class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
-    def assertTracking(self, message, data):
-        tracking_values = message.sudo().tracking_value_ids
-        for field_name, value_type, old_value, new_value in data:
-            tracking = tracking_values.filtered(lambda track: track.field == field_name)
-            self.assertEqual(len(tracking), 1)
-            if value_type in ('char', 'integer'):
-                self.assertEqual(tracking.old_value_char, old_value)
-                self.assertEqual(tracking.new_value_char, new_value)
-            elif value_type in ('many2one'):
-                self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
-                self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
-                self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
-                self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
-            else:
-                self.assertEqual(1, 0)
-
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        record = self.env['mail.test.full'].with_user(self.user_employee).with_context(common.BaseFunctionalTest._test_context).create({
+        record = self.env['mail.test.full'].with_user(self.user_employee).with_context(self._test_context).create({
             'name': 'Test',
         })
         self.record = record.with_context(mail_notrack=False)
@@ -120,7 +104,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def test_message_track_template_at_create(self):
         """ Create a record with tracking template on create, template should be sent."""
 
-        Model = self.env['mail.test.full'].with_user(self.user_employee).with_context(common.BaseFunctionalTest._test_context)
+        Model = self.env['mail.test.full'].with_user(self.user_employee).with_context(self._test_context)
         Model = Model.with_context(mail_notrack=False)
         record = Model.create({
             'name': 'Test',

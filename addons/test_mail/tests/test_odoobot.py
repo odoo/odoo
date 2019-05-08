@@ -11,18 +11,21 @@ from odoo.tests import tagged
 @tagged("odoobot")
 class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
 
-    def setUp(self):
-        super(TestOdoobot, self).setUp()
-        self.odoobot = self.env.ref("base.partner_root")
-        self.message_post_default_kwargs = {
+    @classmethod
+    def setUpClass(cls):
+        super(TestOdoobot, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+
+        cls.odoobot = cls.env.ref("base.partner_root")
+        cls.message_post_default_kwargs = {
             'body': '',
             'attachment_ids': [],
             'message_type': 'comment',
             'partner_ids': [],
             'subtype': 'mail.mt_comment'
         }
-        self.odoobot_ping_body = '<a href="http://odoo.com/web#model=res.partner&amp;id=%s" class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner" target="_blank">@OdooBot</a>' % (self.odoobot.id, self.odoobot.id)
-        self.test_record_employe = self.test_record.with_user(self.user_employee)
+        cls.odoobot_ping_body = '<a href="http://odoo.com/web#model=res.partner&amp;id=%s" class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner" target="_blank">@OdooBot</a>' % (cls.odoobot.id, cls.odoobot.id)
+        cls.test_record_employe = cls.test_record.with_user(cls.user_employee)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_fetch_listener(self):
