@@ -376,6 +376,13 @@ class Project(models.Model):
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
         return dict(action, context=ctx)
 
+    def action_view_account_analytic_line(self):
+        """ return the action to see all the analytic lines of the project's analytic account """
+        action = self.env.ref('analytic.account_analytic_line_action').read()[0]
+        action['context'] = {'default_account_id': self.analytic_account_id.id}
+        action['domain'] = [('account_id', '=', self.analytic_account_id.id)]
+        return action
+
     @api.multi
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project, and activate default filters """
