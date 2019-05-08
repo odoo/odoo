@@ -18,6 +18,8 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestMailResend, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+
         #Two users
         cls.user1 = mail_new_test_user(cls.env, login='e1', groups='base.group_public', name='Employee 1', email='e1')  # invalid email
         cls.user2 = mail_new_test_user(cls.env, login='e2', groups='base.group_portal', name='Employee 2', email='e2@example.com')

@@ -16,17 +16,19 @@ from odoo.tools import mute_logger
 
 class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
-    def setUp(self):
-        super(TestMessagePost, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestMessagePost, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         # configure mailing
-        self.alias_domain = 'schlouby.fr'
-        self.alias_catchall = 'test+catchall'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
+        cls.alias_domain = 'schlouby.fr'
+        cls.alias_catchall = 'test+catchall'
+        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
 
         # admin should not receive emails
-        self.user_admin.write({'notification_type': 'email'})
+        cls.user_admin.write({'notification_type': 'email'})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications(self):
@@ -223,17 +225,19 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
-    def setUp(self):
-        super(TestComposer, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestComposer, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         # configure mailing
-        self.alias_domain = 'schlouby.fr'
-        self.alias_catchall = 'test+catchall'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
+        cls.alias_domain = 'schlouby.fr'
+        cls.alias_catchall = 'test+catchall'
+        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
 
         # admin should not receive emails
-        self.user_admin.write({'notification_type': 'email'})
+        cls.user_admin.write({'notification_type': 'email'})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_comment(self):

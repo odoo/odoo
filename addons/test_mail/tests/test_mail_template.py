@@ -12,41 +12,43 @@ from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
-    def setUp(self):
-        super(TestMailTemplate, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailTemplate, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
-        self.user_employee.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        cls.user_employee.write({
+            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
-        self._attachments = [{
+        cls._attachments = [{
             'name': 'first.txt',
             'datas': base64.b64encode(b'My first attachment'),
             'res_model': 'res.partner',
-            'res_id': self.user_admin.partner_id.id
+            'res_id': cls.user_admin.partner_id.id
         }, {
             'name': 'second.txt',
             'datas': base64.b64encode(b'My second attachment'),
             'res_model': 'res.partner',
-            'res_id': self.user_admin.partner_id.id
+            'res_id': cls.user_admin.partner_id.id
         }]
 
-        self.email_1 = 'test1@example.com'
-        self.email_2 = 'test2@example.com'
-        self.email_3 = self.partner_1.email
-        self.email_template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model']._get('mail.test.simple').id,
+        cls.email_1 = 'test1@example.com'
+        cls.email_2 = 'test2@example.com'
+        cls.email_3 = cls.partner_1.email
+        cls.email_template = cls.env['mail.template'].create({
+            'model_id': cls.env['ir.model']._get('mail.test.simple').id,
             'name': 'Pigs Template',
             'subject': '${object.name}',
             'body_html': '${object.email_from}',
             'user_signature': False,
-            'attachment_ids': [(0, 0, self._attachments[0]), (0, 0, self._attachments[1])],
-            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
-            'email_to': '%s, %s' % (self.email_1, self.email_2),
-            'email_cc': '%s' % self.email_3})
+            'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
+            'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
+            'email_to': '%s, %s' % (cls.email_1, cls.email_2),
+            'email_cc': '%s' % cls.email_3})
 
         # admin should receive emails
-        self.user_admin.write({'notification_type': 'email'})
+        cls.user_admin.write({'notification_type': 'email'})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template(self):
