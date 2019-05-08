@@ -50,11 +50,11 @@ class AlipayController(http.Controller):
         return ""
 
     @http.route('/payment/alipay/return', type='http', auth="none", methods=['GET', 'POST'])
-    def alipay_return(self, redirect_url=False, **post):
+    def alipay_return(self, **post):
         """ Alipay return """
         _logger.info('Beginning Alipay form_feedback with post data %s', pprint.pformat(post))
         self._alipay_validate_data(**post)
-        return werkzeug.utils.redirect(redirect_url or "/")
+        return werkzeug.utils.redirect('/payment/process')
 
     @http.route('/payment/alipay/notify', type='http', auth='none', methods=['POST'], csrf=False)
     def alipay_notify(self, **post):
