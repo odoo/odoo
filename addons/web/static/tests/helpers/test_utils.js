@@ -102,8 +102,7 @@ async function nextTick() {
 // to load xml files that are normally lazy loaded by specific widgets).
 return Promise.all([
     session.is_bound,
-    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
-    ajax.loadXML('/web/static/src/xml/notification.xml', core.qweb)
+    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb)
 ]).then(function () {
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
