@@ -54,7 +54,10 @@ class Lead(models.Model):
     _primary_email = ['email_from']
 
     def _default_probability(self):
-        stage_id = self._default_stage_id()
+        if 'default_stage_id' in self._context:
+            stage_id = self._context.get('default_stage_id')
+        else:
+            stage_id = self._default_stage_id()
         if stage_id:
             return self.env['crm.stage'].browse(stage_id).probability
         return 10
