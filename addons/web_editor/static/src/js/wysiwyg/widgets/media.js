@@ -6,6 +6,7 @@ var Dialog = require('web.Dialog');
 var fonts = require('wysiwyg.fonts');
 var Widget = require('web.Widget');
 var concurrency = require('web.concurrency');
+var session = require('web.session');
 
 var QWeb = core.qweb;
 
