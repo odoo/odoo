@@ -189,7 +189,7 @@
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-                document.addEventListener("DOMContentLoaded", function(event) {
+                window.addEventListener('load', function () {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
                         var Session = require('web.Session');
@@ -207,7 +207,7 @@
                             "<t t-esc="info['server_url']"/>",
                             <t t-raw="json.dumps(info.get('options', {}))"/>
                         );
-                        button.appendTo($('body'));
+                        button.appendTo(document.body);
                         window.livechat_button = button;
             </t>
                     });
