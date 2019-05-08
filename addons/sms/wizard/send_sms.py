@@ -62,6 +62,9 @@ class SendSMS(models.TransientModel):
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
 
+        if 'recipients' not in fields:
+            return result
+
         active_model = self.env.context.get('active_model')
         model = self.env[active_model]
 
