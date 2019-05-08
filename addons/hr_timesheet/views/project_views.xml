@@ -175,6 +175,9 @@
                         </div>
                     </a>
                 </xpath>
+                <xpath expr="//a[@name='action_view_account_analytic_line']" position="attributes">
+                    <attribute name="t-if">record.analytic_account_id.raw_value and !record.allow_timesheets.raw_value</attribute>
+                </xpath>
             </field>
         </record>
 
