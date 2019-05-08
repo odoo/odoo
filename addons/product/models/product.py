@@ -287,6 +287,7 @@ class ProductProduct(models.Model):
         if self.product_tmpl_id.image and self.product_variant_count > 1:
             self.image_variant = image
         else:
+            self.image_variant = False
             self.product_tmpl_id.image = image
 
     @api.depends('product_tmpl_id', 'attribute_value_ids')
