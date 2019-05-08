@@ -45,7 +45,7 @@
                         </t>
                         <t t-call="survey.retake_survey_button"/>
                         <div t-if="survey.scoring_type != 'scoring_without_answers'">
-                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s' % (survey.access_token, answer.token)">review your answers</a>
+                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.token)">review your answers</a>
                         </div>
                     </div>
                 </div>
@@ -482,7 +482,7 @@
                     <div class='jumbotron mt32'>
                         <h1><span t-field='survey.title'/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
-                        <t t-call="survey.retake_survey_button"/>
+                        <t t-if="review" t-call="survey.retake_survey_button"/>
                     </div>
                     <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.access_token, answer.token)">
                         <t t-foreach='survey.question_and_page_ids' t-as='question'>

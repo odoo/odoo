@@ -361,6 +361,25 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_log_contract_view_activity" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.activity</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="arch" type="xml">
+            <activity string="Vehicles Contracts">
+                <field name="purchaser_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('res.partner', 'image_small', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
+                        <div>
+                            <field name="vehicle_id" display="full"/>
+                            <field name="cost_subtype_id" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_log_contract_action' model='ir.actions.act_window'>
         <field name="name">Vehicles Contracts</field>
         <field name="res_model">fleet.vehicle.log.contract</field>

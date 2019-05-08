@@ -19,7 +19,7 @@ from werkzeug.urls import url_encode
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
@@ -198,6 +198,10 @@ class SaleOrder(models.Model):
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
 
+    _sql_constraints = [
+        ('confirmation_date_conditional_required', "CHECK( (state IN ('sale', 'done') AND confirmation_date IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
+    ]
+
     @api.depends('pricelist_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
@@ -221,7 +225,7 @@ class SaleOrder(models.Model):
         """
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -458,6 +462,9 @@ class SaleOrder(models.Model):
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'company_id': self.company_id.id,
+            'campaign_id': self.campaign_id.id,
+            'medium_id': self.medium_id.id,
+            'source_id': self.source_id.id,
             'user_id': self.user_id and self.user_id.id,
             'team_id': self.team_id.id,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],

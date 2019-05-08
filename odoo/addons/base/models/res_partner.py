@@ -328,29 +328,29 @@ class Partner(models.Model):
         if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
             return False
 
-        colorize, img_path, image = False, False, False
+        colorize, img_path, image_base64 = False, False, False
 
         if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
-            image = parent_image and base64.b64decode(parent_image) or None
+            image_base64 = parent_image or None
 
-        if not image and partner_type == 'invoice':
+        if not image_base64 and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/img', 'money.png')
-        elif not image and partner_type == 'delivery':
+        elif not image_base64 and partner_type == 'delivery':
             img_path = get_module_resource('base', 'static/img', 'truck.png')
-        elif not image and is_company:
+        elif not image_base64 and is_company:
             img_path = get_module_resource('base', 'static/img', 'company_image.png')
-        elif not image:
+        elif not image_base64:
             img_path = get_module_resource('base', 'static/img', 'avatar.png')
             colorize = True
 
         if img_path:
             with open(img_path, 'rb') as f:
-                image = f.read()
-        if image and colorize:
-            image = tools.image_colorize(image)
+                image_base64 = base64.b64encode(f.read())
+        if image_base64 and colorize:
+            image_base64 = tools.image_process(image_base64, colorize=True)
 
-        return tools.image_resize_image_big(base64.b64encode(image))
+        return tools.image_process(image_base64, size=tools.IMAGE_BIG_SIZE)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -479,7 +479,7 @@ class Partner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner.with_prefetch()._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
     @api.multi
@@ -572,7 +572,7 @@ class Partner(models.Model):
                             ("The selected company is not compatible with the companies of the related user(s)"))
         # no padding on the big image, because it's used as website logo
         tools.image_resize_images(vals, return_big=False)
-        tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
+        tools.image_resize_images(vals, return_medium=False, return_small=False)
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -601,7 +601,7 @@ class Partner(models.Model):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
             # no padding on the big image, because it's used as website logo
             tools.image_resize_images(vals, return_big=False)
-            tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
+            tools.image_resize_images(vals, return_medium=False, return_small=False)
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):

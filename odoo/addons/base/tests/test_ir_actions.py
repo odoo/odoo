@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 import odoo
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common
 
@@ -215,6 +215,42 @@ class TestServerActions(TestServerActionsBase):
             self.action.write({
                 'child_ids': [(6, 0, [self.action.id])]
             })
+
+    def test_50_groups(self):
+        """ check the action is returned only for groups dedicated to user """
+        Actions = self.env['ir.actions.actions']
+
+        group0 = self.env['res.groups'].create({'name': 'country group'})
+
+        self.context = {
+            'active_model': 'res.country',
+            'active_id': self.test_country.id,
+        }
+
+        # Do: update model and group
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'groups_id': [(4, group0.id, 0)],
+            'code': 'record.write({"vat_label": "VatFromTest"})',
+        })
+
+        # Test: action is not returned
+        bindings = Actions.get_bindings('res.country')
+        self.assertFalse(bindings)
+
+        with self.assertRaises(AccessError):
+            self.action.with_context(self.context).run()
+        self.assertFalse(self.test_country.vat_label)
+
+        # add group to the user, and test again
+        self.env.user.write({'groups_id': [(4, group0.id)]})
+
+        bindings = Actions.get_bindings('res.country')
+        self.assertItemsEqual(bindings.get('action'), self.action.read())
+
+        self.action.with_context(self.context).run()
+        self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
 
 
 class TestActionBindings(common.TransactionCase):

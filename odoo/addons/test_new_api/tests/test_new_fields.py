@@ -921,7 +921,7 @@ class TestFields(common.TransactionCase):
         cat1, cat2 = cats
         self.assertEqual(cat2.name, 'ACCESS')
         # both categories should be ready for prefetching
-        self.assertItemsEqual(cat2._prefetch[Category._name], cats.ids)
+        self.assertItemsEqual(cat2._prefetch_ids, cats.ids)
         # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
         self.assertFalse(cat2.discussions)
         self.assertEqual(cat2.parent, cat1)
@@ -1229,7 +1229,7 @@ class TestX2many(common.TransactionCase):
         recY = recs.create({'lines': [(0, 0, {})]})
         recZ = recs.create({})
         recs = recX + recY + recZ
-        line1, line2, line3 = recs.mapped('lines')
+        line1, line2, line3 = recs.lines
         line4 = recs.create({'lines': [(0, 0, {})]}).lines
         line0 = line4.create({})
 

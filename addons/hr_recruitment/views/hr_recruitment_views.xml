@@ -360,6 +360,23 @@
         </field>
     </record>
 
+    <record id="hr_applicant_view_activity" model="ir.ui.view">
+        <field name="name">hr.applicant.activity</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <activity string="Applicants">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" display="full"/>
+                            <field name="partner_name" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_hr_job_applications">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>

@@ -27,8 +27,14 @@ var createCalendarView = testUtils.createCalendarView;
 var initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
 
+function _preventScroll(ev) {
+    ev.stopImmediatePropagation();
+}
 
 QUnit.module('Views', {
+    before: function () {
+        window.addEventListener('scroll', _preventScroll, true);
+    },
     beforeEach: function () {
         session.uid = -1; // TO CHECK
         this.data = {
@@ -96,6 +102,9 @@ QUnit.module('Views', {
                 ]
             },
         };
+    },
+    after: function () {
+        window.removeEventListener('scroll', _preventScroll, true);
     },
 }, function () {
 

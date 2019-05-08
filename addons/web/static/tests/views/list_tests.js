@@ -210,7 +210,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable rendering with handle', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var list = await createView({
             View: ListView,
@@ -225,6 +225,8 @@ QUnit.module('Views', {
         assert.containsN(list, 'thead th', 4, "there should be 4 th");
         assert.hasClass(list.$('thead th:eq(0)'), 'o_list_record_selector');
         assert.hasClass(list.$('thead th:eq(1)'), 'o_handle_cell');
+        assert.strictEqual(list.$('thead th:eq(1)').text(), '',
+            "the handle field shouldn't have a header description");
         assert.strictEqual(list.$('thead th:eq(2)').attr('style'), "width: 50%;");
         assert.strictEqual(list.$('thead th:eq(3)').attr('style'), "width: 50%;");
         list.destroy();
@@ -1678,7 +1680,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display a tooltip on a field', async function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         var initialDebugMode = config.debug;
         config.debug = false;
@@ -1687,23 +1689,33 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar" widget="toggle_button"/>' +
+                '</tree>',
         });
 
         // this is done to force the tooltip to show immediately instead of waiting
         // 1000 ms. not totally academic, but a short test suite is easier to sell :(
-        list.$('th:not(.o_list_record_selector)').tooltip('show', false);
+        list.$('th[data-name=foo]').tooltip('show', false);
 
-        list.$('th:not(.o_list_record_selector)').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 0, "should not have rendered a tooltip");
 
         config.debug = true;
         // it is necessary to rerender the list so tooltips can be properly created
         await list.reload();
-        list.$('th:not(.o_list_record_selector)').tooltip('show', false);
-
-        list.$('th:not(.o_list_record_selector)').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]').tooltip('show', false);
+        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1, "should have rendered a tooltip");
+
+        await list.reload();
+        list.$('th[data-name=bar]').tooltip('show', false);
+        list.$('th[data-name=bar]').trigger($.Event('mouseenter'));
+        assert.containsOnce($, '.oe_tooltip_technical>li[data-item="widget"]',
+            'widget should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
+            'Button (toggle_button)', "widget description should be correct");
 
         config.debug = initialDebugMode;
         list.destroy();

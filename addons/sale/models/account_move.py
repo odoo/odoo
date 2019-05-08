@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_is_zero
 
 
 class AccountMoveLine(models.Model):
@@ -15,11 +16,13 @@ class AccountMoveLine(models.Model):
         """
         values_list = super(AccountMoveLine, self)._prepare_analytic_line()
 
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
         # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
         move_to_reinvoice = self.env['account.move.line']
         for index, move_line in enumerate(self):
             values = values_list[index]
-            if 'so_line' not in values and (move_line.credit or 0.0) <= (move_line.debit or 0.0) and move_line.product_id.expense_policy not in [False, 'no']:
+            if 'so_line' not in values and float_compare(move_line.credit or 0.0, move_line.debit or 0.0, precision_digits=uom_precision_digits) != 1 and move_line.product_id.expense_policy not in [False, 'no']:
                 move_to_reinvoice |= move_line
 
         # insert the sale line in the create values of the analytic entries
@@ -170,7 +173,9 @@ class AccountMoveLine(models.Model):
                 pricelist=order.pricelist_id.id,
                 uom=self.product_uom_id.id
             ).price
-        if unit_amount == 0.0:
+
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
             return 0.0
 
         # Prevent unnecessary currency conversion that could be impacted by exchange rate

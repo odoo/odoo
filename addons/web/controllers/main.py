@@ -35,8 +35,8 @@ import unicodedata
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
-from odoo.modules import get_resource_path
-from odoo.tools import limited_image_resize, topological_sort, html_escape, pycompat
+from odoo.modules import get_module_path, get_resource_path
+from odoo.tools import image_process, topological_sort, html_escape, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
@@ -971,11 +971,6 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    def force_contenttype(self, headers, contenttype='image/png'):
-        dictheaders = dict(headers)
-        dictheaders['Content-Type'] = contenttype
-        return list(dictheaders.items())
-
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -1023,30 +1018,25 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
-                      upper_limit=False, placeholder='placeholder.png', **kw):
-        status, headers, content = request.env['ir.http'].binary_content(
+                      download=None, width=0, height=0, crop=False, access_token=None,
+                      placeholder='placeholder.png', **kwargs):
+        status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
         if status == 301 or (status != 200 and download):
-            return request.env['ir.http']._response_by_status(status, headers, content)
-        if not content:
-            content = base64.b64encode(self.placeholder(image=placeholder))
-            headers = self.force_contenttype(headers, contenttype='image/png')
+            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+        if not image_base64:
+            image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             if not (width or height):
-                suffix = 'big' if field == 'image' else field.split('_')[-1]
-                if suffix in ('small', 'medium', 'large', 'big'):
-                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+                width, height = odoo.tools.image_guess_size_from_field_name(field)
 
+        image_base64 = image_process(image_base64, (width, height), crop=crop)
 
-        content = limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
-
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
+        content = base64.b64decode(image_base64)
+        headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content, headers)
         response.status_code = status
         return response
 
@@ -1184,12 +1174,16 @@ class Binary(http.Controller):
 
         fonts = []
         if fontname:
-            font_path = get_resource_path('web', 'static/src/fonts/sign', fontname)
-            if not font_path:
-                return []
-            font_file = open(font_path, 'rb')
-            font = base64.b64encode(font_file.read())
-            fonts.append(font)
+            module_path = get_module_path('web')
+            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
+            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
+            if fonts_folder_path and module_resource_path:
+                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
+                module_resource_path = os.path.normpath(module_resource_path)
+                if module_resource_path.startswith(fonts_folder_path):
+                    with file_open(module_resource_path, 'rb') as font_file:
+                        font = base64.b64encode(font_file.read())
+                        fonts.append(font)
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')

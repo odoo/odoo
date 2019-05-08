@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
@@ -61,6 +61,17 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
+
+        if values.get('partner_shipping_id'):
+            new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
+            for record in self:
+                picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
+                addresses = (record.partner_shipping_id.display_name, new_partner.display_name)
+                message = _("""The delivery address has been changed on the Sales Order<br/>
+                        From <strong>"%s"</strong> To <strong>"%s"</strong>,
+                        You should probably update the partner on this document.""") % addresses
+                picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
+
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -290,7 +301,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
         # in database. Hence, we need to explicitly read them from there.
         if self._origin:
             product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]

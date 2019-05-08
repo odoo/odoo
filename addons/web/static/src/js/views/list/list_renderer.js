@@ -687,13 +687,12 @@ var ListRenderer = BasicRenderer.extend({
         if (!field) {
             return $th;
         }
-        var description;
+        var description = node.attrs.string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            description = this.state.fieldsInfo.list[name].Widget.prototype.description;
-        }
-        if (description === undefined) {
-            description = node.attrs.string || field.string;
+            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+                description = '';
+            }
         }
         $th.text(description)
             .attr('data-name', name)
@@ -716,7 +715,7 @@ var ListRenderer = BasicRenderer.extend({
                 name: name,
                 string: description || name,
                 record: this.state,
-                attrs: node.attrs,
+                attrs: _.extend({}, node.attrs, this.state.fieldsInfo.list[name]),
             };
             this._addFieldTooltip(fieldDescr, $th);
         } else {

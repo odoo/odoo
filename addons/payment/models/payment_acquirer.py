@@ -7,11 +7,10 @@ from datetime import datetime
 from dateutil import relativedelta
 import pprint
 
-from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
+from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
+from odoo.tools import consteq, float_round, image_resize_images, image_process, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
-from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 
@@ -75,7 +74,7 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', required=True,
+        'ir.ui.view', 'Form Button Template',
         default=_get_default_view_template_id)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
@@ -101,6 +100,9 @@ class PaymentAcquirer(models.Model):
                 templates to do it in one-click.""")
     specific_countries = fields.Boolean(string="Specific Countries",
         help="If you leave it empty, the payment acquirer will be available for all the countries.")
+    check_validity = fields.Boolean(string="Verify Card Validity",
+        help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
+        Without this check, the validity will be verified at the very first transaction.""")
     country_ids = fields.Many2many(
         'res.country', 'payment_country_rel',
         'payment_id', 'country_id', 'Countries',
@@ -368,6 +370,9 @@ class PaymentAcquirer(models.Model):
         if values is None:
             values = {}
 
+        if not self.view_template_id:
+            return None
+
         values.setdefault('return_url', '/payment/process')
         # reference and amount
         values.setdefault('reference', reference)
@@ -525,16 +530,16 @@ class PaymentIcon(models.Model):
         for vals in vals_list:
             if 'image' in vals:
                 image = ustr(vals['image'] or '').encode('utf-8')
-                vals['image_payment_form'] = image_resize_image(image, size=(45,30))
-                vals['image'] = image_resize_image(image, size=(64,64))
+                vals['image_payment_form'] = image_process(image, size=(45,30))
+                vals['image'] = image_process(image, size=(64,64))
         return super(PaymentIcon, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
             image = ustr(vals['image'] or '').encode('utf-8')
-            vals['image_payment_form'] = image_resize_image(image, size=(45,30))
-            vals['image'] = image_resize_image(image, size=(64,64))
+            vals['image_payment_form'] = image_process(image, size=(45,30))
+            vals['image'] = image_process(image, size=(64,64))
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
@@ -1129,6 +1134,7 @@ class PaymentToken(models.Model):
             'payment_token_id': self.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
+            'state_message': _('This Transaction was automatically processed & refunded in order to validate a new credit card.'),
         })
 
         kwargs.update({'3d_secure': True})

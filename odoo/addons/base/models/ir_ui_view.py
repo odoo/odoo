@@ -473,8 +473,8 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
-            self.mapped('inherit_children_ids').unlink()
+        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+            self.inherit_children_ids.unlink()
         super(View, self).unlink()
 
     @api.multi
@@ -1177,7 +1177,7 @@ actual arch.
                         not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
 
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+        if node.tag in ('kanban', 'tree', 'form', 'gantt', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
