@@ -157,7 +157,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
         """ Create a department leave """
         self.employee_hrmanager.write({'department_id': self.hr_dept.id})
         self.assertFalse(self.env['hr.leave'].search([('employee_id', 'in', self.hr_dept.member_ids.ids)]))
-        leave_form = Form(self.env['hr.leave'].sudo(self.user_hrmanager))
+        leave_form = Form(self.env['hr.leave'].sudo(self.user_hrmanager), view='hr_holidays.hr_leave_view_form_manager')
         leave_form.holiday_status_id = self.holidays_type_1
         leave_form.holiday_type = 'department'
         leave_form.department_id = self.hr_dept
