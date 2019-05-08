@@ -372,13 +372,13 @@ class Product(models.Model):
         return self.mapped('product_tmpl_id').action_view_routes()
 
     @api.model
-    def search(self, domain=None, *args, **kwargs):
+    def search(self, args, offset=0, limit=None, order=None, count=False):
         # ONLY FOR 10.0 UP TO SAAS-15
         # ignore dummy fields used for search context²
-        for index in range(len(domain or [])):
-            if domain[index][0] in ('location_id', 'warehouse_id'):
-                domain[index] = expression.TRUE_LEAF
-        return super(Product, self).search(domain, *args, **kwargs)
+        for index in range(len(args or [])):
+            if args[index][0] in ('location_id', 'warehouse_id'):
+                args[index] = expression.TRUE_LEAF
+        return super(Product, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
     @api.multi
     def write(self, values):
@@ -518,13 +518,13 @@ class ProductTemplate(models.Model):
         return self.mapped('product_variant_ids').onchange_tracking()
 
     @api.model
-    def search(self, domain=None, *args, **kwargs):
+    def search(self, args, offset=0, limit=None, order=None, count=False):
         # ONLY FOR 10.0 UP TO SAAS-15
         # ignore dummy fields used for search context
-        for index in range(len(domain or [])):
-            if domain[index][0] in ('location_id', 'warehouse_id'):
-                domain[index] = expression.TRUE_LEAF
-        return super(ProductTemplate, self).search(domain, *args, **kwargs)
+        for index in range(len(args or [])):
+            if args[index][0] in ('location_id', 'warehouse_id'):
+                args[index] = expression.TRUE_LEAF
+        return super(ProductTemplate, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
     @api.multi
     def write(self, vals):
