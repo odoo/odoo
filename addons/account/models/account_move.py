@@ -1751,6 +1751,9 @@ class AccountPartialReconcile(models.Model):
                                 'debit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                                 'credit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'account_id': line.account_id.id,
+                                # DO NOT FORWARD-PORT!!! ONLY FOR v11
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_exigible': True,
                                 'amount_currency': line.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                 'currency_id': line.currency_id.id,
@@ -1763,6 +1766,9 @@ class AccountPartialReconcile(models.Model):
                                 'debit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                                 'account_id': line.tax_line_id.cash_basis_account.id,
+                                # DO NOT FORWARD-PORT!!! ONLY FOR v11
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_line_id': line.tax_line_id.id,
                                 'tax_exigible': True,
                                 'amount_currency': line.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
