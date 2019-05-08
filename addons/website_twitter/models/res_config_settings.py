@@ -11,15 +11,15 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 TWITTER_EXCEPTION = {
-    304: _('There was no new data to return.'),
-    400: _('The request was invalid or cannot be otherwise served. Requests without authentication are considered invalid and will yield this response.'),
-    401: _('Authentication credentials were missing or incorrect. Maybe screen name tweets are protected.'),
-    403: _('The request is understood, but it has been refused or access is not allowed. Please check your Twitter API Key and Secret.'),
-    429: _('Request cannot be served due to the applications rate limit having been exhausted for the resource.'),
-    500: _('Twitter seems broken. Please retry later. You may consider posting an issue on Twitter forums to get help.'),
-    502: _('Twitter is down or being upgraded.'),
-    503: _('The Twitter servers are up, but overloaded with requests. Try again later.'),
-    504: _('The Twitter servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
+    304: lambda self: _('There was no new data to return.'),
+    400: lambda self: _('The request was invalid or cannot be otherwise served. Requests without authentication are considered invalid and will yield this response.'),
+    401: lambda self: _('Authentication credentials were missing or incorrect. Maybe screen name tweets are protected.'),
+    403: lambda self: _('The request is understood, but it has been refused or access is not allowed. Please check your Twitter API Key and Secret.'),
+    429: lambda self: _('Request cannot be served due to the applications rate limit having been exhausted for the resource.'),
+    500: lambda self: _('Twitter seems broken. Please retry later. You may consider posting an issue on Twitter forums to get help.'),
+    502: lambda self: _('Twitter is down or being upgraded.'),
+    503: lambda self: _('The Twitter servers are up, but overloaded with requests. Try again later.'),
+    504: lambda self: _('The Twitter servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
 }
 
 
@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _get_twitter_exception_message(self, error_code):
         if error_code in TWITTER_EXCEPTION:
-            return TWITTER_EXCEPTION[error_code]
+            return TWITTER_EXCEPTION[error_code](self)
         else:
             return _('HTTP Error: Something is misconfigured')
 
