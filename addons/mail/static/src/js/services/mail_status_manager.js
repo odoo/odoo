@@ -30,6 +30,9 @@ MailManager.include({
     getImStatus: function (data) {
         var self = this;
         var partnerID = data.partnerID;
+        if (partnerID === this.getOdoobotID()[0]) {
+            return 'bot';
+        }
         if (!this._imStatus[partnerID]) {
             // Add to list to call it in next bus update or _fetchMissingImStatus
             this._imStatus[partnerID] = undefined;
