@@ -10,8 +10,8 @@ import pytz
 
 from odoo import exceptions, tests
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
-from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
+from odoo.tools import mute_logger
 
 
 class TestActivityCommon(BaseFunctionalTest):
@@ -19,7 +19,7 @@ class TestActivityCommon(BaseFunctionalTest):
     @classmethod
     def setUpClass(cls):
         super(TestActivityCommon, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.activity'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test'})
+        cls.test_record = cls.env['mail.test.activity'].with_context(cls._test_context).create({'name': 'Test'})
         # reset ctx
         cls.test_record = cls.test_record.with_context(
             mail_create_nolog=False,
@@ -31,6 +31,7 @@ class TestActivityCommon(BaseFunctionalTest):
 @tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_other(self):
         activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
@@ -38,12 +39,14 @@ class TestActivityRights(TestActivityCommon):
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_employee.id})
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_own(self):
         activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo')
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_admin.id})
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(*args, **kwargs):
             """ If employee is test employee, consider he has no access on document """
@@ -90,7 +93,7 @@ class TestActivityRights(TestActivityCommon):
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
-        with self.sudo('ernest'):
+        with self.sudo('employee'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
 
@@ -118,19 +121,7 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_activities'))
 
-    def test_activity_flow_portal(self):
-        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
-
-        with self.sudo('chell'):
-            test_record = self.env['mail.test.activity'].browse(self.test_record.id)
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].create({
-                    'summary': 'Test Activity',
-                    'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
-                    'res_model_id': self.env['ir.model']._get(test_record._name).id,
-                    'res_id': test_record.id,
-                })
-
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_notify_other_user(self):
         self.user_admin.notification_type = 'email'
         rec = self.test_record.with_user(self.user_employee)
@@ -151,6 +142,7 @@ class TestActivityFlow(TestActivityCommon):
         self.assertEqual(activity.create_uid, self.user_employee)
         self.assertEqual(activity.user_id, self.user_employee)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_dont_notify_no_user_change(self):
         self.user_employee.notification_type = 'email'
         activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
@@ -162,9 +154,10 @@ class TestActivityFlow(TestActivityCommon):
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
-        with self.sudo('ernest'):
+        with self.sudo('employee'):
             self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(self.test_record.env.user, self.user_employee)
 
@@ -242,6 +235,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
         rec = self.test_record.with_user(self.user_employee)
         new_act = rec.activity_schedule(
@@ -255,6 +249,7 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(rec.active, True)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
         rec = self.test_record.with_user(self.user_employee)
         rec.activity_schedule(

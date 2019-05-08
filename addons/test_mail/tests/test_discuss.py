@@ -2,10 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.tools import mute_logger
 
 
 class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestChatterTweaks, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     def test_post_no_subscribe_author(self):
         original = self.test_record.message_follower_ids
@@ -14,6 +19,7 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
@@ -21,6 +27,7 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
@@ -73,16 +80,17 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
                          "Creation message without tracking values should have been posted")
 
 
-class TestNotifications(BaseFunctionalTest, MockEmails):
+class TestNotifications(BaseFunctionalTest, TestRecipients, MockEmails):
 
-    def setUp(self):
-        self.partner_1 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
-            'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com'})
+    @classmethod
+    def setUpClass(cls):
+        super(TestNotifications, cls).setUpClass()
+        cls._create_portal_user()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
-        (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
-        super(TestNotifications, self).setUp()
+        (cls.user_employee | cls.user_admin).write({'notification_type': 'inbox'})
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
         with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', '')):
             self.test_record.message_post(
@@ -94,6 +102,11 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
             self.test_record.message_post(
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
+
+        with self.assertNotifications(partner_admin=(0, '', ''), partner_1=(1, 'email', 'read'), partner_portal=(1, 'email', 'read')):
+            self.test_record.message_post(
+                body='Test', message_type='comment', subtype='mail.mt_comment',
+                partner_ids=[self.partner_portal.id])
 
     def test_inactive_follower(self):
         # In some case odoobot is follower of a record.
@@ -115,16 +128,6 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
                 body='Test', message_type='comment', subtype='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
             message.with_user(self.user_employee).set_message_done()
-
-    def test_set_message_done_portal(self):
-        user_portal = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys', notification_type='inbox')
-        self.partner_portal = user_portal.partner_id
-
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_portal=(1, 'inbox', 'read')):
-            message = self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment',
-                partner_ids=[self.user_employee.partner_id.id, user_portal.partner_id.id])
-            message.with_user(user_portal).set_message_done()
 
     def test_set_star(self):
         msg = self.test_record.with_user(self.user_admin).message_post(body='My Body', subject='1')
