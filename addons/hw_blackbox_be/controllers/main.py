@@ -175,7 +175,7 @@ if isfile("/home/pi/registered_blackbox_be"):
         def request_serial(self):
             try:
                 with open('/sys/class/net/eth0/address', 'rb') as f:
-                    return address = f.read().rstrip().replace(b':', b'')[-7:]
+                    return f.read().rstrip().replace(b':', b'')[-7:]
             except IOError as e:
                 _logger.warning("eth0 network interface MAC address could not be found")
                 return b''
