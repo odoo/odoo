@@ -46,7 +46,6 @@
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter string="Today Activities" name="activities_today"
-                    context="{'kanban_view_ref': 'hr_holidays.kanban_actty_view'}"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
@@ -136,26 +135,6 @@
             </kanban>
         </field>
      </record>
-
-    <record id="hr_leave_view_calendar" model="ir.ui.view">
-        <field name="name">hr.leave.view.calendar</field>
-        <field name="model">hr.leave</field>
-        <field name="arch" type="xml">
-            <calendar string="Time Off Request" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
-                <field name="display_name"/>
-            </calendar>
-        </field>
-    </record>
-
-    <record id="hr_leave_view_dashboard" model="ir.ui.view">
-        <field name="name">hr.leave.view.dashboard</field>
-        <field name="model">hr.leave</field>
-        <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar" string="Time Off Request" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
-                <field name="display_name"/>
-            </calendar>
-        </field>
-    </record>
 
     <record id="hr_leave_view_activity" model="ir.ui.view">
         <field name="name">hr.leave.view.activity</field>
@@ -367,7 +346,7 @@
         <field name="model">hr.leave</field>
         <field name="inherit_id" ref="hr_leave_view_form"/>
         <field name="mode">primary</field>
-        <field name="priority">16</field>
+        <field name="priority">5</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='holiday_status_id']" position="before">
                 <field name="employee_id"/>
@@ -382,6 +361,16 @@
                     <field name="report_note" placeholder="e.g. Report to the next month..."/>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_calendar" model="ir.ui.view">
+        <field name="name">hr.leave.view.calendar</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <calendar string="Time Off Request" event_open_popup="true" readonly_form_view_id="%(hr_holidays.hr_leave_view_form_manager)d" form_view_id="%(hr_holidays.hr_leave_view_form_manager)d" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
+                <field name="display_name"/>
+            </calendar>
         </field>
     </record>
 
@@ -612,6 +601,18 @@
                 Create a new time off request
             </p>
         </field>
+    </record>
+    <record id="hr_leave_action_all_tree_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_leave_action_all"/>
+        <field name="view_id" ref="hr_leave_view_tree"/>
+    </record>
+    <record id="hr_leave_action_all_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">10</field>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_leave_action_all"/>
+        <field name="view_id" ref="hr_leave_view_form_manager"/>
     </record>
 
     <record id="hr_leave_action_action_approve_department" model="ir.actions.act_window">
