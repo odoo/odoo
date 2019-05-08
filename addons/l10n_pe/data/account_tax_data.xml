@@ -26,12 +26,52 @@
                 'repartition_type': 'base',
             }),
 
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('401110'),
-            }),
-        ]"/>
+    <record id="tax_tag_sale_ivap" model="account.account.tag">
+        <field name="name">IVAP Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_isc" model="account.account.tag">
+        <field name="name">ISC Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_exportation" model="account.account.tag">
+        <field name="name">EXPORTACIÓN Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_free" model="account.account.tag">
+        <field name="name">GRATUITO Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_exonerated" model="account.account.tag">
+        <field name="name">EXONERADO Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_inafected" model="account.account.tag">
+        <field name="name">INAFECTO Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_others" model="account.account.tag">
+        <field name="name">OTROS Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="ITAX_18" model="account.tax.template">
+      <field name="chart_template_id" ref="pe_chart_template"/>
+      <field name="name">IGV 18% Venta</field>
+      <field name="description">IGV 18% Venta</field>
+      <field name="amount">18</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="account_id" ref="401110"/>
+      <field name="refund_account_id" ref="401110"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_18')])]"/>
+      <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
     <record id="OTAX_18" model="account.tax.template">
@@ -101,4 +141,90 @@
             }),
         ]"/>
     </record>
+
+    <record id="sale_tax_ivap_4" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">IVAP 4% Venta</field>
+        <field name="description">IVAP 4%</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_ivap')])]"/>
+    </record>
+
+    <record id="sale_tax_isc_50" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">ISC 50% Venta</field>
+        <field name="description">ISC 50%</field>
+        <field name="amount">50</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include">False</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_isc')])]"/>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+    </record>
+
+    <record id="sale_tax_exportation_17" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">EXPORTACIÓN 17% Venta</field>
+        <field name="description">EXPORTACIÓN 17%</field>
+        <field name="amount">17</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exportation')])]"/>
+    </record>
+
+    <record id="sale_tax_free_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">FREE 0% Venta</field>
+        <field name="description">FREE 0%</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_free')])]"/>
+    </record>
+
+    <record id="sale_tax_exonerate_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">EXONERADO 0% Venta</field>
+        <field name="description">EXONERADO 0%</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exonerated')])]"/>
+    </record>
+
+    <record id="sale_tax_inafected_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">INAFECTO 0% Venta</field>
+        <field name="description">INAFECTO 0%</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_inafected')])]"/>
+    </record>
+
+    <record id="sale_tax_others_30" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">OTROS 30% Venta</field>
+        <field name="description">OTROS 30%</field>
+        <field name="amount">30</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="401110"/>
+        <field name="refund_account_id" ref="401110"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_others')])]"/>
+    </record>
+
 </odoo>
