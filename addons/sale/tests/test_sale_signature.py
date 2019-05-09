@@ -22,6 +22,8 @@ class TestSaleSignature(odoo.tests.HttpCase):
         })
 
         # must be sent to the user so he can see it
-        sales_order.force_quotation_send()
+        email_act = sales_order.action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        sales_order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
 
         self.start_tour("/", 'sale_signature', login="portal")
