@@ -31,11 +31,21 @@ class AccountPayment(models.Model):
 
     # TODO review how can we remake this
     # ... Este campo lo puedo borrar?
-    # l10n_latam_document_sequence_id = fields.Many2one(
+    l10n_latam_document_sequence_id = fields.Many2one(
+        'ir.sequence',
+        'Entry Sequence',
+        help="This field contains the information related to the numbering "
+        "of the receipt entries of this receiptbook.",
+        copy=False,
+    )
     # ... Revisar tenemos compute que dependen de el
     # l10n_latam_receiptbook_id = fields.Many2one(
+
     # ... este tambien dependia de reciepbook, borrar?
-    # l10n_latam_document_type_id = fields.Many2one(
+    l10n_latam_document_type_id = fields.Many2one(
+        'l10n_latam.document.type',
+        'Document Type',
+    )
 
     @api.model
     def _search_display_name(self, operator, operand):
@@ -51,18 +61,19 @@ class AccountPayment(models.Model):
     @api.multi
     @api.depends(
         'journal_id.sequence_id.number_next_actual',
-        'l10n_latam_receiptbook_id.sequence_id.number_next_actual',
+        # 'l10n_latam_receiptbook_id.sequence_id.number_next_actual',
     )
     def _compute_next_number(self):
-        """
-        show next number only for payments without number and on draft state
+        """ show next number only for payments without number and on draft
+        state
         """
         for payment in self.filtered(
                 lambda x: x.state == 'draft'):
-            if payment.l10n_latam_receiptbook_id:
-                sequence = payment.l10n_latam_receiptbook_id.sequence_id
-            else:
-                sequence = payment.journal_id.sequence_id
+            # if payment.l10n_latam_receiptbook_id:
+            #     sequence = payment.l10n_latam_receiptbook_id.sequence_id
+            # else:
+            #     sequence = payment.journal_id.sequence_id
+            sequence = payment.journal_id.sequence_id
             # we must check if sequence use date ranges
             if not sequence.use_date_range:
                 payment.next_number = sequence.number_next_actual
