@@ -13,7 +13,7 @@ class Feedback(TransactionCase):
         self.user = self.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [(4, self.group2.id),]
+            'groups_id': [(6, 0, self.group2.ids)],
         })
 
 
