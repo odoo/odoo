@@ -26,7 +26,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [4, self.ref('base.group_user')],
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
         ps = (p1 + p2).sudo(user)
         self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
@@ -47,7 +47,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [4, self.ref('base.group_user')],
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
 
         partner_model = self.env['ir.model'].search([('model','=','res.partner')])
@@ -208,7 +208,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
-            'groups_id': [4, self.ref('base.group_partner_manager')],
+            'groups_id': [(6, 0, [self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].sudo(user).create({'name': 'Zorro'})
         p1_prop = self.env['ir.property'].sudo(user).create({
