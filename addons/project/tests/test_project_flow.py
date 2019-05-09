@@ -192,3 +192,26 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)
+
+        # Moving a rating to another task
+        second_task = Task.create({
+            'name': 'second task',
+            'user_id': self.user_projectuser.id,
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_2.id,
+        })
+
+        rating_bad.write({
+            'res_id': second_task.id
+        })
+
+        rating_good.write({
+            'res_id': second_task.id
+        })
+
+        self.assertEqual(first_task.rating_count, 0, "Task should have no ratings associated with it")
+        self.assertEqual(second_task.rating_count, 2, "Task should have two ratings associated with it")
+
+        # Deleting a rating
+        rating_good.unlink()
+        self.assertEqual(second_task.rating_count, 1, "Task should have one ratings associated with it")

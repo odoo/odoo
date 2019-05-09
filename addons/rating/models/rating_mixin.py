@@ -50,8 +50,8 @@ class RatingMixin(models.AbstractModel):
     rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
     rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
     rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
-    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats")
-    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats')
+    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", store=True)
+    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', store=True, index=True)
 
     @api.depends('rating_ids.rating')
     def _compute_rating_last_value(self):

@@ -99,12 +99,41 @@ class Rating(models.Model):
     def create(self, values):
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
-        return super(Rating, self).create(values)
+        res = super(Rating, self).create(values)
+        if res.res_model and res.res_id:
+            res._compute_rating(res._group_model_ids())
+        return res
 
     def write(self, values):
+        model_id_dict = {}
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
-        return super(Rating, self).write(values)
+        if values.get('res_model_id') or values.get('res_id'):
+            self._group_model_ids(model_id_dict)
+        res = super(Rating, self).write(values)
+        if model_id_dict != {} or values.get('rating') or values.get('consumed'):
+            self._group_model_ids(model_id_dict)
+            self._compute_rating(model_id_dict)
+        return res
+
+    def unlink(self):
+        model_id_dict = self._group_model_ids()
+        res = super(Rating, self).unlink()
+        self._compute_rating(model_id_dict)
+        return res
+
+    def _compute_rating(self, model_id_dict):
+        for res_model in model_id_dict:
+            items = self.env[res_model].browse(model_id_dict[res_model])
+            items.modified(['rating_ids'])
+            items.recompute()
+
+    def _group_model_ids(self, model_id_dict=None):
+        if model_id_dict is None:
+            model_id_dict = {}
+        for record in self.filtered(lambda r: r.res_model and r.res_id):
+            model_id_dict.setdefault(record.res_model, set()).add(record.res_id)
+        return model_id_dict
 
     def _find_parent_data(self, values):
         """ Determine the parent res_model/res_id, based on the values to create or write """
