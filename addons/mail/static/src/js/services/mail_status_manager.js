@@ -87,9 +87,8 @@ MailManager.include({
             return $.when();
         }
         return this._rpc({
-            model: 'res.partner',
-            method: 'read',
-            args: [partnerIDs, ['id', 'im_status']],
+            route: '/longpolling/im_status',
+            params: { partner_ids: partnerIDs },
         }).then( function (results) {
             self.updateImStatus(results);
         });
