@@ -8,18 +8,19 @@
         <field type="xml" name="arch">
             <form>
                 <field name="l10n_ar_cuit" invisible="1"/>
+                <field name="l10n_ar_id_number" invisible="1"/>
             </form>
             <sheet position="before">
                 <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('l10n_ar_same_id_number_partner', '=', False)]}">
                     A partner with the same Identification Number already exists (<field name="l10n_ar_same_id_number_partner" widget="html" class="d-inline-block"/>), are you sure to create a new one?
                 </div>
             </sheet>
-            <field name="vat" position="after">
+            <field name="vat" position="before">
                 <label for="l10n_ar_id_number" string="Identification"/>
                 <div class="o_address_format">
                     <field class="o_address_state" name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type"/>
                     <span class="oe_read_only">-</span>
-                    <field name="l10n_ar_id_number" placeholder="Number" class="oe_inline"/>
+                    <field name="l10n_ar_main_number" placeholder="Number" class="oe_inline"/>
                 </div>
             </field>
 

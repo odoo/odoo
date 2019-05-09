@@ -20,6 +20,14 @@ class ResPartner(models.Model):
         help='Computed field that will convert the given cuit number to the'
         ' format {person_category:2}-{number:10}-{validation_number:1}',
     )
+    l10n_ar_main_number = fields.Char(
+        string='Main Identification Number',
+        compute='_compute_l10n_ar_main_number',
+        inverse='_inverse_l10n_ar_main_number',
+        help='Techincal field used to return the identification number to use '
+        'for this partner. Could be VAT Number or Identification Number '
+        'depending on the Identification Type',
+    )
     l10n_ar_id_number = fields.Char(
         string='Identification Number',
         help='Number that appears in the person/legal entity identification'
@@ -42,6 +50,22 @@ class ResPartner(models.Model):
         ' partner. Parent/child partners could share identification number'
         ' so for this cases not warning will appears',
     )
+
+    @api.onchange('l10n_ar_identification_type_id', 'l10n_ar_main_number')
+    def _inverse_l10n_ar_main_number(self):
+        for rec in self.filtered('l10n_ar_identification_type_id'):
+            if rec.l10n_ar_identification_type_id.afip_code == 80:
+                rec.vat = rec.l10n_ar_main_number and 'AR%s' % rec.l10n_ar_main_number
+            else:
+                rec.l10n_ar_id_number = rec.l10n_ar_main_number
+
+    @api.depends('l10n_ar_id_number', 'vat', 'l10n_ar_identification_type_id')
+    def _compute_l10n_ar_main_number(self):
+        for rec in self.filtered('l10n_ar_identification_type_id'):
+            if rec.l10n_ar_identification_type_id.afip_code == 80:
+                rec.l10n_ar_main_number = rec.vat and rec.vat.replace('AR', '')
+            else:
+                rec.l10n_ar_main_number = rec.l10n_ar_id_number
 
     @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
     def _compute_l10n_ar_same_id_number_partner(self):
