@@ -16,7 +16,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
         var $amount_total = $('#order_total span.oe_currency_value');
-        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
+        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge:not(.o_delivery_compute)');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         var $discount = $('#order_discounted');
 
