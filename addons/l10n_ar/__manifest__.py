@@ -15,12 +15,12 @@ Argentinian accounting chart and tax localization.
 * Argentian Taxes
 * Fiscal Positions
 * AFIP Defined Legal Documents
-* AFIP Incoterms
 * Add AFIP Codes for models
     * Currency
     * Country
     * Product Unit of Measure
     * Tax Group
+    * Account Incoterms
     * Fiscal Position
     * Fiscal Position Template
 
@@ -56,14 +56,13 @@ Follow the next configuration steps
         'data/res_country_data.xml',
         'data/menuitem.xml',
         'data/product_data.xml',
-        'data/l10n_ar_afip_incoterm.xml',
+        'data/account_incoterms_data.xml',
         # los cargamos con csv pero los hacemos no actualizables con un hook
         'views/account_move_line_view.xml',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
         'views/afip_menuitem.xml',
-        'views/l10n_ar_afip_incoterm_view.xml',
         'views/account_account_view.xml',
         'views/res_currency_view.xml',
         'views/account_fiscal_position_view.xml',
