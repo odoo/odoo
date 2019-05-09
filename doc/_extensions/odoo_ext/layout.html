@@ -1,12 +1,5 @@
 {% extends "basic/layout.html" %}
 
-{% set script_files = script_files + [
-'_static/jquery.min.js',
-'_static/bootstrap.js',
-'_static/doc.js',
-'_static/jquery.noconflict.js',
-] %}
-
 {% set classes = [] %}
 {% if pagename == master_doc %}
   {% set classes = classes + ['index'] %}

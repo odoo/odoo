@@ -43,7 +43,7 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
         var $amountUntaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amountTax = $('#order_total_taxes span.oe_currency_value');
         var $amountTotal = $('#order_total span.oe_currency_value');
-        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
+        var $carrierBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge:not(.o_delivery_compute)');
         var $computeBadge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         var $discount = $('#order_discounted');
 

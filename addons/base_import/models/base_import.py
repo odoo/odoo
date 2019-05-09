@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import codecs
 import collections
 import unicodedata
 
@@ -32,6 +33,12 @@ DEFAULT_IMAGE_REGEX = r"(?:http|https)://.*(?:png|jpe?g|tiff?|gif|bmp)"
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
 IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
 _logger = logging.getLogger(__name__)
+BOM_MAP = {
+    'utf-16le': codecs.BOM_UTF16_LE,
+    'utf-16be': codecs.BOM_UTF16_BE,
+    'utf-32le': codecs.BOM_UTF32_LE,
+    'utf-32be': codecs.BOM_UTF32_BE,
+}
 
 try:
     import xlrd
@@ -321,6 +328,13 @@ class Import(models.TransientModel):
         encoding = options.get('encoding')
         if not encoding:
             encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
+            # some versions of chardet (e.g. 2.3.0 but not 3.x) will return
+            # utf-(16|32)(le|be), which for python means "ignore / don't strip
+            # BOM". We don't want that, so rectify the encoding to non-marked
+            # IFF the guessed encoding is LE/BE and csv_data starts with a BOM
+            bom = BOM_MAP.get(encoding)
+            if bom and csv_data.startswith(bom):
+                encoding = options['encoding'] = encoding[:-2]
 
         if encoding != 'utf-8':
             csv_data = csv_data.decode(encoding).encode('utf-8')
