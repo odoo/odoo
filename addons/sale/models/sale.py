@@ -674,9 +674,6 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        if self.env.context.get('send_email'):
-            self.force_quotation_send()
-
         # create an analytic account if at least an expense product
         for order in self:
             if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
