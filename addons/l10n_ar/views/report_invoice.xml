@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_invoice_document" inherit_id="l10n_latam_documents.report_invoice_document">
+<template id="report_invoice_document" inherit_id="l10n_latam_document.report_invoice_document">
 
     <xpath expr="//span[@t-if='o.partner_id.vat']" position="after">
         <span t-if="o.l10n_ar_afip_responsability_type">AFIP Responsability Type: <span t-field="o.l10n_ar_afip_responsability_type"/></span>

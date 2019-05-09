@@ -34,7 +34,7 @@ Follow the next configuration steps
     'author': ['ADHOC SA'],
     'category': 'Localization',
     'depends': [
-        'l10n_latam_documents',
+        'l10n_latam_document',
         'l10n_ar_base',
     ],
     'data':[
