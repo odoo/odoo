@@ -87,7 +87,8 @@ class PaymentTransaction(models.Model):
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
-            so.with_context(send_email=True).action_confirm()
+            so.action_confirm()
+            so.force_quotation_send()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
