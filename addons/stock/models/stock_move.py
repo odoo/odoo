@@ -199,7 +199,7 @@ class StockMove(models.Model):
     @api.depends('state', 'picking_id')
     def _compute_is_initial_demand_editable(self):
         for move in self:
-            if self._context.get('planned_picking'):
+            if not self._context.get('planned_picking'):
                 move.is_initial_demand_editable = True
             elif not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
                 move.is_initial_demand_editable = True
