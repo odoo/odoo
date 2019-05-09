@@ -600,21 +600,24 @@ class SaleOrder(models.Model):
     def action_cancel(self):
         return self.write({'state': 'cancel'})
 
+    def _find_mail_template(self, force_confirmation_template=False):
+        template_id = False
+
+        if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
+            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
+            if not template_id:
+                template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+        if not template_id:
+            template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.email_template_edi_sale', raise_if_not_found=False)
+
+        return template_id
+
     @api.multi
     def action_quotation_send(self):
-        '''
-        This function opens a window to compose an email, with the edi sale template message loaded by default
-        '''
+        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
         self.ensure_one()
-        ir_model_data = self.env['ir.model.data']
-        try:
-            template_id = ir_model_data.get_object_reference('sale', 'email_template_edi_sale')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False
+        template_id = self._find_mail_template()
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],
@@ -632,8 +635,8 @@ class SaleOrder(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
+            'views': [(False, 'form')],
+            'view_id': False,
             'target': 'new',
             'context': ctx,
         }
@@ -647,14 +650,11 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
-    def force_quotation_send(self):
-        for order in self:
-            email_act = order.action_quotation_send()
-            if email_act and email_act.get('context'):
-                email_ctx = email_act['context']
-                email_ctx.update(default_email_from=order.company_id.email)
-                order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
-        return True
+    def _send_order_confirmation_mail(self):
+        template_id = self._find_mail_template(force_confirmation_template=True)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', notif_layout="mail.mail_notification_paynow")
 
     @api.multi
     def action_done(self):

@@ -86,7 +86,9 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(self.sale_order.order_line[0].product_updatable)
         # send quotation
-        self.sale_order.force_quotation_send()
+        email_act = self.sale_order.action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        self.sale_order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
         self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
         self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(self.sale_order.order_line[0].product_updatable)

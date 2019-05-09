@@ -9,5 +9,11 @@
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>
+
+        <!-- set default order confirmation template -->
+        <record id="default_confirmation_template" model="ir.config_parameter">
+            <field name="key">sale.default_confirmation_template</field>
+            <field name="value" ref="sale.mail_template_sale_confirmation"/>
+        </record>
     </data>
 </odoo>
