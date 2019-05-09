@@ -18,6 +18,6 @@ class MrpBom(models.Model):
             if bom.product_id:
                 if bom.sub_products.filtered(lambda x: x.product_id == bom.product_id):
                     raise ValidationError(_('Byproduct %s should not be same as BoM product.') % bom.display_name)
-            else:
+            elif:
                 if bom.sub_products.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
                     raise ValidationError(_('Byproduct product %s should not be same as BoM product.') % bom.display_name)
