@@ -583,7 +583,7 @@ class SaleOrder(models.Model):
                     line.quantity = -line.quantity
             # Use additional field helper function (for account extensions)
             for line in invoice.invoice_line_ids:
-                line._set_additional_fields(invoice)
+                line._set_additional_fields()
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
