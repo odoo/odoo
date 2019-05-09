@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.tools import config
 
 
 rec = 0
@@ -206,7 +207,11 @@ class MrpStockReport(models.TransientModel):
             'base_url': base_url,
         }
 
-        body = self.env['ir.ui.view'].render_template(
+        context = dict(self.env.context)
+        if not config['test_enable']:
+            context['commit_assetsbundle'] = True
+
+        body = self.env['ir.ui.view'].with_context(context).render_template(
             "stock.report_stock_inventory_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )
