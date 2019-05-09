@@ -205,7 +205,7 @@ class MrpStockReport(models.TransientModel):
             'base_url': base_url,
         }
 
-        body = self.env['ir.ui.view'].render_template(
+        body = self.env['ir.ui.view'].with_context(commit_assetsbundle=True).render_template(
             "stock.report_stock_inventory_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )
