@@ -87,7 +87,7 @@ tour.register('shop_mail', {
     },
     {
         content: "wait mail to be sent, and go see it",
-        trigger: '.o_thread_message_content:contains("Here is"):contains("the order")',
+        trigger: '.o_thread_message_content:contains("Your"):contains("order")',
         run: function () {
             window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
         },
@@ -98,7 +98,7 @@ tour.register('shop_mail', {
     },
     {
         content: "check it's the correct email, and the URL is correct too",
-        trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Here is"):contains("the order")',
+        trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Your"):contains("order")',
         extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="http://my-test-domain.com"]',
     },
 ]);
