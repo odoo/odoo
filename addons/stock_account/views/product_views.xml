@@ -12,7 +12,7 @@
                         <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
                         <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
                         <field name="property_stock_valuation_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}"/>
-                        <field name="property_stock_journal"/>
+                        <field name="property_stock_journal" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
                     </group>
                 </group>
                 <group name="account_property" position="before">
