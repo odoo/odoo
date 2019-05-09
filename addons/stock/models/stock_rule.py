@@ -362,7 +362,7 @@ class ProcurementGroup(models.Model):
                 try:
                     getattr(self.env['stock.rule'], '_run_%s' % action)(procurements)
                 except UserError as e:
-                    errors.append(e.name)
+                    errors.append(e.args[0])
             else:
                 _logger.error("The method _run_%s doesn't exist on the procurement rules" % action)
 
