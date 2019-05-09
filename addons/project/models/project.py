@@ -174,7 +174,7 @@ class Project(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        help="Analytic account to which this project is linked for financial management."
+        help="Analytic account to which this project is linked for financial management. "
              "Use an analytic account to record cost and revenue on your project.")
 
     favorite_user_ids = fields.Many2many(
