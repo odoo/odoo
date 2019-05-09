@@ -9,7 +9,6 @@ if (!config.device.isMobile) {
 }
 
 ControlPanelRenderer.include({
-    template:'MobileControlPanel',
     events:_.extend({}, ControlPanelRenderer.prototype.events, {
         'click .o_mobile_search_close, .o_mobile_search_show_result, .o_enable_searchview': '_toggleMobileSearchView',
         'click': '_onOpenMobileSearchView',
