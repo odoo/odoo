@@ -220,6 +220,7 @@ class CustomerPortal(CustomerPortal):
 
         if not order_sudo.has_to_be_paid():
             order_sudo.action_confirm()
+            order_sudo._send_order_confirmation_mail()
 
         pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
 

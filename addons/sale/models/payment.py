@@ -61,24 +61,27 @@ class PaymentTransaction(models.Model):
         super(PaymentTransaction, self)._set_transaction_pending()
 
         for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state == 'draft')
-            sales_orders.force_quotation_send()
+            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+            sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
 
             if record.acquirer_id.provider == 'transfer':
                 for so in record.sale_order_ids:
                     so.reference = record._compute_sale_order_reference(so)
+            # send order confirmation mail
+            sales_orders._send_order_confirmation_mail()
 
     @api.multi
     def _set_transaction_authorized(self):
         # Override of '_set_transaction_authorized' in the 'payment' module
         # to confirm the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_authorized()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ['draft', 'sent'])
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.action_confirm()
+
+        # send order confirmation mail
+        sales_orders._send_order_confirmation_mail()
 
     @api.multi
     def _reconcile_after_transaction_done(self):
@@ -87,7 +90,9 @@ class PaymentTransaction(models.Model):
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
-            so.with_context(send_email=True).action_confirm()
+            so.action_confirm()
+        # send order confirmation mail
+        sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
