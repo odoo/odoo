@@ -70,8 +70,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
         used in onchange and request that write on db (e.g. workorder creation).
         """
         line_values = {'to_create': [], 'to_delete': [], 'to_update': {}}
-        move_finished_ids = self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
-        move_raw_ids = self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+        # moves are actual records
+        move_finished_ids = self.move_finished_ids._origin.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
+        move_raw_ids = self.move_raw_ids._origin.filtered(lambda move: move.state not in ('done', 'cancel'))
         for move in move_raw_ids | move_finished_ids:
             move_workorder_lines = self._workorder_line_ids().filtered(lambda w: w.move_id == move)
 
@@ -171,7 +172,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """
         lines = []
         is_tracked = move.product_id.tracking != 'none'
-        if move in self.move_raw_ids:
+        if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
         else:
