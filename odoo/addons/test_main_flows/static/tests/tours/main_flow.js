@@ -604,7 +604,7 @@ tour.register('main_flow_tour', {
     position: "bottom"
 }, {
     trigger: ".o_data_row:first",
-    extra_trigger: '.o_control_panel > .breadcrumb:contains("Sales Orders")',
+    extra_trigger: '.o_control_panel .breadcrumb:contains("Sales Orders")',
     content: _t("Go to the last sale order"),
     position: "right"
 }, {
