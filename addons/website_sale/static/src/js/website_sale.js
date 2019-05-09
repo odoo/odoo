@@ -818,6 +818,7 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
         this.displayDescription = !!this.$input.data('displayDescription');
         this.displayPrice = !!this.$input.data('displayPrice');
         this.displayImage = !!this.$input.data('displayImage');
+        this.displayRating = !!this.$input.data('displayRating');
 
         if (this.limit) {
             this.$input.attr('autocomplete', 'off');
@@ -843,6 +844,7 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                     'limit': this.limit,
                     'display_description': this.displayDescription,
                     'display_price': this.displayPrice,
+                    'display_rating': this.displayRating,
                     'max_nb_chars': Math.round(Math.max(this.autocompleteMinWidth, parseInt(this.$el.width())) * 0.22),
                 },
             },

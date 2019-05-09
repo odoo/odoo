@@ -365,6 +365,7 @@ options.registry.ProductsSearchBar = options.Class.extend({
                 currentDisplayDescription: this.$searchProductsInput.attr('data-display-description') === 'true',
                 currentDisplayPrice: this.$searchProductsInput.attr('data-display-price') === 'true',
                 currentDisplayImage: this.$searchProductsInput.attr('data-display-image') === 'true',
+                currentDisplayRating: this.$searchProductsInput.attr('data-display-rating') === 'true',
             })),
             buttons: [
                 {
@@ -379,6 +380,7 @@ options.registry.ProductsSearchBar = options.Class.extend({
                             'data-display-description': this.$('#display_description').is(':checked'),
                             'data-display-price': this.$('#display_price').is(':checked'),
                             'data-display-image': this.$('#display_image').is(':checked'),
+                            'data-display-rating': this.$('#display_rating').is(':checked'),
                         });
                         self.$target.trigger('content_changed');
                         this.close();

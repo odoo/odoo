@@ -19,6 +19,9 @@
                 <h6 t-attf-class="font-weight-bold #{description ? '' : 'mb-0'}" t-esc="product['name']"/>
                 <p t-if="description" class="mb-0" t-esc="description"/>
             </div>
+            <div t-if="widget.displayRating" class="flex-shrink-0 pr-3">
+                <t t-raw="product.rating"/>
+            </div>
             <div t-if="widget.displayPrice" class="flex-shrink-0">
                 <t t-if="product['has_discounted_price']">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">

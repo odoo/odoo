@@ -22,6 +22,8 @@
             <option value="name desc" t-att-selected="currentOrderBy == 'name desc' ? 'selected' : undefined">Order by name (Z-A)</option>
             <option value="list_price asc" t-att-selected="currentOrderBy == 'list_price asc' ? 'selected' : undefined">Order by price: low to high</option>
             <option value="list_price desc" t-att-selected="currentOrderBy == 'list_price desc' ? 'selected' : undefined">Order by price: high to low</option>
+            <option value="rating_avg asc" t-att-selected="currentOrderBy == 'rating_avg asc' ? 'selected' : undefined">Order by rating: low to high</option>
+            <option value="rating_avg desc" t-att-selected="currentOrderBy == 'rating_avg desc' ? 'selected' : undefined">Order by rating: high to low</option>
         </select>
     </div>
     <div class="form-group">
@@ -55,6 +57,12 @@
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="display_image" t-att-checked="currentDisplayImage ? 'checked' : undefined"/>
                 <label class="custom-control-label" for="display_image">Display product <b>image</b></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="display_rating" t-att-checked="currentDisplayRating ? 'checked' : undefined"/>
+                <label class="custom-control-label" for="display_rating">Display product <b>rating</b></label>
             </div>
         </div>
     </div>

@@ -1168,6 +1168,7 @@ class WebsiteSale(http.Controller):
 
         display_description = options.get('display_description', True)
         display_price = options.get('display_price', True)
+        display_rating = options.get('display_rating', True)
         order = self._get_search_order(options)
         max_nb_chars = options.get('max_nb_chars', 999)
 
@@ -1206,6 +1207,13 @@ class WebsiteSale(http.Controller):
                 res_product.update(combination_info)
                 res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
                 res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
+
+        if display_rating:
+            for res_product, product in zip(res['products'], products):
+                res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
+                    'rating_avg': product.rating_avg,
+                    'rating_count': product.rating_count,
+                })
 
         return res
 
