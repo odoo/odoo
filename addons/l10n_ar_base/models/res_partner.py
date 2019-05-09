@@ -23,7 +23,6 @@ class ResPartner(models.Model):
     l10n_ar_main_number = fields.Char(
         string='Main Identification Number',
         compute='_compute_l10n_ar_main_number',
-        inverse='_inverse_l10n_ar_main_number',
         help='Techincal field used to return the identification number to use '
         'for this partner. Could be VAT Number or Identification Number '
         'depending on the Identification Type',
@@ -51,31 +50,17 @@ class ResPartner(models.Model):
         ' so for this cases not warning will appears',
     )
 
-    @api.onchange('l10n_ar_identification_type_id', 'l10n_ar_main_number')
-    def _inverse_l10n_ar_main_number(self):
-        for rec in self.filtered('l10n_ar_identification_type_id'):
-            if rec.l10n_ar_identification_type_id.afip_code == 80:
-                rec.vat = rec.l10n_ar_main_number and 'AR%s' % rec.l10n_ar_main_number
-            else:
-                rec.l10n_ar_id_number = rec.l10n_ar_main_number
-
     @api.depends('l10n_ar_id_number', 'vat', 'l10n_ar_identification_type_id')
     def _compute_l10n_ar_main_number(self):
-        for rec in self.filtered('l10n_ar_identification_type_id'):
-            if rec.l10n_ar_identification_type_id.afip_code == 80:
-                rec.l10n_ar_main_number = rec.vat and rec.vat.replace('AR', '')
-            else:
-                rec.l10n_ar_main_number = rec.l10n_ar_id_number
+        for rec in self:
+            rec.l10n_ar_main_number = rec.vat or rec.l10n_ar_id_number
 
     @api.depends('l10n_ar_id_number', 'l10n_ar_identification_type_id')
     def _compute_l10n_ar_same_id_number_partner(self):
-        cuit_id_type = self.env.ref('l10n_ar_base.dt_CUIT')
         for partner in self:
             partner_id = partner.id
             partner_id_number = partner.l10n_ar_id_number
             partner_id_type = partner.l10n_ar_identification_type_id
-            if partner_id_type != cuit_id_type:
-                continue
             if isinstance(partner_id, models.NewId):
                 # deal with onchange(), which is always called on a single
                 # record
@@ -138,34 +123,14 @@ class ResPartner(models.Model):
         for rec in self:
             # If the partner is outside Argentina then we return the defined
             # country cuit defined by AFIP for that specific partner
-            if rec.l10n_ar_identification_type_id.afip_code != 80:
-                country = rec.country_id
-                if country and country.code != 'AR':
-                    if rec.is_company:
-                        rec.l10n_ar_cuit = country.l10n_ar_cuit_juridica
-                    else:
-                        rec.l10n_ar_cuit = country.l10n_ar_cuit_fisica
-                continue
-            if rec.l10n_ar_identification_type_id.afip_code == 80:
-                rec.l10n_ar_cuit = rec.l10n_ar_id_number
-
-    @api.constrains('parent_id', 'commercial_partner_id',
-                    'l10n_ar_identification_type_id', 'l10n_ar_id_number')
-    def check_cuit_commercial_partner(self):
-        """ Can not set CUIT for non commercial partners
-        """
-        cuit_id_type = self.env.ref('l10n_ar_base.dt_CUIT')
-        contacts_with_cuit = self.filtered(
-            lambda x: x.l10n_ar_id_number and
-            x.l10n_ar_identification_type_id == cuit_id_type and
-            x.id != x.commercial_partner_id.id
-        )
-        if contacts_with_cuit:
-            raise ValidationError(_(
-                'Can not define CUIT for contacts, you can set cuit'
-                ' to Commercial Entity. Check contacts: %s') % ', '.join(
-                    contacts_with_cuit.mapped('name'))
-            )
+            country = rec.country_id
+            if country and country.code != 'AR':
+                if rec.is_company:
+                    rec.l10n_ar_cuit = country.l10n_ar_cuit_juridica
+                else:
+                    rec.l10n_ar_cuit = country.l10n_ar_cuit_fisica
+            else:
+                rec.l10n_ar_cuit = rec.vat
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100,
@@ -183,3 +148,13 @@ class ResPartner(models.Model):
                 return recs.name_get()
         return super(ResPartner, self)._name_search(
             name, args=args, operator=operator, limit=limit)
+
+    # @api.constrains('vat', 'country_id', 'l10n_co_document_type')
+    # def check_vat(self):
+    #     # check_vat is implemented by base_vat which this localization
+    #     # doesn't directly depend on. It is however automatically
+    #     # installed for Colombia.
+    #         # don't check Colombian partners unless they have RUT (= Colombian VAT) set as document type
+    #     self = self.filtered(lambda partner: partner.country_id.code != self.env.ref('base.co') or\
+    #                                             partner.l10n_co_document_type == 'rut')
+    #     return super(ResPartner, self).check_vat()
