@@ -16,23 +16,8 @@ class AccountPayment(models.Model):
         states={'draft': [('readonly', False)]},
         index=True,
     )
-    l10n_latam_document_sequence_id = fields.Many2one(
-        related='l10n_latam_receiptbook_id.sequence_id',
-        readonly=True,
-    )
     l10n_latam_use_documents = fields.Boolean(
         related='company_id.l10n_latam_use_documents',
-    )
-    l10n_latam_receiptbook_id = fields.Many2one(
-        'l10n_latam.payment.receiptbook',
-        'ReceiptBook',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        auto_join=True,
-    )
-    l10n_latam_document_type_id = fields.Many2one(
-        related='l10n_latam_receiptbook_id.document_type_id',
-        readonly=True,
     )
     l10n_latam_next_number = fields.Integer(
         compute='_compute_next_number',
@@ -44,6 +29,14 @@ class AccountPayment(models.Model):
         string='Document Reference',
     )
 
+    # TODO review how can we remake this
+    # ... Este campo lo puedo borrar?
+    # l10n_latam_document_sequence_id = fields.Many2one(
+    # ... Revisar tenemos compute que dependen de el
+    # l10n_latam_receiptbook_id = fields.Many2one(
+    # ... este tambien dependia de reciepbook, borrar?
+    # l10n_latam_document_type_id = fields.Many2one(
+
     @api.model
     def _search_display_name(self, operator, operand):
         domain = [
@@ -54,6 +47,7 @@ class AccountPayment(models.Model):
             domain = ['&', '!'] + domain[1:]
         return domain
 
+    # TODO Este metodo y el campo asociado lo podemos borrar?
     @api.multi
     @api.depends(
         'journal_id.sequence_id.number_next_actual',
@@ -107,41 +101,19 @@ class AccountPayment(models.Model):
                 display_name = rec.name
             rec.display_name = display_name
 
-    @api.multi
-    @api.constrains('company_id', 'partner_type')
-    def _force_receiptbook(self):
-        for rec in self:
-            if not rec.l10n_latam_receiptbook_id:
-                rec.l10n_latam_receiptbook_id = rec._get_receiptbook()
-
-    @api.onchange('company_id', 'partner_type')
-    def get_receiptbook(self):
-        self.l10n_latam_receiptbook_id = self._get_receiptbook()
-
-    @api.multi
-    def _get_receiptbook(self):
-        self.ensure_one()
-        partner_type = self.partner_type or self._context.get(
-            'partner_type', self._context.get('default_partner_type', False))
-        receiptbook = self.env[
-            'l10n_latam.payment.receiptbook'].search([
-                ('partner_type', '=', partner_type),
-                ('company_id', '=', self.company_id.id),
-            ], limit=1)
-        return receiptbook
-
-    @api.multi
-    def post(self):
-        for rec in self.filtered(
-                lambda x: x.l10n_latam_receiptbook_id and not x.l10n_latam_document_number):
-            if not rec.l10n_latam_receiptbook_id.sequence_id:
-                raise UserError(_(
-                    'Error!. Please define sequence on the receiptbook'
-                    ' related documents to this payment or set the '
-                    'document number.'))
-            rec.l10n_latam_document_number = (
-                rec.l10n_latam_receiptbook_id.sequence_id.next_by_id())
-        return super(AccountPayment, self).post()
+    # TODO we need to define using a different sequence?
+    # @api.multi
+    # def post(self):
+    #     for rec in self.filtered(
+    #             lambda x: x.l10n_latam_receiptbook_id and not x.l10n_latam_document_number):
+    #         if not rec.l10n_latam_receiptbook_id.sequence_id:
+    #             raise UserError(_(
+    #                 'Error!. Please define sequence on the receiptbook'
+    #                 ' related documents to this payment or set the '
+    #                 'document number.'))
+    #         rec.l10n_latam_document_number = (
+    #             rec.l10n_latam_receiptbook_id.sequence_id.next_by_id())
+    #     return super(AccountPayment, self).post()
 
     def _get_move_vals(self, journal=None):
         vals = super(AccountPayment, self)._get_move_vals()
@@ -152,12 +124,3 @@ class AccountPayment(models.Model):
             else self.name,
         })
         return vals
-
-    @api.multi
-    @api.constrains('l10n_latam_receiptbook_id', 'company_id')
-    def _check_company_id(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_receiptbook_id and \
-                x.l10n_latam_receiptbook_id.company_id != rec.company_id):
-            raise ValidationError(_(
-                'The company of the receiptbook and of the payment must be the'
-                ' same!'))

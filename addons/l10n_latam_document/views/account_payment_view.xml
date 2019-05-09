@@ -14,7 +14,6 @@
             <field name="payment_date" position="before">
 
                 <!-- only required on posted state for compatibility if you install this module with payments already created -->
-                <field name="l10n_latam_receiptbook_id" attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('payment_type', '=', 'transfer')], 'required':[('payment_type', '!=', 'transfer'), ('l10n_latam_use_documents', '!=', False), ('state', '=', 'draft')]}" domain="[('partner_type', '=', partner_type), ('company_id', '=', company_id)]"/>
                 <field name="l10n_latam_document_number" attrs="{'invisible': ['|', ('payment_type', '=', 'transfer'), '|', ('l10n_latam_document_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('payment_type', '!=', 'transfer'), ('l10n_latam_document_sequence_id', '=', False), ('l10n_latam_use_documents', '!=', False)]}"/>
             </field>
 
@@ -42,14 +41,6 @@
                 <!-- in this case display_name has the or logic -->
                 <attribute name="filter_domain">['|', ('display_name','ilike',self), ('communication','ilike',self)]</attribute>
             </field>
-
-            <field name="company_id">
-                <field name="l10n_latam_receiptbook_id"/>
-            </field>
-
-            <search>
-                <filter string="Receiptbook" name="l10n_latam_receiptbook" context="{'group_by':'l10n_latam_receiptbook_id'}"/>
-            </search>
         </field>
     </record>
 
