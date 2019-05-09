@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    "name": "Latam Documents",
+    "name": "Latam Document",
     "version": "12.0.1.0.0",
     "author": "ADHOC SA",
     "category": "Localization",
