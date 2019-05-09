@@ -112,7 +112,6 @@ class AccountInvoice(models.Model):
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
             new_line = new_lines.new(data)
-            new_line._set_additional_fields(self)
             new_lines += new_line
 
         self.invoice_line_ids += new_lines
