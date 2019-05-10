@@ -1,0 +1,105 @@
+$o-hierarchical-highlight-color: $o-brand-primary;
+$o-hierarchical-border-color: gray('500');
+$o-hierarchical-border-width: 1px;
+$o-hierarchical-border-radius: 4px;
+
+@mixin o-stock-hierarchy-level {
+    position: relative;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.o_stock_location_hierarchy {
+    .o_hierarchy_container {
+        border: 1px solid gray('300');
+        background-color: lighten(gray('200'), 2%);
+        border-radius: .5rem;
+        white-space: nowrap;
+        overflow-x: auto;
+        @include o-stock-hierarchy-level();
+        ul.o_hierarchy_level {
+            @include o-stock-hierarchy-level();
+            &:before {
+                content: '';
+                @include o-position-absolute($top: 0, $left: 50%);
+                border-left: $o-hierarchical-border-width solid $o-hierarchical-border-color;
+                height: 1.2rem;
+            }
+        }
+        li.o_hierarchy_item {
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            padding: 1rem .5rem 0 .5rem;
+            .o_hierarchy_box {
+                position: relative;
+                border: $o-hierarchical-border-width solid gray('white');
+                padding: .5rem .75rem;
+                display: inline-block;
+                border-radius: $o-hierarchical-border-radius;
+                transition: 0.2s;
+                background: gray('white');
+                box-shadow: 0 1px 3px rgba(gray('black'), 0.12), 0 1px 2px rgba(gray('black'), 0.14);
+                &.disabled {
+                    background-color: #f1f1f1;
+                    border-color: #f1f1f1;
+                }
+                .o_hierarchy_box_title, .o_hierarchy_box_subtitle {
+                    max-width: 170px;
+                }
+                .o_hierarchy_action {
+                    display: none;
+                    @include o-position-absolute($left: 0, $right: 0, $bottom: -10px);
+                    z-index: 1;
+                    .o_hierarchy_add_child .fa {
+                        background-color: gray('white');
+                        border-radius: 8rem;
+                    }
+                }
+                @include media-breakpoint-up(md) {
+                    &:hover .o_hierarchy_action {
+                        display: block;
+                    }
+                    &:hover, &:hover + ul li .o_hierarchy_box {
+                        background: lighten($o-hierarchical-highlight-color, 65);
+                        border: $o-hierarchical-border-width solid $o-hierarchical-highlight-color;
+                    }
+                    &:hover + ul li::after,
+                    &:hover + ul li::before,
+                    &:hover + ul::before,
+                    &:hover + ul ul::before {
+                        border-color: $o-hierarchical-highlight-color;
+                    }
+                }
+            }
+            &::before, &::after {
+                content: '';
+                @include o-position-absolute($top: 0, $right: 50%);
+                border-top: $o-hierarchical-border-width solid $o-hierarchical-border-color;
+                width: 52%;
+                height: 1em;
+            }
+            &::after {
+                right: auto;
+                left: 50%;
+                border-left: $o-hierarchical-border-width solid $o-hierarchical-border-color;
+            }
+            &:only-child::after, &:only-child::before {
+                display: none;
+            }
+            &:only-child {
+                padding-top: 0;
+            }
+            &:first-child::before, &:last-child::after {
+                border: 0 none;
+            }
+            &:last-child::before {
+                border-right: $o-hierarchical-border-width solid $o-hierarchical-border-color;
+                border-radius: 0 $o-hierarchical-border-radius 0 0;
+            }
+            &:first-child::after {
+                border-radius: $o-hierarchical-border-radius 0 0 0;
+            }
+        }
+    }
+}
