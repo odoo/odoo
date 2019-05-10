@@ -48,16 +48,23 @@ class WebsiteProfile(http.Controller):
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
         # User can access - no matter what - his own profile
-        if user_sudo.id == request.env.user.id:
+        if user_sudo.id == request.env.user.id or request.env.user._is_admin():
             return user_sudo
         if user_sudo.karma == 0 or not user_sudo.website_published or \
             (user_sudo.id != request.session.uid and request.env.user.karma < request.website.karma_profile_min):
             return False
         return user_sudo
 
+    def _get_requested_user(self, user_id):
+        if request.env.user._is_admin() and user_id and not user_id == request.env.user.id:
+            return request.env['res.users'].browse(user_id)
+        return request.env.user
+
     def _prepare_user_values(self, **kwargs):
+        user_id = int(kwargs['searches'].get('user_id')) if 'searches' in kwargs else None
+        user = self._get_requested_user(user_id)
         values = {
-            'user': request.env.user,
+            'user': user,
             'is_public_user': request.website.is_public_user(),
             'validation_email_sent': request.session.get('validation_email_sent', False),
             'validation_email_done': request.session.get('validation_email_done', False),
@@ -149,13 +156,14 @@ class WebsiteProfile(http.Controller):
             image = kwargs.get('ufile').read()
             values['image'] = base64.b64encode(image)
 
-        if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
+        if request.uid == user.id or request.env.user._is_admin():  # the controller allows to edit only its own privacy setting except for the admin who can edit everyone's privacy setting
             values['website_published'] = kwargs.get('website_published') == 'True'
         return values
 
     @http.route('/profile/user/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
-        user = request.env.user
+        user_id = int(kwargs.get('user_id'))
+        user = self._get_requested_user(user_id)
         values = self._profile_edition_preprocess_values(user, **kwargs)
         whitelisted_values = {key: values[key] for key in type(user).SELF_WRITEABLE_FIELDS if key in values}
         user.write(whitelisted_values)
@@ -211,7 +219,7 @@ class WebsiteProfile(http.Controller):
                  '/profile/users/page/<int:page>'], type='http', auth="public", website=True)
     def view_all_users_page(self, page=1, **searches):
         User = request.env['res.users']
-        dom = [('karma', '>', 1), ('website_published', '=', True)]
+        dom = [('karma', '>', 1), ('website_published', '=', True)] if not request.env.user._is_admin() else [('karma', '>', 1)]
 
         # Searches
         search_term = searches.get('search')
