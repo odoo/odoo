@@ -30,6 +30,19 @@ class View(models.Model):
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
     @api.multi
+    def name_get(self):
+        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+            return super(View, self).name_get()
+
+        res = []
+        for view in self:
+            view_name = view.name
+            if view.website_id:
+                view_name += ' [%s]' % view.website_id.name
+            res.append((view.id, view_name))
+        return res
+
+    @api.multi
     def write(self, vals):
         '''COW for ir.ui.view. This way editing websites does not impact other
         websites. Also this way newly created websites will only
