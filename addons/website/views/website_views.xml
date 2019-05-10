@@ -139,7 +139,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="url"/>
-                                <field name="view_id"/>
+                                <field name="view_id" context="{'display_website': True}"/>
                                 <field name="is_published" groups="base.group_no_one"/>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             </group>
@@ -200,7 +200,7 @@
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             </group>
                             <group>
-                                <field name="parent_id"/>
+                                <field name="parent_id" context="{'display_website': True}"/>
                                 <field name="group_ids"/>
                             </group>
                         </group>
@@ -228,7 +228,7 @@
                     <field name="name"/>
                     <field name="url"/>
                     <field name="new_window"/>
-                    <field name="parent_id"/>
+                    <field name="parent_id" context="{'display_website': True}"/>
                     <field name="group_ids" widget="many2many_tags"/>
                 </tree>
             </field>
@@ -266,6 +266,9 @@
 
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
+                <field name="inherit_id" position="attributes">
+                    <attribute name="context">{'display_website': True}</attribute>
+                </field>
                 <field name="name" position="after">
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="key"/>
