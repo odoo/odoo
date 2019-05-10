@@ -30,12 +30,14 @@ class TestMenu(common.TransactionCase):
                 'parent_id': top_menu.id,
                 'name': 'New Menu Specific 1',
                 'url': '/new-specific-1',
+                'is_mega_menu': False,
             },
             {
                 'id': 'new-2',
                 'parent_id': top_menu.id,
                 'name': 'New Menu Specific 2',
                 'url': '/new-specific-2',
+                'is_mega_menu': False,
             }
         ]
         Menu.save(1, {'data': data, 'to_delete': []})

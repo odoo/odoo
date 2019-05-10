@@ -7,6 +7,7 @@ var HelperPlugin = require('web_editor.wysiwyg.plugin.helper');
 var TextPlugin = require('web_editor.wysiwyg.plugin.text');
 var HistoryPlugin = require('web_editor.wysiwyg.plugin.history');
 var Wysiwyg = require('web_editor.wysiwyg.snippets');
+var SnippetsEditor = require('web_editor.snippet.editor');
 
 var _t = core._t;
 
@@ -68,7 +69,20 @@ DropzonePlugin.include({
     },
 });
 
+SnippetsEditor.Class.include({
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
+    /**
+     * Toggles visibility of Mega Menu snippets
+     *
+     * @param {Boolean} show
+     */
+    toggleMegaMenuSnippets: function (show) {
+        this.$('#snippet_mega_menu').toggleClass('d-none', !show);
+    },
+});
 
 /**
  * HtmlEditor
@@ -108,7 +122,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         },
     }),
     custom_events: _.extend({}, Wysiwyg.prototype.custom_events, {
-        activate_snippet:  '_onActivateSnippet',
+        activate_snippet: '_onActivateSnippet',
         drop_images: '_onDropImages',
     }),
     /**
@@ -200,6 +214,23 @@ var WysiwygMultizone = Wysiwyg.extend({
             self.$('[data-oe-readonly]').addClass('o_not_editable').attr('contenteditable', false);
             self.$('.oe_structure').attr('contenteditable', false).addClass('o_fake_not_editable');
             self.$('[data-oe-field][data-oe-type="image"]').attr('contenteditable', false).addClass('o_fake_not_editable');
+
+            // Init destroy
+            var $dropdownToggle = self.$el.find('.o_dropdown_toggle_megamenu');
+            $dropdownToggle.removeAttr('data-toggle').dropdown('dispose');
+            // Custom dropdown behavior
+            $dropdownToggle.on('click.wysiwyg_multizone', function (ev) {
+                var $toggle = $(ev.currentTarget);
+                var isShown = $toggle.parent().is('.show');
+                $toggle.dropdown(isShown ? 'hide' : 'show');
+                self.snippets.toggleMegaMenuSnippets(!isShown);
+                $toggle.dropdown('dispose');
+            });
+
+            // Showing Mega Menu snippets if one dropdown is already opened
+            if (self.$('.dropdown_mega_menu').hasClass('show')) {
+                self.snippets.toggleMegaMenuSnippets(true);
+            }
         });
     },
     /**
@@ -233,6 +264,11 @@ var WysiwygMultizone = Wysiwyg.extend({
      * @returns {$.Promise} resolve with true if the content was dirty
      */
     save: function () {
+        // Restore dropdown behavior
+        this.$('.o_dropdown_toggle_megamenu')
+            .off('.wysiwyg_multizone')
+            .attr('data-toggle', 'dropdown')
+            .dropdown('hide');
         var isDirty = this.isDirty();
         if (isDirty) {
             this.savingMutex.exec(this._saveCroppedImages.bind(this));
@@ -466,7 +502,18 @@ var WysiwygMultizone = Wysiwyg.extend({
      * @param {Object} recordInfo
      * @returns {Promise}
      */
-    _saveElement: function (outerHTML, recordInfo) {
+    _saveElement: function (outerHTML, recordInfo, editable) {
+        var $editable = $(editable);
+        if ($editable.data('oe-field') === 'mega_menu_content') {
+            this._rpc({
+                model: 'website.menu',
+                method: 'write',
+                args: [
+                    [parseInt($editable.data('oe-id'))],
+                    {mega_menu_classes: $editable.data('megamenuclasses')},
+                ],
+            });
+        }
         return this._rpc({
             model: 'ir.ui.view',
             method: 'save',

@@ -10,7 +10,7 @@ var _t = core._t;
 var dom = $.summernote.dom;
 dom.isAnchor = function (node) {
     return (node.tagName === 'A' || node.tagName === 'BUTTON' || $(node).hasClass('btn')) &&
-        !$(node).hasClass('fa') && !$(node).hasClass('o_image');
+        !$(node).hasClass('fa') && !$(node).hasClass('o_image') && !$(node).hasClass('dropdown-toggle');
 };
 
 //--------------------------------------------------------------------------

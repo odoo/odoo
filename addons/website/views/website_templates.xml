@@ -132,7 +132,7 @@
 <!-- Layout -->
 <template id="submenu" name="Submenu">
     <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
-    <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
+    <li t-if="submenu.is_visible and not has_visible_submenu and not submenu.mega_menu_content" t-attf-class="#{item_class or ''}">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
             role="menuitem"
@@ -141,7 +141,7 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
+    <li t-if="has_visible_submenu and not submenu.mega_menu_content" t-attf-class="#{item_class or ''} dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
@@ -156,6 +156,12 @@
                 </t>
             </t>
         </ul>
+    </li>
+    <li t-if="submenu.mega_menu_content" class="nav-item dropdown position-static">
+        <a href="#" class="nav-link dropdown-toggle o_dropdown_toggle_megamenu" data-toggle="dropdown">
+            <span t-field="submenu.name"/>
+        </a>
+        <div t-attf-class="#{submenu.mega_menu_classes or 'dropdown-menu w-100 dropdown_mega_menu text-center'}" t-field="submenu.mega_menu_content" t-attf-data-megaMenuClasses="#{submenu.mega_menu_classes or 'dropdown-menu w-100 dropdown_mega_menu text-center'}"/>
     </li>
 </template>
 
@@ -294,6 +300,30 @@
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
     </xpath>
+</template>
+
+<!-- Default template Mega Menu -->
+<template id="default_mega_menu" name="Mega Menu">
+    <div class="s_mega_menu m-2 p-2">
+        <div class="s_mega_menu_content container">
+            <div class="row s_mega_menu_columns">
+                <t t-foreach="3" t-as="o">
+                    <div class="s_mega_menu_col col">
+                        <div class="s_mega_menu_item">
+                            <h3>Title</h3>
+                        </div>
+                        <nav class="nav flex-column">
+                            <t t-foreach="3" t-as="o">
+                                <div class="s_mega_menu_item">
+                                    <a class="nav-link" href="#">Menu item</a>
+                                </div>
+                            </t>
+                        </nav>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">

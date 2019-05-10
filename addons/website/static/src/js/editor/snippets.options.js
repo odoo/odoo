@@ -1539,4 +1539,64 @@ options.registry.anchorName = options.Class.extend({
         this.$target.trigger('content_changed');
     },
 });
+
+options.registry.megaMenu = options.Class.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    openMegaMenuDialog: function (previewMode, value, $opt) {
+        var self = this;
+        new Dialog(this, {
+            title: _t("Mega Menu"),
+            $content: $(qweb.render('website.dialog.megaMenu', {
+                alignmentLeft: this.$target.hasClass('text-left'),
+                alignmentCenter: this.$target.hasClass('text-center'),
+                alignmentRight: this.$target.hasClass('text-right'),
+                fullwidth: !this.$target.hasClass('o_mega_menu_container'),
+            })),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        var willBeContainer = this.$('[name="dropdown_width"]').val() === 'container';
+                        var megaMenuClasses = self.$target.data('megamenuclasses');
+                        var isContainer = megaMenuClasses.indexOf('o_mega_menu_container') >= 0;
+                        self.$target
+                            .toggleClass('o_mega_menu_container', willBeContainer)
+                            .removeClass('text-center').removeClass('text-left').removeClass('text-right')
+                            .addClass(this.$('[name="dropdown_content_alignment"]').val());
+                        if (willBeContainer && !isContainer) {
+                            self.$target
+                                .data('megamenuclasses', megaMenuClasses + ' o_mega_menu_container');
+                        }
+                        if (!willBeContainer && isContainer) {
+                            self.$target.data(
+                                'megamenuclasses', megaMenuClasses.replace('o_mega_menu_container', '').trim()
+                            );
+                        }
+                        self.$target.trigger('content_changed');
+                        this.close();
+                    }
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    toggleTextMute: function (previewMode, value, $opt) {
+        this.$target.toggleClass('text-muted');
+    },
+});
 });

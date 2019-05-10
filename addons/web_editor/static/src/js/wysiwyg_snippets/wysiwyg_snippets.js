@@ -59,7 +59,7 @@ Wysiwyg.include({
             }
             var $editable = $(self._summernote.layoutInfo.editable);
             self.snippets.setSelectorEditableArea(self.$el, self.selectorEditableArea);
-            self.snippets.insertBefore(self.$el).then(function () {
+            return self.snippets.insertBefore(self.$el).then(function () {
                 self.$el.before(self.snippets.$el);
                 var $wrap = $('<div class="o_wrap_editable_snippets"/>');
                 $wrap.on('scroll', function (event) {

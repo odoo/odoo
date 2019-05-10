@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.translate import html_translate
 
 
 class Menu(models.Model):
@@ -26,6 +27,8 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    mega_menu_content = fields.Html(translate=html_translate)
+    mega_menu_classes = fields.Char()
 
     @api.multi
     def name_get(self):
@@ -114,6 +117,7 @@ class Menu(models.Model):
                 parent_id=node.parent_id.id,
                 children=[],
                 is_homepage=is_homepage,
+                is_mega_menu=bool(node.mega_menu_content),
             )
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
@@ -140,6 +144,8 @@ class Menu(models.Model):
             # new menu are prefixed by new-
             if isinstance(mid, str):
                 new_menu = self.create({'name': menu['name'], 'website_id': website_id})
+                if menu['is_mega_menu']:
+                    new_menu.toggle_mega_menu()
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
@@ -155,6 +161,16 @@ class Menu(models.Model):
                     menu['url'] = page.url
                 elif menu_id.page_id:
                     menu_id.page_id.write({'url': menu['url']})
+            menu.pop('is_mega_menu')
             menu_id.write(menu)
 
         return True
+
+    @api.multi
+    def toggle_mega_menu(self):
+        self.mega_menu_classes = False
+        if self.mega_menu_content:
+            self.mega_menu_content = False
+        else:
+            self.mega_menu_content = self.env['ir.ui.view'].render_template('website.default_mega_menu')
+        return bool(self.mega_menu_content)

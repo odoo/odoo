@@ -818,10 +818,62 @@
     </div>
 </template>
 
+<template id="s_link_menu" name="Link">
+    <a class="nav-link s_mega_menu_item" href="#">Menu item</a>
+</template>
+
+<template id="s_text_menu" name="Text">
+    <p class="s_mega_menu_item s_mega_menu_text text-muted">Insert your text here</p>
+</template>
+
+<template id="s_title_menu" name="Title">
+    <h3 class="s_mega_menu_item">Title</h3>
+</template>
+
+<template id="s_subtitle_menu" name="Subtitle">
+    <h5 class="s_mega_menu_item">Subtitle</h5>
+</template>
+
+<template id="s_image_menu" name="Image">
+    <img src="/website/static/src/img/snippets_demo/s_text_image.jpg" class="s_mega_menu_item img-fluid"/>
+</template>
+
+<template id="s_column_menu" name="Column">
+    <div class="s_mega_menu_col col">
+        <nav class="nav flex-column">
+            <t t-foreach="3" t-as="o">
+                <t t-call="website.s_link_menu"/>
+            </t>
+        </nav>
+    </div>
+</template>
+
+<template id="s_divider_menu" name="Divider">
+    <div class="s_mega_menu_item">
+        <div class="dropdown-divider"></div>
+    </div>
+</template>
+
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
+
+            <div id="snippet_mega_menu" class="o_panel d-none">
+                <div class="o_panel_header">
+                    <i class="fa fa-puzzle-piece"/> Mega Menu
+                </div>
+                <div class="o_panel_body">
+                    <!-- TODO: change images! -->
+                    <t t-snippet="website.s_link_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_title_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_subtitle_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_image_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_column_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_divider_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_text_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                </div>
+            </div>
 
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
@@ -1259,8 +1311,8 @@
     <!-- Color | Section -->
     <div id="so_main_colorpicker"
         data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".parallax">
+        data-selector="section, :not(.o_gallery > .container) > .carousel, [data-oe-field='mega_menu_content']"
+        data-exclude=".parallax, div.dropdown_mega_menu">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
             <div class="dropdown-menu" role="menu"/>
@@ -1356,6 +1408,27 @@
     <div data-js="anchorName"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > div">
         <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-anchor-dialog=""><i class="fa fa-anchor"/>Anchor Name</a>
+    </div>
+
+    <!-- Mega Menu settings -->
+    <div data-js="megaMenu"
+        data-selector="div.dropdown_mega_menu">
+        <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-mega-menu-dialog=""><i class="fa fa-puzzle-piece"/>Mega Menu Settings</a>
+    </div>
+
+    <div data-selector=".s_mega_menu_col"
+        data-drop-near="div.s_mega_menu_col"
+        data-drop-in="div.s_mega_menu_columns"/>
+
+    <div data-selector=".s_mega_menu_item"
+        data-drop-in="nav.flex-column"/>
+
+    <div data-selector=".s_mega_menu_subitem"
+        data-drop-near="div.s_mega_submenu_item > a.nav-link"/>
+
+    <div data-js="megaMenu"
+        data-selector=".s_mega_menu_text">
+        <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-toggle-text-mute=""><i class="fa fa-paragraph"/>Mute/unmute text</a>
     </div>
 </template>
 </odoo>
