@@ -349,10 +349,9 @@ class AccountInvoice(models.Model):
         # check this
         for rec in self.filtered(
                 lambda x: not x.l10n_latam_document_sequence_id and x.l10n_latam_document_type_id):
-            res = rec.l10n_latam_document_type_id.validate_document_number(
-                rec.l10n_latam_document_number)
-            if res and res != rec.l10n_latam_document_number:
-                rec.l10n_latam_document_number = res
+            rec.l10n_latam_document_number = \
+                rec.l10n_latam_document_type_id._format_document_number(
+                    rec.l10n_latam_document_number)
 
     @api.constrains('l10n_latam_journal_mapping_id', 'journal_id')
     def check_journal_document_type_journal(self):

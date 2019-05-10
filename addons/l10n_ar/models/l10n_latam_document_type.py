@@ -1,5 +1,5 @@
-from odoo import models, api, fields
-
+from odoo import models, api, fields, _
+from odoo.exceptions import UserError
 
 class L10nLatamDocumentType(models.Model):
 
@@ -84,5 +84,53 @@ class L10nLatamDocumentType(models.Model):
             return self.env['account.tax'].search(
                 [('tax_group_id.l10n_ar_tax', '=', 'vat'),
                  ('tax_group_id.l10n_ar_type', '=', 'tax')])
+        return super().get_taxes_included()
+
+    @api.multi
+    def _format_document_number(self, document_number):
+        """ Method to be inherited by different localizations.
+        The purpose of this method is to allow:
+
+          * making validations on the document_number. If it is wrong it
+            should raise an exception
+          * format the document_number against a pattern and return it
+        """
+        self.ensure_one()
+        if self.country_id.code != 'AR':
+            return super()._format_document_number()
+
+        if not document_number:
+            return
+
+        msg = _("'%s' is not a valid value for '%s'.\n%s")
+
+        # Import Dispatch Validator
+        if self.code in ['66', '67']:
+            if len(document_number) != 16:
+                raise UserError(msg % (document_number, self.name, (
+                    'El número de despacho de importación debe tener'
+                    ' 16 caractéres')))
+            return document_number
+
+        # Invoice Number Validator (For Eg: 123-123)
+        failed = False
+        args = document_number.split('-')
+        if len(args) != 2:
+            failed = True
         else:
-            return super(L10nLatamDocumentType, self).get_taxes_included()
+            pos, number = args
+            if len(pos) > 5 or not pos.isdigit():
+                failed = True
+            elif len(number) > 8 or not number.isdigit():
+                failed = True
+            document_number = '{:>04s}-{:>08s}'.format(pos, number)
+        if failed:
+            raise UserError(msg % (document_number, self.name, (
+                'El número de documento debe ingresarse con un guión (-) y'
+                ' máximo 5 caracteres para la primer parte y 8 para la'
+                ' segunda. Los siguientes son ejemplos de números válidos:'
+                '\n* 1-1'
+                '\n* 0001-00000001'
+                '\n* 00001-00000001'
+            )))
+        return document_number

@@ -6,7 +6,6 @@
     "category": "Localization",
     "depends": [
         "account",
-        "base_validator",
     ],
     "data": [
         'views/account_journal_view.xml',

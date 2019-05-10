@@ -51,11 +51,15 @@ class L10nLatamAccountDocmentType(models.Model):
     )
 
     @api.multi
-    def validate_document_number(self, document_number):
+    def _format_document_number(self, document_number):
+        """ Method to be inherited by different localizations. The purpose of
+        this method is to allow:
+        * making validations on the document_number. If it is wrong it should
+        raise an exception
+        * format the document_number against a pattern and return it
+        """
         self.ensure_one()
-        if self.validator_id:
-            return self.validator_id.validate_value(document_number)
-        return False
+        return document_number
 
     @api.multi
     def name_get(self):

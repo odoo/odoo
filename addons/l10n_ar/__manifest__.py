@@ -48,7 +48,6 @@ Follow the next configuration steps
         'data/res_country_group_data.xml',
         'data/account_fiscal_template.xml',
         'data/uom_uom.xml',
-        'data/base_validator_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/res_partner_data.xml',
         'data/res_currency_data.xml',
