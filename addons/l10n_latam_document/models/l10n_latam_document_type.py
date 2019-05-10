@@ -45,10 +45,6 @@ class L10nLatamAccountDocmentType(models.Model):
         ' (not only related to account.invoice, could be for documents of'
         ' other models like stock.picking)'
     )
-    validator_id = fields.Many2one(
-        'base.validator',
-        'Validator',
-    )
 
     @api.multi
     def _format_document_number(self, document_number):
