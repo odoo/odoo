@@ -31,10 +31,15 @@ class Menu(models.Model):
 
     @api.multi
     def name_get(self):
+        if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
+            return super(Menu, self).name_get()
+
         res = []
         for menu in self:
-            website_suffix = '%s - %s' % (menu.name, menu.website_id.name)
-            res.append((menu.id, website_suffix if menu.website_id and self.env.user.has_group('website.group_multi_website') else menu.name))
+            menu_name = menu.name
+            if menu.website_id:
+                menu_name += ' [%s]' % menu.website_id.name
+            res.append((menu.id, menu_name))
         return res
 
     @api.model
