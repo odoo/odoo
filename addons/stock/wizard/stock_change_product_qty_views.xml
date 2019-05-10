@@ -13,7 +13,7 @@
                             domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                             attrs="{'readonly': [('product_variant_count', '=', 1)]}"
                             readonly="context.get('default_product_id')"/>
-                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                         <field name="new_quantity"/>
                     </group>
                     <footer>
