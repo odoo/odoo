@@ -63,23 +63,6 @@ class ProductCategory(models.Model):
         return self.create({'name': name}).name_get()[0]
 
 
-class ProductPriceHistory(models.Model):
-    """ Keep track of the ``product.template`` standard prices as they are changed. """
-    _name = 'product.price.history'
-    _rec_name = 'datetime'
-    _order = 'datetime desc'
-    _description = 'Product Price List History'
-
-    def _get_default_company_id(self):
-        return self._context.get('force_company', self.env.company.id)
-
-    company_id = fields.Many2one('res.company', string='Company',
-        default=_get_default_company_id, required=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
-    datetime = fields.Datetime('Date', default=fields.Datetime.now)
-    cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
-
-
 class ProductProduct(models.Model):
     _name = "product.product"
     _description = "Product"
@@ -386,10 +369,6 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
-        for product, vals in zip(products, vals_list):
-            # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
-            if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
-                product._set_standard_price(vals.get('standard_price') or 0.0)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
         self.env['product.template'].invalidate_cache(
@@ -406,10 +385,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def write(self, values):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         res = super(ProductProduct, self).write(values)
-        if 'standard_price' in values:
-            self._set_standard_price(values['standard_price'])
         if 'attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `attribute_value_ids`
             self.clear_caches()
@@ -686,30 +662,10 @@ class ProductProduct(models.Model):
 
         return prices
 
-
     # compatibility to remove after v10 - DEPRECATED
     @api.multi
     def price_get(self, ptype='list_price'):
         return self.price_compute(ptype)
-
-    @api.multi
-    def _set_standard_price(self, value):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
-        PriceHistory = self.env['product.price.history']
-        for product in self:
-            PriceHistory.create({
-                'product_id': product.id,
-                'cost': value,
-                'company_id': self._context.get('force_company', self.env.company.id),
-            })
-
-    @api.multi
-    def get_history_price(self, company_id, date=None):
-        history = self.env['product.price.history'].search([
-            ('company_id', '=', company_id),
-            ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
-        return history.cost or 0.0
 
     @api.model
     def get_empty_list_help(self, help):
