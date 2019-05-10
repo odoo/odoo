@@ -300,6 +300,11 @@ class MailThread(models.AbstractModel):
 
         return threads
 
+    def get_initial_values(self, tracked_fields):
+        initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
+                              for record in self)
+        return initial_values
+
     @api.multi
     def write(self, values):
         if self._context.get('tracking_disable'):
@@ -315,8 +320,7 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_notrack'):
             tracked_fields = track_self._get_tracked_fields(list(values))
         if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            initial_values = track_self.get_initial_values(tracked_fields)
 
         # Perform write
         result = super(MailThread, self).write(values)
