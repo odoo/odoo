@@ -40,7 +40,7 @@ class ReturnPicking(models.TransientModel):
     original_location_id = fields.Many2one('stock.location')
     parent_location_id = fields.Many2one('stock.location')
     location_id = fields.Many2one(
-        'stock.location', 'Return Location',
+        'stock.location', 'Return Location', required=True,
         domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
 
     @api.onchange('picking_id')
