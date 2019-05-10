@@ -121,10 +121,10 @@ class Employee(models.Model):
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
     gender = fields.Selection([
-        ('male', 'Male'),
         ('female', 'Female'),
+        ('male', 'Male'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", default="male")
+    ], groups="hr.group_hr_user", default="female")
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
