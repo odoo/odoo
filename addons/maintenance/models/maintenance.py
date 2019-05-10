@@ -66,7 +66,7 @@ class MaintenanceEquipmentCategory(models.Model):
         if not vals.get('alias_name'):
             vals['alias_name'] = vals.get('name')
         category_id = super(MaintenanceEquipmentCategory, self).create(vals)
-        category_id.alias_id.write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
+        category_id.alias_id.sudo().write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
         return category_id
 
     @api.multi

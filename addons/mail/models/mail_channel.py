@@ -224,7 +224,7 @@ class Channel(models.Model):
         channel = super(Channel, self.with_context(
             mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals)
-        channel.alias_id.write({"alias_force_thread_id": channel.id, 'alias_parent_thread_id': channel.id})
+        channel.alias_id.sudo().write({"alias_force_thread_id": channel.id, 'alias_parent_thread_id': channel.id})
 
         if vals.get('group_ids'):
             channel._subscribe_users()

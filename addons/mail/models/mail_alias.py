@@ -30,9 +30,6 @@ class Alias(models.Model):
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
 
-    # user can write only some fields as it's technical model.
-    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_parent_thread_id', 'alias_force_thread_id', 'alias_defaults']
-
     alias_name = fields.Char('Alias Name', help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                      help="The model (Odoo Document Kind) to which this alias "
@@ -105,12 +102,6 @@ class Alias(models.Model):
         if model_name:
             model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
-            try:
-                self.env[model_name].check_access_rights('create')
-            except AccessError:
-                pass
-            else:
-                self = self.sudo()
         if parent_model_name:
             model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
@@ -121,8 +112,6 @@ class Alias(models.Model):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
-        if vals and all(key in self.ALIAS_WRITEABLE_FIELDS for key in list(vals)):
-            return super(Alias, self.sudo()).write(vals)
         return super(Alias, self).write(vals)
 
     @api.multi
@@ -199,6 +188,9 @@ class AliasMixin(models.AbstractModel):
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
 
+    # user can write only some fields as it's technical model.
+    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_parent_thread_id', 'alias_force_thread_id', 'alias_defaults']
+
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 
     def get_alias_model_name(self, vals):
@@ -218,11 +210,36 @@ class AliasMixin(models.AbstractModel):
     @api.model
     def create(self, vals):
         """ Create a record with ``vals``, and create a corresponding alias. """
+        try:
+            self.env[self._name].check_access_rights('create')
+        except AccessError:
+            pass
+        else:
+            self = self.sudo()
         record = super(AliasMixin, self.with_context(
             alias_model_name=self.get_alias_model_name(vals),
             alias_parent_model_name=self._name,
         )).create(vals)
         record.alias_id.sudo().write(record.get_alias_values())
+        return record
+
+    @api.model
+    def write(self, vals):
+        alias_field , other_field = {}, {}
+        for key in list(vals):
+            if key in self.ALIAS_WRITEABLE_FIELDS:
+                alias_field[key] = vals.get(key)
+            else:
+                other_field[key] = vals.get(key)
+        if alias_field:
+            try:
+                self.check_access_rights('write')
+            except AccessError:
+                pass
+            else:
+                record = super(AliasMixin, self.sudo()).write(alias_field)
+        if other_field:
+            record = super(AliasMixin, self).write(other_field)
         return record
 
     @api.multi
