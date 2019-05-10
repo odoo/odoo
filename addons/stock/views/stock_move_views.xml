@@ -11,8 +11,8 @@
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
                     <field name="date_expected" string="Date Expected"/>
@@ -57,8 +57,8 @@
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations" string="From"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" string="To"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" string="From"/>
+                    <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" string="To"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="state"/>
@@ -148,8 +148,8 @@
                     <field name="name" invisible="1"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="location_id" invisible="1"/>
-                    <field name="create_date" invisible="1" />
+                    <field name="location_id" options="{'no_create': True}" invisible="1"/>
+                    <field name="create_date" options="{'no_create': True}" invisible="1" />
                     <field name="date_expected" invisible="1" />
                     <field name="picking_type_id" invisible="1"/>
                     <field name="scrapped" invisible="1"/>
@@ -209,7 +209,7 @@
                     <field name="picking_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="package_level_id" invisible="1"/>
-                    <field name="location_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" options="{'no_create': True}" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
                     <field name="lot_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_lots_m2o')" domain="[('product_id', '=', parent.product_id)]" groups="stock.group_production_lot" context="{'default_product_id': parent.product_id, 'active_picking_id': picking_id}"/>
                     <field name="lot_name" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_lots_text')" groups="stock.group_production_lot"/>
@@ -243,8 +243,8 @@
                         <group name="main_grp" colspan="2">
                             <group name="main_grp_col1">
                                 <field name="reference"/>
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
+                                <field name="location_id" options="{'no_create': True}"/>
+                                <field name="location_dest_id" options="{'no_create': True}"/>
                             </group>
                             <group name="main_grp_col2">
                                 <field name="product_id"/>
@@ -313,8 +313,8 @@
                     </group>
                     <group string="Locations" groups="base.group_no_one">
                         <field name="name"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" options="{'no_create': True}"/>
+                        <field name="location_dest_id" options="{'no_create': True}"/>
                     </group>
                 </group>
                 <group>
@@ -446,7 +446,7 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="location_id" invisible="1"/>
+                    <field name="location_id" options="{'no_create': True}" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
                     <field name="state"/>
