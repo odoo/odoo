@@ -58,6 +58,7 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
         animation_stop_demand: '_onAnimationStopDemand',
         context_get: '_onContextGet',
         main_object_request: '_onMainObjectRequest',
+        seo_object_request: '_onSeoObjectRequest',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
@@ -314,12 +315,37 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
      * @param {OdooEvent} ev
      */
     _onMainObjectRequest: function (ev) {
-        var repr = $('html').data('main-object');
-        var m = repr.match(/(.+)\((\d+),(.*)\)/);
-        ev.data.callback({
-            model: m[1],
-            id: m[2] | 0,
-        });
+        var res = this._unslugHtmlDataObject('main-object');
+        ev.data.callback(res);
+    },
+    /**
+     * Checks information about the page SEO object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSeoObjectRequest: function (ev) {
+        var res = this._unslugHtmlDataObject('seo-object');
+        ev.data.callback(res);
+    },
+    /**
+     * Returns a model/id object constructed from html data attribute.
+     *
+     * @private
+     * @param {string} dataAttr
+     * @returns {Object} an object with 2 keys: model and id, or null
+     * if not found
+     */
+    _unslugHtmlDataObject: function (dataAttr) {
+        var repr = $('html').data(dataAttr);
+        var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+        if (!match) {
+            return null;
+        }
+        return {
+            model: match[1],
+            id: match[2] | 0,
+        };
     },
     /**
      * @todo review
