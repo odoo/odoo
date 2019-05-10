@@ -52,7 +52,7 @@
     </template>
 
     <template id="report_stock_inventory">
-        <div class="container o_stock_reports_page o_stock_reports_no_print">
+        <div class="container-fluid o_stock_reports_page o_stock_reports_no_print">
             <span t-if="lines" class="o_report_heading text-left"><h1>Traceability Report</h1></span>
             <span><t t-esc="context"/></span>
             <div class="o_stock_reports_table table-responsive">
@@ -60,7 +60,7 @@
                     <span class="text-center"><h1>No operation made on this lot.</h1></span>
                 </t>
                 <t t-if="lines">
-                    <table width='100%' class="table">
+                    <table class="table">
                         <thead>
                             <tr class="o_report_header">
                                 <th class="o_report_line_header">Reference</th>
@@ -98,8 +98,8 @@
     <template id="report_stock_body_print">
         <div class="container o_stock_reports_page o_stock_reports_no_print">
             <span class="text-left"><h3>Traceability Report</h3></span>
-            <div class="table-responsive">
-                <table width='100%' class="o_stock_reports_table table">
+            <div class="o_stock_reports_table table-responsive">
+                <table class="table">
                     <thead>
                         <tr class="o_report_header">
                             <th class="o_report_line_header">Reference</th>
