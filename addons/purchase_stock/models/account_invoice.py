@@ -133,9 +133,12 @@ class AccountInvoice(models.Model):
                                 'tax_ids': tax_ids,
                             }
                             # We update the original line accordingly
-                            line['price_unit'] = line['price_unit'] - diff_line['price_unit']
-                            line['price'] = inv.currency_id.round(line['quantity'] * line['price_unit'])
-                            line['price_unit'] = inv.currency_id.round(line['price_unit'])
+                            # line['price_unit'] doesn't contain the discount, so use price_unit
+                            # instead. It could make sense to include the discount in line['price_unit'],
+                            # but that doesn't seem a good idea in stable since it is done in
+                            # "invoice_line_move_line_get" of "account.invoice".
+                            line['price_unit'] = inv.currency_id.round(price_unit - diff_line['price_unit'])
+                            line['price'] = inv.currency_id.round(line['price'] - diff_line['price'])
                             diff_res.append(diff_line)
             return diff_res
         return []
