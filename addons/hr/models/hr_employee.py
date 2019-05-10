@@ -335,8 +335,8 @@ class HrEmployeePrivate(models.Model):
         return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, *args, **kwargs):
-        return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)
+    def message_post(self, **kwargs):
+        return super(HrEmployeePrivate, self._post_author()).message_post(**kwargs)
 
     def _sms_get_partner_fields(self):
         return ['user_partner_id']
