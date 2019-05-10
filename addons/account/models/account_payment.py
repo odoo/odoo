@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 
 from itertools import groupby
+from functools import reduce
 
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',
@@ -92,6 +93,7 @@ class account_payment(models.Model):
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]})
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
+    split_payment = fields.Boolean(help='Split the payment at the due date(s) according to the payment terms', store=True)  # Need to store to access it in transient. I know.
 
     @api.model
     def default_get(self, fields):
@@ -128,6 +130,7 @@ class account_payment(models.Model):
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': invoices[0].reference or invoices[0].number,
             'invoice_ids': [(6, 0, invoices.ids)],
+            'split_payment': bool(invoices[0].payment_term_id)
         })
         return rec
 
@@ -508,6 +511,44 @@ class account_payment(models.Model):
         return True
 
     @api.multi
+    def validate_from_invoice(self):
+        total_amount = self.amount
+        invoice = self.invoice_ids
+        # Only supposed to be called with 'register payment' of one invoice
+        self.ensure_one()
+        invoice.ensure_one()
+
+        def get_line(amount, date):
+            return {
+                'journal_id': self.journal_id.id,
+                'payment_method_id': self.payment_method_id.id,
+                'payment_date': date,
+                'communication': invoice.reference or invoice.number,
+                'invoice_ids': [(6, 0, invoice.ids)],
+                'payment_type': self.payment_type,
+                'amount': abs(amount),
+                'currency_id': invoice.currency_id.id,
+                'partner_id': invoice.commercial_partner_id.id,
+                'partner_type': self.partner_type,
+                'partner_bank_account_id': invoice.partner_bank_id.id,
+            }
+
+        if invoice.payment_term_id and self.split_payment:
+            totlines = invoice.payment_term_id.with_context(currency_id=self.env.user.company_id.id).compute(total_amount, invoice.date_invoice)
+            payment_to_create = []
+            self.write(get_line(totlines[0][1], totlines[0][0]))
+            self.post()
+            if len(totlines) > 1:
+                for subtotal in totlines[1:]:
+                    payment_to_create.append(get_line(t[1], t[0]))
+            if payment_to_create:
+                new_payments = self.create(payment_to_create)
+                new_payments.post()
+        else:
+            self.post()
+
+
+    @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
 
@@ -746,20 +787,31 @@ class payment_register(models.TransientModel):
         :param invoice: A single invoice/bill to pay.
         :return: The payment values as a dictionary.
         '''
+        def get_line(amount, date):
+            return {
+                'journal_id': self.journal_id.id,
+                'payment_method_id': self.payment_method_id.id,
+                'payment_date': date,
+                'communication': invoice.reference or invoice.number,
+                'invoice_ids': [(6, 0, invoice.ids)],
+                'payment_type': ('inbound' if amount > 0 else 'outbound'),
+                'amount': abs(amount),
+                'currency_id': invoice.currency_id.id,
+                'partner_id': invoice.commercial_partner_id.id,
+                'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type],
+                'partner_bank_account_id': invoice.partner_bank_id.id,
+            }
+
+        company_currency = invoice.company_id.currency_id
+
+        values = []
         amount = self.env['account.payment']._compute_payment_amount(invoices=invoice, currency=invoice.currency_id)
-        values = {
-            'journal_id': self.journal_id.id,
-            'payment_method_id': self.payment_method_id.id,
-            'payment_date': self.payment_date,
-            'communication': invoice.reference or invoice.number,
-            'invoice_ids': [(6, 0, invoice.ids)],
-            'payment_type': ('inbound' if amount > 0 else 'outbound'),
-            'amount': abs(amount),
-            'currency_id': invoice.currency_id.id,
-            'partner_id': invoice.commercial_partner_id.id,
-            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type],
-            'partner_bank_account_id': invoice.partner_bank_id.id,
-        }
+        if invoice.payment_term_id:
+            totlines = invoice.payment_term_id.with_context(currency_id=company_currency.id).compute(amount, invoice.date_invoice)
+            for subtotal in totlines:
+                values.append(get_line(subtotal[1], subtotal[0]))
+        else:
+            values.append(get_line(amount, self.payment_date))
         return values
 
     @api.multi
@@ -768,7 +820,7 @@ class payment_register(models.TransientModel):
 
         :return: a list of payment values (dictionary).
         '''
-        return [self._prepare_payment_vals(invoice) for invoice in self.invoice_ids]
+        return reduce(lambda x, y: x+y, (self._prepare_payment_vals(invoice) for invoice in self.invoice_ids))
 
     @api.multi
     def create_payments(self):

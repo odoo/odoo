@@ -286,11 +286,14 @@
             <field name="inherit_id" ref="view_account_payment_form"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <field name="payment_date" position="after">
+                    <field name="split_payment"/>
+                </field>
                 <xpath expr="//header" position='replace'></xpath>
                 <xpath expr="//sheet" position='after'>
                     <footer>
                         <field name="state" invisible="1"/>
-                        <button string='Validate' name="post" type="object" class="btn-primary"/>
+                        <button string='Validate' name="validate_from_invoice" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
