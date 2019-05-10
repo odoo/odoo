@@ -9,7 +9,7 @@
                 <field name="product_id"/>
                 <field name="product_qty"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
             </tree>
         </field>
     </record>
@@ -22,7 +22,7 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id"  domain="[('type','=','product')]"/>
                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
-                <field name="location_id" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"/>
@@ -30,7 +30,7 @@
                 <field name="product_qty" string="Real Quantity"/>
                 <field name="state" invisible="1"/>
                 <field name="inventory_id" invisible="1"/>
-                <field name="inventory_location_id" invisible="1"/>
+                <field name="inventory_location_id" options="{'no_create': True}" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -143,7 +143,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="location_id" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_id" options="{'no_create': True}" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
                         <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                     </group>
                     <group>
@@ -166,7 +166,7 @@
                                 <field name="product_id" domain="[('type','=','product')]" attrs="{'readonly': [('parent.filter', '=', 'product')]}" force_save="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" domain="[('category_id', '=', product_uom_category_id)]"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
                                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
                                 <field name="partner_id" groups="stock.group_tracking_owner"/>
@@ -234,7 +234,7 @@
                                 <field name="date_expected" invisible="1" />
                                 <field name="scrapped" invisible="1"/>
                                 <field name="state" invisible="1"/>
-                                <field name="location_id" string="From"/>
+                                <field name="location_id" options="{'no_create': True}" string="From"/>
                                 <field name="location_dest_id" string="To"/>
                                 <field name="quantity_done"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
