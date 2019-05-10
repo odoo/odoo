@@ -449,7 +449,11 @@ class HolidaysRequest(models.Model):
         res = []
         for leave in self:
             if self.env.context.get('short_name'):
-                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
+                res.append((leave.id, _("%s : %.2f %s") % (
+                    leave.name or leave.holiday_status_id.name,
+                    leave.number_of_hours_display if leave.leave_type_request_unit == 'hour' else leave.number_of_days,
+                    _('hour(s)') if leave.leave_type_request_unit == 'hour' else _('day(s)')
+                )))
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -461,8 +465,12 @@ class HolidaysRequest(models.Model):
                     target = leave.employee_id.name
                 res.append(
                     (leave.id,
-                     _("%s on %s :%.2f day(s)") %
-                     (target, leave.holiday_status_id.name, leave.number_of_days))
+                     _("%s on %s :%.2f %s") % (
+                         target,
+                         leave.holiday_status_id.name,
+                         leave.number_of_hours_display if leave.leave_type_request_unit == 'hour' else leave.number_of_days,
+                         _('hour(s)') if leave.leave_type_request_unit == 'hour' else _('day(s)')
+                     ))
                 )
         return res
 
