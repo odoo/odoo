@@ -95,42 +95,92 @@ class StockMove(models.Model):
     def _get_all_domain(self):
         return [('product_id', '=', self.product_id.id)] + self._get_all_base_domain(company_id=self.company_id.id)
 
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+
+    def _get_in_move_lines(self):
+        """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
+        to the `_should_be_valued` method of their source and destionation location as well as their
+        owner.
+
+        :returns: a subset of `self` containing the incoming records
+        :rtype: recordset
+        """
+        self.ensure_one()
+        res = self.env['stock.move.line']
+        for move_line in self.move_line_ids:
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+                continue
+            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+                res |= move_line
+        return res
+
     def _is_in(self):
-        """ Check if the move should be considered as entering the company so that the cost method
+        """Check if the move should be considered as entering the company so that the cost method
         will be able to apply the correct logic.
 
-        :return: True if the move is entering the company else False
+        :returns: True if the move is entering the company else False
+        :rtype: bool
         """
-        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
-            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
-                return True
+        self.ensure_one()
+        if self._get_in_move_lines():
+            return True
         return False
 
+    def _get_out_move_lines(self):
+        """ Returns the `stock.move.line` records of `self` considered as outgoing. It is done thanks
+        to the `_should_be_valued` method of their source and destionation location as well as their
+        owner.
+
+        :returns: a subset of `self` containing the outgoing records
+        :rtype: recordset
+        """
+        res = self.env['stock.move.line']
+        for move_line in self.move_line_ids:
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+                continue
+            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+                res |= move_line
+        return res
+
     def _is_out(self):
-        """ Check if the move should be considered as leaving the company so that the cost method
+        """Check if the move should be considered as leaving the company so that the cost method
         will be able to apply the correct logic.
 
-        :return: True if the move is leaving the company else False
+        :returns: True if the move is leaving the company else False
+        :rtype: bool
         """
-        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
-            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
-                return True
+        self.ensure_one()
+        if self._get_out_move_lines():
+            return True
         return False
 
     def _is_dropshipped(self):
-        """ Check if the move should be considered as a dropshipping move so that the cost method
+        """Check if the move should be considered as a dropshipping move so that the cost method
         will be able to apply the correct logic.
 
-        :return: True if the move is a dropshipping one else False
+        :returns: True if the move is a dropshipping one else False
+        :rtype: bool
         """
+        self.ensure_one()
         return self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer'
 
     def _is_dropshipped_returned(self):
-        """ Check if the move should be considered as a returned dropshipping move so that the cost
+        """Check if the move should be considered as a returned dropshipping move so that the cost
         method will be able to apply the correct logic.
 
-        :return: True if the move is a returned dropshipping one else False
+        :returns: True if the move is a returned dropshipping one else False
+        :rtype: bool
         """
+        self.ensure_one()
         return self.location_id.usage == 'customer' and self.location_dest_id.usage == 'supplier'
 
     @api.model
@@ -209,7 +259,7 @@ class StockMove(models.Model):
         self.ensure_one()
         value_to_return = 0
         if self._is_in():
-            valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued() and not ml.owner_id)
+            valued_move_lines = self._get_in_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
@@ -236,7 +286,7 @@ class StockMove(models.Model):
                 })
             self.write(vals)
         elif self._is_out():
-            valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
+            valued_move_lines = self._get_out_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
@@ -270,7 +320,20 @@ class StockMove(models.Model):
     def _action_done(self, cancel_backorder=False):
         self.product_price_update_before_done()
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
-        for move in res:
+
+        # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
+        valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
+        for move in self:
+            for valued_type in self._get_valued_types():
+                if getattr(move, '_is_%s' % valued_type)():
+                    valued_moves[valued_type] |= move
+                    continue
+
+        valued_moves_set = self.env['stock.move']
+        for valued_type, valued_move in valued_moves.items():
+            valued_moves_set |= valued_move
+
+        for move in valued_moves_set:
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
             if move._is_in() and move._is_out():
@@ -287,7 +350,7 @@ class StockMove(models.Model):
             if company_src and company_dst and company_src.id != company_dst.id:
                 raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
             move._run_valuation()
-        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped() or m._is_dropshipped_returned())):
+        for move in valued_moves_set.filtered(lambda m: m.product_id.valuation == 'real_time'):
             move._account_entry_move()
         return res
 
