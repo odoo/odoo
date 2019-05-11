@@ -38,13 +38,13 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
-                            attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', '!=', 'fifo')]}"
+                            attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                             class="float-left oe_inline"/>
                         <div name="update_cost_price">
                             <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
-                                attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
+                                attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '>', 1)]}"
                                 class="oe_link pt-0 float-left oe_inline"/>
                         </div>
                     </field>
@@ -66,12 +66,12 @@
                         <label for="standard_price"/>
                         <div name="standard_price_div" class="row ml-0">
                             <field name="standard_price"
-                                attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', '!=', 'fifo')]}"
+                                attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
                                 widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}" class="float-left"/>
                             <div name="update_cost_price">
                                 <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
-                                attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                                attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
                                 class="oe_link pt-0 float-left"/>
                             </div>
                         </div>

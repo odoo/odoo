@@ -184,6 +184,61 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.location_id.usage == 'customer' and self.location_dest_id.usage == 'supplier'
 
+    def _prepare_common_svl_vals(self):
+        """When a `stock.valuation.layer` is created from a `stock.move`, we can prepare a dict of
+        common vals.
+
+        :returns: the common values when creating a `stock.valuation.layer` from a `stock.move`
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'stock_move_id': self.id,
+            'company_id': self.company_id.id,
+            'product_id': self.product_id.id,
+            'description': self.name,
+        }
+
+    def _create_in_svl(self, forced_quantity=None):
+        """Create a `stock.valuation.layer` from `self`.
+
+        :param forced_quantity: under some circunstances, the quantity to value is different than
+            the initial demand of the move (Default value = None)
+        """
+        svl_vals_list = []
+        for move in self:
+            valued_move_lines = move._get_in_move_lines()
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+            unit_cost = move.product_id.standard_price
+            svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
+            svl_vals.update(move._prepare_common_svl_vals())
+            if forced_quantity:
+                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
+            svl_vals_list.append(svl_vals)
+        return self.env['stock.valuation.layer'].create(svl_vals_list)
+
+    def _create_out_svl(self, forced_quantity=None):
+        """Create a `stock.valuation.layer` from `self`.
+
+        :param forced_quantity: under some circunstances, the quantity to value is different than
+            the initial demand of the move (Default value = None)
+        """
+        svl_vals_list = []
+        for move in self:
+            valued_move_lines = move._get_out_move_lines()
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+            svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity)
+            svl_vals.update(move._prepare_common_svl_vals())
+            if forced_quantity:
+                svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
+            svl_vals_list.append(svl_vals)
+        return self.env['stock.valuation.layer'].create(svl_vals_list)
+
+
     @api.model
     def _run_fifo(self, move, quantity=None):
         """ Value `move` according to the FIFO rule, meaning we consume the
@@ -331,8 +386,23 @@ class StockMove(models.Model):
                     continue
 
         valued_moves_set = self.env['stock.move']
-        for valued_type, valued_move in valued_moves.items():
-            valued_moves_set |= valued_move
+        standard_valued_moves_set = self.env['stock.move']
+        for valued_type, valued_move_list in valued_moves.items():
+            for valued_move in valued_move_list:
+                if valued_move._is_dropshipped() or valued_move._is_dropshipped_returned():
+                    continue
+                if valued_move.product_id.cost_method == 'standard':
+                    standard_valued_moves_set |= valued_move
+                else:
+                    valued_moves_set |= valued_move
+
+        stock_valuation_layers = self.env['stock.valuation.layer']
+        # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
+        for valued_type in self._get_valued_types():
+            todo_valued_moves = valued_moves[valued_type]
+            if todo_valued_moves and todo_valued_moves in standard_valued_moves_set:
+                stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
+                continue
 
         for move in valued_moves_set:
             # Apply restrictions on the stock move to be able to make
@@ -353,6 +423,11 @@ class StockMove(models.Model):
             move._run_valuation()
         for move in valued_moves_set.filtered(lambda m: m.product_id.valuation == 'real_time'):
             move._account_entry_move()
+
+        for stock_valuation_layer in stock_valuation_layers:
+            if not stock_valuation_layer.product_id.valuation == 'real_time':
+                continue
+            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=stock_valuation_layer.value, forced_quantity=stock_valuation_layer.quantity)._account_entry_move()
         return res
 
     @api.multi
@@ -613,6 +688,8 @@ class StockMove(models.Model):
                 'ref': ref,
                 'stock_move_id': self.id,
             })
+            if self.env.context.get('svl_id'):
+                new_account_move['stock_valuation_layer_ids'] = [(6, None, [self.env.context.get('svl_id')])]
             new_account_move.post()
 
     def _account_entry_move(self):
