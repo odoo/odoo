@@ -8,4 +8,5 @@ from . import account_reconciliation_widget
 from . import product
 from . import stock
 from . import stock_inventory
+from . import stock_location
 from . import res_config_settings
