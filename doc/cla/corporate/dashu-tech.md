@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-Robin LI lihaibin@dashu-tech.com https://github.com/robinhli
+Robin LI robinhli@hotmail.com https://github.com/robinhli
 
 List of contributors:
 
-Robin LI lihaibin@dashu-tech.com https://github.com/robinhli
+Robin LI robinhli@hotmail.com https://github.com/robinhli
