@@ -538,6 +538,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Informace o SEPA QR kódu nejsou správně "
+"nastaveny.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -818,7 +820,7 @@ msgstr "Účetní"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Účet zaokrouhlení"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -867,7 +869,7 @@ msgstr "Majitel účtu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Jméno Majitele Účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -886,7 +888,7 @@ msgstr "Účetní deník"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "Account Journal Report"
-msgstr ""
+msgstr "Účetní výkaz"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -932,7 +934,7 @@ msgstr "Účet pohledávek"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget pro spárování účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1160,12 +1162,12 @@ msgstr "Účetní položky"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Overview"
-msgstr ""
+msgstr "Účetní přehled"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Nastavení související s účtováním jsou spravována"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -1187,7 +1189,7 @@ msgstr "Mapování účtů"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Šablona mapování účtů fiskální pozice"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -1375,12 +1377,12 @@ msgstr "Pokročilé nastavení"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr ""
+msgstr "Ovlivnit základ následných daní"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__include_base_amount
 msgid "Affect Subsequent Taxes"
-msgstr ""
+msgstr "Ovlivnit následné daně"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_aged_partner_balance
@@ -1581,13 +1583,13 @@ msgstr "Částka splatná v měně faktury"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount
 msgid "Amount Matching"
-msgstr ""
+msgstr "Odpovídající částka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount_param
 msgid "Amount Matching %"
-msgstr ""
+msgstr "Částka odpovídající v procentech"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
@@ -1645,6 +1647,7 @@ msgstr "Typ částky"
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
 msgstr ""
+"Částka, na kterou se tato shoda vztahuje. Předpokládá se, že je vždy kladná"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__amount_currency
@@ -2023,7 +2026,7 @@ msgstr "Průměrná cena"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__user_currency_price_average
 msgid "Average Price in Currency"
-msgstr ""
+msgstr "Průměrná cena v měně"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:410
@@ -2277,12 +2280,14 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
+"Na základě faktury: daň je splatná ihned po potvrzení faktury. Na základě "
+"platby: daň je splatná ihned po obdržení faktury."
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Payment"
-msgstr ""
+msgstr "Na základě platby"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2362,7 +2367,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "Browse available countries."
-msgstr ""
+msgstr "Procházet dostupné země."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_budget
@@ -2428,7 +2433,7 @@ msgstr "CAMT Import"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "PŘEPRAVA A POJIŠTĚNÍ PLACENÉ DO"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
@@ -2542,7 +2547,7 @@ msgstr "Nelze vytvořit nevyužitý kód účtu."
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
-msgstr ""
+msgstr "Nelze vygenerovat nepoužívaný kód deníku. Vyplňte pole „Shortcode“."
 
 #. module: account
 #: selection:account.journal,type:0
@@ -3705,7 +3710,7 @@ msgstr "dodáno na místo"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr ""
+msgstr "PŘIJATÝ V TERMINÁLU"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
@@ -4172,7 +4177,7 @@ msgstr "Zobrazit na fakturách"
 #: code:addons/account/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Nemáte přístup, přeskočte tato data pro e-mail uživatele"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
