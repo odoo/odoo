@@ -7,7 +7,7 @@ from . import account_move
 from . import account_reconciliation_widget
 from . import procurement_group
 from . import product
-from . import stock
+from . import stock_move
 from . import stock_inventory
 from . import stock_location
 from . import stock_move_line
