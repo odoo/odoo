@@ -60,6 +60,26 @@ class ProductProduct(models.Model):
     stock_fifo_manual_move_ids = fields.Many2many(
         'stock.move', compute='_compute_stock_value')
 
+    value_svl = fields.Float(compute='_compute_value_svl')
+    quantity_svl = fields.Float(compute='_compute_value_svl')
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
+
+    @api.depends('stock_valuation_layer_ids')
+    def _compute_value_svl(self):
+        """Compute `value_svl` and `quantity_svl`."""
+        domain = [
+            ('product_id', 'in', self.ids),
+            ('company_id', '=', self.env.user.company_id.id)
+        ]
+        if self.env.context.get('to_date'):
+            to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
+            domain.append(('create_date', '<=', to_date))
+        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        for group in groups:
+            product = self.browse(group['product_id'][0])
+            product.value_svl = group['value']
+            product.quantity_svl = group['quantity']
+
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
