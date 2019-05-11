@@ -7,8 +7,8 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2019
 # JH CHOI <hwangtog@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,7 @@ msgstr "# 작업 수"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: 만족도 조사"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -71,7 +71,7 @@ msgstr "%s (사본)"
 msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
-msgstr ""
+msgstr "(미)보관할 프로젝트내의 작업들을 자동으로 (미)보관처리합니다. 진행하시겠습니까?"
 
 #. module: project
 #. openerp-web
@@ -80,7 +80,7 @@ msgstr ""
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
-msgstr "누군가에게<b>작업할당</b>을 합니다. <i>당신은 즉석에서 새로운 사용자를 생성하거나 초대할 수 있습니다.</i>"
+msgstr "누군가에게<b>작업할당</b>을 합니다. <i>당신은 바로 새로운 사용자를 생성하거나 초대할 수 있습니다.</i>"
 
 #. module: project
 #. openerp-web
@@ -94,7 +94,7 @@ msgstr "<b>저장버튼을 눌러</b>작업의 변경사항을 승인합니다."
 #: code:addons/project/static/src/js/tour.js:71
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr "팀 우선 순위를 표시하는 <b>별표시 작업</b>."
+msgstr "<b>작업에 별표시하여</b>팀 우선 순위를 표시합니다."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -184,7 +184,7 @@ msgstr "<i class=\"fa fa-calendar\"/> 종료일 :"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -197,11 +197,13 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-envelope\"/> Email :"
-msgstr "<i class=\"fa fa-envelope\"/> Email :"
+msgstr "<i class=\"fa fa-envelope\"/> 이메일 :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -209,6 +211,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -233,13 +237,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    새로운 프로젝트 생성</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>업무가 준비가 되면, 저장할 수 있습니다.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -249,22 +255,22 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">상태:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">첨부파일</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">설명</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -299,12 +305,12 @@ msgstr "<strong>프로젝트:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>평가자:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr "<strong>보고 대상</strong>"
+msgstr "<strong>보고자</strong>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -328,7 +334,7 @@ msgstr "접근 경고"
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "조치가 필요함"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -350,7 +356,7 @@ msgstr "활동 상태"
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr "활동 종류"
+msgstr "활동 유형"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -377,7 +383,7 @@ msgstr "고급"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:34
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "애자일"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -413,7 +419,7 @@ msgstr "모두"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "전체 업무"
 
 #. module: project
 #. openerp-web
@@ -426,12 +432,12 @@ msgstr "분석"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr "아카이브됨"
+msgstr "보관됨"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr "자신에게 할당"
+msgstr "나에게 할당"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_start
@@ -447,19 +453,19 @@ msgstr "할당 된 작업"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
 msgid "Assigned To"
-msgstr "담당자"
+msgstr "담당 배정"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "지정 된"
+msgstr "담당 배정"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr "날짜 지정"
+msgstr "지정일"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -520,7 +526,7 @@ msgstr "평균"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Backlog"
-msgstr "백로그"
+msgstr "기록"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -589,7 +595,7 @@ msgstr "담당자 별"
 #. module: project
 #: model:project.task.type,name:project.project_stage_3
 msgid "Cancelled"
-msgstr "취소 됨"
+msgstr "취소됨"
 
 #. module: project
 #. openerp-web
@@ -598,14 +604,14 @@ msgstr "취소 됨"
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr "<b>프로젝트 이름</b>을 선택하십시오. (예 : 웹 사이트 시작, 제품 개발, 오피스 파티 등)"
+msgstr "<b>프로젝트 명</b>을 선택하십시오. (예 : 웹 사이트 시작, 제품 개발, 사무실 파티 등)"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:61
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
-msgstr ""
+msgstr "<b>업무명</b>을 선택하세요. (예. 웹사이트 디자인, 상품 구매 등.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -628,7 +634,7 @@ msgstr "작업과 하위작업간의 순환참조는 허용되지 않습니다."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr ""
+msgstr "새로운 업무를 시작하기 위해 <i>신규</i>버튼을 클릭하세요."
 
 #. module: project
 #. openerp-web
@@ -695,7 +701,7 @@ msgstr "설정 구성"
 #: model:ir.ui.menu,name:project.menu_project_config
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: project
 #. openerp-web
@@ -719,7 +725,7 @@ msgstr "연락처"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "저작권"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -729,28 +735,28 @@ msgstr "표지 이미지"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create"
-msgstr "작성"
+msgstr "신규"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr "프로젝트 만들기"
+msgstr "프로젝트 생성"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "신규 프로젝트 생성"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "업무 프로세스에서 새로운 단계 생성"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "새 태그 생성"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -826,7 +832,7 @@ msgstr "고객 이메일"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:44
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "고객 피드백"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -854,7 +860,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer(s) Ratings"
-msgstr "고객(들)의 평가"
+msgstr "고객 평가"
 
 #. module: project
 #. openerp-web
@@ -933,7 +939,7 @@ msgstr "디자인"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Development"
-msgstr "발전"
+msgstr "개발"
 
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
@@ -962,7 +968,7 @@ msgstr "작성취소"
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시할 이름"
 
 #. module: project
 #: code:addons/project/models/digest.py:16
@@ -992,7 +998,7 @@ msgstr "완료"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Draft"
-msgstr "임시"
+msgstr "초안"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1047,7 +1053,7 @@ msgstr "이메일"
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_end
 msgid "Ending Date"
-msgstr "종료 날짜"
+msgstr "종료일"
 
 #. module: project
 #: code:addons/project/models/project.py:631
@@ -1108,7 +1114,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "최종 문서"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1148,7 +1154,7 @@ msgstr "팔로워 (파트너)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Forecasts"
-msgstr "예측"
+msgstr "일정 계획"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1170,12 +1176,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr "프로젝트의 칸반보기에서 작업에 레이블을 지정합니다."
+msgstr "프로젝트의 칸반보기에서 작업에 라벨을 지정합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr "프로젝트 목록을 표시 할 때 시퀀스 순서를 지정합니다."
+msgstr "프로젝트 목록을 표시 할 때 순서를 지정합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
@@ -1390,7 +1396,7 @@ msgstr "진행중"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:45
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "개발중"
 
 #. module: project
 #. openerp-web
@@ -1413,7 +1419,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
-msgstr "팔로워입니다"
+msgstr "팔로우 중"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -1566,14 +1572,14 @@ msgstr "실시간"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "작업에 시간 기록"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "로고 디자인"
 
 #. module: project
 #. openerp-web
@@ -1607,13 +1613,13 @@ msgstr "관리자"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr "참여자"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 msgid "Message Delivery error"
-msgstr "메시지 배달 오류"
+msgstr "메시지 전송오류"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
@@ -1689,14 +1695,14 @@ msgstr "새로운"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "신규 주문"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "신규프로젝트"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1752,7 +1758,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "평가안함"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:121
@@ -2059,12 +2065,12 @@ msgstr "프로젝트 이름"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "Project Satisfaction"
-msgstr ""
+msgstr "프로젝트 만족도"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "프로젝트 태그"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2117,7 +2123,7 @@ msgstr "분기 별"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "평가한 고객"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2154,7 +2160,7 @@ msgstr "최근 이미지 평가"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "최근 값 평가"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2164,7 +2170,7 @@ msgstr "평가 요청 마감일"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "평가 수 "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
@@ -2253,7 +2259,7 @@ msgstr "빨간색"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "빨간색 칸반 라벨"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2291,21 +2297,21 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:60
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "연구 프로젝트"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "연구중"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "자원 배분"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2316,7 +2322,7 @@ msgstr "담당 사용자"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "슬픈 표정"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2328,7 +2334,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:114
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr "검색 <span class=\"nolabel\"> (내용 있음)</span>"
+msgstr "<span class=\"nolabel\"> (내용 안에서)</span> 검색"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2351,7 +2357,7 @@ msgstr "고객 검색"
 #: code:addons/project/controllers/portal.py:115
 #, python-format
 msgid "Search in Messages"
-msgstr "메제시에서 검색"
+msgstr "메시지에서 검색"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:117
@@ -2377,7 +2383,7 @@ msgstr "선택하기"
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "순차적"
+msgstr "순서"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2387,7 +2393,7 @@ msgstr "표지 이미지 설정"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "이메일 별칭 설정"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2431,7 +2437,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:28
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "소프트웨어 개발"
 
 #. module: project
 #. openerp-web
@@ -2459,7 +2465,7 @@ msgstr "단계"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "업무 단계 변경"
+msgstr "단계가 변경됨"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -2469,7 +2475,7 @@ msgstr "단계 설명 및 툴팁"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr "단계 이름"
+msgstr "단계명"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -2500,7 +2506,7 @@ msgstr "시작일"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_start
 msgid "Starting Date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_state
@@ -2537,19 +2543,19 @@ msgstr "하위 작업"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "하위 작업"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:66
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "티셔츠 인쇄"
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "태그명이 이미 존재합니다!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action

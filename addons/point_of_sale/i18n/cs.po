@@ -135,12 +135,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Journal Entries</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Účetní zápisy</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Order Reference</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Reference objednávky</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -154,6 +154,9 @@ msgid ""
 "that you can start recording payments. We suggest you to control the opening"
 " balance of each register, using their CashBox tab.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Systém otevře všechny pokladny, abyste mohli "
+"začít zaznamenávat platby. Doporučujeme Vám kontrolovat počáteční zůstatek "
+"každého registru pomocí záložky CashBox.</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -161,11 +164,13 @@ msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                <span class=\"o_stat_text\">Money In</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Vložit</span>\n"
+"                                <span class=\"o_stat_text\">Peníze</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nastavení závěrečného zůstatku</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -178,6 +183,8 @@ msgid ""
 "<span class=\"o_stat_text\">Take</span>\n"
 "                                <span class=\"o_stat_text\">Money Out</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Vybrat</span>\n"
+"                                <span class=\"o_stat_text\">Peníze</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1428,7 +1435,7 @@ msgstr "Zobrazit obrázky kategorií produktů"
 #: code:addons/point_of_sale/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Nemáte přístup, přeskočte tato data pro e-mail uživatele"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -3870,7 +3877,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:452
 #, python-format
 msgid "Tax ID"
-msgstr "ID daně"
+msgstr "DIČ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime

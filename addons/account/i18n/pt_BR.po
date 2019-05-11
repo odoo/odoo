@@ -42,6 +42,7 @@
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
 # rogeriojlle <rogerio.s.machado@gmail.com>, 2019
 # Paulo C Pinheiro <clanslive@gmail.com>, 2019
+# Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -49,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Paulo C Pinheiro <clanslive@gmail.com>, 2019\n"
+"Last-Translator: Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1781,6 +1782,8 @@ msgstr "Quantidade:"
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
+"Uma posição fiscal da conta pode ser definida apenas uma vez nas mesmas "
+"contas."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2294,12 +2297,12 @@ msgstr "Extrato Bancário %s"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Bank Statement Cashbox"
-msgstr ""
+msgstr "Extrato Bancário"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Bank Statement Closing Balance"
-msgstr ""
+msgstr "Saldo Final do Extrato Bancário"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2320,13 +2323,15 @@ msgstr "Extratos Bancários"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
 msgid "Bank account that was used in this transaction."
-msgstr ""
+msgstr "Conta bancária usada nesta transação."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Tipo de conta bancária: Normal ou IBAN. Inferido do número da conta "
+"bancária."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_liquidity
@@ -2336,7 +2341,7 @@ msgstr "Banco e Caixa"
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Configuração manual do banco"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
@@ -2375,7 +2380,7 @@ msgstr "Conta de Base de Imposto Recebido"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Customer"
-msgstr ""
+msgstr "Baseado no Cliente"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2387,7 +2392,7 @@ msgstr "Baseado em Fatura"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Invoice Number"
-msgstr ""
+msgstr "Com Base no Número da Fatura"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -2408,7 +2413,7 @@ msgstr "Baseado em Pagamento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr ""
+msgstr "Pagamentos em Lote"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__belongs_to_company
@@ -2543,7 +2548,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:413
 #, python-format
 msgid "CABA"
-msgstr ""
+msgstr "CABA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2553,7 +2558,7 @@ msgstr "Importar CAMT"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "TRANSPORTE E SEGURO PAGOS PARA"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
@@ -2701,12 +2706,12 @@ msgstr "Diário de Taxa Base Dinheiro"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "Cash Box In"
-msgstr ""
+msgstr "Em dinheiro"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "Sacar"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:212
@@ -2804,6 +2809,9 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
+"Não é permitido alterar o nome da sua empresa depois que as faturas forem "
+"emitidas para sua conta. Por favor, contate-nos diretamente para esta "
+"operação."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:108
@@ -2857,7 +2865,7 @@ msgstr "Modelo de Plano de Contas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of account set."
-msgstr ""
+msgstr "Gráfico do conjunto de contas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -2947,7 +2955,7 @@ msgstr "Escolher Modelo de Contabilidade"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr ""
+msgstr "Escolha um imposto sobre vendas padrão para seus produtos."
 
 #. module: account
 #. openerp-web
@@ -3216,12 +3224,12 @@ msgstr "Configurar"
 #: code:addons/account/static/src/js/section_and_note_fields_backend.js:102
 #, python-format
 msgid "Configure a product"
-msgstr ""
+msgstr "Configurar um produto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Configure o layout do seu documento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -4661,7 +4669,7 @@ msgstr "Estados"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_import_wizard__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "Arquivos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_in_form
@@ -4744,7 +4752,7 @@ msgstr "Ano Fiscal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.action_account_fiscal_year_form
 msgid "Fiscal Year 2018"
-msgstr ""
+msgstr "Ano Fiscal 2018"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
@@ -4755,7 +4763,7 @@ msgstr "Anos fiscais"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 msgid "Fiscal year last day."
-msgstr ""
+msgstr "Primeiro Dia do Ano Fiscal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month

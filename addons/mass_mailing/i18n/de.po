@@ -6,14 +6,15 @@
 # Ermin Trevisan <trevi@twanda.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# Wolfgang Taferner, 2018
 # Mathias Neef <mn@copado.de>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
 # DE T1 <e2f8846@yahoo.com>, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2018
+# Wolfgang Taferner, 2019
 # Anja Funk <anja.funk@afimage.de>, 2019
 # Martin Trigaux, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-15 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,9 @@ msgid ""
 "                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
+"                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -136,6 +140,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -517,7 +525,7 @@ msgstr "Spaltentitel"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Come Back"
-msgstr ""
+msgstr "Komm zurück"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_test__email_to
@@ -596,7 +604,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a contact in your address book"
-msgstr ""
+msgstr "Erstellen Sie einen Kontakt in Ihrem Adressbuch"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
@@ -1058,7 +1066,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: selection:mail.mail.statistics,state:0
 msgid "Ignored"
-msgstr ""
+msgstr "Ignoriert"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,state:0
@@ -1078,7 +1086,7 @@ msgstr "Ist ein Abonnent"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__is_public
 msgid "Is Public"
-msgstr ""
+msgstr "ist Öffentlich"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
@@ -1164,7 +1172,7 @@ msgstr "Link Tracker"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Nachverfolgungslink"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__links_click_ids
@@ -1637,6 +1645,8 @@ msgstr "Odoo präsentiert"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
+"Mit Odoo können Sie alle Aktivitäten, die mit einem Kunden zu tun haben, "
+"einfach nachverfolgen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1646,7 +1656,7 @@ msgstr "Omnichannel-Verkäufe"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_rel_list_contact_view_tree
 msgid "Open Contact"
-msgstr ""
+msgstr "Kontakt öffnen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
