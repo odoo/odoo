@@ -2,21 +2,37 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.tools import float_is_zero
 
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
+    # -------------------------------------------------------------------------
+    # CRUD
+    # -------------------------------------------------------------------------
     @api.model_create_multi
     def create(self, vals_list):
-        lines = super(StockMoveLine, self).create(vals_list)
-        for line in lines:
+        move_lines = super(StockMoveLine, self).create(vals_list)
+        if self.env.context.get('svl'):
+            for move_line in move_lines:
+                if move_line.state != 'done':
+                    continue
+                move = move_line.move_id
+                rounding = move.product_id.uom_id.rounding
+                diff = move_line.qty_done
+                if float_is_zero(diff, precision_rounding=rounding):
+                    continue
+                self._create_correction_svl(move, diff)
+            return move_lines
+
+        for line in move_lines:
             move = line.move_id
             if move.state == 'done':
                 correction_value = move._run_valuation(line.qty_done)
                 if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
                     move.with_context(force_valuation_amount=correction_value)._account_entry_move()
-        return lines
+        return move_lines
 
     def write(self, vals):
         """ When editing a done stock.move.line, we impact the valuation. Users may increase or
@@ -30,7 +46,17 @@ class StockMoveLine(models.Model):
         user decreases qty_done, we either increase the last receipt candidate if one is found or
         we decrease the value with the last fifo price.
         """
-        if 'qty_done' in vals:
+        if 'qty_done' in vals and self.env.context.get('svl'):
+            for move_line in self:
+                if move_line.state != 'done':
+                    continue
+                move = move_line.move_id
+                rounding = move.product_id.uom_id.rounding
+                diff = vals['qty_done'] - move_line.qty_done
+                if float_is_zero(diff, precision_rounding=rounding):
+                    continue
+                self._create_correction_svl(move, diff)
+        elif 'qty_done' in vals:
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
                 moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
@@ -72,4 +98,14 @@ class StockMoveLine(models.Model):
                 if qty_difference > 0:
                     move_id.product_price_update_before_done(forced_qty=qty_difference)
         return super(StockMoveLine, self).write(vals)
+
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    @api.model
+    def _create_correction_svl(self, move, diff):
+        if move._is_in() and diff > 0 or move._is_out() and diff < 0:
+            move._create_in_svl(forced_quantity=abs(diff))
+        elif move._is_in() and diff < 0 or move._is_out() and diff > 0:
+            move._create_out_svl(forced_quantity=abs(diff))
 
