@@ -32,8 +32,13 @@ class StockMove(models.Model):
         return action_data
 
     def _get_price_unit(self):
-        """ Returns the unit price to store on the quant """
-        return not self.company_id.currency_id.is_zero(self.price_unit) and self.price_unit or self.product_id.standard_price
+        """ Returns the unit price to value this stock move """
+        self.ensure_one()
+        price_unit = self.price_unit
+        # If the move is a return, use the original move's price unit.
+        if self.origin_returned_move_id:
+            price_unit = self.origin_returned_move_id.price_unit
+        return not self.company_id.currency_id.is_zero(price_unit) and price_unit or self.product_id.standard_price
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
