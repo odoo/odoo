@@ -20,6 +20,7 @@ class StockMove(models.Model):
     remaining_qty = fields.Float(copy=False)
     remaining_value = fields.Float(copy=False)
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
 
     @api.multi
     def action_get_account_moves(self):
