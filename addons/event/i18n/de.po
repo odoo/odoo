@@ -24,6 +24,7 @@
 # Johannes Croe <jcr@odoo.com>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Martin Trigaux, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr "%s (Kopie)"
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -67,6 +68,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        zu</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -83,6 +86,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Liebe (r) ${object.name},<br/>\n"
+"    Vielen Dank für Ihre Anfrage.<br/>\n"
+"    Hier ist Ihr Ausweis für die Veranstaltung ${object.event_id.name}.<br/>\n"
+"     Wenn Sie Fragen haben, lassen Sie es uns bitte wissen.\n"
+"    <br/><br/>\n"
+"   Vielen Dank,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -146,6 +160,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        zu\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -162,6 +179,9 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Warnung: Dieses Event hat das "
+"Mindestregistrierungslimit nicht erreicht. Möchten Sie es wirklich "
+"bestätigen?</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -180,7 +200,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "<strong>Conference for Architects</strong>"
-msgstr ""
+msgstr "<strong>Konferenz für Architekten</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -630,12 +650,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "Neuen Teilnehmer hinzufügen"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "Fügen Sie ein neues Veranstaltung hinzu"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -856,7 +876,7 @@ msgstr "Konferenz"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "Konferenz für Architekten"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -994,7 +1014,7 @@ msgstr "Beschreibung"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "Designmesse Los Angeles"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1575,7 +1595,7 @@ msgstr "Mail-Planer"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "E-Mail-Planung nach Veranstaltungskategorien"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1979,6 +1999,8 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
+"Planen und organisieren Sie Ihre Veranstaltungen effizient:\n"
+"                Registrierungen und Teilnahmen verfolgen, Bestätigungs-E-Mails automatisieren, Tickets verkaufen usw."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -2084,7 +2106,7 @@ msgstr ""
 #: code:addons/event/models/event.py:278
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "Das Enddatum kann nicht vor dem Anfangsdatum liegen."
 
 #. module: event
 #: code:addons/event/models/event.py:322
@@ -2233,7 +2255,7 @@ msgstr "Zukünftige Veranstaltungen ab heute"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Kommende / Laufen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_hashtag

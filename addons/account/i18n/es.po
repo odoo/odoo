@@ -40,6 +40,7 @@
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
 # 36700cd705c35e1852bdffcd0b296648, 2019
+# Lucas Weigandt <lucasweigandt@gmail.com>, 2019
 # Pilar Marín <pilar@odooperu.pe>, 2019
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
@@ -59,7 +60,6 @@
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2019
 # fr33co <fr33codev@gmail.com>, 2019
 # Harald Panten <harald.panten@qubiq.es>, 2019
-# Lucas Weigandt <lucasweigandt@gmail.com>, 2019
 # cc53a0412107de288f77ae97a300f6b0, 2019
 # Rodrigo Aragon <conectacoatepec@gmail.com>, 2019
 # Jhonsons Jimenez <jhonson1195@gmail.com>, 2019
@@ -72,12 +72,12 @@
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Hector Hernandez <info@ronandez.com>, 2019
-# Martin Trigaux, 2019
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2019
 # Christian García <shopificame@gmail.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
 # Vivian Montana <vmo@odoo.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -85,7 +85,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-20 13:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Vivian Montana <vmo@odoo.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,8 +225,8 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data>Estimado ${object.partner_id.name},</p>\n"
-"<p>Gracias por tu pago.<br/> Aquí está tu recibo de pago <strong>${(object.name or '').replace('/','-')}</strong> por un monto de <strong>${format_amount(object.amount, object.currency_id)}</strong> efectuado por ${object.company_id.name}.</p>\n"
-"<p>Si tienes alguna pregunta, no dudes en contactarnos.</p>\n"
+"<p>Gracias por su pago.<br/> Aquí está su recibo de pago <strong>${(object.name or '').replace('/','-')}</strong> por un monto de <strong>${format_amount(object.amount, object.currency_id)}</strong> efectuado por ${object.company_id.name}.</p>\n"
+"<p>Si tiene alguna pregunta, no dude en contactarnos.</p>\n"
 "<p>Cordiales saludos,\n"
 "% if user and user.signature:\n"
 "${user.signature | safe}\n"

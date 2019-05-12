@@ -138,7 +138,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Сканер штрих-коду</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -148,7 +148,7 @@ msgstr "<span class=\"o_form_label\">Записи журналу</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Log in with Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Увійдіть як співробітник</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -561,7 +561,7 @@ msgstr "Автоматично відкриває касовий ящик."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available Category Tree"
-msgstr ""
+msgstr "Дерево доступної категорії"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_ids
@@ -578,7 +578,7 @@ msgstr "Доступний прайслист"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr ""
+msgstr "Категорії доступних товарів"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
@@ -1546,6 +1546,9 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
+"Співробітники можуть сканувати свій значок або ввести PIN-код для входу в "
+"сесію точки продажу. Ці облікові дані налаштовуються на вкладці *Параметри "
+"відділу кадрів* форми працівника."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1816,7 +1819,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_start_categ_domain_ids
 msgid "Iface Start Categ Domain"
-msgstr ""
+msgstr "Домен для початкової категорії інтерфейсу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image
@@ -2183,7 +2186,7 @@ msgstr "Інші"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Модуль відділу кадрів точки продажу"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2969,7 +2972,7 @@ msgstr "Налаштування точки продажу"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "Замовлення точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -3351,7 +3354,7 @@ msgstr "Відповідальний"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 msgid "Restrict Available Product Categories"
-msgstr ""
+msgstr "Обмежити категорії доступних товарів"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
@@ -3653,7 +3656,7 @@ msgstr "Покажіть клієнту екран з віддаленим пі�
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "Показати екран входу співробітника"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3934,7 +3937,7 @@ msgstr "Податки:"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_domain_ids
 msgid "Technical field used as a domain for iface_start_categ_id."
-msgstr ""
+msgstr "Технічне поле використовується, як домен для iface_start_categ_id."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4082,6 +4085,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"У точці продажу відображатимуться лише товари, які знаходяться в межах "
+"однієї з вибраних дерев категорій. Якщо категорія не вказана, "
+"відображатимуться усі доступні товари"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -4251,6 +4257,8 @@ msgid ""
 "This barcode is already assigned to another contact. Please make sure you "
 "assign a unique barcode to this contact."
 msgstr ""
+"Цей штрих-код вже призначено іншому контакту. Переконайтеся, що для цього "
+"контакту призначено унікальний штрих-код."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line__default_pos_id
@@ -4594,6 +4602,8 @@ msgstr "Використовуйте інтегровану установку �
 msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
 msgstr ""
+"Використовуйте облікові дані співробітників для входу в сесію точки продажу "
+"і перемикніть касира"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user
