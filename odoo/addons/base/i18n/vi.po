@@ -6751,12 +6751,15 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
+"<code>model</code>: Bảng ghi của Model hệ thống mà hành động được kích hoạt,"
+" là một bản ghi void."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
+"<code>bảng ghi</code>: bảng ghi mà hành động đã kích hoạt, có thể là void"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -8427,7 +8430,7 @@ msgstr "Áp dụng cho sửa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_calendar
 msgid "Appointment Scheduling"
-msgstr ""
+msgstr "Lên lịch hẹn"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
@@ -8634,7 +8637,7 @@ msgstr "Tìm kiếm tự động"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
-msgstr ""
+msgstr "Tự động hóa các chiến dịch tiếp thị"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -8924,7 +8927,7 @@ msgstr "Base: Auto-vacuum internal data"
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
 msgid "Base: Module Immediate Install"
-msgstr ""
+msgstr "Cơ bản: Cài đặt mô-đun ngay lập tức"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
@@ -9131,7 +9134,7 @@ msgstr "Bouvet Island"
 #. module: base
 #: selection:res.company,external_report_layout:0
 msgid "Boxed"
-msgstr ""
+msgstr "Boxed"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -9812,7 +9815,7 @@ msgstr "Commercial Entity"
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
 msgid "Commercial Entity's Country"
-msgstr ""
+msgstr "Commercial Entity's Country"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
@@ -11071,7 +11074,7 @@ msgstr "Deutschland - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_reports
 msgid "Deutschland - Accounting Reports"
-msgstr ""
+msgstr "Tiếng Đức - Báo cáo kế toán"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
@@ -11740,12 +11743,12 @@ msgstr "Quét mã vạch sự kiện"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode_mobile
 msgid "Event Barcode in Mobile"
-msgstr ""
+msgstr "Mã vạch sự kiện trên Mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode_mobile
 msgid "Event Barcode scan in Mobile"
-msgstr ""
+msgstr "Quét mã vạch sự kiện trên Mobile"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
@@ -13220,7 +13223,7 @@ msgstr "Hỗ trợ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
 msgid "Helpdesk Timesheet"
-msgstr ""
+msgstr "Bảng chấm công Helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
@@ -13650,6 +13653,8 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
+"Nếu bật, các kết nối ra ngoài của SMTP sẽ ghi lại vào nhật ký máy chủ theo "
+"mức DEBUG (điều này rất dài dòng và có thể bao gồm thông tin bí mật!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -14046,7 +14051,7 @@ msgstr "Inline Edit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_view_id
 msgid "Input View"
-msgstr ""
+msgstr "Hiển thị nhập"
 
 #. module: base
 #: code:addons/base/module/module.py:436
@@ -14121,17 +14126,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
-msgstr ""
+msgstr "Tích hợp cơ chế phiếu giảm giá trong đơn đặt hàng."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_delivery
 msgid "Integrate coupon mechanism with shipping costs."
-msgstr ""
+msgstr "Tích hợp cơ chế phiếu giảm giá với chi phí vận chuyển."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_coupon
 msgid "Integrate coupons mechanism in ecommerce."
-msgstr ""
+msgstr "Tích hợp cơ chế phiếu giảm giá trong thương mại điện tử."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_inter_company_rules
@@ -14282,7 +14287,7 @@ msgstr "Kiểu không hợp lệ"
 #: code:addons/base/ir/ir_default.py:70
 #, python-format
 msgid "Invalid value for %s.%s: %s"
-msgstr ""
+msgstr "Giá trị không hợp lệ với %s.%s: %s"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:343
@@ -14905,7 +14910,7 @@ msgstr "Quản lý kỳ nghỉ"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Leave allocations and leave requests"
-msgstr ""
+msgstr "Phân bổ nghĩ phép và yêu cầu nghĩ phép"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
@@ -14965,7 +14970,7 @@ msgstr "Lesotho"
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
 msgid "Let returning shoppers save products in a wishlist"
-msgstr ""
+msgstr "Hãy để người mua trở lại lưu sản phẩm trong một danh sách mong muốn"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -18414,13 +18419,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Please set the Model to Create before choosing values"
-msgstr ""
+msgstr "Hãy đặt Model cần Tạo trước khi chọn giá trị"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:472
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "Vui lòng chỉ định một model hợp lệ cho đối tượng liên quan"
 
 #. module: base
 #: code:addons/base/res/res_users.py:255
@@ -18638,12 +18643,13 @@ msgstr "Private methods (such as %s) cannot be called remotely."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
 msgid "Product Comparison And Product Attribute Category"
-msgstr ""
+msgstr "So sánh sản phẩm và danh mục thuộc tính sản phẩm"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
 msgid "Product Comparison, Product Attribute Category and specification table"
 msgstr ""
+"So sánh sản phẩm, Danh mục thuộc tính sản phẩm và bảng thông số kỹ thuật"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
@@ -18785,7 +18791,7 @@ msgstr "Dự án, Trợ giúp, Chấm công và Đơn bán hàng"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr ""
+msgstr "Dự án, Nhiệm vụ, Bảng chấm công"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -18842,7 +18848,7 @@ msgstr "Public"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
 msgid "Public Administration"
-msgstr ""
+msgstr "Công khai tài khoản quản trị"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -18861,7 +18867,7 @@ msgstr "Publish Associations, Groups and Memberships"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish Events and Manage Online Registrations on your Website"
-msgstr ""
+msgstr "Sự kiện công cộng và Quản lý đăng ký trực tuyến trên Website của bạn"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -19186,7 +19192,7 @@ msgstr "Tên quan hệ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_table
 msgid "Relation Table"
-msgstr ""
+msgstr "Bảng liên quan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment_use
@@ -19722,7 +19728,7 @@ msgstr "Scheduled Action"
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "Scheduled Actions"
+msgstr "Hành động định kỳ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_user_id
@@ -21330,7 +21336,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr ""
+msgstr "TaxCloud và giao hàng - Thương mại điện tử"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -22076,7 +22082,7 @@ msgstr "Chấm công"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets Validation"
-msgstr ""
+msgstr "Xác nhận bảng chấm công"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
@@ -22449,7 +22455,7 @@ msgstr "UK - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS Bill My Account"
-msgstr ""
+msgstr "Đơn thanh toán UPS trong Tài khoản của tôi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -23333,7 +23339,7 @@ msgstr "Website Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_project
 msgid "Website Form - Project"
-msgstr ""
+msgstr "Website Form - Dự án"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_editor
@@ -23403,7 +23409,7 @@ msgstr "Website Xếp hạng"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_rating_project
 msgid "Website Rating Project"
-msgstr ""
+msgstr "Website đánh giá dự án"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_management
@@ -24224,7 +24230,7 @@ msgstr "ir.qweb.field.float"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
 msgid "ir.qweb.field.float_time"
-msgstr ""
+msgstr "ir.qweb.field.float_time"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
