@@ -266,7 +266,7 @@
         </t>
     </template>
 
-    <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
+    <template id="sort" inherit_id="website_sale.products" customize_show="True" name="Show Sort by">
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
             <t t-set="list_price_desc_label">Catalog price: High to Low</t>
             <t t-set="list_price_asc_label">Catalog price: Low to High</t>
@@ -1271,7 +1271,7 @@
         </t>
     </template>
 
-    <template id="address_b2b" inherit_id="address" name="Show b2b fields" customize_show="True" active="True">
+    <template id="address_b2b" inherit_id="address" name="Show b2b fields" customize_show="True">
         <xpath expr="//div[@id='div_phone']" position="after">
             <div class="w-100"/>
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
@@ -1549,7 +1549,7 @@
         </div>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.total" active="True" customize_show="True" name="Promo Code">
+    <template id="reduction_code" inherit_id="website_sale.total" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_coupon">
                 <td colspan="3" class="text-center text-xl-right noborder">
