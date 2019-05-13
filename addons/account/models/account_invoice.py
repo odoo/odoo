@@ -754,24 +754,26 @@ class AccountInvoice(models.Model):
         """
         # Split `From` and `CC` email address from received email to look for related partners to subscribe on the invoice
         subscribed_emails = email_split((msg_dict.get('from') or '') + ',' + (msg_dict.get('cc') or ''))
-        seen_partner_ids = [pid for pid in self._find_partner_from_emails(subscribed_emails) if pid]
+        seen_partner_ids = [partner.id for partner in self.env['mail.thread']._mail_find_partner_from_emails(subscribed_emails, records=self) if partner]
 
         # Detection of the partner_id of the invoice:
         # 1) check if the email_from correspond to a supplier
         email_from = msg_dict.get('from') or ''
         email_from = email_escape_char(email_split(email_from)[0])
-        partner_id = self._search_on_partner(email_from, extra_domain=[('supplier', '=', True)])
+        partners = self.env['mail.thread'].sudo()._mail_search_on_partner(email_from, extra_domain=[('supplier', '=', True)]).id
+        partner_id = partners.ids[0] if partners else False
 
         # 2) otherwise, if the email sender is from odoo internal users then it is likely that the vendor sent the bill
         # by mail to the internal user who, inturn, forwarded that email to the alias to automatically generate the bill
         # on behalf of the vendor.
         if not partner_id:
-            user_partner_id = self._search_on_user(email_from)
+            user_partners = self.env['mail.thread'].sudo()._mail_search_on_user(email_from).id
+            user_partner_id = user_partners.ids[0] if user_partners else False
             if user_partner_id and user_partner_id in self.env.ref('base.group_user').users.mapped('partner_id').ids:
                 # In this case, we will look for the vendor's email address in email's body and assume if will come first
                 email_addresses = email_re.findall(msg_dict.get('body'))
                 if email_addresses:
-                    partner_ids = [pid for pid in self._find_partner_from_emails([email_addresses[0]], force_create=False) if pid]
+                    partner_ids = [partner.id for partner in self.env['mail.thread']._mail_find_partner_from_emails([email_addresses[0]], records=self, force_create=False) if partner]
                     partner_id = partner_ids and partner_ids[0]
             # otherwise, there's no fallback on the partner_id found for the regular author of the mail.message as we want
             # the partner_id to stay empty

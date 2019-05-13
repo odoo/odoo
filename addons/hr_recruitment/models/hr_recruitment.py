@@ -381,8 +381,8 @@ class Applicant(models.Model):
         return res
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Applicant, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Applicant, self)._message_get_suggested_recipients()
         for applicant in self:
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))

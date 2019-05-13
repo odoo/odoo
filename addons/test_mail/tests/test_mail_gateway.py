@@ -184,7 +184,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self._mails), 0, 'No notification / bounce should be sent')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_process_partner_find(self):
+    def test_message_process_email_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
         from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@example.com'})
@@ -204,6 +204,19 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, 'groups@test.com')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_3)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_email_author_exclude_alias(self):
+        """ Do not set alias as author to avoid including aliases in discussions """
+        from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@test.com'})
+        self.env['mail.alias'].create({
+            'alias_name': 'from.test',
+            'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id
+        })
+
+        record = self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, 'groups@test.com')
+        self.assertFalse(record.message_ids[0].author_id)
+        self.assertEqual(record.message_ids[0].email_from, from_1.email_formatted)
 
     # --------------------------------------------------
     # Alias configuration
