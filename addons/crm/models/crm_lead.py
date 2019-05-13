@@ -50,7 +50,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _primary_email = 'email_from'
 
     def _default_probability(self):
@@ -95,9 +95,6 @@ class Lead(models.Model):
     day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
-
-    # Messaging and marketing
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
 
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
@@ -1163,17 +1160,16 @@ class Lead(models.Model):
         return view_id
 
     @api.multi
-    def message_get_default_recipients(self):
-        return {
-            r.id : {'partner_ids': [],
-                    'email_to': r.email_normalized,
-                    'email_cc': False}
-            for r in self.sudo()
-        }
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [],
+            'email_to': r.email_normalized,
+            'email_cc': False}
+            for r in self}
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Lead, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Lead, self)._message_get_suggested_recipients()
         try:
             for lead in self:
                 if lead.partner_id:
@@ -1229,8 +1225,8 @@ class Lead(models.Model):
         return super(Lead, self)._message_post_after_hook(message, *args, **kwargs)
 
     @api.multi
-    def message_partner_info_from_emails(self, emails, link_mail=False):
-        result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
         for partner_info in result:
             if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
                 emails = email_re.findall(partner_info['full_name'] or '')

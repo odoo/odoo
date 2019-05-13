@@ -305,7 +305,7 @@ class MailComposer(models.TransientModel):
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         blacklisted_rec_ids = []
-        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.blacklist.mixin']):
+        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             BL_sudo = self.env['mail.blacklist'].sudo()
             blacklist = set(BL_sudo.search([]).mapped('email'))
             if blacklist:
@@ -467,7 +467,7 @@ class MailComposer(models.TransientModel):
         template rendering represent a significant part of the process.
 
         Default recipients are also computed, based on mail_thread method
-        message_get_default_recipients. This allows to ensure a mass mailing has
+        _message_get_default_recipients. This allows to ensure a mass mailing has
         always some recipients specified.
 
         :param browse wizard: current mail.compose.message browse record
@@ -488,7 +488,8 @@ class MailComposer(models.TransientModel):
         replies_to = self.env['mail.template']._render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
         if not self.partner_ids:
-            default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
+            records = self.env[self.model].browse(res_ids).sudo()
+            default_recipients = self.env['mail.thread']._message_get_default_recipients_on_records(records)
 
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:

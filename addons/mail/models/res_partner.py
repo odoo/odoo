@@ -18,24 +18,27 @@ class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = "res.partner"
-    _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin', 'mail.blacklist.mixin']
+    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
     # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Partner, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
             partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients
 
     @api.multi
-    def message_get_default_recipients(self):
-        return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [r.id],
+            'email_to': False,
+            'email_cc': False}
+            for r in self}
 
     @api.model
     def _notify_prepare_template_context(self, message, record, model_description=False, mail_auto_delete=True):
