@@ -52,7 +52,7 @@
                             class="oe_stat_button"
                             attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
                             icon="fa-money"
-                            type="object" context="{'balance': 'end'}">
+                            type="object" context="{'balance': 'close'}">
                             <span class="o_stat_text">Set Closing Balance</span>
                         </button>
                         <button name="action_view_order"

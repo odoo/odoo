@@ -342,10 +342,7 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Default Opening" for="proxy_ip" class="col-lg-3 o_light_label" />
-                                        <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'show_coin_and_value': True}"/>
-                                    </div>
-                                    <div>
-                                        <button type="action" name="%(account_cashbox_line_action)d" string="Opening/Closing Values" class="btn-link" icon="fa-arrow-right"/>
+                                        <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True}"/>
                                     </div>
                                 </div>
                             </div>

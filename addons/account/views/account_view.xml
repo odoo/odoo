@@ -417,29 +417,46 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.cashbox</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="cashbox_lines_ids" nolabel="1">
+                    <sheet>
+                        <field name="start_bank_stmt_ids" invisible="1"/>
+                        <field name="end_bank_stmt_ids" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cashbox_lines_ids" nolabel="1" context="{'default_currency_id': currency_id}">
                             <tree editable="bottom">
-                                <field name="coin_value"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="number"/>
-                                <field name="subtotal" sum="Total"/>
+                                <field name="coin_value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </tree>
                         </field>
-                    </group>
-                    <footer>
-                        <button string="Confirm" name="validate" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
+                        <div>
+                            <group>
+                                <group class="oe_subtotal_footer oe_right" cols="6">
+                                    <field name="currency_id" invisible="1" />
+                                    <div class="o_td_label"></div>
+                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </group>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="action_view_account_bnk_stmt_cashbox" model="ir.actions.act_window">
-            <field name="name">Cash Control</field>
-            <field name="res_model">account.bank.statement.cashbox</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_bnk_stmt_cashbox"/>
-            <field name="target">new</field>
+        <record id="view_account_bnk_stmt_cashbox_footer" model="ir.ui.view">
+            <field name="name">account.bnk_stmt_cashbox.form</field>
+            <field name="model">account.bank.statement.cashbox</field>
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_account_bnk_stmt_cashbox"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <footer>
+                        <button string="Confirm" class="btn-primary" special="save"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </xpath>
+            </field>
         </record>
 
         <record id="view_account_bnk_stmt_check" model="ir.ui.view">
@@ -543,18 +560,12 @@ action = model.setting_init_bank_account_action()
                             <label for="balance_start"/>
                             <div>
                                 <field class="oe_inline" name="balance_start"/>
-                                <button class="oe_inline oe_link oe_edit_only" name="%(action_view_account_bnk_stmt_cashbox)d"
-                                string="&#8594; Count" type="action"
-                                attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id','!=',False)]}" context="{'balance':'start'}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id', '=', False)]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start', 'cashbox_id': cashbox_start_id}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
                                 <field class="oe_inline" name="balance_end_real"/>
-                                <button class="oe_inline oe_link oe_edit_only" name="%(action_view_account_bnk_stmt_cashbox)d"
-                                string="&#8594; Count" type="action"
-                                attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id','!=',False)]}" context="{'balance':'close'}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id', '=', False)]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close', 'cashbox_id': cashbox_end_id}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
                     </group>

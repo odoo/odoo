@@ -101,7 +101,10 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.pos_order_pos0.amount_paid, 450, 'Amount paid for the order should be updated.')
 
         # I close the current session to generate the journal entries
-        self.pos_config.current_session_id.action_pos_session_close()
+        current_session_id = self.pos_config.current_session_id
+        current_session_id._check_pos_session_balance()
+        current_session_id.action_pos_session_close()
+        self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         # I test that the generated journal entries are correct.
         account_output = self.category.property_stock_account_output_categ_id
