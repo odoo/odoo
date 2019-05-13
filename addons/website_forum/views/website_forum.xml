@@ -967,14 +967,14 @@
                                 <t t-set="inDropdown" t-value="True"/>
                                 <t t-set="icon" t-value="'fa-trash-o text-primary'"/>
                                 <t t-set="classes" t-value="'comment_delete border-bottom'"/>
-                                <t t-set="karma" t-value="not object.can_unlink and answer.karma_unlink or 0"/>
+                                <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
                             </t>
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
                                 <t t-set="label">Convert as a answer</t>
                                 <t t-set="inDropdown" t-value="True"/>
                                 <t t-set="icon" t-value="'fa-magic text-primary'"/>
-                                <t t-set="karma" t-value="not object.can_comment_convert and answer.karma_comment_convert or 0"/>
+                                <t t-set="karma" t-value="not object.can_comment_convert and object.karma_comment_convert or 0"/>
                             </t>
                         </div>
                     </div>
