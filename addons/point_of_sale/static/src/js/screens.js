@@ -59,12 +59,14 @@ var ScreenWidget = PosBaseWidget.extend({
     // it will add the product to the order and go to barcode_product_screen. 
     barcode_product_action: function(code){
         var self = this;
-        if (self.pos.scan_product(code)) {
-            if (self.barcode_product_screen) {
-                self.gui.show_screen(self.barcode_product_screen, null, null, true);
+        if (!(self.pos.get_order().finalized)){
+            if (self.pos.scan_product(code)) {
+                if (self.barcode_product_screen) {
+                    self.gui.show_screen(self.barcode_product_screen, null, null, true);
+                }
+            } else {
+                this.barcode_error_action(code);
             }
-        } else {
-            this.barcode_error_action(code);
         }
     },
 
