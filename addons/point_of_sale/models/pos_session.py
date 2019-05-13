@@ -315,32 +315,12 @@ class PosSession(models.Model):
             'url':   '/pos/web/',
         }
 
-    def open_cashbox(self):
+    def open_cashbox_pos(self):
         self.ensure_one()
-        context = dict(self._context)
-        balance_type = context.get('balance') or 'start'
-        context['bank_statement_id'] = self.cash_register_id.id
-        context['balance'] = balance_type
-        context['default_pos_id'] = self.config_id.id
-
-        action = {
-            'name': _('Cash Control'),
-            'view_mode': 'form',
-            'res_model': 'account.bank.statement.cashbox',
-            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
-            'type': 'ir.actions.act_window',
-            'context': context,
-            'target': 'new'
-        }
-
-        cashbox_id = None
-        if balance_type == 'start':
-            cashbox_id = self.cash_register_id.cashbox_start_id.id
-        else:
-            cashbox_id = self.cash_register_id.cashbox_end_id.id
-        if cashbox_id:
-            action['res_id'] = cashbox_id
-
+        action = self.cash_register_id.open_cashbox_id()
+        action['view_id'] = self.env.ref('point_of_sale.view_account_bnk_stmt_cashbox_footer').id
+        action['context']['pos_session_id'] = self.id
+        action['context']['default_pos_id'] = self.config_id.id
         return action
 
     def action_view_order(self):
