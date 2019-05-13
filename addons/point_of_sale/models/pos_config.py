@@ -8,32 +8,28 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class AccountCashboxLine(models.Model):
-    _inherit = 'account.cashbox.line'
-
-    default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
+class AccountBankStmtCashWizard(models.Model):
+    _inherit = 'account.bank.statement.cashbox'
 
     @api.multi
     def name_get(self):
         result = []
-        for cashbox_line in self:
-            result.append((cashbox_line.id, "%s * %s"%(cashbox_line.coin_value, cashbox_line.number)))
+        for cashbox_lines in self:
+            result.append((cashbox_lines.id, "Cashbox %s" % (cashbox_lines.id)))
         return result
 
-class AccountBankStmtCashWizard(models.Model):
-    _inherit = 'account.bank.statement.cashbox'
+    @api.multi
+    def validate(self):
+        bnk_stmt_id = self.env.context.get('bank_statement_id', False) or self.env.context.get('active_id', False)
+        bnk_stmt = self.env['account.bank.statement'].browse(bnk_stmt_id)
+        total = 0.0
+        for lines in self.cashbox_lines_ids:
+            total += lines.subtotal
+        # closing balance
+        bnk_stmt.write({'balance_end_real': total, 'cashbox_end_id': self.id})
+        return {'type': 'ir.actions.act_window_close'}
 
-    @api.model
-    def default_get(self, fields):
-        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
-        config_id = self.env.context.get('default_pos_id')
-        if config_id:
-            lines = self.env['account.cashbox.line'].search([('default_pos_id', '=', config_id)])
-            if self.env.context.get('balance', False) == 'start':
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
-            else:
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
-        return vals
+
 
 class PosConfig(models.Model):
     _name = 'pos.config'
@@ -150,7 +146,7 @@ class PosConfig(models.Model):
         help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
-    default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
+    default_cashbox_id = fields.Many2one('account.bank.statement.cashbox', string='Default Balance')
     customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
@@ -166,6 +162,10 @@ class PosConfig(models.Model):
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
+    amount_authorized_diff = fields.Float('Amount Authorized Difference',
+        help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
+             "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
+             "the closing of his session saying that he needs to contact his manager.")
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
