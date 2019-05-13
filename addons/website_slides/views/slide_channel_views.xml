@@ -1,58 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- SLIDE.CATEGORY -->
-        <record model="ir.ui.view" id="view_slides_category_form">
-            <field name="name">slide.category.form</field>
-            <field name="model">slide.category</field>
-            <field name="arch" type="xml">
-                <form string="Category">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="channel_id"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="slide_category_view_from_fchannel">
-            <field name="name">slide.category.form</field>
-            <field name="model">slide.category</field>
-            <field name="arch" type="xml">
-                <form string="Category">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_slides_category_tree" model="ir.ui.view">
-            <field name="name">slide.category.tree</field>
-            <field name="model">slide.category</field>
-            <field name="arch" type="xml">
-                <tree string="Category">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="channel_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_ir_slide_category" model="ir.actions.act_window">
-            <field name="name">Categories</field>
-            <field name="res_model">slide.category</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a new category
-                </p>
-            </field>
-        </record>
 
         <!-- SLIDE.CHANNEL VIEWS -->
         <record model="ir.ui.view" id="view_slide_channel_form">
@@ -87,9 +35,6 @@
                             <group>
                                 <field name="active" invisible="1"/>
                                 <field name="enroll" widget="radio" options="{'horizontal': true}"/>
-                                <field name="category_ids" widget="many2many_tags" placeholder="Categories"
-                                    context="{'default_channel_id': active_id, 'form_view_ref': 'website_slides.slide_category_view_from_fchannel'}"
-                                    domain="[('channel_id','=', active_id)]"/>
                                 <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
                                 <field name="user_id"/>
                             </group>

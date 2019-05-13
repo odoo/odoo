@@ -53,6 +53,8 @@ class TestKarmaGain(common.SlidesCase):
 
         # Finish the Course
         self.slide.with_user(user).action_set_completed()
+        self.assertFalse(self.channel.with_user(user).completed)
+        (self.slide_2 | self.slide_3).with_user(user).action_set_completed()
         self.assertTrue(self.channel.with_user(user).completed)
         computed_karma += self.channel.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
@@ -93,6 +95,6 @@ class TestKarmaGain(common.SlidesCase):
         # Finish two course at the same time (should not ever happen but hey, we never know)
         (self.channel | self.channel_2)._action_add_members(user.partner_id)
 
-        (self.slide | self.slide_2_0 | self.slide_2_1).with_user(user).action_set_completed()
+        (self.slide | self.slide_2 | self.slide_3 | self.slide_2_0 | self.slide_2_1).with_user(user).action_set_completed()
         computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)

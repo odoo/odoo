@@ -130,13 +130,12 @@ class TestAccessFeatures(common.SlidesCase):
     def test_channel_auto_subscription(self):
         user_employees = self.env['res.users'].search([('groups_id', 'in', self.ref('base.group_user'))])
 
-        with self.with_user(self.user_publisher):
-            channel = self.env['slide.channel'].create({
-                'name': 'Test',
-                'enroll': 'invite',
-                'is_published': True,
-                'enroll_group_ids': [(4, self.ref('base.group_user'))]
-            })
+        channel = self.env['slide.channel'].with_user(self.user_publisher).create({
+            'name': 'Test',
+            'enroll': 'invite',
+            'is_published': True,
+            'enroll_group_ids': [(4, self.ref('base.group_user'))]
+        })
 
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
 

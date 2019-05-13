@@ -30,7 +30,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
     _bindSortable: function () {
         this.$('ul.o_wslides_js_slides_list_container').sortable({
             handle: '.o_wslides_slides_list_drag',
-            stop: this._reorderCategories.bind(this),
+            stop: this._reorderSlides.bind(this),
             items: '.o_wslides_slide_list_category',
             placeholder: 'o_wslides_slides_list_slide_hilight position-relative mb-1'
         });
@@ -62,61 +62,20 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
         });
     },
 
-    _getCategories: function (){
+    _getSlides: function (){
         var categories = [];
-        this.$('.o_wslides_js_category').each(function (){
-            categories.push(parseInt($(this).data('categoryId')));
+        this.$('.o_wslides_js_list_item').each(function (){
+            categories.push(parseInt($(this).data('slideId')));
         });
         return categories;
     },
-
-    /**
-     * Returns a slides dict in the form:
-     * {slide_id: {'sequence': slide_sequence, 'category_id': slide.category_id.id}}
-     *
-     *
-     * (Uncategorized slides don't have the category_id key)
-     *
-     * @private
-     */
-    _getSlides: function (){
-        var slides = {};
-        this.$('li.o_wslides_slides_list_slide[data-slide-id]').each(function (index){
-            var $slide = $(this);
-            var values = {
-                sequence: index
-            };
-
-            var categoryId = $slide.closest('.o_wslides_slide_list_category').data('categoryId');
-            if (typeof categoryId !== typeof undefined && categoryId !== false) {
-                values.category_id = categoryId;
-            }
-
-            slides[$slide.data('slideId')] = values;
-        });
-
-        return slides;
-    },
-
-    _reorderCategories: function (){
+    _reorderSlides: function (){
         var self = this;
         self._rpc({
             route: '/web/dataset/resequence',
             params: {
-                model: "slide.category",
-                ids: self._getCategories()
-            }
-        });
-    },
-
-    _reorderSlides: function (){
-        this._checkForEmptySections();
-
-        this._rpc({
-            route: "/slides/channel/resequence",
-            params: {
-                channel_id: this.channelId,
-                slides_data: this._getSlides()
+                model: "slide.slide",
+                ids: self._getSlides()
             }
         });
     },
