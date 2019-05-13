@@ -109,9 +109,9 @@ class ResUsers(models.Model):
         # return user credentials
         return (self.env.cr.dbname, login, access_token)
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         try:
-            return super(ResUsers, self)._check_credentials(password)
+            return super(ResUsers, self)._check_credentials(password, env)
         except AccessDenied:
             res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', password)])
             if not res:

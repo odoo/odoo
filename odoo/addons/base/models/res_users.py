@@ -318,7 +318,7 @@ class Users(models.Model):
         )
         self.invalidate_cache(['password'], [uid])
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         """ Validates the current user's password.
 
         Override this method to plug additional authentication methods.
@@ -630,7 +630,7 @@ class Users(models.Model):
         return self._order
 
     @classmethod
-    def _login(cls, db, login, password):
+    def _login(cls, db, login, password, user_agent_env):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
@@ -642,7 +642,7 @@ class Users(models.Model):
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
-                    user._check_credentials(password)
+                    user._check_credentials(password, user_agent_env)
                     tz = request.httprequest.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
@@ -667,7 +667,7 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, login, password)
+        uid = cls._login(db, login, password, user_agent_env=user_agent_env)
         if user_agent_env and user_agent_env.get('base_location'):
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})
@@ -693,14 +693,13 @@ class Users(models.Model):
         db = cls.pool.db_name
         if cls.__uid_cache[db].get(uid) == passwd:
             return
-        cr = cls.pool.cursor()
-        try:
+        with contextlib.closing(cls.pool.cursor()) as cr:
             self = api.Environment(cr, uid, {})[cls._name]
             with self._assert_can_auth():
-                self._check_credentials(passwd)
+                if not self.env.user.active:
+                    raise AccessDenied()
+                self._check_credentials(passwd, {'interactive': False})
                 cls.__uid_cache[db][uid] = passwd
-        finally:
-            cr.close()
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
@@ -739,11 +738,15 @@ class Users(models.Model):
         :raise: odoo.exceptions.AccessDenied when old password is wrong
         :raise: odoo.exceptions.UserError when new password is not set or empty
         """
-        self.check(self._cr.dbname, self._uid, old_passwd)
-        if new_passwd:
-            # use self.env.user here, because it has uid=SUPERUSER_ID
-            return self.env.user.write({'password': new_passwd})
-        raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+        if not old_passwd:
+            raise AccessDenied()
+        if not new_passwd:
+            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+
+        # alternatively: use identitycheck wizard?
+        self._check_credentials(old_passwd, {'interactive': True})
+        # use self.env.user here, because it has uid=SUPERUSER_ID
+        return self.env.user.write({'password': new_passwd})
 
     def preference_save(self):
         return {

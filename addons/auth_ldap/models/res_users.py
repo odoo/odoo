@@ -10,9 +10,9 @@ class Users(models.Model):
     _inherit = "res.users"
 
     @classmethod
-    def _login(cls, db, login, password):
+    def _login(cls, db, login, password, user_agent_env):
         try:
-            return super(Users, cls)._login(db, login, password)
+            return super(Users, cls)._login(db, login, password, user_agent_env=user_agent_env)
         except AccessDenied as e:
             with registry(db).cursor() as cr:
                 cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
@@ -28,9 +28,9 @@ class Users(models.Model):
                         return Ldap._get_or_create_user(conf, login, entry)
                 raise e
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         try:
-            super(Users, self)._check_credentials(password)
+            return super(Users, self)._check_credentials(password, env)
         except AccessDenied:
             if self.env.user.active:
                 Ldap = self.env['res.company.ldap']
