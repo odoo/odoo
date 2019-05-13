@@ -41,6 +41,8 @@ class ResConfigSettings(models.TransientModel):
         If the user disables the product variants -> disable the product configurator as well"""
         if self.module_sale_product_configurator and not self.group_product_variant:
             self.module_sale_product_configurator = False
+        if self.module_product_variant_grid and not self.group_product_variant:
+            self.module_product_variant_grid = False
 
     @api.onchange('module_sale_product_configurator')
     def _onchange_module_sale_product_configurator(self):
@@ -48,6 +50,13 @@ class ResConfigSettings(models.TransientModel):
         If the user enables the product configurator -> enable the product variants as well"""
         if self.module_sale_product_configurator and not self.group_product_variant:
             self.group_product_variant = True
+
+    @api.onchange('module_product_variant_grid')
+    def _onchange_module_module_product_variant_grid(self):
+        """The product Grid Configurator requires the product Configurator activated
+        If the user enables the Grid Configurator -> enable the product Configurator as well"""
+        if self.module_product_variant_grid and not self.module_sale_product_configurator:
+            self.module_sale_product_configurator = True
 
     @api.model
     def get_values(self):

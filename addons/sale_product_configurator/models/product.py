@@ -42,8 +42,9 @@ class ProductTemplate(models.Model):
                     break
 
             return {
+                'product_template_id': self.id,
                 'product_id': self.product_variant_id.id,
-                'has_optional_products': has_optional_products
+                'has_optional_products': has_optional_products,
             }
 
         return None
