@@ -825,6 +825,7 @@ class PaymentTransaction(models.Model):
     @api.model
     def _compute_reference_prefix(self, values):
         if values and values.get('invoice_ids'):
+            # TODO DBO: use read? I mean, this seems obscure...
             many_list = self.resolve_2many_commands('invoice_ids', values['invoice_ids'], fields=['number'])
             return ','.join(dic['number'] for dic in many_list)
         return None
@@ -852,11 +853,13 @@ class PaymentTransaction(models.Model):
 
         # Fetch the last reference
         # E.g. If the last reference is SO42-5, this query will return '-5'
+        # TODO DBO: very louche query with kwarg parsing coming directly from portal url
         self._cr.execute('''
                 SELECT CAST(SUBSTRING(reference FROM '-\d+$') AS INTEGER) AS suffix
                 FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
             ''', [prefix + '-%'])
         query_res = self._cr.fetchone()
+        # TODO DBO: let's use sql all the way and do the increment/restart there
         if query_res:
             # Increment the last reference by one
             suffix = '%s' % (-query_res[0] + 1)
