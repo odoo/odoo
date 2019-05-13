@@ -19,5 +19,12 @@
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
 
+        <record id="payment_acquirer_public" model="ir.rule">
+            <field name="name">Access published payment acquirers</field>
+            <field name="model_id" ref="payment.model_payment_acquirer"/>
+            <field name="domain_force">[('website_published', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+        </record>
+
     </data>
 </odoo>

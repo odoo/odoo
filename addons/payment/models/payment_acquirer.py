@@ -318,6 +318,7 @@ class PaymentAcquirer(models.Model):
             return getattr(self, '_%s_get_form_action_url' % self.provider)()
         return False
 
+    @api.model
     def _get_available_payment_input(self, partner=None, company=None):
         """ Generic (model) method that fetches available payment mechanisms
         to use in all portal / eshop pages that want to use the payment form.
@@ -331,13 +332,15 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
-        acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
-                                                               (acq.payment_flow == 's2s' and acq.registration_view_template_id))
+        acquirers = self.search([('website_published', '=', True), ('company_id', '=', company.id),
+                                  '|',
+                                     '&', ('payment_flow', '=', 'form'), ('view_template_id', '!=', False),
+                                     '&', ('payment_flow', '=', 's2s', ('registration_view_template_id', '!=', False))])
         return {
             'acquirers': acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
+                # TODO DBO: uniform logic; only current partner's pms or commercial_partner_id as well?
                 ('acquirer_id', 'in', acquirers.ids)]),
         }
 
@@ -797,6 +800,10 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def _post_process_after_done(self):
+        # this method should be called in a sudoed environment
+        # this will mark all transactions and operations as done
+        # by OdooBot, which is what we want here as this is an automated
+        # post-processing step
         self._reconcile_after_transaction_done()
         self._log_payment_transaction_received()
         self.write({'is_processed': True})
@@ -940,10 +947,11 @@ class PaymentTransaction(models.Model):
 
     def _generate_callback_hash(self):
         self.ensure_one()
+        tx_sudo = self.sudo()
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token = '%s%s%s' % (self.callback_model_id.model,
-                            self.callback_res_id,
-                            self.sudo().callback_method)
+        token = '%s%s%s' % (tx_sudo.callback_model_id.model,
+                            tx_sudo.callback_res_id,
+                            tx_sudo.sudo().callback_method)
         return hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha256).hexdigest()
 
     # --------------------------------------------------
@@ -1024,6 +1032,8 @@ class PaymentTransaction(models.Model):
 
             record = self.env[transaction.callback_model_id.model].browse(transaction.callback_res_id).exists()
             if record:
+                # TODO DBO: replace callback method by a standard method name to avoid a getattr here?
+                # signature enforce coherence a no faulty setup, but who knows
                 res = getattr(record, transaction.callback_method)(transaction)
             else:
                 _logger.warning("Did not found record %s.%s for callback of transaction %d" % (transaction.callback_model_id.model, transaction.callback_res_id, transaction.id))
