@@ -140,12 +140,15 @@ class Website(models.Model):
 
     @api.multi
     def write(self, values):
+        public_user_to_change_websites = self.env['website']
         self._get_languages.clear_cache(self)
         if 'company_id' in values and 'user_id' not in values:
-            company = self.env['res.company'].browse(values['company_id'])
-            values['user_id'] = company._get_public_user().id
+            public_user_to_change_websites = self.filtered(lambda w: w.user_id.company_id.id != values['company_id'])
+            if public_user_to_change_websites:
+                company = self.env['res.company'].browse(values['company_id'])
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
 
-        result = super(Website, self).write(values)
+        result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
