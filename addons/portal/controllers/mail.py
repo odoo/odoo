@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import werkzeug
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
@@ -9,8 +10,9 @@ from odoo import http
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
+from odoo.tools.translate import _
 from odoo.addons.mail.controllers.main import MailController
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -92,14 +94,55 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
 
 class PortalChatter(http.Controller):
 
+    def _document_check_access(self, model_name, res_id, access_token=None):
+        document = request.env[model_name].browse(res_id)
+        document_sudo = document.sudo().exists()
+        if not document_sudo:
+            raise MissingError("This document does not exist.")
+        try:
+            document.check_access_rights('read')
+            document.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(document_sudo.access_token, access_token):
+                raise
+        return document_sudo
+
+    def _check_portal_unlink_attachment(self, attachment_id, attachment_token):
+        if not attachment_id or not attachment_token:
+            return False
+
+        attachment_ids = request.env['ir.attachment'].sudo().search([
+            ('res_model', '=', 'mail.compose.message'),
+            ('res_id', '=', 0),
+            ('access_token', '=', attachment_token),
+            ('id', '=', attachment_id)])
+
+        if attachment_ids:
+            # verify that attachment is attached to the mail.compose.message and res id must be 0
+            if attachment_ids.res_id != 0 or attachment_ids.res_model != 'mail.compose.message':
+                return False
+
+            # verify that attachment is not linked to a message yet
+            if request.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_ids.ids)]):
+                return False
+
+            return attachment_ids
+        return False
+
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
-    def portal_chatter_post(self, res_model, res_id, message, **kw):
+    def portal_chatter_post(self, res_model, res_id, message, attachment_tokens=None, **kw):
         url = request.httprequest.referrer
-        if message:
+        if message or attachment_tokens:
             # message is received in plaintext and saved in html
-            message = plaintext2html(message)
-            _message_post_helper(res_model, int(res_id), message, **kw)
+            if message:
+                message = plaintext2html(message)
+            message_id = _message_post_helper(res_model=res_model, res_id=int(res_id), message=message, **kw)
             url = url + "#discussion"
+
+            if attachment_tokens and message_id:
+                attachment_tokens = [x for x in attachment_tokens.split(',')]
+                message_id._post_process_portal_attachments(res_model=res_model, res_id=int(res_id), attachment_tokens=attachment_tokens)
+
         return request.redirect(url)
 
     @http.route('/mail/chatter_init', type='json', auth='public', website=True)
@@ -141,10 +184,61 @@ class PortalChatter(http.Controller):
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._non_employee_message_domain(), domain])
             Message = request.env['mail.message'].sudo()
+        # domain for blank message
+        domain = expression.AND([domain, field_domain, ['|', ('body', '!=', ''), ('attachment_ids', '!=', False)]])
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route('/portal/binary/upload_attachment', type='http', auth="public")
+    def upload_attachment(self, callback, model, id, ufile, **kwargs):
+        files = request.httprequest.files.getlist('ufile')
+        access_token = kwargs.get('access_token')
+        result = {}
+
+        if request.env.user.has_group('base.group_public') and not access_token:
+            result['error'] = _("Do not have access to the document.")
+
+        try:
+            self._document_check_access(model, int(id), access_token=access_token)
+        except (AccessError, MissingError) as e:
+            result['error'] = _(e.name)
+
+        if 'error' not in result:
+            http_model = request.env['ir.http']
+            # if internal user proccess attachment by that user only
+            # for portal and public(with parent record token) proccess attachment with super user
+            if not request.env.user.has_group('base.group_user'):
+                http_model = http_model.sudo()
+
+            args = http_model._process_uploaded_files(files, 'mail.compose.message', 0, generate_token=True)
+            result = {
+                'files': args,
+                'form': callback,
+            }
+
+        headers = [('Content-Type', 'application/json'),
+                   ('X-Content-Type-Options', 'nosniff')]
+        return request.make_response(json.dumps(result), headers)
+
+    @http.route('/portal/binary/unlink_attachment', type='json', auth="public")
+    def unlink_attachment(self, attachment_id, attachment_token, res_model, res_id, document_token=None):
+        res = {'error': _("Do not have access to the document.")}
+
+        if request.env.user.has_group('base.group_public') and not document_token:
+            return res
+
+        try:
+            self._document_check_access(res_model, res_id, document_token)
+        except (AccessError, MissingError) as e:
+            return {'error': _(e.name)}
+
+        attachment = self._check_portal_unlink_attachment(attachment_id, attachment_token)
+        if attachment:
+            attachment.unlink()
+            return {}
+        return res
 
 
 class MailController(MailController):

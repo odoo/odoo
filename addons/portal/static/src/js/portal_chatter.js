@@ -3,6 +3,7 @@ odoo.define('portal.chatter', function (require) {
 
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
+var session = require('web.session');
 var time = require('web.time');
 
 var qweb = core.qweb;
@@ -19,6 +20,9 @@ var PortalComposer = publicWidget.Widget.extend({
     xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
+        'change input.o_input_file': '_onAttachmentChange',
+        'click .o_attachment_delete': '_onAttachmentDelete',
+        'click .o_portal_chatter_attachment_btn': '_onClickFilePicker',
     },
 
     /**
@@ -34,8 +38,19 @@ var PortalComposer = publicWidget.Widget.extend({
             'res_model': false,
             'res_id': false,
         });
+        this.set('attachmentIDs', []);
     },
+    /**
+     * @override
+     */
+    start: function () {
+        //portal chatter
+        this.$attachmentButton = this.$('.o_portal_chatter_attachment_btn');
+        this.$composerSendButton = this.$(".o_portal_chatter_composer_btn");
+        this.on("change:attachmentIDs", this, this._renderAttachments);
 
+        return this._super.apply(this, arguments);
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -45,6 +60,158 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onSubmitButtonClick: function () {
         return new Promise(function() {});
+    },
+    /**
+     * @private
+     */
+    _renderAttachments: function () {
+        this.$('.o_portal_chatter_attachment').html(qweb.render('portal.Chatter.Attachments', {attachment_ids: this.get('attachmentIDs')}));
+    },
+    /**
+     * @private
+     */
+    _onAttachmentChange: function (ev) {
+        var self = this;
+        var files = ev.target.files,
+            attachments = this.get('attachmentIDs');
+
+        _.each(files, function (file) {
+            var duplicateAttachment = _.findWhere(attachments, {name: file.name});
+            if (duplicateAttachment) {
+                attachments = _.without(attachments, duplicateAttachment);
+            }
+        });
+        var $form = this.$('form.o_form_binary_form');
+        var data = new FormData($form[0]);
+        _.each(files, function (file) {
+            // removing existing key with blank data and appending again with file info
+            // In safari, existing key will not be updated when append with new file.
+            data.delete("ufile");
+            data.append("ufile", file, file.name);
+            $.ajax({
+                url: $form.attr("action"),
+                type: "POST",
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                data: data,
+                success: function (result) {
+                    if (result['error']) {
+                        self.display_alert(result['error']);
+                        self.set('attachmentIDs', []);
+                    } else {
+                        self._onAttachmentLoaded(result);
+                    }
+                },
+            });
+        });
+        this.$attachmentButton.prop('disabled', true);
+        this.$composerSendButton.prop('disabled', true);
+        var uploadAttachments = _.map(files, function (file) {
+            return {
+                'id': 0,
+                'name': file.name,
+                'filename': file.name,
+                'url': '',
+                'upload': true,
+                'mimetype': '',
+                'access_token': file.access_token,
+            };
+        });
+
+        attachments = attachments.concat(uploadAttachments);
+        this.set('attachmentIDs', attachments);
+        this.$('.o_portal_chatter_warning').remove();
+    },
+    /**
+     * @private
+     */
+    _onAttachmentDelete: function (ev) {
+        ev.stopPropagation();
+        var attachmentID = $(ev.currentTarget).data("id");
+        var attachments = this.get('attachmentIDs');
+        var self = this;
+
+        if (attachmentID) {
+            this._rpc({
+                route: '/portal/binary/unlink_attachment',
+                params: {
+                    attachment_id: attachmentID,
+                    document_token: this.options['token'],
+                    res_model: this.options['res_model'],
+                    res_id: this.options['res_id'],
+                    attachment_token: _.find(attachments, {'id': attachmentID})['access_token'],
+                },
+            }).then(function (status) {
+                if (status['error']) {
+                    self.display_alert(status['error']);
+                } else {
+                    attachments = _.reject(attachments, {'id': attachmentID});
+                    self.$('#portal_attachment_token').val(_.pluck(attachments, 'access_token'));
+                    self.set('attachmentIDs', attachments);
+                }
+            });
+            this.$('.o_portal_chatter_warning').remove();
+            this.$('input.o_input_file').val('');
+            this.$('#portal_attachment_token').val('');
+        }
+    },
+    /**
+     * @private
+     */
+    _onAttachmentLoaded: function (ev) {
+        var attachments = this.get('attachmentIDs');
+
+        _.each(ev['files'], function (file) {
+            if (file.error || !file.id) {
+                this.display_alert(file.error);
+                attachments = _.filter(attachments, function (attachment) {
+                    return !attachment.upload;
+                });
+            } else {
+                var attachment = _.findWhere(attachments, {filename: file.filename, upload: true});
+                if (attachment) {
+                    attachments = _.without(attachments, attachment);
+                    attachments.push({
+                        'id': file.id,
+                        'name': file.name || file.filename,
+                        'filename': file.filename,
+                        'mimetype': file.mimetype,
+                        'url': session.url('/web/content', {'id': file.id, download: true}),
+                        'access_token': file.access_token,
+                    });
+                }
+            }
+        }.bind(this));
+
+        this.set('attachmentIDs', attachments);
+        this.$('#portal_attachment_token').val(_.pluck(attachments, 'access_token'));
+        this.$attachmentButton.prop('disabled', false);
+        this.$composerSendButton.prop('disabled', false);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickFilePicker: function (ev) {
+        var filePicker = this.$('input.o_input_file');
+        if (!_.isEmpty(filePicker)) {
+            filePicker[0].click();
+        }
+    },
+    /**
+     * Display error message on file upload
+     *
+     * @param {string<message>}
+     */
+    display_alert: function (message) {
+        this.$('.o_portal_chatter_warning').remove();
+        this.$attachmentButton.prop('disabled', false);
+        this.$composerSendButton.prop('disabled', false);
+        $('<div>', {
+            class: 'alert alert-warning o_portal_chatter_warning',
+            text: message,
+        }).insertBefore(this.$('.o_portal_chatter_attachment'));
     },
 });
 
@@ -59,7 +226,7 @@ var PortalComposer = publicWidget.Widget.extend({
  */
 var PortalChatter = publicWidget.Widget.extend({
     template: 'portal.Chatter',
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
+    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml', '/mail/static/src/xml/attachment.xml'],
     events: {
         "click .o_portal_chatter_pager_btn": '_onClickPager',
     },

@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import hashlib
 import json
+import logging
+import unicodedata
 
-from odoo import api, models
+from odoo import api, models, _
 from odoo.http import request
 from odoo.tools import ustr
 
 from odoo.addons.web.controllers.main import concat_xml, manifest_glob, module_boot
 
 import odoo
+
+_logger = logging.getLogger(__name__)
 
 
 class Http(models.AbstractModel):
@@ -77,3 +82,44 @@ class Http(models.AbstractModel):
         Currency = request.env['res.currency']
         currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
         return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}
+
+    def _neuter_mimetype(self, mimetype, user):
+        wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
+        if wrong_type and not user._is_system():
+            return 'text/plain'
+        return mimetype
+
+    def _process_uploaded_files(self, files, model, res_id, generate_token=False):
+        Model = self.env['ir.attachment']
+        args = []
+        for ufile in files:
+
+            filename = ufile.filename
+            mimetype = self._neuter_mimetype(ufile.content_type, request.env.user)
+            if request.httprequest.user_agent.browser == 'safari':
+                # Safari sends NFD UTF-8 (where é is composed by 'e' and [accent])
+                # we need to send it the same stuff, otherwise it'll fail
+                filename = unicodedata.normalize('NFD', ufile.filename)
+            try:
+                attachment = Model.create({
+                    'name': filename,
+                    'mimetype': mimetype,
+                    'datas': base64.encodebytes(ufile.read()),
+                    'res_model': model,
+                    'res_id': int(res_id)
+                })
+                if generate_token:
+                    attachment.generate_access_token()
+                attachment._post_add_create()
+            except Exception:
+                args.append({'error': _("Something horrible happened")})
+                _logger.exception("Fail to upload attachment %s" % ufile.filename)
+            else:
+                args.append({
+                    'filename': filename,
+                    'mimetype': mimetype,
+                    'id': attachment.id,
+                    'size': attachment.file_size,
+                    'access_token': attachment.access_token,
+                })
+        return args
