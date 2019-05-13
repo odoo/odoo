@@ -86,7 +86,7 @@ class LunchProductReport(models.Model):
                 RIGHT JOIN res_users users ON users.company_id = product.company_id -- multi company
                 LEFT JOIN lunch_product_favorite_user_rel fav ON fav.product_id = product.id AND fav.user_id = users.id
                 JOIN res_groups_users_rel groups ON groups.uid = users.id -- only generate for internal users
-                JOIN lunch_order l_order ON l_order.product_id = product.id AND l_order.user_id = users.id AND l_order.date <= current_date
+                LEFT JOIN lunch_order l_order ON l_order.product_id = product.id AND l_order.user_id = users.id
                 WHERE users.active AND product.active AND groups.gid = %%s --only take into account active products and users
                 GROUP BY product.id, product.name, product.category_id, product.description, product.price, product.supplier_id, product.company_id, product.active, users.id, is_favorite, is_new
             );

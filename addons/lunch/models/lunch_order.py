@@ -42,6 +42,10 @@ class LunchOrder(models.Model):
 
     display_toppings = fields.Text('Toppings', compute='_compute_display_toppings', store=True)
 
+    def init(self):
+        self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
+            % self._table)
+
     @api.depends('topping_ids_1', 'topping_ids_2', 'topping_ids_3', 'product_id', 'quantity')
     def _compute_total_price(self):
         for line in self:
