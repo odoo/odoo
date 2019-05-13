@@ -2271,7 +2271,7 @@ QUnit.test('Align', function (assert) {
 
 QUnit.test('Indent/outdent', function (assert) {
     var done = assert.async();
-    assert.expect(18);
+    assert.expect(20);
 
     return weTestUtils.createWysiwyg({
         debug: false,
@@ -2311,6 +2311,21 @@ QUnit.test('Indent/outdent', function (assert) {
                 test: {
                     content: '<ul><li><p>dom</p></li><li class="o_indent"><ul><li><p>to edit</p></li></ul></li></ul>',
                     start: 'p:eq(1):contents()[0]->1',
+                },
+            },
+            {
+                name: "Click INDENT: li -> indented li",
+                content: '<p>aaa</p><p>bbb</p><p>ccc</p><p>ddd</p>',
+                start: 'p:eq(1):contents()[0]->0',
+                end: 'p:eq(3):contents()[0]->3',
+                do: function () {
+                    $dropdownPara.mousedown().click();
+                    $btnIndent.mousedown().click();
+                },
+                test: {
+                    content: '<p>aaa</p><p style="margin-left: 1.5em;">bbb</p><p style="margin-left: 1.5em;">ccc</p><p style="margin-left: 1.5em;">ddd</p>',
+                    start: 'p:eq(1):contents()[0]->0',
+                    end: 'p:eq(3):contents()[0]->3',
                 },
             },
             /* OUTDENT */
