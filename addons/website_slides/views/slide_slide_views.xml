@@ -43,12 +43,12 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="website_publish_button"
-                                    type="object" icon="fa-globe">
+                                    type="object" icon="fa-globe" attrs="{'invisible': [('is_category', '=', True)]}">
                                 <field name="is_published" widget="website_button"/>
                             </button>
                         </div>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
-                            attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))]}"
+                            attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))], 'invisible': [('is_category', '=', True)]}"
                         />
                         <div class="oe_title">
                             <div class="oe_edit_only">
@@ -56,10 +56,11 @@
                             </div>
                             <h1>
                                 <field name="name" default_focus="1" placeholder="Title"/>
+                                <field name="is_category" invisible="1"/>
                             </h1>
-                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
+                            <field name="tag_ids" attrs="{'invisible': [('is_category', '=', True)]}" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
-                        <notebook>
+                        <notebook attrs="{'invisible': [('is_category', '=', True)]}">
                             <page string="Document">
                                 <group>
                                     <group>
@@ -86,7 +87,7 @@
                             <page string="Description">
                                 <field name="description"/>
                             </page>
-                            <page name="external_links" string="External Links">
+                            <page string="External Links" name="external_links" >
                                 <group>
                                     <field name="link_ids" widget="one2many" nolabel="1">
                                          <tree editable="top">

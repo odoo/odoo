@@ -32,16 +32,6 @@
         <field name="description">Learn how to take care of your favorite trees. Learn when to plant, how to manage potted trees, ...</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
     </record>
-    <record id="slide_category_demo_1_0" model="slide.category">
-        <field name="name">Interesting Facts</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="sequence">10</field>
-    </record>
-    <record id="slide_category_demo_1_1" model="slide.category">
-        <field name="name">Methods</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
-        <field name="sequence">20</field>
-    </record>
 
     <record id="slide_channel_demo_2_gard2" model="slide.channel">
         <field name="name">Trees, Wood and Gardens</field>
@@ -59,16 +49,6 @@
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
         <field name="description">A lot of nice documentation: trees, wood, gardens. A gold mine for references.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=6)"/>
-    </record>
-    <record id="slide_category_demo_2_0" model="slide.category">
-        <field name="name">Trees</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="sequence">10</field>
-    </record>
-    <record id="slide_category_demo_2_1" model="slide.category">
-        <field name="name">Wood</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
-        <field name="sequence">20</field>
     </record>
 
     <record id="slide_channel_demo_3_furn0" model="slide.channel">
@@ -89,11 +69,6 @@
 will learn the basics of wood characteristics.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=5)"/>
     </record>
-    <record id="slide_category_demo_3_0" model="slide.category">
-        <field name="name">Introduction</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
-        <field name="sequence">10</field>
-    </record>
 
     <record id="slide_channel_demo_4_furn1" model="slide.channel">
         <field name="name">Furniture Technical Specifications</field>
@@ -108,11 +83,6 @@ will learn the basics of wood characteristics.</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture_2.jpg"/>
         <field name="description">If you are looking for technical specifications, have a look at this documentation.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
-    </record>
-    <record id="slide_category_demo_4_0" model="slide.category">
-        <field name="name">Introduction</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
-        <field name="sequence">10</field>
     </record>
 
     <record id="slide_channel_demo_5_furn2" model="slide.channel">
@@ -130,21 +100,6 @@ will learn the basics of wood characteristics.</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
         <field name="description">All you need to know about furniture creation.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=3)"/>
-    </record>
-    <record id="slide_category_demo_5_0" model="slide.category">
-        <field name="name">Tools and Methods</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="sequence">10</field>
-    </record>
-    <record id="slide_category_demo_5_1" model="slide.category">
-        <field name="name">Hand on !</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="sequence">20</field>
-    </record>
-    <record id="slide_category_demo_5_2" model="slide.category">
-        <field name="name">Test Yourself</field>
-        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
-        <field name="sequence">30</field>
     </record>
 
     <!-- This channel will be set on payment and receive certifications capabilities -->

@@ -343,7 +343,7 @@
             <t t-foreach="category_data" t-as="category">
                 <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
 
-                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category mb-2' if category_id else 'mb-3'" t-att-data-category-id="category_id">
+                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else 'mb-3'" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
                     <div t-att-data-category-id="category_id"
                          t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center %s' % ('o_wslides_js_category bg-white shadow-sm border-bottom-0' if category_id and channel.can_upload  else 'border-0 py-1')">
                         <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">
@@ -396,7 +396,7 @@
 </template>
 
 <template id="course_slides_list_slide" name="Slide template for a training channel">
-    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
+    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide o_wslides_js_list_item bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
         <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag border-right p-2">
             <i class="fa fa-bars mr-2"></i>
         </div>

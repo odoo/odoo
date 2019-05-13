@@ -12,37 +12,19 @@ from odoo.tools import mute_logger, float_compare
 
 
 @tagged('functional')
-class TestStatistics(common.SlidesCase):
-
-    def setUp(self):
-        super(TestStatistics, self).setUp()
-
-        self.slide_2 = self.env['slide.slide'].with_user(self.user_publisher).create({
-            'name': 'How To Cook For Humans',
-            'channel_id': self.channel.id,
-            'slide_type': 'presentation',
-            'is_published': True,
-            'completion_time': 3.0,
-        })
-        self.slide_3 = self.env['slide.slide'].with_user(self.user_publisher).create({
-            'name': 'How To Cook Humans For Humans',
-            'channel_id': self.channel.id,
-            'slide_type': 'document',
-            'is_published': True,
-            'completion_time': 1.5,
-        })
+class TestChannelStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
     def test_channel_statistics(self):
         channel_publisher = self.channel.with_user(self.user_publisher)
         # slide type computation
-        self.assertEqual(channel_publisher.total_slides, len(channel_publisher.slide_ids))
-        self.assertEqual(channel_publisher.nbr_infographic, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'infographic')))
-        self.assertEqual(channel_publisher.nbr_presentation, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'presentation')))
-        self.assertEqual(channel_publisher.nbr_document, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'document')))
-        self.assertEqual(channel_publisher.nbr_video, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'video')))
+        self.assertEqual(channel_publisher.total_slides, len(channel_publisher.slide_content_ids))
+        self.assertEqual(channel_publisher.nbr_infographic, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_type == 'infographic')))
+        self.assertEqual(channel_publisher.nbr_presentation, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_type == 'presentation')))
+        self.assertEqual(channel_publisher.nbr_document, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_type == 'document')))
+        self.assertEqual(channel_publisher.nbr_video, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_type == 'video')))
         # slide statistics computation
-        self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_ids), 3), 0)
+        self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_content_ids), 3), 0)
         # members computation
         self.assertEqual(channel_publisher.members_count, 1)
         channel_publisher.action_add_member()
@@ -68,7 +50,7 @@ class TestStatistics(common.SlidesCase):
         channel_emp.invalidate_cache()
         self.assertEqual(
             channel_emp.completion,
-            math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_ids)))
+            math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_content_ids)))
         self.assertFalse(channel_emp.completed)
 
         self.slide_3.with_user(self.user_emp).action_set_completed()
@@ -100,6 +82,10 @@ class TestStatistics(common.SlidesCase):
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
 
+
+@tagged('functional')
+class TestSlideStatistics(common.SlidesCase):
+
     def test_slide_user_statistics(self):
         channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
@@ -121,7 +107,7 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(slide_emp.dislikes, 1)
         self.assertEqual(slide_emp.user_vote, -1)
 
-    def test_slide_statistics(self):
+    def test_slide_statistics_views(self):
         channel_publisher = self.channel.with_user(self.user_publisher)
         channel_publisher._action_add_members(self.user_emp.partner_id)
 
@@ -140,3 +126,13 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(slide_emp.slide_views, 1)
         self.assertEqual(slide_emp.public_views, 4)
         self.assertEqual(slide_emp.total_views, 5)
+
+    @users('user_publisher')
+    def test_slide_statistics_types(self):
+        category = self.category.with_user(self.env.user)
+        self.assertEqual(
+            category.nbr_presentation,
+            len(category.channel_id.slide_ids.filtered(lambda s: s.category_id == category and s.slide_type == 'presentation')))
+        self.assertEqual(
+            category.nbr_document,
+            len(category.channel_id.slide_ids.filtered(lambda s: s.category_id == category and s.slide_type == 'document')))
