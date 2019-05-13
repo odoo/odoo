@@ -289,3 +289,13 @@ class MailController(http.Controller):
         except:
             return []
         return records._message_partner_info_from_emails(emails, link_mail=link_mail)
+
+    @http.route('/mail/get_suggested_recipients', type='json', auth='user')
+    def message_get_suggested_recipients(self, model, res_ids):
+        records = request.env[model].browse(res_ids)
+        try:
+            records.check_access_rule('read')
+            records.check_access_rights('read')
+        except:
+            return {}
+        return records._message_get_suggested_recipients()

@@ -539,10 +539,11 @@ var Chatter = Widget.extend({
         if (!this.suggested_partners_def) {
             this.suggested_partners_def = new Promise(function (resolve, reject) {
                 self._rpc({
-                    model: self.record.model,
-                    method: 'message_get_suggested_recipients',
-                    args: [[self.context.default_res_id]],
-                    context: self.context,
+                    route: '/mail/get_suggested_recipients',
+                    params: {
+                        model: self.record.model,
+                        res_ids: [self.context.default_res_id],
+                    },
                 }).then(function (result) {
                     if (!self.suggested_partners_def) {
                         return; // widget has been reset (e.g. we just switched to another record)
