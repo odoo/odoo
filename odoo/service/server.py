@@ -324,7 +324,7 @@ class ThreadedServer(CommonServer):
                 os._exit(0)
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
-        elif sig == signal.SIGXCPU:
+        elif hasattr(signal, 'SIGXCPU') and sig == signal.SIGXCPU:
             sys.stderr.write("CPU time limit exceeded! Shutting down immediately\n")
             sys.stderr.flush()
             os._exit(0)
