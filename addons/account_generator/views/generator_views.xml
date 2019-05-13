@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_generator_form" model="ir.ui.view">
+        <field name="name">account.generator.form</field>
+        <field name="model">account.generator</field>
+        <field name="arch" type="xml">
+            <form string="Account Generator">
+                <sheet>
+                    <field name="generator" widget="radio" options="{'horizontal': true}"/>
+                    <group>
+                        <group string="General Options">
+                            <field name="number_to_generate"/>
+                            <field name="number_of_lines"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="empty_field_probability"/>
+                        </group>
+                        <group string="Reference Pool">
+                            <field name="company_id"/>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                            <field name="partner_excluded_ids" widget="many2many_tags" attrs="{'invisible': [('partner_ids', '!=', [])]}"/>
+                            <field name="account_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]"/>
+                            <field name="account_excluded_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('account_ids', '!=', [])]}"/>
+                            <field name="journal_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]"/>
+                            <field name="journal_excluded_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('journal_ids', '!=', [])]}"/>
+                        </group>
+                        <group string="Journal Entry Options" attrs="{'invisible': [('generator', 'not in', ('aml', 'invoice', 'payment'))]}">
+                            <field name="post"/>
+                        </group>
+                        <group string="Partner Options" attrs="{'invisible': [('generator', 'not in', ('partner', 'invoice'))]}">
+                            <field name="customer"/>
+                            <field name="supplier"/>
+                            <field name="company_type" widget="radio" attrs="{'invisible': [('generator', 'not in', ('partner'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="generate_amls" type="object" string="Generate Amls" attrs="{'invisible': [('generator', '!=', 'aml')]}"/>
+                    <button name="generate_partners" type="object" string="Generate Partners" attrs="{'invisible': [('generator', '!=', 'partner')]}"/>
+                    <button name="generate_invoices" type="object" string="Generate Invoices" attrs="{'invisible': [('generator', '!=', 'invoice')]}"/>
+                    <button name="generate_payments" type="object" string="Generate Payments" attrs="{'invisible': [('generator', '!=', 'payment')]}"/>
+                    <button name="generate_bank_statement" type="object" string="Generate Bank Statements" attrs="{'invisible': [('generator', '!=', 'bank_statement')]}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_generator_action">
+        <field name="name">Generate</field>
+        <field name="res_model">account.generator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_finance_dev_tools" name="Dev Tools" parent="account.menu_finance_configuration" sequence="999"/>
+    <menuitem id="menu_generate" action="account_generator.account_generator_action" parent="account_generator.menu_finance_dev_tools"/>
+</odoo>
