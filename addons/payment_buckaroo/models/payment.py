@@ -102,7 +102,7 @@ class AcquirerBuckaroo(models.Model):
         return buckaroo_tx_values
 
     @api.multi
-    def buckaroo_get_form_action_url(self):
+    def _buckaroo_get_form_action_url(self):
         return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
 
 

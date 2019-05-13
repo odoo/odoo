@@ -28,7 +28,7 @@ class TransferPaymentAcquirer(models.Model):
             acquirers.write({'journal_id': bank_journal.id})
         return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers(company=company)
 
-    def transfer_get_form_action_url(self):
+    def _transfer_get_form_action_url(self):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self):

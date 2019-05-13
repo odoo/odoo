@@ -38,7 +38,7 @@ class PayUlatamForm(PayUlatamCommon):
         })
 
         # render the button
-        res = self.payulatam.render(
+        res = self.payulatam._render(
             'test_ref0', 0.01, self.currency_euro.id,
             values=self.buyer_values)
 
@@ -127,7 +127,7 @@ class PayUlatamForm(PayUlatamCommon):
             'partner_id': self.buyer_id})
 
         # validate transaction
-        tx.form_feedback(payulatam_post_data, 'payulatam')
+        tx._form_feedback(payulatam_post_data, 'payulatam')
         # check
         self.assertEqual(tx.state, 'pending', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'PENDING', 'Payulatam: wrong state message after receiving a valid pending notification')
@@ -141,7 +141,7 @@ class PayUlatamForm(PayUlatamCommon):
         # update notification from payulatam
         payulatam_post_data['lapTransactionState'] = 'APPROVED'
         # validate transaction
-        tx.form_feedback(payulatam_post_data, 'payulatam')
+        tx._form_feedback(payulatam_post_data, 'payulatam')
         # check transaction
         self.assertEqual(tx.state, 'done', 'payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'payulatam: wrong txn_id after receiving a valid pending notification')

@@ -226,7 +226,7 @@ class WebsitePayment(http.Controller):
             'partner_id': partner_id,
         }
 
-        return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
+        return acquirer.sudo()._render(tx.reference, float(amount), int(currency_id), values=render_values)
 
     @http.route(['/website_payment/token/<string:reference>/<string:amount>/<string:currency_id>',
                 '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
@@ -257,7 +257,7 @@ class WebsitePayment(http.Controller):
         PaymentProcessing.add_payment_transaction(tx)
 
         try:
-            res = tx.s2s_do_transaction()
+            res = tx._s2s_do_transaction()
             if tx.state == 'done':
                 tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
             valid_state = 'authorized' if tx.acquirer_id.capture_manually else 'done'

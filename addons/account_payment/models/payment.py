@@ -18,7 +18,7 @@ class PaymentTransaction(models.Model):
         }
         if render_values:
             values.update(render_values)
-        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
+        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo()._render(
             self.reference,
             invoice.residual_signed,
             invoice.currency_id.id,

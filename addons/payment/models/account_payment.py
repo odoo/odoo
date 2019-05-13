@@ -86,7 +86,7 @@ class AccountPayment(models.Model):
         #                                  ||                      |    |
         #                                  ||                      |    |
         #                                  ||                      |    |
-        #  __________  no s2s required   __\/______   s2s required |    | s2s_do_transaction()
+        #  __________  no s2s required   __\/______   s2s required |    | _s2s_do_transaction()
         # |  Posted  |<-----------------|  post()  |----------------    |
         # |__________|                  |__________|<-----              |
         #                                                |              |
@@ -100,6 +100,6 @@ class AccountPayment(models.Model):
 
         res = super(AccountPayment, self - payments_need_trans).post()
 
-        transactions.s2s_do_transaction()
+        transactions._s2s_do_transaction()
 
         return res

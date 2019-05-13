@@ -85,14 +85,14 @@ class AccountMove(models.Model):
 
         # Process directly if payment_token
         if transaction.payment_token_id:
-            transaction.s2s_do_transaction()
+            transaction._s2s_do_transaction()
 
         return transaction
 
     @api.multi
     def payment_action_capture(self):
-        self.authorized_transaction_ids.s2s_capture_transaction()
+        self.authorized_transaction_ids._s2s_capture_transaction()
 
     @api.multi
     def payment_action_void(self):
-        self.authorized_transaction_ids.s2s_void_transaction()
+        self.authorized_transaction_ids._s2s_void_transaction()

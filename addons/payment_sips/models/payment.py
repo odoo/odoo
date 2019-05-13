@@ -108,7 +108,7 @@ class AcquirerSips(models.Model):
         return sips_tx_values
 
     @api.multi
-    def sips_get_form_action_url(self):
+    def _sips_get_form_action_url(self):
         self.ensure_one()
         return self.environment == 'prod' and self.sips_prod_url or self.sips_test_url
 

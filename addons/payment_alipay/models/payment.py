@@ -114,7 +114,7 @@ class PaymentAcquirer(models.Model):
         return values
 
     @api.multi
-    def alipay_get_form_action_url(self):
+    def _alipay_get_form_action_url(self):
         return self._get_alipay_urls(self.environment)
 
 
@@ -215,7 +215,7 @@ class PaymentTransaction(models.Model):
             res.update(date=date_validate)
             self._set_transaction_done()
             self.write(res)
-            self.execute_callback()
+            self._execute_callback()
             return True
         elif status == 'TRADE_CLOSED':
             _logger.info('Received notification for Alipay payment %s: set as Canceled' % (self.reference))

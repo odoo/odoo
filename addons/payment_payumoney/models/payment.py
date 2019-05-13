@@ -75,7 +75,7 @@ class PaymentAcquirerPayumoney(models.Model):
         return payumoney_values
 
     @api.multi
-    def payumoney_get_form_action_url(self):
+    def _payumoney_get_form_action_url(self):
         self.ensure_one()
         return self._get_payumoney_urls(self.environment)['payumoney_form_url']
 

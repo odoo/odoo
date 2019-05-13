@@ -27,14 +27,14 @@ class OgoneController(http.Controller):
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        request.env['payment.transaction'].sudo()._form_feedback(post, 'ogone')
         return werkzeug.utils.redirect("/payment/process")
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))._s2s_process(kwargs)
         return new_id.id
 
     @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
@@ -45,7 +45,7 @@ class OgoneController(http.Controller):
         error = None
         
         try:
-            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))._s2s_process(kwargs)
         except Exception as e:
             error = str(e)
 
@@ -72,7 +72,7 @@ class OgoneController(http.Controller):
                 'exception_url': baseurl + '/payment/ogone/validate/exception',
                 'return_url': kwargs.get('return_url', baseurl)
                 }
-            tx = token.validate(**params)
+            tx = token._validate(**params)
             res['verified'] = token.verified
 
             if tx and tx.html_3ds:
@@ -85,7 +85,7 @@ class OgoneController(http.Controller):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
-            token = acq.s2s_process(post)
+            token = acq._s2s_process(post)
         except Exception as e:
             # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
             token = False
@@ -99,7 +99,7 @@ class OgoneController(http.Controller):
                 'exception_url': baseurl + '/payment/ogone/validate/exception',
                 'return_url': post.get('return_url', baseurl)
                 }
-            tx = token.validate(**params)
+            tx = token._validate(**params)
             if tx and tx.html_3ds:
                 return tx.html_3ds
             # add the payment transaction into the session to let the page /payment/process to handle it
@@ -113,7 +113,7 @@ class OgoneController(http.Controller):
     ], type='http', auth='public')
     def ogone_validation_form_feedback(self, **post):
         """ Feedback from 3d secure for a bank card validation """
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        request.env['payment.transaction'].sudo()._form_feedback(post, 'ogone')
         return werkzeug.utils.redirect("/payment/process")
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='public', csrf=False)

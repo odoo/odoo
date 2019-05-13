@@ -21,7 +21,7 @@ class SipsController(http.Controller):
         security = sips.sudo()._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
-            return request.env['payment.transaction'].sudo().form_feedback(post, 'sips')
+            return request.env['payment.transaction'].sudo()._form_feedback(post, 'sips')
         _logger.warning('Sips: data are corrupted')
         return False
 

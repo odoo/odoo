@@ -53,7 +53,7 @@ class AdyenForm(AdyenCommon):
         }
 
         # render the button
-        res = adyen.render(
+        res = adyen._render(
             'test_ref0', 0.01, self.currency_euro.id,
             partner_id=None,
             partner_values=self.buyer_values)

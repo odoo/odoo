@@ -20,7 +20,7 @@ class AdyenController(http.Controller):
     def adyen_return(self, **post):
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         if post.get('authResult') not in ['CANCELLED']:
-            request.env['payment.transaction'].sudo().form_feedback(post, 'adyen')
+            request.env['payment.transaction'].sudo()._form_feedback(post, 'adyen')
         return werkzeug.utils.redirect('/payment/process')
 
     @http.route([

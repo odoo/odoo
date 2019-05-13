@@ -42,13 +42,13 @@ class PaymentAcquirer(models.Model):
 
     Methods that should be added in an acquirer-specific implementation:
 
-     - ``<name>_form_generate_values(self, reference, amount, currency,
+     - ``_<name>_form_generate_values(self, reference, amount, currency,
        partner_id=False, partner_values=None, tx_custom_values=None)``:
        method that generates the values used to render the form button template.
-     - ``<name>_get_form_action_url(self):``: method that returns the url of
+     - ``_<name>_get_form_action_url(self):``: method that returns the url of
        the button form. It is used for example in ecommerce application if you
        want to post some data to the acquirer.
-     - ``<name>_compute_fees(self, amount, currency_id, country_id)``: computes
+     - ``_<name>_compute_fees(self, amount, currency_id, country_id)``: computes
        the fees of the acquirer, using generic fields defined on the acquirer
        model (see fields definition).
 
@@ -299,7 +299,7 @@ class PaymentAcquirer(models.Model):
         return True
 
     @api.multi
-    def get_acquirer_extra_fees(self, amount, currency_id, country_id):
+    def _get_acquirer_extra_fees(self, amount, currency_id, country_id):
         extra_fees = {
             'currency_id': currency_id
         }
@@ -312,10 +312,10 @@ class PaymentAcquirer(models.Model):
         return extra_fees
 
     @api.multi
-    def get_form_action_url(self):
+    def _get_form_action_url(self):
         """ Returns the form action URL, for form-based acquirer implementations. """
-        if hasattr(self, '%s_get_form_action_url' % self.provider):
-            return getattr(self, '%s_get_form_action_url' % self.provider)()
+        if hasattr(self, '_%s_get_form_action_url' % self.provider):
+            return getattr(self, '_%s_get_form_action_url' % self.provider)()
         return False
 
     def _get_available_payment_input(self, partner=None, company=None):
@@ -342,7 +342,7 @@ class PaymentAcquirer(models.Model):
         }
 
     @api.multi
-    def render(self, reference, amount, currency_id, partner_id=False, values=None):
+    def _render(self, reference, amount, currency_id, partner_id=False, values=None):
         """ Renders the form template of the given acquirer as a qWeb template.
         :param string reference: the transaction reference
         :param float amount: the amount the buyer has to pay
@@ -457,7 +457,7 @@ class PaymentAcquirer(models.Model):
             values = method(values)
 
         values.update({
-            'tx_url': self._context.get('tx_url', self.get_form_action_url()),
+            'tx_url': self._context.get('tx_url', self._get_form_action_url()),
             'submit_class': self._context.get('submit_class', 'btn btn-link'),
             'submit_txt': self._context.get('submit_txt'),
             'acquirer': self,
@@ -466,19 +466,19 @@ class PaymentAcquirer(models.Model):
             'type': values.get('type') or 'form',
         })
 
-        _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
-        return self.view_template_id.render(values, engine='ir.qweb')
+        _logger.info('payment.acquirer._render: <%s> values rendered for form payment:\n%s', acquirer_sudo.provider, pprint.pformat(values))
+        return acquirer_sudo.view_template_id._render(values, engine='ir.qweb')
 
-    def get_s2s_form_xml_id(self):
+    def _get_s2s_form_xml_id(self):
         if self.registration_view_template_id:
             model_data = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('res_id', '=', self.registration_view_template_id.id)])
             return ('%s.%s') % (model_data.module, model_data.name)
         return False
 
     @api.multi
-    def s2s_process(self, data):
+    def _s2s_process(self, data):
         cust_method_name = '%s_s2s_form_process' % (self.provider)
-        if not self.s2s_validate(data):
+        if not self._s2s_validate(data):
             return False
         if hasattr(self, cust_method_name):
             # As this method may be called in JSON and overriden in various addons
@@ -490,7 +490,7 @@ class PaymentAcquirer(models.Model):
         return True
 
     @api.multi
-    def s2s_validate(self, data):
+    def _s2s_validate(self, data):
         cust_method_name = '%s_s2s_form_validate' % (self.provider)
         if hasattr(self, cust_method_name):
             method = getattr(self, cust_method_name)
@@ -948,7 +948,7 @@ class PaymentTransaction(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def form_feedback(self, data, acquirer_name):
+    def _form_feedback(self, data, acquirer_name):
         invalid_parameters, tx = None, None
 
         tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
@@ -979,7 +979,7 @@ class PaymentTransaction(models.Model):
     # --------------------------------------------------
 
     @api.multi
-    def s2s_do_transaction(self, **kwargs):
+    def _s2s_do_transaction(self, **kwargs):
         custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
         for trans in self:
             trans._log_payment_transaction_sent()
@@ -987,33 +987,25 @@ class PaymentTransaction(models.Model):
                 return getattr(trans, custom_method_name)(**kwargs)
 
     @api.multi
-    def s2s_do_refund(self, **kwargs):
+    def _s2s_do_refund(self, **kwargs):
         custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
-    def s2s_capture_transaction(self, **kwargs):
+    def _s2s_capture_transaction(self, **kwargs):
         custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
-    def s2s_void_transaction(self, **kwargs):
+    def _s2s_void_transaction(self, **kwargs):
         custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
-    def s2s_get_tx_status(self):
-        """ Get the tx status. """
-        invalid_param_method_name = '_%s_s2s_get_tx_status' % self.acquirer_id.provider
-        if hasattr(self, invalid_param_method_name):
-            return getattr(self, invalid_param_method_name)()
-        return True
-
-    @api.multi
-    def execute_callback(self):
+    def _execute_callback(self):
         res = None
         for transaction in self:
             # limited sudo env, only for checking callback presence, not for running it!
@@ -1039,14 +1031,14 @@ class PaymentTransaction(models.Model):
         if any([t.state != 'authorized' for t in self]):
             raise ValidationError(_('Only transactions having the capture status can be captured.'))
         for tx in self:
-            tx.s2s_capture_transaction()
+            tx._s2s_capture_transaction()
 
     @api.multi
     def action_void(self):
         if any([t.state != 'authorized' for t in self]):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
-            tx.s2s_void_transaction()
+            tx._s2s_void_transaction()
 
 
 class PaymentToken(models.Model):
@@ -1107,7 +1099,7 @@ class PaymentToken(models.Model):
         }
 
     @api.model
-    def validate(self, **kwargs):
+    def _validate(self, **kwargs):
         """
             This method allow to verify if this payment method is valid or not.
             It does this by withdrawing a certain amount and then refund it right after.
@@ -1139,11 +1131,11 @@ class PaymentToken(models.Model):
         })
 
         kwargs.update({'3d_secure': True})
-        tx.s2s_do_transaction(**kwargs)
+        tx._s2s_do_transaction(**kwargs)
 
         # if 3D secure is called, then we do not refund right now
         if not tx.html_3ds:
-            tx.s2s_do_refund()
+            tx._s2s_do_refund()
 
         return tx
 

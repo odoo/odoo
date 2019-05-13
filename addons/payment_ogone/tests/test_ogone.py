@@ -132,7 +132,7 @@ class OgonePayment(PaymentAcquirerCommon):
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
         # validate it
-        tx.form_feedback(ogone_post_data)
+        tx._form_feedback(ogone_post_data)
         # check state
         self.assertEqual(tx.state, 'done', 'ogone: validation did not put tx into done state')
         self.assertEqual(tx.ogone_payid, ogone_post_data.get('PAYID'), 'ogone: validation did not update tx payid')
@@ -149,12 +149,12 @@ class OgonePayment(PaymentAcquirerCommon):
         # now ogone post is ok: try to modify the SHASIGN
         ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
         with self.assertRaises(ValidationError):
-            tx.form_feedback(ogone_post_data)
+            tx._form_feedback(ogone_post_data)
 
         # simulate an error
         ogone_post_data['STATUS'] = 2
         ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
-        tx.form_feedback(ogone_post_data)
+        tx._form_feedback(ogone_post_data)
         # check state
         self.assertEqual(tx.state, 'cancel', 'ogone: erroneous validation did not put tx into error state')
 

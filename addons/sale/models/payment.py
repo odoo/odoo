@@ -158,7 +158,7 @@ class PaymentTransaction(models.Model):
             values.update(render_values)
         # Not very elegant to do that here but no choice regarding the design.
         self._log_payment_transaction_sent()
-        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
+        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo()._render(
             self.reference,
             order.amount_total,
             order.pricelist_id.currency_id.id,

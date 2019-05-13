@@ -21,7 +21,7 @@ class AuthorizeController(http.Controller):
     def authorize_form_feedback(self, **post):
         _logger.info('Authorize: entering form_feedback with post data %s', pprint.pformat(post))
         if post:
-            request.env['payment.transaction'].sudo().form_feedback(post, 'authorize')
+            request.env['payment.transaction'].sudo()._form_feedback(post, 'authorize')
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # Authorize.Net is expecting a response to the POST sent by their server.
         # This response is in the form of a URL that Authorize.Net will pass on to the
@@ -37,7 +37,7 @@ class AuthorizeController(http.Controller):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         try:
-           return acquirer.s2s_process(kwargs).id
+           return acquirer._s2s_process(kwargs).id
         except (ValidationError, UserError) as e:
            return {
                'error': e.name,
@@ -51,7 +51,7 @@ class AuthorizeController(http.Controller):
         try:
             if not kwargs.get('partner_id'):
                 kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-            token = acquirer.s2s_process(kwargs)
+            token = acquirer._s2s_process(kwargs)
         except ValidationError as e:
             message = e.args[0]
             if isinstance(message, dict) and 'missing_fields' in message:
@@ -87,7 +87,7 @@ class AuthorizeController(http.Controller):
             'verified': True, #Authorize.net does a transaction type of Authorization Only
                               #As Authorize.net already verify this card, we do not verify this card again.
         }
-        #token.validate() don't work with Authorize.net.
+        #token._validate() don't work with Authorize.net.
         #Payments made via Authorize.net are settled and allowed to be refunded only on the next day.
         #https://account.authorize.net/help/Miscellaneous/FAQ/Frequently_Asked_Questions.htm#Refund
         #<quote>The original transaction that you wish to refund must have a status of Settled Successfully.
@@ -98,5 +98,5 @@ class AuthorizeController(http.Controller):
     def authorize_s2s_create(self, **post):
         acquirer_id = int(post.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        acquirer.s2s_process(post)
+        acquirer._s2s_process(post)
         return utils.redirect("/payment/process")

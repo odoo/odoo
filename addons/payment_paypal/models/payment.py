@@ -118,7 +118,7 @@ class AcquirerPaypal(models.Model):
         return paypal_tx_values
 
     @api.multi
-    def paypal_get_form_action_url(self):
+    def _paypal_get_form_action_url(self):
         return self._get_paypal_urls(self.environment)['paypal_form_url']
 
 

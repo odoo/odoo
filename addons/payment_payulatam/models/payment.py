@@ -66,7 +66,7 @@ class PaymentAcquirerPayulatam(models.Model):
         return payulatam_values
 
     @api.multi
-    def payulatam_get_form_action_url(self):
+    def _payulatam_get_form_action_url(self):
         self.ensure_one()
         return self._get_payulatam_urls(self.environment)
 
@@ -124,7 +124,7 @@ class PaymentTransactionPayulatam(models.Model):
             res.update(state='done', date=fields.Datetime.now())
             self._set_transaction_done()
             self.write(res)
-            self.execute_callback()
+            self._execute_callback()
             return True
         elif status == 'PENDING':
             _logger.info('Received notification for PayU Latam payment %s: set as pending' % (self.reference))

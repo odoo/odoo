@@ -18,7 +18,7 @@ class StripeController(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        return acquirer.s2s_process(kwargs).id
+        return acquirer._s2s_process(kwargs).id
 
     @http.route(['/payment/stripe/s2s/create'], type='http', auth='public')
     def stripe_s2s_create(self, **post):
@@ -26,7 +26,7 @@ class StripeController(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         error = None
         try:
-            acquirer.s2s_process(post)
+            acquirer._s2s_process(post)
         except Exception as e:
             error = str(e)
 
@@ -41,7 +41,7 @@ class StripeController(http.Controller):
     def stripe_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))._s2s_process(kwargs)
 
         if not token:
             res = {
@@ -58,7 +58,7 @@ class StripeController(http.Controller):
         }
 
         if verify_validity != False:
-            token.validate()
+            token._validate()
             res['verified'] = token.verified
 
         return res
@@ -93,7 +93,7 @@ class StripeController(http.Controller):
             response = tx._create_stripe_charge(tokenid=stripe_token['id'], email=stripe_token['email'])
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
         if response:
-            request.env['payment.transaction'].sudo().with_context(lang=None).form_feedback(response, 'stripe')
+            request.env['payment.transaction'].sudo().with_context(lang=None)._form_feedback(response, 'stripe')
         # add the payment transaction into the session to let the page /payment/process to handle it
         PaymentProcessing.add_payment_transaction(tx)
         return "/payment/process"

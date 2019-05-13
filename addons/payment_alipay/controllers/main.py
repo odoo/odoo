@@ -27,7 +27,7 @@ class AlipayController(http.Controller):
                 _logger.warning('Alipay: unrecognized alipay answer, received %s instead of TRADE_FINISHED/TRADE_SUCCESS and TRADE_CLOSED' % (post['trade_status']))
         if post.get('out_trade_no') and post.get('trade_no'):
             post['reference'] = request.env['payment.transaction'].sudo().search([('reference', '=', post['out_trade_no'])]).reference
-            return request.env['payment.transaction'].sudo().form_feedback(post, 'alipay')
+            return request.env['payment.transaction'].sudo()._form_feedback(post, 'alipay')
         return False
 
     def _alipay_validate_notification(self, **post):

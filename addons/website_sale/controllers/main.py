@@ -853,7 +853,7 @@ class WebsiteSale(http.Controller):
             ('acquirer_id', 'in', acquirers.ids)])
 
         if order:
-            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
+            values['acq_extra_fees'] = acquirers._get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
         return values
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)

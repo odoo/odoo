@@ -47,7 +47,7 @@ class BuckarooForm(BuckarooCommon):
         }
 
         # render the button
-        res = self.buckaroo.render(
+        res = self.buckaroo._render(
             'SO004', 2240.0, self.currency_euro.id,
             partner_id=None,
             values=self.buyer_values)
@@ -79,7 +79,7 @@ class BuckarooForm(BuckarooCommon):
         })
 
         # render the button
-        res = self.buckaroo.render(
+        res = self.buckaroo._render(
             'should_be_erased', 2240.0, self.currency_euro,
             partner_id=None,
             values=self.buyer_values)
@@ -130,7 +130,7 @@ class BuckarooForm(BuckarooCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction'].form_feedback(buckaroo_post_data, 'buckaroo')
+            self.env['payment.transaction']._form_feedback(buckaroo_post_data, 'buckaroo')
 
         tx = self.env['payment.transaction'].create({
             'amount': 2240.0,
@@ -141,7 +141,7 @@ class BuckarooForm(BuckarooCommon):
             'partner_country_id': self.country_france.id})
 
         # validate it
-        tx.form_feedback(buckaroo_post_data, 'buckaroo')
+        tx._form_feedback(buckaroo_post_data, 'buckaroo')
         # check state
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, buckaroo_post_data.get('BRQ_TRANSACTIONS'), 'Buckaroo: validation did not update tx payid')
@@ -159,11 +159,11 @@ class BuckarooForm(BuckarooCommon):
         # now buckaroo post is ok: try to modify the SHASIGN
         buckaroo_post_data['Brq_signature'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
         with self.assertRaises(ValidationError):
-            tx.form_feedback(buckaroo_post_data, 'buckaroo')
+            tx._form_feedback(buckaroo_post_data, 'buckaroo')
         # simulate an error
         buckaroo_post_data['BRQ_STATUSCODE'] = '2'
         buckaroo_post_data['Brq_signature'] = '9138e2bf09a708a4eb485ce7777e5406898b689d'
-        tx.form_feedback(buckaroo_post_data, 'buckaroo')
+        tx._form_feedback(buckaroo_post_data, 'buckaroo')
 
         # check state
         self.assertEqual(tx.state, 'cancel', 'Buckaroo: erroneous validation did not put tx into error state')

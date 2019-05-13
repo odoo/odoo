@@ -75,7 +75,7 @@ class PaypalController(http.Controller):
             resp, post = self._parse_pdt_response(resp)
         if resp in ['VERIFIED', 'SUCCESS']:
             _logger.info('Paypal: validated data')
-            res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
+            res = request.env['payment.transaction'].sudo()._form_feedback(post, 'paypal')
             if not res:
                 tx.sudo()._set_transaction_error('Validation error occured. Please contact your administrator.')
         elif resp in ['INVALID', 'FAIL']:

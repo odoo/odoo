@@ -847,7 +847,7 @@ class SaleOrder(models.Model):
 
         # Process directly if payment_token
         if transaction.payment_token_id:
-            transaction.s2s_do_transaction()
+            transaction._s2s_do_transaction()
 
         return transaction
 

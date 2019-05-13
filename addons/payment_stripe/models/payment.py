@@ -200,7 +200,7 @@ class PaymentTransactionStripe(models.Model):
                 'acquirer_reference': tree.get('id'),
             })
             self._set_transaction_done()
-            self.execute_callback()
+            self._execute_callback()
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             return True

@@ -32,7 +32,7 @@ class AlipayTest(PaymentAcquirerCommon):
         # ----------------------------------------
 
         # render the button
-        res = self.alipay.render(
+        res = self.alipay._render(
             'test_ref0', 0.01, self.currency_euro.id,
             values=self.buyer_values)
 
@@ -85,7 +85,7 @@ class AlipayTest(PaymentAcquirerCommon):
         })
 
         # render the button
-        res = self.alipay.render(
+        res = self.alipay._render(
             'test_ref0', 12.50, self.currency_euro.id,
             values=self.buyer_values)
 
@@ -128,7 +128,7 @@ class AlipayTest(PaymentAcquirerCommon):
         alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction'].form_feedback(alipay_post_data, 'alipay')
+            self.env['payment.transaction']._form_feedback(alipay_post_data, 'alipay')
 
         if self.alipay.alipay_payment_method == 'express_checkout':
             currency = self.currency_yuan
@@ -146,7 +146,7 @@ class AlipayTest(PaymentAcquirerCommon):
         })
 
         # validate tx
-        tx.form_feedback(alipay_post_data, 'alipay')
+        tx._form_feedback(alipay_post_data, 'alipay')
         # check tx
         self.assertEqual(tx.state, 'cancel', 'alipay: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
@@ -161,13 +161,13 @@ class AlipayTest(PaymentAcquirerCommon):
             alipay_post_data['trade_status'] = 'TRADE_SUCCESS'
         alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # validate tx
-        tx.form_feedback(alipay_post_data, 'alipay')
+        tx._form_feedback(alipay_post_data, 'alipay')
         # check tx
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: notification should not go throught since it has already been validated')
 
         # this time it should go through since the transaction is not validated yet
         tx.write({'state': 'draft', 'acquirer_reference': False})
-        tx.form_feedback(alipay_post_data, 'alipay')
+        tx._form_feedback(alipay_post_data, 'alipay')
         self.assertEqual(tx.state, 'done', 'alipay: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
 

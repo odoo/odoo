@@ -120,7 +120,7 @@ class PaymentAcquirerAuthorize(models.Model):
         return authorize_tx_values
 
     @api.multi
-    def authorize_get_form_action_url(self):
+    def _authorize_get_form_action_url(self):
         self.ensure_one()
         return self._get_authorize_urls(self.environment)['authorize_form_url']
 
@@ -316,7 +316,7 @@ class TxAuthorize(models.Model):
                     'date': fields.Datetime.now(),
                 })
                 if init_state != 'authorized':
-                    self.execute_callback()
+                    self._execute_callback()
 
                 if self.payment_token_id:
                     self.payment_token_id.verified = True
@@ -325,7 +325,7 @@ class TxAuthorize(models.Model):
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({'acquirer_reference': tree.get('x_trans_id')})
                 self._set_transaction_authorized()
-                self.execute_callback()
+                self._execute_callback()
             if tree.get('x_type').lower() == 'void':
                 self._set_transaction_cancel()
             return True

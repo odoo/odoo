@@ -194,7 +194,7 @@ class AcquirerAdyen(models.Model):
         return values
 
     @api.multi
-    def adyen_get_form_action_url(self):
+    def _adyen_get_form_action_url(self):
         return self._get_adyen_urls(self.environment)['adyen_form_url']
 
 

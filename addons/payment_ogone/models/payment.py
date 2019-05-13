@@ -183,7 +183,7 @@ class PaymentAcquirerOgone(models.Model):
         ogone_tx_values.update(temp_ogone_tx_values)
         return ogone_tx_values
 
-    def ogone_get_form_action_url(self):
+    def _ogone_get_form_action_url(self):
         return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
 
     def ogone_s2s_form_validate(self, data):
@@ -308,10 +308,10 @@ class PaymentTxOgone(models.Model):
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             self._set_transaction_done()
-            self.execute_callback()
+            self._execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
             if self.type == 'validation':
-                self.s2s_do_refund()
+                self._s2s_do_refund()
 
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -460,10 +460,10 @@ class PaymentTxOgone(models.Model):
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             self._set_transaction_done()
-            self.execute_callback()
+            self._execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
             if self.type == 'validation':
-                self.s2s_do_refund()
+                self._s2s_do_refund()
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({'acquirer_reference': tree.get('PAYID')})

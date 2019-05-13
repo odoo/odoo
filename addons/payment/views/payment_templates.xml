@@ -103,7 +103,7 @@
                              t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
                             <div class="clearfix">
                                 <input type="hidden" t-if="(verify_validity==True or mode == 'manage') and acq.check_validity" name="verify_validity" t-att-value="acq.check_validity"/>
-                                <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
+                                <t t-call="{{acq.sudo()._get_s2s_form_xml_id()}}">
                                     <t t-set="id" t-value="acq.id"/>
                                     <t t-set="partner_id" t-value="partner_id"/>
                                     <t t-if="not return_url" t-set="return_url" t-value="''"/>

@@ -58,7 +58,7 @@ class StripeTest(StripeCommon):
         # ----------------------------------------
 
         # render the button
-        res = self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
+        res = self.stripe._render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
         # Generated and received
         self.assertIn(self.buyer_values.get('partner_email'), res, 'Stripe: email input not found in rendered template')
 
@@ -131,7 +131,7 @@ class StripeTest(StripeCommon):
             'partner_country_id': self.country_france.id})
 
         # validate it
-        tx.form_feedback(stripe_post_data, 'stripe')
+        tx._form_feedback(stripe_post_data, 'stripe')
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
         stripe_post_data['metadata']['reference'] = u'SO100-2'
@@ -147,6 +147,6 @@ class StripeTest(StripeCommon):
         stripe_post_data['status'] = 'error'
         stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})
         with mute_logger('odoo.addons.payment_stripe.models.payment'):
-            tx.form_feedback(stripe_post_data, 'stripe')
+            tx._form_feedback(stripe_post_data, 'stripe')
         # check state
         self.assertEqual(tx.state, 'cancel', 'Stipe: erroneous validation did not put tx into error state')

@@ -73,7 +73,7 @@ class AuthorizeForm(AuthorizeCommon):
 
         form_values['x_fp_hash'] = self.env['payment.acquirer']._authorize_generate_hashing(form_values)
         # render the button
-        res = self.authorize.render('SO004', 56.16, self.currency_usd.id, values=self.buyer_values)
+        res = self.authorize._render('SO004', 56.16, self.currency_usd.id, values=self.buyer_values)
         # check form result
         tree = objectify.fromstring(res)
 
@@ -146,7 +146,7 @@ class AuthorizeForm(AuthorizeCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
+            self.env['payment.transaction']._form_feedback(authorize_post_data, 'authorize')
 
         tx = self.env['payment.transaction'].create({
             'amount': 320.0,
@@ -158,7 +158,7 @@ class AuthorizeForm(AuthorizeCommon):
         tx._set_transaction_done()
 
         # validate it
-        self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
+        self.env['payment.transaction']._form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'done', 'Authorize: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
@@ -174,7 +174,7 @@ class AuthorizeForm(AuthorizeCommon):
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'
-        self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
+        self.env['payment.transaction']._form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'cancel', 'Authorize: erroneous validation did not put tx into error state')
 
