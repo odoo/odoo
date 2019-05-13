@@ -286,7 +286,7 @@ class WebsiteBlog(http.Controller):
 
         new_blog_post = request.env['blog.post'].create({
             'blog_id': blog_id,
-            'website_published': False,
+            'is_published': False,
         })
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
