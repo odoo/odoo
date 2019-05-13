@@ -33,8 +33,8 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         this._super(parent, context);
 
         this.date_range = 'week';  // possible values : 'week', 'month', year'
-        this.date_from = moment().subtract(1, 'week');
-        this.date_to = moment();
+        this.date_from = moment.utc().subtract(1, 'week');
+        this.date_to = moment.utc();
 
         this.dashboards_templates = ['website.dashboard_header', 'website.dashboard_content'];
         this.graphs = [];
@@ -230,13 +230,13 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     on_date_range_button: function(date_range) {
         if (date_range === 'week') {
             this.date_range = 'week';
-            this.date_from = moment().subtract(1, 'weeks');
+            this.date_from = moment.utc().subtract(1, 'weeks');
         } else if (date_range === 'month') {
             this.date_range = 'month';
-            this.date_from = moment().subtract(1, 'months');
+            this.date_from = moment.utc().subtract(1, 'months');
         } else if (date_range === 'year') {
             this.date_range = 'year';
-            this.date_from = moment().subtract(1, 'years');
+            this.date_from = moment.utc().subtract(1, 'years');
         } else {
             console.log('Unknown date range. Choose between [week, month, year]');
             return;

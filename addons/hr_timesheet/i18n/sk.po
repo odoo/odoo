@@ -130,7 +130,7 @@ msgstr "Apple App Store"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
 msgid "Awesome Timesheet"
-msgstr ""
+msgstr "Úžasný časový rozvrh"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
@@ -440,6 +440,8 @@ msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
 "account. Set one on the project configuration."
 msgstr ""
+"Projekt, na ktorom chcete použiť časový rozvrh, nie je prepojený s aktívnym "
+"analytickým účtom. Nastavte ho v konfigurácii projektu."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:147
@@ -448,6 +450,8 @@ msgid ""
 "This task must be part of a project because they some timesheets are linked "
 "to it."
 msgstr ""
+"Táto úloha musí byť súčasťou projektu, pretože s ňou sú prepojené niektoré "
+"časové rozvrhy."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account__company_uom_id
@@ -457,6 +461,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Toto nastaví mernú jednotku používanú v projektoch a úlohách.\n"
+"Ak používate časové rozvrhy spojené s projektmi, nezabudnite nastaviť správnu mernú jednotku u vašich zamestnancov."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__timesheet_encode_uom_id
@@ -465,11 +471,13 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"To nastaví mernú jednotku použitú na kódovanie časového rozvrhu. To jednoducho poskytne nástroje\n"
+"        a pomôcky na pomoc s kódovaním. Všetky reporty budú stále vyjadrené v hodinách (predvolená hodnota)."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr ""
+msgstr "Kódovanie času"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -527,7 +535,7 @@ msgstr "Časové rozvrhy"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr ""
+msgstr "Na túto úlohu môžu byť zaznačené časové rozvrhy."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:32
@@ -535,6 +543,7 @@ msgstr ""
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
+"Ak chcete povoliť časový rozvrh, váš projekt %s by mal mať analytický účet."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -559,7 +568,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:51
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "Neznámy analytický účet"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
@@ -590,6 +599,9 @@ msgid ""
 "analytic account. Please change it, or reactivate the current one to "
 "timesheet on the project."
 msgstr ""
+"Na tomto projekte nemôžete zaznamenávať časové rozvrhy, pretože je prepojený"
+" s neaktívnym analytickým účtom. Prosím, zmeňte ho, alebo ho znovu aktivujte"
+" na časový rozvrh projektu."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -602,6 +614,9 @@ msgid ""
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
+"Môžete zaznamenávať a sledovať svoje pracovné hodiny na projekte každý\n"
+"deň. Všetok čas strávený na projekte sa zmení na náklady a môže byť prefakturovaný\n"
+" zákazníkovi v prípade potreby."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet

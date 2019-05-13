@@ -12,9 +12,10 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Tina Milas, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
 # Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,18 @@ msgid ""
 "leaves;\tFixed by HR + allocation request: allocated by HR and users can "
 "request leaves and allocations;\tNo allocation: no allocation by default, "
 "users can freely request leaves;"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:265
+#, python-format
+msgid " days"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_type.py:265
+#, python-format
+msgid " hours"
 msgstr ""
 
 #. module: hr_holidays
@@ -114,7 +127,7 @@ msgstr "&lt;th standard=\"centriranje teksta\" stupci="
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
 msgid "0:30 AM"
-msgstr ""
+msgstr "0:30 AM"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_hour_from:0 selection:hr.leave,request_hour_to:0
@@ -540,7 +553,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
 msgid "Afternoon"
-msgstr ""
+msgstr "popodne"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_all
@@ -696,7 +709,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Broj priloga"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_limit
@@ -993,7 +1006,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Padajući izbornik"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1339,7 +1352,7 @@ msgstr "Vrijeme promjene"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Posljednje aktivnosti"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1596,7 +1609,7 @@ msgstr "Magenta"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Glavni prilog"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
@@ -1652,7 +1665,7 @@ msgstr "Vrsta sastanka"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -1681,7 +1694,7 @@ msgstr "Mjesec(i)"
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
 msgid "Morning"
-msgstr ""
+msgstr "Ujutro"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
@@ -1729,7 +1742,7 @@ msgstr "Novi zahtjev"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Krajnji rok slijedeće aktivnosti"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
@@ -1741,7 +1754,7 @@ msgstr "Sažetak sljedeće aktivnosti"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip sljedeće aktivnosti"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
@@ -1782,7 +1795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
@@ -1801,7 +1814,7 @@ msgstr "Broj poruka koje zahtijevaju aktivnost"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_number
@@ -1896,7 +1909,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Overview"
-msgstr ""
+msgstr "Pregled"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla

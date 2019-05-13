@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# JH CHOI <hwangtog@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-22 11:11+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +26,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Gengo 공개 키 또는 개인 키가 잘못되었거나 누락되었습니다.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -37,6 +36,8 @@ msgid ""
 "in this system. You are supposed to do that directly by using your Gengo "
 "Account</span>"
 msgstr ""
+"<span class=\"o_form_label\">참고 : 번역 상태가 \"처리 중\"이면 번역이 시스템에 업로드되기 전에 승인되어야 "
+"한다는 의미입니다. 이 작업을 완료하려면 Gengo 계정을 직접 사용해야 합니다.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
@@ -67,7 +68,7 @@ msgstr "번역을 자동으로 승인할까요?"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "Base Gengo Translations"
-msgstr ""
+msgstr "기본 Gengo 번역"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -90,18 +91,18 @@ msgstr "주로 테스트 목적으로 사용하고자 Gengo를 샌드박스 모�
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
-msgstr ""
+msgstr "Gengo 매개 변수를 구성하려면 여기를 클릭하십시오."
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Comment"
-msgstr "코멘트"
+msgstr "댓글"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_comment
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_comment
 msgid "Comments"
-msgstr "의견"
+msgstr "댓글"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation__gengo_comment
@@ -111,12 +112,12 @@ msgstr "댓글 및 Gengo에 연결한 활동"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_company
 msgid "Companies"
-msgstr "회사들"
+msgstr "회사"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -199,14 +200,14 @@ msgstr "Gengo: 수동 번역 요청"
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
 msgid "Gengo: Sync translation (Request)"
-msgstr ""
+msgstr "Gengo : 동기식 번역 (요청)"
 
 #. module: base_gengo
 #: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
 msgid "Gengo: Sync translation (Response)"
-msgstr ""
+msgstr "Gengo : 동기식 번역 (응답)"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
@@ -297,12 +298,12 @@ msgstr "동기화 유형"
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
-msgstr ""
+msgstr "Gengo 번역 서비스를 사용하려면 동기화할 용어의 수가 1에서 200 사이여야 합니다."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__authorized_credentials
 msgid "The private and public keys are valid"
-msgstr ""
+msgstr "비공개 키와 공개 키가 유효합니다."
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_comment
@@ -326,7 +327,7 @@ msgstr "Gengo에 승인하기"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_ir_translation
 msgid "Translation"
-msgstr ""
+msgstr "번역하기"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -336,7 +337,7 @@ msgstr "기계가 번역하기"
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Ultra"
-msgstr "Ultra"
+msgstr "울트라"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_ir_translation__gengo_translation

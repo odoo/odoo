@@ -3,10 +3,10 @@
 # * sale
 # 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2018
 # sharkutz <sharkutz4life@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2019
+# Cozmin Candea <office@terrabit.ro>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +59,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr ""
 
@@ -79,7 +80,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:70
 #, python-format
 msgid "<b>Print this quotation to preview it.</b>"
-msgstr ""
+msgstr "<b>Apăsați pe tipărire pentru a o previzualiza acestă ofertă.</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -192,7 +193,7 @@ msgstr "<i class=\"fa fa-print\"/> Tipărire"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/>Adaugă în coș"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -246,6 +247,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Vândut</span>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -358,6 +366,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Subtotal</strong>"
 
@@ -389,6 +398,7 @@ msgstr "<strong> Total: </strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
 
@@ -435,11 +445,14 @@ msgid ""
 "                where you want to sell extra hours to the customer\n"
 "                because the initial hours have already been used."
 msgstr ""
+"Un exemplu tipic este pentru orele de serviciu preplătite, în cazul în care "
+"doriți să vindeți ore suplimentare, deoarece orele inițiale au fost deja "
+"utilizate."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "O avertizare poate fi setată pe un produs sau pe un client (Vânzare)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -765,7 +778,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
-msgstr ""
+msgstr "Faceți clic pentru a defini o țintă"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -929,7 +942,7 @@ msgstr "Creați un produs nou"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Creați o ofertă nouă, primul pas al unei vânzări noi!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1784,7 +1797,7 @@ msgstr ""
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Doar făcut"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
@@ -1878,7 +1891,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_sale_order_dates
 msgid "Manage delivery dates from sales orders."
-msgstr ""
+msgstr "Gestionați datele de livrare din comenzile de vânzări."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2250,7 +2263,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "Comenzi de facturat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2673,7 +2686,7 @@ msgstr "Cant. facturată"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr ""
+msgstr "Cant. Comandată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -3169,6 +3182,14 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Vânzare și achiziționare produse în diferite unități de măsură"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Vinde produse digitale - asigură conținut ce poate fi descărcat din portalul"
+" pentru clienți"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
@@ -3487,6 +3508,8 @@ msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
+"Termeni și condiții ... (notă: puteți să setați unele implicite din meniul "
+"Configurare)"
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:116
@@ -3636,6 +3659,8 @@ msgid ""
 "These are orders with products invoiced based on ordered quantities,\n"
 "                in the case you have delivered more than what was ordered."
 msgstr ""
+"Acestea sunt comenzi cu produse facturate pe baza cantităților comandate, în"
+" cazul în care ați livrat mai mult decât a fost comandat."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure

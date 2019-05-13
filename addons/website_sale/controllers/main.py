@@ -234,8 +234,9 @@ class WebsiteSale(ProductConfiguratorController):
 
         Category = request.env['product.public.category']
         search_categories = False
+        search_product = Product.search(domain)
         if search:
-            categories = Product.search(domain).mapped('public_categ_ids')
+            categories = search_product.mapped('public_categ_ids')
             search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
             categs = search_categories.filtered(lambda c: not c.parent_id)
         else:
@@ -250,15 +251,14 @@ class WebsiteSale(ProductConfiguratorController):
                 parent_category_ids.append(current_category.parent_id.id)
                 current_category = current_category.parent_id
 
-        product_count = Product.search_count(domain)
+        product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            selected_products = Product.search(domain, limit=False)
-            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', selected_products.ids)])
+            attributes = ProductAttribute.search([('attribute_line_ids.value_ids', '!=', False), ('attribute_line_ids.product_tmpl_id', 'in', search_product.ids)])        
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
@@ -605,6 +605,7 @@ class WebsiteSale(ProductConfiguratorController):
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
         new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
+        new_values['company_id'] = request.website.company_id.id
         new_values['website_id'] = request.website.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
@@ -967,6 +968,9 @@ class WebsiteSale(ProductConfiguratorController):
 
         if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
+
+        if order and not order.amount_total and not tx:
+            return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()

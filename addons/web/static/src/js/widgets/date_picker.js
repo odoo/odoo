@@ -15,6 +15,7 @@ var DateWidget = Widget.extend({
         'change.datetimepicker': 'changeDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'keydown': '_onKeydown',
         'show.datetimepicker': '_onDateTimePickerShow',
     },
     /**
@@ -237,6 +238,17 @@ var DateWidget = Widget.extend({
     _onDateTimePickerShow: function () {
         if (this.$input.val().length !== 0 && this.isValid()) {
             this.$input.select();
+        }
+    },
+    /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            this.__libInput++;
+            this.$el.datetimepicker('hide');
+            this.__libInput--;
         }
     },
     /**

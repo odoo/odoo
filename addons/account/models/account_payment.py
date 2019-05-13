@@ -87,6 +87,16 @@ class account_abstract_payment(models.AbstractModel):
         # Check all invoices have the same currency
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
+        # Check if, in batch payments, there are not negative invoices and positive invoices
+        dtype = invoices[0].type
+        for inv in invoices[1:]:
+            if inv.type != dtype:
+                if ((dtype == 'in_refund' and inv.type == 'in_invoice') or
+                        (dtype == 'in_invoice' and inv.type == 'in_refund')):
+                    raise UserError(_("You cannot register payments for vendor bills and supplier refunds at the same time."))
+                if ((dtype == 'out_refund' and inv.type == 'out_invoice') or
+                        (dtype == 'out_invoice' and inv.type == 'out_refund')):
+                    raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
@@ -821,3 +831,17 @@ class account_payment(models.Model):
             })
 
         return vals
+
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_payments_vals()
+            if data['account_payment_id'] == self.id
+        ])

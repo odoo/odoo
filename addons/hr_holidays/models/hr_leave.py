@@ -327,19 +327,22 @@ class HolidaysRequest(models.Model):
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
-        if self.holiday_type == 'employee' and not self.employee_id:
-            self.employee_id = self.env.user.employee_ids[:1].id
+        if self.holiday_type == 'employee':
+            if not self.employee_id:
+                self.employee_id = self.env.user.employee_ids[:1].id
             self.mode_company_id = False
             self.category_id = False
-        elif self.holiday_type == 'company' and not self.mode_company_id:
+        elif self.holiday_type == 'company':
             self.employee_id = False
-            self.mode_company_id = self.env.user.company_id.id
+            if not self.mode_company_id:
+                self.mode_company_id = self.env.user.company_id.id
             self.category_id = False
-        elif self.holiday_type == 'department' and not self.department_id:
+        elif self.holiday_type == 'department':
             self.employee_id = False
             self.mode_company_id = False
-            self.department_id = self.env.user.employee_ids[:1].department_id.id
             self.category_id = False
+            if not self.department_id:
+                self.department_id = self.env.user.employee_ids[:1].department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False

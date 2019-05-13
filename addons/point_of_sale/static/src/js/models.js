@@ -904,6 +904,9 @@ exports.PosModel = Backbone.Model.extend({
                     }}).done(function () {
                         invoiced.resolve();
                         done.resolve();
+                    }).fail(function (error) {
+                        invoiced.reject({code:401, message:'Backend Invoice', data:{order: order}});
+                        done.reject();
                     });
                 } else {
                     // The order has been pushed separately in batch when
@@ -2664,7 +2667,7 @@ exports.NumpadState = Backbone.Model.extend({
             this.set({
                 buffer: "-" + newChar
             });
-        } else {
+        } else if (!(newChar === '.') || oldBuffer.indexOf('.') === -1) {
             this.set({
                 buffer: (this.get('buffer')) + newChar
             });

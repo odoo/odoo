@@ -639,11 +639,17 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
-            raise UserError("\n".join([
-                _("Cannot rename/delete fields that are still present in views:"),
-                _("Fields: %s") % ", ".join(str(f) for f in fields),
-                _("View: %s") % view.name,
-            ]))
+            if not self._context.get(MODULE_UNINSTALL_FLAG):
+                raise UserError("\n".join([
+                    _("Cannot rename/delete fields that are still present in views:"),
+                    _("Fields: %s") % ", ".join(str(f) for f in fields),
+                    _("View: %s") % view.name,
+                ]))
+            else:
+                # uninstall mode
+                _logger.warn("The following fields were force-deleted to prevent a registry crash "
+                        + ", ".join(str(f) for f in fields)
+                        + " the following view might be broken %s" % view.name)
         finally:
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)

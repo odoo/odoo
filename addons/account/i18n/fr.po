@@ -30,9 +30,10 @@
 # Phil Anth <thep3r3x@gmail.com>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Pandraghon <pandraghon@outlook.com>, 2019
-# Martin Trigaux, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
 # Shark McGnark <peculiarcheese@gmail.com>, 2019
+# Stéphane Bidoul (ACSONE), 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -310,7 +311,7 @@ msgid ""
 "or received.</p>"
 msgstr ""
 "<p>Vous pouvez contrôler la facture de votre base vendeurs sur ce que vous "
-"avez acheté ou reçu."
+"avez acheté ou reçu.</p>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -503,7 +504,7 @@ msgstr "<span> à </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr "Montant payé"
+msgstr "<span>Montant payé</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -841,7 +842,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -6834,12 +6840,12 @@ msgstr "Equivalence entre éléments du journal "
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Matching"
-msgstr "équivalent "
+msgstr "Lettrage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
 msgid "Matching Number"
-msgstr "nombre équivalent "
+msgstr "Référence de lettrage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -12148,6 +12154,22 @@ msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
 "Vous ne pouvez pas déposer/prendre de l'argent lorsqu'un transfert banquaire"
 " est clôturé. "
+
+#. module: account
+#: code:addons/account/models/account_payment.py:99
+#, python-format
+msgid ""
+"You cannot register payments for customer invoices and credit notes at the "
+"same time."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:96
+#, python-format
+msgid ""
+"You cannot register payments for vendor bills and supplier refunds at the "
+"same time."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:644

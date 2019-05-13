@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class StockRule(models.Model):
@@ -88,3 +89,12 @@ class StockRule(models.Model):
         new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         new_move_vals['production_id'] = False
         return new_move_vals
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _get_moves_to_assign_domain(self):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+        domain = expression.AND([domain, [('production_id', '=', False)]])
+        return domain

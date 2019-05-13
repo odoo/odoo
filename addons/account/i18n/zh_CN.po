@@ -32,7 +32,6 @@
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Jerry Pan <panjianyu@inspur.com>, 2019
 # Liping Wang <lynn.config@gmail.com>, 2019
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
 # Martin Trigaux, 2019
@@ -40,6 +39,8 @@
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # John An <johnxan@163.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
+# 红瑜 陶 <823103015@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 张宏奎 <zhanghongkui@inspur.com>, 2019\n"
+"Last-Translator: 红瑜 陶 <823103015@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -440,7 +441,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">财务本地化</span>\n"
+"<span class=\"o_form_label\">会计制度</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -552,7 +553,7 @@ msgstr "<span>发票号码</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr "<span>日记账分录</span>"
+msgstr "<span>凭证分录</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -681,7 +682,7 @@ msgstr "<strong>发票日期:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>日记账：</strong>"
+msgstr "<strong>凭证：</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -844,7 +845,12 @@ msgstr "一种税只能定义一个替换规则"
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
-msgid "A user cannot have both Tax B2B and Tax B2C"
+msgid ""
+"A user cannot have both Tax B2B and Tax B2C.\n"
+"Problematic user(s): %s\n"
+"You should go in General Settings, and choose to display Product Prices\n"
+"either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
+"(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 
 #. module: account
@@ -1932,7 +1938,7 @@ msgstr "已归档"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask for a Credit Note"
-msgstr "要求提供红字发票"
+msgstr "红字发票"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -5443,7 +5449,7 @@ msgstr "库存计价的入库科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Install More Packages"
-msgstr "安装更多软件包"
+msgstr "安装更多会计制度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
@@ -11691,13 +11697,29 @@ msgstr "您不能支付已部分支付的发票。您需要先核销付款分录
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr "不能在包含日记项的帐户上执行此操作。"
+msgstr "科目已经使用过，不允许删除的相关提示"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr "你不能从从已经关闭的银行对账单中存/取款."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:99
+#, python-format
+msgid ""
+"You cannot register payments for customer invoices and credit notes at the "
+"same time."
+msgstr "您无法同时为客户发票和信用票据注册付款。"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:96
+#, python-format
+msgid ""
+"You cannot register payments for vendor bills and supplier refunds at the "
+"same time."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:644

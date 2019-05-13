@@ -3,6 +3,7 @@ odoo.define('web.search_view_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 var createActionManager = testUtils.createActionManager;
 var patchDate = testUtils.patchDate;
 var createView = testUtils.createView;
@@ -649,6 +650,37 @@ QUnit.module('Search View', {
         window.Date = RealDate;
     });
 
+    QUnit.test('Filter with JSON-parsable domain works', function (assert) {
+        assert.expect(1);
+
+        var domain = [['foo' ,'=', 'Gently Weeps']];
+        var xml_domain = JSON.stringify(domain);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, domain,
+                        'A JSON parsable xml domain should be handled just like any other');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<filter string="Foo" name="gently_weeps" domain="' + _.escape(xml_domain) + '" />' +
+            '</search>';
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {search_default_gently_weeps: true};
+
+        actionManager.doAction(1);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', function (assert) {
@@ -976,7 +1008,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1000,6 +1032,13 @@ QUnit.module('Search View', {
                 'partner,false,search': '<search><field name="date_field"/></search>',
             },
             res_id: 1,
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.strictEqual(data.filter.name, 'Fire on the bayou');
+                    assert.strictEqual(data.filter.is_default, true);
+                },
+            },
         });
 
         form.$('.o_input').click();
@@ -1030,8 +1069,20 @@ QUnit.module('Search View', {
             $input.click();
             $input.click();
         });
-
         assert.ok($filterDropDown.is(':visible'));
+
+        // Favorites Menu
+        testUtilsDom.click($modal.find('.o_search_options button:contains(Favorites)'));
+        testUtilsDom.click($modal.find('.o_favorites_menu a:contains(Save current search)'));
+        $modal.find('.o_search_options .dropdown-menu').one('click', function (ev) {
+            // This handler is on the webClient
+            // But since the test suite doesn't have one
+            // We manually set it here
+            ev.stopPropagation();
+        });
+        $modal.find('.o_save_name:first input').val('Fire on the bayou');
+        testUtilsDom.click($modal.find('.o_save_name label:contains(Use by default)'));
+        testUtilsDom.click($modal.find('.o_save_name button:contains(Save)'));
 
         form.destroy();
     });
