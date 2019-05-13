@@ -9,7 +9,7 @@
         </xpath>
     </template>
 
-    <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
+    <template id="add_to_compare" inherit_id="website_sale.products_item" customize_show="True" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <button t-if="product_variant_id" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-sm o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant_id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
@@ -25,7 +25,7 @@
         </xpath>
     </template>
 
-    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" active="True" name="Product attributes table">
+    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" name="Product attributes table">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
             <section class="container" id="product_full_spec">

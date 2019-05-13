@@ -9,7 +9,7 @@
         </xpath>
     </template>
 
-    <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
+    <template id="add_to_wishlist" inherit_id="website_sale.products_item" customize_show="True" name="Wishlist" priority="20">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
