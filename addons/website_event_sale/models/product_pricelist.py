@@ -9,7 +9,7 @@ class PricelistItem(models.Model):
     def _onchange_event_sale_warning(self):
         if self.min_quantity > 0:
             msg = ''
-            if self.applied_on == '3_global' or self.applied_on == '2_product_category':
+            if self.applied_on == '9_global' or self.applied_on == '2_product_category':
                 msg = _("A pricelist item with a positive min. quantity will not be applied to the event tickets products.")
             elif ((self.applied_on == '1_product' and self.product_tmpl_id.event_ok) or
                     (self.applied_on == '0_product_variant' and self.product_id.event_ok)):

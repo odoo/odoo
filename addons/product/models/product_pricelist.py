@@ -417,7 +417,7 @@ class PricelistItem(models.Model):
     # inconstencies and undeterministic issues.
 
     def _get_default_applied_on(self):
-        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '3_global'
+        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '9_global'
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',
@@ -434,7 +434,7 @@ class PricelistItem(models.Model):
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
     applied_on = fields.Selection([
-        ('3_global', 'Global'),
+        ('9_global', 'Global'),  # set to 9 to leave room for intermediary settings in module extensions
         ('2_product_category', ' Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
