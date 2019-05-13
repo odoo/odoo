@@ -42,6 +42,10 @@
                                 </div>
                                 <field name="time_cycle" invisible="1"/>
                             </group>
+                            <group>
+                                <field name="batch"/>
+                                <field name="batch_size" attrs="{'invisible': [('batch', '=', 'no')]}"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Description">
