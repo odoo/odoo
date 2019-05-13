@@ -10,7 +10,7 @@ from odoo.tools import float_round, float_repr
 class LunchController(http.Controller):
     @http.route('/lunch/infos', type='json', auth='user')
     def infos(self, user_id=None):
-        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+        user = request.env['res.users'].browse(user_id) if user_id and self._user_is_manager() else request.env.user
 
         infos = self._make_infos(user, order=False)
 
@@ -35,7 +35,7 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/trash', type='json', auth='user')
     def trash(self, user_id=None):
-        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+        user = request.env['res.users'].browse(user_id) if user_id and self._user_is_manager() else request.env.user
 
         lines = self._get_current_lines(user.id)
         lines.action_cancel()
@@ -43,7 +43,7 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/pay', type='json', auth='user')
     def pay(self, user_id=None):
-        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+        user = request.env['res.users'].browse(user_id) if user_id and self._user_is_manager() else request.env.user
 
         lines = self._get_current_lines(user.id)
         if lines:
@@ -60,14 +60,14 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/user_location_set', type='json', auth='user')
     def set_user_location(self, location_id, user_id=None):
-        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+        user = request.env['res.users'].browse(user_id) if user_id and self._user_is_manager() else request.env.user
 
-        user.last_lunch_location_id = request.env['lunch.location'].browse(location_id)
+        user.sudo().last_lunch_location_id = request.env['lunch.location'].browse(location_id)
         return True
 
     @http.route('/lunch/user_location_get', type='json', auth='user')
     def get_user_location(self, user_id=None):
-        user = request.env['res.users'].browse(user_id) if user_id else request.env.user
+        user = request.env['res.users'].browse(user_id) if user_id and self._user_is_manager() else request.env.user
 
         return user.last_lunch_location_id.id
 
@@ -100,6 +100,9 @@ class LunchController(http.Controller):
         })
 
         return res
+
+    def _user_is_manager(self):
+        return request.env.user.user_has_groups('lunch.group_lunch_manager')
 
     def _get_current_lines(self, user_id):
         return request.env['lunch.order'].search([('user_id', '=', user_id), ('date', '=', fields.Date.today()), ('state', '!=', 'cancelled')])
