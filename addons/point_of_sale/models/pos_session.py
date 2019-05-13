@@ -320,7 +320,7 @@ class PosSession(models.Model):
         self.ensure_one()
         context = dict(self._context)
         balance_type = context.get('balance') or 'start'
-        context['bank_statement_id'] = self.cash_register_id.id
+        context['statement_id'] = self.cash_register_id.id
         context['balance'] = balance_type
         context['default_pos_id'] = self.config_id.id
 
@@ -329,7 +329,7 @@ class PosSession(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement.cashbox',
-            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox_close_modal').id,
             'type': 'ir.actions.act_window',
             'context': context,
             'target': 'new'

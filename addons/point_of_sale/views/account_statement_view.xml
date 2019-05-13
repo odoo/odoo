@@ -19,4 +19,14 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_account_bnk_stmt_cashbox_form_inherited_pos" model="ir.ui.view">
+            <field name="name">account.bnk_stmt_cashbox.form.inherited.pos</field>
+            <field name="model">account.bank.statement.cashbox</field>
+            <field name="inherit_id" ref="account.view_account_bnk_stmt_cashbox"/>
+            <field name="arch" type="xml">
+              <xpath expr="//sheet" position="inside">
+                  <field name="is_a_template" invisible="1"/>
+              </xpath>
+            </field>
+        </record>
 </odoo>
