@@ -153,10 +153,27 @@ var dom = {
      *
      * @param {jQuery} $from - the jQuery element(s) from which to search
      * @param {string} selector - the CSS selector to match
+     * @param {boolean} [addBack=false] - whether or not the $from element
+     *                                  should be considered in the results
      * @returns {jQuery}
      */
-    cssFind: function ($from, selector) {
-        return $from.find('*').filter(selector);
+    cssFind: function ($from, selector, addBack) {
+        var $results;
+
+        // No way to correctly parse a complex jQuery selector but having no
+        // spaces should be a good-enough condition to use a simple find
+        var multiParts = selector.indexOf(' ') >= 0;
+        if (multiParts) {
+            $results = $from.find('*').filter(selector);
+        } else {
+            $results = $from.find(selector);
+        }
+
+        if (addBack && $from.is(selector)) {
+            $results = $results.add($from);
+        }
+
+        return $results;
     },
     /**
      * Detaches widgets from the DOM and performs their on_detach_callback()

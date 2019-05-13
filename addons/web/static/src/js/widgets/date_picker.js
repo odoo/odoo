@@ -14,7 +14,9 @@ var DateWidget = Widget.extend({
     events: {
         'change.datetimepicker': 'changeDatetime',
         'change .o_datepicker_input': 'changeDatetime',
+        'click input': '_onInputClicked',
         'input input': '_onInput',
+        'keydown': '_onKeydown',
         'show.datetimepicker': '_onDateTimePickerShow',
         'hide.datetimepicker': '_onDateTimePickerHide',
     },
@@ -50,10 +52,13 @@ var DateWidget = Widget.extend({
             },
             widgetParent: 'body',
             keyBinds: null,
-            allowInputToggle: true,
         }, options || {});
 
         this.__libInput = 0;
+        // tempusdominus doesn't offer any elegant way to check whether the
+        // datepicker is open or not, so we have to listen to hide/show events
+        // and manually keep track of the 'open' state
+        this.__isOpen = false;
     },
     /**
      * @override
@@ -238,6 +243,7 @@ var DateWidget = Widget.extend({
      * @private
      */
     _onDateTimePickerHide: function () {
+        this.__isOpen = false;
         if (this._onScroll) {
             window.removeEventListener('scroll', this._onScroll, true);
         }
@@ -250,6 +256,7 @@ var DateWidget = Widget.extend({
      * @private
      */
     _onDateTimePickerShow: function () {
+        this.__isOpen = true;
         if (this.$input.val().length !== 0 && this.isValid()) {
             this.$input.select();
         }
@@ -264,6 +271,34 @@ var DateWidget = Widget.extend({
         window.addEventListener('scroll', this._onScroll, true);
     },
     /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            this.__libInput++;
+            this.$el.datetimepicker('hide');
+            this.__libInput--;
+        }
+    },
+    /**
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE) {
+            if (this.__isOpen) {
+                // we don't want any other effects than closing the datepicker,
+                // like leaving the edition of a row in editable list view
+                ev.stopImmediatePropagation();
+                this.__libInput++;
+                this.$el.datetimepicker('hide');
+                this.__libInput--;
+                this.focus();
+            }
+        }
+    },
+    /**
      * Prevents 'input' events triggered by the library to bubble up, as they
      * might have unwanted effects (like triggering 'field_changed' events in
      * the context of field widgets)
@@ -275,6 +310,15 @@ var DateWidget = Widget.extend({
         if (this.__libInput > 0) {
             ev.stopImmediatePropagation();
         }
+    },
+    /**
+     * @private
+     */
+    _onInputClicked: function () {
+        this.__libInput++;
+        this.$el.datetimepicker('toggle');
+        this.__libInput--;
+        this.focus();
     },
 });
 

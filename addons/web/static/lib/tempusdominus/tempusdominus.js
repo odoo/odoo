@@ -2754,7 +2754,8 @@ var TempusDominusBootstrap4 = function ($) {
         if ($target.length === 0) {
             return;
         }
-        if (config._options.debug || window.debug) {
+        // /!\ ODOO FIX: check on 'config' existence added by odoo
+        if (config && config._options.debug || window.debug) {
             return;
         }
         TempusDominusBootstrap4._jQueryInterface.call($target, 'hide', event);

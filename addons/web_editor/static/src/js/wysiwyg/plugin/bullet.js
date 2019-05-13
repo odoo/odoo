@@ -173,6 +173,7 @@ var BulletPlugin = AbstractPlugin.extend({
             } else {
                 ul = this.document.createElement(sorted === "ol" ? "ol" : "ul");
                 ul.className = ol.className;
+                $(ul).removeClass('o_checklist');
                 $(ul).insertBefore(ol).append(lis);
                 parent.removeChild(ol);
             }
@@ -310,6 +311,10 @@ var BulletPlugin = AbstractPlugin.extend({
     _indent: function (outdent) {
         var range = this.context.invoke('editor.createRange');
         if (!range) {
+            return;
+        }
+        // list groups shouldn't be outdented like regular lists
+        if ($(dom.ancestor(range.sc, dom.isList)).hasClass('list-group')) {
             return;
         }
 

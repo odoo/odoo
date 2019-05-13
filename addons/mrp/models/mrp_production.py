@@ -463,15 +463,18 @@ class MrpProduction(models.Model):
         self.is_locked = not self.is_locked
         return True
 
-    def _generate_finished_moves(self):
-        move = self.env['stock.move'].create({
+    def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
+        return {
+            'product_id': product_id,
+            'product_uom_qty': product_uom_qty,
+            'product_uom': product_uom,
+            'operation_id': operation_id,
+            'byproduct_id': byproduct_id,
+            'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'picking_type_id': self.picking_type_id.id,
-            'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
-            'product_uom_qty': self.product_qty,
             'location_id': self.product_id.property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
@@ -481,8 +484,19 @@ class MrpProduction(models.Model):
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
-        })
-        return move
+        }
+
+    def _generate_finished_moves(self):
+        moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
+        for byproduct in self.bom_id.byproduct_ids:
+            product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
+            qty = byproduct.product_qty * (product_uom_factor / self.bom_id.product_qty)
+            move_values = self._get_finished_move_value(byproduct.product_id.id,
+                qty, byproduct.product_uom_id.id, byproduct.operation_id.id,
+                byproduct.id)
+            moves_values.append(move_values)
+        moves = self.env['stock.move'].create(moves_values)
+        return moves
 
     def _get_moves_raw_values(self):
         moves = []
@@ -725,11 +739,12 @@ class MrpProduction(models.Model):
 
             # assign moves; last operation receive all unassigned moves (which case ?)
             moves_raw = self.move_raw_ids.filtered(lambda move: move.operation_id == operation)
+            moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
             if len(workorders) == len(bom.routing_id.operation_ids):
                 moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id)
-            moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
+                moves_finished |= self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and not move.operation_id)
             moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
-            (moves_finished + moves_raw).write({'workorder_id': workorder.id})
+            (moves_finished | moves_raw).write({'workorder_id': workorder.id})
 
             workorder._generate_wo_lines()
         return workorders
@@ -737,18 +752,18 @@ class MrpProduction(models.Model):
     def _check_lots(self):
         # Check that the components were consumed for lots that we have produced.
         if self.product_id.tracking != 'none':
-            finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
-            raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
-            if not (raw_finished_lots <= finished_lots):
+            finished_lots = self.finished_move_line_ids.mapped('lot_id')
+            raw_finished_lots = self.move_raw_ids.mapped('move_line_ids.lot_produced_ids')
+            if (raw_finished_lots - finished_lots):
                 lots_short = raw_finished_lots - finished_lots
                 error_msg = _(
                     'Some components have been consumed for a lot/serial number that has not been produced. '
                     'Unlock the MO and click on the components lines to correct it.\n'
                     'List of the components:\n'
                 )
-                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
                 for ml in move_lines:
-                    error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
+                    error_msg += ml.product_id.display_name + ' (' + (lots_short & ml.lot_produced_ids).mapped('name') + ')\n'
                 raise UserError(error_msg)
 
     @api.multi
@@ -801,19 +816,21 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
-            moves_to_do._action_done()
+            # MRP do not merge move, catch the result of _action_done in order
+            # to get extra moves.
+            moves_to_do = moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
-            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
-            moves_to_finish._action_done()
+            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            moves_to_finish = moves_to_finish._action_done()
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
             for moveline in moves_to_finish.mapped('move_line_ids'):
-                if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':
-                    if any([not ml.lot_produced_id for ml in consume_move_lines]):
+                if moveline.move_id.has_tracking != 'none' and moveline.product_id == order.product_id or moveline.lot_id in consume_move_lines.mapped('lot_produced_ids'):
+                    if any([not ml.lot_produced_ids for ml in consume_move_lines]):
                         raise UserError(_('You can not consume without telling for which lot you consumed it'))
-                    # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id
-                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id)
+                    # Link all movelines in the consumed with same lot_produced_ids false or the correct lot_produced_ids
+                    filtered_lines = consume_move_lines.filtered(lambda ml: moveline.lot_id in ml.lot_produced_ids)
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
                 else:
                     # Link with everything

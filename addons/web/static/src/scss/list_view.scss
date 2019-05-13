@@ -97,6 +97,7 @@
     // Grouped list views
     tbody > tr.o_group_header {
         > th, > td {
+            vertical-align: middle;
             padding-top: ($table-cell-padding-sm*2);
             padding-bottom: ($table-cell-padding-sm*2);
         }
@@ -105,8 +106,10 @@
         }
         .o_group_buttons {
             display: inline-block;
+            margin-left: 10px;
 
             > button {
+                @include o-hover-text-color($o-brand-primary, darken($o-brand-primary, 20%));
                 background-color: transparent;
                 border: none;
                 padding-top: 0;

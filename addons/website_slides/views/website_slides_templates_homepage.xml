@@ -3,6 +3,7 @@
 
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
+    <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div class="wrap o_wslides_wrap">
             <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%">
@@ -87,7 +88,7 @@
                                 <div class="row mb-5 mt-3 mt-lg-0">
                                     <div class="col-12 col-sm-6 col-lg-12">
                                         <t t-call="website_slides.slides_home_user_profile_small"/>
-                                        <hr class="d-sm-none d-lg-block" />
+                                        <hr class="d-sm-none d-lg-block"/>
                                     </div>
                                     <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
@@ -163,8 +164,9 @@
 
 <!-- Channel all/main template -->
 <template id='courses_all' name="Odoo All Courses">
+    <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
-        <div class="wrap o_wslides_wrap">
+        <div class="wrap">
             <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
                 <div class="container py-5">
                     <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
@@ -173,14 +175,33 @@
             </section>
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
-                <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: white!important">
-                    <div class="navbar-nav border-right pr-3">
-                        <a class="nav-link nav-item" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
+                <nav class="navbar navbar-expand-md navbar-light shadow-sm pl-0" style="background: white!important">
+                    <div class="navbar-nav border-right">
+                        <a class="nav-link nav-item px-3" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
                     </div>
-                    <button class="navbar-toggler" type="button"
+                    <!-- Clear filtering (mobile)-->
+                    <div class="form-inline text-nowrap ml-auto d-md-none" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                        <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="btn btn-info mr-2" role="button" title="Clear filters">
+                            <i class="fa fa-eraser"/> Clear filters
+                        </a>
+                    </div>
+                    <form t-else="" method="GET" class="form-inline o_wslides_nav_navbar_right d-md-none">
+                        <!-- Search box (mobile)-->
+                        <div class="input-group">
+                            <input type="search" name="search" class="form-control"
+                                placeholder="Search courses" aria-label="Search"
+                                t-att-value="search_term"/>
+                            <div class="input-group-append">
+                                <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="navbar-toggler px-1" type="button"
                         data-toggle="collapse" data-target="#navbarTagGroups"
                         aria-controls="navbarTagGroups" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon small"/>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTagGroups">
                         <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
@@ -202,16 +223,15 @@
                                     </div>
                                 </li>
                             </t>
-                            <!-- clear filtering -->
-                            <li class="nav-item ml-auto" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
-                                <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="nav-link mr-2"
-                                    role="button" title="Clear filters">
-                                    <i class="fa fa-eraser"/> Clear filters
-                                </a>
-                            </li>
                         </ul>
-                        <!-- search box -->
-                        <form method="GET" class="form-inline o_wslides_nav_navbar_right">
+                        <!-- Clear filtering (desktop)-->
+                        <div class="form-inline ml-auto d-none d-md-flex" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                            <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="btn btn-info text-nowrap mr-2" role="button" title="Clear filters">
+                                <i class="fa fa-eraser"/> Clear filters
+                            </a>
+                        </div>
+                        <!-- Search box (desktop) -->
+                        <form method="GET" class="form-inline o_wslides_nav_navbar_right d-none d-md-flex">
                             <div class="input-group">
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search courses" aria-label="Search"
@@ -262,7 +282,7 @@
 
 <template id='course_card' name="Course Card">
     <div class="card w-100 o_wslides_course_card mb-4">
-        <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image_large' % channel.id"/>
+        <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image' % channel.id"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
             <div t-if="channel.image_large" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
             <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
@@ -270,7 +290,7 @@
             </div>
         </a>
         <div class="card-body p-3">
-            <a class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+            <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <div class="card-text mt-1">
                 <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description"/>
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
@@ -280,7 +300,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer border-top-0 text-600 px-3">
+        <div class="card-footer bg-white text-600 px-3">
             <div class="d-flex justify-content-between align-items-center">
                 <small class="font-weight-bold" t-field="channel.total_time" t-options='{"widget": "float_time"}'/>
                 <div class="d-flex flex-grow-1 justify-content-end">
@@ -335,7 +355,7 @@
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
-                <h5 class="m-0">Heroes of the week</h5>
+                <h5 class="m-0">Leaderboard of the week</h5>
                 <hr class="mt-2 pt-2"/>
             </div>
         </div>
@@ -349,7 +369,7 @@
                     </t>
                 </div>
             </t>
-            <t t-else=""><p class="col mt8">No heroes currently :(</p></t>
+            <t t-else=""><p class="col mt8">No leaderboard currently :(</p></t>
         </div>
     </div>
 </template>

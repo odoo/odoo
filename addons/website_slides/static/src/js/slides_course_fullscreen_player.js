@@ -432,6 +432,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
             // display quiz slide, or quiz attached to a slide
             if (slide.type === 'quiz' || slide.isQuiz) {
+                $content.addClass('bg-white');
                 var QuizWidget = new Quiz(this, slide);
                 return QuizWidget.appendTo($content);
             }

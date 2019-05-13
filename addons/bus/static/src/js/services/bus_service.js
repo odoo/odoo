@@ -68,7 +68,7 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 var session = this.getSession();
                 this._audio.src = session.url("/mail/static/src/audio/ting" + ext);
             }
-            this._audio.play();
+            Promise.resolve(this._audio.play()).catch(_.noop);
         }
     },
     /**

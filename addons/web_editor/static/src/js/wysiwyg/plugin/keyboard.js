@@ -296,6 +296,7 @@ var KeyboardPlugin = AbstractPlugin.extend({
         var next = this.context.invoke('HelperPlugin.splitTree', ancestor, point, {
             isSkipPaddingBlankHTML: !this.context.invoke('HelperPlugin.isNodeBlockType', point.node.parentNode) && !!point.node.parentNode.nextSibling
         });
+        $(next).removeClass('o_checked');
         while (next.firstChild) {
             next = next.firstChild;
         }

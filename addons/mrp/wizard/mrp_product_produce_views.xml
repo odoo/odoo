@@ -25,8 +25,9 @@
                             </div>
                         </group>
                     </group>
+                    <h4 attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}">Components</h4>
                     <group>
-                        <field name="workorder_line_ids" attrs="{'invisible': [('workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_final_lot_id': final_lot_id}">
+                        <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_final_lot_id': final_lot_id}">
                             <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
                                 <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
                                 <field name="product_tracking" invisible="1"/>
@@ -34,6 +35,20 @@
                                 <field name="qty_to_consume" readonly="1" force_save="1"/>
                                 <field name="qty_reserved" readonly="1" force_save="1"/>
                                 <field name="qty_done"/>
+                                <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
+                                <field name="move_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <h4 attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}">By-products</h4>
+                    <group>
+                        <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_final_lot_id': final_lot_id}">
+                            <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="qty_to_consume" string="To Produce" readonly="1" force_save="1"/>
+                                <field name="qty_done" string="Produced"/>
                                 <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
                                 <field name="move_id" invisible="1"/>
                             </tree>

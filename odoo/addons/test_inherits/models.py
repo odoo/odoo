@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 # We just create a new model
@@ -38,3 +39,28 @@ class Pallet(models.Model):
     box_id = fields.Many2one('test.box', 'Box', required=True,
                              ondelete='cascade')
     field_in_pallet = fields.Char('Field2')
+
+
+# Another model for another test suite
+class AnotherUnit(models.Model):
+    _name = 'test.another_unit'
+    _description = 'Another Test Unit'
+
+    val1 = fields.Integer('Value 1', required=True)
+
+
+# We want to _inherits from the parent model, add a field and check
+# the new field is always equals to the first one
+class AnotherBox(models.Model):
+    _name = 'test.another_box'
+    _inherits = {'test.another_unit': 'another_unit_id'}
+    _description = 'Another Test Box'
+
+    another_unit_id = fields.Many2one('test.another_unit', 'Another Unit',
+                                      required=True, ondelete='cascade')
+    val2 = fields.Integer('Value 2', required=True)
+
+    @api.constrains('val1', 'val2')
+    def _check(self):
+        if self.val1 != self.val2:
+            raise ValidationError("The two values must be equals")

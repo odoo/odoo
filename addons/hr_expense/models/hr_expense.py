@@ -324,7 +324,7 @@ class HrExpense(models.Model):
                     'credit': -amount if amount < 0 else 0,
                     'amount_currency': amount_currency if different_currency else 0.0,
                     'account_id': tax['account_id'] or move_line_src['account_id'],
-                    'tax_line_id': tax['id'],
+                    'tax_repartition_line_id': tax['tax_repartition_line_id'],
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id if different_currency else False,
@@ -369,7 +369,7 @@ class HrExpense(models.Model):
             # get move line values
             move_line_values = move_line_values_by_expense.get(expense.id)
             move_line_dst = move_line_values[-1]
-            total_amount = abs(move_line_dst['debit'])
+            total_amount = move_line_dst['debit'] or -move_line_dst['credit']
             total_amount_currency = move_line_dst['amount_currency']
 
             # create one more move line, a counterline for the total on payable account

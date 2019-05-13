@@ -40,6 +40,7 @@ configuration of their taxes and fiscal positions manually.
         'data/account_chart_template_data.xml',
         'views/l10n_fr_view.xml',
         'data/account_data.xml',
+        'data/tax_report_data.xml',
         'data/account_tax_data.xml',
         'data/res_country_data.xml',
         'data/account_fiscal_position_template_data.xml',

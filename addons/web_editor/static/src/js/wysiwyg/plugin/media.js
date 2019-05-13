@@ -43,6 +43,8 @@ var MediaPlugin = AbstractPlugin.extend({
         'dblclick .note-editable': '_onDblclick',
     },
 
+    mousePosition: {},
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -114,12 +116,12 @@ var MediaPlugin = AbstractPlugin.extend({
         this.context.invoke('editor.saveTarget', target);
 
         var $target = $(target);
-        if (!$target.data('show_tooltip')) {
+        if (!$target.data('show_tooltip') && this.context.options.tooltip) {
             $target.data('show_tooltip', true);
             setTimeout(function () {
                 $target.tooltip({
                     title: _t('Double-click to edit'),
-                    trigger: 'manuel',
+                    trigger: 'manual',
                     container: this.document.body,
                 }).tooltip('show');
                 setTimeout(function () {

@@ -5,8 +5,7 @@
         <field name="res_model">account.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="context" eval="{'default_journal_user': 1, 'default_type': 'cash'}"/>
-        <field name="domain">[('journal_user','=', 1)]</field>
+        <field name="context" eval="{'search_default_available_in_pos': True, 'default_journal_user': True, 'default_type': 'cash'}"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new payment method

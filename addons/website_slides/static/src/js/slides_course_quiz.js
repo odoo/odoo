@@ -106,7 +106,12 @@ odoo.define('website_slides.quiz', function (require) {
                     'slide_id': self.slide.id,
                 }
             }).then(function (quiz_data) {
-                self.quiz = quiz_data;
+                self.quiz = {
+                    questions: quiz_data.slide_questions,
+                    quizAttemptsCount: quiz_data.quiz_attempts_count,
+                    quizKarmaGain: quiz_data.quiz_karma_gain,
+                    quizKarmaWon: quiz_data.quiz_karma_won
+                };
             });
         },
 
@@ -219,6 +224,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param OdooEvent ev
          */
         _onAnswerClick: function (ev) {
+            ev.preventDefault();
             if (! this.slide.readonly && ! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }

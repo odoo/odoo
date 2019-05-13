@@ -41,7 +41,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
-from odoo import http
+from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
@@ -968,8 +968,7 @@ class View(http.Controller):
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):
-        addons_path = http.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
+        return tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb').read()
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
@@ -999,6 +998,15 @@ class Binary(http.Controller):
             response.set_cookie('fileToken', token)
         return response
 
+    @http.route(['/web/partner_image',
+        '/web/partner_image/<int:rec_id>',
+        '/web/partner_image/<int:rec_id>/<string:field>',
+        '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
+    def content_image_partner(self, rec_id, field='image_small', model='res.partner', **kwargs):
+        # other kwargs are ignored on purpose
+        return self._content_image(id=rec_id, model='res.partner', field=field,
+            placeholder='user_placeholder.jpg')
+
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
@@ -1019,7 +1027,16 @@ class Binary(http.Controller):
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None,
-                      placeholder='placeholder.png', **kwargs):
+                      **kwargs):
+        # other kwargs are ignored on purpose
+        return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
+            filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
+            download=download, width=width, height=height, crop=crop, access_token=access_token)
+
+    def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                       download=None, width=0, height=0, crop=False, access_token=None,
+                       placeholder='placeholder.png', **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,

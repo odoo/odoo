@@ -32,5 +32,15 @@
         <field name="amount_type">percentage</field>
         <field name="amount">100</field>
         <field name="label">Virements internes</field>
+        <field name="to_check" eval="False"/>
+    </record>
+    <record id="compte_attente_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="account_id" ref="a4990"/>
+        <field name="name">Compte Attente</field>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label"></field>
+        <field name="to_check" eval="True"/>
     </record>
 </odoo>

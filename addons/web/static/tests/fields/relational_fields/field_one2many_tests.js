@@ -3428,11 +3428,6 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
             await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(1));
             await testUtils.dom.click($('.day:contains(22)'));
-            // trigger the blur of input before the click on Save, to closely mock what actually
-            // happens when we really click on Save
-            // this is required to close the datepicker before removing the input from the DOM
-            // (because of the re-rendering in readonly), otherwise tempusdominus crashes
-            await testUtils.dom.triggerEvents(form.$('.o_datepicker_input'), 'blur');
             await testUtils.form.clickSave(form);
 
             assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
@@ -8340,6 +8335,65 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').text(), 'blipkawayop');
 
             await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many editable list: edit and click on add a line', async function (assert) {
+            assert.expect(9);
+
+            this.data.turtle.onchanges = {
+                turtle_int: function () {},
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom"><field name="turtle_int"/></tree>' +
+                        '</field>' +
+                    '</form>',
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === 'onchange') {
+                        assert.step('onchange');
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                // in this test, we want to to accurately mock what really happens, that is, input
+                // fields only trigger their changes on 'change' event, not on 'input'
+                fieldDebounce: 100000,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+
+            // edit first row
+            await testUtils.dom.click(form.$('.o_data_row:first .o_data_cell:first'));
+            assert.hasClass(form.$('.o_data_row:first'), 'o_selected_row');
+            await testUtils.fields.editInput(form.$('.o_selected_row input[name=turtle_int]'), '44');
+
+            assert.verifySteps([]);
+            // simulate a long click on 'Add a line' (mousedown [delay] mouseup and click events)
+            var $addLine = form.$('.o_field_x2many_list_row_add a');
+            testUtils.dom.triggerEvents($addLine, 'mousedown');
+            // mousedown is supposed to trigger the change event on the edited input, but it doesn't
+            // in the test environment, for an unknown reason, so we trigger it manually to reproduce
+            // what really happens
+            testUtils.dom.triggerEvents(form.$('.o_selected_row input[name=turtle_int]'), 'change');
+            await testUtils.nextTick();
+
+            // release the click
+            await testUtils.dom.triggerEvents($addLine, ['mouseup', 'click']);
+            assert.verifySteps(['onchange', 'onchange']);
+
+            assert.containsN(form, '.o_data_row', 2);
+            assert.strictEqual(form.$('.o_data_row:first').text(), '44');
+            assert.hasClass(form.$('.o_data_row:nth(1)'), 'o_selected_row');
 
             form.destroy();
         });

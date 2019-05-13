@@ -220,8 +220,9 @@ img.o_forum_avatar_big {
 }
 
 .o_wforum_elearning_navtabs_container {
-    height: $owprofile-tabs-height;
-    background-color: #66445e;
+    @include media-breakpoint-up(md) {
+        background-color: theme-color('secondary');
+    }
 }
 
 .website_forum {

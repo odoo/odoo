@@ -2,11 +2,10 @@ import json
 from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
-
 from odoo import models, api, _, fields
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date as odoo_format_date
 import random
 
 class account_journal(models.Model):
@@ -23,8 +22,41 @@ class account_journal(models.Model):
         elif (self.type in ['cash', 'bank']):
             self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
+    def _get_json_activity_data(self):
+        for journal in self:
+            activities = []
+            # search activity on move on the journal
+            sql_query = '''
+                SELECT act.id,
+                    act.res_id,
+                    act.res_model,
+                    act.summary,
+                    act_type.name as act_type_name,
+                    act_type.category as activity_category,
+                    act.date_deadline,
+                    CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
+                FROM account_move m
+                    LEFT JOIN mail_activity act ON act.res_id = m.id
+                    LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
+                WHERE act.res_model = 'account.move'
+                    AND m.journal_id = %s
+            '''
+            self.env.cr.execute(sql_query, (journal.id,))
+            for activity in self.env.cr.dictfetchall():
+                activities.append({
+                    'id': activity.get('id'),
+                    'res_id': activity.get('res_id'),
+                    'res_model': activity.get('res_model'),
+                    'status': activity.get('status'),
+                    'name': activity.get('summary') or activity.get('act_type_name'),
+                    'activity_category': activity.get('activity_category'),
+                    'date': odoo_format_date(self.env, activity.get('date_deadline'))
+                })
+            journal.json_activity_data = json.dumps({'activities': activities})
+
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
 
@@ -215,6 +247,10 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount'], 'journal_id', lazy=False)
+            if read:
+                number_to_check = read[0]['__count']
+                to_check_balance = read[0]['amount']
 
         difference = currency.round(last_balance-account_sum) + 0.0
 

@@ -732,6 +732,37 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('Filter with JSON-parsable domain works', async function (assert) {
+        assert.expect(1);
+
+        var domain = [['foo' ,'=', 'Gently Weeps']];
+        var xml_domain = JSON.stringify(domain);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, domain,
+                        'A JSON parsable xml domain should be handled just like any other');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<filter string="Foo" name="gently_weeps" domain="' + _.escape(xml_domain) + '" />' +
+            '</search>';
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {search_default_gently_weeps: true};
+
+        await actionManager.doAction(1);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', async function (assert) {
@@ -1249,7 +1280,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('Customizing filter does not close the filter dropdown', async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1273,6 +1304,13 @@ QUnit.module('Search View', {
                 'partner,false,search': '<search><field name="date_field"/></search>',
             },
             res_id: 1,
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.strictEqual(data.filter.name, 'Fire on the bayou');
+                    assert.strictEqual(data.filter.is_default, true);
+                },
+            },
         });
 
         await testUtils.fields.many2one.clickOpenDropdown('bar');
@@ -1296,8 +1334,21 @@ QUnit.module('Search View', {
             $input.click();
             await testUtils.nextTick();
         });
-
         assert.isVisible($filterDropdown);
+
+        // Favorites Menu
+        var $modal = $('.modal');
+        await testUtils.dom.click($modal.find('.o_favorites_menu_button'));
+        await testUtils.dom.click($modal.find('.o_add_favorite'));
+        $modal.find('.o_search_options .dropdown-menu').one('click', function (ev) {
+            // This handler is on the webClient
+            // But since the test suite doesn't have one
+            // We manually set it here
+            ev.stopPropagation();
+        });
+        await testUtils.fields.editInput($modal.find('div.o_favorite_name input'), 'Fire on the bayou');
+        await testUtils.dom.click($modal.find('.o_add_favorite ~ div label:contains(Use by default)'));
+        await testUtils.dom.click($modal.find('.o_save_favorite button'));
 
         form.destroy();
     });

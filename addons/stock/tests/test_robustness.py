@@ -2,20 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestRobustness(TransactionCase):
-    def setUp(self):
-        super(TestRobustness, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
-        self.product1 = self.env['product.product'].create({
+class TestRobustness(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestRobustness, cls).setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
     def test_uom_factor(self):

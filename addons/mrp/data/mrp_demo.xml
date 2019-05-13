@@ -706,7 +706,7 @@
         <function model="mrp.product.produce.line" name="create">
             <value model="mrp.product.produce.line" eval="[dict(item,
                  **{
-                     'product_produce_id': obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).id
+                     'raw_product_produce_id': obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).id
                  }) for item in  obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)])._update_workorder_lines()['to_create']]"/>
         </function>
 
@@ -721,6 +721,19 @@
         <function model="mrp.production" name="button_mark_done">
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
+
+        <!-- set 'create component' as True for the demo manufacturing picking type
+        while leaving the default value to False for the others -->
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
+            <value eval="{'manufacture_to_resupply': True}"/>
+        </function>
+
+        <function model="stock.picking.type" name="write">
+            <value model="stock.picking.type" eval="obj().env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).ids"/>
+            <value eval="{'use_create_components_lots': True}"/>
+        </function>
+
 
     </data>
 </odoo>

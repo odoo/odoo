@@ -314,12 +314,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Keyboards            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
         # iPad                 |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
         # Computer Case        |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
-        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  450.00 |  227.78
+        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
         # --------------------------------------------------------------------------------
-        # TOTAL                                              | 2576.77 | 2985.00 |  408.23
+        # TOTAL                                              | 2576.77 | 2946.11 |  369.34
 
-        self.assertEqual(order.amount_total, 2985, "The order total without any programs should be 2985")
+        self.assertEqual(order.amount_total, 2946.11, "The order total without any programs should be 2946.11")
         self.assertEqual(order.amount_untaxed, 2576.77, "The order untaxed total without any programs should be 2576.77")
         self.assertEqual(len(order.order_line.ids), 5, "The order without any programs should have 5 lines")
 
@@ -332,9 +332,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Free Keyboard        |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
         # Free iPad            |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
         # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1940.00 |  345.05
+        # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
 
-        self.assertEqual(order.amount_total, 1940.00, "The order total with programs should be 1940")
+        self.assertEqual(order.amount_total, 1901.11, "The order total with programs should be 1901.11")
         self.assertEqual(order.amount_untaxed, 1594.95, "The order untaxed total with programs should be 1594.95")
         self.assertEqual(len(order.order_line.ids), 8, "Order should contains 5 regular product lines and 3 free product lines")
 
@@ -346,22 +346,22 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # 10% on tax 10% incl  |  1  |    -30.00  | 10% incl | -27.27  | -30.00  |   -2.73
         # 10% on no tax        |  1  |    -50.00  | /        | -50.00  | -50.00  |       /
         # 10% on tax 15% excl  |  1  |    -40.00  | 15% excl | -60.00  | -69.00  |   -9.00
-        # 10% on tax 35%+50%   |  1  |    -30.00  | 35% incl | -22.22  | -45.00  |  -22.78
+        # 10% on tax 35%+50%   |  1  |    -30.00  | 35% incl | -22.22  | -45.00  |  -18.89
         #                                           50% excl
         # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING 10% GLOBAL PROGRAM            | 1435.46 | 1746.00 | -310.55
+        # TOTAL AFTER APPLYING 10% GLOBAL PROGRAM            | 1435.46 | 1711.00 | 275.54
 
-        self.assertEqual(order.amount_total, 1746, "The order total with programs should be 1746")
+        self.assertEqual(order.amount_total, 1711, "The order total with programs should be 1711")
         self.assertEqual(order.amount_untaxed, 1435.46, "The order untaxed total with programs should be 1435.46")
         self.assertEqual(len(order.order_line.ids), 12, "Order should contains 5 regular product lines, 3 free product lines and 4 discount lines (one for every tax)")
 
         # -- This is a test inside the test
         order.order_line._compute_tax_id()
-        self.assertEqual(order.amount_total, 1746, "Recomputing tax on sale order lines should not change total amount")
+        self.assertEqual(order.amount_total, 1711, "Recomputing tax on sale order lines should not change total amount")
         self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         order.recompute_coupon_lines()
-        self.assertEqual(order.amount_total, 1746, "Recomputing tax on sale order lines should not change total amount")
+        self.assertEqual(order.amount_total, 1711, "Recomputing tax on sale order lines should not change total amount")
         self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         # -- End test inside the test
@@ -384,9 +384,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # --------------------------------------------------------------------------------
         # 20% on iPad          |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING 20% ON IPAD                   | 1355.45 | 1654.00 | -298.55
+        # TOTAL AFTER APPLYING 20% ON IPAD                   | 1355.45 | 1619.00 | 263.54
 
-        self.assertEqual(order.amount_total, 1654, "The order total with programs should be 1654")
+        self.assertEqual(order.amount_total, 1619, "The order total with programs should be 1619")
         self.assertEqual(order.amount_untaxed, 1355.46, "The order untaxed total with programs should be 1435.45")
         self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on iPad")
 
@@ -427,14 +427,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Keyboards            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
         # iPad                 |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
         # Computer Case        |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
-        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  450.00 |  227.78
+        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
         # Free Keyboard        |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
         # Free iPad            |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
         # 20% on iPad          |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1242.22 | 1548.00 |  305.78
-        self.assertEqual(order.amount_total, 1548, "The order total with programs should be 1548")
+        # TOTAL                                              | 1242.22 | 1509.11 |  266.89
+        self.assertEqual(order.amount_total, 1509.11, "The order total with programs should be 1509.11")
         self.assertEqual(order.amount_untaxed, 1242.22, "The order untaxed total with programs should be 1242.22")
         self.assertEqual(len(order.order_line.ids), 7, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
 

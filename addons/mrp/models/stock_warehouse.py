@@ -164,24 +164,25 @@ class StockWarehouse(models.Model):
         })
         return rules
 
-    def _get_locations_values(self, vals):
-        values = super(StockWarehouse, self)._get_locations_values(vals)
+    def _get_locations_values(self, vals, code=False):
+        values = super(StockWarehouse, self)._get_locations_values(vals, code=code)
         def_values = self.default_get(['manufacture_steps'])
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
-        code = vals.get('code') or self.code
+        code = vals.get('code') or code
         code = code.replace(' ', '').upper()
+        company_id = vals.get('company_id', self.company_id.id)
         values.update({
             'pbm_loc_id': {
                 'name': _('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
-                'barcode': code + '-PREPRODUCTION'
+                'barcode': self._valid_barcode(code + '-PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
                 'name': _('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
-                'barcode': code + '-POSTPRODUCTION'
+                'barcode': self._valid_barcode(code + '-POSTPRODUCTION', company_id)
             },
         })
         return values
