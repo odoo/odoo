@@ -8,31 +8,65 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class AccountCashboxLine(models.Model):
-    _inherit = 'account.cashbox.line'
-
-    default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
-
-    def name_get(self):
-        result = []
-        for cashbox_line in self:
-            result.append((cashbox_line.id, "%s * %s"%(cashbox_line.coin_value, cashbox_line.number)))
-        return result
-
 class AccountBankStmtCashWizard(models.Model):
     _inherit = 'account.bank.statement.cashbox'
+
+    @api.depends('pos_config_ids')
+    def _compute_currency(self):
+        super(AccountBankStmtCashWizard, self)._compute_currency()
+        for cashbox in self:
+            if cashbox.pos_config_ids:
+                cashbox.currency_id = cashbox.pos_config_ids[0].currency_id.id
+
+    pos_config_ids = fields.One2many('pos.config', 'default_cashbox_id')
+    is_a_template = fields.Boolean(default=False)
 
     @api.model
     def default_get(self, fields):
         vals = super(AccountBankStmtCashWizard, self).default_get(fields)
+        if "is_a_template" in fields and self.env.context.get('default_is_a_template'):
+            vals['is_a_template'] = True
         config_id = self.env.context.get('default_pos_id')
         if config_id:
-            lines = self.env['account.cashbox.line'].search([('default_pos_id', '=', config_id)])
+            config = self.env['pos.config'].browse(config_id)
+            if config.last_session_closing_cashbox.cashbox_lines_ids:
+                lines = config.last_session_closing_cashbox.cashbox_lines_ids
+            else:
+                lines = config.default_cashbox_id.cashbox_lines_ids
             if self.env.context.get('balance', False) == 'start':
                 vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
             else:
                 vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
         return vals
+
+    def _validate_cashbox(self):
+        super(AccountBankStmtCashWizard, self)._validate_cashbox()
+        session_id = self.env.context.get('pos_session_id')
+        if session_id:
+            current_session = self.env['pos.session'].browse(session_id)
+            if current_session.state == 'new_session':
+                current_session.write({'state': 'opening_control'})
+
+    def set_default_cashbox(self):
+        self.ensure_one()
+        current_session = self.env['pos.session'].browse(self.env.context['pos_session_id'])
+        lines = current_session.config_id.default_cashbox_id.cashbox_lines_ids
+        context = dict(self._context)
+        self.cashbox_lines_ids.unlink()
+        self.cashbox_lines_ids = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+
+        return {
+            'name': _('Cash Control'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.bank.statement.cashbox',
+            'view_id': self.env.ref('point_of_sale.view_account_bnk_stmt_cashbox_footer').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new',
+            'res_id': self.id,
+        }
+
 
 class PosConfig(models.Model):
     _name = 'pos.config'
@@ -128,6 +162,7 @@ class PosConfig(models.Model):
     current_session_state = fields.Char(compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
+    last_session_closing_cashbox = fields.Many2one('account.bank.statement.cashbox', compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
@@ -150,7 +185,7 @@ class PosConfig(models.Model):
         help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
-    default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
+    default_cashbox_id = fields.Many2one('account.bank.statement.cashbox', string='Default Balance')
     customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
@@ -194,11 +229,16 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = PosSession.search_read(
                 [('config_id', '=', pos_config.id), ('state', '=', 'closed')],
-                ['cash_register_balance_end_real', 'stop_at'],
+                ['cash_register_balance_end_real', 'stop_at', 'cash_register_id'],
                 order="stop_at desc", limit=1)
             if session:
-                pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
                 pos_config.last_session_closing_date = session[0]['stop_at'].date()
+                if session[0]['cash_register_id']:
+                    pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
+                    pos_config.last_session_closing_cashbox = self.env['account.bank.statement'].browse(session[0]['cash_register_id'][0]).cashbox_end_id
+                else:
+                    pos_config.last_session_closing_cash = 0
+                    pos_config.last_session_closing_cashbox = False
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
@@ -217,6 +257,12 @@ class PosConfig(models.Model):
                 pos_config.pos_session_username = False
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
+
+    @api.constrains('cash_control')
+    def _check_session_state(self):
+        open_session = self.env['pos.session'].search([('config_id', '=', self.id), ('state', '!=', 'closed')])
+        if open_session:
+            raise ValidationError(_("You are not allowed to change the cash control status while a session is already opened."))
 
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
