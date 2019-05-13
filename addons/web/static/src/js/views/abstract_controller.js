@@ -495,7 +495,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 additional_context: _.extend({}, data.context)
             });
         }
-        return false;
     },
     /**
      * FIXME: this logic should be rethought

@@ -4,10 +4,7 @@
     <!-- survey assets  -->
     <template id="survey_assets" name="Survey Results assets">
         <script src="/web/static/lib/Chart/Chart.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
-        <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
-        <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
-        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+
         <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
 
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
@@ -18,6 +15,16 @@
         <script type="text/javascript" src="/survey/static/src/js/tour_test_certification_failure.js"></script>
         <script type="text/javascript" src="/survey/static/src/js/tour_test_survey_prefill.js"></script>
 
+        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+    </template>
+
+    <template id="survey_web_assets" name="Survey Web Assets">
+        <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+
         <t t-call="web._assets_helpers">
             <t t-call="web._assets_frontend_helpers"/>
         </t>
@@ -25,8 +32,6 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
         <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/scss/web_editor.common.scss"/>
-        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
-        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
         <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_templates.scss"/>
     </template>
 

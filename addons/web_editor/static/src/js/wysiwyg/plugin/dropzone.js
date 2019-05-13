@@ -19,6 +19,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
     attachDragAndDropEvent: function () {
         this._super.apply(this, arguments);
         this.$dropzone.off('drop');
+        this.$dropzone.on('dragenter', this._onDragenter.bind(this));
         this.$dropzone.on('drop', this._onDrop.bind(this));
     },
 
@@ -71,7 +72,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
                 if (range.so >= dom.nodeLength(range.sc)) {
                     $(range.sc).append(spinner);
                 } else {
-                    $(range.sc).before(range.sc.childNodes[range.so]);
+                    $(range.sc.childNodes[range.so]).before(spinner);
                 }
             } else {
                 range.sc.splitText(range.so);
@@ -151,7 +152,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
             route: '/web_editor/add_image_base64',
             params: {
                 res_model: options.res_model,
-                res_id: options.res_id,
+                res_id: options.res_id || 0,
                 image_base64: imageBase64.split(';base64,').pop(),
                 filename: fileName,
             },
@@ -161,8 +162,25 @@ var DropzonePlugin = Plugins.dropzone.extend({
      * @private
      * @param {JQueryEvent} e
      */
+    _onDragenter: function (e) {
+        var range = this.context.invoke('editor.createRange');
+        if (!this.editable.contains(range.sc)) {
+            var node = this.editable;
+            if (node && node.firstChild) {
+                node = node.firstChild;
+            }
+            range = this.context.invoke('editor.setRange', node, 0, node, 0);
+            range.select();
+        }
+    },
+    /**
+     * @private
+     * @param {JQueryEvent} e
+     */
     _onDrop: function (e) {
         e.preventDefault();
+
+        this.$editor.removeClass('dragover');
 
         if (this.options.disableDragAndDrop) {
             return;

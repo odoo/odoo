@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    portal_confirmation_sign = fields.Boolean(string='Online Signature')
+    portal_confirmation_sign = fields.Boolean(string='Online Signature', default=True)
     portal_confirmation_pay = fields.Boolean(string='Online Payment')
     quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 

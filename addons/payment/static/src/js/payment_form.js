@@ -122,6 +122,18 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         }
     },
 
+    disableButton: function (button) {
+        $(button).attr('disabled', true);
+        $(button).children('.fa-lock').removeClass('fa-lock');
+        $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
+    },
+
+    enableButton: function (button) {
+        $(button).attr('disabled', false);
+        $(button).children('.fa').addClass('fa-lock');
+        $(button).find('span.o_loader').remove();
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -184,10 +196,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     return;
                 }
 
-                $(button).attr('disabled', true);
-                $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
-                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
-
+                this.disableButton(button);
                 var verify_validity = this.$el.find('input[name="verify_validity"]');
 
                 if (verify_validity.length>0) {
@@ -225,14 +234,10 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         }
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
-                    $(button).attr('disabled', false);
-                    $(button).children('.fa').addClass('fa-plus-circle');
-                    $(button).find('span.o_loader').remove();
+                    self.enableButton(button);
                 }).guardedCatch(function (error) {
                     // if the rpc fails, pretty obvious
-                    $(button).attr('disabled', false);
-                    $(button).children('.fa').addClass('fa-plus-circle');
-                    $(button).find('span.o_loader').remove();
+                    self.enableButton(button);
 
                     self.displayError(
                         _t('Server Error'),
@@ -300,6 +305,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 }
             }
             else {  // if the user is using an old payment then we just submit the form
+                this.disableButton(button);
                 form.submit();
                 return new Promise(function () {});
             }

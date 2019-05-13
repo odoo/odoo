@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -179,33 +180,45 @@ class Product(models.Model):
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
-        location_ids = []
-        if self.env.context.get('location', False):
-            if isinstance(self.env.context['location'], int):
-                location_ids = [self.env.context['location']]
-            elif isinstance(self.env.context['location'], str):
-                domain = [('complete_name', 'ilike', self.env.context['location'])]
-                if self.env.context.get('force_company', False):
-                    domain += [('company_id', '=', self.env.context['force_company'])]
-                location_ids = self.env['stock.location'].search(domain).ids
-            else:
-                location_ids = self.env.context['location']
-        else:
-            if self.env.context.get('warehouse', False):
-                if isinstance(self.env.context['warehouse'], int):
-                    wids = [self.env.context['warehouse']]
-                elif isinstance(self.env.context['warehouse'], str):
-                    domain = [('name', 'ilike', self.env.context['warehouse'])]
-                    if self.env.context.get('force_company', False):
-                        domain += [('company_id', '=', self.env.context['force_company'])]
-                    wids = Warehouse.search(domain).ids
-                else:
-                    wids = self.env.context['warehouse']
-            else:
-                wids = Warehouse.search([]).ids
 
-            for w in Warehouse.browse(wids):
-                location_ids.append(w.view_location_id.id)
+        def _search_ids(model, values, force_company_id):
+            ids = set()
+            domain = []
+            for item in values:
+                if isinstance(item, int):
+                    ids.add(item)
+                else:
+                    domain = expression.OR([[('name', 'ilike', item)], domain])
+            if force_company_id:
+                domain = expression.AND([[('company_id', '=', force_company_id)], domain])
+            if domain:
+                ids |= set(self.env[model].search(domain).ids)
+            return ids
+
+        # We may receive a location or warehouse from the context, either by explicit
+        # python code or by the use of dummy fields in the search view.
+        # Normalize them into a list.
+        location = self.env.context.get('location')
+        if location and not isinstance(location, list):
+            location = [location]
+        warehouse = self.env.context.get('warehouse')
+        if warehouse and not isinstance(warehouse, list):
+            warehouse = [warehouse]
+        force_company = self.env.context.get('force_company', False)
+        # filter by location and/or warehouse
+        if warehouse:
+            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse, force_company)).mapped('view_location_id').ids)
+            if location:
+                l_ids = _search_ids('stock.location', location, force_company)
+                location_ids = w_ids & l_ids
+            else:
+                location_ids = w_ids
+        else:
+            if location:
+                location_ids = _search_ids('stock.location', location, force_company)
+            else:
+                location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
+
         return self._get_domain_locations_new(location_ids, company_id=self.env.context.get('force_company', False), compute_child=self.env.context.get('compute_child', True))
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
