@@ -45,8 +45,7 @@ class StockRule(models.Model):
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
         ('make_to_order', 'Trigger Another Rule'),
-        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Move Supply Method',
-        default='make_to_stock', required=True,
+        ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Supply Method', default='make_to_stock', required=True,
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
