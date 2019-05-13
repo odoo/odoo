@@ -8,7 +8,7 @@
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
 
         <t t-call="web._assets_frontend_helpers"/>
@@ -19,6 +19,12 @@
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/scss/web_editor.common.scss"/>
         <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+    </template>
+
+    <template id="assets_common" name="tour" inherit_id="web.assets_common">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+        </xpath>
     </template>
 
     <!-- Forbidden error messages-->
