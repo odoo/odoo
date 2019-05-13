@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestPacking(TransactionCase):
+class TestPacking(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestPacking, cls).setUpClass()
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
+        cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})
+        cls.pack_location = cls.warehouse.wh_pack_stock_loc_id
+        cls.ship_location = cls.warehouse.wh_output_stock_loc_id
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
 
-    def setUp(self):
-        super(TestPacking, self).setUp()
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.warehouse = self.env['stock.warehouse'].search([('lot_stock_id', '=', self.stock_location.id)], limit=1)
-        self.warehouse.write({'delivery_steps': 'pick_pack_ship'})
-        self.pack_location = self.warehouse.wh_pack_stock_loc_id
-        self.ship_location = self.warehouse.wh_output_stock_loc_id
-        self.customer_location = self.env.ref('stock.stock_location_customers')
-
-        self.productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
-        self.productB = self.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+        cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that

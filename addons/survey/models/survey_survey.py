@@ -239,7 +239,8 @@ class Survey(models.Model):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
         if test_entry:
-            if not user.has_group('survey.group_survey_manager') or not user.has_group('survey.group_survey_user'):
+            # the current user must have the access rights to survey
+            if not user.has_group('survey.group_survey_user'):
                 raise UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:

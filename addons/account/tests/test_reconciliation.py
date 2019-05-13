@@ -98,10 +98,33 @@ class TestReconciliation(AccountingTestCase):
             'type_tax_use': 'purchase',
             'company_id': company.id,
             'amount': 20,
-            'account_id': self.tax_waiting_account.id,
             'tax_exigibility': 'on_payment',
-            'cash_basis_account_id': self.tax_final_account.id,
+            'cash_basis_transition_account_id': self.tax_waiting_account.id,
             'cash_basis_base_account_id': self.tax_base_amount_account.id,
+            'invoice_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': self.tax_final_account.id,
+                    }),
+                ],
+            'refund_repartition_line_ids': [
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                    }),
+
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': self.tax_final_account.id,
+                    }),
+                ],
         })
 
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
@@ -227,7 +250,7 @@ class TestReconciliationExec(TestReconciliation):
             {'debit': 10.74,    'credit': 0.0,      'account_id': self.diff_expense_account.id},
             {'debit': 0.0,      'credit': 10.74,    'account_id': self.account_rcv.id},
         ])
-        
+
         self.assertRecordValues(supplier_move_lines, [
             {'debit': 0.0,      'credit': 27.47,    'amount_currency': -42, 'currency_id': self.currency_usd_id},
             {'debit': 27.47,    'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_swiss_id},
@@ -249,7 +272,7 @@ class TestReconciliationExec(TestReconciliation):
             {'debit': 0.0,      'credit': 7.30,     'account_id': self.diff_income_account.id},
             {'debit': 7.30,     'credit': 0.0,      'account_id': self.account_rcv.id},
         ])
-        
+
         self.assertRecordValues(supplier_move_lines, [
             {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
@@ -643,12 +666,12 @@ class TestReconciliationExec(TestReconciliation):
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01', 
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01',
             'rate': 0.75,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01', 
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01',
             'rate': 0.80,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
@@ -1280,7 +1303,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': self.tax_waiting_account.id,
             'debit': 16.67,
             'move_id': purchase_move.id,
-            'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_move.post()
 
@@ -1398,7 +1421,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': tax_waiting_account10.id,
             'debit': 5,
             'move_id': purchase_move.id,
-            'tax_line_id': tax_cash_basis10percent.id,
+            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         AccountMoveLine.create({
             'name': 'expenseTaxed 20%',
@@ -1412,7 +1435,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': self.tax_waiting_account.id,
             'debit': 16.67,
             'move_id': purchase_move.id,
-            'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_move.post()
 
@@ -1520,18 +1543,18 @@ class TestReconciliationExec(TestReconciliation):
                 expected['tax_10']
             )
             index += 1
-            
+
     def test_reconciliation_to_check(self):
         partner = self.env['res.partner'].create({'name': 'UncertainPartner'})
         currency = self.env.company_id.currency_id
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
         journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'update_posted':True})
-        
+
         statement = self.make_payment(invoice, journal, 50)
         st_line = statement.line_ids
         previous_move_lines = st_line.journal_entry_ids.ids
         previous_name = st_line.move_name
-        
+
         with self.assertRaises(UserError): #you need edition mode to be able to change it
             st_line.with_context(edition_mode=False).process_reconciliation(
                 counterpart_aml_dicts=[],
@@ -1542,7 +1565,7 @@ class TestReconciliationExec(TestReconciliation):
                   'account_id': self.diff_income_account.id
                 }],
             )
-            
+
         st_line.with_context(edition_mode=True).process_reconciliation(
             counterpart_aml_dicts=[],
             new_aml_dicts = [{
@@ -1620,9 +1643,9 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': self.tax_waiting_account.id,
             'debit': 17094.66,
             'move_id': purchase_move.id,
-            'tax_line_id': self.tax_cash_basis.id,
             'currency_id': self.currency_usd_id,
             'amount_currency': 848.16,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_payable_line0 = aml_obj.create({
             'name': 'Payable',
@@ -1697,8 +1720,7 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEqual(len(cash_basis_aml_ids), 4)
 
         # check amounts
-        cash_basis_move1 = cash_basis_moves.filtered(
-            lambda m: m.amount == 123936.31)
+        cash_basis_move1 = cash_basis_moves.filtered(lambda m: m.currency_id.is_zero(sum(line.credit for line in m.line_ids) - 123936.31))
 
         self.assertTrue(cash_basis_move1.exists())
 
@@ -1793,7 +1815,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': self.tax_waiting_account.id,
             'debit': 17094.66,
             'move_id': purchase_move.id,
-            'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
             'currency_id': self.currency_usd_id,
             'amount_currency': 848.16,
         })
@@ -1893,8 +1915,7 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEqual(len(cash_basis_aml_ids), 4)
 
         # check amounts
-        cash_basis_move1 = cash_basis_moves.filtered(
-            lambda m: m.amount == 123936.31)
+        cash_basis_move1 = cash_basis_moves.filtered(lambda m: m.currency_id.is_zero(sum(line.credit for line in m.line_ids) - 123936.31))
 
         self.assertTrue(cash_basis_move1.exists())
 
@@ -1953,7 +1974,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': tax_waiting_account10.id,
             'debit': 5,
             'move_id': purchase_move.id,
-            'tax_line_id': tax_cash_basis10percent.id,
+            'tax_repartition_line_id': tax_cash_basis10percent.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         AccountMoveLine.create({
             'name': 'expenseTaxed 20%',
@@ -1967,7 +1988,7 @@ class TestReconciliationExec(TestReconciliation):
             'account_id': self.tax_waiting_account.id,
             'debit': 20,
             'move_id': purchase_move.id,
-            'tax_line_id': self.tax_cash_basis.id,
+            'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
         })
         purchase_move.post()
 

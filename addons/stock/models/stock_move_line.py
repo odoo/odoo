@@ -16,12 +16,12 @@ class StockMoveLine(models.Model):
     _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
-        'stock.picking', 'Stock Picking',
+        'stock.picking', 'Stock Picking', auto_join=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
         help="Change to a better name", index=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company_id, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', related='move_id.company_id', store=True, readonly=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -75,12 +75,6 @@ class StockMoveLine(models.Model):
         for line in self:
             if line.lot_id and line.product_id != line.lot_id.product_id:
                 raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
-
-    @api.constrains('company_id', 'move_id')
-    def _check_same_company_id(self):
-        for line in self:
-            if line.move_id and line.move_id.company_id != line.company_id:
-                raise ValidationError(_('The move line a a different company than its move'))
 
     @api.one
     def _set_product_qty(self):

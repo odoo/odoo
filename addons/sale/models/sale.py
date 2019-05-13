@@ -507,6 +507,9 @@ class SaleOrder(models.Model):
         invoices_origin = {}
         invoices_name = {}
 
+        # Keep track of the sequences of the lines
+        # To keep lines under their section
+        inv_line_sequence = 0
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
 
@@ -515,6 +518,7 @@ class SaleOrder(models.Model):
 
             # Create lines in batch to avoid performance problems
             line_vals_list = []
+            # sequence is the natural order of order_lines
             for line in order.order_line:
                 if line.display_type == 'line_section':
                     pending_section = line
@@ -536,14 +540,21 @@ class SaleOrder(models.Model):
 
                 if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
                     if pending_section:
-                        line_vals_list.extend(pending_section.invoice_line_create_vals(
+                        section_invoice = pending_section.invoice_line_create_vals(
                             invoices[group_key].id,
                             pending_section.qty_to_invoice
-                        ))
+                        )
+                        inv_line_sequence += 1
+                        section_invoice[0]['sequence'] = inv_line_sequence
+                        line_vals_list.extend(section_invoice)
                         pending_section = None
-                    line_vals_list.extend(line.invoice_line_create_vals(
+
+                    inv_line_sequence += 1
+                    inv_line = line.invoice_line_create_vals(
                         invoices[group_key].id, line.qty_to_invoice
-                    ))
+                    )
+                    inv_line[0]['sequence'] = inv_line_sequence
+                    line_vals_list.extend(inv_line)
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
@@ -578,7 +589,9 @@ class SaleOrder(models.Model):
             invoice.compute_taxes()
             # Idem for partner
             so_payment_term_id = invoice.payment_term_id.id
+            fp_invoice = invoice.fiscal_position_id
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = fp_invoice
             # To keep the payment terms set on the SO
             invoice.payment_term_id = so_payment_term_id
             invoice.message_post_with_view('mail.message_origin_link',
@@ -658,10 +671,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        tx = self.sudo().transaction_ids.get_last_transaction()
-        if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
-            tx._set_transaction_done()
-            tx.write({'is_processed': True})
+        for order in self:
+            tx = order.sudo().transaction_ids.get_last_transaction()
+            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+                tx._set_transaction_done()
+                tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     @api.multi
@@ -1103,7 +1117,7 @@ class SaleOrderLine(models.Model):
         result = super(SaleOrderLine, self).write(values)
         return result
 
-    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False, readonly=True)
+    order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
 
@@ -1563,7 +1577,7 @@ class SaleOrderLine(models.Model):
             if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id, self.order_id.date_order)
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id or self.env.user.company_id, self.order_id.date_order or fields.Date.today())
 
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:

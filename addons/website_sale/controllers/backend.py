@@ -17,6 +17,13 @@ class WebsiteSaleBackend(WebsiteBackend):
         current_website = website_id and Website.browse(website_id) or Website.get_current_website()
 
         results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
+
+        date_date_from = fields.Date.from_string(date_from)
+        date_date_to = fields.Date.from_string(date_to)
+        date_diff_days = (date_date_to - date_date_from).days
+        datetime_from = datetime.combine(date_date_from, time.min)
+        datetime_to = datetime.combine(date_date_to, time.max)
+
         sales_values = dict(
             graph=[],
             best_sellers=[],
@@ -29,16 +36,10 @@ class WebsiteSaleBackend(WebsiteBackend):
         )
         results['dashboards']['sales'] = sales_values
 
-        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(date_from, date_to)
+        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
         if not results['groups']['sale_salesman']:
             return results
-
-        date_date_from = fields.Date.from_string(date_from)
-        date_date_to = fields.Date.from_string(date_to)
-        date_diff_days = (date_date_to - date_date_from).days
-        datetime_from = datetime.combine(date_date_from, time.min)
-        datetime_to = datetime.combine(date_date_to, time.max)
 
         # Product-based computation
         report_product_lines = request.env['sale.report'].read_group(

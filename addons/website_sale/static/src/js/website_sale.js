@@ -459,7 +459,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             false
         );
 
-        productReady.then(function (productId){
+        return productReady.then(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
 
             self.rootProduct = {
@@ -472,12 +472,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
             return self._onProductReady();
         });
-
-        return productReady;
     },
 
     _onProductReady: function () {
-        this._submitForm();
+        return this._submitForm();
     },
 
     /**
@@ -485,6 +483,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * in the form data and trigger submit.
      *
      * @private
+     * @returns {Promise} never resolved
      */
     _submitForm: function () {
         var $productCustomVariantValues = $('<input>', {
@@ -506,6 +505,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         }
 
         this.$form.trigger('submit', [true]);
+
+        return new Promise(function () {});
     },
 
     /**

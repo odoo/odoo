@@ -54,6 +54,7 @@ class TestMrpCommon(common2.TestStockCommon):
         user_group_stock_user = cls.env.ref('stock.group_stock_user')
         user_group_mrp_user = cls.env.ref('mrp.group_mrp_user')
         user_group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')
+        user_group_mrp_byproducts = cls.env.ref('mrp.group_mrp_byproducts')
 
         # Update demo products
         (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7 | cls.product_8).write({
@@ -67,13 +68,21 @@ class TestMrpCommon(common2.TestStockCommon):
             'login': 'hilda',
             'email': 'h.h@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_user.id, user_group_stock_user.id])]})
+            'groups_id': [(6, 0, [
+                user_group_mrp_user.id,
+                user_group_stock_user.id,
+                user_group_mrp_byproducts.id
+            ])]})
         cls.user_mrp_manager = Users.create({
             'name': 'Gary Youngwomen',
             'login': 'gary',
             'email': 'g.g@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_manager.id, user_group_stock_user.id])]})
+            'groups_id': [(6, 0, [
+                user_group_mrp_manager.id,
+                user_group_stock_user.id,
+                user_group_mrp_byproducts.id
+            ])]})
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',

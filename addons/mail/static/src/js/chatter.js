@@ -366,7 +366,7 @@ var Chatter = Widget.extend({
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
         if (this.fields.thread) {
-            this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+            this.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
         }
     },
     /**
