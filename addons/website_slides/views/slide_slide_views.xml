@@ -186,8 +186,8 @@
             <field name="arch" type="xml">
                 <search string="Search Slides">
                     <field name="name"/>
-                    <filter name="published" string="Published" domain="[('website_published', '=', True)]"/>
-                    <filter name="not_published" string="Waiting for validation" domain="[('website_published', '=', False)]"/>
+                    <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
+                    <filter name="not_published" string="Waiting for validation" domain="[('is_published', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
