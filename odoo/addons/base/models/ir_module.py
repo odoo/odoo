@@ -382,7 +382,7 @@ class Module(models.Model):
         #  - at least one dependency is 'to install'
         install_states = frozenset(('installed', 'to install', 'to upgrade'))
         def must_install(module):
-            states = set(dep.state for dep in module.dependencies_id)
+            states = {dep.state for dep in module.dependencies_id if dep.auto_install_required}
             return states <= install_states and 'to install' in states
 
         modules = self
@@ -667,7 +667,7 @@ class Module(models.Model):
             'license': terp.get('license', 'LGPL-3'),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
-            'auto_install': terp.get('auto_install', False),
+            'auto_install': terp.get('auto_install', False) is not False,
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
             'url': terp.get('url') or terp.get('live_test_url', ''),
@@ -707,8 +707,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], str) else values[key]
-                    if (old or updated) and updated != old:
+                    if (old or values[key]) and values[key] != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
@@ -724,7 +723,7 @@ class Module(models.Model):
                 mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
-            mod._update_dependencies(terp.get('depends', []))
+            mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
 
@@ -835,13 +834,15 @@ class Module(models.Model):
     def get_apps_server(self):
         return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
-    def _update_dependencies(self, depends=None):
+    def _update_dependencies(self, depends=None, auto_install_requirements=()):
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
         for dep in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
+        self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
+                         (list(auto_install_requirements or ()), self.id))
         self.invalidate_cache(['dependencies_id'], self.ids)
 
     def _update_exclusions(self, excludes=None):
@@ -912,6 +913,11 @@ class ModuleDependency(models.Model):
     # the module corresponding to the dependency, and its status
     depend_id = fields.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
+
+    auto_install_required = fields.Boolean(
+        default=True,
+        help="Whether this dependency blocks automatic installation "
+             "of the dependent")
 
     @api.multi
     @api.depends('name')

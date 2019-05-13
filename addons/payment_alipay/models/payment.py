@@ -80,13 +80,12 @@ class PaymentAcquirer(models.Model):
     def _get_alipay_tx_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-        tx = self.env['payment.transaction'].search([('reference', '=', values.get('reference'))], limit=1)
         alipay_tx_values = ({
             '_input_charset': 'utf-8',
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
             'out_trade_no': values.get('reference'),
             'partner': self.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url) + '?' + urls.url_encode({'redirect_url': values.get('return_url')}),
+            'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': values.get('reference'),
             'total_fee': values.get('amount') + values.get('fees'),
         })
@@ -213,16 +212,19 @@ class PaymentTransaction(models.Model):
         if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
             _logger.info('Validated Alipay payment for tx %s: set as done' % (self.reference))
             date_validate = fields.Datetime.now()
-            res.update(state='done', date=date_validate)
+            res.update(date=date_validate)
+            self._set_transaction_done()
             self.write(res)
             self.execute_callback()
             return True
         elif status == 'TRADE_CLOSED':
             _logger.info('Received notification for Alipay payment %s: set as Canceled' % (self.reference))
-            res.update(state='cancel', state_message=data.get('close_reason', ''))
+            res.update(state_message=data.get('close_reason', ''))
+            self._set_transaction_cancel()
             return self.write(res)
         else:
             error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
-            res.update(state='error', state_message=error)
+            res.update(state_message=error)
+            self._set_transaction_error()
             return self.write(res)
