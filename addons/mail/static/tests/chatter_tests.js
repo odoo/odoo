@@ -473,7 +473,7 @@ QUnit.test('chatter in create mode', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -540,7 +540,7 @@ QUnit.test('chatter rendering inside the sheet', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -773,7 +773,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'get_mention_suggestions') {
@@ -916,7 +916,7 @@ QUnit.test('chatter: post a message disable the send button', async function(ass
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -963,7 +963,7 @@ QUnit.test('chatter: post message failure keep message', async function(assert) 
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -1109,7 +1109,7 @@ QUnit.test('chatter: post a message and switch in edit mode', async function (as
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -1174,7 +1174,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -1225,7 +1225,7 @@ QUnit.test('chatter: discard changes on message post without post_refresh', asyn
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_format') {
@@ -1303,7 +1303,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: [[42, "Me"]]});
             }
             if (args.method === 'get_mention_suggestions') {
@@ -1399,7 +1399,7 @@ QUnit.test('chatter: discard changes on opening full-composer', async function (
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (route === "/mail/get_suggested_recipients") {
                 return Promise.resolve({2: []});
             }
             return this._super(route, args);
@@ -1580,7 +1580,7 @@ QUnit.test('chatter: keep context when sending a message', async function(assert
             user_context: {lang: 'en_US'},
         },
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'message_post') {
@@ -2569,7 +2569,7 @@ QUnit.test('chatter: suggested partner auto-follow on message post', async funct
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: [
                         [
                             8,
@@ -2743,7 +2743,7 @@ QUnit.test('chatter: mention prefetched partners (followers & employees)', async
                     subtypes: [],
                 });
             }
-            if (args.method === 'message_get_suggested_recipients') {
+            if (route === '/mail/get_suggested_recipients') {
                 return Promise.resolve({2: []});
             }
             if (args.method === 'get_mention_suggestions') {

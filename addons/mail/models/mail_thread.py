@@ -1714,7 +1714,7 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
-        """ Called by message_get_suggested_recipients, to add a suggested
+        """ Called by _message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
                 partner_id, partner_name<partner_email> or partner_name, reason """
         self.ensure_one()
@@ -1738,7 +1738,7 @@ class MailThread(models.AbstractModel):
         return result
 
     @api.multi
-    def message_get_suggested_recipients(self):
+    def _message_get_suggested_recipients(self):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason), to be managed by Chatter. """
         result = dict((res_id, []) for res_id in self.ids)
