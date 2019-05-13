@@ -1416,7 +1416,8 @@ class Form(object):
         if not any(spec[f] for f in fields):
             return
 
-        result = self._model.onchange(self._onchange_values(), fields, spec)
+        record = self._model.browse(self._values.get('id'))
+        result = record.onchange(self._onchange_values(), fields, spec)
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
