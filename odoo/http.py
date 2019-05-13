@@ -974,7 +974,7 @@ class OpenERPSession(sessions.Session):
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
 
-    def authenticate(self, db, login=None, password=None, uid=None):
+    def authenticate(self, db, login=None, password=None):
         """
         Authenticate the current user with the given db, login and
         password. If successful, store the authentication parameters in the
@@ -984,25 +984,24 @@ class OpenERPSession(sessions.Session):
                     to authenticate the user.
         """
 
-        if uid is None:
-            wsgienv = request.httprequest.environ
-            env = dict(
-                base_location=request.httprequest.url_root.rstrip('/'),
-                HTTP_HOST=wsgienv['HTTP_HOST'],
-                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            )
-            uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
-        else:
-            security.check(db, uid, password)
+        wsgienv = request.httprequest.environ
+        env = dict(
+            interactive=True,
+            base_location=request.httprequest.url_root.rstrip('/'),
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+        )
+        uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+
         self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
-        self.session_token = uid and security.compute_session_token(self, request.env)
+        self.session_token = security.compute_session_token(self, request.env)
         request.uid = uid
         request.disable_db = False
 
-        if uid: self.get_context()
+        self.get_context()
         return uid
 
     def check_security(self):
