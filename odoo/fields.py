@@ -1116,7 +1116,14 @@ class Field(MetaField('DummyField', (object,), {})):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            return self.compute_value(record)
+            if self.compute_sudo and record.env.uid != SUPERUSER_ID:
+                record_sudo = record.sudo()
+                copy_cache(record, record_sudo.env)
+                self.compute_value(record_sudo)
+                record[self.name] = record_sudo[self.name]
+            else:
+                self.compute_value(record)
+            return
 
         null = self.convert_to_cache(False, record, validate=False)
         record.env.cache.set_special(record, self, lambda: null)
