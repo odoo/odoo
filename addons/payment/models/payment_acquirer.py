@@ -1101,12 +1101,12 @@ class PaymentToken(models.Model):
         'THB': 70.00
         }
 
-    @api.model
     def _validate(self, **kwargs):
         """
             This method allow to verify if this payment method is valid or not.
             It does this by withdrawing a certain amount and then refund it right after.
         """
+        self.ensure_one()
         currency = self.partner_id.currency_id
 
         if self.VALIDATION_AMOUNTS.get(currency.name):
@@ -1139,8 +1139,9 @@ class PaymentToken(models.Model):
         # if 3D secure is called, then we do not refund right now
         if not tx.html_3ds:
             tx._s2s_do_refund()
+            return (self, None)
 
-        return tx
+        return (tx.id, tx.html_3ds)
 
     @api.multi
     @api.depends('name')

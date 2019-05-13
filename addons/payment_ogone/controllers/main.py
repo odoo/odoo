@@ -72,11 +72,11 @@ class OgoneController(http.Controller):
                 'exception_url': baseurl + '/payment/ogone/validate/exception',
                 'return_url': kwargs.get('return_url', baseurl)
                 }
-            tx = token._validate(**params)
+            (tx_id, html_3ds) = token._validate(**params)
             res['verified'] = token.verified
 
-            if tx and tx.html_3ds:
-                res['3d_secure'] = tx.html_3ds
+            if html_3ds:
+                res['3d_secure'] = html_3ds
 
         return res
 
@@ -99,11 +99,11 @@ class OgoneController(http.Controller):
                 'exception_url': baseurl + '/payment/ogone/validate/exception',
                 'return_url': post.get('return_url', baseurl)
                 }
-            tx = token._validate(**params)
-            if tx and tx.html_3ds:
-                return tx.html_3ds
+            (tx_id, html_3ds) = token._validate(**params)
+            if html_3ds:
+                return html_3ds
             # add the payment transaction into the session to let the page /payment/process to handle it
-            PaymentProcessing.add_payment_transaction(tx)
+            PaymentProcessing.add_payment_transaction(tx_id)
         return werkzeug.utils.redirect("/payment/process")
 
     @http.route([
