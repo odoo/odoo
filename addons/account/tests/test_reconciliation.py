@@ -1959,7 +1959,7 @@ class TestReconciliationExec(TestReconciliation):
             'company_id': self.env.ref('base.main_company').id,
         })
         invoice = self.create_invoice(
-            type='out_invoice', invoice_amount=50,
+            type='out_invoice', invoice_amount=50000,
             currency_id=self.currency_usd_id)
         invoice.journal_id.update_posted = True
         invoice.action_cancel()
