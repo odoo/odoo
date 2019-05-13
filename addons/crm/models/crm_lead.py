@@ -1171,8 +1171,8 @@ class Lead(models.Model):
             for r in self}
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Lead, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Lead, self)._message_get_suggested_recipients()
         try:
             for lead in self:
                 if lead.partner_id:

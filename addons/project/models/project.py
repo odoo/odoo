@@ -854,8 +854,8 @@ class Task(models.Model):
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Task, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Task, self)._message_get_suggested_recipients()
         for task in self:
             if task.partner_id:
                 reason = _('Customer Email') if task.partner_id.email else _('Customer')

@@ -27,8 +27,8 @@ class Partner(models.Model):
     user_id = fields.Many2one(tracking=True)
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Partner, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
             partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients

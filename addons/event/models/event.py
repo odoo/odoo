@@ -474,8 +474,8 @@ class EventRegistration(models.Model):
                 self.phone = contact.phone or self.phone
 
     @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(EventRegistration, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(EventRegistration, self)._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
         public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
         if public_groups:
