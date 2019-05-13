@@ -43,7 +43,7 @@ class MrpProductProduce(models.TransientModel):
     product_tracking = fields.Selection(related="product_id.tracking")
     is_pending_production = fields.Boolean(compute='_compute_pending_production')
 
-    move_raw_ids = fields.One2many(related='production_id.move_raw_ids')
+    move_raw_ids = fields.One2many(related='production_id.move_raw_ids', string="PO Components")
     move_finished_ids = fields.One2many(related='production_id.move_finished_ids')
 
     raw_workorder_line_ids = fields.One2many('mrp.product.produce.line',
