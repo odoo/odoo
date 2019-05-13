@@ -1032,7 +1032,9 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, (width, height), crop=crop)
+        content_mimetype = guess_mimetype(base64.b64decode(image_base64))
+        if content_mimetype != 'image/gif':
+            image_base64 = image_process(image_base64, (width, height), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
