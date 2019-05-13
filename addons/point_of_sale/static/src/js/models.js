@@ -880,6 +880,9 @@ exports.PosModel = Backbone.Model.extend({
                                 }}).then(function () {
                                     resolveInvoiced();
                                     resolveDone();
+                                }).guardedCatch(function (error) {
+                                    rejectInvoiced({code:401, message:'Backend Invoice', data:{order: order}});
+                                    rejectDone();
                                 });
                             } else {
                                 // The order has been pushed separately in batch when

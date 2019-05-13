@@ -1280,7 +1280,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('Customizing filter does not close the filter dropdown', async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1304,6 +1304,13 @@ QUnit.module('Search View', {
                 'partner,false,search': '<search><field name="date_field"/></search>',
             },
             res_id: 1,
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.strictEqual(data.filter.name, 'Fire on the bayou');
+                    assert.strictEqual(data.filter.is_default, true);
+                },
+            },
         });
 
         await testUtils.fields.many2one.clickOpenDropdown('bar');
@@ -1327,8 +1334,21 @@ QUnit.module('Search View', {
             $input.click();
             await testUtils.nextTick();
         });
-
         assert.isVisible($filterDropdown);
+
+        // Favorites Menu
+        var $modal = $('.modal');
+        await testUtils.dom.click($modal.find('.o_favorites_menu_button'));
+        await testUtils.dom.click($modal.find('.o_add_favorite'));
+        $modal.find('.o_search_options .dropdown-menu').one('click', function (ev) {
+            // This handler is on the webClient
+            // But since the test suite doesn't have one
+            // We manually set it here
+            ev.stopPropagation();
+        });
+        await testUtils.fields.editInput($modal.find('div.o_favorite_name input'), 'Fire on the bayou');
+        await testUtils.dom.click($modal.find('.o_add_favorite ~ div label:contains(Use by default)'));
+        await testUtils.dom.click($modal.find('.o_save_favorite button'));
 
         form.destroy();
     });

@@ -43,6 +43,8 @@ var MediaPlugin = AbstractPlugin.extend({
         'dblclick .note-editable': '_onDblclick',
     },
 
+    mousePosition: {},
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

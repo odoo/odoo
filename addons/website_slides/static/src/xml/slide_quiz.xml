@@ -60,7 +60,7 @@
                 <b t-else="" class="my-0 h5">Done !</b>
                 <span class="my-0 h5" style="line-height: 1">
                     <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2">
-                        + <t t-esc="widget.quiz.quizKarmaGain"/> XP
+                        + <t t-if="! widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
                     </span>
                 </span>
             </div>
