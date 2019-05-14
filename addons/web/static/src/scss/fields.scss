@@ -88,6 +88,7 @@
     &.o_field_many2manytags {
         flex-flow: row wrap;
         align-items: baseline;
+        max-width: 100%;
 
         > .o_field_widget {
             flex: 1 0 100px;
@@ -96,6 +97,8 @@
         }
 
         .badge {
+            display: flex;
+            max-width: 100%;
             flex: 0 0 auto;
             border: 0;
             font-size: 12px;
@@ -113,6 +116,7 @@
             }
 
             .o_delete {
+                padding-left: 4px;
                 color: inherit;
                 cursor: pointer;
             }
