@@ -41,7 +41,7 @@ class PaymentProcessing(http.Controller):
         # I prefer to let the controller chose when to access to payment.transaction using sudo
         return request.session.get("__payment_tx_ids__", [])
 
-    @http.route(['/payment/process'], type="http", auth="public", website=True)
+    @http.route(['/payment/process'], type="http", auth="public", website=True, sitemap=False)
     def payment_status_page(self, **kwargs):
         # When the customer is redirect to this website page,
         # we retrieve the payment transaction list from his session
@@ -127,7 +127,7 @@ class WebsitePayment(http.Controller):
         }
         return request.render("payment.pay_methods", values)
 
-    @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/pay'], type='http', auth='public', website=True, sitemap=False)
     def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, **kw):
         env = request.env
         user = env.user.sudo()
@@ -267,7 +267,7 @@ class WebsitePayment(http.Controller):
         except Exception as e:
             return request.redirect('/payment/process')
 
-    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0))
         if tx_id:
