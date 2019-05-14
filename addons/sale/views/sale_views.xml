@@ -418,7 +418,26 @@
                                             'default_lst_price': price_unit,
                                             'default_description_sale': name
                                         }"
+                                        widget="product_configurator"
                                     />
+                                    <field name="product_template_id"
+                                      string="Product"
+                                      invisible="1"
+                                      attrs="{
+                                          'readonly': [('product_updatable', '=', False)],
+                                          'required': [('display_type', '=', False)],
+                                      }"
+                                      options="{'no_open': True}"
+                                      context="{
+                                          'partner_id': parent.partner_id,
+                                          'quantity': product_uom_qty,
+                                          'pricelist': parent.pricelist_id,
+                                          'uom':product_uom,
+                                          'company_id': parent.company_id,
+                                          'default_lst_price': price_unit,
+                                          'default_description_sale': name
+                                      }"
+                                      widget="product_configurator"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field
                                         name="analytic_tag_ids"

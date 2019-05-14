@@ -1,59 +1,142 @@
-odoo.define('event.configurator', function (require) {
-
-var relationalFields = require('web.relational_fields');
-var FieldsRegistry = require('web.field_registry');
-var EventConfiguratorWidgetMixin = require('event_sale.EventConfiguratorWidgetMixin');
+odoo.define('event_sale.product_configurator', function (require) {
+var ProductConfiguratorWidget = require('sale.product_configurator');
 
 /**
- * The event configurator widget is a simple FieldMany2One that adds the capability
- * to configure a product_id with event information using the event configurator wizard.
+ * Extension of the ProductConfiguratorWidget to support event product configuration.
+ * It opens when an event product_product is set.
  *
  * The event information include:
  * - event_id
  * - event_ticket_id
  *
- * !!! It should only be used on a product_id field !!!
  */
-var EventConfiguratorWidget = relationalFields.FieldMany2One.extend(EventConfiguratorWidgetMixin, {
-    events: _.extend({},
-        relationalFields.FieldMany2One.prototype.events,
-        EventConfiguratorWidgetMixin.events
-    ),
+ProductConfiguratorWidget.include({
+    /**
+     * @returns {boolean}
+     *
+     * @override
+     * @private
+     */
+    _isConfigurableLine: function () {
+        return this.recordData.event_ok || this._super.apply(this, arguments);
+    },
 
     /**
-     * @see _addEventConfigurationEditButton for more info
+     * @param {integer} productId
+     * @param {String} dataPointID
+     * @returns {Promise<Boolean>} stopPropagation true if a suitable configurator has been found.
+     *
      * @override
+     * @private
      */
-    start: function () {
+    _onProductChange: function (productId, dataPointId) {
+      var self = this;
+      return this._super.apply(this, arguments).then(function (stopPropagation) {
+          if (stopPropagation) {
+              return Promise.resolve(true);
+          } else {
+              return self._checkForEvent(productId, dataPointId);
+          }
+      });
+    },
+
+    /**
+     * This method will check if the productId needs configuration or not:
+     *
+     * @param {integer} productId
+     * @param {string} dataPointID
+     * @returns {Promise<Boolean>} stopPropagation true if the product is an event ticket.
+     *
+     * @private
+     */
+    _checkForEvent: function (productId, dataPointId) {
         var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self._addEventConfigurationEditButton();
+        return this._rpc({
+            model: 'product.product',
+            method: 'read',
+            args: [productId, ['event_ok']],
+        }).then(function (result) {
+            if (result && result[0].event_ok) {
+                self._openEventConfigurator({
+                        default_product_id: productId
+                    },
+                    dataPointId
+                );
+                return Promise.resolve(true);
+            }
+            return Promise.resolve(false);
         });
     },
 
     /**
-     * This method is overridden to check if the product_id needs configuration or not:
+     * Opens the event configurator in 'edit' mode.
      *
      * @override
-     * @param {OdooEvent} event
+     * @private
+     */
+    _onEditProductConfiguration: function () {
+        if (this.recordData.event_ok) {
+            var defaultValues = {
+                default_product_id: this.recordData.product_id.data.id
+            };
+
+            if (this.recordData.event_id) {
+                defaultValues.default_event_id = this.recordData.event_id.data.id;
+            }
+
+            if (this.recordData.event_ticket_id) {
+                defaultValues.default_event_ticket_id = this.recordData.event_ticket_id.data.id;
+            }
+
+            this._openEventConfigurator(defaultValues, this.dataPointID);
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+
+    /**
+     * Opens the event configurator to allow configuring the SO line with events information.
+     *
+     * When the window is closed, configured values are used to trigger a 'field_changed'
+     * event to modify the current SO line.
+     *
+     * If the window is closed without providing the required values 'event_id' and
+     * 'event_ticket_id', the product_id field is cleaned.
+     *
+     * @param {Object} data various "default_" values
+     * @param {string} dataPointId
      *
      * @private
      */
-    _onFieldChanged: function (event) {
+    _openEventConfigurator: function (data, dataPointId) {
         var self = this;
-
-        this._super.apply(this, arguments);
-        if (!event.data.changes.product_id){
-            return;
-        }
-
-        var productId = event.data.changes.product_id.id;
-        self._checkForEvent(productId, event.data.dataPointID);
+        this.do_action('event_sale.event_configurator_action', {
+            additional_context: data,
+            on_close: function (result) {
+                if (result && result !== 'special') {
+                    self.trigger_up('field_changed', {
+                        dataPointID: dataPointId,
+                        changes: result.eventConfiguration,
+                        // VFE NOTE : Do we unselect the row after event config?
+                        // event_sale tour is made to work without unselectRow
+                        /*onSuccess: function (){
+                            self.getParent().unselectRow();
+                        }*/
+                    });
+                } else {
+                    if (!self.recordData.event_id || !self.recordData.event_ticket_id) {
+                        self.trigger_up('field_changed', {
+                            dataPointID: dataPointId,
+                            changes: {product_id: false},
+                        });
+                    }
+                }
+            }
+        });
     }
 });
 
-FieldsRegistry.add('event_configurator', EventConfiguratorWidget);
 
-return EventConfiguratorWidget;
+return ProductConfiguratorWidget;
 
 });
