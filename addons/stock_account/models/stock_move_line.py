@@ -105,6 +105,7 @@ class StockMoveLine(models.Model):
     @api.model
     def _create_correction_svl(self, move, diff):
         if move._is_in() and diff > 0 or move._is_out() and diff < 0:
+            move.product_price_update_before_done(forced_qty=diff)
             move._create_in_svl(forced_quantity=abs(diff))
         elif move._is_in() and diff < 0 or move._is_out() and diff > 0:
             move._create_out_svl(forced_quantity=abs(diff))
