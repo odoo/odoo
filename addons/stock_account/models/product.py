@@ -98,6 +98,8 @@ class ProductProduct(models.Model):
             'unit_cost': unit_cost,
             'quantity': quantity,
         }
+        if self.cost_method in ('average'):
+            vals['remaining_qty'] = quantity
         return vals
 
     def _prepare_out_svl_vals(self, quantity):

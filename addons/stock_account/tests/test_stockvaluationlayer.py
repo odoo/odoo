@@ -200,3 +200,99 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 5)
         self.assertEqual(self.product1.stock_valuation_layer_ids[-1].description, 'Product value manually modified (from 10.0 to 15.0)')
 
+
+class TestStockValuationAVCO(TestStockValuationCommon):
+    def setUp(self):
+        super(TestStockValuationAVCO, self).setUp()
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+
+    def test_normal_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        self.assertEqual(self.product1.standard_price, 10)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, 100)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(move2.stock_valuation_layer_ids.value, 200)
+        move3 = self._make_out_move(self.product1, 15)
+        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(move3.stock_valuation_layer_ids.value, -225)
+
+        self.assertEqual(self.product1.value_svl, 75)
+        self.assertEqual(self.product1.quantity_svl, 5)
+
+    def test_change_in_past_increase_in_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        move1.move_line_ids.qty_done = 15
+
+        self.assertEqual(self.product1.value_svl, 125)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_change_in_past_decrease_in_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        move1.move_line_ids.qty_done = 5
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_change_in_past_add_ml_in_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        self.env['stock.move.line'].with_context(svl=True).create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'qty_done': 5,
+            'product_uom_id': move1.product_uom.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        self.assertEqual(self.product1.value_svl, 125)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.standard_price, 12.5)
+
+    def test_change_in_past_add_move_in_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        self.env['stock.move.line'].with_context(svl=True).create({
+            'product_id': move1.product_id.id,
+            'qty_done': 5,
+            'product_uom_id': move1.product_uom.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+            'state': 'done',
+            'picking_id': move1.picking_id.id,
+        })
+
+        self.assertEqual(self.product1.value_svl, 150)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.standard_price, 15)
+
+    def test_change_in_past_increase_out_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        move3.move_line_ids.qty_done = 20
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 15)
+
+    def test_change_in_past_decrease_out_1(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+        move3.move_line_ids.qty_done = 10
+
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 10)
+        self.assertEqual(self.product1.value_svl, 150)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.standard_price, 15)
+
