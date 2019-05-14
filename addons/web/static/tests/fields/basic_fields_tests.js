@@ -1928,7 +1928,7 @@ QUnit.module('basic_fields', {
         assert.isVisible(form.$('.o_field_widget iframe.o_pdfview_iframe'),
             "there should be an visible iframe");
         assert.hasAttrValue(form.$('.o_field_widget iframe.o_pdfview_iframe'), 'data-src',
-            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fcontent%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
             "the src attribute should be correctly set on the iframe");
 
         form.destroy();
