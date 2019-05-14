@@ -2667,6 +2667,25 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field should remove the date  if the date is not valid', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        // set an invalid date
+        var $input = form.$('.o_field_widget[name=date] input');
+        $input.val('mmmh').trigger('change');
+        assert.strictEqual($input.text(), "", "The date field should be empty");
+        form.destroy();
+    });
+
     QUnit.test('date field value should not set on first click', function (assert) {
         assert.expect(2);
 

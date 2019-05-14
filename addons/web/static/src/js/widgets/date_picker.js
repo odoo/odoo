@@ -13,6 +13,7 @@ var DateWidget = Widget.extend({
     type_of_date: "date",
     events: {
         'change.datetimepicker': 'changeDatetime',
+        'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
         'keydown': '_onKeydown',
@@ -102,6 +103,15 @@ var DateWidget = Widget.extend({
                 this.trigger("datetime_changed");
             }
         }
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     */
+    errorDatetime: function (e) {
+        if (!e.date.isValid()){
+            this.do_warn(_t("Error"), e.date.toString());
+        }
+        return false;
     },
     /**
      * Focuses the datepicker input. This function must be called in order to
