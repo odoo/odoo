@@ -113,11 +113,6 @@ class ResConfigSettings(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    @api.onchange('portal_confirmation_pay')
-    def _onchange_portal_confirmation_pay(self):
-        if self.portal_confirmation_pay:
-            self.module_sale_payment = True
-
     @api.onchange('use_quotation_validity_days')
     def _onchange_use_quotation_validity_days(self):
         if self.quotation_validity_days <= 0:
