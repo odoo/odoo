@@ -765,6 +765,12 @@ class MrpProduction(models.Model):
                 for ml in move_lines:
                     error_msg += ml.product_id.display_name + ' (' + (lots_short & ml.lot_produced_ids).mapped('name') + ')\n'
                 raise UserError(error_msg)
+            
+    @api.multi
+    def action_start(self):
+        self.write({
+            'date_start': datetime.now()
+            })
 
     @api.multi
     def action_cancel(self):
