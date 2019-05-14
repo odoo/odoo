@@ -288,10 +288,11 @@ class Post(models.Model):
             operator = operator == "=" and '!=' or '='
             value = True
 
-        if self._uid == SUPERUSER_ID:
+        user = self.env.user
+        # Won't impact sitemap, search() in converter is forced as public user
+        if user._is_admin():
             return [(1, '=', 1)]
 
-        user = self.env['res.users'].browse(self._uid)
         req = """
             SELECT p.id
             FROM forum_post p
@@ -379,7 +380,7 @@ class Post(models.Model):
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
-        is_admin = user.id == SUPERUSER_ID
+        is_admin = user._is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in pycompat.izip(self, self.sudo()):

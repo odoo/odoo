@@ -121,7 +121,8 @@ class Channel(models.Model):
         if not value:
             operator = operator == "=" and '!=' or '='
 
-        if self._uid == SUPERUSER_ID:
+        # Won't impact sitemap, search() in converter is forced as public user
+        if self.env.user._is_admin():
             return [(1, '=', 1)]
 
         # Better perfs to split request and use inner join that left join
