@@ -457,7 +457,9 @@ var Gui = core.Class.extend({
                 newbuf = newbuf.substring(1,newbuf.length);
             }
         } else if (input === '-') {
-            if ( newbuf[0] === '-' ) {
+            if (options.firstinput) {
+                newbuf = '-0';
+            } else if ( newbuf[0] === '-' ) {
                 newbuf = newbuf.substring(1,newbuf.length);
             } else {
                 newbuf = '-' + newbuf;
@@ -470,6 +472,9 @@ var Gui = core.Class.extend({
             } else {
                 newbuf += input;
             }
+        }
+        if (newbuf === "-") {
+            newbuf = "";
         }
 
         // End of input buffer at 12 characters.
