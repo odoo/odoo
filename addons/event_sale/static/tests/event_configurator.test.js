@@ -14,7 +14,7 @@ odoo.define('event.configurator.tests', function (require) {
         '<create string="Add a section" context="{\'default_display_type\': \'line_section\'}"/>' +
         '<create string="Add a note" context="{\'default_display_type\': \'line_note\'}"/>' +
         '</control>' +
-        '<field name="product_id" widget="event_configurator" />' +
+        '<field name="product_id" widget="product_configurator" />' +
         '</tree>' +
         '</field>' +
         '</sheet>' +
@@ -81,7 +81,7 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read') {
+                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
                         assert.ok(true);
                         return Promise.resolve([{event_ok: false}]);
                     }
@@ -110,7 +110,7 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read') {
+                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
                         assert.ok(true);
                         return Promise.resolve([{event_ok: true}]);
                     }
@@ -126,7 +126,7 @@ odoo.define('event.configurator.tests', function (require) {
             });
 
             await testUtils.dom.click(form.$("a:contains('Add a product')"));
-            await testUtils.fields.many2one.searchAndClickItem("product_id", {item: 'Customizable Event'})
+            await testUtils.fields.many2one.searchAndClickItem("product_id", {item: 'Customizable Event'});
             form.destroy();
         });
     });
