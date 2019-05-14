@@ -478,7 +478,11 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 new RainbowMan(data).appendTo(this.$el);
             } else {
                 // For instance keep title blank, as we don't have title in data
-                this.notification_manager.notify('', data.message, true);
+                this.call('notification', 'notify', {
+                    title: "",
+                    message: data.message,
+                    sticky: false
+                });
             }
         } else {
             throw new Error('Unknown effect type: ' + type);
