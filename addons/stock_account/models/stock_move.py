@@ -211,7 +211,9 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            unit_cost = move.product_id.standard_price
+            unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
+            if move.product_id.cost_method == 'standard':
+                unit_cost = move.product_id.standard_price
             svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
@@ -374,9 +376,6 @@ class StockMove(models.Model):
         return value_to_return
 
     def _action_done(self, cancel_backorder=False):
-        self.product_price_update_before_done()
-        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
-
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
@@ -385,14 +384,19 @@ class StockMove(models.Model):
                     valued_moves[valued_type] |= move
                     continue
 
+        # AVCO application
+        valued_moves['in'].product_price_update_before_done()
+
+        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+
         valued_moves_set = self.env['stock.move']
-        standard_valued_moves_set = self.env['stock.move']
+        standard_average_valued_moves_set = self.env['stock.move']
         for valued_type, valued_move_list in valued_moves.items():
             for valued_move in valued_move_list:
                 if valued_move._is_dropshipped() or valued_move._is_dropshipped_returned():
                     continue
-                if valued_move.product_id.cost_method == 'standard':
-                    standard_valued_moves_set |= valued_move
+                if valued_move.product_id.cost_method in ('standard', 'average'):
+                    standard_average_valued_moves_set |= valued_move
                 else:
                     valued_moves_set |= valued_move
 
@@ -400,7 +404,7 @@ class StockMove(models.Model):
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
         for valued_type in self._get_valued_types():
             todo_valued_moves = valued_moves[valued_type]
-            if todo_valued_moves and todo_valued_moves in standard_valued_moves_set:
+            if todo_valued_moves and todo_valued_moves <= standard_average_valued_moves_set:
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
                 continue
 
@@ -436,10 +440,14 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
-            qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
+            valued_move_lines = move._get_in_move_lines()
+            qty_done = 0
+            for valued_move_line in valued_move_lines:
+                qty_done += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
