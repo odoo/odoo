@@ -150,6 +150,7 @@ class IoTboxHomepage(web.Home):
             'title': "Odoo's IoT Box - Drivers list",
             'breadcrumb': 'Drivers list',
             'drivers_list': drivers_list,
+            'server': get_odoo_server_url()
         })
 
     @http.route('/load_drivers', type='http', auth='none', website=True)
