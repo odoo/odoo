@@ -1729,7 +1729,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
                 id: this.res_id,
             };
             var queryString = $.param(queryObj);
-            fileURI = '/web/image?' + queryString
+            fileURI = '/web/content?' + queryString;
         }
         fileURI = encodeURIComponent(fileURI);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
