@@ -20,12 +20,12 @@ class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
-    paypal_email_account = fields.Char('Paypal Email ID', required_if_provider='paypal', groups='base.group_user')
+    paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user', default=lambda self: self.env.user.email or 'dummy')
     paypal_seller_account = fields.Char(
-        'Paypal Merchant ID', groups='base.group_user',
+        'Merchant Account ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
-    paypal_pdt_token = fields.Char(string='Paypal PDT Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
+    paypal_pdt_token = fields.Char(string='PDT Identity Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Server 2 server
     paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
     paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')
@@ -179,8 +179,10 @@ class TxPaypal(models.Model):
             # different than the business email. Therefore, if you want such a configuration in your Paypal, you are then obliged to fill
             # the Merchant ID in the Paypal payment acquirer in Odoo, so the check is performed on this variable instead of the receiver_email.
             # At least one of the two checks must be done, to avoid fraudsters.
-            if data.get('receiver_email') != self.acquirer_id.paypal_email_account:
+            if data.get('receiver_email') and data.get('receiver_email') != self.acquirer_id.paypal_email_account:
                 invalid_parameters.append(('receiver_email', data.get('receiver_email'), self.acquirer_id.paypal_email_account))
+            if data.get('business') and data.get('business') != self.acquirer_id.paypal_email_account:
+                invalid_parameters.append(('business', data.get('business'), self.acquirer_id.paypal_email_account))
 
         return invalid_parameters
 
@@ -190,6 +192,21 @@ class TxPaypal(models.Model):
             'acquirer_reference': data.get('txn_id'),
             'paypal_txn_type': data.get('payment_type'),
         }
+        if not self.acquirer_id.paypal_pdt_token and not self.acquirer_id.paypal_seller_account and status in ['Completed', 'Processed', 'Pending']:
+            template = self.env.ref('payment_paypal.mail_template_paypal_invite_user_to_configure', False)
+            if template:
+                render_template = template.render({
+                    'acquirer': self.acquirer_id,
+                }, engine='ir.qweb')
+                mail_body = self.env['mail.thread']._replace_local_links(render_template)
+                mail_values = {
+                    'body_html': mail_body,
+                    'subject': _('Add your Paypal account to Odoo'),
+                    'email_to': self.acquirer_id.paypal_email_account,
+                    'email_from': self.acquirer_id.create_uid.email
+                }
+                self.env['mail.mail'].sudo().create(mail_values).send()
+
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
             try:
