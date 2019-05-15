@@ -59,7 +59,7 @@ class ImageProcess():
         """
         self.base64_source = base64_source or False
 
-        if not base64_source or base64_source[:1] == b'P':
+        if not base64_source or base64_source[:1] == b'P' or base64_source[:1] == 'P':
             # don't process empty source or SVG
             self.image = False
         else:
@@ -288,7 +288,7 @@ def is_image_size_above(base64_source, size=IMAGE_BIG_SIZE):
     """
     if not base64_source:
         return False
-    if base64_source[:1] == b'P':
+    if base64_source[:1] == b'P' or base64_source[:1] == 'P':
         # False for SVG
         return False
     image = base64_to_image(base64_source)
