@@ -1313,7 +1313,7 @@ class SaleOrderLine(models.Model):
                 `inv_line` is a customer invoice line linked to the SO line
                 `ref_line` is a customer credit note (refund) line linked to the SO line
         """
-        for line in self:
+        for line in self.filtered(lambda l: not l.display_type):
             amount_invoiced = 0.0
             for invoice_line in line.invoice_lines:
                 if invoice_line.invoice_id.state in ['open', 'in_payment', 'paid']:
