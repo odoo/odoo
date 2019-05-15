@@ -140,6 +140,7 @@
                 action = records.action_recovery_email_send()
         </field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
     </record>
 
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
