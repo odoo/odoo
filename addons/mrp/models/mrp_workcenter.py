@@ -172,6 +172,11 @@ class MrpWorkcenter(models.Model):
         return super(MrpWorkcenter, self.with_context({
             'default_resource_type': 'material'})).create(vals)
 
+    @api.multi
+    def action_work_order(self):
+        action = self.env.ref('mrp.action_work_orders').read()[0]
+        return action
+
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"
