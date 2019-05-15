@@ -243,7 +243,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
             image.resize(max_width=size[0], max_height=size[1])
     if colorize:
         image.colorize()
-    return image.image_base64(quality=quality, output_format=output_format)
+    return image.image_base64(quality=min(quality, 95), output_format=output_format)
 
 
 # ----------------------------------------
