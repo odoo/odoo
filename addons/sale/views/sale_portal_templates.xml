@@ -117,7 +117,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations').id)"/>
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations_with_onboarding').id)"/>
                 </t>
             </t>
 
