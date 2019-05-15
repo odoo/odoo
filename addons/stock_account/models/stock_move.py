@@ -389,26 +389,23 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
-        valued_moves_set = self.env['stock.move']
-        standard_average_valued_moves_set = self.env['stock.move']
-        for valued_type, valued_move_list in valued_moves.items():
-            for valued_move in valued_move_list:
-                if valued_move._is_dropshipped() or valued_move._is_dropshipped_returned():
-                    continue
-                if valued_move.product_id.cost_method in ('standard', 'average'):
-                    standard_average_valued_moves_set |= valued_move
-                else:
-                    valued_moves_set |= valued_move
-
         stock_valuation_layers = self.env['stock.valuation.layer']
         # Create the valuation layers in batch by calling `moves._create_valued_type_svl`.
         for valued_type in self._get_valued_types():
             todo_valued_moves = valued_moves[valued_type]
-            if todo_valued_moves and todo_valued_moves <= standard_average_valued_moves_set:
+            if todo_valued_moves:
+                todo_valued_moves._sanity_check_for_valuation()
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
                 continue
 
-        for move in valued_moves_set:
+        for stock_valuation_layer in stock_valuation_layers:
+            if not stock_valuation_layer.product_id.valuation == 'real_time':
+                continue
+            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=abs(stock_valuation_layer.value), forced_quantity=stock_valuation_layer.quantity)._account_entry_move()
+        return res
+
+    def _sanity_check_for_valuation(self):
+        for move in self:
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
             if move._is_in() and move._is_out():
@@ -424,15 +421,6 @@ class StockMove(models.Model):
                 raise UserError(_("The move lines are not in a consistent states: they do not share the same origin or destination company."))
             if company_src and company_dst and company_src.id != company_dst.id:
                 raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
-            move._run_valuation()
-        for move in valued_moves_set.filtered(lambda m: m.product_id.valuation == 'real_time'):
-            move._account_entry_move()
-
-        for stock_valuation_layer in stock_valuation_layers:
-            if not stock_valuation_layer.product_id.valuation == 'real_time':
-                continue
-            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=stock_valuation_layer.value, forced_quantity=stock_valuation_layer.quantity)._account_entry_move()
-        return res
 
     @api.multi
     def product_price_update_before_done(self, forced_qty=None):
