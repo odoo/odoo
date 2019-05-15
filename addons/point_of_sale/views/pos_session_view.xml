@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <act_window
-        id="act_pos_session_orders"
-        name="Orders"
-        binding_model="pos.session"
-        binding_views="form"
-        res_model="pos.order"
-        context="{'search_default_session_id': active_id, 'default_session_id' : active_id }"/>
-
     <record id="view_pos_session_form" model="ir.ui.view">
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
