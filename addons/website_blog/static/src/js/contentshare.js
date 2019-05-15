@@ -16,24 +16,27 @@
                 });
             },
             getContent : function() {
-                var popover_content = '';
-                if($('.blog_title, .blog_content').hasClass('js_comment')){
+                var $popover_content = $('<div class="h4 m-0"/>');
+                if($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_comment')){
                     selected_text = this.getSelection('string');
-                    popover_content += '<a class="o_share_comment mr12"><i class="fa fa-comment fa-lg mr4 ml4"/></a>';
+                    var $btn_c = $('<a class="o_share_comment btn btn-link px-2" href="#"/>').append($('<i class="fa fa-lg fa-comment"/>'));
+                    $popover_content.append($btn_c);
                 }
-                if($('.blog_title, .blog_content').hasClass('js_tweet')){
+                if($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_tweet')){
                     var tweet = '"%s" - %s';
                     var baseLength = tweet.replace(/%s/g, '').length;
                     // Shorten the selected text to match the tweet max length
                     // Note: all (non-localhost) urls in a tweet have 23 characters https://support.twitter.com/articles/78124
                     var selectedText = this.getSelection('string').substring(0, option.maxLength - baseLength - 23);
                     var text = encodeURIComponent(_.str.sprintf(tweet, selectedText, window.location.href));
-                    popover_content += '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="ml4 mr4 fa fa-twitter fa-lg"/></a>';
+                    var $btn_t = $('<a class="px-2 btn btn-link" onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')" href="#"/>');
+                    $btn_t.append($('<i class="fa fa-lg fa-twitter"/>'));
+                    $popover_content.append($btn_t);
                 }
-                return popover_content;
+                return $popover_content;
             },
             commentEdition : function(){
-                var positionComment = ($('#comments').position()).top-50;
+                var positionComment = ($('#o_wblog_post_comments').position()).top-50;
                 $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
                 $('html, body').stop().animate({
                     'scrollTop': positionComment
@@ -86,7 +89,7 @@
         });
         $.fn.share.init(this);
     };
-    
+
     $.fn.share.defaults = {
         shareLink : "http://twitter.com/intent/tweet?text=",
         minLength  : 5,
