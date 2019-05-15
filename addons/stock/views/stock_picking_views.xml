@@ -422,6 +422,7 @@
             <field name="name">Assign a Responsible</field>
             <field name="model_id" ref="model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
 action_values = env.ref('stock.stock_assign_responsible_action').read()[0]
