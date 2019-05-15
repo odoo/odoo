@@ -1134,6 +1134,10 @@ actual arch.
         if self.env.context.get('check_field_names'):
             editable = self.env.context.get('view_is_editable', True)
             attrs_fields = self.get_attrs_field_names(node, Model, editable)
+            for item in attrs_fields:
+                field = Model._fields.get(item[0])
+                if field and field.compute and not field.store and not field.related:
+                    _logger.warning("Found field %s on model %s", item[0], model)
 
         fields_def = self.postprocess(model, node, view_id, False, fields)
         self._postprocess_access_rights(model, node)
