@@ -9,6 +9,7 @@ from odoo.tools import consteq, float_round, image_resize_images, image_resize_i
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -484,6 +485,9 @@ class PaymentAcquirer(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'reload',
             }
+
+    def get_base_url(self):
+        return request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 class PaymentIcon(models.Model):
     _name = 'payment.icon'
