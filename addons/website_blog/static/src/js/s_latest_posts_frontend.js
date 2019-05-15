@@ -2,12 +2,13 @@ odoo.define('website_blog.s_latest_posts_frontend', function (require) {
 'use strict';
 
 var core = require('web.core');
+var wUtils = require('website.utils');
 var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
 publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
-    selector : '.js_get_posts',
+    selector: '.js_get_posts',
     disabledInEditableMode: false,
 
     /**
@@ -87,62 +88,40 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
     _showLoading: function ($posts) {
         var self = this;
 
-        _.each($posts, function (post) {
+        _.each($posts, function (post, i) {
             var $post = $(post);
-            var $loadingContainer = $post.find('.loading_container');
-            var $thumb = $post.find('.thumb .o_blog_cover_image');
-            var $progress = $('<div/>', {
-                class: 'progress js-loading',
-            }).append($('<div/>', {
-                class: 'progress-bar',
-                role: 'progressbar',
-                'aria-valuenow': '0',
-                'aria-valuemin': '0',
-                'aria-valuemax': '100',
-                css: {
-                    width: 0,
-                },
-            }));
+            var $progress = $post.find('.s_latest_posts_loader');
+            var bgUrl = $post.find('.o_blog_cover_image').css('background-image').replace('url(','').replace(')','').replace(/\"/gi, "") || 'none';
 
-            // If can't find loading container or thumb inside the post, then they are the post itself
-            if (!$loadingContainer.length) {
-                $loadingContainer = $post;
-            }
-            if (!$thumb.length)  {
-                $thumb = $post;
-            }
-
-            $post.addClass('js-loading');
-            $progress.appendTo($loadingContainer);
+            // Append $post to the snippet, regardless by the loading state.
             $post.appendTo(self.$target);
 
-            var m = $thumb.css('background-image').match(/url\(["']?(.+)["']?\)/);
-            var bg = m ? m[1] : 'none';
-            var loaded = false;
+            // No cover-image found. Add a 'flag' class and exit.
+            if (bgUrl === 'none') {
+                $post.addClass('s_latest_posts_loader_no_cover');
+                $progress.remove();
+                return;
+            }
 
-            var $bar = $progress.find('.progress-bar');
-            $bar.css('width', '50%').attr('aria-valuenow', '50');
+            // Cover image found. Show the spinning icon.
+            $progress.find('> div').removeClass('d-none').css('animation-delay', i * 200 + 'ms');
+            var $dummyImg = $('<img/>', {src: bgUrl});
 
-            var $dummyImg = $('<img/>');
-
-            // Show the post after 5sec in any case
+            // If the image is not loaded in 10 sec, remove loader and provide a fallback bg-color to the container.
+            // Hopefully one day the image will load, covering the bg-color...
             var timer = setTimeout(function () {
-                $dummyImg.remove();
-                $post.removeClass('js-loading');
-                $progress.hide();
-            }, 5000);
+                $post.find('.o_blog_cover_image').addClass('bg-200');
+                $progress.remove();
+            }, 10000);
 
-            $dummyImg.on('load', function () {
-                $bar.css('width', '100%').attr('aria-valuenow', '100');
-                setTimeout(function () {
-                    $post.removeClass('js-loading');
-                    $progress.fadeOut(500);
-                }, 500);
+            wUtils.onceAllImagesLoaded($dummyImg).then(function () {
+                $progress.fadeOut(500, function () {
+                    $progress.removeClass('d-flex');
+                });
+
                 $dummyImg.remove();
                 clearTimeout(timer);
             });
-
-            $dummyImg.attr('src', bg);
         });
     },
 });

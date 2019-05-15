@@ -2,32 +2,14 @@
 <odoo>
     <data noupdate="1">
         <record id="blog_blog_1" model="blog.blog">
-            <field name="name">Our Blog</field>
-            <field name="subtitle">Get in touch with us</field>
+            <field name="name">Our blog</field>
         </record>
-        <record id="menu_news" model="website.menu">
+
+        <record id="menu_blog" model="website.menu">
             <field name="name">Blog</field>
             <field name="url">/blog</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">40</field>
-        </record>
-
-        <!-- Pre loaded covers -->
-
-        <record id="blog_post_cover_01" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">Blog Post Cover 1</field>
-            <field name="res_model">ir.ui.view</field>
-            <field name="type">url</field>
-            <field name="url">/website_blog/static/src/img/demo/blog_post_cover_1.jpg</field>
-        </record>
-
-        <record id="blog_post_cover_02" model="ir.attachment">
-            <field name="public" eval="True"/>
-            <field name="name">Blog Post Cover 2</field>
-            <field name="res_model">ir.ui.view</field>
-            <field name="type">url</field>
-            <field name="url">/website_blog/static/src/img/demo/blog_post_cover_2.jpg</field>
         </record>
 
         <!-- Blog-related subtypes for messaging / Chatter -->
@@ -45,7 +27,7 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Blogs</field>
             <field name="target">self</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
+            <field name="url" eval="'/blog/'"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>

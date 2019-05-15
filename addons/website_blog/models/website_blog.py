@@ -12,7 +12,6 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
 
-
 class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
@@ -22,6 +21,7 @@ class Blog(models.Model):
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
+    content = fields.Html('Content', translate=html_translate, sanitize=False)
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -126,24 +126,15 @@ class BlogPost(models.Model):
 
     def _default_content(self):
         return '''
-            <section class="s_text_block">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 mb16 mt16">
-                            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
         '''
-
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
     active = fields.Boolean('Active', default=True)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
+        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "cover_mid"}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
@@ -173,7 +164,7 @@ class BlogPost(models.Model):
                 blog_post.teaser = blog_post.teaser_manual
             else:
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
-                blog_post.teaser = content[:150] + '...'
+                blog_post.teaser = content[:200] + '...'
 
     def _set_teaser(self):
         for blog_post in self:

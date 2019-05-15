@@ -6,12 +6,8 @@ var publicWidget = require('web.public.widget');
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
     events: {
-        'click .cover_footer': '_onNextBlogClick',
-        'click a[href^="#blog_content"]': '_onContentAnchorClick',
-        'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
-        'click .blog_post_year_collapse': '_onYearCollapseClick',
-        'mouseenter div.o_blog_post_complete a': '_onBlogPostMouseEnter',
-        'mouseleave div.o_blog_post_complete a': '_onBlogPostMouseLeave',
+        'click #o_wblog_next_container': '_onNextBlogClick',
+        'click #o_wblog_post_content_jump': '_onContentAnchorClick',
     },
 
     /**
@@ -19,27 +15,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     start: function () {
         $('.js_tweet, .js_comment').share({});
-
-        // Active year collapse
-        var $activeYear = $('.blog_post_year li.active');
-        if ($activeYear.length) {
-            var id = $activeYear.closest('ul').attr('id');
-            this._toggleYearCollapse($('.blog_post_year_collapse[data-target="#' + id + '"]'));
-        }
-
         return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {jQuery} $el
-     */
-    _toggleYearCollapse: function ($el) {
-        $el.find('i.fa').toggleClass('fa-chevron-down fa-chevron-right');
     },
 
     //--------------------------------------------------------------------------
@@ -52,16 +28,20 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onNextBlogClick: function (ev) {
         ev.preventDefault();
+        var self = this;
         var $el = $(ev.currentTarget);
-        var newLocation = $('.js_next')[0].href;
-        var top = $el.offset().top;
-        $el.animate({
-            height: $(window).height() + 'px',
-        }, 300);
-        $('html, body').animate({
-            scrollTop: top,
-        }, 300, 'swing', function () {
-           window.location.href = newLocation;
+        var nexInfo = $el.find('#o_wblog_next_post_info').data();
+
+        $el.css('height', $(window).height())
+           .find('.o_blog_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
+           .find('.o_wblog_toggle').toggleClass('d-none d-flex');
+
+        // Use _.defer to calculate the 'offset()'' only after that size classes
+        // have been applyed and that $el has been resized.
+        _.defer(function () {
+            self._forumScrollAction($el, 300, function () {
+                window.location.href = nexInfo.url;
+            });
         });
     },
     /**
@@ -71,11 +51,9 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     _onContentAnchorClick: function (ev) {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        var element = ev.currentTarget;
-        var target = $(element.hash);
-        $('html, body').stop().animate({
-            scrollTop: target.offset().top - 32,
-        }, 500, 'swing', function () {
+        var $el = $(ev.currentTarget.hash);
+
+        this._forumScrollAction($el, 500, function () {
             window.location.hash = 'blog_content';
         });
     },
@@ -114,26 +92,26 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         }
         window.open(url, '', 'menubar=no, width=500, height=400');
     },
+
+    //--------------------------------------------------------------------------
+    // Utils
+    //--------------------------------------------------------------------------
+
     /**
      * @private
-     * @param {Event} ev
+     * @param {JQuery} $el - the element we are scrolling to
+     * @param {Integer} duration - scroll animation duration
+     * @param {Function} callback - to be executed after the scroll is performed
      */
-    _onYearCollapseClick: function (ev) {
-        this._toggleYearCollapse($(ev.currentTarget));
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onBlogPostMouseEnter: function (ev) {
-        $('div.o_blog_post_complete a').not('#' + ev.srcElement.id).addClass('unhover');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onBlogPostMouseLeave: function (ev) {
-        $('div.o_blog_post_complete a').not('#' + ev.currentTarget.id).removeClass('unhover');
+    _forumScrollAction: function ($el, duration, callback) {
+        var $mainNav = $('#wrapwrap > header');
+        var gap = $mainNav.height() + $mainNav.offset().top;
+
+        $('html, body').stop().animate({
+            scrollTop: $el.offset().top - gap
+        }, duration, 'swing', function () {
+            callback();
+        });
     },
 });
 });
