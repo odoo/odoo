@@ -172,7 +172,7 @@
                                         <div class="col-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
-                                                <button class="btn btn-primary" name="%(action_work_orders)d" type="action">
+                                                <button class="btn btn-primary" name="action_work_order" type="object">
                                                     <span>WORK ORDERS</span>
                                                 </button>
                                             </t>
@@ -186,7 +186,7 @@
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_ready': 1}">
                                                         To Launch
                                                     </a>
                                                 </div>
@@ -196,7 +196,7 @@
                                             </div>
                                             <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_progress': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_progress': 1}">
                                                         In Progress
                                                     </a>
                                                 </div>
@@ -206,7 +206,7 @@
                                             </div>
                                             <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
                                                 <div class="col-8">
-                                                    <a name="%(action_work_orders)d" type="action" context="{'search_default_late': 1}">
+                                                    <a name="action_work_order" type="object" context="{'search_default_late': 1}">
                                                         Late
                                                     </a>
                                                 </div>
@@ -253,7 +253,7 @@
                                                 <span>Actions</span>
                                             </div>
                                             <div role="menuitem" name="plan_order">
-                                                <a name="%(action_work_orders)d" type="action">Plan Orders</a>
+                                                <a name="action_work_order" type="object">Plan Orders</a>
                                             </div>
                                         </div>
                                         <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
@@ -269,7 +269,7 @@
                                                 </a>
                                             </div>
                                             <div role="menuitem">
-                                                <a name="%(action_work_orders)d" type="action" context="{'search_default_waiting': 1}">Waiting Availability</a>
+                                                <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
                                             </div>
                                         </div>
                                     </div>
