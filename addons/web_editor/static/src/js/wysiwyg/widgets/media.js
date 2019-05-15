@@ -4,6 +4,7 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var fonts = require('wysiwyg.fonts');
+var session = require('web.session');
 var Widget = require('web.Widget');
 var concurrency = require('web.concurrency');
 
