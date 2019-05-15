@@ -37,6 +37,7 @@ class TaxAdjustments(models.TransientModel):
                 'credit': not is_debit and abs(self.amount) or 0,
                 'account_id': is_debit and self.debit_account_id.id or self.credit_account_id.id,
                 'tax_repartition_line_id': repartition_line.id,
+                'tax_base_amount': tax_vals['base'],
                 'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
             }))
 
