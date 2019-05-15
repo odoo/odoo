@@ -28,6 +28,7 @@ class CRMRevealRule(models.Model):
 
     # Website Traffic Filter
     country_ids = fields.Many2many('res.country', string='Countries', help='Only visitors of following countries will be converted into leads/opportunities (using GeoIP).')
+    website_id = fields.Many2one('website', help='Restrict Lead generation to this website.')
     state_ids = fields.Many2many('res.country.state', string='States', help='Only visitors of following states will be converted into leads/opportunities.')
     regex_url = fields.Char(string='URL Expression', help='Regex to track website pages. Leave empty to track the entire website, or / to target the homepage. Example: /page* to track all the pages which begin with /page')
     sequence = fields.Integer(help='Used to order the rules with same URL and countries. '
@@ -122,13 +123,15 @@ class CRMRevealRule(models.Model):
             'rules': [
             {
                 'id': 0,
-                'url': ***,
+                'regex': ***,
+                'website_id': 1,
                 'country_codes': ['BE', 'US'],
                 'state_codes': [('BE', False), ('US', 'NY'), ('US', 'CA')]
             },
             {
                 'id': 1,
-                'url': ***,
+                'regex': ***,
+                'website_id': 1,
                 'country_codes': ['BE'],
                 'state_codes': [('BE', False)]
             }
@@ -159,6 +162,7 @@ class CRMRevealRule(models.Model):
             rules.append({
                 'id': rule.id,
                 'regex': regex_url,
+                'website_id': rule.website_id.id if rule.website_id else False,
                 'country_codes': countries,
                 'state_codes': states
             })
@@ -178,9 +182,9 @@ class CRMRevealRule(models.Model):
         country_rules[country].append(rule_index)
         return country_rules
 
-    def _match_url(self, url, country_code, state_code, rules_excluded):
+    def _match_url(self, website_id, url, country_code, state_code, rules_excluded):
         """
-        Return the matching rule based on the country and URL.
+        Return the matching rule based on the country, the website and URL.
         """
         all_rules = self._get_active_rules()
         rules_id = all_rules['country_rules'].get(country_code, [])
@@ -189,6 +193,7 @@ class CRMRevealRule(models.Model):
         for rule_index in rules_id:
             rule = all_rules['rules'][rule_index]
             if ((country_code, state_code) in rule['state_codes'] or (country_code, False) in rule['state_codes'])\
+                and (not rule['website_id'] or rule['website_id'] == website_id)\
                 and str(rule['id']) not in rules_excluded\
                 and re.search(rule['regex'], url):
                 rules_matched.append(rule)
