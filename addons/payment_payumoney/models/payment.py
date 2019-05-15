@@ -8,6 +8,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.tools.float_utils import float_compare
+from odoo.http import request
 
 import logging
 
@@ -55,7 +56,7 @@ class PaymentAcquirerPayumoney(models.Model):
     @api.multi
     def payumoney_form_generate_values(self, values):
         self.ensure_one()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         payumoney_values = dict(values,
                                 key=self.payumoney_merchant_key,
                                 txnid=values['reference'],

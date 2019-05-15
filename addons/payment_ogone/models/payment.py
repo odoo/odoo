@@ -17,6 +17,7 @@ from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, ustr
 from odoo.tools.float_utils import float_compare, float_repr, float_round
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -148,7 +149,7 @@ class PaymentAcquirerOgone(models.Model):
         return shasign
 
     def ogone_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         ogone_tx_values = dict(values)
         param_plus = {
             'return_url': ogone_tx_values.pop('return_url', False)

@@ -15,6 +15,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_adyen.controllers.main import AdyenController
 from odoo.tools.pycompat import to_native
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -150,7 +151,7 @@ class AcquirerAdyen(models.Model):
 
     @api.multi
     def adyen_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # tmp
         import datetime
         from dateutil import relativedelta

@@ -7,6 +7,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
+from odoo.http import request
 
 from odoo.tools.float_utils import float_compare
 
@@ -83,7 +84,7 @@ class AcquirerBuckaroo(models.Model):
 
     @api.multi
     def buckaroo_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         buckaroo_tx_values = dict(values)
         buckaroo_tx_values.update({
             'Brq_websitekey': self.brq_websitekey,

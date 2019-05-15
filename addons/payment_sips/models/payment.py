@@ -14,6 +14,7 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.translate import _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_sips.controllers.main import SipsController
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -68,7 +69,7 @@ class AcquirerSips(models.Model):
     @api.multi
     def sips_form_generate_values(self, values):
         self.ensure_one()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         currency = self.env['res.currency'].sudo().browse(values['currency_id'])
         currency_code = CURRENCY_CODES.get(currency.name, False)
         if not currency_code:

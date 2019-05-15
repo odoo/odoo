@@ -11,6 +11,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.tools.float_utils import float_compare
+from odoo.http import request
 
 
 _logger = logging.getLogger(__name__)
@@ -91,7 +92,7 @@ class AcquirerPaypal(models.Model):
 
     @api.multi
     def paypal_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         paypal_tx_values = dict(values)
         paypal_tx_values.update({
