@@ -26,12 +26,12 @@ class StockMoveLine(models.Model):
                 self._create_correction_svl(move, diff)
             return move_lines
 
-        for line in move_lines:
-            move = line.move_id
-            if move.state == 'done':
-                correction_value = move._run_valuation(line.qty_done)
-                if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
-                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
+#        for line in move_lines:
+#            move = line.move_id
+#            if move.state == 'done':
+#                correction_value = move._run_valuation(line.qty_done)
+#                if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
+#                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
         return move_lines
 
     def write(self, vals):
@@ -104,9 +104,14 @@ class StockMoveLine(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def _create_correction_svl(self, move, diff):
+        stock_valuation_layers = self.env['stock.valuation.layer']
         if move._is_in() and diff > 0 or move._is_out() and diff < 0:
             move.product_price_update_before_done(forced_qty=diff)
-            move._create_in_svl(forced_quantity=abs(diff))
+            stock_valuation_layers |= move._create_in_svl(forced_quantity=abs(diff))
         elif move._is_in() and diff < 0 or move._is_out() and diff > 0:
-            move._create_out_svl(forced_quantity=abs(diff))
+            stock_valuation_layers |= move._create_out_svl(forced_quantity=abs(diff))
 
+        for stock_valuation_layer in stock_valuation_layers:
+            if not stock_valuation_layer.product_id.valuation == 'real_time':
+                continue
+            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=stock_valuation_layer.value, forced_quantity=stock_valuation_layer.quantity, forced_ref=stock_valuation_layer.description)._account_entry_move()

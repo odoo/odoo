@@ -296,3 +296,93 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.standard_price, 15)
 
+
+class TestStockValuationFIFO(TestStockValuationCommon):
+    def setUp(self):
+        super(TestStockValuationFIFO, self).setUp()
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+
+    def test_normal_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 15)
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 5)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 5)
+
+    def test_change_in_past_decrease_in_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 10)
+        move1.move_line_ids.qty_done = 10
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    @skip('fifo negative')
+    def test_change_in_past_decrease_in_2(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 10)
+        move3 = self._make_out_move(self.product1, 10)
+        move1.move_line_ids.qty_done = 10
+        move1 = self._make_in_move(self.product1, 20, unit_cost=15)
+
+        self.assertEqual(self.product1.value_svl, 150)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_change_in_past_increase_in_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=15)
+        move3 = self._make_out_move(self.product1, 20)
+        move1.move_line_ids.qty_done = 20
+
+        self.assertEqual(self.product1.value_svl, 100)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    @skip('fifo negative')
+    def test_change_in_past_increase_in_2(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=12)
+        move3 = self._make_out_move(self.product1, 15)
+        move4 = self._make_out_move(self.product1, 20)
+        move5 = self._make_in_move(self.product1, 100, unit_cost=15)
+        move1.move_line_ids.qty_done = 20
+
+        self.assertEqual(self.product1.value_svl, 1375)
+        self.assertEqual(self.product1.quantity_svl, 95)
+
+    def test_change_in_past_decrease_out_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 15)
+        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
+        move2.move_line_ids.qty_done = 5
+
+        self.assertEqual(self.product1.value_svl, 450)
+        self.assertEqual(self.product1.quantity_svl, 35)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 35)
+
+    def test_return_delivery_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_out_move(self.product1, 10, create_picking=True)
+        move3 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move4 = self._make_return(move2, 10)
+
+        self.assertEqual(self.product1.value_svl, 300)
+        self.assertEqual(self.product1.quantity_svl, 20)
+
+    def test_return_receipt_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_return(move1, 2)
+
+        self.assertEqual(self.product1.value_svl, 280)
+        self.assertEqual(self.product1.quantity_svl, 18)
+
