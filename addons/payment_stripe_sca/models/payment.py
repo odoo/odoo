@@ -20,7 +20,7 @@ class PaymentAcquirerStripeSCA(models.Model):
 
     def stripe_form_generate_values(self, tx_values):
         self.ensure_one()
-        base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        base_url = self.get_base_url()
         stripe_session_data = {
             "payment_method_types[]": "card",
             "line_items[][amount]": int(
