@@ -22,7 +22,7 @@
                         <div style="color: #000000; font-size: 15px;">${datetime.date.today().strftime('%B %d, %Y')}</div>
                     </td>
                     <td style="text-align: right; padding: 10px 20px">
-                        <img style="padding: 0px; margin: 0px; height: auto; width: 80px;" src="/logo.png?company=${company.id}"/>
+                        <img style="padding: 0px; margin: 0px; height: auto; width: 80px;" src="/logo.png?company=${company.id}&amp;dbname=${object.env.cr.dbname}"/>
                         <div style="padding-top: 5px;">
                             <a href="/web/login" style="background-color: #875A7B; margin-left: 5px; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Connect</a>
                         </div>
