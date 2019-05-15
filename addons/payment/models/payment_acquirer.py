@@ -5,6 +5,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_round, image_resize_images
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -366,6 +367,9 @@ class PaymentAcquirer(models.Model):
                 'res_id': self.ids[0],
                 'context': context,
             }
+
+    def _get_base_url(self):
+        return request and request.httprequest.url_root or self.env['ir.config_parameter'].get_param('web.base.url')
 
 
 class PaymentTransaction(models.Model):
