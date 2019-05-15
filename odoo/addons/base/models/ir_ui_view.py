@@ -1006,37 +1006,14 @@ actual arch.
 
     def get_attrs_symbols(self):
         """ Return a set of predefined symbols for evaluating attrs. """
-        return {
-            'True', 'False', 'None',    # those are identifiers in Python 2.7
-            'self',
-            'parent',
-            'id',
-            'uid',
-            'context',
-            'context_today',
-            'active_id',
-            'active_ids',
-            'allowed_company_ids',
-            'current_company_id',
-            'active_model',
-            'time',
-            'datetime',
-            'relativedelta',
-            'current_date',
-            'abs',
-            'len',
-            'bool',
-            'float',
-            'str',
-            'unicode',
-        }
+        return orm.get_attrs_symbols()
 
     def get_attrs_field_names(self, arch, model, editable):
         """ Retrieve the field names appearing in context, domain and attrs, and
             return a list of triples ``(field_name, attr_name, attr_value)``.
         """
         VIEW_TYPES = {item[0] for item in type(self).type.selection}
-        symbols = self.get_attrs_symbols() | {None}
+        symbols = self.get_attrs_symbols()
         result = []
 
         def get_name(node):
@@ -1053,12 +1030,13 @@ actual arch.
             """ parse `expr` and collect triples """
             for node in ast.walk(ast.parse(expr.strip(), mode='eval')):
                 name = get(node)
-                if name not in symbols:
+                if name is not None and name not in symbols:
                     result.append((name, key, val))
 
         def process_attrs(expr, get, key, val):
             """ parse `expr` and collect field names in lhs of conditions. """
-            for domain in safe_eval(expr).values():
+            eval_ctx = dict.fromkeys(symbols, 42)
+            for domain in safe_eval(expr, globals_dict=eval_ctx).values():
                 if not isinstance(domain, list):
                     continue
                 for arg in domain:

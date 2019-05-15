@@ -56,13 +56,56 @@ def transfer_field_to_modifiers(field, modifiers):
         else:
             modifiers[attr] = default_value
 
+def get_attrs_symbols():
+    """ Return a set of predefined symbols for evaluating attrs. """
+    return {
+        'True', 'False', 'None',    # those are identifiers in Python 2.7
+        'self',
+        'parent',
+        'id',
+        'uid',
+        'context',
+        'context_today',
+        'active_id',
+        'active_ids',
+        'allowed_company_ids',
+        'current_company_id',
+        'active_model',
+        'time',
+        'datetime',
+        'relativedelta',
+        'current_date',
+        'abs',
+        'len',
+        'bool',
+        'float',
+        'str',
+        'unicode',
+    }
+
 
 # Don't deal with groups, it is done by check_group().
 # Need the context to evaluate the invisible attribute on tree views.
 # For non-tree views, the context shouldn't be given.
 def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False):
     if node.get('attrs'):
-        modifiers.update(safe_eval(node.get('attrs')))
+        symbols = list(get_attrs_symbols())
+        attrs_dict = safe_eval(node.get('attrs'), globals_dict={symbol: symbol for symbol in symbols})
+        for modifier, domain in attrs_dict.items():
+            new_domain_values = []
+            for element in domain:
+                if len(element) == 3:
+                    occurences = [i for i, symbol in enumerate(symbols) if element[2] == symbol]
+                    if occurences:
+                        symbol = symbols[occurences[0]]
+                        new_domain_values += [str(element).replace("'%s'" % symbol, "%s" % symbol)]
+                    else:
+                        new_domain_values += [str(element)]
+                else:
+                    new_domain_values += [element]
+            new_domain = "[%s]" % ','.join(["%s"] * len(domain)) % tuple(new_domain_values)
+            attrs_dict[modifier] = new_domain
+        modifiers.update(attrs_dict)
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
