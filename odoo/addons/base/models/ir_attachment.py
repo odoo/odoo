@@ -50,22 +50,62 @@ class IrAttachment(models.Model):
     @api.model
     def _filestore(self):
         return config.filestore(self._cr.dbname)
-
+    
+    @api.model
+    def _get_datas_inital_vals(self):
+        return {
+            'store_fname': False,
+            'db_datas': False,
+        }
+    
+    @api.model
+    def _update_datas_vals(self, vals, attach, bin_data):
+        vals.update({
+            'file_size': len(bin_data),
+            'checksum': self._compute_checksum(bin_data),
+            'index_content': self._index(bin_data, attach.datas_fname, attach.mimetype),
+        })
+        return vals
+    
+    @api.model
+    def _get_datas_clean_vals(self, attach):
+        vals = {}
+        if attach.store_fname:
+            vals['store_fname'] = attach.store_fname
+        return vals
+    
+    @api.model
+    def _clean_datas_after_write(self, vals):
+        if 'store_fname' in vals:
+            self._file_delete(vals['store_fname'])
+    
+    @api.model
+    def storage_locations(self):
+        return ['db', 'file']
+    
     @api.model
     def force_storage(self):
-        """Force all attachments to be stored in the currently configured storage"""
         if not self.env.user._is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
-
-        # domain to retrieve the attachments to migrate
-        domain = {
-            'db': [('store_fname', '!=', False)],
-            'file': [('db_datas', '!=', False)],
-        }[self._storage()]
-
-        for attach in self.search(domain):
-            attach.write({'datas': attach.datas})
+        storage_domain = {
+            'db': ('db_datas', '=', False),
+            'file': ('store_fname', '=', False), 
+        }
+        record_domain = [
+            '&', ('type', '=', 'binary'),
+            '&', storage_domain[self._storage()], 
+            '|', ('res_field', '=', False), ('res_field', '!=', False)
+        ]
+        self.search(record_domain).migrate()
         return True
+    
+    @api.multi
+    def migrate(self):
+        record_count = len(self)
+        storage = self._storage().upper()
+        for index, attach in enumerate(self):
+            _logger.info(_("Migrate Attachment %s of %s to %s") % (index + 1, record_count, storage))
+            attach.with_context(migration=True).write({'datas': attach.datas})
 
     @api.model
     def _full_path(self, path):
@@ -191,31 +231,22 @@ class IrAttachment(models.Model):
                 attach.datas = self._file_read(attach.store_fname, bin_size)
             else:
                 attach.datas = attach.db_datas
-
+                
+    @api.multi
     def _inverse_datas(self):
         location = self._storage()
         for attach in self:
-            # compute the fields that depend on datas
             value = attach.datas
             bin_data = base64.b64decode(value) if value else b''
-            vals = {
-                'file_size': len(bin_data),
-                'checksum': self._compute_checksum(bin_data),
-                'index_content': self._index(bin_data, attach.datas_fname, attach.mimetype),
-                'store_fname': False,
-                'db_datas': value,
-            }
+            vals = self._get_datas_inital_vals()
+            vals = self._update_datas_vals(vals, attach, bin_data)
             if value and location != 'db':
-                # save it to the filestore
                 vals['store_fname'] = self._file_write(value, vals['checksum'])
-                vals['db_datas'] = False
-
-            # take current location in filestore to possibly garbage-collect it
-            fname = attach.store_fname
-            # write as superuser, as user probably does not have write access
+            else:
+                vals['db_datas'] = value
+            clean_vals = self._get_datas_clean_vals(attach)
             super(IrAttachment, attach.sudo()).write(vals)
-            if fname:
-                self._file_delete(fname)
+            self._clean_datas_after_write(clean_vals)
 
     def _compute_checksum(self, bin_data):
         """ compute the checksum for the given datas
@@ -229,6 +260,8 @@ class IrAttachment(models.Model):
             :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
+        if self.env.context.get('migration') and len(self) == 1:
+            return self.mimetype or 'application/octet-stream'
         mimetype = None
         if values.get('mimetype'):
             mimetype = values['mimetype']
