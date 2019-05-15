@@ -153,7 +153,7 @@ class ResourceCalendar(models.Model):
                 cleaned.append(working_interval)
                 working_interval = self._interval_new(*current_interval)
             elif working_interval[1] < current_interval[1]:  # union of greater intervals
-                working_interval = self._interval_or(working_interval, current_interval)
+                working_interval = self._interval_or(working_interval, self._interval_new(*current_interval))
         if working_interval:  # handle void lists
             cleaned.append(working_interval)
         return cleaned
