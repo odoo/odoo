@@ -31,8 +31,6 @@ tour.register('shop_cart_recovery', {
                 'method': 'sale_get_order',
                 'args': [[$('html').data('website-id')]],
             }).then(function (data) {
-                var orderId = parseInt(data.match(/sale\.order\((\d+),\)/)[1]);
-                localStorage.setItem(orderIdKey, orderId);
                 window.location.href = "/web/session/logout?redirect=/web/login";
             });
         },
@@ -41,14 +39,21 @@ tour.register('shop_cart_recovery', {
         content: "login as admin and go to the SO (backend)",
         trigger: '.oe_login_form',
         run: function () {
-            var orderId = localStorage.getItem(orderIdKey);
-            var url = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
+            var url = "/web#action=website_sale.action_orders_ecommerce&view_type=list";
             var $loginForm = $('.oe_login_form');
             $loginForm.find('input[name="login"]').val("admin");
             $loginForm.find('input[name="password"]').val("admin");
             $loginForm.find('input[name="redirect"]').val(url);
             $loginForm.submit();
         },
+    },
+    {
+        content: "remove filter Confirmed Orders",
+        trigger: '.o_searchview_input_container .o_searchview_facet:first .o_facet_remove'
+    },
+    {
+        content: "select the order",
+        trigger: 'tbody tr:first .o_list_record_selector input[type="checkbox"]',
     },
     {
         content: "click action",
@@ -61,6 +66,10 @@ tour.register('shop_cart_recovery', {
     {
         content: "click Send email",
         trigger: '.btn[name="action_send_mail"]',
+    },
+    {
+        content: "click on the order",
+        trigger: '.o_data_row:first',
     },
     {
         content: "check the mail is sent, grab the recovery link, and logout",
