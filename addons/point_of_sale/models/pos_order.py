@@ -326,6 +326,7 @@ class PosOrder(models.Model):
                     'partner_id': partner_id,
                     'order_id': order.id,
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
+                    'tax_base_amount': tax['base'],
                     'tag_ids': tax['tag_ids'],
                 }
                 if currency_id != cur_company:

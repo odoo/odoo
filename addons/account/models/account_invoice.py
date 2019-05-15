@@ -1098,6 +1098,7 @@ class AccountInvoice(models.Model):
             'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
             'tax_ids': tax_ids and [(6, None, tax_ids)] or False,
             'tax_repartition_line_id': tax.get('tax_repartition_line_id'), # For base amount, we let this field empty
+            'tag_ids': tax['tag_ids'],
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -1265,7 +1266,6 @@ class AccountInvoice(models.Model):
 
     def tax_line_move_line_get(self):
         self.ensure_one()
-
         res = []
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
@@ -1285,7 +1285,8 @@ class AccountInvoice(models.Model):
                     'invoice_id': self.id,
                     'tax_ids': tax_line.tax_ids and [(6, 0, tax_line.tax_ids.ids)] or False, # We don't pass an empty recordset here, as it would reset the tax_exibility of the line, due to the condition in account.move.line's create
                     'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
-                    'tag_ids': [(6, 0, tax_line.tax_repartition_line_id.tag_ids.ids)],
+                    'tag_ids': [(6, 0, tax_line.tag_ids.ids)],
+                    'tax_base_amount': tax_line.base,
                 })
         return res
 
@@ -2145,8 +2146,8 @@ class AccountInvoiceTax(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base')
-    tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes',
-        help='Taxes affecting the tax base amount applied before this one.')
+    tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes', help='Taxes affecting the tax base amount applied before this one.')
+    tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', help="The taxes that will be applied on the move line generated for this tax entry")
 
     @api.depends('amount', 'amount_rounding')
     def _compute_amount_total(self):
