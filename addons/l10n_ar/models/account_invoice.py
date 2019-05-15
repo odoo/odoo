@@ -19,10 +19,6 @@ class AccountInvoice(models.Model):
         ('4', '4-Otros (exportación)'),
     ]
 
-    l10n_ar_id_number = fields.Char(
-        related='commercial_partner_id.l10n_ar_id_number',
-        readonly=True,
-    )
     l10n_ar_state_id = fields.Many2one(
         related='partner_id.state_id',
         store=True,
