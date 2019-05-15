@@ -300,6 +300,7 @@ widgetsMedia.ImageWidget.include({
             }
         }
         this._super.apply(this, arguments);
+        this.hasSearched = true;
     },
 });
 });
