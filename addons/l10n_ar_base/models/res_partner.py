@@ -63,7 +63,7 @@ class ResPartner(models.Model):
     @api.depends('vat', 'l10n_ar_identification_type_id')
     def _compute_l10n_ar_cuit(self):
         """ We add this computed field that returns cuit or nothing ig this one
-        is not set for the partner. This validation can be also done by calling
+        is not set for the partner. This Wvalidation can be also done by calling
         ensure_cuit() method that returns the cuit or error if this one is not
         found.
         """
