@@ -60,7 +60,7 @@ class ResPartner(models.Model):
             rec.l10n_ar_formated_cuit = "{0}-{1}-{2}".format(
                 cuit[0:2], cuit[2:10], cuit[10:])
 
-    @api.depends('l10n_ar_identification_type_id')
+    @api.depends('l10n_ar_identification_type_id', 'vat')
     def _compute_l10n_ar_cuit(self):
         """ We add this computed field that returns cuit or nothing ig this one
         is not set for the partner. This validation can be also done by calling
