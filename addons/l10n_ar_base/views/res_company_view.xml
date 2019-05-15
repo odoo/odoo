@@ -6,12 +6,7 @@
         <field name="model">res.company</field>
         <field name="arch" type="xml">
             <field name="vat" position="before">
-                <label for="l10n_ar_id_number" string="Identification"/>
-                <div class="o_address_format">
-                    <field class="o_address_state" name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type"/>
-                    <span class="oe_read_only">-</span>
-                    <field name="l10n_ar_id_number" placeholder="Number" class="oe_inline"/>
-                </div>
+                <field name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" />
             </field>
         </field>
     </record>
