@@ -1,6 +1,62 @@
 odoo.define('web.public.lazyloader', function (require) {
 'use strict';
 
+var blockEvents = ['submit', 'click'];
+var blockFunction = function (ev) {
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+};
+
+var waitingLazy = false;
+
+/**
+ * Blocks the DOM sections which explicitely require the lazy loaded JS to be
+ * working (those sections should be marked with the 'o_wait_lazy_js' class).
+ *
+ * @see stopWaitingLazy
+ */
+function waitLazy() {
+    if (waitingLazy) {
+        return;
+    }
+    waitingLazy = true;
+
+    document.querySelectorAll('.o_wait_lazy_js').forEach(function (element) {
+        blockEvents.forEach(function (evType) {
+            element.addEventListener(evType, blockFunction);
+        });
+    });
+}
+/**
+ * Unblocks the DOM sections blocked by @see waitLazy and removes the related
+ * 'o_wait_lazy_js' class from the whole DOM.
+ */
+function stopWaitingLazy() {
+    if (!waitingLazy) {
+        return;
+    }
+    waitingLazy = false;
+
+    document.querySelectorAll('.o_wait_lazy_js').forEach(function (element) {
+        blockEvents.forEach(function (evType) {
+            element.removeEventListener(evType, blockFunction);
+        });
+        element.classList.remove('o_wait_lazy_js');
+    });
+}
+
+// Start waiting for lazy loading as soon as the DOM is available
+if (document.readyState !== 'loading') {
+    waitLazy();
+} else {
+    document.addEventListener('DOMContentLoaded', function () {
+        waitLazy();
+    });
+}
+
+// As soon as everything is fully loaded, start loading all the remaining JS
+// and unblock the related DOM section when all of it have been loaded and
+// executed
 var doResolve = null;
 var _allScriptsLoaded = new Promise(function (resolve) {
     if (doResolve) {
@@ -8,12 +64,21 @@ var _allScriptsLoaded = new Promise(function (resolve) {
     } else {
         doResolve = resolve;
     }
+}).then(function () {
+    stopWaitingLazy();
 });
-
-window.addEventListener('load', function () {
+if (document.readyState === 'complete') {
     setTimeout(_loadScripts, 0);
-});
+} else {
+    window.addEventListener('load', function () {
+        setTimeout(_loadScripts, 0);
+    });
+}
 
+/**
+ * @param {DOMElement[]} scripts
+ * @param {integer} index
+ */
 function _loadScripts(scripts, index) {
     if (scripts === undefined) {
         scripts = document.querySelectorAll('script[data-src]');
