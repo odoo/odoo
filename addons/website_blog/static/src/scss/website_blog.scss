@@ -1,3 +1,97 @@
+// ======= VARIABLES =======
+$o-wblog-read-width: 620px;
+$o-wblog-read-container-sidebar-width :900px;
+$o-wblog-loader-size: 50px;
+
+$o-wblog-title-sizes-variants: (
+    tiny: (
+        title: $display4-size*0.6,
+        subtitle: $lead-font-size
+    ),
+    small: (
+        title: $display4-size*0.75,
+        subtitle: $lead-font-size
+    ),
+    big: (
+        title: $display3-size,
+        subtitle: $lead-font-size*1.25
+    ),
+    huge: (
+        title: $display2-size,
+        subtitle: $lead-font-size*1.5
+    ),
+    hero: (
+        title: $display1-size,
+        subtitle: $lead-font-size*1.75
+    )
+);
+
+// ======= ANIMATIONS =======
+// Attention keeper for the "scroll down" top-banner button
+@keyframes o-wblog-anim-heart {
+    0%, 14%, 35% { transform: scale(1); }
+    7%, 21% {
+        transform: scale(1.3);
+        background-color: rgba(theme-color('primary'), 0.8);
+    }
+}
+
+// Generic fade-in
+@keyframes o-wblog-fade-In {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes o-wblog-loader {
+    0%, 100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    }
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    }
+    100% {
+        transform: rotateY(3600deg);
+    }
+}
+
+
+// ======== MIXINS =========
+// Create easing-linear-gradients. Compared to the standards liner-gradients
+// these are smoother and blends into their context increasing readability when
+// acts as background for text placed over images.
+// based on: https://css-tricks.com/easing-linear-gradients/
+@mixin o-wbblog-scrim-gradient($colorFrom, $colorTo) {
+    $scrimStops: 0% 0%, 26.2% 19%, 45.9% 34%, 61.8% 47%, 72.2% 56.5%, 80.6% 65%, 87.4% 73%, 92.5% 80.2%, 95.8% 86.1%, 97.9% 91%, 99.2% 95.2%, 99.8% 98.2%, 100% 100%;
+    $stops: ();
+    @each $scrimStop in $scrimStops {
+        $stops: append($stops, mix($colorTo, $colorFrom, nth($scrimStop, 1)) nth($scrimStop, 2), comma)
+    }
+
+    background-image: linear-gradient(#{$stops});
+}
+
+// ======== Cover container =========
+// A generic component that can be used even outside blog using snippets.
+// In website_blog it's used for blog post posts.
+.o_blog_cover_container {
+    position: relative;
+
+    .o_blog_cover_component {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Website Blog
+//------------------------------------------------------------------------------
 .website_blog {
     .css_website_mail {
         .o_has_error {
@@ -11,14 +105,70 @@
         }
     }
 
-    .read_width {
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
+    .o_wblog_page_cards_bg {
+        // To be applied to the main container when 'card design' option is
+        // enabled. Provide a slight darker bg that will blend the background
+        // color chosen by the user, visually increasing the contrast in case of
+        // brights (or white) backgrounds.
+        // It shouldn't be noticeable on dark backgrounds.
+        background-color: rgba(black, 0.005);
     }
 
-    .blog_content {
+    .o_wblog_read {
+        max-width: $o-wblog-read-width;
+    }
+
+    .o_wblog_read_with_sidebar {
+        max-width: $o-wblog-read-container-sidebar-width;
+    }
+
+    // This option class is assigned to the post's content using the "Customize"
+    // menu. The aim is to be able to write simple articles on the fly,
+    // achieving a good design without being forced to use snippets.
+    .o_wblog_read_text {
+        font-size: 18px;
+        line-height: 28px;
+        font-weight: 300;
+
+        p, ul, ol {
+            margin-bottom: 1.55em;
+        }
+
+        li {
+            margin-bottom: 1em;
+        }
+
+        .lead {
+            font-size: 26px;
+            line-height: 34px;
+            margin-bottom: 40px;
+        }
+    }
+
+    .o_wblog_author_avatar {
+        width: 1.2em;
+        max-width: none;
+    }
+
+    .o_wblog_author_avatar_date {
+        // Resize in order to double the current font-size and accommodate
+        // two text lines, name and date.
+        width: 2em;
+        max-width: none;
+    }
+
+    .o_wblog_social_links > a {
+        @include size(3em);
+        > i {
+            font-size: 1.3em;
+        }
+    }
+
+    // Blog Post Page
+    // ==============================================
+    #o_wblog_post_content {
         min-height: 350px !important;
+
         a.oe_mail_expand:after {
             content: " →";
         }
@@ -27,282 +177,285 @@
         }
     }
 
-    p.post-meta {
-        position: relative;
-        top: -5px;
-    }
-
-    div#blog_angle_down a:hover {
-        text-decoration: none;
-    }
-
-    .o_blog_cover_container {
-        position: relative;
-
-        > .o_blog_cover_component {
-            @include o-position-absolute(0, 0, 0, 0);
+    #o_wblog_post_comments {
+        .o_portal_chatter > hr {
             display: none;
+        }
+    }
 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+    // Blog Post Page Cover
+    // ==============================================
+    .o_wblog_post_page_cover {
+        // By default (no image defined), inner filters elements are hidden.
+        .o_blog_cover_component {
+            display: none;
         }
 
-        > .blog_title {
-            margin: 0 auto;
-            text-align: center;
-            font-weight: bold;
-        }
-        &.cover {
-            > .o_blog_cover_component {
+        // If a cover image is defined, show filters + adapt inner typography
+        &.o_wblog_has_cover {
+            .o_blog_cover_image:after {
+                content: "";
+                display: block;
+                @include o-position-absolute(0,0,50%,0);
+                @include o-wbblog-scrim-gradient(rgba(black, 0.5), transparent);
+            }
+            .o_blog_cover_component {
                 display: block;
             }
-        }
-        &.cover, &.cover_footer {
-            > .blog_title {
+
+            .o_wblog_post_title {
                 color: white;
-                @include o-position-absolute(20%, $grid-gutter-width, auto, $grid-gutter-width);
+            }
+
+            #o_wblog_post_content_jump {
+                @include size($o-wblog-loader-size);
+                display: none;
+                background-color: rgba(black, 0.5);
+
+                &:hover {
+                    background-color: rgba(black, 0.7);
+                }
+            }
+
+            // Cover sizes
+            // ==============================================
+            &.cover_full {
+                min-height: 600px;
+                min-height: 100vh;
+            }
+
+            &.cover_mid {
+                min-height: 400px;
+                min-height: 55vh;
+            }
+
+            &.cover_full, &.cover_mid {
+                #o_wblog_post_content_jump {
+                    display: flex;
+                    animation: o-wblog-anim-heart 2.6s ease-in-out 1s infinite;
+
+                    &:hover {
+                        animation-iteration-count: 1;
+                    }
+                }
+            }
+
+            &.cover_auto {
+                padding: 3rem 0;
+                // The actual height will always be 'auto'. The following
+                // min-height rule is set to trigger the page transition only.
+                min-height: 1px;
+            }
+
+            // "Regular Cover" design sizes
+            // ==============================================
+            &.o_wblog_post_page_cover_regular {
+                .o_blog_cover_image:after {
+                    visibility: hidden;
+                }
+
+                &.cover_full {
+                    min-height: 350px;
+                }
+
+                &.cover_mid {
+                    min-height: 250px;
+                }
+
+                &.cover_auto {
+                    min-height: 150px;
+                    padding: 0;
+                }
             }
         }
 
-        &.cover_full {
-            height: 600px;
-            height: 100vh;
-        }
-        &.cover_narrow {
-            height: 300px;
-            height: 50vh;
-        }
-        &.o_list_cover {
-            display: none;
-            height: 250px!important;
+    }
 
-            &.cover {
-                display: block;
-            }
+    // Blog Post Specific
+    // ==============================================
+    .o_wblog_post_title {
+        #o_wblog_post_name {
+            font-weight: $display4-weight;
+            line-height: $display-line-height;
+            // Default font-size.
+            @include font-size($display4-size);
         }
 
-        &.cover_footer {
-            min-height: 350px;
-            height: 65vh;
-            background-color: #B8B8B8;
-            cursor: pointer;
+        #o_wblog_post_subtitle {
+            font-weight: $lead-font-weight;
+            // Default font-size.
+            @include font-size($lead-font-size);
         }
     }
 
-    /* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
-    @include media-breakpoint-down(sm) {
+    // Size variants
+    @each $size, $map in $o-wblog-title-sizes-variants {
+        .o_wblog_cover_font_#{$size} .o_wblog_post_title {
+            #o_wblog_post_name {
+                @include font-size(map-get($map, title));
+            }
+            #o_wblog_post_subtitle {
+                @include font-size(map-get($map, subtitle));
+            }
+        }
+    }
+
+    // Refine multi-lines titles when using 'regular' cover
+    .o_wblog_regular_cover_container #o_wblog_post_name {
+        line-height: 1;
+        padding-bottom: 0.5rem;
+    }
+
+    .o_wblog_post_page_cover_footer {
+        min-height: 33vh;
+        // Emulate native jQuery 'swing' easing to match js code
+        transition: all 0.3s cubic-bezier(.02, .01, .47, 1);
+    }
+
+    #o_wblog_next_container {
+        background-color: $body-bg;
+        cursor: pointer;
+
+        .o_wblog_next_loader {
+            transform: translateZ(1px);
+
+            div {
+                @include size($o-wblog-loader-size);
+                margin-top: $o-wblog-loader-size * -2;
+                background: rgba(black, 0.15);
+                animation: o-wblog-loader 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            }
+        }
+
+        .o_wblog_next_fake_btn {
+            height: $o-wblog-loader-size;
+        }
+    }
+
+    #o_wblog_post_main.o_wblog_post_main_transition {
+        animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
+    }
+
+    // Blog Index Pages
+    // ==============================================
+    #o_wblog_posts_loop {
         .o_blog_cover_container {
-            > .blog_title {
-                > h1 {
-                    font-size: 26px;
-                }
-                > h2 {
-                    font-size: 20px;
-                }
-            }
-            &.cover > .blog_title {
-                top: 10%;
-            }
+            box-shadow: inset 0 0 0 1px rgba(white, 0.3);
+            background: rgba(black, 0.1);
 
-            &.cover_narrow {
-                height: 65vh;
-            }
+            padding-top: 33%;
+            height: auto!important;
 
-            &.cover_footer {
-                min-height: 280px;
-                height: 50vh;
-
-                > .blog_title {
-                    top: 2%;
-                }
+            &:hover .o_blog_cover_image {
+                opacity: 0.8;
             }
         }
-    }
 
-    mark + .popover, .cover_footer {
-        cursor: pointer;
-    }
-
-    .js_publish_management {
-        z-index: 1;
-
-        .dropdown-menu {
-            left: auto;
-            right: 0;
+        .o_wblog_normalize_font {
+            // normalize fonts
+            font-size: 13px;
+            line-height: 1.45;
         }
-    }
 
-    .o_blog_post_title {
-        font-size: 24px;
-    }
-
-    .o_blog_post_teaser {
-        text-align: justify;
-    }
-
-    /*To display the grid or inline presentation of the blog.post_list*/
-    .o_grid {
-        margin: 0 6% 6% 0;
-        border: 1px solid #EEEEEE;
-        box-shadow: .5px .5px .5px .5px rgba(238,238,238,1);
-        padding-bottom: 15px;
-        .o_blog_post_teaser {
-            width: 100%;
+        .o_wblog_post_list_author {
+            @include o-wbblog-scrim-gradient(transparent, rgba(black, 0.5));
         }
-        > .text-muted > .mb0 > hr {
+
+        &.o_wblog_list_view {
+            .o_blog_cover_container {
+                padding-top: 20%;
+            }
+            .o_wblog_post_cover_nocard .o_blog_cover_container {
+                padding-top: 33%;
+            }
+        }
+
+    }
+
+    //  Editor Helpers
+    // ==============================================
+    body.editor_enable & {
+        // Make empty covers visible in edit mode
+        .o_blog_cover_container.o_wblog_post_page_cover:not(.o_wblog_has_cover) {
+            background-color: $gray-100;
+            padding: 30px 0;
+            border: 1px dashed $gray-500;
+        }
+
+        // Hide the big "DRAG BUILDING BLOCKS HERE" box when inside a sidebar.
+        // The purple lines are enough to help the user dropping snippets.
+        #o_wblog_sidebar .oe_structure:empty {
             display: none;
         }
-    }
-
-    .o_author_avatar_little {
-        width: 40px;
-    }
-
-    .o_blog_post_complete.o_sharing_links {
-        max-width: 700px;
-        margin: 50px auto 50px auto;
-        text-align: center;
-
-        > p {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        > a {
-            font: normal normal normal 40px/1 FontAwesome;
-        }
-    }
-
-    .blog_post_year_collapse {
-        cursor: pointer;
-        > i {
-            color: theme-color('primary');
-        }
-    }
-
-    section.blog_tags ul.nav-pills li a {
-        padding: 2px 15px;
     }
 }
+
 
 //------------------------------------------------------------------------------
 // Latest posts snippets
 //------------------------------------------------------------------------------
+.s_latest_posts, .s_latest_posts_big_picture {
+    .s_latest_posts_loader {
+        @include o-position-absolute(0, 0, 0, 0);
+        transform: translateZ(1px);
 
-.s_latest_posts .media > a {
-    width: 100%;
-    height: 200px;
-
-    @include media-breakpoint-up(md) {
-        width: 100px;
-        height: 100px;
+        > div {
+            animation: o-wblog-loader 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            max: {width: 30px; height: 30px;}
+        }
     }
 
-    > .o_blog_cover_container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        padding: 0;
+    .s_latest_posts_post_title  {
+        font-weight: $headings-font-weight;
+        // Tweek line-height to help fit multi-line titles.
+        line-height: 1;
+    }
 
-        > .o_blog_cover_component {
-            @include o-position-absolute(0, 0, 0, 0);
-        }
-        > .o_blog_cover_image {
-            background-size: cover;
-            background-position: center;
-        }
+    .s_latest_posts_post_subtitle {
+        font-size: 1em;
+    }
+}
+
+.s_latest_posts {
+    // Set sizes relative to the container font-size.
+    // (handle parents with, for example, '.small' or '.h1' classes)
+    .s_latest_posts_post_cover {
+        @include size(3.5em);
+        max: {width: 85px; height: 85px}
+    }
+
+    .s_latest_posts_post_title  {
+        font-size: 1.25em;
     }
 }
 
 .s_latest_posts_big_picture {
     .s_latest_posts_post {
-        position: relative;
-        height: 250px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 300ms;
+        min-height: 150px;
 
-        &.js-loading {
-            background: gray('200') !important;
-        }
-
-        .thumb {
+        figcaption {
             position: relative;
-            display: block;
-            width: 100%;
-            max-width: 100% !important;
-            height: 100%;
-            padding: 0;
-            opacity: 0.8;
-            overflow: hidden;
+            justify-content: center;
+        }
 
-            > .o_blog_cover_component {
-                @include o-position-absolute(0, 0, 0, 0);
-            }
-            > .o_blog_cover_image {
-                background-size: cover;
-                background-position: center;
+        .s_latest_posts_post_cover {
+            min-height: 100%;
+
+            .o_blog_cover_container {
+                top: 0;
             }
         }
-        > div:not(.o_blog_cover_container):not(.js-loading) {
-            &, & > a {
-                @include o-position-absolute(0, $grid-gutter-width/2, 0, $grid-gutter-width/2);
-                padding: 2em;
-                color: $white;
-                text-transform: uppercase;
-                font-size: 1.25em;
-                backface-visibility: hidden;
-                &::after, &::before {
-                    pointer-events: none;
-                }
-            }
 
-            > a {
-                z-index: 1000;
-                text-indent: 200%;
-                white-space: nowrap;
-                font-size: 0;
-                opacity: 0;
-            }
-            h2 {
-                margin: 0;
-                font-size: 1.5em;
-                font-weight: 300;
-                span {
-                    font-weight: 800;
-                }
-            }
-            p {
-                margin: 1em 0 0;
-                letter-spacing: 1px;
-                font-size: 68.5%;
-            }
+        .s_latest_posts_post_title  {
+            @include font-size($h3-font-size);
+            margin-bottom: 0.5em;
+            word-spacing: -0.15em;
         }
+
         @include s-latest-posts-figure-hook;
     }
 
     .js_get_posts {
         @include s-latest-posts-js-get-posts-hook;
-    }
-}
-
-.s_latest_posts, .s_latest_posts_big_picture {
-
-    .js_get_posts {
-        position: relative;
-        min-height: 100px;
-    }
-
-    .progress.js-loading {
-        @include o-position-absolute(0, 0, 0, 0);
-        border-radius: 0;
-
-        .progress-bar {
-            @include o-position-absolute(45%, 10%, auto, 10%);
-            height: 10px;
-            margin: 0;
-            background: gray('600');
-            box-shadow: none;
-        }
     }
 }
