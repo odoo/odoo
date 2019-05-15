@@ -119,7 +119,6 @@ class TestIRRuleFeedback(Feedback):
         )
 
 
-
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
         self.assertRaisesRegex(
             AccessError,
