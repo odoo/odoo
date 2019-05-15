@@ -518,14 +518,6 @@
         </field>
     </record>
 
-    <act_window
-        id="act_pos_config_sessions"
-        name="Sessions"
-        binding_model="pos.config"
-        binding_views="form"
-        res_model="pos.session"
-        domain="[('config_id', '=', active_id)]" />
-
     <record id="action_pos_config_pos" model="ir.actions.act_window">
         <field name="name">Point of Sale</field>
         <field name="type">ir.actions.act_window</field>
