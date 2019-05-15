@@ -15,6 +15,7 @@ Base Module for Argentinian Localization
     """,
     'depends': [
         'contacts',
+        'base_vat',
     ],
     'data': [
         'data/res_currency_data.xml',

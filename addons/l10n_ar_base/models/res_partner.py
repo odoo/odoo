@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import re
+import stdnum.ar
 
 
 class ResPartner(models.Model):
@@ -53,12 +54,8 @@ class ResPartner(models.Model):
         """ This will add some dash to the CUIT number in order to show in his
         natural format: {person_category}-{number}-{validation_number}
         """
-        for rec in self:
-            if not rec.l10n_ar_cuit:
-                continue
-            cuit = rec.l10n_ar_cuit
-            rec.l10n_ar_formated_cuit = "{0}-{1}-{2}".format(
-                cuit[0:2], cuit[2:10], cuit[10:])
+        for rec in self.filtered('l10n_ar_cuit'):
+            rec.l10n_ar_formated_cuit = stdnum.ar.cuit.format(rec.l10n_ar_cuit)
 
     @api.depends('l10n_ar_identification_type_id', 'vat')
     def _compute_l10n_ar_cuit(self):
@@ -68,11 +65,47 @@ class ResPartner(models.Model):
         found.
         """
         for rec in self:
+            commercial_partner = rec.commercial_partner_id
             if rec.l10n_ar_identification_type_id.afip_code == 80:
                 rec.l10n_ar_cuit = rec.vat
             # If the partner is outside Argentina then we return the defined
             # country cuit defined by AFIP for that specific partner
-            elif rec.country_id and country.code != 'AR':
-                rec.l10n_ar_cuit = rec.commercial_partner_id.is_company and \
-                    rec.country_id.l10n_ar_cuit_juridica or \
-                    rec.country_id.l10n_ar_cuit_fisica
+            elif commercial_partner.country_id and \
+                 commercial_partner.country_id.code != 'AR':
+                rec.l10n_ar_cuit = commercial_partner.country_id[
+                    commercial_partner.is_company and
+                    'l10n_ar_cuit_juridica' or 'l10n_ar_cuit_fisica']
+
+    @api.constrains('vat', 'l10n_ar_identification_type_id')
+    def check_vat(self):
+        l10n_ar_partners = self.filtered('l10n_ar_identification_type_id')
+        l10n_ar_partners.l10n_ar_identification_validation()
+        return super(ResPartner, self - l10n_ar_partners).check_vat()
+
+    def _get_validation_module(self):
+        self.ensure_one()
+        if self.l10n_ar_identification_type_id.afip_code in [80, 86]:
+            return stdnum.ar.cuit
+        elif self.l10n_ar_identification_type_id.afip_code == 96:
+            return stdnum.ar.dni
+
+    def l10n_ar_identification_validation(self):
+        for rec in self.filtered('vat'):
+            module = rec._get_validation_module()
+            if not module:
+                continue
+            try:
+                module.validate(rec.vat)
+            except module.InvalidChecksum:
+                raise ValidationError(_('The validation digit is not valid.'))
+            except module.InvalidLength:
+                raise ValidationError(_('Invalid length.'))
+            except module.InvalidFormat:
+                raise ValidationError(_('Only numbers allowed.'))
+            except Exception as error:
+                raise ValidationError(repr(error))
+
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + [
+            'l10n_ar_identification_type_id']
