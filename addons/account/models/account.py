@@ -1173,7 +1173,8 @@ class AccountTax(models.Model):
                str(invoice_tax_val['account_id']) + '-' + \
                str(invoice_tax_val['account_analytic_id']) + '-' + \
                str(invoice_tax_val.get('analytic_tag_ids', [])) + '-' + \
-               str(invoice_tax_val.get('tax_ids') or [])
+               str(invoice_tax_val.get('tax_ids') or []) + '-' + \
+               str(invoice_tax_val.get('tag_ids') or [])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -1391,12 +1392,22 @@ class AccountTax(models.Model):
             if tax.price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += tax_amount
 
+            # If the tax affects the base of subsequent taxes, its tax move lines must
+            # receive the base tags of these taxes, so that the tax report computes
+            # the right total
+            additional_tags = self.env['account.account.tag']
+            if tax.include_base_amount:
+                next_taxes_rep = taxes[i+1:].mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
+                additional_tags += next_taxes_rep.filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+
+            # Compute the tax lines
             tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
             repartition_lines_to_treat = len(tax_repartition_lines)
             total_amount = 0
             for repartition_line in tax_repartition_lines.filtered(lambda x: x.repartition_type == 'tax'):
                 # In case some rounding error occurs, we compensate for it on the last line
                 line_amount = round(sign * tax_amount * repartition_line.factor if repartition_lines_to_treat != 1 else tax_amount - total_amount, prec)
+
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
@@ -1408,7 +1419,7 @@ class AccountTax(models.Model):
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
-                    'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
+                    'tag_ids': [(6, False, (repartition_line.tag_ids + additional_tags).ids)],
                 })
 
                 total_amount += line_amount

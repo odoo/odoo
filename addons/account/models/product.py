@@ -81,4 +81,5 @@ class ProductProduct(models.Model):
             'analytic_tag_ids': line.get('analytic_tag_ids', False),
             'tax_repartition_line_id': line.get('tax_repartition_line_id'),
             'tag_ids': line.get('tag_ids'),
+            'tax_base_amount': line.get('tax_base_amount'),
         }

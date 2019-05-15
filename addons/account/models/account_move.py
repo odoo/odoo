@@ -289,6 +289,7 @@ class AccountMove(models.Model):
                                 'company_currency_id': self.company_id.currency_id.id,
                                 'tax_repartition_line_id': line_vals['tax_repartition_line_id'],
                                 'tag_ids': line_vals['tag_ids'],
+                                'tax_base_amount': line_vals['base'],
                             }
                             # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
                             # and different currencies, we have no idea which currency set on this line.
@@ -619,15 +620,6 @@ class AccountMoveLine(models.Model):
                 move_line.credit_cash_basis = move_line.credit
             move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
 
-    @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
-    def _compute_tax_base_amount(self):
-        for move_line in self:
-            if move_line.tax_line_id:
-                base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids)
-                move_line.tax_base_amount = abs(sum(base_lines.mapped('balance')))
-            else:
-                move_line.tax_base_amount = 0
-
     @api.depends('move_id')
     def _compute_parent_state(self):
         for record in self.filtered('move_id'):
@@ -655,7 +647,7 @@ class AccountMoveLine(models.Model):
         help="The residual amount on a journal item expressed in the company currency.")
     amount_residual_currency = fields.Monetary(compute='_amount_residual', string='Residual Amount in Currency', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
-    tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
+    tax_base_amount = fields.Monetary(string="Base Amount", currency_field='company_currency_id')
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
@@ -1725,6 +1717,7 @@ class AccountPartialReconcile(models.Model):
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
+                                'tax_base_amount': line.tax_base_amount,
                                 'tag_ids': [(6, 0, line.tag_ids.ids)],
                             })
                             if line.account_id.reconcile:
@@ -1750,6 +1743,7 @@ class AccountPartialReconcile(models.Model):
                                     'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                                     'partner_id': line.partner_id.id,
                                     'tax_repartition_line_id': line.tax_repartition_line_id.id,
+                                    'tax_base_amount': line.tax_base_amount,
                                     'tag_ids': [(6, 0, line.tag_ids.ids)],
                                 })
                                 self.env['account.move.line'].with_context(check_move_validity=False).create({
