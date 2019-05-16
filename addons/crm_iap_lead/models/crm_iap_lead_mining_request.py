@@ -61,8 +61,8 @@ class CRMLeadMiningRequest(models.Model):
     seniority_id = fields.Many2one('crm.iap.lead.seniority', string='Seniority')
 
     # Fields for the blue tooltip
-    lead_credits = fields.Char(compute='_compute_credits', readonly=True)
-    lead_contacts_credits = fields.Char(compute='_compute_credits', readonly=True)
+    lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
+    lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
 
     @api.onchange('lead_number', 'contact_number')
     def _compute_tooltip(self):
