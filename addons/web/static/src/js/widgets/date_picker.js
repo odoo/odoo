@@ -108,9 +108,6 @@ var DateWidget = Widget.extend({
      * Library clears the wrong date format so just ignore error
      */
     errorDatetime: function (e) {
-        if (!e.date.isValid()){
-            this.do_warn(_t("Error"), e.date.toString());
-        }
         return false;
     },
     /**
