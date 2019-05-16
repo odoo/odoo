@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com)
-
 {
-    'name': 'Argentina - Accounting',
+    'name': 'Argentinian Accounting',
     'version': '12.0.1.0.0',
     'description': """
 Argentinian accounting chart and tax localization.
@@ -12,9 +9,11 @@ Argentinian accounting chart and tax localization.
 
 * Define Argentinian chart of accounts:
   * Responsable Inscripto (RI)
-* Argentian Taxes
+  * Exento (EX)
+  * Monotributo (Mono)
+* Argentinian Taxes
 * Fiscal Positions
-* AFIP Defined Legal Documents
+* AFIP Legal Documents
 * Add AFIP Codes for models
     * Currency
     * Country
@@ -26,7 +25,7 @@ Argentinian accounting chart and tax localization.
 
 Follow the next configuration steps
 
-1. Go to your company and your CUIT Number and your AFIP Responsability
+1. Go to your company and configure your CUIT number and AFIP Responsability
 2. Go to Invoicing / Configuration and set the Chart of Account you will like
    to use.
 3. Create your sale journals taking into account AFIP info if needed.
