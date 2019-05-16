@@ -6,6 +6,7 @@ var base = require('web_editor.base');
 
 tour.register('rte_translator', {
     test: true,
+    url: '/',
     wait_for: base.ready(),
 }, [{
     content: "click on Add a language",
