@@ -18,8 +18,9 @@ class ProductProduct(models.Model):
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
                                                                       time.min))
         date_to = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.today(), time.min))
+        done_states = self.env['sale.report']._get_done_states()
         domain = [
-            ('state', 'in', ['sale', 'done', 'paid']),
+            ('state', 'in', done_states),
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
             ('date', '<', date_to)
