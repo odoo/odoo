@@ -51,7 +51,6 @@ class CRMLeadMiningRequest(models.Model):
     country_ids = fields.Many2many('res.country', string='Countries')
     state_ids = fields.Many2many('res.country.state', string='States')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
-    technology_ids = fields.Many2many('crm.iap.lead.technology', string='Technologies')
 
     # Contact Generation Filter
     contact_number = fields.Integer(string='Number of Contacts', default=1)
@@ -124,8 +123,8 @@ class CRMLeadMiningRequest(models.Model):
         if self.filter_on_size:
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
-        if self.technology_ids:
-            payload['technology_tags'] = self.technology_ids.mapped('tech_tag')
+        if self.industry_ids:
+            payload['industry_ids'] = self.industry_ids.mapped('reveal_id')
         if self.search_type == 'people':
             payload.update({'contact_number': self.contact_number,
                             'contact_filter_type': self.contact_filter_type})

@@ -3,14 +3,13 @@
 
 {
     'name': 'Lead Generation',
-    'summary': 'Create Leads/Opportunities based on country, technologies, size, etc.',
+    'summary': 'Create Leads/Opportunities based on country, industries, size, etc.',
     'category': 'CRM',
     'depends': ['iap', 'crm'],
     'data': [
         'data/crm.iap.lead.industry.csv',
         'data/crm.iap.lead.role.csv',
         'data/crm.iap.lead.seniority.csv',
-        'data/crm.iap.lead.technology.csv',
         'data/message_template.xml',
         'data/crm_iap_lead_data.xml',
         'data/ir_sequence_data.xml',
