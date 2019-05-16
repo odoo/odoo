@@ -648,12 +648,12 @@ class MailThread(models.AbstractModel):
     # Mail gateway
     # ------------------------------------------------------
 
-    def _routing_warn(self, error_message, warn_suffix, message_id, route, raise_exception):
-        """ Tools method used in message_route_verify: whether to log a warning or raise an error """
+    def _routing_warn(self, error_message, message_id, route, raise_exception=True):
+        """ Tools method used in _routing_check_route: whether to log a warning or raise an error """
         short_message = _("Mailbox unavailable - %s") % error_message
         full_message = ('Routing mail with Message-Id %s: route %s: %s' %
                         (message_id, route, error_message))
-        _logger.info(full_message + (warn_suffix and '; %s' % warn_suffix or ''))
+        _logger.info(full_message)
         if raise_exception:
             # sender should not see private diagnostics info, just the error
             raise ValueError(short_message)
@@ -673,9 +673,7 @@ class MailThread(models.AbstractModel):
         self.env['mail.mail'].create(bounce_mail_values).send()
 
     @api.model
-    def message_route_verify(self, message, message_dict, route,
-                             update_author=True, assert_model=True,
-                             create_fallback=True, drop_alias=False):
+    def _routing_check_route(self, message, message_dict, route, raise_exception=True):
         """ Verify route validity. Check and rules:
             1 - if thread_id -> check that document effectively exists; otherwise
                 fallback on a message_new by resetting thread_id
@@ -695,14 +693,9 @@ class MailThread(models.AbstractModel):
                              mail_message.create()
         :param route: route to check which is a tuple (model, thread_id,
                       custom_values, uid, alias)
-        :param update_author: update message_dict['author_id']. TDE TODO: move me
-        :param assert_model: if an error occurs, tell whether to raise an error
-                             or just log a warning and try other processing or
-                             invalidate route
-        :param create_fallback: if the route aims at updating a record and that
-                                record does not exists or does not support update
-                                either fallback on creating a new record in the
-                                same model or raise / warn
+        :param raise_exception: if an error occurs, tell whether to raise an error
+                                or just log a warning and try other processing or
+                                invalidate route
         """
 
         assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
@@ -722,43 +715,35 @@ class MailThread(models.AbstractModel):
 
         # Wrong model
         if not model:
-            self._routing_warn(_('target model unspecified'), '', message_id, route, assert_model)
+            self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
             return ()
         elif model not in self.env:
-            self._routing_warn(_('unknown target model %s') % model, '', message_id, route, assert_model)
+            self._routing_warn(_('unknown target model %s') % model, message_id, route, raise_exception)
             return ()
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
-            if not record_set.exists() and create_fallback:
-                self._routing_warn(_('reply to missing document (%s,%s), fall back on new document creation') % (model, thread_id), '', message_id, route, False)
-                thread_id = None
-            elif not hasattr(record_set, 'message_update') and create_fallback:
-                self._routing_warn(_('model %s does not accept document update, fall back on document creation') % model, '', message_id, route, False)
-                thread_id = None
-
             if not record_set.exists():
-                self._routing_warn(_('reply to missing document (%s,%s)') % (model, thread_id), _('skipping'), message_id, route, assert_model)
-                return False
+                self._routing_warn(_('reply to missing document (%s,%s), fall back on document creation') % (model, thread_id), message_id, route, False)
+                thread_id = None
             elif not hasattr(record_set, 'message_update'):
-                self._routing_warn(_('model %s does not accept document update') % model, _('skipping'), message_id, route, assert_model)
-                return False
+                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation') % model, message_id, route, False)
+                thread_id = None
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
-            self._routing_warn(_('model %s does not accept document creation') % model, _('skipping'), message_id, route, assert_model)
-            return False
+            self._routing_warn(_('model %s does not accept document creation') % model, message_id, route, raise_exception)
+            return ()
 
         # Update message author if asked. We do it now because we need it for aliases (contact settings)
-        if not author_id and update_author:
+        if not author_id:
             authors = self._mail_find_partner_from_emails([email_from], records=record_set)
             if authors:
                 message_dict['author_id'] = authors[0].id
 
         # Alias: check alias_contact settings
         if alias:
-            obj = None
             if thread_id:
                 obj = record_set[0]
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
@@ -770,11 +755,11 @@ class MailThread(models.AbstractModel):
             else:
                 check_result = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if check_result is not True:
-                self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
+                self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), message_id, route, False)
                 self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
                 return False
 
-        return (model, thread_id, route[2], route[3], None if drop_alias else route[4])
+        return (model, thread_id, route[2], route[3], route[4])
 
     @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
@@ -921,11 +906,10 @@ class MailThread(models.AbstractModel):
             model, thread_id = mail_messages.model, mail_messages.res_id
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
-            route = self.message_route_verify(
+            route = self._routing_check_route(
                 message, message_dict,
                 (model, thread_id, custom_values, self._uid, dest_aliases),
-                update_author=True, assert_model=False, create_fallback=True,
-                drop_alias=True)
+                raise_exception=False)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
@@ -962,9 +946,7 @@ class MailThread(models.AbstractModel):
                         user_id = self._uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
                     route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
-                    route = self.message_route_verify(
-                        message, message_dict, route,
-                        update_author=True, assert_model=True, create_fallback=True)
+                    route = self._routing_check_route(message, message_dict, route, raise_exception=True)
                     if route:
                         _logger.info(
                             'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
@@ -976,10 +958,10 @@ class MailThread(models.AbstractModel):
         if fallback_model:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
-            route = self.message_route_verify(
+            route = self._routing_check_route(
                 message, message_dict,
                 (fallback_model, thread_id, custom_values, self._uid, None),
-                update_author=True, assert_model=True)
+                raise_exception=True)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
