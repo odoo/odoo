@@ -1303,6 +1303,65 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: set and remove value should set correct value after onchange', function (assert) {
+        assert.expect(2);
+
+        var self = this;
+        this.data.partner.records[0].foo = "";
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+            var product = _.find(self.data.product.records, function (rec) {return rec.id == obj.product_id})
+                obj.foo = product ? product.display_name: obj.foo;
+            },
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="product_id"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === "onchange") {
+                    return $.when(def).then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+            fieldDebounce: 1000,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('input[name="foo"]').val(), "",
+            'should contain the default value');
+
+        form.$('input[name="foo"]').val("test").trigger('input');   // set value for foo
+        form.$('input[name="foo"]').val("").trigger('input');   // remove value for foo
+
+        def = $.Deferred();
+        // select product
+        form.$('.o_field_many2one input').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        def.resolve();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'xphone',
+            'input should contain correct value after onchange');
+
+        form.destroy();
+    });
+
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {

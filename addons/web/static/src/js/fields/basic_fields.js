@@ -301,6 +301,7 @@ var InputField = DebouncedField.extend({
      * @param {OdooEvent} event 'field_changed' event
      */
     _onFieldChanged: function (event) {
+        this.isDirty = true;
         this.lastChangeEvent = event;
     },
     /**
@@ -311,7 +312,6 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _onInput: function () {
-        this.isDirty = true;
         this._doDebouncedAction();
     },
     /**
