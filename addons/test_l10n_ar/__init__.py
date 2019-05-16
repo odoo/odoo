@@ -5,11 +5,12 @@ _logger = logging.getLogger(__name__)
 
 
 def update_companies_country(cr, registry):
-    _logger.info('Update update_companies_country to AR')
+    _logger.info('Force installation l10n_ar module')
     env = Environment(cr, SUPERUSER_ID, {})
-    env['res.company'].search([]).write({
-        'country_id': env.ref('base.ar').id,
-    })
+    module_ids = env['ir.module.module'].search([
+        ('name', '=', 'l10n_ar'), ('state', '=', 'uninstalled')])
+    module_ids.sudo().button_install()
+
 
 def post_init_hook(cr, registry):
     _logger.info('Post init hook initialized')
