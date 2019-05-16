@@ -255,6 +255,81 @@ class ProductProduct(models.Model):
             }
         return vals
 
+    def _run_fifo_vacuum(self):
+        """Compensate layer valued at an estimated price with the price of future receipts
+        if any. If the estimated price is equals to the real price, no layer is created but
+        the original layer is marked as compensated.
+        """
+        self.ensure_one()
+        svls_to_vacuum = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.id),
+            ('remaining_qty', '<', 0),
+            ('stock_move_id', '!=', False),
+        ])
+        for svl_to_vacuum in svls_to_vacuum:
+            domain = [
+                ('company_id', '=', svl_to_vacuum.company_id.id),
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                '|',
+                    ('create_date', '>', svl_to_vacuum.create_date),
+                    '&',
+                        ('create_date', '=', svl_to_vacuum.create_date),
+                        ('id', '>', svl_to_vacuum.id)
+            ]
+            candidates = self.env['stock.valuation.layer'].search(domain)
+            if not candidates:
+                continue
+            qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
+            qty_taken_on_candidates = 0
+            tmp_value = 0
+            for candidate in candidates:
+                qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
+                qty_taken_on_candidates += qty_taken_on_candidate
+
+                value_taken_on_candidate = qty_taken_on_candidate * candidate.unit_cost
+                candidate_vals = {
+                    'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                }
+                candidate.write(candidate_vals)
+
+                qty_to_take_on_candidates -= qty_taken_on_candidate
+                tmp_value += value_taken_on_candidate
+                if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                    break
+
+            # Get the estimated value we will correct.
+            remaining_value_before_vacuum = svl_to_vacuum.unit_cost * qty_taken_on_candidates
+            new_remaining_qty = svl_to_vacuum.remaining_qty + qty_taken_on_candidates
+            corrected_value = remaining_value_before_vacuum - tmp_value
+            svl_to_vacuum.write({
+                'remaining_qty': new_remaining_qty,
+            })
+
+            # Don't create a layer or an accounting entry if the corrected value is zero.
+            if svl_to_vacuum.currency_id.is_zero(corrected_value):
+                continue
+
+            corrected_value = svl_to_vacuum.currency_id.round(corrected_value)
+            move = svl_to_vacuum.stock_move_id
+            vals = {
+                'product_id': self.id,
+                'value': corrected_value,
+                'unit_cost': 0,
+                'quantity': 0,
+                'remaining_qty': 0,
+                'description': 'vacuum',
+                'stock_move_id': move.id,
+                'company_id': move.company_id.id,
+                'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+            }
+            vacuum_svl = self.env['stock.valuation.layer'].create(vals)
+
+            # Create the account move.
+            if self.valuation != 'real_time':
+                continue
+            vacuum_svl.stock_move_id.with_context(svl_id=vacuum_svl.id, force_valuation_amount=vacuum_svl.value, forced_quantity=vacuum_svl.quantity, forced_ref=vacuum_svl.description)._account_entry_move()
+
     # -------------------------------------------------------------------------
     # Miscellaneous
     # -------------------------------------------------------------------------
