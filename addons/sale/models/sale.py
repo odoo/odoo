@@ -1038,10 +1038,15 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.model
+    def _add_missing_fields_get_onchange_fields(self):
+        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
+        return onchange_fields
+
+    @api.model
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
         res = {}
-        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
+        onchange_fields = self._add_missing_fields_get_onchange_fields()
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.product_id_change()
