@@ -35,7 +35,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.depends('snailmail_is_letter')
     def _compute_snailmail_cost(self):
         for wizard in self:
-            wizard.snailmail_cost = wizard.env['snailmail.letter']._snailmail_estimate_from_documents(wizard.invoice_ids._name, wizard.invoice_ids.ids, 'partner_id')
+            wizard.snailmail_cost = len(wizard.invoice_ids.ids)
 
     @api.multi
     def snailmail_print_action(self):
