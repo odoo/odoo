@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="partner_ri" model="res.partner">
+        <field name='name'>(AR) Responsabile Inscripto</field>
+        <field name='l10n_ar_afip_responsability_type'>1</field>
+        <field name='l10n_ar_identification_type_id' ref="l10n_ar_base.dt_CUIT"/>
+        <field name="l10n_ar_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name='vat'>20222222223</field>
+        <field name="street">Calle Falsa 123</field>
+        <field name="city">Rosario</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="zip">2000</field>
+        <field name="phone">+1 555 123 8069</field>
+        <field name="email">info@yourcompany.example.com</field>
+        <field name="website">www.example.com</field>
+        <field name="supplier" eval="True"/>
+    </record>
+
+    <record id="company_ri" model="res.company">
+        <field name='parent_id' ref='base.main_company'/>
+        <field name='currency_id' ref='base.ARS'/>
+        <field name='partner_id' ref='partner_ri'/>
+        <field name='name'>Responsable Inscripto</field>
+        <field name='l10n_ar_gross_income_type'>no_liquida</field>
+    </record>
+
+    <record id="base.user_root" model="res.users">
+        <field name="company_ids" eval="[(4,ref('company_ri'))]"/>
+        <field name="company_id" ref="company_ri"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4,ref('company_ri'))]"/>
+        <field name="company_id" ref="company_ri"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4,ref('company_ri'))]"/>
+        <field name="company_id" ref="company_ri"/>
+    </record>
+
+    <function model="account.chart.template" name="try_loading_for_current_company">
+        <value eval="[ref('l10n_ar.l10nar_ri_chart_template')]"/>
+    </function>
+
+</odoo>

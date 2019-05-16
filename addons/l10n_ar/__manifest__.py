@@ -70,6 +70,9 @@ Follow the next configuration steps
         'security/security.xml',
     ],
     'demo': [
+        'demo/exento_demo.xml',
+        'demo/mono_demo.xml',
+        'demo/respinsc_demo.xml',
     ],
     'post_init_hook': 'post_init_hook',
 }
