@@ -105,7 +105,7 @@ class Registry(Mapping):
 
     def init(self, db_name):
         self.models = {}    # model name/model instance mapping
-        self._sql_error = {}
+        self._sql_constraints = set()
         self._init = True
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None

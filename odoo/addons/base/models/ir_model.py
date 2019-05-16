@@ -970,6 +970,7 @@ class IrModelConstraint(models.Model):
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
     definition = fields.Char(help="PostgreSQL constraint definition")
+    message = fields.Char(help="Error message returned when the constraint is violated.", translate=True)
     model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
@@ -1033,9 +1034,10 @@ class IrModelConstraint(models.Model):
         default['name'] = self.name + '_copy'
         return super(IrModelConstraint, self).copy(default)
 
-    def _reflect_constraint(self, model, conname, type, definition, module):
-        """ Reflect the given constraint, to make it possible to delete it later
-            when the module is uninstalled. ``type`` is either 'f' or 'u'
+    def _reflect_constraint(self, model, conname, type, definition, module, message=None):
+        """ Reflect the given constraint, and return its corresponding record.
+            The reflection makes it possible to remove a constraint when its
+            corresponding module is uninstalled. ``type`` is either 'f' or 'u'
             depending on the constraint being a foreign key or not.
         """
         if not module:
@@ -1044,23 +1046,28 @@ class IrModelConstraint(models.Model):
             return
         assert type in ('f', 'u')
         cr = self._cr
-        query = """ SELECT type, definition
+        query = """ SELECT c.id, type, definition, message
                     FROM ir_model_constraint c, ir_module_module m
                     WHERE c.module=m.id AND c.name=%s AND m.name=%s """
         cr.execute(query, (conname, module))
         cons = cr.dictfetchone()
         if not cons:
             query = """ INSERT INTO ir_model_constraint
-                            (name, date_init, date_update, module, model, type, definition)
+                            (name, date_init, date_update, module, model, type, definition, message)
                         VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
                             (SELECT id FROM ir_module_module WHERE name=%s),
-                            (SELECT id FROM ir_model WHERE model=%s), %s, %s) """
-            cr.execute(query, (conname, module, model._name, type, definition))
-        elif cons['type'] != type or (definition and cons['definition'] != definition):
+                            (SELECT id FROM ir_model WHERE model=%s), %s, %s, %s)
+                        RETURNING id"""
+            cr.execute(query, (conname, module, model._name, type, definition, message))
+            return self.browse(cr.fetchone()[0])
+
+        cons_id = cons.pop('id')
+        if cons != dict(type=type, definition=definition, message=message):
             query = """ UPDATE ir_model_constraint
-                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
-                        WHERE name=%s AND module=(SELECT id FROM ir_module_module WHERE name=%s) """
-            cr.execute(query, (type, definition, conname, module))
+                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s, message=%s
+                        WHERE id=%s"""
+            cr.execute(query, (type, definition, message, cons_id))
+        return self.browse(cons_id)
 
     def _reflect_model(self, model):
         """ Reflect the _sql_constraints of the given model. """
@@ -1075,10 +1082,16 @@ class IrModelConstraint(models.Model):
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
 
-        for (key, definition, _) in model._sql_constraints:
+        data_list = []
+        for (key, definition, message) in model._sql_constraints:
             conname = '%s_%s' % (model._table, key)
             module = constraint_module.get(key)
-            self._reflect_constraint(model, conname, 'u', cons_text(definition), module)
+            record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
+            if record:
+                xml_id = '%s.constraint_%s' % (module, conname)
+                data_list.append(dict(xml_id=xml_id, record=record))
+
+        self.env['ir.model.data']._update_xmlids(data_list)
 
 
 class IrModelRelation(models.Model):
