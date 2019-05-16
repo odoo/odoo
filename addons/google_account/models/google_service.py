@@ -189,7 +189,7 @@ class GoogleService(models.TransientModel):
                 status = error.response.status_code
                 response = ""
             else:
-                req = json.loads(error.request.body)
+                req = json.loads(error.request.body or 'null')
                 res = error.response.json()
                 _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", pformat(req), pformat(res))
                 if error.response.status_code in (400, 401, 410):
