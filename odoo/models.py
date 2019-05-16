@@ -5483,13 +5483,18 @@ Fields:
             def __init__(self, record, tree):
                 # put record in dict to include it when comparing snapshots
                 super(Snapshot, self).__init__({'<record>': record, '<tree>': tree})
-                for name, subnames in tree.items():
-                    field = record._fields[name]
+                for name in tree:
+                    self.fetch(name)
+
+            def fetch(self, name):
+                """ Set the value of field ``name`` from the record's value. """
+                record = self['<record>']
+                tree = self['<tree>']
+                if record._fields[name].type in ('one2many', 'many2many'):
                     # x2many fields are serialized as a list of line snapshots
-                    self[name] = (
-                        [Snapshot(line, subnames) for line in record[name]]
-                        if field.type in ('one2many', 'many2many') else record[name]
-                    )
+                    self[name] = [Snapshot(line, tree[name]) for line in record[name]]
+                else:
+                    self[name] = record[name]
 
             def has_changed(self, name):
                 """ Return whether a field on record has changed. """
@@ -5562,11 +5567,40 @@ Fields:
                 for subname in subnames:
                     new_lines.mapped(subname)
 
+        # Isolate changed x2many values, to handle inconsistent data sent from
+        # the client side: when a form view contains two one2many fields that
+        # overlap, the lines that appear in both fields may be sent with
+        # different data. Consider, for instance:
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=1, ...]
+        #
+        # If value=2 is set on 'line' in 'bar_ids', the client sends
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=2, ...]
+        #
+        # The idea is to put 'foo_ids' in cache first, so that the snapshot
+        # contains value=1 for line in 'foo_ids'. The snapshot is then updated
+        # with the value of `bar_ids`, which will contain value=2 on line.
+        values = dict(values)
+        changed_x2many = {
+            name: values.pop(name, [])
+            for name in names
+            if self._fields[name].type in ('one2many', 'many2many')
+        }
+
         # create a new record with values, and attach ``self`` to it
         record = self.new(values, origin=self)
 
         # make a snapshot based on the initial values of record
-        snapshot0 = snapshot1 = Snapshot(record, nametree)
+        snapshot0 = Snapshot(record, nametree)
+
+        # store changed values in cache, and update snapshot0
+        for name, value in changed_x2many.items():
+            field = self._fields[name]
+            record._cache[name] = field.convert_to_cache(value, record)
+            snapshot0.fetch(name)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names or nametree)
