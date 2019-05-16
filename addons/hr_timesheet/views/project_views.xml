@@ -199,18 +199,5 @@
              </field>
          </record>
 
-         <act_window id="project_task_action_view_timesheet"
-            name="Timesheet Entries"
-            binding_model="project.task"
-            binding_views="form"
-            res_model="account.analytic.line"
-            view_mode="tree"
-            view_id="hr_timesheet_line_tree"
-            context="{
-                'search_default_task_id': [active_id],
-                'default_task_id': active_id,
-            }"
-        />
-
     </data>
 </odoo>
