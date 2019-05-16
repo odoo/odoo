@@ -68,7 +68,7 @@
                             </div>
                             <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
                             <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="technology_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
                             <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}"/>
