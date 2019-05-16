@@ -51,7 +51,6 @@ Follow the next configuration steps
         'data/l10n_latam.document.type.csv',
         'data/res_partner_data.xml',
         'data/res_currency_data.xml',
-        'data/l10n_ar_afip_vat_f2002_category_data.xml',
         'data/res_country_data.xml',
         'data/menuitem.xml',
         'data/product_data.xml',
@@ -69,7 +68,6 @@ Follow the next configuration steps
         'views/account_journal_view.xml',
         'views/account_invoice_view.xml',
         'views/l10n_latam_document_type_view.xml',
-        'security/ir.model.access.csv',
         'security/security.xml',
     ],
     'demo': [
