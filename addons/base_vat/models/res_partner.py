@@ -25,6 +25,7 @@ _eu_country_vat = {
 _eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
+    'ar': '20313932975',
     'at': 'ATU12345675',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
@@ -361,5 +362,12 @@ class ResPartner(models.Model):
         try:
             import stdnum.al
             return stdnum.al.vat.is_valid(vat)
+        except ImportError:
+            return True
+
+    def check_vat_ar(self, vat):
+        try:
+            import stdnum.ar
+            return stdnum.ar.cuit.is_valid(vat)
         except ImportError:
             return True

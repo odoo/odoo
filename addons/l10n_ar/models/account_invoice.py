@@ -18,6 +18,7 @@ class AccountInvoice(models.Model):
         ('3', 'Productos y Servicios'),
         ('4', '4-Otros (exportación)'),
     ]
+
     l10n_ar_state_id = fields.Many2one(
         related='partner_id.state_id',
         store=True,

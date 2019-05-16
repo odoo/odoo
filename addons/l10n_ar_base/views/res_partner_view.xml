@@ -9,9 +9,10 @@
             <form>
                 <field name="l10n_ar_cuit" invisible="1"/>
             </form>
-            <field name="vat" position="after">
-                <field class="o_address_state" name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+            <field name="vat" position="before">
+                <field name="l10n_ar_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" attrs="{'readonly': [('parent_id','!=',False)]}"/>
             </field>
         </field>
     </record>
+
 </odoo>
