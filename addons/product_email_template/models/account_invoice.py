@@ -18,7 +18,8 @@ class AccountInvoice(models.Model):
         return True
 
     @api.multi
-    def invoice_validate(self):
-        res = super(AccountInvoice, self).invoice_validate()
-        self.invoice_validate_send_email()
+    def write(self, values):
+        res = super(AccountInvoice, self).write(values)
+        if values.get('state') == 'paid':
+            self.invoice_validate_send_email()
         return res
