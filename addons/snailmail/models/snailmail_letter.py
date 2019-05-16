@@ -288,36 +288,10 @@ class SnailmailLetter(models.Model):
     @api.multi
     def _snailmail_estimate(self):
         """
-        Send a request to estimate the cost of sending all the documents with
-        the differents options.
-
-        The JSON object sent is the one generated from self._snailmail_create()
-
-        arguments sent:
-        {
-            "documents":[{
-                pages: int,
-                res_id: int (client_side, optional),
-                res_model: int (client_side, optional),
-                address: {
-                    country_code: char (country name)
-                }
-            }],
-            'color': # color on the letter,
-            'duplex': # one/two side printing,
-        }
-
-        The answer of the server is the same JSON object with some additionnal fields:
-        {
-            "total_cost": integer,      //The cost of sending ALL the documents
-            body: JSON object (same as body param except new param 'cost' in each documents)
-        }
+        Return the numbers of stamps needed to send a letter.
+        As 1 letter = 1 stamp, we just need to return the number of letters.
         """
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
-        params = self._snailmail_create('estimate')
-        req = jsonrpc(endpoint + '/iap/snailmail/1/estimate', params=params)
-
-        return req['total_cost']
+        return len(self)
 
     @api.model
     def _snailmail_cron(self):
