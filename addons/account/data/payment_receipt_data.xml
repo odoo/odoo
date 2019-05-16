@@ -32,12 +32,11 @@
             <field name="user_signature" eval="False"/>
         </record>
 
-        <act_window name="Send Receipt By Email"
+        <act_window name="Send receipt by email"
             res_model="mail.compose.message"
             binding_model="account.payment"
             view_mode="form"
             target="new"
-            binding_views="form"
             id="account_send_payment_receipt_by_email_action"
             context="{
                 'default_model': 'account.payment',
