@@ -212,7 +212,7 @@
     <xpath expr="//div/span" position="replace">
         <a class="pull-left" t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
-    <xpath expr="//div[@class='media-body']/span" position="replace">
+    <xpath expr="//div[hasclass('media-body')]/span" position="replace">
         <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
 </template>
