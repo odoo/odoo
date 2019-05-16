@@ -90,6 +90,7 @@ class AccountInvoice(models.Model):
         string='Other Taxes Amount'
     )
     incoterm_id = fields.Many2one(
+        'account.incoterms',
         readonly=True,
         states={'draft': [('readonly', False)]},
         help='For international invoices AFIP required to identify the invoice'
