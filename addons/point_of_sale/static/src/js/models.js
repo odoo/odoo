@@ -1637,9 +1637,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_display_price_one: function(){
         var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        var price_unit = this.get_unit_price();
         if (this.pos.config.iface_tax_included !== 'total') {
-            return round_pr(price_unit, rounding);
+            return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
         } else {
             var product =  this.get_product();
             var taxes_ids = product.taxes_id;
