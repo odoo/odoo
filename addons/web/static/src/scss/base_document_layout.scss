@@ -1,7 +1,3 @@
-.o_document_layout {
-    padding-bottom: 0px !important;
-}
-
 .o_document_layout_preview {
     border: 1px solid;
     border-color: lightgray;
@@ -13,34 +9,9 @@
     max-height: 45px;
 }
 
-.o_document_layout_reset_link {
-    label {
-        @extend .btn-link;
-        font-weight: bold !important;
-        color: #008782;
-    }
-}
-
-.o_document_layout_company_color {
+.o_document_layout_layout, .o_document_layout_colors {
     .o_field_widget {
         display: inline;
-    }
-}
-
-.o_document_layout_company {
-    // we need enough space left for the preview
-    max-width: 50%;
-    tr td {
-        width: auto !important;
-    }
-    border-collapse: separate;
-    border-spacing: 0 1rem;
-    // hide the default empty option
-    select option:first-child {
-        display: none;
-    }
-    img {
-        max-height: 90px;
     }
 }
 
@@ -92,7 +63,6 @@
     .o_preview_Boxed_layout {
         table {
             border: 1px solid gray('700');
-            // border-collapse: 
             thead th {
                 border: 1px solid gray('700');
                 text-transform: uppercase;

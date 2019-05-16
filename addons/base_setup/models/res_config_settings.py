@@ -105,15 +105,8 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'name': _('Configure your document layout'),
             'view_mode': 'form',
-<<<<<<< HEAD
-            'res_id': self.env.company_id.id,
-            'res_model': 'res.company',
-            'views': [(template.id, 'form')],
-            'view_id': template.id,
-=======
             'res_model': 'base.document.layout',
             'res_id': wizard.id,
             'views': [[view_id, 'form']],
->>>>>>> [IMP] base: Configure document layout
             'target': 'new',
         }

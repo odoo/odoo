@@ -5,6 +5,7 @@ import base64
 
 from odoo import api, fields, models
 from odoo.tools.image import image_data_uri
+from odoo.exceptions import ValidationError # TODO remove
 
 _logger = logging.getLogger(__name__)
 
@@ -30,10 +31,11 @@ class BaseDocumentLayout(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
+    custom_primary = fields.Boolean(compute="_compute_custom_colors")
+    custom_secondary = fields.Boolean(compute="_compute_custom_colors")
+
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
-    use_default_colors = fields.Boolean(compute="_compute_use_default_colors")
     preview = fields.Html(compute='_compute_preview')
-    reset_link = fields.Boolean()
 
     @api.depends('company_id')
     def _compute_report_layout_id(self):
@@ -42,34 +44,11 @@ class BaseDocumentLayout(models.TransientModel):
                 ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
             ])
 
-    @api.depends('company_id')
-    def _compute_use_default_colors(self):
+    @api.depends('primary_color', 'secondary_color')
+    def _compute_custom_colors(self):
         for wizard in self:
-            wizard.use_default_colors = not(wizard.primary_color and wizard.secondary_color)
-
-    @api.onchange('reset_link')
-    def reset_colors(self):
-        """ set the colors to the current layout default colors """
-        for wizard in self:
-            wizard.primary_color = wizard.report_layout_id.primary_color
-            wizard.secondary_color = wizard.report_layout_id.secondary_color
-
-    @api.onchange('primary_color', 'secondary_color')
-    def onchange_colors(self):
-        for wizard in self:
-            if wizard.env.context.get('user_selected', False):  # color change caused by user
-                wizard.use_default_colors = False
-            else:                                               # color change caused by reset_colors()
-                wizard.use_default_colors = True
-            wizard._compute_preview()
-
-    @api.onchange('report_layout_id')
-    def onchange_report_layout_id(self):
-        for wizard in self:
-            if wizard.use_default_colors:
-                wizard.reset_colors()
-            wizard.external_report_layout_id = wizard.report_layout_id.view_id
-            wizard._compute_preview()
+            wizard.custom_primary = wizard.primary_color != wizard.report_layout_id.primary_color
+            wizard.custom_secondary = wizard.secondary_color != wizard.report_layout_id.secondary_color
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
@@ -77,5 +56,43 @@ class BaseDocumentLayout(models.TransientModel):
         for wizard in self:
             ir_qweb = wizard.env['ir.qweb']
             wizard.preview = ir_qweb.render('web.layout_preview', {
-                'company'       : wizard,
+                'company': wizard,
             })
+
+    @api.onchange('primary_color', 'secondary_color')
+    def onchange_colors(self):
+        for wizard in self:
+            wizard._compute_preview()
+
+    @api.onchange('report_layout_id')
+    def onchange_report_layout_id(self):
+        for wizard in self:
+            is_primary_default = not wizard.custom_primary
+            is_secondary_default = not wizard.custom_secondary
+
+            if is_primary_default:
+                wizard.primary_color = wizard.report_layout_id.primary_color
+            if is_secondary_default:
+                wizard.secondary_color = wizard.report_layout_id.secondary_color
+            wizard.external_report_layout_id = wizard.report_layout_id.view_id
+            wizard._compute_preview()
+
+    @api.multi
+    def reset_colors(self):
+        """ set the colors to the current layout default colors """
+        for wizard in self:
+            wizard.primary_color = wizard.report_layout_id.primary_color
+            wizard.secondary_color = wizard.report_layout_id.secondary_color
+
+    @api.multi
+    def detect_colors(self):
+        for wizard in self:
+            # TODO identify dominant colors
+            raise ValidationError("Yeah well that's not really implemented yet")
+
+    @api.multi
+    def download_preview(self):
+        for wizard in self:
+            # TODO identify dominant colors
+            raise ValidationError(
+                "Yeah well that's not really implemented yet")

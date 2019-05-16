@@ -279,9 +279,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Promise}
      */
     _callButtonAction: function (attrs, record) {
+        console.log(attrs);
         var self = this;
         var def = new Promise(function (resolve, reject) {
             var reload = function () {
+                console.log('reloading...', attrs);
                 return self.isDestroyed() ? Promise.resolve() : self.reload();
             };
             record = record || self.model.get(self.handle);
@@ -302,6 +304,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_closed: reload,
             });
+            console.log(attrs);
         });
         return this.alive(def);
     },

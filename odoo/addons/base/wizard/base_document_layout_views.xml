@@ -8,26 +8,26 @@
                 <form class="o_document_layout">
                     <group>
                         <group class="o_document_layout_company">
-                            <field name="report_layout_id" widget="radio" />
-                            <field name="logo" widget="image" />
-                            <!-- TODO pick dominant colors from logo -->
-                            <label for="o_document_layout_company_color" string="Colors" />
-                            <div class="o_document_layout_company_color">
-                                <field name="primary_color" widget="color" context="{'user_selected':True}" />
-                                <field name="secondary_color" widget="color" context="{'user_selected':True}" />
-                                <div class="o_document_layout_reset_link">
-                                    <label for="reset_link" string="➜ Reset to default" />
-                                </div>
+                            <label for="external_report_layout_id" string="Layout" />
+                            <div class="o_document_layout_layout">
+                                <field name="external_report_layout_id" invisible="1" />
+                                <field name="report_layout_id" widget="radio" />
+                                <field name="logo" widget="image" />
+                                <button name="detect_colors" string="Identify dominant colors" type="object" class="oe_link" icon="fa-arrow-right"
+                                    attrs="{'invisible': [('logo', '=', False)]}"/>
+                            </div>
+                            <label for="primary_color" string="Colors" />
+                            <div class="o_document_layout_colors">
+                                <field name="custom_primary" invisible="1"/>
+                                <field name="custom_secondary" invisible="1"/>
+                                <field name="primary_color" widget="color" context="{'user_selected': True}" />
+                                <field name="secondary_color" widget="color" context="{'user_selected': True}" />
                             </div>
                             <field name="font" widget="selection" />
+                            <button name="reset_colors" string="Reset to default" type="object" class="oe_link" icon="fa-arrow-right" noclose="1"/>
                             <field name="report_header"  widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
                             <field name="paperformat_id" widget="selection" />
-                            <div>
-                                <field name="reset_link" invisible="1" />
-                                <field name="use_default_colors" invisible="1" />
-                                <field name="external_report_layout_id" invisible="1" />
-                            </div>
                         </group>
                         <group>
                             <div class="o_document_layout_preview">
@@ -37,9 +37,8 @@
                         </group>
                     </group>
                     <footer>
-                        <!-- TODO pdf preview button -->
-                        <button special="save" string="Save"
-                                class="btn btn-primary" type="object" />
+                        <button special="save" string="Save" class="btn btn-primary" type="object" />
+                        <button name="download_preview" type="object" string="Preview" />
                         <button special="cancel" string="Cancel" />
                     </footer>
                 </form>
