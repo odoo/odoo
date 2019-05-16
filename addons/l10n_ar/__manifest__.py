@@ -38,7 +38,6 @@ Follow the next configuration steps
         'l10n_ar_base',
     ],
     'data':[
-        'data/account_account_tag_data.xml',
         'data/account_chart_template.xml',
         'data/account_chart_base.xml',
         'data/account_chart_exento.xml',
