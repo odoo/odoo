@@ -23,16 +23,13 @@ class Users(models.Model):
         from_clause, where_clause, where_clause_params = where_query.get_sql()
 
         query = """
-            SELECT sub.id, sub.karma_position
-            FROM (
-                SELECT id, row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
-                FROM {from_clause}
-                WHERE {where_clause}
-            ) sub
-            WHERE sub.id IN %s
+            SELECT id, row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
+              FROM {from_clause}
+             WHERE id IN %s
+               AND ({where_clause})
             """.format(from_clause=from_clause, where_clause=where_clause)
 
-        self.env.cr.execute(query, where_clause_params + [tuple(self.ids)])
+        self.env.cr.execute(query, [tuple(self.ids)] + where_clause_params)
 
         position_map = {item['id']: item['karma_position'] for item in self.env.cr.dictfetchall()}
 
