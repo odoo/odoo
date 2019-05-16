@@ -75,6 +75,8 @@ class ProductPriceHistory(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company',
         default=_get_default_company_id, required=True)
+    # Product.product standard price (cost) is company_dependent
+    # Therefore, changes are also company_dependent through the company_id field.
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
     datetime = fields.Datetime('Date', default=fields.Datetime.now)
     cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
