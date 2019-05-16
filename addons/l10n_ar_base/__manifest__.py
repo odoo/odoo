@@ -24,6 +24,7 @@ Base Module for Argentinian Localization
         'views/res_partner_view.xml',
         'views/l10n_ar_identification_type_view.xml',
         'views/res_country_view.xml',
+        'views/res_company_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

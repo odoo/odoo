@@ -61,7 +61,6 @@ Follow the next configuration steps
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
         'views/afip_menuitem.xml',
-        'views/account_account_view.xml',
         'views/res_currency_view.xml',
         'views/account_fiscal_position_view.xml',
         'views/uom_uom_view.xml',
