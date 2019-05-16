@@ -402,6 +402,12 @@ class StockMove(models.Model):
             if not stock_valuation_layer.product_id.valuation == 'real_time':
                 continue
             stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=abs(stock_valuation_layer.value), forced_quantity=stock_valuation_layer.quantity)._account_entry_move()
+
+        # For every in move, run the vacuum for the linked product.
+        products_to_vacuum = valued_moves['in'].mapped('product_id')
+        for product_to_vacuum in products_to_vacuum:
+            product_to_vacuum._run_fifo_vacuum()
+
         return res
 
     def _sanity_check_for_valuation(self):
@@ -714,6 +720,10 @@ class StockMove(models.Model):
 
         # Create Journal Entry for products leaving the company
         if self._is_out():
+            if self.env.context.get('force_valuation_amount'):
+                force_valuation_amount = self.env.context['force_valuation_amount']
+                self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
+
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
