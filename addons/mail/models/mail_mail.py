@@ -146,6 +146,7 @@ class MailMail(models.Model):
         if notif_emails:
             notifications = self.env['mail.notification'].search([
                 ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('res_partner_id', 'in', notif_emails.mapped('recipient_ids').ids),
                 ('is_email', '=', True)])
             if mail_sent:
                 notifications.write({
@@ -273,6 +274,7 @@ class MailMail(models.Model):
                 notifs = self.env['mail.notification'].search([
                     ('is_email', '=', True),
                     ('mail_message_id', 'in', mail.mapped('mail_message_id').ids),
+                    ('res_partner_id', 'in', mail.mapped('recipient_ids').ids),
                     ('email_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
