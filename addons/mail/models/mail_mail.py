@@ -316,6 +316,19 @@ class MailMail(models.Model):
                 })
                 mail_sent = False
 
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_message_id', 'in', mail.mapped('mail_message_id').ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notifs.sudo().write({
+                        'email_status': 'exception',
+                    })
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
