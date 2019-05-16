@@ -8,6 +8,12 @@ from odoo import api, fields, models
 class SaleReport(models.Model):
     _inherit = "sale.report"
 
+    @api.model
+    def _get_done_states(self):
+        done_states = super(SaleReport, self)._get_done_states()
+        done_states.extend(['pos_done', 'invoiced'])
+        return done_states
+
     state = fields.Selection(selection_add=[('pos_draft', 'New'),
                                             ('paid', 'Paid'),
                                             ('pos_done', 'Posted'),
