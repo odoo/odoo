@@ -507,6 +507,17 @@ var FieldDate = InputField.extend({
         );
     },
     /**
+     * In edit mode, FieldDate must be invalid when DateWidget datepicker is invalid.
+     *
+     * @override
+     */
+    isValid: function () {
+        return (
+            this._super.apply(this, arguments)
+            && (!this.datewidget || this.datewidget.isValid())
+        );
+    },
+    /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
      *
      * @override

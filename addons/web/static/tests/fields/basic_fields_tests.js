@@ -2667,8 +2667,8 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('date field should remove the date  if the date is not valid', function (assert) {
-        assert.expect(1);
+    QUnit.test('date field should keep the date  if the date is not valid', function (assert) {
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
@@ -2682,7 +2682,13 @@ QUnit.module('basic_fields', {
         // set an invalid date
         var $input = form.$('.o_field_widget[name=date] input');
         $input.val('mmmh').trigger('change');
-        assert.strictEqual($input.text(), "", "The date field should be empty");
+        // save the change
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual($input.val(), "mmmh", "The wrong value should be kept");
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'),
+            "form view should still be editable");
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_invalid'),
+            "image field should be displayed as invalid");
         form.destroy();
     });
 

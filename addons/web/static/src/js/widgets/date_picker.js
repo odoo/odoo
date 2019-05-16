@@ -43,6 +43,7 @@ var DateWidget = Widget.extend({
                 clear: 'fa fa-delete',
                 close: 'fa fa-times'
             },
+            keepInvalid: true,
             calendarWeeks: true,
             buttons: {
                 showToday: false,
