@@ -153,6 +153,7 @@ class MailMail(models.Model):
         if notif_emails:
             notifications = self.env['mail.notification'].search([
                 ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('res_partner_id', 'in', notif_emails.mapped('recipient_ids').ids),
                 ('is_email', '=', True)])
             if mail_sent:
                 notifications.write({
@@ -319,6 +320,20 @@ class MailMail(models.Model):
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
                 mail_sent = False
+
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_message_id', 'in', mail.mapped('mail_message_id').ids),
+                    ('res_partner_id', 'in', mail.mapped('recipient_ids').ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notifs.sudo().write({
+                        'email_status': 'exception',
+                    })
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
