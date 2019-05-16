@@ -73,7 +73,7 @@ class TestTraceability(TestMrpCommon):
                 produce_form.qty_producing = 1
 
             if finished_product.tracking != 'none':
-                produce_form.final_lot_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id})
+                produce_form.finished_lot_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id})
             produce_wizard = produce_form.save()
 
             produce_wizard.do_produce()
@@ -165,7 +165,7 @@ class TestTraceability(TestMrpCommon):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
-        produce_form.final_lot_id = self.env['stock.production.lot'].create({
+        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
             'product_id': product_final.id,
             'name': 'Final_lot_1'
         })
@@ -196,7 +196,7 @@ class TestTraceability(TestMrpCommon):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
-        produce_form.final_lot_id = self.env['stock.production.lot'].create({
+        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
             'product_id': product_final.id,
             'name': 'Final_lot_2'
         })

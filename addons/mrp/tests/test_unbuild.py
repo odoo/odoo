@@ -101,7 +101,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 5.0
-        produce_form.final_lot_id = lot
+        produce_form.finished_lot_id = lot
         produce_wizard = produce_form.save()
 
         produce_wizard.do_produce()
@@ -276,7 +276,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 5.0
-        produce_form.final_lot_id = lot_final
+        produce_form.finished_lot_id = lot_final
         produce_wizard = produce_form.save()
 
         produce_wizard.do_produce()
@@ -420,7 +420,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 3.0
-        produce_form.final_lot_id = lot_finished_1
+        produce_form.finished_lot_id = lot_finished_1
         produce_wizard = produce_form.save()
         produce_wizard._workorder_line_ids()[0].lot_id = lot_1
         produce_wizard.do_produce()
@@ -441,7 +441,7 @@ class TestUnbuild(TestMrpCommon):
             'active_ids': [mo.id],
         }))
         produce_form.qty_producing = 2.0
-        produce_form.final_lot_id = lot_finished_2
+        produce_form.finished_lot_id = lot_finished_2
 
         produce_wizard = produce_form.save()
         produce_wizard._workorder_line_ids()[0].lot_id = lot_2

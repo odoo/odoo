@@ -175,7 +175,7 @@ class TestWarehouse(common.TestMrpCommon):
 
         workorder.button_start()
         serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
-        workorder.final_lot_id = serial
+        workorder.finished_lot_id = serial
         workorder.record_production()
         mo_laptop.button_mark_done()
 
@@ -199,7 +199,7 @@ class TestWarehouse(common.TestMrpCommon):
             'active_ids': [mo_laptop.id],
         }).create({
             "qty_producing": 1.0,
-            "final_lot_id": serial.id,
+            "finished_lot_id": serial.id,
         })
         product_produce.do_produce()
         mo_laptop.button_mark_done()

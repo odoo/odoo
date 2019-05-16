@@ -17,7 +17,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True)
     qty_producing = fields.Float(string='Currently Produced Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    final_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
+    finished_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]", oldname='final_lot_id')
     product_tracking = fields.Selection(related="product_id.tracking")
     consumption = fields.Selection([
         ('strict', 'Strict'),
@@ -242,10 +242,10 @@ class MrpAbstractWorkorder(models.AbstractModel):
             move.state not in ('done', 'cancel')
         )
         if production_move and production_move.product_id.tracking != 'none':
-            if not self.final_lot_id:
+            if not self.finished_lot_id:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
-                lambda line: line.lot_id.id == self.final_lot_id.id
+                lambda line: line.lot_id.id == self.finished_lot_id.id
             )
             if move_line:
                 if self.product_id.tracking == 'serial':
@@ -257,7 +257,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
-                    'lot_id': self.final_lot_id.id,
+                    'lot_id': self.finished_lot_id.id,
                     'product_uom_qty': self.qty_producing,
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': self.qty_producing,

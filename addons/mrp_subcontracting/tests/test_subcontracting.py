@@ -502,7 +502,7 @@ class TestSubcontractingTracking(TransactionCase):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
-        produce_form.final_lot_id = lot_id
+        produce_form.finished_lot_id = lot_id
         produce_form.raw_workorder_line_ids._records[0]['lot_id'] = serial_id.id
         wiz_produce = produce_form.save()
         wiz_produce.do_produce()

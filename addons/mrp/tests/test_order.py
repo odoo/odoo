@@ -412,7 +412,7 @@ class TestMrpOrder(TestMrpCommon):
             with produce_form.raw_workorder_line_ids.edit(i) as line:
                 line.qty_done += 1
         product_produce = produce_form.save()
-        product_produce.final_lot_id = final_product_lot.id
+        product_produce.finished_lot_id = final_product_lot.id
         # product 1 lot 1 shelf1
         # product 1 lot 1 shelf2
         # product 1 lot 2
@@ -914,11 +914,11 @@ class TestMrpOrder(TestMrpCommon):
             'active_id': mo.id,
             'active_ids': [mo.id],
         }))
-        produce_form.final_lot_id = final_product_lot
+        produce_form.finished_lot_id = final_product_lot
         product_produce = produce_form.save()
         self.assertEqual(product_produce.qty_producing, 1)
         self.assertEqual(product_produce.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
-        product_produce.final_lot_id = final_product_lot.id
+        product_produce.finished_lot_id = final_product_lot.id
 
         product_produce.do_produce()
         move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)
