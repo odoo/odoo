@@ -5,6 +5,7 @@
         <field name="name">Lunch: Receive meals</field>
         <field name="model_id" ref="model_lunch_order"/>
         <field name="binding_model_id" ref="model_lunch_order"/>
+        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">records.action_confirm()</field>
     </record>
@@ -13,6 +14,7 @@
         <field name="name">Lunch: Cancel meals</field>
         <field name="model_id" ref="model_lunch_order"/>
         <field name="binding_model_id" ref="model_lunch_order"/>
+        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">records.action_cancel()</field>
     </record>
