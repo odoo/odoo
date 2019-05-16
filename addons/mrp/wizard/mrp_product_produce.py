@@ -72,7 +72,7 @@ class MrpProductProduce(models.TransientModel):
     def action_generate_serial(self):
         self.ensure_one()
         product_produce_wiz = self.env.ref('mrp.view_mrp_product_produce_wizard', False)
-        self.final_lot_id = self.env['stock.production.lot'].create({
+        self.finished_lot_id = self.env['stock.production.lot'].create({
             'product_id': self.product_id.id
         })
         return {
@@ -162,7 +162,7 @@ class MrpProductProduceLine(models.TransientModel):
 
     def _get_final_lots(self):
         product_produce_id = self.raw_product_produce_id or self.finished_product_produce_id
-        return product_produce_id.final_lot_id | product_produce_id.finished_workorder_line_ids.mapped('lot_id')
+        return product_produce_id.finished_lot_id | product_produce_id.finished_workorder_line_ids.mapped('lot_id')
 
     def _get_production(self):
         product_produce_id = self.raw_product_produce_id or self.finished_product_produce_id
