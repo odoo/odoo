@@ -312,6 +312,19 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 5)
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 5)
 
+    def test_negative_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 30)
+        self.assertEqual(move3.stock_valuation_layer_ids.remaining_qty, -10)
+        move4 = self._make_in_move(self.product1, 10, unit_cost=30)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 0)
+        move5 = self._make_in_move(self.product1, 10, unit_cost=40)
+
+        self.assertEqual(self.product1.value_svl, 400)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
     def test_change_in_past_decrease_in_1(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 20, unit_cost=10)
@@ -321,14 +334,13 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 0)
 
-    @skip('fifo negative')
     def test_change_in_past_decrease_in_2(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 20, unit_cost=10)
         move2 = self._make_out_move(self.product1, 10)
         move3 = self._make_out_move(self.product1, 10)
-        move1.move_line_ids.qty_done = 10
-        move1 = self._make_in_move(self.product1, 20, unit_cost=15)
+        move1.move_line_ids.with_context(svl=True).qty_done = 10
+        move4 = self._make_in_move(self.product1, 20, unit_cost=15)
 
         self.assertEqual(self.product1.value_svl, 150)
         self.assertEqual(self.product1.quantity_svl, 10)
@@ -343,7 +355,6 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
 
-    @skip('fifo negative')
     def test_change_in_past_increase_in_2(self):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 10, unit_cost=10)
@@ -351,7 +362,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 15)
         move4 = self._make_out_move(self.product1, 20)
         move5 = self._make_in_move(self.product1, 100, unit_cost=15)
-        move1.move_line_ids.qty_done = 20
+        move1.move_line_ids.with_context(svl=True).qty_done = 20
 
         self.assertEqual(self.product1.value_svl, 1375)
         self.assertEqual(self.product1.quantity_svl, 95)
