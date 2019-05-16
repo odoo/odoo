@@ -59,6 +59,7 @@ var KanbanColumn = Widget.extend({
         this.KanbanRecord = options.KanbanRecord || KanbanRecord; // the KanbanRecord class to use
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
+        this.recordsDraggable = options.recordsDraggable;
         this.relation = options.relation;
         this.offset = 0;
         this.remaining = data.count - this.data_records.length;
@@ -100,7 +101,7 @@ var KanbanColumn = Widget.extend({
             defs.push(this._addRecord(this.data_records[i]));
         }
 
-        if (!config.device.isMobile) {
+        if (this.recordsDraggable && !config.device.isMobile) {
             // deactivate sortable in mobile mode.  It does not work anyway,
             // and it breaks horizontal scrolling in kanban views.  Someday, we
             // should find a way to use the touch events to make sortable work.
