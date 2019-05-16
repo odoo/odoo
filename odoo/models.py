@@ -584,9 +584,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @classmethod
     def _init_constraints_onchanges(cls):
-        # store sql constraint error messages
-        for (key, _, msg) in cls._sql_constraints:
-            cls.pool._sql_error[cls._table + '_' + key] = msg
+        # store list of sql constraint qualified names
+        for (key, _, _) in cls._sql_constraints:
+            cls.pool._sql_constraints.add(cls._table + '_' + key)
 
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
