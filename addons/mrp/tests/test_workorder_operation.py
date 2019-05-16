@@ -94,7 +94,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # Process assembly line
         # ---------------------------------------------------------
         finished_lot =self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
-        workorder.write({'final_lot_id': finished_lot.id})
+        workorder.write({'finished_lot_id': finished_lot.id})
         workorder.button_start()
         for workorder_line_id in workorder._workorder_line_ids():
             if workorder_line_id.product_id.id == product_bolt.id:
@@ -198,7 +198,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # Process cutting operation...
         # ---------------------------------------------------------
         finished_lot = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
-        workorders[0].write({'final_lot_id': finished_lot.id, 'qty_producing': 1.0})
+        workorders[0].write({'finished_lot_id': finished_lot.id, 'qty_producing': 1.0})
         workorders[0].button_start()
         workorders[0]._workorder_line_ids()[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
@@ -360,7 +360,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         kit_wo.button_start()
         finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
         kit_wo.write({
-            'final_lot_id': finished_lot.id,
+            'finished_lot_id': finished_lot.id,
             'qty_producing': 48
         })
 
@@ -371,7 +371,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         # first operation of main bom
         finished_lot = self.env['stock.production.lot'].create({'product_id': man_order.product_id.id})
         door_wo_1.write({
-            'final_lot_id': finished_lot.id,
+            'finished_lot_id': finished_lot.id,
             'qty_producing': 48
         })
         door_wo_1.record_production()
@@ -485,7 +485,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         product_form = Form(self.env['mrp.product.produce'].with_context(context))
         product_form.qty_producing = 6.00
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        product_form.final_lot_id = laptop_lot_001
+        product_form.finished_lot_id = laptop_lot_001
         product_consume = product_form.save()
         product_consume._workorder_line_ids()[0].qty_done = 12
         product_consume.do_produce()
@@ -512,7 +512,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
         produce_form.qty_producing = 4.00
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        produce_form.final_lot_id = laptop_lot_002
+        produce_form.finished_lot_id = laptop_lot_002
         product_consume = produce_form.save()
         self.assertEquals(len(product_consume._workorder_line_ids()), 2)
         product_consume._workorder_line_ids()[0].qty_done = 8
@@ -650,7 +650,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
         produce_form.qty_producing = 10.00
-        produce_form.final_lot_id = lot_a
+        produce_form.finished_lot_id = lot_a
         product_consume = produce_form.save()
         # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         self.assertEquals(len(product_consume._workorder_line_ids()), 2)
@@ -702,22 +702,22 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         workorders[0].button_start()
         serial_a = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_a
+        workorders[0].finished_lot_id = serial_a
         workorders[0].record_production()
         serial_b = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_b
+        workorders[0].finished_lot_id = serial_b
         workorders[0].record_production()
         serial_c = self.env['stock.production.lot'].create({'product_id': laptop.id})
-        workorders[0].final_lot_id = serial_c
+        workorders[0].finished_lot_id = serial_c
         workorders[0].record_production()
         self.assertEqual(workorders[0].state, 'done')
 
         for workorder in workorders - workorders[0]:
-            self.assertEqual(workorder.final_lot_id, serial_a)
+            self.assertEqual(workorder.finished_lot_id, serial_a)
             workorder.record_production()
-            self.assertEqual(workorder.final_lot_id, serial_b)
+            self.assertEqual(workorder.finished_lot_id, serial_b)
             workorder.record_production()
-            self.assertEqual(workorder.final_lot_id, serial_c)
+            self.assertEqual(workorder.finished_lot_id, serial_c)
             workorder.record_production()
             self.assertEqual(workorder.state, 'done')
 
@@ -763,12 +763,12 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         workorder_1 = mo.workorder_ids[1]
         with Form(workorder_1) as wo:
-            wo.final_lot_id = lot_1
+            wo.finished_lot_id = lot_1
         workorder_1.record_production()
 
         self.assertTrue(len(workorder_1.allowed_lots_domain) > 1)
         with Form(workorder_1) as wo:
-            wo.final_lot_id = lot_2
+            wo.finished_lot_id = lot_2
         workorder_1.record_production()
 
         workorder_2 = mo.workorder_ids[2]
