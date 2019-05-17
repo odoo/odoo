@@ -96,6 +96,24 @@ class TestStockValuationCommon(SavepointCase):
         self.days += 1
         return out_move.with_context(svl=True)
 
+    def _make_dropship_move(self, product, quantity, unit_cost=None):
+        dropshipped = self.env['stock.move'].create({
+            'name': 'dropship %s units' % str(quantity),
+            'product_id': product.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': quantity,
+            'picking_type_id': self.picking_type_out.id,
+        })
+        if unit_cost:
+            dropshipped.unit_cost = unit_cost
+        dropshipped._action_confirm()
+        dropshipped._action_assign()
+        dropshipped.move_line_ids.qty_done = quantity
+        dropshipped._action_done()
+        return dropshipped
+
     def _make_return(self, move, quantity_to_return):
         stock_return_picking = Form(self.env['stock.return.picking']\
             .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
@@ -214,6 +232,33 @@ class TestStockValuationStandard(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 50)
         self.assertEqual(self.product1.quantity_svl, 5)
+
+    def test_dropship_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_dropship_move(self.product1, 10)
+
+        valuation_layers = self.product1.stock_valuation_layer_ids
+        self.assertEqual(len(valuation_layers), 2)
+        self.assertEqual(valuation_layers[0].value, 100)
+        self.assertEqual(valuation_layers[1].value, -100)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_change_in_past_increase_dropship_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_dropship_move(self.product1, 10)
+        move1.move_line_ids.with_context(svl=True).qty_done = 15
+
+        valuation_layers = self.product1.stock_valuation_layer_ids
+        self.assertEqual(len(valuation_layers), 4)
+        self.assertEqual(valuation_layers[0].value, 100)
+        self.assertEqual(valuation_layers[1].value, -100)
+        self.assertEqual(valuation_layers[2].value, 50)
+        self.assertEqual(valuation_layers[3].value, -50)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
 
 
 class TestStockValuationAVCO(TestStockValuationCommon):
@@ -380,6 +425,15 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 1)
         self.assertEqual(self.product1.standard_price, 15)
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 1)
+
+    def test_dropship_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_dropship_move(self.product1, 1, unit_cost=10)
+
+        self.assertEqual(self.product1.value_svl, 30)
+        self.assertEqual(self.product1.quantity_svl, 2)
+        self.assertEqual(self.product1.standard_price, 15)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):

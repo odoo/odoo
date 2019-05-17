@@ -240,6 +240,52 @@ class StockMove(models.Model):
             svl_vals_list.append(svl_vals)
         return self.env['stock.valuation.layer'].create(svl_vals_list)
 
+    def _create_dropshipped_svl(self, forced_quantity=None):
+        """Create a `stock.valuation.layer` from `self`.
+
+        :param forced_quantity: under some circunstances, the quantity to value is different than
+            the initial demand of the move (Default value = None)
+        """
+        svl_vals_list = []
+        for move in self:
+            valued_move_lines = move.move_line_ids
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+            quantity = forced_quantity or valued_quantity
+
+            unit_cost = move._get_price_unit()
+            if move.product_id.cost_method == 'standard':
+                unit_cost = move.product_id.standard_price
+
+            common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
+
+            # create the in
+            in_vals = {
+                'unit_cost': unit_cost,
+                'value': unit_cost * quantity,
+                'quantity': quantity,
+            }
+            in_vals.update(common_vals)
+            svl_vals_list.append(in_vals)
+
+            # create the out
+            out_vals = {
+                'unit_cost': unit_cost,
+                'value': unit_cost * quantity * -1,
+                'quantity': quantity * -1,
+            }
+            out_vals.update(common_vals)
+            svl_vals_list.append(out_vals)
+        return self.env['stock.valuation.layer'].create(svl_vals_list)
+
+    def _create_dropshipped_returned_svl(self, forced_quantity=None):
+        """Create a `stock.valuation.layer` from `self`.
+
+        :param forced_quantity: under some circunstances, the quantity to value is different than
+            the initial demand of the move (Default value = None)
+        """
+        return self._create_dropshipped_svl(forced_quantity=forced_quantity)
 
     @api.model
     def _run_fifo(self, move, quantity=None):
@@ -734,9 +780,21 @@ class StockMove(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if self._is_dropshipped():
-                self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+                value = self.env.context.get('force_valuation_amount')
+                if value > 0:
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
+                else:
+                    force_valuation_amount = self.env.context['force_valuation_amount']
+                    self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
             elif self._is_dropshipped_returned():
-                self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_src, journal_id)
+                value = self.env.context.get('force_valuation_amount')
+                if value > 0:
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
+                else:
+                    force_valuation_amount = self.env.context['force_valuation_amount']
+                    self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
 
         if self.company_id.anglo_saxon_accounting:
             #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
