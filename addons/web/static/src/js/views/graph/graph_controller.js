@@ -96,8 +96,13 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
             this._updateButtons();
             this.$buttons.appendTo($node);
             if (this.isEmbedded) {
-                this._addGroupByMenu($node, this.groupableFields);
+                this._addGroupByMenu($node, this.groupableFields).then(function(){
+                    var groupByButton = $node.find('.o_dropdown_toggler_btn');
+                    groupByButton.removeClass("o_dropdown_toggler_btn btn btn-secondary dropdown-toggle");
+                    groupByButton.addClass("btn dropdown-toggle btn-outline-secondary");
+                });
             }
+
         }
     },
 
