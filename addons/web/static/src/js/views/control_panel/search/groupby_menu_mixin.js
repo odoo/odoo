@@ -36,6 +36,7 @@ var GroupByMenuMixin = {
      * private
      * @param {jQuery} $node
      * @param {Object} groupableFields
+     * @param {Promise}
      */
     _addGroupByMenu: function ($node, groupableFields) {
         this.sortedFieldNames = _.sortBy(Object.keys(groupableFields), function (fieldName) {
@@ -44,7 +45,7 @@ var GroupByMenuMixin = {
         this.groupableFields = groupableFields;
         var groupBys = this._getGroupBys(this.model.get().groupBy);
         this.groupByMenu = new GroupByMenu(this, groupBys, this.groupableFields);
-        this.groupByMenu.insertAfter($node.find('div:first'));
+        return this.groupByMenu.insertAfter($node.find('div:first'));
     },
     /**
      * This method puts the active groupBys in a convenient form.
