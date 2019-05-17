@@ -38,7 +38,6 @@ Follow the next configuration steps
     ],
     'data':[
         'data/account_account_tag_data.xml',
-        'data/account_chart_template.xml',
         'data/account_chart_base.xml',
         'data/account_chart_exento.xml',
         'data/account_chart_respinsc.xml',
@@ -51,7 +50,6 @@ Follow the next configuration steps
         'data/res_partner_data.xml',
         'data/res_currency_data.xml',
         'data/res_country_data.xml',
-        'data/menuitem.xml',
         'data/product_product_data.xml',
         'data/account_incoterms_data.xml',
         # los cargamos con csv pero los hacemos no actualizables con un hook
