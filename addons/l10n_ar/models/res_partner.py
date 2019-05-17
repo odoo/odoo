@@ -20,7 +20,6 @@ class ResPartner(models.Model):
     ]
     l10n_ar_gross_income_number = fields.Char(
         'Gross Income Number',
-        size=64,
     )
     l10n_ar_gross_income_type = fields.Selection([
         ('multilateral', 'Multilateral'),

@@ -19,27 +19,19 @@ class AccountInvoice(models.Model):
         ('4', '4-Otros (exportación)'),
     ]
 
-    l10n_ar_state_id = fields.Many2one(
-        related='partner_id.state_id',
-        store=True,
-        readonly=True,
-        auto_join=True,
-    )
     l10n_ar_currency_rate = fields.Float(
         copy=False,
         digits=(16, 4),
-        # TODO make it editable, we have to change move create method
+        # TODO make it editable, we have to change move creation method
         readonly=True,
         string="Currency Rate",
     )
+    # Mostly used on reports
     l10n_ar_letter = fields.Selection(
         related='l10n_latam_document_type_id.l10n_ar_letter',
     )
-
-    # Mostly used on reports
     l10n_ar_afip_responsability_type = fields.Selection(
         related='move_id.l10n_ar_afip_responsability_type',
-        index=True,
     )
     l10n_ar_invoice_number = fields.Integer(
         compute='_compute_l10n_ar_invoice_number',
@@ -52,28 +44,21 @@ class AccountInvoice(models.Model):
     l10n_ar_vat_tax_ids = fields.One2many(
         compute="_compute_argentina_amounts",
         comodel_name='account.invoice.tax',
-        string='VAT Taxes',
         help='Vat Taxes and vat tax amounts. Is an ADHOC internal concept',
     )
     l10n_ar_vat_taxable_ids = fields.One2many(
         compute="_compute_argentina_amounts",
         comodel_name='account.invoice.tax',
-        string='VAT Taxable Taxes',
         help="Does not include afip_code [0, 1, 2] because their are"
         " not taxes themselves: VAT Exempt, VAT Untaxed and VAT Not applicable"
     )
-    # todos los impuestos menos los tipo iva vat_tax_ids
     l10n_ar_not_vat_tax_ids = fields.One2many(
         compute="_compute_argentina_amounts",
         comodel_name='account.invoice.tax',
-        string='Not VAT Taxes'
     )
-    # suma de base para todos los impuestos tipo iva
-    # TODO revisar si se usa y si no borrar
     l10n_ar_vat_base_amount = fields.Monetary(
         compute="_compute_argentina_amounts",
     )
-    # base imponible (no se incluyen no corresponde, exento y no gravado)
     l10n_ar_vat_taxable_amount = fields.Monetary(
         compute="_compute_argentina_amounts",
     )
@@ -88,34 +73,17 @@ class AccountInvoice(models.Model):
     )
     l10n_ar_other_taxes_amount = fields.Monetary(
         compute="_compute_argentina_amounts",
-        string='Other Taxes Amount'
-    )
-    incoterm_id = fields.Many2one(
-        'account.incoterms',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        help='For international invoices AFIP required to identify the invoice'
-        ' with the type of incoterm that correspond',
-    )
-    l10n_ar_afip_pos_type = fields.Selection(
-        related='journal_id.l10n_ar_afip_pos_type',
-        readonly=True,
     )
     l10n_ar_afip_concept = fields.Selection(
         compute='_compute_l10n_ar_afip_concept',
         inverse='_inverse_l10n_ar_afip_concept',
-        # store=True,
         selection=afip_invoice_concepts,
         string="AFIP Concept",
-        help="Se sugiere un concepto en función a la configuración de los "
-        "productos (tipo servicio, consumible o almacenable) pero se puede "
-        "cambiar este valor si lo requiere.",
+        help="A concept is suggested regarding the type of the products on the"
+        " invoice but it is allowed to force a different type if required.",
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
-    # la idea es incorporar la posibilidad de forzar otro concepto distinto
-    # al sugerido, para no complicarla y ser compatible hacia atras de manera
-    # simple, agregamos este otro campo
     l10n_ar_force_afip_concept = fields.Selection(
         selection=afip_invoice_concepts,
         string="AFIP Concept",
@@ -146,13 +114,14 @@ class AccountInvoice(models.Model):
         'l10n_ar_force_afip_concept',
     )
     def _compute_l10n_ar_afip_concept(self):
-        for rec in self:
+        for rec in self.filtered(
+                lambda x: x.company_id.country_id.code == 'AR' and
+                x.l10n_latam_use_documents):
             afip_concept = False
-            if rec.l10n_ar_afip_pos_type in ['online', 'electronic']:
-                if rec.l10n_ar_force_afip_concept:
-                    afip_concept = rec.l10n_ar_force_afip_concept
-                else:
-                    afip_concept = rec._get_concept()
+            if rec.l10n_ar_force_afip_concept:
+                afip_concept = rec.l10n_ar_force_afip_concept
+            else:
+                afip_concept = rec._get_concept()
             rec.l10n_ar_afip_concept = afip_concept
 
     @api.multi
@@ -165,10 +134,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _get_concept(self):
-        """
-        Metodo para obtener el concepto en funcion a los productos de una
-        factura, luego es utilizado por los metodos inverse y compute del campo
-        afip_concept
+        """ Method to get the concept of the invoice considering the type of
+        the products on the invoice
         """
         self.ensure_one()
         invoice_lines = self.invoice_line_ids
@@ -186,19 +153,14 @@ class AccountInvoice(models.Model):
             afip_concept = '2'
         if product_types.issubset(consumible):
             afip_concept = '1'
-        if self.document_type_id.code in ['19', '20', '21']:
-            # en realidad para expo no se puede informar productos y servicios
-            # en mismo comprobante, este otros no sabemos bien que significa,
-            # si hay mezcla de productos y servicios lo dejamos como producto
-            # ya que es más seguro al exigir que el usuario agregue el Incoterm
+        # on expo invoice you can mix services and products
+        if self.l10n_latam_document_type_id.code in ['19', '20', '21']:
             if afip_concept == '3':
                 afip_concept = '1'
         return afip_concept
 
     @api.multi
     def _compute_argentina_amounts(self):
-        """
-        """
         for rec in self:
             vat_taxes = rec.tax_line_ids.filtered(
                 lambda r: (
@@ -216,13 +178,10 @@ class AccountInvoice(models.Model):
             rec.l10n_ar_vat_tax_ids = vat_taxes
             rec.l10n_ar_vat_taxable_ids = vat_taxables
             rec.l10n_ar_vat_amount = l10n_ar_vat_amount
-            # rec.l10n_ar_vat_taxable_amount = sum(vat_taxables.mapped('base_amount'))
             rec.l10n_ar_vat_taxable_amount = sum(vat_taxables.mapped('base'))
-            # rec.l10n_ar_vat_base_amount = sum(vat_taxes.mapped('base_amount'))
             rec.l10n_ar_vat_base_amount = sum(vat_taxes.mapped('base'))
 
-            # vat exempt values
-            # exempt taxes are the ones with code 2
+            # vat exempt values (are the ones with code 2)
             vat_exempt_taxes = rec.tax_line_ids.filtered(
                 lambda r: (
                     r.tax_id.tax_group_id.l10n_ar_type == 'tax' and
@@ -230,11 +189,8 @@ class AccountInvoice(models.Model):
                     r.tax_id.tax_group_id.l10n_ar_afip_code == 2))
             rec.l10n_ar_vat_exempt_base_amount = sum(
                 vat_exempt_taxes.mapped('base'))
-            # rec.l10n_ar_vat_exempt_base_amount = sum(
-            #     vat_exempt_taxes.mapped('base_amount'))
 
-            # l10n_ar_vat_untaxed_base_amount values (no gravado)
-            # vat exempt taxes are the ones with code 1
+            # vat untaxed values / no gravado (are the ones with code 1)
             vat_untaxed_taxes = rec.tax_line_ids.filtered(
                 lambda r: (
                     r.tax_id.tax_group_id.l10n_ar_type == 'tax' and
@@ -242,8 +198,6 @@ class AccountInvoice(models.Model):
                     r.tax_id.tax_group_id.l10n_ar_afip_code == 1))
             rec.l10n_ar_vat_untaxed_base_amount = sum(
                 vat_untaxed_taxes.mapped('base'))
-            # rec.l10n_ar_vat_untaxed_base_amount = sum(
-            #     vat_untaxed_taxes.mapped('base_amount'))
 
             # other taxes values
             not_vat_taxes = rec.tax_line_ids - vat_taxes
@@ -254,51 +208,38 @@ class AccountInvoice(models.Model):
     @api.multi
     @api.depends('l10n_latam_document_number', 'number')
     def _compute_l10n_ar_invoice_number(self):
-        """ Funcion que calcula numero de punto de venta y numero de factura
-        a partir del document number. Es utilizado principalmente por el modulo
-        de vat ledger citi
-        """
-        # TODO mejorar estp y almacenar punto de venta y numero de factura por
-        # separado, de hecho con esto hacer mas facil la carga de los
-        # comprobantes de compra
-
-        # decidimos obtener esto solamente para comprobantes con doc number
-        for rec in self:
-            str_number = rec.l10n_latam_document_number or False
-            if str_number:
-                if rec.document_type_id.code in ['33', '99', '331', '332']:
-                    point_of_sale = '0'
-                    # leave only numbers and convert to integer
-                    # otherwise use date as a number
-                    if re.search(r'\d', str_number):
-                        invoice_number = str_number
-                    else:
-                        invoice_number = rec.date_invoice
-                # despachos de importacion
-                elif rec.document_type_id.code == '66':
-                    point_of_sale = '0'
-                    invoice_number = '0'
-                elif "-" in str_number:
-                    splited_number = str_number.split('-')
-                    invoice_number = splited_number.pop()
-                    point_of_sale = splited_number.pop()
-                elif "-" not in str_number and len(str_number) == 12:
-                    point_of_sale = str_number[:4]
-                    invoice_number = str_number[-8:]
+        for rec in self.filtered('l10n_latam_document_number'):
+            if rec.l10n_latam_document_type_id.code in ['33', '99', '331', '332']:
+                point_of_sale = '0'
+                # leave only numbers and convert to integer
+                # otherwise use date as a number
+                if re.search(r'\d', str_number):
+                    invoice_number = str_number
                 else:
-                    raise ValidationError(_(
-                        'Could not get invoice number and point of sale for '
-                        'Invoice [%i] %s') % (rec.id, rec.display_name))
-                rec.invoice_number = int(
-                    re.sub("[^0-9]", "", invoice_number))
-                rec.l10n_ar_afip_pos_number = int(
-                    re.sub("[^0-9]", "", point_of_sale))
+                    invoice_number = rec.date_invoice
+            # despachos de importacion
+            elif rec.l10n_latam_document_type_id.code == '66':
+                point_of_sale = '0'
+                invoice_number = '0'
+            elif "-" in str_number:
+                splited_number = str_number.split('-')
+                invoice_number = splited_number.pop()
+                point_of_sale = splited_number.pop()
+            elif "-" not in str_number and len(str_number) == 12:
+                point_of_sale = str_number[:4]
+                invoice_number = str_number[-8:]
+            else:
+                raise ValidationError(_(
+                    'Could not get invoice number and point of sale for '
+                    'Invoice [%i] %s') % (rec.id, rec.display_name))
+            rec.l10n_ar_invoice_number = int(
+                re.sub("[^0-9]", "", invoice_number))
+            rec.l10n_ar_afip_pos_number = int(
+                re.sub("[^0-9]", "", point_of_sale))
 
     @api.multi
     def get_localization_invoice_vals(self):
         self.ensure_one()
-        # TODO depreciar esta funcion y convertir a l10n_ar_currency_rate campo
-        # calculado que la calcule en funcion a los datos del move
         if self.company_id.country_id.code == 'AR':
             if self.company_id.currency_id == self.currency_id:
                 l10n_ar_currency_rate = 1.0
@@ -317,15 +258,6 @@ class AccountInvoice(models.Model):
     @api.model
     def _get_available_journal_document_types(
             self, journal, invoice_type, partner):
-        """
-        This function search for available document types regarding:
-        * Journal
-        * Partner
-        * Company
-        * Documents configuration
-        If needed, we can make this funcion inheritable and customizable per
-        localization
-        """
         if journal.company_id.country_id.code != 'AR':
             return super(
                 AccountInvoice, self)._get_available_journal_document_types(
@@ -354,20 +286,17 @@ class AccountInvoice(models.Model):
                 if invoice_type in ['out_refund', 'in_refund']:
                     domain = [
                         ('document_type_id.internal_type',
-                            # '=', 'credit_note')]
                             # TODO, check if we need to add tickets and others
                             # also
                             'in', ['credit_note', 'in_document'])] + domain
                 # else, none credit notes
                 else:
-                    # usamos not in porque != no funciona bien, no muestra los
-                    # que tienen internal type = False
                     domain = [
                         ('document_type_id.internal_type',
                             'not in', ['credit_note'])] + domain
 
-                # If internal_type in context we try to serch specific document
-                # for eg used on debit notes
+                # If internal_type is in context we try to search for an
+                # specific document. for eg used on debit notes
                 internal_type = self._context.get('internal_type', False)
                 if internal_type:
                     journal_document_type = journal_document_type.search(
@@ -381,7 +310,8 @@ class AccountInvoice(models.Model):
                     journal_document_type = journal_document_types[0]
 
         if invoice_type == 'in_invoice':
-            other_document_types = (commercial_partner.l10n_ar_special_purchase_document_type_ids)
+            other_document_types = (
+                commercial_partner.l10n_ar_special_purchase_document_type_ids)
             domain = [
                 ('journal_id', '=', journal.id),
                 ('document_type_id',
@@ -411,11 +341,6 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def check_argentinian_invoice_taxes(self):
-        """
-        We make theis function to be used as a constraint but also to be called
-        from other models like vat citi
-        """
-        # only check for argentinian localization companies
         _logger.info('Running checks related to argentinian documents')
 
         # we consider argentinian invoices the ones from companies with
@@ -482,7 +407,7 @@ class AccountInvoice(models.Model):
         # configurado
         without_cuit = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
-            x.document_type_id.purchase_cuit_required and
+            x.l10n_latam_document_type_id.purchase_cuit_required and
             not x.commercial_partner_id.cuit)
         if without_cuit:
             raise ValidationError(_(
@@ -494,7 +419,7 @@ class AccountInvoice(models.Model):
         # facturas que no debería tener ningún iva y tienen
         not_zero_alicuot = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
-            x.document_type_id.purchase_alicuots == 'zero' and
+            x.l10n_latam_document_type_id.purchase_alicuots == 'zero' and
             any([t.tax_id.tax_group_id.l10n_ar_afip_code != 0 for t in x.l10n_ar_vat_tax_ids]))
         if not_zero_alicuot:
             raise ValidationError(_(
@@ -506,7 +431,7 @@ class AccountInvoice(models.Model):
         # facturas que debería tener iva y tienen no corresponde
         zero_alicuot = argentinian_invoices.filtered(
             lambda x: x.type in ['in_invoice', 'in_refund'] and
-            x.document_type_id.purchase_alicuots == 'not_zero' and
+            x.l10n_latam_document_type_id.purchase_alicuots == 'not_zero' and
             any([t.tax_id.tax_group_id.l10n_ar_afip_code == 0 for t in x.l10n_ar_vat_tax_ids]))
         if zero_alicuot:
             raise ValidationError(_(

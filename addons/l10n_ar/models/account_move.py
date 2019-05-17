@@ -10,9 +10,6 @@ class AccountMove(models.Model):
     l10n_ar_afip_responsability_type = fields.Selection(
         ResPartner._afip_responsabilities,
         'AFIP Responsability Type',
-        index=True,
-        help='Responsability type from journal entry where it is stored and '
-        'it nevers change',
     )
 
     @api.constrains('partner_id')

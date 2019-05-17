@@ -12,7 +12,7 @@ class AccountInvoiceLine(models.Model):
         'account.tax',
         compute='_compute_l10n_ar_vat_tax_id',
         string='VAT Tax',
-        help="Field to help with electronic invoice and perhups in other uses",
+        help="Technical Field. Helper.",
     )
 
     @api.depends(
