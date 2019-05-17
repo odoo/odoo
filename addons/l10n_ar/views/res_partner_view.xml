@@ -1,57 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="base_view_partner_form" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="ref" position="replace">
-                </field>
-                <field name="parent_id" position="after">
-                    <field name="ref" placeholder="Reference/Name fantasy"/>
-                </field>
-                <field name="vat" position="after">
-                    <field name="l10n_ar_afip_responsability_type" attrs="{'invisible': [('is_company','=',False), ('parent_id','!=',False)]}"/>
-                </field>
+    <record id="base_view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="replace">
             </field>
-        </record>
+            <field name="parent_id" position="after">
+                <field name="ref" placeholder="Reference/Name fantasy"/>
+            </field>
+            <field name="vat" position="after">
+                <field name="l10n_ar_afip_responsability_type" attrs="{'invisible': [('is_company','=',False), ('parent_id','!=',False)]}"/>
+            </field>
+        </field>
+    </record>
 
-        <record id="view_partner_property_form" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="account.view_partner_property_form"/>
-            <field name="arch" type="xml">
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
 
-                <xpath expr="//page[@name='accounting']/group" position="inside">
-                    <group string="Accounting Documents" name="accounting_documents">
-                        <!-- we use _tags widget because of a bug with m2m default widget that don't allow to add records if user don't have access rights to create on destiny model. It is also much cleaner -->
-                        <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
-                    </group>
-                </xpath>
+            <xpath expr="//page[@name='accounting']/group" position="inside">
+                <group string="Accounting Documents" name="accounting_documents">
+                    <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
 
             <page name="accounting" position="after">
-                <page string="Fiscal Data" name="fiscal_data" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                    <!-- add other documents -->
-                    <group string="AFIP" name="afip">
-                        <group name="afip_col_1">
-                            <field name="l10n_ar_start_date"/>
-                        </group>
-                    </group>
-                    <group string="Others" name="others">
-                        <group name="others_col_1">
+                <page string="Arg. Fiscal Data" name="fiscal_data" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                    <group>
+                        <group name="gross_income">
                             <label for="l10n_ar_gross_income_number" string="Gross Income"/>
                             <div>
                                 <field name="l10n_ar_gross_income_type" class="oe_inline"/>
                                 <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'not in', ['multilateral', 'local'])], 'required': [('l10n_ar_gross_income_type', 'in', ['multilateral', 'local'])]}"/>
                             </div>
                         </group>
-                        <group name="others_col_2">
-                        </group>
                     </group>
                 </page>
             </page>
-
         </field>
     </record>
 

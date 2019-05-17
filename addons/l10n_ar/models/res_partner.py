@@ -29,11 +29,6 @@ class ResPartner(models.Model):
         'Gross Income Type',
         help='Type of gross income: exempt, local, multilateral',
     )
-    l10n_ar_start_date = fields.Date(
-        'Start-up Date',
-        help='This one is required when trying to validate invoices that have'
-        ' AFIP concept at invoice is different from Products',
-    )
     l10n_ar_afip_responsability_type = fields.Selection(
         _afip_responsabilities,
         'AFIP Responsability Type',

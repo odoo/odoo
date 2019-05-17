@@ -40,7 +40,6 @@
                     <field name="l10n_ar_gross_income_type" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')]}" class="oe_inline"/>
                     <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'in', [False, 'no_liquida'])], 'required': [('l10n_ar_gross_income_type', 'not in', [False, 'no_liquida'])]}"/>
                 </div>
-                <field name="l10n_ar_start_date" attrs="{'required': [('l10n_ar_country_code', '=', 'AR')], 'invisible': [('l10n_ar_country_code', '!=', 'AR')]}"/>
             </field>
         </field>
     </record>
