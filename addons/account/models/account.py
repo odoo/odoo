@@ -1237,6 +1237,10 @@ class AccountTax(models.Model):
                 all_taxes += tax
         return all_taxes
 
+    def get_tax_tags(self, is_refund, repartition_type):
+        rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
+        return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
+
     @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False):
         """ Returns all information required to apply taxes (in self + their children in case of a tax group).
@@ -1395,12 +1399,13 @@ class AccountTax(models.Model):
                 cumulated_tax_included_amount += tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
-            # receive the base tags of these taxes, so that the tax report computes
+            # receive the base tags and tag_ids of these taxes, so that the tax report computes
             # the right total
-            additional_tags = self.env['account.account.tag']
+            subsequent_taxes = self.env['account.tax']
+            subsequent_tags = self.env['account.account.tag']
             if tax.include_base_amount:
-                next_taxes_rep = taxes[i+1:].mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
-                additional_tags += next_taxes_rep.filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+                subsequent_taxes = taxes[i+1:]
+                subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
             # Compute the tax lines
             tax_repartition_lines = is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids
@@ -1421,7 +1426,8 @@ class AccountTax(models.Model):
                     'price_include': tax.price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
-                    'tag_ids': [(6, False, (repartition_line.tag_ids + additional_tags).ids)],
+                    'tag_ids': [(6, False, (repartition_line.tag_ids + subsequent_tags).ids)],
+                    'tax_ids': [(6, False, subsequent_taxes.ids)]
                 })
 
                 total_amount += line_amount
