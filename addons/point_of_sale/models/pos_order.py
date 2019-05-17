@@ -536,8 +536,10 @@ class PosOrder(models.Model):
     def _default_pricelist(self):
         return self._default_session().config_id.pricelist_id
 
+    def _default_company_id(self):
+        return self._default_session().config_id.company_id
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='User',
@@ -552,6 +554,8 @@ class PosOrder(models.Model):
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
+                                    default=lambda self: self._default_company_id())
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
                                    'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
@@ -1048,7 +1052,7 @@ class PosOrderLine(models.Model):
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
@@ -1059,7 +1063,7 @@ class PosOrderLine(models.Model):
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
-    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
+    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')

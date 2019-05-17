@@ -40,6 +40,8 @@ class PosSession(models.Model):
             orders_to_reconcile = session.order_ids._filtered_for_reconciliation()
             orders_to_reconcile.sudo()._reconcile_payments()
 
+    company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
+    
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
