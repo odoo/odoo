@@ -249,6 +249,35 @@
 
         <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>
 
+        <!-- STAT VIEW VIEWS -->
+
+        <record model="ir.ui.view" id="view_forum_post_views_pivot">
+        <field name="name">forum.post.views.pivot</field>
+        <field name="model">forum.post.view</field>
+        <field name="arch" type="xml">
+            <pivot string="Forum Stats" disable_linking="True">
+                <field name="post_id" type="row"/>
+                <field name="view_date" interval="month" type="col"/>
+                <field name="views_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+        <record id="action_forum_stats" model="ir.actions.act_window">
+            <field name="name">Forum Stats</field>
+            <field name="res_model">forum.post.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,form</field>
+            <field name="view_id" ref="view_forum_post_views_pivot"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    There is no record for this view
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_forum_stats" parent="menu_website_forum" name="Stats" action="action_forum_stats" sequence="30"/>
+
         <!-- TAG VIEWS -->
         <record id="forum_tag_view_list" model="ir.ui.view">
             <field name="name">forum.tag.list</field>

@@ -175,7 +175,6 @@ class Post(models.Model):
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Number of Views', default=0)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -190,6 +189,10 @@ class Post(models.Model):
                                      "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
+
+    #views
+    view_ids = fields.One2many('forum.post.view', 'post_id', string='Views')
+    views = fields.Integer('Number of Views', compute='_get_views_count', store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -304,6 +307,26 @@ class Post(models.Model):
             result[data['post_id'][0]] += data['__count'] * int(data['vote'])
         for post in self:
             post.vote_count = result[post.id]
+
+    @api.multi
+    @api.depends('view_ids.views_count')
+    def _get_views_count(self):
+        read_group_res = self.env['forum.post.view'].read_group([('post_id', 'in', self._ids)], ['post_id', 'views_count'], ['post_id'], lazy=False)
+        result = dict.fromkeys(self._ids, 0)
+        for data in read_group_res:
+            result[data['post_id'][0]] += data['views_count']
+        for post in self:
+            post.views = result[post.id]
+
+    @api.multi
+    @api.depends('view_ids.views_count')
+    def _get_views_count_last_month(self):
+        read_group_res = self.env['forum.post.view'].read_group([('post_id', 'in', self._ids),('view_date', '>=', datetime.today().replace(month=datetime.today().month-1))], ['post_id', 'views_count'], ['post_id'], lazy=False)
+        result = dict.fromkeys(self._ids, 0)
+        for data in read_group_res:
+            result[data['post_id'][0]] += data['views_count']
+        for post in self:
+            post.views_last_month = result[post.id]
 
     @api.one
     def _get_user_favourite(self):
@@ -755,7 +778,18 @@ class Post(models.Model):
 
     @api.multi
     def set_viewed(self):
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
+        for rec in self:
+            today_views = rec.env['forum.post.view'].search([('post_id', '=', rec.id), ('view_date_day', '=', datetime.today().day)], limit=1)
+            if today_views :
+                today_views.write({
+                    'views_count': today_views.views_count+1,
+                    })
+            else:
+                test = rec.env['forum.post.view'].create({
+                    'post_id':rec.id,
+                    'views_count':1,
+                    'view_date':datetime.today().date(),
+                    })
         return True
 
     @api.multi
@@ -940,3 +974,49 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
+
+class PostViews(models.Model):
+    _name = "forum.post.view"
+    _description = "Post Views"
+
+    post_id = fields.Many2one('forum.post', string='Post')
+    views_count = fields.Integer(string='Number of Views')
+    view_date = fields.Date(string='Viewed on')
+    view_date_day = fields.Integer(compute='_compute_date_day', store=True)
+
+    @api.depends('view_date')
+    def _compute_date_day(self):
+        for rec in self:
+            rec.view_date_day = rec.view_date.day
+
+    @api.model
+    def _cron_aggregate_views(self):
+        """
+            Cron to aggregate all views of all days from a month.
+        """
+
+        interval = 'year' if datetime.today().month == 1 else 'month'
+        first_day = datetime.today().replace(**{
+            interval: datetime.today().__getattribute__(interval)-1,
+        })
+
+        query = """
+            INSERT INTO forum_post_view (views_count, post_id, view_date)
+            SELECT
+                sum(views_count),
+                post_id,
+                date_trunc(%s, view_date) AS date_month
+            FROM forum_post_view
+            WHERE view_date >= '%s'
+            GROUP BY post_id, date_month
+            RETURNING id;
+        """
+        params = (
+            interval,
+            first_day,
+        )
+
+        self._cr.execute(query, params)
+        created_ids = [resp[0] for resp in self._cr.fetchall()]
+
+        self.env['forum.post.view'].search([('view_date', '>=', first_day.date()), ('id', 'not in', created_ids)]).unlink()
