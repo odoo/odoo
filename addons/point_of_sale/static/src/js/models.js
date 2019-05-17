@@ -263,10 +263,6 @@ exports.PosModel = Backbone.Model.extend({
                                     self.config.iface_cashdrawer       ||
                                     self.config.iface_customer_facing_display;
 
-            if (self.config.company_id[0] !== self.user.company_id[0]) {
-                throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
-            }
-
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
             // We need to do it here, since only then the local storage has the correct uuid
@@ -345,7 +341,7 @@ exports.PosModel = Backbone.Model.extend({
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
-            var domain = [['sale_ok','=',true],['available_in_pos','=',true]];
+            var domain = [['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
             if (self.config.limit_categories &&  self.config.iface_available_categ_ids.length) {
                 domain.push(['pos_categ_id', 'in', self.config.iface_available_categ_ids]);
             }

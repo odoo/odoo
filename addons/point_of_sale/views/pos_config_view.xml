@@ -45,7 +45,7 @@
                         <div id="company" class="col-12 col-lg-6 o_setting_box" groups="base.group_multi_company">
                             <div class="o_setting_right_pane">
                                 <label for="company_id"/>
-                                <div><field name="company_id"/></div>
+                                <div><field name="company_id" readonly="1"/></div>
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
                             <div class="o_setting_left_pane">
-                                <field name="tax_regime_selection"/>
+                                <field name="tax_regime_selection" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="tax_regime_selection" string="Fiscal Position per Order"/>
@@ -220,7 +220,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('tax_regime_selection', '=', False)]}">
                                     <div class="mt16">
-                                        <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                                     </div>
                                     <div>
                                         <button name="%(account.action_account_fiscal_position_form)d" icon="fa-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
@@ -239,7 +239,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('tax_regime', '=', False)]}">
                                     <div class="mt16">
-                                        <field name="default_fiscal_position_id" attrs="{'required': [('tax_regime', '=', True)]}"/>
+                                        <field name="default_fiscal_position_id" attrs="{'required': [('tax_regime', '=', True)]}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                                     </div>
                                 </div>
                             </div>
@@ -247,19 +247,19 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container" id="pricing">
-                        <div class="col-xs-12 col-lg-6 o_setting_box" id="product_prices"> 
-                            <div class="o_setting_right_pane"> 
-                                <label for="iface_tax_included" string="Product Prices"/>  
-                                <div class="text-muted">   
-                                    Product prices on receipts 
-                                </div> 
-                                <div class="content-group">    
-                                    <div class="mt16"> 
-                                        <field name="iface_tax_included" class="o_light_label" widget="radio"/>    
-                                    </div> 
+                        <div class="col-xs-12 col-lg-6 o_setting_box" id="product_prices">
+                            <div class="o_setting_right_pane">
+                                <label for="iface_tax_included" string="Product Prices"/>
+                                <div class="text-muted">
+                                    Product prices on receipts
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="iface_tax_included" class="o_light_label" widget="radio"/>
+                                    </div>
                                     <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/12.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
-                                </div> 
-                            </div> 
+                                </div>
+                            </div>
                         </div>
                         <div class="col-xs-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
@@ -289,7 +289,7 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
                                     <div class="row mt16">
                                         <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="available_pricelist_ids" widget="many2many_tags"/>
+                                        <field name="available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                                     </div>
                                     <div class="row">
                                         <label string="Default Pricelist" for="pricelist_id" class="col-lg-3 o_light_label"/>
@@ -445,7 +445,9 @@
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="invoice_journal_id"
-                                               attrs="{'required': [('module_account', '=', True)]}"/>
+                                                domain="[('company_id', '=', company_id)]"
+                                               attrs="{'required': [('module_account', '=', True)]}"
+                                               context="{'default_company_id': company_id}"/>
                                     </div>
                                 </div>
                             </div>
@@ -461,7 +463,7 @@
                                     Products will be taken from the default source location of this operation type
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="picking_type_id" required="1"/>
+                                    <field name="picking_type_id" required="1" domain="[('company_id', '=', company_id)]"/>
                                 </div>
                             </div>
                         </div>
@@ -477,7 +479,7 @@
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                         <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
-                                        <field name="journal_id"/>
+                                        <field name="journal_id" domain="[('company_id', '=', company_id)]" context="{'default_company_id': company_id}"/>
                                     </div>
                                     <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">
                                         <label string="Group Journal Items" for="group_by" class="col-lg-3 o_light_label"/>
@@ -500,6 +502,7 @@
             <tree string="Point of Sale Configuration">
                 <field name="name" />
                 <field name="picking_type_id"/>
+                <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
