@@ -5,7 +5,7 @@
         <field name="name">l10n_latam.document.type.form</field>
         <field name="model">l10n_latam.document.type</field>
         <field name="arch" type="xml">
-            <form string="Document Type">
+            <form string="Document Type"  create="0" edit="0">>
                 <group>
                     <field name='code'/>
                     <field name="name"/>
@@ -13,9 +13,6 @@
                     <field name='report_name'/>
                     <field name='internal_type'/>
                     <field name='country_id'/>
-                    <!-- TODO review with Juan
-                    <field name='taxes_included'/>
-                    <field name='active'/> -->
                 </group>
             </form>
         </field>
@@ -25,14 +22,14 @@
         <field name="name">l10n_latam.document.type.tree</field>
         <field name="model">l10n_latam.document.type</field>
         <field name="arch" type="xml">
-            <tree string="Document Type">
-                <field name="sequence" widget="handle"/>
+            <tree string="Document Type" decoration-muted="(not active)" create="0" edit="0">
                 <field name="code"/>
                 <field name="name"/>
                 <field name="doc_code_prefix"/>
                 <field name='report_name'/>
                 <field name='internal_type'/>
                 <field name='country_id'/>
+                <field name="active" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>
@@ -46,6 +43,8 @@
                 <field name="code"/>
                 <field name='internal_type'/>
                 <field name='country_id'/>
+                <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active document types"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived document types"/>
                 <group expand="1" string="Group By...">
                     <filter string="Internal Type" name="group_by_internal_type" context="{'group_by':'internal_type'}"/>
                     <filter string="Localization" name="group_by_localization" context="{'group_by':'country_id'}"/>
@@ -57,6 +56,8 @@
     <record model="ir.actions.act_window" id="action_document_type">
         <field name="name">Document Types</field>
         <field name="res_model">l10n_latam.document.type</field>
+        <field name="domain">['|', ('active', '=', True), ('active', '=', False)]</field>
+        <field name="context">{"search_default_active":1}</field>
     </record>
 
     <menuitem action="action_document_type" id="menu_document_type" sequence="20" parent="account.account_account_menu"/>

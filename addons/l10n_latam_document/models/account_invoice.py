@@ -24,31 +24,22 @@ class AccountInvoice(models.Model):
         comodel_name='account.invoice.tax',
         string='Taxes'
     )
-    l10n_latam_available_journal_document_type_ids = fields.Many2many(
-        'l10n_latam.journal.mapping',
-        compute='_compute_l10n_latam_available_journal_document_types',
-        string='Available Journal Document Types',
-    )
-    l10n_latam_journal_mapping_id = fields.Many2one(
-        'l10n_latam.journal.mapping',
-        'Document Type Mapping',
-        readonly=True,
-        ondelete='restrict',
-        copy=False,
-        auto_join=True,
-        states={'draft': [('readonly', False)]}
+    l10n_latam_available_document_type_ids = fields.Many2many(
+        'l10n_latam.document.type',
+        compute='_compute_l10n_latam_available_document_types',
+        string='Available Document Types',
     )
     l10n_latam_document_type_id = fields.Many2one(
-        related='l10n_latam_journal_mapping_id.document_type_id',
+        'l10n_latam.document.type',
+        string='Document Type',
         copy=False,
         readonly=True,
-        store=True,
         auto_join=True,
         index=True,
     )
     l10n_latam_document_sequence_id = fields.Many2one(
-        related='l10n_latam_journal_mapping_id.sequence_id',
-        readonly=True,
+        'ir.sequence',
+        compute='_compute_l10n_latam_document_sequence',
     )
     l10n_latam_document_number = fields.Char(
         string='Document Number',
@@ -101,7 +92,7 @@ class AccountInvoice(models.Model):
     @api.multi
     @api.depends(
         'journal_id.sequence_id.number_next_actual',
-        'l10n_latam_journal_mapping_id.sequence_id.number_next_actual',
+        'l10n_latam_document_sequence_id.number_next_actual',
     )
     def _compute_l10n_latam_next_number(self):
         """
@@ -110,7 +101,7 @@ class AccountInvoice(models.Model):
         for invoice in self.filtered(
                 lambda x: not x.display_name and x.state == 'draft'):
             if invoice.l10n_latam_use_documents:
-                sequence = invoice.l10n_latam_journal_mapping_id.sequence_id
+                sequence = invoice.l10n_latam_document_sequence_id
             elif (
                     invoice.type in ['out_refund', 'in_refund'] and
                     invoice.journal_id.refund_sequence
@@ -165,7 +156,7 @@ class AccountInvoice(models.Model):
     @api.constrains(
         'journal_id',
         'partner_id',
-        'l10n_latam_journal_mapping_id',
+        'l10n_latam_document_type_id',
     )
     def _get_document_type(self):
         """ Como los campos responsible y journal document type no los
@@ -174,12 +165,12 @@ class AccountInvoice(models.Model):
         interfaz, hacemos este hack de constraint para computarlos si no estan
         computados"""
         for rec in self.filtered(
-                lambda x: not x.l10n_latam_journal_mapping_id and
-                x.l10n_latam_available_journal_document_type_ids):
-            rec.l10n_latam_journal_mapping_id = (
-                rec._get_available_journal_document_types(
+                lambda x: not x.l10n_latam_document_type_id and
+                x.l10n_latam_available_document_type_ids):
+            rec.l10n_latam_document_type_id = (
+                rec._get_available_document_types(
                     rec.journal_id, rec.type, rec.partner_id
-                ).get('journal_document_type'))
+                ).get('document_type'))
 
     @api.depends(
         'move_name',
@@ -254,17 +245,17 @@ class AccountInvoice(models.Model):
         for invoice in self:
             _logger.info(
                 'Setting document data on account.invoice and account.move')
-            journal_document_type = invoice.l10n_latam_journal_mapping_id
+            document_type = invoice.l10n_latam_document_type_id
             inv_vals = self._get_localization_invoice_vals()
             if invoice.l10n_latam_use_documents:
                 if not invoice.l10n_latam_document_number:
-                    if not invoice.l10n_latam_journal_mapping_id.sequence_id:
+                    if not invoice.l10n_latam_document_sequence_id:
                         raise UserError(_(
                             'Error!. Please define sequence on the journal '
                             'related documents to this invoice or set the '
                             'document number.'))
-                    document_number = (
-                        journal_document_type.sequence_id.next_by_id())
+                    document_number = \
+                        invoice.l10n_latam_document_sequence_id.next_by_id()
                     inv_vals['l10n_latam_document_number'] = document_number
                 # for canelled invoice number that still has a document_number
                 # if validated again we use old document_number
@@ -272,8 +263,7 @@ class AccountInvoice(models.Model):
                 else:
                     document_number = invoice.l10n_latam_document_number
                 invoice.move_id.write({
-                    'l10n_latam_document_type_id': (
-                        journal_document_type.document_type_id.id),
+                    'l10n_latam_document_type_id': document_type.id,
                     'l10n_latam_document_number': document_number,
                 })
             invoice.write(inv_vals)
@@ -281,29 +271,29 @@ class AccountInvoice(models.Model):
 
     @api.onchange('journal_id', 'partner_id', 'company_id')
     def onchange_journal_partner_company(self):
-        res = self._get_available_journal_document_types(
+        res = self._get_available_document_types(
             self.journal_id, self.type, self.partner_id)
-        self.l10n_latam_journal_mapping_id = res['journal_document_type']
+        self.l10n_latam_document_type_id = res['document_type']
 
     @api.depends('journal_id', 'partner_id', 'company_id')
-    def _compute_l10n_latam_available_journal_document_types(self):
+    def _compute_l10n_latam_available_document_types(self):
         """
         This function should only be inherited if you need to add another
         "depends", for eg, if you need to add a depend on "new_field" you
         should add:
 
         @api.depends('new_field')
-        def _get_available_journal_document_types(
+        def _get_available_document_types(
                 self, journal, invoice_type, partner):
             return super(
-                AccountInvoice, self)._get_available_journal_document_types(
+                AccountInvoice, self)._get_available_document_types(
                     journal, invoice_type, partner)
         """
         for invoice in self:
-            res = invoice._get_available_journal_document_types(
+            res = invoice._get_available_document_types(
                 invoice.journal_id, invoice.type, invoice.partner_id)
-            invoice.l10n_latam_available_journal_document_type_ids = res[
-                'available_journal_document_types']
+            invoice.l10n_latam_available_document_type_ids = res[
+                'available_document_types']
 
     @api.multi
     def write(self, vals):
@@ -316,32 +306,30 @@ class AccountInvoice(models.Model):
         # podrian pasarse otras cosas ademas del type
         if inv_type:
             for rec in self:
-                res = rec._get_available_journal_document_types(
+                res = rec._get_available_document_types(
                     rec.journal_id, inv_type, rec.partner_id)
-                vals['l10n_latam_journal_mapping_id'] = res[
-                    'journal_document_type'].id
+                vals['l10n_latam_document_type_id'] = res[
+                    'document_type'].id
                 # call write for each inoice
                 super(AccountInvoice, rec).write(vals)
                 return True
         return super(AccountInvoice, self).write(vals)
 
     @api.model
-    def _get_available_journal_document_types(
+    def _get_available_document_types(
             self, journal, invoice_type, partner):
         """ This function is to be inherited by different localizations and
         MUST return a dictionary with two keys:
-        * 'available_journal_document_types': available document types on
+        * 'available_document_types': available document types on
         this invoice
-        * 'journal_document_type': suggested document type on this invoice
+        * 'document_type': suggested document type on this invoice
         """
-        # if journal dont use documents return empty recordsets just in case
-        # there are journal_document_type_ids related to the journal
         if not journal.l10n_latam_use_documents:
             return {
-                'available_journal_document_types':
-                    self.env['l10n_latam.journal.mapping'],
-                'journal_document_type':
-                    self.env['l10n_latam.journal.mapping'],
+                'available_document_types':
+                    self.env['l10n_latam.document.type'],
+                'document_type':
+                    self.env['l10n_latam.document.type'],
             }
         raise UserError(_(
             'Method not implemented by localization of %s') % (
@@ -358,23 +346,10 @@ class AccountInvoice(models.Model):
                 rec.l10n_latam_document_type_id._format_document_number(
                     rec.l10n_latam_document_number)
 
-    @api.constrains('l10n_latam_journal_mapping_id', 'journal_id')
-    def check_journal_document_type_journal(self):
-        for rec in self:
-            if rec.l10n_latam_journal_mapping_id and (
-                    rec.l10n_latam_journal_mapping_id.journal_id != rec.journal_id):
-                raise Warning(_(
-                    'El Tipo de Documento elegido "%s" no pertenece al diario'
-                    ' "%s". Por favor pruebe elegir otro tipo de documento.'
-                    'Puede refrezcar los tipos de documentos disponibles '
-                    'cambiando el diario o el partner.') % ((
-                        rec.l10n_latam_journal_mapping_id.display_name,
-                        rec.journal_id.name)))
-
     @api.constrains('type', 'l10n_latam_document_type_id')
     def check_invoice_type_document_type(self):
         for rec in self:
-            internal_type = rec.l10n_latam_journal_mapping_id.document_type_id.internal_type
+            internal_type = rec.l10n_latam_document_type_id.document_type_id.internal_type
             invoice_type = rec.type
             if not internal_type:
                 continue
@@ -397,13 +372,13 @@ class AccountInvoice(models.Model):
         values = super(AccountInvoice, self)._prepare_refund(
             invoice, date_invoice=date_invoice,
             date=date, description=description, journal_id=journal_id)
-        refund_journal_document_type_id = self._context.get(
-            'refund_journal_document_type_id', False)
+        refund_document_type_id = self._context.get(
+            'refund_document_type_id', False)
         refund_document_number = self._context.get(
             'refund_document_number', False)
-        if refund_journal_document_type_id:
-            values['l10n_latam_journal_mapping_id'] = \
-                refund_journal_document_type_id
+        if refund_document_type_id:
+            values['l10n_latam_document_type_id'] = \
+                refund_document_type_id
         if refund_document_number:
             values['l10n_latam_document_number'] = refund_document_number
         return values

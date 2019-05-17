@@ -6,12 +6,6 @@ from odoo.exceptions import ValidationError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    l10n_latam_journal_mapping_ids = fields.One2many(
-        'l10n_latam.journal.mapping',
-        'journal_id',
-        'Documents Types',
-        auto_join=True,
-    )
     l10n_latam_use_documents = fields.Boolean(
         'Use Documents?',
     )
@@ -25,28 +19,6 @@ class AccountJournal(models.Model):
     def change_company(self):
         self.l10n_latam_use_documents = self.type in ['sale', 'purchase'] and \
            self.company_id.l10n_latam_use_documents
-
-    @api.multi
-    @api.constrains(
-        'code',
-        'company_id',
-        'l10n_latam_use_documents',
-    )
-    def update_journal_document_types(self):
-        """
-        Tricky constraint to create documents on journal.
-        You should not inherit this function, inherit
-        "_update_journal_document_types" instead
-        """
-        return self._update_journal_document_types()
-
-    @api.multi
-    def _update_journal_document_types(self):
-        """
-        Function to be inherited by different localizations
-        """
-        self.ensure_one()
-        return True
 
     @api.constrains('l10n_latam_use_documents')
     def check_use_document(self):

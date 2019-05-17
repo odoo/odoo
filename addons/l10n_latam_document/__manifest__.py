@@ -9,13 +9,11 @@
     ],
     "data": [
         'views/account_journal_view.xml',
-        'views/l10n_latam_journal_mapping_view.xml',
         'views/account_move_line_view.xml',
         'views/account_move_view.xml',
         'views/l10n_latam_document_type_view.xml',
         'views/account_invoice_view.xml',
         'views/report_invoice.xml',
-        'views/account_payment_view.xml',
         'views/menuitem.xml',
         # 'views/account_portal_templates.xml',
         'report/invoice_report_view.xml',

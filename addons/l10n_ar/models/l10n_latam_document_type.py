@@ -32,26 +32,7 @@ class L10nLatamDocumentType(models.Model):
             ('invoice', 'Invoices'),
             ('debit_note', 'Debit Notes'),
             ('credit_note', 'Credit Notes'),
-            ('ticket', 'Ticket'),
-            ('receipt_invoice', 'Receipt Invoice'),
-            ('customer_payment', 'Customer Voucher'),
-            ('supplier_payment', 'Supplier Invoice'),
-            # ('inbound_payment_voucher', 'Inbound Payment Voucer'),
-            # ('outbound_payment_voucher', 'Outbound Payment Voucer'),
-            ('in_document', 'In Document')],
-        help='It defines some behaviours on different places:'
-        '* invoice: used on sale and purchase journals. Auto selected if not'
-        'debit_note specified on context.'
-        '* debit_note: used on sale and purchase journals but with lower'
-        'priority than invoices.'
-        '* credit_note: used on sale_refund and purchase_refund journals.'
-        '* ticket: automatically loaded for purchase journals but only loaded'
-        'on sales journals if point_of_sale is fiscal_printer'
-        '* receipt_invoice: mean to be used as invoices but not automatically'
-        'loaded because it is not usually used'
-        '* in_document: automatically loaded for purchase journals but not '
-        'loaded on sales journals. Also can be selected on partners, to be '
-        'available it must be selected on partner.'
+        ],
     )
     purchase_cuit_required = fields.Boolean(
         help='Verdadero si la declaración del CITI compras requiere informar '

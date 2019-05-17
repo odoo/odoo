@@ -12,12 +12,6 @@
             <field name="type" position="after">
                 <field name="l10n_latam_use_documents" attrs="{'invisible': [('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}"/>
             </field>
-            <notebook position="inside">
-                <page string="Documents" attrs="{'invisible': ['|',('l10n_latam_use_documents','=',False),('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}">
-                    <!-- <button name="update_journal_document_types" type="object" string="Update Documents"/> -->
-                    <field name='l10n_latam_journal_mapping_ids'/>
-                </page>
-            </notebook>
         </field>
     </record>
 

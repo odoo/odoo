@@ -256,78 +256,54 @@ class AccountInvoice(models.Model):
                 AccountInvoice, self).get_localization_invoice_vals()
 
     @api.model
-    def _get_available_journal_document_types(
+    def _get_available_document_types(
             self, journal, invoice_type, partner):
         if journal.company_id.country_id.code != 'AR':
             return super(
-                AccountInvoice, self)._get_available_journal_document_types(
+                AccountInvoice, self)._get_available_document_types(
                     journal, invoice_type, partner)
+
+        document_types = document_type = self.env[
+            'l10n_latam.document.type']
 
         commercial_partner = partner.commercial_partner_id
 
-        journal_document_types = journal_document_type = self.env[
-            'l10n_latam.journal.mapping']
+        if journal.l10n_latam_use_documents and commercial_partner:
 
-        if invoice_type in [
-                'out_invoice', 'in_invoice', 'out_refund', 'in_refund']:
+            letters = journal.get_journal_letter(
+                counterpart_partner=commercial_partner)
 
-            if journal.l10n_latam_use_documents:
-                letters = journal.get_journal_letter(
-                    counterpart_partner=commercial_partner)
+            if invoice_type in ['out_refund', 'in_refund']:
+                internal_types = ['credit_note']
+            else:
+                internal_types = ['invoice', 'debit_note', 'receipt']
 
-                domain = [
-                    ('journal_id', '=', journal.id),
-                    '|',
-                    ('document_type_id.l10n_ar_letter', 'in', letters),
-                    ('document_type_id.l10n_ar_letter', '=', False),
-                ]
-
-                # if invoice_type is refund, only credit notes
-                if invoice_type in ['out_refund', 'in_refund']:
-                    domain = [
-                        ('document_type_id.internal_type',
-                            # TODO, check if we need to add tickets and others
-                            # also
-                            'in', ['credit_note', 'in_document'])] + domain
-                # else, none credit notes
-                else:
-                    domain = [
-                        ('document_type_id.internal_type',
-                            'not in', ['credit_note'])] + domain
-
-                # If internal_type is in context we try to search for an
-                # specific document. for eg used on debit notes
-                internal_type = self._context.get('internal_type', False)
-                if internal_type:
-                    journal_document_type = journal_document_type.search(
-                        [('document_type_id.internal_type',
-                            '=', internal_type)] + domain, limit=1)
-                # For domain, we search all documents
-                journal_document_types = journal_document_types.search(domain)
-
-                # If not specific document type found, we choose another one
-                if not journal_document_type and journal_document_types:
-                    journal_document_type = journal_document_types[0]
-
-        if invoice_type == 'in_invoice':
-            other_document_types = (
-                commercial_partner.l10n_ar_special_purchase_document_type_ids)
             domain = [
-                ('journal_id', '=', journal.id),
-                ('document_type_id',
-                    'in', other_document_types.ids),
+                ('internal_type', 'in', internal_types),
+                '|', ('l10n_ar_letter', '=', False),
+                ('l10n_ar_letter', 'in', letters),
             ]
-            other_journal_document_types = self.env[
-                'account.journal.document.type'].search(domain)
 
-            journal_document_types += other_journal_document_types
-            # if we have some document sepecific for the partner, we choose it
-            if other_journal_document_types:
-                journal_document_type = other_journal_document_types[0]
+            codes = journal.get_journal_codes()
+            if codes:
+                domain.append(('code', 'in', codes))
+
+            document_types = document_types.search(domain)
+
+            # If internal_type is in context we try to search for an
+            # specific document. for eg used on debit notes
+            internal_type = self._context.get('internal_type', False)
+            if internal_type:
+                document_type = document_type.search(
+                    [('internal_type', '=', internal_type)] + domain, limit=1)
+
+            # If not specific document type found, we choose another one
+            if not document_type and document_types:
+                document_type = document_types[0]
 
         return {
-            'available_journal_document_types': journal_document_types,
-            'journal_document_type': journal_document_type,
+            'available_document_types': document_types,
+            'document_type': document_type,
         }
 
     @api.multi

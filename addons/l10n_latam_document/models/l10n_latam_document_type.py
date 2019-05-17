@@ -9,6 +9,9 @@ class L10nLatamAccountDocmentType(models.Model):
     _description = 'Latam Document Type'
     _order = 'sequence, id'
 
+    active = fields.Boolean(
+        default=True,
+    )
     sequence = fields.Integer(
         default=10,
         required=True,
