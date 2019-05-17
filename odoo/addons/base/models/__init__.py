@@ -29,6 +29,7 @@ from . import ir_property
 from . import ir_module
 from . import ir_demo
 from . import ir_demo_failure
+from . import report_layout
 from . import report_paperformat
 
 from . import image_mixin
