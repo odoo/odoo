@@ -279,11 +279,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Promise}
      */
     _callButtonAction: function (attrs, record) {
-        console.log(attrs);
         var self = this;
         var def = new Promise(function (resolve, reject) {
             var reload = function () {
-                console.log('reloading...', attrs);
                 return self.isDestroyed() ? Promise.resolve() : self.reload();
             };
             record = record || self.model.get(self.handle);
@@ -300,11 +298,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 },
                 on_success: resolve,
                 on_fail: function () {
-                    self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                    // Allows buttons not to close the modal when performing an action
+                    if (attrs.noclose) {
+                        reload();
+                    } else {
+                        self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                    }
                 },
                 on_closed: reload,
             });
-            console.log(attrs);
         });
         return this.alive(def);
     },

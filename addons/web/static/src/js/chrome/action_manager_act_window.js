@@ -667,7 +667,7 @@ ActionManager.include({
                 // in case an effect is returned from python and there is already an effect
                 // attribute on the button, the priority is given to the button attribute
                 action.effect = effect || action.effect;
-            } else {
+            } else if (! actionData.noclose) {
                 // if action doesn't return anything, but there is an effect
                 // attribute on the button, display rainbowman
                 action = {
