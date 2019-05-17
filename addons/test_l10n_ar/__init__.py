@@ -17,7 +17,7 @@ def set_user_company(cr, registry):
     users = env.ref('base.user_root')
     users |= env.ref('base.user_admin')
     users |= env.ref('base.user_demo')
-    users.write({'company_id': env.ref('base.main_company')})
+    users.write({'company_id': env.ref('base.main_company').id})
 
 def post_init_hook(cr, registry):
     _logger.info('Post init hook initialized')
