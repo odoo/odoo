@@ -104,6 +104,11 @@
                                         <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
                                         <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
                                     </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                    </group>
                                     <group string="Dependant">
                                         <field name="children"/>
                                     </group>

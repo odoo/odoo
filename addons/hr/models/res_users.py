@@ -48,6 +48,9 @@ class User(models.Model):
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
+    certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
+    study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
+    study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
     employee_warning = fields.Char("Missing employee warning", compute='_compute_employee_warning')
 
     @api.depends('groups_id', 'employee_ids', 'active')
@@ -109,7 +112,10 @@ class User(models.Model):
             'visa_no',
             'work_email',
             'work_location',
-            'work_phone'
+            'work_phone',
+            'certificate',
+            'study_field',
+            'study_school',
         ]
 
         init_res = super(User, self).__init__(pool, cr)
