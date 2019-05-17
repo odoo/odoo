@@ -2276,7 +2276,6 @@ class TestStockValuation(SavepointCase):
         self.assertAlmostEqual(self.product1.quantity_svl, 25)
         self.assertAlmostEqual(self.product1.value_svl, 350)
 
-    @skip('need to implement dropship')
     def test_average_perpetual_8(self):
         """ Receive 1@10, then dropship 1@20, finally return the dropship. Dropship should not
             impact the price.
