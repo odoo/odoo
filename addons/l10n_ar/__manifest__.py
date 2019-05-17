@@ -70,6 +70,7 @@ Follow the next configuration steps
         'demo/exento_demo.xml',
         'demo/mono_demo.xml',
         'demo/respinsc_demo.xml',
+        'demo/res_users_demo.xml',
     ],
     'post_init_hook': 'post_init_hook',
 }
