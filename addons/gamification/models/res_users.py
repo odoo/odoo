@@ -3,6 +3,9 @@
 
 from odoo import api, fields, models
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Users(models.Model):
     _inherit = 'res.users'
@@ -18,6 +21,7 @@ class Users(models.Model):
 
     @api.depends('karma')
     def _compute_karma_position(self):
+        _logger.warning("The field karma_position from res.users is deprecated. Don't use it anymore.")
         where_query = self._where_calc([])
         self._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
