@@ -2005,7 +2005,6 @@ class TestStockValuation(SavepointCase):
 
         self.assertEqual(move6.stock_valuation_layer_ids.value, 0)
 
-    @skip('it is actually an average negative test')
     def test_average_perpetual_2(self):
         self.product1.categ_id.property_cost_method = 'average'
 
@@ -2022,6 +2021,7 @@ class TestStockValuation(SavepointCase):
         move1._action_assign()
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
+        self.assertEqual(self.product1.standard_price, 10)
 
         move2 = self.env['stock.move'].create({
             'name': 'Receive 10 units at 15',
@@ -2036,6 +2036,7 @@ class TestStockValuation(SavepointCase):
         move2._action_assign()
         move2.move_line_ids.qty_done = 10.0
         move2._action_done()
+        self.assertEqual(self.product1.standard_price, 12.5)
 
         move3 = self.env['stock.move'].create({
             'name': 'Deliver 15 units',
@@ -2049,6 +2050,7 @@ class TestStockValuation(SavepointCase):
         move3._action_assign()
         move3.move_line_ids.qty_done = 15.0
         move3._action_done()
+        self.assertEqual(self.product1.standard_price, 12.5)
 
         move4 = self.env['stock.move'].create({
             'name': 'Deliver 10 units',
@@ -2062,12 +2064,15 @@ class TestStockValuation(SavepointCase):
         move4._action_assign()
         move4.move_line_ids.qty_done = 10.0
         move4._action_done()
+        self.assertEqual(self.product1.standard_price, 12.5)
+        self.assertEqual(self.product1.quantity_svl, -5)
+        self.assertEqual(self.product1.value_svl, -62.5)
 
-        move2.move_line_ids.qty_done = 20
+        move2.with_context(svl=True).move_line_ids.qty_done = 20
 
-        self.assertEqual(self.product1.stock_value, 87.5)
+        self.assertEqual(self.product1.quantity_svl, 5)
+        self.assertEqual(self.product1.value_svl, 87.5)
 
-    @skip('it is actually an average negative test')
     def test_average_perpetual_3(self):
         self.product1.categ_id.property_cost_method = 'average'
 
@@ -2124,8 +2129,8 @@ class TestStockValuation(SavepointCase):
         move4._action_assign()
         move4.move_line_ids.qty_done = 10.0
         move4._action_done()
-        move2.move_line_ids.qty_done = 0
-        self.assertEqual(self.product1.stock_value, -187.5)
+        move2.with_context(svl=True).move_line_ids.qty_done = 0
+        self.assertEqual(self.product1.value_svl, -187.5)
 
     def test_average_perpetual_4(self):
         """receive 1@10, receive 1@5 insteadof 3@5"""
@@ -2323,7 +2328,6 @@ class TestStockValuation(SavepointCase):
 
         self.assertAlmostEqual(self.product1.standard_price, 10.0)
 
-    @skip('avco negative test')
     def test_average_negative_1(self):
         """ Test edit in the past. Receive 10, send 20, edit the second move to only send 10.
         """
@@ -2362,7 +2366,7 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move2_valuation_aml.debit, 0)
         self.assertEqual(move2_valuation_aml.credit, 200)
 
-        move2.quantity_done = 10.0
+        move2.with_context(svl=True).quantity_done = 10.0
 
         valuation_aml = self._get_stock_valuation_move_lines()
         move2_valuation_aml = valuation_aml[-1]
@@ -2370,7 +2374,7 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move2_valuation_aml.debit, 100)
         self.assertEqual(move2_valuation_aml.credit, 0)
 
-        move2.quantity_done = 11.0
+        move2.with_context(svl=True).quantity_done = 11.0
 
         valuation_aml = self._get_stock_valuation_move_lines()
         move2_valuation_aml = valuation_aml[-1]
@@ -2378,7 +2382,6 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move2_valuation_aml.debit, 0)
         self.assertEqual(move2_valuation_aml.credit, 10)
 
-    @skip('avco negative test')
     def test_average_negative_2(self):
         """ Send goods that you don't have in stock and never received any unit.
         """
@@ -2400,9 +2403,8 @@ class TestStockValuation(SavepointCase):
         move1._action_confirm()
         move1.quantity_done = 10.0
         move1._action_done()
-        self.assertEqual(move1.value, -990.0)  # as no move out were done for this product, fallback on the standard price
+        self.assertEqual(move1.stock_valuation_layer_ids.value, -990.0)  # as no move out were done for this product, fallback on the standard price
 
-    @skip('avco negative test')
     def test_average_negative_3(self):
         """ Send goods that you don't have in stock but received and send some units before.
         """
@@ -2426,7 +2428,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
 
-        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, 100.0)
 
         # send 10 products
         move2 = self.env['stock.move'].create({
@@ -2442,8 +2444,8 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 10.0
         move2._action_done()
 
-        self.assertEqual(move2.value, -100.0)
-        self.assertEqual(move2.remaining_qty, 0.0)  # unused in average move
+        self.assertEqual(move2.stock_valuation_layer_ids.value, -100.0)
+        self.assertEqual(move2.stock_valuation_layer_ids.remaining_qty, 0.0)  # unused in average move
 
         # send 10 products again
         move3 = self.env['stock.move'].create({
@@ -2458,9 +2460,8 @@ class TestStockValuation(SavepointCase):
         move3.quantity_done = 10.0
         move3._action_done()
 
-        self.assertEqual(move3.value, -100.0)  # as no move out were done for this product, fallback on latest cost
+        self.assertEqual(move3.stock_valuation_layer_ids.value, -100.0)  # as no move out were done for this product, fallback on latest cost
 
-    @skip('avco negative test')
     def test_average_negative_4(self):
         self.product1.categ_id.property_cost_method = 'average'
 
@@ -2482,9 +2483,8 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
 
-        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, 100.0)
 
-    @skip('avco negative test')
     def test_average_negative_5(self):
         self.product1.categ_id.property_cost_method = 'average'
 
@@ -2503,7 +2503,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
 
-        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, 100.0)
         self.assertEqual(self.product1.standard_price, 10)
 
         # in 10 @ 20
@@ -2521,7 +2521,7 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 10.0
         move2._action_done()
 
-        self.assertEqual(move2.value, 200.0)
+        self.assertEqual(move2.stock_valuation_layer_ids.value, 200.0)
         self.assertEqual(self.product1.standard_price, 15)
 
         # send 5
@@ -2537,7 +2537,7 @@ class TestStockValuation(SavepointCase):
         move3.quantity_done = 5.0
         move3._action_done()
 
-        self.assertEqual(move3.value, -75.0)
+        self.assertEqual(move3.stock_valuation_layer_ids.value, -75.0)
         self.assertEqual(self.product1.standard_price, 15)
 
         # send 30
@@ -2553,7 +2553,7 @@ class TestStockValuation(SavepointCase):
         move4.quantity_done = 30.0
         move4._action_done()
 
-        self.assertEqual(move4.value, -450.0)
+        self.assertEqual(move4.stock_valuation_layer_ids.value, -450.0)
         self.assertEqual(self.product1.standard_price, 15)
 
         # in 20 @ 20
@@ -2571,7 +2571,7 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 20.0
         move5._action_done()
 
-        self.assertEqual(move5.value, 400.0)
+        self.assertEqual(move5.stock_valuation_layer_ids.value, 400.0)
         self.assertEqual(self.product1.standard_price, 35)
 
         self.assertEqual(self.product1.qty_available, 5)
@@ -2589,7 +2589,7 @@ class TestStockValuation(SavepointCase):
         move6.quantity_done = 5.0
         move6._action_done()
 
-        self.assertEqual(move6.value, -175.0)
+        self.assertEqual(move6.stock_valuation_layer_ids.value, -175.0)
         self.assertEqual(self.product1.standard_price, 35)
 
         # in 10 @ 10, the new average price should be 10
@@ -2607,7 +2607,7 @@ class TestStockValuation(SavepointCase):
         move7.move_line_ids.qty_done = 10.0
         move7._action_done()
 
-        self.assertEqual(move7.value, 100.0)
+        self.assertEqual(move7.stock_valuation_layer_ids.value, 100.0)
         self.assertEqual(self.product1.standard_price, 10)
 
     def test_average_manual_1(self):
