@@ -19,16 +19,16 @@
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                         class="oe_highlight"/>
                     <button name="action_pos_session_closing_control" type="object" string="End of Session"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
                     <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
                     <button name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
-                    
+
                     <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
-                    
+
                 </header>
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
@@ -87,6 +87,7 @@
                         <group>
                             <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                             <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <newline/>
 
@@ -147,6 +148,7 @@
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="start_at" />
                 <field name="stop_at" />
                 <field name="state" />
