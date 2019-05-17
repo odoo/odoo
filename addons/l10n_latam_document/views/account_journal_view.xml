@@ -6,6 +6,9 @@
         <field name="name">account.journal.form</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_country_code" invisible="1"/>
+            </form>
             <field name="type" position="after">
                 <field name="l10n_latam_use_documents" attrs="{'invisible': [('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}"/>
             </field>

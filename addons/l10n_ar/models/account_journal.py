@@ -30,9 +30,6 @@ class AccountJournal(models.Model):
         help='This is the point of sale number assigned by AFIP in order to'
         ' you in order to generate invoices',
     )
-    l10n_ar_country_code = fields.Char(
-        related='company_id.l10n_ar_country_code',
-    )
 
     @api.multi
     def get_journal_letter(self, counterpart_partner=False):
