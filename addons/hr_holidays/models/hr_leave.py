@@ -138,8 +138,7 @@ class HolidaysRequest(models.Model):
         default=fields.Datetime.now,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     number_of_days = fields.Float(
-        'Duration (Days)', copy=False, readonly=True, tracking=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        'Duration (Days)', copy=False, tracking=True,
         help='Number of days of the time off request. Used in the calculation. To manually correct the duration, use this field.')
     number_of_days_display = fields.Float(
         'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
@@ -469,7 +468,7 @@ class HolidaysRequest(models.Model):
                     target = leave.employee_id.name
                 res.append(
                     (leave.id,
-                     _("%s on %s :%.2f day(s)") %
+                     _("%s on %s: %.2f day(s)") %
                      (target, leave.holiday_status_id.name, leave.number_of_days))
                 )
         return res
@@ -817,16 +816,19 @@ class HolidaysRequest(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
         for holiday in self:
+            note = _('New %s Request created by %s from %s to %s') % (holiday.holiday_status_id.name, holiday.create_uid.name, fields.Datetime.to_string(holiday.date_from), fields.Datetime.to_string(holiday.date_to))
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_approval',
+                    note=note,
                     user_id=holiday.sudo()._get_responsible_for_approval().id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_second_approval',
+                    note=note,
                     user_id=holiday.sudo()._get_responsible_for_approval().id)
             elif holiday.state == 'validate':
                 to_do |= holiday
