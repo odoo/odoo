@@ -930,9 +930,10 @@ ListRenderer.include({
                 // when navigating with keyboard, we want to get out of the list editable if focus
                 // is on first field of first row and SHIFT + TAB is pressed, try to focus on previous
                 // field in parent view, else if classic listview then call _moveToPreviousLine
-                var column = this.columns[this.currentFieldIndex];
+                var record = this.state.data[this.currentRow];
+                var currentWidget = this.allFieldWidgets[record.id][this.currentFieldIndex];
                 var firstWidget = this._getFirstWidget();
-                if (this.currentRow === 0 && column.attrs.name === firstWidget.name) {
+                if (this.currentRow === 0 && currentWidget.name === firstWidget.name) {
                     var isPreviousWidgetActivated = false;
                     this.trigger_up('activate_previous_widget', {
                         successCallback: function () {isPreviousWidgetActivated = true;},
@@ -950,9 +951,10 @@ ListRenderer.include({
             case 'next':
                 // When navigating with the keyboard, we want to get out of the list editable if the
                 // entire line is left unmodified and we are on the next line.
-                var column = this.columns[this.currentFieldIndex];
+                var record = this.state.data[this.currentRow];
+                var currentWidget = this.allFieldWidgets[record.id][this.currentFieldIndex];
                 var lastWidget = this._getLastWidget();
-                if (column.attrs.name === lastWidget.name) {
+                if (currentWidget.name === lastWidget.name) {
                     if (this.currentRow + 1 < this.state.data.length) {
                         this._selectCell(this.currentRow+1, 0, {wrap:false})
                             .fail(this._moveToNextLine.bind(this));

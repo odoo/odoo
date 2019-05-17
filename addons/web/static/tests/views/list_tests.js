@@ -2717,6 +2717,60 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('navigation in o2m with no modification, TAB on last field should move to next widget in form', function (assert) {
+        // This test makes sure that if we have 2 cells in a row, the first is
+        // required, and the second one is optional, then if we press TAB when the
+        // focus is on the second, then it directly goes to the next widget in form
+        // if line has no modification.
+        assert.expect(3);
+
+        this.data.bar = {
+            fields: {
+                titi: {string: "Char", type: "char"},
+                grosminet: {string: "Char 2", type: "char"},
+            },
+            records: [
+                {titi: 'cui', grosminet: 'gui'},
+                {titi: 'cuicui', grosminet: 'guigui'},
+            ]
+        };
+        var form = createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>'+
+                    '<field name="o2m">'+
+                        '<tree editable="top">'+
+                            '<field name="titi"/>'+
+                            '<field name="grosminet"/>'+
+                        '</tree>'+
+                    '</field>'+
+                    '<field name="foo"></field>' +
+                '</form>',
+        });
+
+        // click on first td and press TAB
+        form.$('.o_field_widget[name=o2m] .o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name=o2m] input[name="titi"]')[0],
+            "the titi field in o2m should be selected");
+
+        // TAB on required field moves to next field in list view, it doesn't prevent to navigate even though it is required field
+        form.$('.o_field_widget[name=o2m] input[name="titi"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name=o2m] input[name="grosminet"]')[0],
+            "the grosminet field in o2m should be selected");
+
+        form.$('.o_field_widget[name=o2m] input[name="grosminet"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "the foo field in form should be selected");
+
+        form.destroy();
+    });
+
     QUnit.test('navigation with tab and readonly field (no modification)', function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we press TAB when the
