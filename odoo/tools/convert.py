@@ -178,18 +178,20 @@ def _eval_xml(self, node, env):
             return res
     elif node.tag == "function":
         a_eval = node.get('eval')
+        model_str = node.get('model')
         if a_eval:
-            self.idref['ref'] = self.id_get
+            idref2 = _get_idref(self, env, model_str, self.idref)
+            args = safe_eval(a_eval, idref2)
             # ensure the args are a list (sometimes folks eval a tuple which
             # is inconvenient when trying to concatenate w/ a list)
-            args = list(safe_eval(a_eval, self.idref))
+            args = list(safe_eval(a_eval, idref2))
         else:
             args = [
                 r for r in (_eval_xml(self, n, env) for n in node)
                 if r is not None
             ]
 
-        model = env[node.get('model')]
+        model = env[model_str]
         method_name = node.get('name')
         method = getattr(model, method_name)
 
