@@ -3,8 +3,6 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
-from unittest import skip
-
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase, TransactionCase
 
@@ -295,6 +293,76 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 150)
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.standard_price, 15)
+
+    def test_negative_1(self):
+        """ Ensures that, in AVCO, the `remaining_qty` field is computed and the vacuum is ran
+        when necessary.
+        """
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 30)
+        self.assertEqual(move3.stock_valuation_layer_ids.remaining_qty, -10)
+        move4 = self._make_in_move(self.product1, 10, unit_cost=30)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 0)
+        move5 = self._make_in_move(self.product1, 10, unit_cost=40)
+
+        self.assertEqual(self.product1.value_svl, 400)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_negative_2(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.standard_price = 10
+        move1 = self._make_out_move(self.product1, 1, force_assign=True)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=15)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
+    def test_return_receipt_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_return(move1, 1)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 15)
+
+    def test_return_delivery_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1, create_picking=True)
+        move4 = self._make_return(move3, 1)
+
+        self.assertEqual(self.product1.value_svl, 30)
+        self.assertEqual(self.product1.quantity_svl, 2)
+        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 2)
+
+    def test_rereturn_receipt_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1)
+        move4 = self._make_return(move1, 1)  # -15, current avco
+        move5 = self._make_return(move4, 1)  # +10, original move's price unit
+
+        self.assertEqual(self.product1.value_svl, 15)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 1)
+
+    def test_rereturn_delivery_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product1, 1, create_picking=True)
+        move4 = self._make_return(move3, 1)
+        move5 = self._make_return(move4, 1)
+
+        self.assertEqual(self.product1.value_svl, 15)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 1)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
