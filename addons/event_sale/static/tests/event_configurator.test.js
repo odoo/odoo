@@ -24,19 +24,22 @@ odoo.define('event.configurator.tests', function (require) {
     QUnit.module('Event Configurator', {
         beforeEach: function () {
             this.data = {
-                product: {
+                'product.product': {
                     fields: {
                         id: {type: 'integer'},
-                        event_ok: {type: 'boolean'}
+                        event_ok: {type: 'boolean'},
+                        rent_ok: {type: 'boolean'}//sale_rental purposes
                     },
                     records: [{
                         id: 1,
                         display_name: "Customizable Event",
-                        event_ok: true
+                        event_ok: true,
+                        rent_ok: false//sale_rental purposes
                     }, {
                         id: 2,
                         display_name: "Desk",
-                        event_ok: false
+                        event_ok: false,
+                        rent_ok: false//sale_rental purposes
                     }]
                 },
                 sale_order: {
@@ -54,9 +57,10 @@ odoo.define('event.configurator.tests', function (require) {
                         product_id: {
                             string: 'product',
                             type: 'many2one',
-                            relation: 'product'
+                            relation: 'product.product'
                         },
                         event_ok: {type: 'boolean'},
+                        rent_ok: {type: 'boolean'},//sale_rental purposes
                         event_id: {
                             string: 'event',
                             type: 'many2one',
