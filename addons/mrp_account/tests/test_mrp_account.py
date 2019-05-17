@@ -83,7 +83,7 @@ class TestMrpAccount(common.TransactionCase):
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
         production_table.post_inventory()
-        move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").value
+        move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").stock_valuation_layer_ids.value
 
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
