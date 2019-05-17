@@ -213,6 +213,7 @@ class WebsiteProfile(http.Controller):
             'rank': user.rank_id.name,
             'karma': user.karma,
             'badge_count': len(user.badge_ids),
+            'website_published': user.website_published
         }
 
     @http.route(['/profile/users',
