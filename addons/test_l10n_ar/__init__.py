@@ -14,8 +14,8 @@ def install_l10n_ar(cr, registry):
 def set_user_company(cr, registry):
     _logger.info('Set user company to main company to avoid unit test errors')
     users = env.ref('base.user_root')
-    users =| env.ref('base.user_admin')
-    users =| env.ref('base.user_demo')
+    users |= env.ref('base.user_admin')
+    users |= env.ref('base.user_demo')
     users.write({'company_id': env.ref('base.main_company')})
 
 def post_init_hook(cr, registry):
