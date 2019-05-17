@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import psycopg2
 
 from odoo import http, _
 from odoo.http import request
@@ -93,6 +94,10 @@ class PaymentProcessing(http.Controller):
         tx_to_process = payment_transaction_ids.filtered(lambda x: x.state == 'done' and x.is_processed is False)
         try:
             tx_to_process._post_process_after_done()
+        except psycopg2.OperationalError as e:
+            request.env.cr.rollback()
+            result['success'] = False
+            result['error'] = "tx_process_retry"
         except Exception as e:
             request.env.cr.rollback()
             result['success'] = False
