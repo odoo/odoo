@@ -198,6 +198,23 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 5)
         self.assertEqual(self.product1.stock_valuation_layer_ids[-1].description, 'Product value manually modified (from 10.0 to 15.0)')
 
+    def test_negative_1(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+
+        move1 = self._make_in_move(self.product1, 10)
+        move2 = self._make_out_move(self.product1, 15)
+        self.env['stock.move.line'].with_context(svl=True).create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'qty_done': 10,
+            'product_uom_id': move1.product_uom.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        self.assertEqual(self.product1.value_svl, 50)
+        self.assertEqual(self.product1.quantity_svl, 5)
+
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     def setUp(self):
