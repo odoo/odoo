@@ -490,9 +490,6 @@ class IrAttachment(models.Model):
     @api.multi
     def write(self, vals):
         self.check('write', values=vals)
-        # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
-            vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
