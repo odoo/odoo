@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
             purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
         price = frm_cur._convert(
             purchase_price, to_cur,
-            self.order_id.company_id or self.env.company,
+            self.company_id or self.env.company,
             date or fields.Date.today(), round=False)
         return {'purchase_price': price}
 
@@ -70,5 +70,5 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.margin')
     def _product_margin(self):
-        for order in self:
-            order.margin = sum(order.order_line.filtered(lambda r: r.state != 'cancel').mapped('margin'))
+        for order in self.filtered(lambda order: order.state != 'cancel'):
+            order.margin = sum(order.order_line.mapped('margin'))

@@ -210,5 +210,4 @@ class SaleOrderOption(models.Model):
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
-            'company_id': self.order_id.company_id.id,
         }

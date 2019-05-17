@@ -329,7 +329,7 @@ class SaleOrderLine(models.Model):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
         date_planned = self.order_id.confirmation_date\
-            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.company_id.security_lead)
         values.update({
             'group_id': group_id,
             'sale_line_id': self.id,
@@ -339,7 +339,7 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
         })
         for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.company_id.security_lead)
             values.update({
                 'date_planned': fields.Datetime.to_string(date_planned),
             })
@@ -399,7 +399,7 @@ class SaleOrderLine(models.Model):
             procurements.append(self.env['procurement.group'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_shipping_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                line.name, line.order_id.name, line.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
         return True
