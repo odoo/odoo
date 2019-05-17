@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 
@@ -107,7 +107,8 @@ class Channel(models.Model):
         if not value:
             operator = operator == "=" and '!=' or '='
 
-        if self._uid == SUPERUSER_ID:
+        # Won't impact sitemap, search() in converter is forced as public user
+        if self.env.user._is_admin():
             return [(1, '=', 1)]
 
         # Better perfs to split request and use inner join that left join
