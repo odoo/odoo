@@ -25,34 +25,6 @@
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="%(action_pos_box_out)d"
-                            type="action" icon="fa-level-up"
-                            attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'not in', ['opened', 'closing_control'])]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Take</span>
-                                <span class="o_stat_text">Money In/Out</span>
-                            </div>
-                        </button>
-                        <button name="open_cashbox"
-                            class="oe_stat_button"
-                            attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
-                            icon="fa-money"
-                            type="object" context="{'balance': 'start'}">
-                            <span class="o_stat_text">Set Opening Balance</span>
-                        </button>
-                        <button name="open_cashbox"
-                            class="oe_stat_button"
-                            attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
-                            icon="fa-money"
-                            type="object" context="{'balance': 'close'}">
-                            <span class="o_stat_text">Set Closing Balance</span>
-                        </button>
-                        <button name="action_view_order"
-                            class="oe_stat_button"
-                            icon="fa-shopping-basket"
-                            type="object">
-                            <field name="order_count" widget="statinfo" string="Orders"/>
-                        </button>
                         <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
                             <field name="picking_count" widget="statinfo" string="Picking Errors"/>
                         </button>
@@ -63,52 +35,67 @@
                     </h1>
                     <group>
                         <field name="cash_control" invisible="1" />
-                        <group>
-                            <field name="user_id"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="config_id"/>
-                        </group>
-                        <group>
-                            <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                            <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                        </group>
-                        <newline/>
-
-                        <div attrs="{'invisible' : [('cash_control', '=', False)]}">
-                            <group class="oe_subtotal_footer oe_right">
-                                <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <label for="cash_register_total_entry_encoding" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions" class="oe_force_bold oe_opening_total"/>
-                                <field name="cash_register_total_entry_encoding" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <label for="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Closing Balance" class="oe_force_bold oe_opening_total"/>
-                                <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </group>
-                            <div class="oe_clear"/>
-                        </div>
-                        <div>
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="cash_register_balance_end_real" string="Real Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </group>
-                            <group/>
-                            <group/>
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="cash_register_difference" class="oe_subtotal_footer_separator oe_right oe_pos_total oe_pos_difference" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </group>
-                        </div>
+                        <field name="user_id"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="config_id"/>
+                        <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                        <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>
-                    <separator string="Summary by Payment Methods" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                    <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}" context="{'form_view_ref': 'point_of_sale.view_bank_statement_pos_session'}">
-                        <tree string="Statements">
-                            <field name="name" />
-                            <field name="journal_id" />
-                            <field name="balance_start" />
-                            <field name="total_entry_encoding" />
-                            <field name="balance_end_real" />
-                            <field name="difference" />
-                            <field name="currency_id" groups="base.group_multi_currency" />
-                            <field name="state" />
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                            <group class="col-md-12" style="margin-left: 140px;">
+                                <group class="col-md-7">
+                                    <div style="margin:0;padding:0;">
+                                        <group style="margin:0;padding:0;">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_start" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}" string="Starting Cash"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_real" widget="monetary" options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
+                                        </group>
+                                    </div>
+                                    <div style="margin:0;padding:0;">
+                                        <group style="margin:0;padding:0;">
+                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" context="{'balance': 'start'}" attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}">Set Starting Cash</button>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <button class="oe_inline oe_link" name="%(action_pos_box_out)d" type="action" attrs="{'invisible' : [('state', '=', 'closed')]}">Cash In/Out</button>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" attrs="{'invisible': [('state', 'in', ['new_session', 'opening_control', 'closed'])]}" context="{'balance': 'close'}">Set Closing Cash</button>
+                                        </group>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <div class="col-md-4" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control', 'opened'])]}" style="height: 30px">
+                                <group class="oe_subtotal_footer">
+                                    <field name="cash_register_difference" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-danger="cash_register_difference != 0"/>
+                                </group>
+                            </div>
+                        </page>
+                        <page string="Payments" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                            <field name="statement_ids">
+                                <tree string="Statements">
+                                    <field name="name" />
+                                    <field name="journal_id" />
+                                    <field name="balance_start" />
+                                    <field name="total_entry_encoding" />
+                                    <field name="balance_end_real" />
+                                    <field name="difference" />
+                                    <field name="currency_id" groups="base.group_multi_currency" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="activity_ids" widget="mail_activity"/>
@@ -125,7 +112,6 @@
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />
-                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="start_at" />
                 <field name="stop_at" />
                 <field name="state" />
@@ -236,6 +222,6 @@
         id="menu_pos_session_all"
         parent="menu_point_of_sale"
         action="action_pos_session"
-        sequence="1"
+        sequence="2"
         groups="group_pos_manager"/>
 </odoo>
