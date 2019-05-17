@@ -181,7 +181,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'res.company',
-        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
+        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
         ids:    function(self){ return [self.user.company_id[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
@@ -214,6 +214,12 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
+        },
+    },{
+        model:  'res.country.state',
+        fields: ['name', 'country_id'],
+        loaded: function(self,states){
+            self.states = states;
         },
     },{
         model:  'res.country',
