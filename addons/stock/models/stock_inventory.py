@@ -179,6 +179,12 @@ class Inventory(models.Model):
         """ Checks the inventory and computes the stock move to do """
         # tde todo: clean after _generate_moves
         for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
+            lines = inventory.line_ids.filtered(lambda l: (
+                l.product.tracking != 'none' and not l.prod_lot_id))
+            if lines:
+                raise UserError(
+                    _('You need to supply a lot/serial number for %s.') %
+                    '\n'.join(lines.product_id.display_name))
             # first remove the existing stock moves linked to this inventory
             inventory.mapped('move_ids').unlink()
             inventory.line_ids._generate_moves()
