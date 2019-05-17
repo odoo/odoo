@@ -13,6 +13,7 @@ def install_l10n_ar(cr, registry):
 
 def set_user_company(cr, registry):
     _logger.info('Set user company to main company to avoid unit test errors')
+    env = Environment(cr, SUPERUSER_ID, {})
     users = env.ref('base.user_root')
     users |= env.ref('base.user_admin')
     users |= env.ref('base.user_demo')
