@@ -398,7 +398,7 @@ class IrAttachment(models.Model):
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)
 
-        if self.env.user._is_system():
+        if self.env.user._is_admin():
             # rules do not apply for the superuser
             return len(ids) if count else ids
 
