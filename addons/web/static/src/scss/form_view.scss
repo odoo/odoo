@@ -81,7 +81,16 @@
 
     .o_form_uri {
         display: inline-block;
-        color: $o-main-text-color;
+        color: $link-color;
+        &:hover {
+            color: darken($link-color, 15%);
+        }
+        > span {
+            color: $o-main-text-color;
+            &:hover {
+                color: $o-main-text-color;
+            }
+        }
         > span:first-child {
             color: $link-color;
             &:hover {
