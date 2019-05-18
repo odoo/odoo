@@ -11,8 +11,8 @@
 # Mark Lee <odoos@soti.33mail.com>, 2018
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -396,7 +396,7 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">선택한 모든 분개의 유효성이 검사되고 게시됩니다. 나중에 수정할 수 "
+"<span class=\"o_form_label\">선택한 모든 분개의 유효성이 승인되고 전기됩니다. 나중에 수정할 수 "
 "없습니다.</span>"
 
 #. module: account
@@ -1253,7 +1253,7 @@ msgstr "재정 상태 계정 매핑"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "작업이 필요함"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -2388,7 +2388,7 @@ msgstr "지급할 청구"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "승인할 청구서"
+msgstr "승인 할 청구서"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -7120,7 +7120,7 @@ msgstr "오류 횟수"
 #: model:ir.model.fields,help:account.field_account_invoice__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "조치가 필요한 메시지 수"
+msgstr "작업이 필요한 메시지 수"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_error_counter
@@ -8241,7 +8241,7 @@ msgstr "채권/채무 계정"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Receivables"
-msgstr "채권"
+msgstr "미수금"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9762,7 +9762,7 @@ msgid ""
 "when the invoice is validated then stored to set the same number again if "
 "the invoice is cancelled, set to draft and re-validated."
 msgstr ""
-"청구서에 지정된 번호를 포함한 기술 필드입니다. 청구서를 검증한 다음, 청구서를 취소했을 때 동일한 번호로 다시 저장하거나 초안으로 "
+"청구서에 지정된 번호를 포함한 기술 필드입니다. 청구서를 승인한 다음, 청구서를 취소했을 때 동일한 번호로 다시 저장하거나 초안으로 "
 "설정하거나 다시 검증할 때 자동으로 설정됩니다."
 
 #. module: account
@@ -10165,7 +10165,7 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"공급업체 청구서가 검증되면 비용으로 적용됩니다. 단, 영구 재고 가치 평가를 적용하는 앵글로색슨 회계는 고객 청구서 검증 시 비용(상품 "
+"공급업체 청구서가 승인되면 비용으로 적용됩니다. 단, 영구 재고 가치 평가를 적용하는 앵글로색슨 회계는 고객 청구서 승인 시 비용(상품 "
 "판매 계정의 비용)을 인식합니다."
 
 #. module: account
@@ -10174,7 +10174,7 @@ msgstr ""
 msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
 "Bill."
-msgstr "협력업체 필드가 필요합니다. 협력업체 청구서의 유효성을 확인하려면 협력업체 필드를 작성하십시오."
+msgstr "공급업체 필드가 필요합니다. 공급업체 청구서의 유효성을 승인하려면 협력업체 필드를 작성하십시오."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -10743,7 +10743,7 @@ msgstr ""
 msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
-msgstr "이 마법사는 선택한 모든 분개를 검증합니다. 분개가 검증되면 더는 업데이트할 수 없습니다."
+msgstr "이 마법사는 선택한 모든 분개를 승인합니다. 분개가 승인되면 더는 업데이트할 수 없습니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -11487,7 +11487,7 @@ msgid ""
 "parse them (OCR) and auto-complete (AI) Draft Bills to validate."
 msgstr ""
 "청구서가 있는 이메일을 받거나 스캔한 청구서를 업로드하면 Odoo는 이를 확인 (OCR)하고 자동 완성(AI) 초안 청구서를 통해 "
-"확인합니다."
+"승인합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__post_at_bank_rec
@@ -11602,7 +11602,7 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"여기에서 확인되면 고객 청구서에 표시되는 기본 통신을 설정하여 고객이 결제 시 특정 청구서를 참조할 수 있도록 할 수 있습니다."
+"여기에서 승인되면 고객 청구서에 표시되는 기본 통신을 설정하여 고객이 결제 시 특정 청구서를 참조할 수 있도록 할 수 있습니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:370
@@ -11917,7 +11917,7 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
-"이 신용 전표를 직접 편집, 검증하거나\n"
+"이 신용 전표를 직접 편집, 승인하거나\n"
 "                                초안으로 보관했다가\n"
 "                                공급업체/고객이 문서를 발행하기를\n"
 "                                기다려야 합니다."
