@@ -102,7 +102,7 @@ msgstr "<span class=\"o_stat_text\"> Produkty</span>"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<span class=\"text-muted\">No barcode available</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Není k dispozici žádný čárový kód</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -123,7 +123,7 @@ msgstr "<strong>Popis</strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Název ceníku</strong>:<br/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
@@ -133,7 +133,7 @@ msgstr "<strong>Cena:</strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Datum tisku</strong>:<br/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -234,7 +234,7 @@ msgstr "Všechny produkty"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Všechna obecná nastavení tohoto produktu jsou spravována"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -276,7 +276,7 @@ msgstr "Archivováno"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Přiřadí prioritu seznamu dodavatelů produktu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -301,7 +301,7 @@ msgstr "Název atributu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Atribut Speciální Ceny"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -359,7 +359,7 @@ msgstr "Založeno na"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Velký obrázek"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -405,18 +405,19 @@ msgstr "Zrušit"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Název Kategorie"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:451
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Kategorie: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Zaškrtněte toto, pokud chcete pro tento atribut vytvořit více variant."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
@@ -426,7 +427,7 @@ msgstr "Kategorie potomků"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Choose the unit to measure weight"
-msgstr ""
+msgstr "Zvolte jednotku pro vážení hmotnosti"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -473,7 +474,7 @@ msgstr "Kompletní jméno"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Výpočet ceny"
 
 #. module: product
 #: model:product.product,name:product.product_product_11
@@ -490,7 +491,7 @@ msgstr "Nastavení konfigurace"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Konfigurace variant"
 
 #. module: product
 #: model:product.category,name:product.product_category_consumable
@@ -506,12 +507,12 @@ msgstr "Kontakt"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Obsahuje množství"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr ""
+msgstr "Obsahuje množství"
 
 #. module: product
 #: model:product.product,name:product.product_product_13
@@ -555,6 +556,9 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Náklady použité pro ocenění zásob ve standardní ceně a jako první cena v "
+"průměru / fifo. Používá se také jako základní cena pro ceníky. Vyjádřeno ve "
+"výchozí měrné jednotce produktu."
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1601,7 +1605,7 @@ msgstr "Výrobek"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "Atribut produktu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -2050,6 +2054,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1

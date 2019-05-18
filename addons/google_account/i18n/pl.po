@@ -3,8 +3,7 @@
 # * google_account
 # 
 # Translators:
-# zbik2607 <darek@krokus.com.pl>, 2018
-# Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2018
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2018
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
@@ -38,6 +37,12 @@ msgstr "Data utworzenia"
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:196
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -101,10 +106,10 @@ msgstr ""
 "jest zły lub już obecnie wygasły [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:197
 #, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Coś poszło nie tak z twoim zapytaniem do Google"
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131

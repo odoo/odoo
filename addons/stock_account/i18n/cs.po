@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:152
 #, python-format
 msgid "%s changed cost from %s to %s - %s"
-msgstr ""
+msgstr "%s změněná cena z %s na %s - %s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -39,7 +39,7 @@ msgstr "Šablona schématu účtu"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
-msgstr ""
+msgstr "Pohyby na účtu"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -77,7 +77,7 @@ msgstr "Archivováno"
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 msgid "Automated"
-msgstr ""
+msgstr " Automatizovaný "
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -136,7 +136,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
 msgid "Choose your date"
-msgstr ""
+msgstr "Zvolte datum"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
@@ -177,7 +177,7 @@ msgstr "Metoda nacenění"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Účet protistrany"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id_required
@@ -237,7 +237,7 @@ msgstr "Pokud existují produkty, uvidíte jeho název a cenu."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr ""
+msgstr "Zahrnout náklady na vykládku do nákladů na produkt"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -310,6 +310,9 @@ msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
 msgstr ""
+"Manuálně: Účetní položky pro ocenění zásob nejsou automaticky zaúčtovány. "
+"Automatizovaně: Účetní položka je automaticky vytvořena pro ocenění zásob "
+"při vstupu produktu do společnosti nebo při opuštění společnosti."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -318,12 +321,14 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
+"Manuální: Účetní položky pro ocenění zásob nejsou automaticky zaúčtovány. \n"
+"Automatizované: Účetní položka je automaticky vytvořena pro ocenění zásob, když produkt vstoupí do společnosti nebo opustí společnost"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:129
 #, python-format
 msgid "No difference between the standard price and the new price."
-msgstr ""
+msgstr "Žádný rozdíl mezi standardní cenou a novou cenou."
 
 #. module: stock_account
 #: selection:product.template,property_valuation:0
@@ -333,7 +338,7 @@ msgstr ""
 #. module: stock_account
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Trvalé (automatizované)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -468,14 +473,14 @@ msgstr "Výstupní účet zásob"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr ""
+msgstr "Historie skladových zásob"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Oceňování zásob"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
@@ -529,12 +534,14 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
+"Řádky přesunu nejsou v konzistentních stavech: nesdílejí stejnou společnost "
+"původu nebo cílovou společnost."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "K náhradě (aktualizace SO / PO)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -543,6 +550,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Spusťte snížení dodaného / přijatého množství v související objednávce / "
+"objednávce"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
@@ -564,6 +573,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Používá se pro oceňování zásob v reálném čase. Pokud je tento účet nastaven "
+"na virtuálním místě (bez interního typu), bude tento účet používán k udržení"
+" hodnoty produktů přesunutých z interního umístění do tohoto umístění "
+"namísto generického účtu Stock Output nastaveného na produktu. To nemá žádný"
+" vliv na vnitřní umístění."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -610,6 +624,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"Při provádění oceňování zásob v reálném čase budou do tohoto účtu účtovány "
+"položky protějšků pro všechny příchozí pohyby zásob, pokud na místě zdroje "
+"není nastaven konkrétní účet ocenění. Toto je výchozí hodnota pro všechny "
+"produkty v této kategorii. Může být také přímo nastavena na každém produktu"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__property_stock_account_input

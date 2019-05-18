@@ -3,7 +3,7 @@
 # * google_account
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
 # 
 msgid ""
@@ -34,6 +34,12 @@ msgstr "Thời điểm tạo"
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:196
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -99,10 +105,10 @@ msgstr ""
 "bạn không hợp lệ hoặc đã hết hạn [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:197
 #, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Đã xảy ra lỗi với yêu cầu của bạn tới google"
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131

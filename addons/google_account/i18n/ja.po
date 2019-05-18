@@ -6,14 +6,14 @@
 # Martin Trigaux, 2018
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
 # Manami Hashi <manami@roomsfor.hk>, 2018
-# どりる <drill.dev@outlook.jp>, 2018
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,12 @@ msgstr "作成日"
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "表示名"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:196
+#, python-format
+msgid "Error while requesting Google Services: %s"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -93,10 +99,10 @@ msgid ""
 msgstr "トークンの生成中に何か問題が発生しました。 承認コードが無効であるかすでに失効している可能性があります [%s]"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:193
+#: code:addons/google_account/models/google_service.py:197
 #, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Googleへのリクエストに異常があるようです"
+msgid "Something went wrong with your request to google: %s"
+msgstr ""
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:131

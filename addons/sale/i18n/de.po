@@ -94,7 +94,7 @@ msgstr "&amp;times;"
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, mit großen Beinen."
 
 #. module: sale
 #. openerp-web
@@ -131,6 +131,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Lieber ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Hier ist\n"
+"        % if ctx.get('proforma')\n"
+"           im anhang ihre pro-forma rechnung\n"
+"        % else\n"
+"            das ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        belaufen sich auf <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        from ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Zögern Sie nicht, uns zu kontaktieren, wenn Sie Fragen haben.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -518,7 +542,7 @@ msgstr "Akzeptieren &amp; Bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept and sign online"
-msgstr ""
+msgstr "Akzeptieren und online unterschreiben"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -716,7 +740,7 @@ msgstr "Attribute"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Autorisierte Transaktionen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
@@ -726,7 +750,7 @@ msgstr "Automatische Rechnung"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Verfügbare Optionen:"
 
 #. module: sale
 #. openerp-web
@@ -803,7 +827,7 @@ msgstr "Transaktion erfassen"
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Stuhlbodenschutz"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__use_quotations
@@ -956,7 +980,7 @@ msgstr "Bestätigen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Confirmation &amp; Payment"
-msgstr ""
+msgstr "Bestätigung &amp; Zahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__confirmation_date
@@ -1050,7 +1074,7 @@ msgstr "Benutzerdefiniert"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Benutzerdefinierte Zahlungsanweisungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
@@ -1189,7 +1213,7 @@ msgstr "Standardprodukt, welches für Zahlungsvorschüsse verwendet wird"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "Liefern Sie Inhalte per E-Mail"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
@@ -1522,7 +1546,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "How your customers can confirm an order"
-msgstr ""
+msgstr "Wie Ihre Kunden eine Bestellung bestätigen können"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
@@ -1949,7 +1973,7 @@ msgstr "Gesperrt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Sieht toll aus!"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
@@ -2190,7 +2214,7 @@ msgstr "Anzahl ungelesener Nachrichten"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
-msgstr ""
+msgstr "Bürostühle können Ihren Boden beschädigen: Schützen Sie ihn."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2243,7 +2267,7 @@ msgstr "Nur Integer-Werte sollten gültig sein"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Option nicht verfügbar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
@@ -2438,7 +2462,7 @@ msgstr "Bestätigen & Zahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr ""
+msgstr "Bezahlen &amp; Bestätigen"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:160
@@ -2454,7 +2478,7 @@ msgstr "Jetzt bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Pay online"
-msgstr ""
+msgstr "Online bezahlen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2470,12 +2494,12 @@ msgstr "Mit PayPal bezahlen"
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Bezahlen Sie mit einem anderen Zahlungsempfänger"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Bezahlen mit Kreditkarte (via Stripe)"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -2500,7 +2524,7 @@ msgstr "Zahlungsanbieter"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Zahlungsanweisungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -2821,7 +2845,7 @@ msgstr "Angebotsdatum"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr ""
+msgstr "Angebotslayout"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2951,6 +2975,8 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Fordern Sie eine Online-Zahlung an den Kunden an, um Bestellungen "
+"automatisch zu bestätigen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3401,13 +3427,13 @@ msgstr "Standard-Geschäftsbedingungen für Aufträge anzeigen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign and pay online"
-msgstr ""
+msgstr "Online unterschreiben und bezahlen"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Sign online"
-msgstr ""
+msgstr "Online unterschreiben"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -3429,7 +3455,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed by"
-msgstr ""
+msgstr "Unterzeichnet von"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -3441,7 +3467,7 @@ msgstr "Verkauft"
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Verkauft in den letzten 365 Tagen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
@@ -3538,7 +3564,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Steuerbetrag nach Gruppe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3588,6 +3614,8 @@ msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
+"Allgemeine Geschäftsbedingungen ... (Hinweis: Sie können Standardbedingungen"
+" im Konfigurationsmenü festlegen)"
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:116
@@ -3657,7 +3685,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Die Zahlungsmitteilung dieses Verkaufsauftrags."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:154
@@ -3777,7 +3805,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Dieses Produkt hat keine gültige Kombination."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -3844,7 +3872,7 @@ msgstr "Abzurechnen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr ""
+msgstr "Rechnungsmenge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -3858,6 +3886,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
+"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Dropdown-Menü"
+" * Aktion * auf die Option 'Portal Access Management'."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -3890,7 +3921,7 @@ msgstr "Gesamtpreis"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Gesamtsteuer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3922,12 +3953,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS Schnittstelle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS Schnittstelle"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:734
@@ -3999,18 +4030,18 @@ msgstr "Nettobetrag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Unbesteuerter Rechnungsbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Unbesteuerter zum Rechnungsbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Unversteuerter Rechnungsbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -4152,6 +4183,8 @@ msgstr "Sie haben einen falschen Wert eingetragen!"
 #: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Sie können einen Kunden anhand seines Namens, seiner TIN, seiner E-Mail-"
+"Adresse oder seiner internen Referenz finden."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:268
@@ -4160,6 +4193,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Sie können ein gesendetes Angebot oder einen bestätigten Kundenauftrag nicht"
+" löschen. Sie müssen es zuerst abbrechen."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1491
@@ -4168,6 +4203,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Sie können eine Bestellposition nicht mehr entfernen, nachdem der Kundenauftrag bestätigt wurde.\n"
+"Sie sollten die Menge lieber auf 0 setzen."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4194,22 +4231,24 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Ihre Rückmeldung..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Ihre Bestellung wurde bestätigt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Ihre Bestellung wurde unterschrieben, muss aber noch bezahlt werden, um "
+"bestätigt zu werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Ihre Bestellung wurde unterschrieben."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4252,7 +4291,7 @@ msgstr "kg"
 #: code:addons/sale/models/sale.py:106
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "Verkaufsauftrag"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group

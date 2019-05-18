@@ -671,7 +671,7 @@ msgstr "尽快"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr "指定货主"
+msgstr "指定所有者"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1501,7 +1501,7 @@ msgstr "默认目的位置"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid "Default Owner"
-msgstr "默认货主"
+msgstr "默认所有者"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
@@ -1780,7 +1780,7 @@ msgstr "详情可见"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
-msgstr "取消"
+msgstr "丢弃"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -2539,7 +2539,7 @@ msgstr "已盘点批次/序列号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__partner_id
 msgid "Inventoried Owner"
-msgstr "已盘点货主"
+msgstr "已盘点所有者"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__package_id
@@ -3107,7 +3107,7 @@ msgstr "按订单生成"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr "管理不同的库存货主"
+msgstr "管理不同的库存所有者"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -3571,7 +3571,7 @@ msgstr "一个批次/序列号"
 #: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One owner only"
-msgstr "仅一个货主"
+msgstr "仅一个所有者"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:114
@@ -3583,7 +3583,7 @@ msgstr "一个产品类别"
 #: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One product for a specific owner"
-msgstr "特定货主的一个产品"
+msgstr "特定所有者的一个产品"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:115
@@ -3762,27 +3762,27 @@ msgstr "概览"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Owner"
-msgstr "货主"
+msgstr "所有者"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__restrict_partner_id
 msgid "Owner "
-msgstr "货主 "
+msgstr "所有者 "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Owner :"
-msgstr "货主:"
+msgstr "所有者:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__partner_id
 msgid "Owner of the location if not internal"
-msgstr "如果不是内部位置，则填写位置货主"
+msgstr "如果不是内部位置，则填写位置所有者"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid "Owner of the quants"
-msgstr "份的货主"
+msgstr "份的所有者"
 
 #. module: stock
 #: code:addons/stock/models/product.py:340
@@ -5168,7 +5168,7 @@ msgstr "为批次和序列号设置过期日期"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "在储存的产品上设置货主"
+msgstr "在储存的产品上设置所有者"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5350,7 +5350,7 @@ msgstr "指定批次/序列号使你的存货有一个特定的批次/序列号�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr "指定货主以便一个特定货主专注于你的存货。"
+msgstr "指定所有者以便一个特定所有者专注于你的存货。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__package_id
@@ -5649,7 +5649,7 @@ msgstr "用于计算验证是否应该显示的技术字段。"
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当货主的份移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当所有者的份移动标记为’完成‘时的限制"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -5912,7 +5912,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
 msgid "This is the owner of the quant"
-msgstr "这是库存分析货主"
+msgstr "这是库存分析所有者"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_qty
@@ -6820,7 +6820,7 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
-"在“正在进行”状态下，您不能有两个库存调整使用相同的产品 (%s), 相同的位置, 相同的包装, 相同的货主和相同的批次。 "
+"在“正在进行”状态下，您不能有两个库存调整使用相同的产品 (%s), 相同的位置, 相同的包装, 相同的所有者和相同的批次。 "
 "在创建另一个产品之前，请先使用此产品验证第一个库存调整。"
 
 #. module: stock

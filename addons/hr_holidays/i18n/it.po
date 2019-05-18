@@ -12,15 +12,15 @@
 # Cécile Collart <cco@odoo.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Martin Trigaux, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
-# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
+# Simone Bernini <simone@aperturelabs.it>, 2019
+# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2019
+# Paolo Valier, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019\n"
+"Last-Translator: Paolo Valier, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,10 +100,22 @@ msgid "%s : %.2f day(s)"
 msgstr "%s : %.2f giorno(i)"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:466
+#, python-format
+msgid "%s : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:440
 #, python-format
-msgid "%s on %s :%.2f day(s)"
-msgstr "%s su %s :%.2f giorno(i)"
+msgid "%s on %s : %.2f day(s)"
+msgstr "%s su %s : %.2f giorno(i)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:481
+#, python-format
+msgid "%s on %s : %.2f hour(s)"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -588,9 +600,9 @@ msgid "All Leaves"
 msgstr "Tutti i Permessi"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Allocated Days"
-msgstr "Giorni assegnati"
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
+msgid "Allocated (Days/Hours)"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1112,6 +1124,20 @@ msgstr "Data fine"
 #: code:addons/hr_holidays/models/hr_leave_type.py:93
 #, python-format
 msgid "End of validity period should be greater than start of validity period"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
+msgid ""
+"Field allowing to see the allocation duration in days or hours depending on "
+"the type_request_unit"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
+msgid ""
+"Field allowing to see the leave request duration in days or hours depending "
+"on the leave_type_request_unit"
 msgstr ""
 
 #. module: hr_holidays
@@ -2077,6 +2103,11 @@ msgid "Request refused"
 msgstr "Richiesta rifiutata"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
+msgid "Requested (Days/Hours)"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Reset to Draft"
@@ -2352,16 +2383,6 @@ msgid "Total Employee"
 msgstr "Totale Dipendente"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-msgid "Total allocated days"
-msgstr "Totale giorni allocati"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
-msgid "Total leaves"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__remaining_leaves
 msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
@@ -2564,6 +2585,11 @@ msgid "You must be either %s's manager or Leave manager to approve this leave"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:392
+#, python-format
+msgid "day(s)"
+msgstr "giorno(i)"
+
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -2575,6 +2601,13 @@ msgstr "giorni"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
 msgid "e.g. Report to the next month..."
 msgstr "ad esempio Riporta al prossimo mese..."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:392
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:219
+#, python-format
+msgid "hour(s)"
+msgstr "ora(e)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
