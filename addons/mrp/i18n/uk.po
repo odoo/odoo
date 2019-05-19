@@ -36,6 +36,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Чернетка: ЗНВ досі не підтверджено.\n"
+" * Підтверджено: ЗНВ підтверджено, складські правила та правила дозамовлення компонентів запущені.\n"
+" * Заплановано: Робоче замовлення заплановано.\n"
+" * В процесі: Виробництво запущене (на ЗНВ або на РЗ).\n"
+" * Закрити: Виробництво завершено, ЗНВ потрібно закрити.\n"
+" * Готово: ЗНВ закрите, складські переміщення опубліковані. \n"
+" * Скасовано: ЗНВ скасовано, більше не можна підтвердити."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -75,19 +82,19 @@ msgstr "К-сть готових робочих замовлень"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
-msgstr "# Читати робочі замовлення"
+msgstr "К-сть прочитаних робочих замовлень"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "# Робочі замовлення"
+msgstr "К-сть робочих замовлень"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# специфікації, де було використано"
+msgstr "К-сть специфікації, де було використано"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -227,7 +234,7 @@ msgstr "<span>Новий</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr "<span>ПЛАН ЗАМОВЛЕННЯ</span>"
+msgstr "<span>ЗАПЛАНУВАТИ ЗАМОВЛЕННЯ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -339,7 +346,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
-msgstr "Доступ Токена"
+msgstr "Токен доступу"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -352,7 +359,7 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
@@ -484,7 +491,7 @@ msgstr "Підрахунок прикріплення"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__local_url
 msgid "Attachment URL"
-msgstr "URL долучення"
+msgstr "URL прикріплення"
 
 #. module: mrp
 #. openerp-web
@@ -493,7 +500,7 @@ msgstr "URL долучення"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Attachments"
-msgstr "Долучення"
+msgstr "Прикріплення"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
@@ -508,7 +515,7 @@ msgstr "Наявність"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr "Втрати на доступність"
+msgstr "Доступні витрати"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -527,8 +534,8 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Середній час у днях приведення у виробництво цього товару. У випадку "
-"багаторівневої специфікації буде додано час виготовлення компонентів."
+"Середній час у днях для виробництво цього товару. У випадку багаторівневої "
+"специфікації буде додано час виготовлення компонентів."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
