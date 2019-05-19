@@ -5,7 +5,7 @@ class L10nLatamDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
 
-    l10n_ar_letter = fields.Selection([
+    _l10n_ar_letters = [
         ('A', 'A'),
         ('B', 'B'),
         ('C', 'C'),
@@ -14,7 +14,10 @@ class L10nLatamDocumentType(models.Model):
         ('T', 'T'),
         ('R', 'R'),
         ('X', 'X'),
-    ],
+    ]
+
+    l10n_ar_letter = fields.Selection(
+        _l10n_ar_letters,
         'Letters',
         help='Letters defined by the AFIP that can be used to identify the'
         ' documents presented to the goverment and that depends on the'
@@ -43,17 +46,18 @@ class L10nLatamDocumentType(models.Model):
         help='Cero o No cero según lo requiere la declaración del CITI compras'
     )
 
-    @api.multi
-    def get_document_sequence_vals(self, journal):
-        vals = super(L10nLatamDocumentType, self).get_document_sequence_vals(
-            journal)
-        if self.country_id.code == 'AR':
-            vals.update({
-                'padding': 8,
-                'implementation': 'no_gap',
-                'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
-            })
-        return vals
+    # TODO esto tiene que cambiar
+    # @api.multi
+    # def get_document_sequence_vals(self, journal):
+    #     vals = super(L10nLatamDocumentType, self).get_document_sequence_vals(
+    #         journal)
+    #     if self.country_id.code == 'AR':
+    #         vals.update({
+    #             'padding': 8,
+    #             'implementation': 'no_gap',
+    #             'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
+    #         })
+    #     return vals
 
     @api.multi
     def get_taxes_included(self):

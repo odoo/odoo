@@ -9,3 +9,4 @@ from . import account_invoice
 from . import account_invoice_line
 from . import account_chart_template
 from . import account_reconciliation_widget
+from . import ir_sequence

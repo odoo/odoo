@@ -31,6 +31,14 @@ class AccountJournal(models.Model):
         'AFIP POS Address',
         help='This is the address used for invoice reports of this POS',
     )
+    l10n_ar_sequence_ids = fields.One2many(
+        'ir.sequence',
+    )
+    l10n_ar_document_type_ids = fields.One2many(
+        'l10n_latam.document.type',
+    )
+    unified_book = fields.Boolean(
+    )
 
     def get_journal_letter(self, counterpart_partner=False):
         self.ensure_one()
@@ -109,3 +117,20 @@ class AccountJournal(models.Model):
             return usual_codes
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
+
+    def get_document_type_sequence(self, invoice):
+        """ Return the match sequences for the given journal and invoice
+        """
+        self.ensure_one()
+        if self.unified_book:
+            return self.l10n_ar_sequence_ids.filtered(
+                lambda x: x.l10n_ar_letter == invoice.l10n_ar_letter)
+
+        return self.l10n_ar_sequence_ids.filtered(
+            lambda x: x.l10n_latam_document_type_id ==
+                invoice.l10n_latam_document_type_id)
+
+    def create_document_type_sequences(self):
+        """ Search if exist, it need to me updated? (can be?), or create
+        """
+        return True

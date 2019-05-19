@@ -37,9 +37,9 @@ class AccountInvoice(models.Model):
         auto_join=True,
         index=True,
     )
-    l10n_latam_document_sequence_id = fields.Many2one(
+    l10n_latam_sequence_id = fields.Many2one(
         'ir.sequence',
-        compute='_compute_l10n_latam_document_sequence',
+        compute='compute_l10n_latam_sequence',
     )
     l10n_latam_document_number = fields.Char(
         string='Document Number',
@@ -50,7 +50,7 @@ class AccountInvoice(models.Model):
         index=True,
     )
     l10n_latam_next_number = fields.Integer(
-        compute='_compute_l10n_latam_next_number',
+        compute='compute_l10n_latam_next_number',
         string='Next Number',
     )
     l10n_latam_use_documents = fields.Boolean(
@@ -65,6 +65,12 @@ class AccountInvoice(models.Model):
         compute='_compute_display_name',
         string='Document Reference',
     )
+
+    @api.depends('l10n_latam_document_type_id', 'journal_id')
+    def compute_l10n_latam_sequence(self):
+        for rec in self:
+            rec.l10n_latam_sequence_id = \
+                rec.journal_id.get_document_type_sequence(rec)
 
     @api.depends(
         'amount_untaxed', 'amount_tax', 'tax_line_ids', 'l10n_latam_document_type_id')
@@ -89,19 +95,17 @@ class AccountInvoice(models.Model):
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_line_ids = not_included_taxes
 
-    @api.multi
     @api.depends(
         'journal_id.sequence_id.number_next_actual',
-        'l10n_latam_document_sequence_id.number_next_actual',
+        'l10n_latam_sequence_id.number_next_actual',
     )
-    def _compute_l10n_latam_next_number(self):
-        """
-        show next number only for invoices without number and on draft state
+    def compute_l10n_latam_next_number(self):
+        """ Show next number only for invoices without number and on draft state
         """
         for invoice in self.filtered(
                 lambda x: not x.display_name and x.state == 'draft'):
             if invoice.l10n_latam_use_documents:
-                sequence = invoice.l10n_latam_document_sequence_id
+                sequence = invoice.l10n_latam_sequence_id
             elif (
                     invoice.type in ['out_refund', 'in_refund'] and
                     invoice.journal_id.refund_sequence
@@ -249,13 +253,14 @@ class AccountInvoice(models.Model):
             inv_vals = self._get_localization_invoice_vals()
             if invoice.l10n_latam_use_documents:
                 if not invoice.l10n_latam_document_number:
-                    if not invoice.l10n_latam_document_sequence_id:
+                    # TODO: crear la sequencia si no existe, usar la que existe
+                    if not invoice.l10n_latam_sequence_id:
                         raise UserError(_(
                             'Error!. Please define sequence on the journal '
                             'related documents to this invoice or set the '
                             'document number.'))
                     document_number = \
-                        invoice.l10n_latam_document_sequence_id.next_by_id()
+                        invoice.l10n_latam_sequence_id.next_by_id()
                     inv_vals['l10n_latam_document_number'] = document_number
                 # for canelled invoice number that still has a document_number
                 # if validated again we use old document_number
@@ -341,7 +346,7 @@ class AccountInvoice(models.Model):
         # if we have a sequence, number is set by sequence and we dont
         # check this
         for rec in self.filtered(
-                lambda x: not x.l10n_latam_document_sequence_id and x.l10n_latam_document_type_id):
+                lambda x: not x.l10n_latam_sequence_id and x.l10n_latam_document_type_id):
             rec.l10n_latam_document_number = \
                 rec.l10n_latam_document_type_id._format_document_number(
                     rec.l10n_latam_document_number)
