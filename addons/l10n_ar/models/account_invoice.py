@@ -209,6 +209,7 @@ class AccountInvoice(models.Model):
     @api.depends('l10n_latam_document_number', 'number')
     def _compute_l10n_ar_invoice_number(self):
         for rec in self.filtered('l10n_latam_document_number'):
+            str_number = rec.l10n_latam_document_number
             if rec.l10n_latam_document_type_id.code in ['33', '99', '331', '332']:
                 point_of_sale = '0'
                 # leave only numbers and convert to integer
