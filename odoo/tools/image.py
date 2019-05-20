@@ -228,6 +228,10 @@ class ImageProcess():
 def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=80, crop=None, colorize=False, output_format=None):
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
+
+    As this function is exposed to users through controllers, the quality is
+    limited to 95 as per recommandation from PIL. If needed the lower level
+    method image_base64 in ImageProcess does not enforce that limit.
     """
     image = ImageProcess(base64_source, verify_resolution)
     if size:
@@ -243,7 +247,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=8
             image.resize(max_width=size[0], max_height=size[1])
     if colorize:
         image.colorize()
-    return image.image_base64(quality=quality, output_format=output_format)
+    return image.image_base64(quality=min(quality, 95), output_format=output_format)
 
 
 # ----------------------------------------
