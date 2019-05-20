@@ -75,12 +75,14 @@ class AccountInvoice(models.Model):
                                 # In case val_stock_move is a return move, its valuation entries have been made with the
                                 # currency rate corresponding to the original stock move
                                 valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
+                                layers_qty = sum(val_stock_move.mapped('stock_valuation_layer_ids.quantity'))
+                                layers_values = sum(val_stock_move.mapped('stock_valuation_layer_ids.value'))
                                 valuation_price_unit_total += company_currency._convert(
-                                    abs(val_stock_move.price_unit) * val_stock_move.product_qty,
+                                    layers_values,
                                     inv.currency_id,
                                     company=inv.company_id, date=valuation_date, round=False,
                                 )
-                                valuation_total_qty += val_stock_move.product_qty
+                                valuation_total_qty += layers_qty
 
                             # in Stock Move, price unit is in company_currency
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
