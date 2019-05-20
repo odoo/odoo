@@ -184,7 +184,9 @@ QUnit.module('Product Configurator', {
             mockRPC: function (route, params) {
                 if (params.method === 'get_single_product_variant') {
                     assert.ok(true);
-                    return Promise.resolve(false);
+                    return Promise.resolve({
+                        'mode': 'configurator'
+                    });
                 }
                 return this._super.apply(this, arguments);
             },

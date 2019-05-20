@@ -33,18 +33,17 @@ class ProductTemplate(models.Model):
         - is configurable (see has_configurable_attributes)
         - has optional products """
         self.ensure_one()
-
+        res = {
+            'product_template_id': self.id,
+            'product_id': self.product_variant_id.id,
+            'mode': self.has_configurable_attributes and 'configurator' or False
+        }
         if self.product_variant_count == 1 and not self.has_configurable_attributes:
             has_optional_products = False
             for optional_product in self.product_variant_id.optional_product_ids:
                 if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants(self.product_variant_id.product_template_attribute_value_ids):
                     has_optional_products = True
                     break
+            res['has_optional_products'] = has_optional_products
+        return res
 
-            return {
-                'product_template_id': self.id,
-                'product_id': self.product_variant_id.id,
-                'has_optional_products': has_optional_products,
-            }
-
-        return None
