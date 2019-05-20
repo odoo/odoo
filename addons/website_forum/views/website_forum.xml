@@ -660,7 +660,7 @@
                         </div>
                     </t>
                 </div>
-                <div t-attf-class="col question-block mb-5 o_post_content" role="alert">
+                <div t-attf-class="col-11 question-block mb-5 o_post_content" role="alert">
                      <span t-if="question.has_validated_answer" title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle text-success"/> <b class="text-success">Resolved</b></span>
                     <h1 t-attf-class="#{not question.active and 'text-danger' or 'text-primary'}">
                         <t t-esc="question.name"/>
@@ -815,7 +815,7 @@
                         </div>
                     </t>
                 </div>
-                <div class="col">
+                <div class="col-11">
                     <t t-if="answer.can_comment">
                         <div class="dropdown dropleft float-right">
                           <a class="btn bg-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
