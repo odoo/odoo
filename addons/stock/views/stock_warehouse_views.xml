@@ -216,7 +216,7 @@
                             </group>
                             <group>
                                 <field name="allowed_location_ids" invisible="1"/>
-                                <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                                <field name="warehouse_id" domain="[('company_id', '=', company_id)]" widget="selection" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>

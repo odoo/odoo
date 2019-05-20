@@ -1020,6 +1020,14 @@ class Orderpoint(models.Model):
         if self.warehouse_id:
             self.location_id = self.warehouse_id.lot_stock_id.id
 
+    @api.onchange('company_id')
+    def onchange_company_id(self):
+        """ Finds the first warehouse for changed company. """
+        if self.company_id:
+            self.warehouse_id = self.env['stock.warehouse'].search([
+                ('company_id', '=', self.company_id.id)
+            ], limit=1)
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
