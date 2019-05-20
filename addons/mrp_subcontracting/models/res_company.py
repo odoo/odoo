@@ -27,7 +27,7 @@ class ResCompany(models.Model):
         ])
         for company in self:
             subcontracting_location = self.env['stock.location'].create({
-                'name': _('%s: Subcontracting Location') % company.name,
+                'name': _('Subcontracting Location'),
                 'usage': 'internal',
                 'location_id': parent_location.id,
                 'company_id': company.id,
