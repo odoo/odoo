@@ -104,7 +104,7 @@ class IrActionsReport(models.Model):
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')
-    print_report_name = fields.Char('Printed Report Name',
+    print_report_name = fields.Char('Printed Report Name', translate=True,
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
