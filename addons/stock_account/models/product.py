@@ -398,10 +398,15 @@ class ProductProduct(models.Model):
                 qty_to_consider = invoiced_qty - qty_done
             qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
             qty_delivered += qty_to_consider
-            # `move.price_unit` is negative if the move is out and positive if the move is
-            # dropshipped. Use its absolute value to compute the average price unit.
             if qty_delivered:
-                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
+                layers = move.stock_valuation_layer_ids
+                # Dropshipped moves are always linked to two layers cancelling each others.
+                if move._is_dropshipped() or move._is_dropshipped_returned():
+                    layers = layers.filtered(lambda svl: svl.value > 0)
+                layers_qty = sum(layers.mapped('quantity'))
+                layers_value = sum(layers.mapped('value'))
+                move_price_unit = layers_value / layers_qty
+                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move_price_unit * qty_to_consider) / qty_delivered
             if qty_delivered == quantity:
                 break
         return average_price_unit
