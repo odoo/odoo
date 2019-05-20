@@ -172,6 +172,7 @@ class StockMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        mls = self.env['stock.move.line']
         for vals in vals_list:
             if vals.get('move_id'):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
@@ -182,8 +183,12 @@ class StockMoveLine(models.Model):
             # associated done move.
             if 'picking_id' in vals and not vals.get('move_id'):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
-                if picking.state == 'done':
-                    product = self.env['product.product'].browse(vals['product_id'])
+                product = self.env['product.product'].browse(vals['product_id'])
+                moves = picking.move_lines.filtered(lambda x: x.product_id.id == vals['product_id'])
+                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
+                if moves and picking.state != 'done':
+                    vals['move_id'] = moves[0].id
+                else:
                     new_move = self.env['stock.move'].create({
                         'name': _('New Move:') + product.display_name,
                         'product_id': product.id,
@@ -191,12 +196,16 @@ class StockMoveLine(models.Model):
                         'product_uom': vals['product_uom_id'],
                         'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
                         'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
-                        'state': 'done',
+                        'state': picking.state,
                         'additional': True,
                         'picking_id': picking.id,
+                        'restrict_partner_id': picking.owner_id.id,
+                        'company_id': picking.company_id.id,
                     })
+                    if picking.state not in ['draft', 'done']:
+                        new_move._action_confirm()
                     vals['move_id'] = new_move.id
-        mls = super(StockMoveLine, self).create(vals_list)
+            mls |= super(StockMoveLine, self).create(vals)
 
         for ml in mls:
             if ml.state == 'done':
