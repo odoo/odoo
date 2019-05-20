@@ -249,7 +249,7 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
