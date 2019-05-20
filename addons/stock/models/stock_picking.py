@@ -585,8 +585,37 @@ class Picking(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.mapped('move_lines')._action_cancel()
-        self.write({'is_locked': True})
+        """Changes picking state to cancel by processing the Stock Moves of the Picking
+
+        Normally that happens when the button "Cancel" is pressed on a Picking view.
+        @return: True
+        """
+        stock_moves = self.mapped('move_lines')
+        for picking in self:
+            value = {'is_locked': True}
+            for ops in picking.move_line_ids.filtered(lambda x: not x.move_id and x.qty_done):
+                moves = picking.move_lines.filtered(lambda x: x.product_id == ops.product_id)
+                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
+                if moves:
+                    ops.move_id = moves[0].id
+                else:
+                    values = {
+                        'name': _('New Move:') + ops.product_id.display_name,
+                        'product_id': ops.product_id.id,
+                        'product_uom_qty': ops.qty_done,
+                        'product_uom': ops.product_uom_id.id,
+                        'description_picking': ops.description_picking,
+                        'location_id': picking.location_id.id,
+                        'location_dest_id': picking.location_dest_id.id,
+                        'picking_id': picking.id,
+                        'move_line_ids': [(4, ops.id)],
+                        'picking_type_id': picking.picking_type_id.id,
+                    }
+                    stock_moves |= stock_moves.create(values)
+            if not picking.move_lines:
+                value['state'] = 'cancel'
+            picking.write(value)
+        stock_moves._action_cancel()
         return True
 
     @api.multi
