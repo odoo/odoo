@@ -62,3 +62,8 @@
         min-height: 0;
     }
 }
+
+// Restore pointer cursor which came with the 'btn' class until BS 4.3.1
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
