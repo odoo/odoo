@@ -1285,6 +1285,10 @@ var FieldX2Many = AbstractField.extend({
             ev.initialEvent = this.lastInitialEvent;
             return;
         }
+        if (ev.data.ignore_o2m) {
+            ev.initialEvent = this.lastInitialEvent;
+            return;
+        }
         ev.stopPropagation();
         // changes occured in an editable list
         var changes = ev.data.changes;
@@ -2328,10 +2332,21 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
         changes[this.colorField] = color;
 
+        // TODO: Another solution to have separate widget for list.many2many_tags and
+        // call _setValue instead of field_changed, but note that changes
+        // will not be saved until whole form is saved
+        // this._setValue({
+        //     operation: 'UPDATE',
+        //     id: _.findWhere(this.value.data, {res_id: id}).id,
+        //     data: changes,
+        // });
+
+        // this will call X2Many's field_changed which will consider dataPointID in setValue of o2m
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
             changes: changes,
             force_save: true,
+            ignore_o2m: true,
         });
     },
 });
