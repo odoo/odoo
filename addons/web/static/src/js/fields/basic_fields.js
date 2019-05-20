@@ -1465,13 +1465,10 @@ var AbstractFieldBinary = AbstractField.extend({
                     this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
-                var filereader = new FileReader();
-                filereader.readAsDataURL(file);
-                filereader.onloadend = function (upload) {
-                    var data = upload.target.result;
+                utils.getDataURLFromFile(file).then(function (data) {
                     data = data.split(',')[1];
                     self.on_file_uploaded(file.size, file.name, file.type, data);
-                };
+                });
             } else {
                 this.$('form.o_form_binary_form').submit();
             }

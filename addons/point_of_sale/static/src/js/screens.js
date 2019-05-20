@@ -1433,21 +1433,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
             return;
         }
-        
-        var reader = new FileReader();
-        reader.onload = function(event){
-            var dataurl = event.target.result;
+        utils.getDataURLFromFile(file).then(function (dataurl) {
             var img     = new Image();
             img.src = dataurl;
             self.resize_image_to_dataurl(img,800,600,callback);
-        };
-        reader.onerror = function(){
+        }).guardedCatch(function () {
             self.gui.show_popup('error',{
                 title :_t('Could Not Read Image'),
                 body  :_t('The provided file could not be read due to an unknown error'),
             });
-        };
-        reader.readAsDataURL(file);
+        });
     },
 
     // This fetches partner changes on the server, and in case of changes, 
