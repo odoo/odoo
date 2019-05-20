@@ -583,8 +583,8 @@ class AccountJournal(models.Model):
              "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
-    profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
-    loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
+    profit_account_id = fields.Many2one('account.account', string='Profit Account', help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
+    loss_account_id = fields.Many2one('account.account', string='Loss Account', help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
     belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
 
@@ -874,12 +874,18 @@ class AccountJournal(models.Model):
 
             # Create a default debit/credit account if not given
             default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
+            company = self.env['res.company'].browse(company_id)
             if not default_account:
-                company = self.env['res.company'].browse(company_id)
                 account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
                 default_account = self.env['account.account'].create(account_vals)
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
+            if vals['type'] == 'cash':
+                if not vals.get('profit_account_id'):
+                    vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
+                if not vals.get('loss_account_id'):
+                    vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+
 
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):

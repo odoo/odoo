@@ -114,6 +114,8 @@ class AccountChartTemplate(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
+    default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account', oldname="property_account_receivable")
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
     property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account', oldname="property_account_expense_categ")
@@ -241,6 +243,12 @@ class AccountChartTemplate(models.Model):
 
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
+
+        # Set default cash difference account on company
+        company.write({
+            'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
+            'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
+        })
 
         # Set the transfer account on the company
         company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]

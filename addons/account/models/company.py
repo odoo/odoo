@@ -43,6 +43,8 @@ class ResCompany(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
+    default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
+    default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense Account")
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
