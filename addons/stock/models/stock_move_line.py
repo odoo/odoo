@@ -180,26 +180,41 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
-            # If the move line is directly create on the picking view.
-            # If this picking is already done we should generate an
-            # associated done move.
-            if 'picking_id' in vals and not vals.get('move_id'):
-                picking = self.env['stock.picking'].browse(vals['picking_id'])
-                if picking.state == 'done':
-                    product = self.env['product.product'].browse(vals['product_id'])
-                    new_move = self.env['stock.move'].create({
-                        'name': _('New Move:') + product.display_name,
-                        'product_id': product.id,
-                        'product_uom_qty': 'qty_done' in vals and vals['qty_done'] or 0,
-                        'product_uom': vals['product_uom_id'],
-                        'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
-                        'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
-                        'state': 'done',
-                        'additional': True,
-                        'picking_id': picking.id,
-                    })
-                    vals['move_id'] = new_move.id
-        mls = super(StockMoveLine, self).create(vals_list)
+
+        mls = super().create(vals_list)
+
+        def create_move(move_line):
+            new_move = self.env['stock.move'].create({
+                'name': _('New Move:') + move_line.product_id.display_name,
+                'product_id': move_line.product_id.id,
+                'product_uom_qty': move_line.qty_done,
+                'product_uom': move_line.product_uom_id.id,
+                'description_picking': move_line.description_picking,
+                'location_id': move_line.picking_id.location_id.id,
+                'location_dest_id': move_line.picking_id.location_dest_id.id,
+                'picking_id': move_line.picking_id.id,
+                'state': move_line.picking_id.state,
+                'picking_type_id': move_line.picking_id.picking_type_id.id,
+                'restrict_partner_id': move_line.picking_id.owner_id.id,
+                'company_id': move_line.picking_id.company_id.id,
+            })
+            move_line.move_id = new_move.id
+
+        # If the move line is directly create on the picking view.
+        # If this picking is already done we should generate an
+        # associated done move.
+        for move_line in mls:
+            if move_line.move_id or not move_line.picking_id:
+                continue
+            if move_line.picking_id.state != 'done':
+                moves = move_line.picking_id.move_lines.filtered(lambda x: x.product_id == move_line.product_id)
+                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
+                if moves:
+                    move_line.move_id = moves[0].id
+                else:
+                    create_move(move_line)
+            else:
+                create_move(move_line)
 
         for ml, vals in zip(mls, vals_list):
             if ml.move_id and \
