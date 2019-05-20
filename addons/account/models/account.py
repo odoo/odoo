@@ -897,6 +897,11 @@ class AccountJournal(models.Model):
                 default_account = self.env['account.account'].create(account_vals)
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
+            if vals['type'] == 'cash' and not (vals.get('profit_account_id') or vals.get('loss_account_id')):
+                company = self.env['res.company'].browse(company_id)
+                vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
+                vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+
 
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
