@@ -62,8 +62,6 @@ class CrmTeam(models.Model):
         string='Show on dashboard',
         compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
-    reply_to = fields.Char(string='Reply-To',
-                           help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this Sales Team")
     color = fields.Integer(string='Color Index', help="The color of the channel")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
