@@ -5,6 +5,7 @@ var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
+var utils = require('web.utils');
 var qweb = core.qweb;
 var WebsiteProfile = require('website_profile.website_profile');
 
@@ -231,11 +232,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             return;
         }
         var $form = $(ev.currentTarget).closest('form');
-        var reader = new window.FileReader();
-        reader.onload = function (ev) {
-            $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
-        };
-        reader.readAsDataURL(ev.currentTarget.files[0]);
+        utils.getDataURLFromFile(ev.currentTarget.files[0]).then(function (result) {
+            $form.find('.o_forum_avatar_img').attr('src', result);
+        });
         $form.find('#forum_clear_image').remove();
     },
     /**

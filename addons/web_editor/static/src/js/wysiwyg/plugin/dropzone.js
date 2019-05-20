@@ -4,6 +4,7 @@ odoo.define('web_editor.wysiwyg.plugin.dropzone', function (require) {
 var core = require('web.core');
 var Plugins = require('web_editor.wysiwyg.plugins');
 var registry = require('web_editor.wysiwyg.plugin.registry');
+var utils = require('web.utils');
 
 var _t = core._t;
 var dom = $.summernote.dom;
@@ -83,9 +84,8 @@ var DropzonePlugin = Plugins.dropzone.extend({
             // save images as attachments
             var def = new Promise(function (resolve) {
                 // Get image's Base64 string
-                var reader = new FileReader();
-                reader.addEventListener('load', function (e) {
-                    self._uploadImage(e.target.result, file.name).then(function (attachment) {
+                utils.getDataURLFromFile(file).then(function (result) {
+                    self._uploadImage(result, file.name).then(function (attachment) {
                         // Make the HTML
                         var image = self.document.createElement('img');
                         image.setAttribute('style', 'width: 100%;');
@@ -97,7 +97,6 @@ var DropzonePlugin = Plugins.dropzone.extend({
                         $(image).trigger('dropped');
                     });
                 });
-                reader.readAsDataURL(file);
             });
             defs.push(def);
         });
