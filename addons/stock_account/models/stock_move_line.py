@@ -54,7 +54,7 @@ class StockMoveLine(models.Model):
         elif move._is_dropshipped() and diff < 0 or move._is_dropshipped_returned() and diff > 0:
             stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=abs(diff))
 
-        for stock_valuation_layer in stock_valuation_layers:
-            if not stock_valuation_layer.product_id.valuation == 'real_time':
+        for svl in stock_valuation_layers:
+            if not svl.product_id.valuation == 'real_time':
                 continue
-            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=stock_valuation_layer.value, forced_quantity=stock_valuation_layer.quantity, forced_ref=stock_valuation_layer.description)._account_entry_move()
+            svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
