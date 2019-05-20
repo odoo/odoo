@@ -748,28 +748,6 @@ class Picking(models.Model):
             if picking.owner_id:
                 picking.move_lines.write({'restrict_partner_id': picking.owner_id.id})
                 picking.move_line_ids.write({'owner_id': picking.owner_id.id})
-            for move_line in picking.move_line_ids.filtered(lambda x: not x.move_id):
-                moves = picking.move_lines.filtered(lambda x: x.product_id == move_line.product_id)
-                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
-                if moves:
-                    move_line.move_id = moves[0].id
-                else:
-                    new_move = self.env['stock.move'].create({
-                        'name': _('New Move:') + move_line.product_id.display_name,
-                        'product_id': move_line.product_id.id,
-                        'product_uom_qty': move_line.qty_done,
-                        'product_uom': move_line.product_uom_id.id,
-                        'description_picking': move_line.description_picking,
-                        'location_id': picking.location_id.id,
-                        'location_dest_id': picking.location_dest_id.id,
-                        'picking_id': picking.id,
-                        'picking_type_id': picking.picking_type_id.id,
-                        'restrict_partner_id': picking.owner_id.id,
-                        'company_id': picking.company_id.id,
-                    })
-                    move_line.move_id = new_move.id
-                    new_move._action_confirm()
-                    todo_moves |= new_move
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
 
