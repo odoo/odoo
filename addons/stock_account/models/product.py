@@ -33,11 +33,6 @@ class ProductTemplate(models.Model):
         return accounts
 
     @api.multi
-    def action_open_product_moves(self):
-        # TODO: remove me in master
-        pass
-
-    @api.multi
     def get_product_accounts(self, fiscal_pos=None):
         """ Add the stock journal related to product to the result of super()
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
@@ -49,16 +44,6 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
-
-    stock_value_currency_id = fields.Many2one('res.currency', compute='_compute_stock_value_currency')
-    stock_value = fields.Float(
-        'Value', compute='_compute_stock_value')
-    qty_at_date = fields.Float(
-        'Quantity', compute='_compute_stock_value')
-    stock_fifo_real_time_aml_ids = fields.Many2many(
-        'account.move.line', compute='_compute_stock_value')
-    stock_fifo_manual_move_ids = fields.Many2many(
-        'stock.move', compute='_compute_stock_value')
 
     value_svl = fields.Float(compute='_compute_value_svl')
     quantity_svl = fields.Float(compute='_compute_value_svl')
@@ -331,202 +316,8 @@ class ProductProduct(models.Model):
             vacuum_svl.stock_move_id.with_context(svl_id=vacuum_svl.id, force_valuation_amount=vacuum_svl.value, forced_quantity=vacuum_svl.quantity, forced_ref=vacuum_svl.description)._account_entry_move()
 
     # -------------------------------------------------------------------------
-    # Miscellaneous
+    # Anglo saxon helpers
     # -------------------------------------------------------------------------
-    @api.multi
-    def do_change_standard_price(self, new_price, account_id):
-        """ Changes the Standard Price of Product and creates an account move accordingly."""
-        AccountMove = self.env['account.move']
-
-        quant_locs = self.env['stock.quant'].sudo().read_group([('product_id', 'in', self.ids)], ['location_id'], ['location_id'])
-        quant_loc_ids = [loc['location_id'][0] for loc in quant_locs]
-        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.company.id), ('id', 'in', quant_loc_ids)])
-
-        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
-
-        for location in locations:
-            for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
-                diff = product.standard_price - new_price
-                if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
-                    raise UserError(_("No difference between the standard price and the new price."))
-                if not product_accounts[product.id].get('stock_valuation', False):
-                    raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
-                qty_available = product.qty_available
-                if qty_available:
-                    # Accounting Entries
-                    if diff * qty_available > 0:
-                        debit_account_id = account_id
-                        credit_account_id = product_accounts[product.id]['stock_valuation'].id
-                    else:
-                        debit_account_id = product_accounts[product.id]['stock_valuation'].id
-                        credit_account_id = account_id
-
-                    move_vals = {
-                        'journal_id': product_accounts[product.id]['stock_journal'].id,
-                        'company_id': location.company_id.id,
-                        'ref': product.default_code,
-                        'line_ids': [(0, 0, {
-                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
-                            'account_id': debit_account_id,
-                            'debit': abs(diff * qty_available),
-                            'credit': 0,
-                            'product_id': product.id,
-                        }), (0, 0, {
-                            'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
-                            'account_id': credit_account_id,
-                            'debit': 0,
-                            'credit': abs(diff * qty_available),
-                            'product_id': product.id,
-                        })],
-                    }
-                    move = AccountMove.create(move_vals)
-                    move.post()
-
-        self.write({'standard_price': new_price})
-        return True
-
-    def _get_fifo_candidates_in_move(self):
-        """ Find IN moves that can be used to value OUT moves.
-        """
-        return self._get_fifo_candidates_in_move_with_company()
-
-    def _get_fifo_candidates_in_move_with_company(self, move_company_id=False):
-        self.ensure_one()
-        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain(move_company_id)
-        candidates = self.env['stock.move'].search(domain, order='date, id')
-        return candidates
-
-    def _sum_remaining_values(self):
-        StockMove = self.env['stock.move']
-        domain = [('product_id', '=', self.id)] + StockMove._get_all_base_domain()
-        moves = StockMove.search(domain)
-        return sum(moves.mapped('remaining_value')), moves
-
-    @api.multi
-    def _compute_stock_value_currency(self):
-        currency_id = self.env.company.currency_id
-        for product in self:
-            product.stock_value_currency_id = currency_id
-
-    @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price', 'product_tmpl_id.categ_id.property_valuation')
-    def _compute_stock_value(self):
-        StockMove = self.env['stock.move']
-        to_date = self.env.context.get('to_date')
-
-        real_time_product_ids = [product.id for product in self if product.product_tmpl_id.valuation == 'real_time']
-        if real_time_product_ids:
-            self.env['account.move.line'].check_access_rights('read')
-            fifo_automated_values = {}
-            query = """SELECT aml.product_id, aml.account_id, sum(aml.debit) - sum(aml.credit), sum(quantity), array_agg(aml.id)
-                         FROM account_move_line AS aml
-                        WHERE aml.product_id IN %%s AND aml.company_id=%%s %s
-                     GROUP BY aml.product_id, aml.account_id"""
-            params = (tuple(real_time_product_ids), self.env.company.id)
-            if to_date:
-                query = query % ('AND aml.date <= %s',)
-                params = params + (to_date,)
-            else:
-                query = query % ('',)
-            self.env.cr.execute(query, params=params)
-
-            res = self.env.cr.fetchall()
-            for row in res:
-                fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
-
-        product_values = {product.id: 0 for product in self}
-        product_move_ids = {product.id: [] for product in self}
-
-        if to_date:
-            domain = [('product_id', 'in', self.ids), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
-            value_field_name = 'value'
-        else:
-            domain = [('product_id', 'in', self.ids)] + StockMove._get_all_base_domain()
-            value_field_name = 'remaining_value'
-
-        StockMove.check_access_rights('read')
-        query = StockMove._where_calc(domain)
-        StockMove._apply_ir_rules(query, 'read')
-        from_clause, where_clause, params = query.get_sql()
-        query_str = """
-            SELECT stock_move.product_id, SUM(COALESCE(stock_move.{}, 0.0)), ARRAY_AGG(stock_move.id)
-            FROM {}
-            WHERE {}
-            GROUP BY stock_move.product_id
-        """.format(value_field_name, from_clause, where_clause)
-        self.env.cr.execute(query_str, params)
-        for product_id, value, move_ids in self.env.cr.fetchall():
-            product_values[product_id] = value
-            product_move_ids[product_id] = move_ids
-
-        for product in self:
-            if product.cost_method in ['standard', 'average']:
-                qty_available = product.with_context(company_owned=True, owner_id=False).qty_available
-                price_used = product.standard_price
-                if to_date:
-                    price_used = product.get_history_price(
-                        self.env.company.id,
-                        date=to_date,
-                    )
-                product.stock_value = price_used * qty_available
-                product.qty_at_date = qty_available
-            elif product.cost_method == 'fifo':
-                if to_date:
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        product.stock_value = product_values[product.id]
-                        product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
-                        product.stock_fifo_manual_move_ids = StockMove.browse(product_move_ids[product.id])
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
-                        product.stock_value = value
-                        product.qty_at_date = quantity
-                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
-                else:
-                    product.stock_value = product_values[product.id]
-                    product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        product.stock_fifo_manual_move_ids = StockMove.browse(product_move_ids[product.id])
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
-                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
-
-    def action_valuation_at_date_details(self):
-        """ Returns an action with either a list view of all the valued stock moves of `self` if the
-        valuation is set as manual or a list view of all the account move lines if the valuation is
-        set as automated.
-        """
-        self.ensure_one()
-        to_date = self.env.context.get('to_date')
-        ctx = self.env.context.copy()
-        ctx.pop('group_by', None)
-        action = {
-            'name': _('Valuation at date'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': ctx,
-        }
-        if self.valuation == 'real_time':
-            action['res_model'] = 'account.move.line'
-            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_real_time_aml_ids.ids)]
-            tree_view_ref = self.env.ref('stock_account.view_stock_account_aml')
-            form_view_ref = self.env.ref('account.view_move_line_form')
-            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
-        else:
-            action['res_model'] = 'stock.move'
-            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_manual_move_ids.ids)]
-            tree_view_ref = self.env.ref('stock_account.view_move_tree_valuation_at_date')
-            form_view_ref = self.env.ref('stock.view_move_form')
-            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
-        return action
-
-    @api.multi
-    def action_open_product_moves(self):
-        #TODO: remove me in master
-        pass
-
     @api.model
     def _anglo_saxon_sale_move_lines(self, name, product, uom, qty, price_unit, currency=False, amount_currency=False, fiscal_position=False, account_analytic=False, analytic_tags=False):
         """Prepare dicts describing new journal COGS journal items for a product sale.
@@ -661,14 +452,6 @@ class ProductCategory(models.Model):
             input_and_output_accounts = category.property_stock_account_input_categ_id | category.property_stock_account_output_categ_id
             if valuation_account and valuation_account in input_and_output_accounts:
                 raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same than the Stock Valuation account.'))
-    @api.multi
-    def write(self, vals):
-        # When going from FIFO to AVCO or to standard, we update the standard price with the
-        # average value in stock.
-        cost_method = vals.get('property_cost_method')
-        if cost_method and cost_method in ['average', 'standard']:
-            self._update_standard_price()
-        return super(ProductCategory, self).write(vals)
 
     @api.onchange('property_cost_method')
     def onchange_property_valuation(self):
@@ -682,11 +465,3 @@ class ProductCategory(models.Model):
             }
         }
 
-    def _update_standard_price(self):
-        updated_categories = self.filtered(lambda x: x.property_cost_method == 'fifo')
-        templates = self.env['product.template'].search([('categ_id', 'in', updated_categories.ids)])
-        for t in templates:
-            valuation = sum([variant._sum_remaining_values()[0] for variant in t.product_variant_ids])
-            qty_available = t.with_context(company_owned=True).qty_available
-            if qty_available:
-                t.standard_price = valuation / qty_available
