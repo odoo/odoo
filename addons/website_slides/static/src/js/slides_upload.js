@@ -4,6 +4,7 @@ odoo.define('website_slides.upload_modal', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var publicWidget = require('web.public.widget');
+var utils = require('web.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -401,17 +402,14 @@ var SlideUploadDialog = Dialog.extend({
             this._fileReset();
             return;
         }
-        var BinaryReader = new FileReader();
-        // file read as DataURL
-        BinaryReader.readAsDataURL(file);
-        BinaryReader.onloadend = function (upload) {
-            var buffer = upload.target.result;
+
+        utils.getDataURLFromFile(file).then(function (buffer) {
             if (isImage) {
                 self.$('#slide-image').attr('src', buffer);
             }
             buffer = buffer.split(',')[1];
             self.file.data = buffer;
-        };
+        });
 
         if (file.type === 'application/pdf') {
             var ArrayReader = new FileReader();

@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 
 var core = require('web.core');
 var Qweb = core.qweb;
+var utils = require('web.utils');
 var _t = core._t;
 
 /**
@@ -195,11 +196,7 @@ var PartnerAutocompleteMixin = {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
             xhr.onload = function () {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    resolve(reader.result);
-                };
-                reader.readAsDataURL(xhr.response);
+                utils.getDataURLFromFile(xhr.response).then(resolve);
             };
             xhr.open('GET', url);
             xhr.responseType = 'blob';

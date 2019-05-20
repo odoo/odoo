@@ -2,6 +2,7 @@ odoo.define('web.name_and_signature', function (require) {
 'use strict';
 
 var core = require('web.core');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -597,11 +598,9 @@ var NameAndSignature = Widget.extend({
         }
         this.$loadInvalid.addClass('d-none');
 
-        var reader = new FileReader();
-        reader.onload = function (ev) {
-            self._printImage(reader.result);
-        };
-        reader.readAsDataURL(f);
+        utils.getDataURLFromFile(f).then(function (result) {
+            self._printImage(result);
+        });
     },
     /**
      * Handles input on name field: if the @see mode is 'auto', redraws the
