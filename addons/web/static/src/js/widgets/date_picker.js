@@ -258,17 +258,6 @@ var DateWidget = Widget.extend({
      */
     _onKeydown: function (ev) {
         if (ev.which === $.ui.keyCode.ESCAPE) {
-            this.__libInput++;
-            this.$el.datetimepicker('hide');
-            this.__libInput--;
-        }
-    },
-    /**
-     * @private
-     * @param {KeyEvent} ev
-     */
-    _onKeydown: function (ev) {
-        if (ev.which === $.ui.keyCode.ESCAPE) {
             if (this.__isOpen) {
                 // we don't want any other effects than closing the datepicker,
                 // like leaving the edition of a row in editable list view
