@@ -23,11 +23,6 @@
                         <button string="Current Stock"
                                 class="oe_stat_button"
                                 icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
-                        <button string="Products"
-                                class="oe_stat_button"
-                                icon="fa-th-list" name="%(act_product_location_open)d" type="action"
-                                context="{'location_id': active_id}"
-                                />
                     </div>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <label for="name" class="oe_edit_only"/>
