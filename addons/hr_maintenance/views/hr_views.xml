@@ -5,7 +5,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <xpath expr="//button[@name='toggle_active']" position="before">
                 <button name="%(maintenance.hr_equipment_action)d"
                     context="{'search_default_employee_id': id}"
                     groups="maintenance.group_equipment_manager"
