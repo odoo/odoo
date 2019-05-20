@@ -3961,8 +3961,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # The quotes surrounding `ir_translation` are important as well.
             unique_translation_subselect = """
                 (SELECT res_id, value FROM "ir_translation"
-                 WHERE name=%s AND lang=%s AND value!=''
-                 ORDER BY res_id, id DESC)
+                 WHERE type='model' AND name=%s AND lang=%s AND value!='')
             """
             alias, alias_statement = query.add_join(
                 (table_alias, unique_translation_subselect, 'id', 'res_id', field),
