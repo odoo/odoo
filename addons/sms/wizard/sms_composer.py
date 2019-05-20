@@ -23,7 +23,7 @@ except ImportError:
 
 
 class SendSMS(models.TransientModel):
-    _name = 'sms.send_sms'
+    _name = 'sms.composer'
     _description = 'Send SMS'
 
     recipients = fields.Char('Recipients', required=True)
