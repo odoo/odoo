@@ -79,7 +79,7 @@ class TestOnchangeProductId(TransactionCase):
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 20,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'Pre-Christmas discount'
             }), (0, 0, {
                 'date_start': "2017-12-25",
@@ -87,7 +87,7 @@ class TestOnchangeProductId(TransactionCase):
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 50,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'Post-Christmas super-discount'
             })]
         })
@@ -137,7 +137,7 @@ class TestOnchangeProductId(TransactionCase):
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'Christmas discount'
             })]
         })
@@ -180,7 +180,7 @@ class TestOnchangeProductId(TransactionCase):
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'First discount'
             })]
         })
@@ -193,7 +193,7 @@ class TestOnchangeProductId(TransactionCase):
                 'base': 'pricelist',
                 'base_pricelist_id': first_pricelist.id,
                 'price_discount': 10,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'Second discount'
             })]
         })
@@ -247,7 +247,7 @@ class TestOnchangeProductId(TransactionCase):
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,
-                'applied_on': '9_global',
+                'applied_on': '3_global',
                 'name': 'First discount'
             })]
         })

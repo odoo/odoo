@@ -151,8 +151,31 @@ class Pricelist(models.Model):
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
         return products_qty_partner, prod_tmpl_ids, prod_ids, categ_ids, date
 
+    def _price_rule_get_where(self, prod_tmpl_ids, prod_ids, categ_ids, date):
+        """
+        Get the where clause for pricelist rule selection.
+
+        This method is meant to be extend by pricelist modifiers that could
+        add specific fields on the pricelist item model; you should then extend
+        this and add your own where clause depending on context or existing data in the args.
+
+        :rtype: tuple
+        :returns: (str, list) where the string is the where clause and the
+                              list contains the parameters for query extrapolation
+        """
+        where_clause =  """
+            (item.product_tmpl_id IS NULL OR item.product_tmpl_id = any(%s))
+                AND (item.product_id IS NULL OR item.product_id = any(%s))
+                AND (item.categ_id IS NULL OR item.categ_id = any(%s))
+                AND (item.date_start IS NULL OR item.date_start <= %s)
+                AND (item.date_end IS NULL OR item.date_end >= %s)
+            """
+        return (where_clause, [prod_tmpl_ids, prod_ids, categ_ids, date, date])
+
     def _compute_price_rule_get_items(self, prod_tmpl_ids, prod_ids, categ_ids, date):
         self.ensure_one()
+        (where, args) = self._price_rule_get_where(prod_tmpl_ids, prod_ids, categ_ids, date)
+        args.append(self.id) # pricelist id is always last
         self.env.cr.execute(
             """
             SELECT
@@ -160,17 +183,14 @@ class Pricelist(models.Model):
             FROM
                 product_pricelist_item AS item
             LEFT JOIN product_category AS categ ON item.categ_id = categ.id
-            WHERE
-                (item.product_tmpl_id IS NULL OR item.product_tmpl_id = any(%s))
-                AND (item.product_id IS NULL OR item.product_id = any(%s))
-                AND (item.categ_id IS NULL OR item.categ_id = any(%s))
+            WHERE"""
+            + where +  # TODO DBO: check sql injection with someone from security
+            """
                 AND (item.pricelist_id = %s)
-                AND (item.date_start IS NULL OR item.date_start <= %s)
-                AND (item.date_end IS NULL OR item.date_end >= %s)
             ORDER BY
                 item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
             """,
-            (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
+            args)
         # NOTE: if you change `order by` on that query, make sure it matches
         # _order from model to avoid inconstencies and undeterministic issues.
         item_ids = [item[0] for item in self.env.cr.fetchall()]
@@ -417,7 +437,7 @@ class PricelistItem(models.Model):
     # inconstencies and undeterministic issues.
 
     def _get_default_applied_on(self):
-        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '9_global'
+        return self.env.user.has_group('product.group_product_pricelist') and '1_product' or '3_global'
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',
@@ -434,7 +454,7 @@ class PricelistItem(models.Model):
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
     applied_on = fields.Selection([
-        ('9_global', 'Global'),  # set to 9 to leave room for intermediary settings in module extensions
+        ('3_global', 'Global'),
         ('2_product_category', ' Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
