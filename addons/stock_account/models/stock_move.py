@@ -252,10 +252,10 @@ class StockMove(models.Model):
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
                 continue
 
-        for stock_valuation_layer in stock_valuation_layers:
-            if not stock_valuation_layer.product_id.valuation == 'real_time':
+        for svl in stock_valuation_layers:
+            if not svl.product_id.valuation == 'real_time':
                 continue
-            stock_valuation_layer.stock_move_id.with_context(svl_id=stock_valuation_layer.id, force_valuation_amount=abs(stock_valuation_layer.value), forced_quantity=stock_valuation_layer.quantity)._account_entry_move()
+            svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
 
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
@@ -343,48 +343,36 @@ class StockMove(models.Model):
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
+    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
         self.ensure_one()
 
-        if self._context.get('force_valuation_amount'):
-            valuation_amount = self._context.get('force_valuation_amount')
-        else:
-            valuation_amount = cost
-
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
-        debit_value = self.company_id.currency_id.round(valuation_amount)
+        debit_value = self.company_id.currency_id.round(cost)
 
         # check that all data is correct
         if self.company_id.currency_id.is_zero(debit_value) and not self.env['ir.config_parameter'].sudo().get_param('stock_account.allow_zero_cost'):
             raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 
-
         valuation_partner_id = self._get_partner_id_for_valuation_lines()
-        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
+        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
 
         return res
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
-
-        if self._context.get('forced_ref'):
-            ref = self._context['forced_ref']
-        else:
-            ref = self.picking_id.name
-
         debit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': ref,
+            'ref': description,
             'partner_id': partner_id,
             'debit': debit_value if debit_value > 0 else 0,
             'credit': -debit_value if debit_value < 0 else 0,
@@ -396,7 +384,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': ref,
+            'ref': description,
             'partner_id': partner_id,
             'credit': credit_value if credit_value > 0 else 0,
             'debit': -credit_value if credit_value < 0 else 0,
@@ -419,7 +407,7 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,
                 'quantity': qty,
                 'product_uom_id': self.product_id.uom_id.id,
-                'ref': ref,
+                'ref': description,
                 'partner_id': partner_id,
                 'credit': diff_amount > 0 and diff_amount or 0,
                 'debit': diff_amount < 0 and -diff_amount or 0,
@@ -435,38 +423,24 @@ class StockMove(models.Model):
         vals['to_refund'] = self.to_refund
         return vals
 
-    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
+    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        quantity = self.env.context.get('forced_quantity', self.product_qty)
-        quantity = quantity if self._is_in() else -1 * quantity
 
-        # Make an informative `ref` on the created account move to differentiate between classic
-        # movements, vacuum and edition of past moves.
-        ref = self.picking_id.name
-        if self.env.context.get('force_valuation_amount'):
-            if self.env.context.get('forced_quantity') == 0:
-                ref = 'Revaluation of %s (negative inventory)' % ref
-            elif self.env.context.get('forced_quantity') is not None:
-                ref = 'Correction of %s (modification of past move)' % ref
-        if not ref and self.inventory_id:
-            ref = self.inventory_id.name
-
-        move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, 0, credit_account_id, debit_account_id)
+        move_lines = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': ref,
+                'ref': description,
                 'stock_move_id': self.id,
+                'stock_valuation_layer_ids': [(6, None, [svl_id])],
             })
-            if self.env.context.get('svl_id'):
-                new_account_move['stock_valuation_layer_ids'] = [(6, None, [self.env.context.get('svl_id')])]
             new_account_move.post()
 
-    def _account_entry_move(self):
+    def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
         if self.product_id.type != 'product':
@@ -486,41 +460,34 @@ class StockMove(models.Model):
         if self._is_in():
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
 
         # Create Journal Entry for products leaving the company
         if self._is_out():
-            if self.env.context.get('force_valuation_amount'):
-                force_valuation_amount = self.env.context['force_valuation_amount']
-                self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
-
+            cost = -1 * cost
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
             else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if self._is_dropshipped():
-                value = self.env.context.get('force_valuation_amount')
-                if value > 0:
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
+                if cost > 0:
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
                 else:
-                    force_valuation_amount = self.env.context['force_valuation_amount']
-                    self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
+                    cost = -1 * cost
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
             elif self._is_dropshipped_returned():
-                value = self.env.context.get('force_valuation_amount')
-                if value > 0:
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
+                if cost > 0:
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
                 else:
-                    force_valuation_amount = self.env.context['force_valuation_amount']
-                    self.env.context = dict(self.env.context, force_valuation_amount=-1*force_valuation_amount)
-                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
+                    cost = -1 * cost
+                    self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts

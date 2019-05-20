@@ -313,7 +313,9 @@ class ProductProduct(models.Model):
             # Create the account move.
             if self.valuation != 'real_time':
                 continue
-            vacuum_svl.stock_move_id.with_context(svl_id=vacuum_svl.id, force_valuation_amount=vacuum_svl.value, forced_quantity=vacuum_svl.quantity, forced_ref=vacuum_svl.description)._account_entry_move()
+            vacuum_svl.stock_move_id._account_entry_move(
+                vacuum_svl.quantity, vacuum_svl.description, vacuum_svl.id, vacuum_svl.value
+            )
 
     # -------------------------------------------------------------------------
     # Anglo saxon helpers
