@@ -1978,6 +1978,55 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(receipt.location_dest_id.id, stock_location.id)
         self.assertEqual(receipt.move_line_ids.location_dest_id.id, shelf_location.id)
 
+    def test_cancel_plan_transfer(self):
+        """ Test canceling plan transfer """
+        # Create picking with stock move.
+        picking = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.pack_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        # Confirm the outgoing picking, state should be changed.
+        picking.action_confirm()
+        self.assertEqual(picking.state, 'confirmed', "Picking should be in a confirmed state.")
+
+        # Picking in a confirmed state and try to cancel it.
+        picking.action_cancel()
+        self.assertEqual(picking.state, 'cancel', "Picking should be in a cancel state.")
+
+    def test_immediate_transfer(self):
+        """ Test picking should be in ready state if immediate transfer and SML is created via view +
+            Test picking cancelation with immediate transfer and done quantity"""
+        # create picking with stock move line
+        picking = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'immediate_transfer': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'qty_done': 10,
+                'product_uom_id': self.productA.uom_id.id,
+                'location_id': self.pack_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+
+        self.assertEqual(picking.state, 'assigned', "Picking should not be in a draft state.")
+        self.assertEqual(len(picking.move_lines), 1, "Picking should have stock move.")
+        picking.action_cancel()
+        self.assertEqual(picking.move_lines.state, 'cancel', "Stock move should be in a cancel state.")
+        self.assertEqual(picking.state, 'cancel', "Picking should be in a cancel state.")
+
+
 class TestStockUOM(TestStockCommon):
     def setUp(self):
         super(TestStockUOM, self).setUp()
