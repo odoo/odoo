@@ -7660,6 +7660,60 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.only('resequence list lines when discardable lines are present', function (assert) {
+        assert.expect(4);
+
+        var onchangeNum = 0;
+
+        this.data.partner.onchanges = {
+            p: function (obj) {
+                onchangeNum++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,list':
+                    '<tree editable="bottom" create="1">' +
+                        '<field name="int_field" widget="handle"/>' +
+                        '<field name="display_name" required="1"/>' +
+                    '</tree>',
+            },
+        });
+
+        assert.strictEqual(onchangeNum, 1, "one onchange happens when form is opened");
+
+        // Add one line
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_one2many input:first').focus();
+        form.$('.o_field_one2many input:first').val('first line').trigger('input');
+        assert.strictEqual(onchangeNum, 2, "one onchange happens when a line is added");
+
+        // Drag and drop second line before first one (with 1 draft and invalid line)
+        form.$('.o_field_x2many_list_row_add a').click();
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(0),
+            form.$('.o_data_row').last(),
+            {position: 'bottom'}
+        );
+        assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced")
+
+        // Add a second line
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_one2many input:first').focus();
+        form.$('.o_field_one2many input:first').val('second line').trigger('input');
+        assert.strictEqual(onchangeNum, 4, "one onchange happens when a line is added");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
