@@ -1027,8 +1027,10 @@ class AccountInvoice(models.Model):
         if to_open_invoices.filtered(lambda inv: not inv.account_id):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
         to_open_invoices.action_date_assign()
+        to_open_invoices._set_name_and_date_invoice()
+        res = to_open_invoices.action_move_create()
         to_open_invoices.invoice_validate()
-        return to_open_invoices.action_move_create()
+        return res
 
     @api.multi
     def action_invoice_paid(self):
@@ -1440,29 +1442,9 @@ class AccountInvoice(models.Model):
 
         for invoice in self:
             vals = {'state': 'open'}
-            if not invoice.date_invoice:
-                vals['date_invoice'] = fields.Date.context_today(self)
             if not invoice.date_due:
                 vals['date_due'] = vals.get('date_invoice', invoice.date_invoice)
 
-            if (invoice.move_name and invoice.move_name != '/'):
-                new_name = invoice.move_name
-            else:
-                new_name = False
-                journal = invoice.journal_id
-                if journal.sequence_id:
-                    # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
-                    sequence = journal.sequence_id
-                    if invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
-                        if not journal.refund_sequence_id:
-                            raise UserError(_('Please define a sequence for the credit notes'))
-                        sequence = journal.refund_sequence_id
-
-                    new_name = sequence.with_context(ir_sequence_date=invoice.date or invoice.date_invoice).next_by_id()
-                else:
-                    raise UserError(_('Please define a sequence on the journal.'))
-            #give the invoice its number directly as it's needed in _get_computed_reference()
-            invoice.number = new_name
 
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
@@ -1815,6 +1797,29 @@ class AccountInvoice(models.Model):
             ('_onchange_partner_id', ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id']),
             ('_onchange_journal_id', ['currency_id']),
         ])
+
+    def _set_name_and_date_invoice(self):
+        for invoice in self:
+            if (invoice.move_name and invoice.move_name != '/'):
+                new_name = invoice.move_name
+            else:
+                new_name = False
+                journal = invoice.journal_id
+                if journal.sequence_id:
+                    # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
+                    sequence = journal.sequence_id
+                    if invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                        if not journal.refund_sequence_id:
+                            raise UserError(_('Please define a sequence for the credit notes'))
+                        sequence = journal.refund_sequence_id
+
+                    new_name = sequence.with_context(ir_sequence_date=invoice.date or invoice.date_invoice).next_by_id()
+                else:
+                    raise UserError(_('Please define a sequence on the journal.'))
+            #give the invoice its number directly as it's needed in _get_computed_reference()
+            invoice.number = new_name
+            if not invoice.date_invoice:
+                invoice.date_invoice = fields.Date.context_today(self)
 
 
 class AccountInvoiceLine(models.Model):
