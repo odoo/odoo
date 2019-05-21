@@ -16,7 +16,7 @@
         Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting
         to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.
         <br /><br />
-        Do not hesitate to contact us if you have any question.
+        Do not hesitate to contact us if you have any questions.
         <br/><br/>
         Best regards,<br/>
         % if user and user.signature:
