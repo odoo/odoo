@@ -380,7 +380,7 @@ class Lead(models.Model):
 
     @api.multi
     def action_set_lost(self):
-        """ Lost semantic: probability = 0, active = False """
+        """ Lost semantic: probability = 0 or active = False """
         for lead in self:
             lead.write({
                 'probability': 0,
@@ -391,7 +391,7 @@ class Lead(models.Model):
 
     @api.multi
     def action_set_won(self):
-        """ Won semantic: probability = 100 (active untouched) """
+        """ Won semantic: probability = 100 """
         for lead in self:
             stage_id = lead._stage_find(domain=[('won_stage', '=', True), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id.id})
