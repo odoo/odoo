@@ -95,7 +95,7 @@ class WebsiteProfile(http.Controller):
             if not (width or height):
                 width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.image_process(image_base64, (width, height), crop=crop)
+        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)

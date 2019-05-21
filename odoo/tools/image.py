@@ -387,5 +387,5 @@ if __name__=="__main__":
     assert len(sys.argv)==3, 'Usage to Test: image.py SRC.png DEST.png'
 
     img = base64.b64encode(open(sys.argv[1],'rb').read())
-    new = image_process(img, (128, 100))
+    new = image_process(img, size=(128, 100))
     open(sys.argv[2], 'wb').write(base64.b64decode(new))
