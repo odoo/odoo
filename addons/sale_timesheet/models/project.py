@@ -124,8 +124,8 @@ class ProjectTask(models.Model):
     def _get_default_partner(self):
         partner = False
         if 'default_project_id' in self.env.context:  # partner from SO line is prior on one from project
-            project = self.env['project.project'].browse(self.env.context['default_project_id'])
-            partner = project.sale_line_id.order_partner_id
+            project_sudo = self.env['project.project'].browse(self.env.context['default_project_id']).sudo()
+            partner = project_sudo.sale_line_id.order_partner_id
         if not partner:
             partner = super(ProjectTask, self)._get_default_partner()
         return partner
@@ -205,7 +205,7 @@ class ProjectTask(models.Model):
     @api.multi
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
-        for task in self:
+        for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
                     raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
