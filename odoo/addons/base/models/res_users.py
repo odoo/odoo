@@ -21,7 +21,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, collections
+from odoo.tools import partition, collections, ormcache
 
 _logger = logging.getLogger(__name__)
 
@@ -201,7 +201,6 @@ class Users(models.Model):
     _description = 'Users'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
-    __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
@@ -481,22 +480,21 @@ class Users(models.Model):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
-            # clear default ir values when company changes
-            self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
         if 'groups_id' in values:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['ir.rule'].clear_caches()
-            self.has_group.clear_cache(self)
-        if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
-            self.context_get.clear_cache(self)
-        if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
-            db = self._cr.dbname
-            for id in self.ids:
-                self.__uid_cache[db].pop(id, None)
-        if any(key in values for key in self._get_session_token_fields()):
-            self._invalidate_session_cache()
+
+        # per-method / per-model caches have been removed so the various
+        # clear_cache/clear_caches methods pretty much just end up calling
+        # Registry._clear_cache
+        invalidation_fields = {
+            'groups_id', 'active', 'lang', 'tz', 'company_id',
+            *USER_PRIVATE_FIELDS,
+            *self._get_session_token_fields()
+        }
+        if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
+            self.clear_caches()
 
         return res
 
@@ -504,10 +502,7 @@ class Users(models.Model):
     def unlink(self):
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
-        self._invalidate_session_cache()
+        self.clear_caches()
         return super(Users, self).unlink()
 
     @api.model
@@ -627,22 +622,20 @@ class Users(models.Model):
         return uid
 
     @classmethod
+    @ormcache('uid', 'passwd')
     def check(cls, db, uid, passwd):
         """Verifies that the given (uid, password) is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        db = cls.pool.db_name
-        if cls.__uid_cache[db].get(uid) == passwd:
-            return
+
         with contextlib.closing(cls.pool.cursor()) as cr:
             self = api.Environment(cr, uid, {})[cls._name]
             with self._assert_can_auth():
                 if not self.env.user.active:
                     raise AccessDenied()
                 self._check_credentials_api(passwd, {})
-                cls.__uid_cache[db][uid] = passwd
 
     def _get_session_token_fields(self):
         return {'id', 'login', 'password', 'active'}
@@ -656,7 +649,7 @@ class Users(models.Model):
                                 FROM res_users
                                 WHERE id=%%s""" % (session_fields), (self.id,))
         if self.env.cr.rowcount != 1:
-            self._invalidate_session_cache()
+            self.clear_caches()
             return False
         data_fields = self.env.cr.fetchone()
         # generate hmac key
@@ -666,11 +659,6 @@ class Users(models.Model):
         h = hmac.new(key, data, sha256)
         # keep in the cache the token
         return h.hexdigest()
-
-    @api.multi
-    def _invalidate_session_cache(self):
-        """ Clear the sessions cache """
-        self._compute_session_token.clear_cache(self)
 
     @api.model
     def change_password(self, old_passwd, new_passwd):

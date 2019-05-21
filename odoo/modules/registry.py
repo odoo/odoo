@@ -110,6 +110,7 @@ class Registry(Mapping):
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
+        self.__cache = LRU(8192)
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -328,15 +329,9 @@ class Registry(Mapping):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    @lazy_property
-    def cache(self):
-        """ A cache for model methods. """
-        # this lazy_property is automatically reset by lazy_property.reset_all()
-        return LRU(8192)
-
     def _clear_cache(self):
         """ Clear the cache and mark it as invalidated. """
-        self.cache.clear()
+        self.__cache.clear()
         self.cache_invalidated = True
 
     def clear_caches(self):
@@ -424,7 +419,7 @@ class Registry(Mapping):
                 self.setup_models(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
-            self.cache.clear()
+            self.__cache.clear()
             self.cache_invalidated = False
 
     @contextmanager

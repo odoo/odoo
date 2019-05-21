@@ -17,5 +17,5 @@ def check_session(session, env):
     expected = self._compute_session_token(session.sid)
     if expected and odoo.tools.misc.consteq(expected, session.session_token):
         return True
-    self._invalidate_session_cache()
+    self.clear_caches()
     return False

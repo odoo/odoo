@@ -29,6 +29,9 @@ class ormcache_counter(object):
 # statistic counters dictionary, maps (dbname, modelname, method) to counter
 STAT = defaultdict(ormcache_counter)
 
+def lru(method, model):
+    counter = STAT[(model.pool.db_name, model._name, method)]
+    return model.pool._Registry__cache, (model._name, method), counter
 
 class ormcache(object):
     """ LRU cache decorator for model methods.
@@ -74,13 +77,8 @@ class ormcache(object):
         else:
             # backward-compatible function that uses self.skiparg
             self.key = lambda *args, **kwargs: args[self.skiparg:]
-
-    def lru(self, model):
-        counter = STAT[(model.pool.db_name, model._name, self.method)]
-        return model.pool.cache, (model._name, self.method), counter
-
     def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
+        d, key0, counter = lru(self.method, args[0])
         key = key0 + self.key(*args, **kwargs)
         try:
             r = d[key]
@@ -151,7 +149,7 @@ class ormcache_multi(ormcache):
         self.multi_pos = spec.args.index(self.multi)
 
     def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
+        d, key0, counter = lru(self.method, args[0])
         base_key = key0 + self.key(*args, **kwargs)
         ids = self.key_multi(*args, **kwargs)
         result = {}
@@ -227,7 +225,7 @@ def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
     model = bound_method.__self__
     ormcache = bound_method.clear_cache.__self__
-    cache, key0, counter = ormcache.lru(model)
+    cache, key0, counter = lru(ormcache.method, model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
 
