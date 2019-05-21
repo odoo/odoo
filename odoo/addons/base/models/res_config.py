@@ -543,7 +543,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
-                    value = value.lower() == 'true'
+                    value = bool(value)
             res[name] = value
 
         # other fields: call the method 'get_values'
