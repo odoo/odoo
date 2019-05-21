@@ -88,10 +88,7 @@ var DebugManager = Widget.extend({
      */
     regenerateAssets: function () {
         var self = this;
-        var domain = [
-            ['res_model', '=', 'ir.ui.view'],
-            ['name', 'like', 'assets_']
-        ];
+        var domain = utils.assetsDomain();
         this._rpc({
             model: 'ir.attachment',
             method: 'search',

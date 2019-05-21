@@ -771,7 +771,18 @@ var utils = {
         }
         return curr;
     },
-
+    /**
+     * Returns the domain targeting assets files.
+     *
+     * @returns {Array} Domain of assets files
+     */
+    assetsDomain: function () {
+        return [
+            '&',
+            ['res_model', '=', 'ir.ui.view'],
+            ['name', 'like', 'assets_']
+        ];
+    },
 };
 
 return utils;
