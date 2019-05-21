@@ -80,7 +80,7 @@ var SwitchCompanyMenu = Widget.extend({
         var hash = $.bbq.getState()
         var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
         var current_company_id = allowed_company_ids[0];
-        if ($(ev.currentTarget).find('.fa-square-o')) {
+        if ($(ev.currentTarget).find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);
         } else {
             allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
