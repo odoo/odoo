@@ -28,6 +28,6 @@ class PhoneValidationMixin(models.AbstractModel):
             number,
             country.code if country else None,
             country.phone_code if country else None,
-            always_international=always_international,
+            force_format='INTERNATIONAL' if always_international else 'NATIONAL',
             raise_exception=False
         )
