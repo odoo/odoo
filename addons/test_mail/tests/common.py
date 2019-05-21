@@ -37,6 +37,17 @@ class BaseFunctionalTest(common.SavepointCase):
 
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
+    @classmethod
+    def _reset_mail_context(cls, record):
+        return record.with_context(
+            mail_create_nolog=False,
+            mail_create_nosubscribe=False,
+            mail_notrack=False
+        )
+
+    def _clear_bus(self):
+        self.env['bus.bus'].search([]).unlink()
+
     @contextmanager
     def assertNotifications(self, **counters):
         """ Counters: 'partner_attribute': 'inbox' or 'email' """
@@ -83,41 +94,57 @@ class BaseFunctionalTest(common.SavepointCase):
             if hasattr(self, 'assertEmails') and len(new_messages) == 1:
                 self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.is_email).mapped('res_partner_id'))
 
-    def assertBusNotification(self, channels, message_dicts=None, init=True):
+    def assertBusNotification(self, channels, message_items=None, init=True):
         """ Check for bus notifications. Basic check is about used channels.
         Verifying content is optional.
 
         :param channels: list of channel
-        :param messages: if given, list of message making a valid pair (channel,
+        :param message_items: if given, list of message making a valid pair (channel,
           message) to be found in bus.bus
         """
+        def check_content(returned_value, expected_value):
+            if isinstance(expected_value, list):
+                done = []
+                for expected_item in expected_value:
+                    for returned_item in returned_value:
+                        if check_content(returned_item, expected_item):
+                            done.append(expected_item)
+                            break
+                    else:
+                        return False
+                return len(done) == len(expected_value)
+            elif isinstance(expected_value, dict):
+                return all(k in returned_value for k in expected_value.keys()) and all(
+                    check_content(returned_value[key], val)
+                    for key, val in expected_value.items()
+                )
+            else:
+                return returned_value == expected_value
+
         if init:
             self.assertEqual(len(self.env['bus.bus'].search([])), len(channels))
         notifications = self.env['bus.bus'].search([('channel', 'in', [json_dump(channel) for channel in channels])])
+        notif_messages = [json.loads(n.message) for n in notifications]
         self.assertEqual(len(notifications), len(channels))
-        if message_dicts:
-            notif_messages = [json.loads(n.message) for n in notifications]
-            for expected in message_dicts:
-                found = False
-                for returned in notif_messages:
-                    for key, val in expected.items():
-                        if key not in returned:
-                            continue
-                        if isinstance(returned[key], list):
-                            if set(returned[key]) != set(val):
-                                continue
-                        else:
-                            if returned[key] != val:
-                                continue
-                            found = True
-                            break
-                    if found:
-                        break
-                if not found:
-                    raise AssertionError("Bus notification content %s not found" % (repr(expected)))
+
+        for expected in message_items or []:
+            for notification in notif_messages:
+                found_keys, not_found_keys = [], []
+                if not all(k in notification for k in expected.keys()):
+                    continue
+                for expected_key, expected_value in expected.items():
+                    done = check_content(notification[expected_key], expected_value)
+                    if done:
+                        found_keys.append(expected_key)
+                    else:
+                        not_found_keys.append(expected_key)
+                if set(found_keys) == set(expected.keys()):
+                    break
+            else:
+                raise AssertionError('Keys %s not found (expected: %s - returned: %s)' % (not_found_keys, repr(expected), repr(notif_messages)))
 
     @contextmanager
-    def sudoAs(self, login):
+    def sudo(self, login):
         old_uid = self.uid
         try:
             user = self.env['res.users'].sudo().search([('login', '=', login)])
@@ -125,13 +152,11 @@ class BaseFunctionalTest(common.SavepointCase):
             # switch user
             self.uid = user.id
             self.env = self.env(user=self.uid)
-            self.test_record = self.test_record.sudo(self.uid)
             yield
         finally:
             # back
             self.uid = old_uid
             self.env = self.env(user=self.uid)
-            self.test_record = self.test_record_old
 
 
 class TestRecipients(common.SavepointCase):
@@ -147,10 +172,16 @@ class TestRecipients(common.SavepointCase):
         })
         cls.partner_1 = Partner.create({
             'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com'})
+            'email': 'valid.lelitre@agrolait.com',
+            'country_id': cls.env.ref('base.be').id,
+            'mobile': '0475001122',
+        })
         cls.partner_2 = Partner.create({
             'name': 'Valid Poilvache',
-            'email': 'valid.other@gmail.com'})
+            'email': 'valid.other@gmail.com',
+            'country_id': cls.env.ref('base.be').id,
+            'mobile': '+32 475 22 11 00',
+        })
 
 
 class MockEmails(common.SingleTransactionCase):
@@ -308,6 +339,3 @@ class Moderation(MockEmails, BaseFunctionalTest):
             'subtype_id': self.env['mail.message.subtype'].search([('name', '=', 'Discussions')]).id
             })
         return message
-
-    def _clear_bus(self):
-        self.env['bus.bus'].search([]).unlink()
