@@ -58,7 +58,7 @@ var SwitchCompanyMenu = Widget.extend({
         if ($($(ev.currentTarget).parent()).find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);
         }
-        session.setCompanies(companyID, [companyID]);
+        session.setCompanies(companyID, allowed_company_ids);
     },
 
     //--------------------------------------------------------------------------
