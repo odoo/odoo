@@ -57,9 +57,14 @@ var SwitchCompanyMenu = Widget.extend({
         var hash = $.bbq.getState()
         var allowed_company_ids = _.map(hash.cids.split(','), function(company_id) {return parseInt(company_id);});
         if ($($(ev.currentTarget).parent()).find('.fa-square-o').length) {
-            allowed_company_ids.push(companyID);
+            // 1 enabled company: Stay in single company mode
+            if (this.allowed_company_ids.length === 1) {
+                allowed_company_ids = [companyID]    
+            } else { // Multi company mode
+                allowed_company_ids.push(companyID);
+            }
         }
-        session.setCompanies(companyID, [companyID]);
+        session.setCompanies(companyID, allowed_company_ids);
     },
 
     //--------------------------------------------------------------------------
