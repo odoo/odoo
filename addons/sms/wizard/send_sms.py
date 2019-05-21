@@ -61,12 +61,11 @@ class SendSMS(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
-
         active_model = self.env.context.get('active_model')
-        model = self.env[active_model]
 
-        records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients') and not self.env.context.get('default_recipients'):
+        if not self.env.context.get('default_recipients') and active_model and hasattr(self.env[active_model], '_get_default_sms_recipients'):
+            model = self.env[active_model]
+            records = self._get_records(model)
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
@@ -86,9 +85,9 @@ class SendSMS(models.TransientModel):
         numbers = [number.strip() for number in self.recipients.split(',') if number.strip()]
 
         active_model = self.env.context.get('active_model')
-        model = self.env[active_model]
-        records = self._get_records(model)
-        if getattr(records, 'message_post_send_sms'):
+        if active_model and hasattr(self.env[active_model], 'message_post_send_sms'):
+            model = self.env[active_model]
+            records = self._get_records(model)
             records.message_post_send_sms(self.message, numbers=numbers)
         else:
             self.env['sms.api']._send_sms(numbers, self.message)
