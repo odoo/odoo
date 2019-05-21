@@ -102,7 +102,7 @@ class PaymentProcessing(http.Controller):
             request.env.cr.rollback()
             result['success'] = False
             result['error'] = str(e)
-            _logger.error("Error while processing transaction(s) %s, exception \"%s\"", tx_to_process.ids, str(e))
+            _logger.exception("Error while processing transaction(s) %s, exception \"%s\"", tx_to_process.ids, str(e))
 
         return result
 
