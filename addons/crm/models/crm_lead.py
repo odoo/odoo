@@ -194,20 +194,11 @@ class Lead(models.Model):
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
-    @api.model
-    def _onchange_stage_id_values(self, stage_id):
-        """ returns the new values when stage_id has changed """
-        if not stage_id:
-            return {}
-        stage = self.env['crm.stage'].browse(stage_id)
-        if stage.on_change:
-            return {'probability': stage.probability}
-        return {}
-
     @api.onchange('stage_id')
     def _onchange_stage_id(self):
-        values = self._onchange_stage_id_values(self.stage_id.id)
-        self.update(values)
+        stage = self.env['crm.stage'].browse(self.stage_id.id)
+        if stage and stage.on_change:
+            self.probability = stage.probability
 
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """
