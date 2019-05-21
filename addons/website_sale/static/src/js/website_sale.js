@@ -150,7 +150,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
-        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
     }),
 
     /**
@@ -422,33 +421,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         $carousel.toggleClass('css_not_available',
             $productContainer.find('.js_main_product').hasClass('css_not_available'));
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onApplyShopLayoutChange: function (ev) {
-        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
-        this._rpc({
-            route: '/shop/save_shop_layout_mode',
-            params: {
-                'layout_mode': switchToList ? 'list' : 'grid',
-            },
-        });
-        var $grid = this.$('#products_grid');
-        // Disable transition on all list elements, then switch to the new
-        // layout then reenable all transitions after having forced a redraw
-        // TODO should probably be improved to allow disabling transitions
-        // altogether with a class/option.
-        $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', switchToList);
-        void $grid[0].offsetWidth;
-        $grid.find('*').css('transition', '');
-    },
     /**
      * @private
      * @param {MouseEvent} ev
@@ -458,7 +430,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
         return this._handleAdd($(ev.currentTarget).closest('form'));
     },
-
     /**
      * Initializes the optional products modal
      * and add handlers to the modal events (confirm, back, ...)
@@ -715,6 +686,43 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+});
+
+publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    disabledInEditableMode: false,
+    events: {
+        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyShopLayoutChange: function (ev) {
+        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        if (!this.editableMode) {
+            this._rpc({
+                route: '/shop/save_shop_layout_mode',
+                params: {
+                    'layout_mode': switchToList ? 'list' : 'grid',
+                },
+            });
+        }
+        var $grid = this.$('#products_grid');
+        // Disable transition on all list elements, then switch to the new
+        // layout then reenable all transitions after having forced a redraw
+        // TODO should probably be improved to allow disabling transitions
+        // altogether with a class/option.
+        $grid.find('*').css('transition', 'none');
+        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        void $grid[0].offsetWidth;
+        $grid.find('*').css('transition', '');
     },
 });
 
