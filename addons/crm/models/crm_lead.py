@@ -323,8 +323,6 @@ class Lead(models.Model):
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
         # stage change with new stage: update probability and date_closed
-        if vals.get('stage_id') and 'probability' not in vals:
-            vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
         elif 'probability' in vals:
