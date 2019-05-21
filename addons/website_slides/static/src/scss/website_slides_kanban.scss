@@ -1,0 +1,127 @@
+.o_elearning_kanban.o_kanban_ungrouped {
+    .o_kanban_record {
+        width: 525px;
+        height: 275px;
+    }
+    .o_tag {
+        box-shadow: none;
+    }
+    .dropdown-menu {
+        .dropdown-item {
+            a {
+                color: #495057;
+            }
+        }
+    }
+    .o_kanban_card_footer {
+        margin-top: 10px;
+        display: flex;
+    }
+}
+
+.o_elearning_kanban .o_kanban_group:not(.o_column_folded) {
+    width: 525px;
+    margin-right: 16px;
+}
+
+.o_elearning_kanban.o_kanban_grouped {
+    .o_kanban_record {
+        width: 525px;
+        height: 275px;
+        margin-bottom: 10px;
+    }
+    .o_tag {
+        box-shadow: none;
+    }
+    .dropdown-menu {
+        .dropdown-item {
+            a {
+                color: #495057;
+            }
+        }
+    }
+    .o_kanban_card_footer {
+        margin-top: 10px;
+        display: flex;
+    }
+}
+
+.o_kanban_view.o_kanban_dashboard .o_kanban_record .o_kanban_card_manage_pane > .o_kanban_card_manage_section {
+    border-bottom: none;
+    margin-bottom: 10px;
+}
+
+.o_kanban_stat_link {
+    background-color: white;
+    &:hover {
+        background-color: #dddddd;
+    }
+}
+
+.o_kanban_info {
+    font-size: 1.8em;
+    color: rgb(100,100,100);
+    margin-top: 15px;
+    span {
+        margin: auto;
+    }
+}
+
+.o_kanban_info_divider {
+    border-right:1px solid #646464; 
+    height:80px;
+}
+
+
+.o_kanban_field_center {
+    text-align: center;
+    margin: auto;
+    cursor: pointer;
+}
+
+.o_kanban_attendees {
+    .o_kanban_record_has_image_fill {
+        display: flex;
+        .image_course {
+            margin: auto;
+            display: flex;
+            img {
+                display: block;
+                max-height: 64px;
+                max-width: 64px;
+                height: auto;
+                width: auto;
+            }
+        }
+        
+    }
+    .oe_kanban_details {
+        float: right;
+        .o_tag {
+            box-shadow: none;
+        }
+    }
+
+    strong {
+        margin: 8px;
+        padding: 0px;
+    }
+    
+    ul {
+        list-style-type: none;
+        margin: 10px;
+        padding: 0px;
+    }
+
+    a{
+        color: #495057;
+
+    }
+}
+
+.o_dropdown_elearning {
+    left: auto !important;
+    right: 0px !important;
+    transform: none !important;
+    top: unset !important;
+}

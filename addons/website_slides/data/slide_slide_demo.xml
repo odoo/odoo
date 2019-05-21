@@ -430,4 +430,53 @@
     <!-- CHANNEL 6: DIY Furniture -->
     <!-- ======================================= -->
 
+    <!-- CHANNEL 7: Free Quizzes -->
+    <!-- ======================================= -->
+    <record id="slide_slide_demo_7_0" model="slide.slide">
+        <field name="name">Geo-Quiz</field>
+        <field name="sequence">1</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_question_mark.jpg"/>
+        <field name="slide_type">quiz</field>       
+        <field name="channel_id" ref="website_slides.slide_channel_demo_quiz"/>
+        <field name="website_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="public_views">0</field>
+        <field name="completion_time">0.5</field>
+        <field name="description">Test your knowledge about geography !</field>
+    </record>
+
+    <record id="slide_slide_demo_7_0_question_0" model="slide.question">
+        <field name="question">What is the capital of Belgium ?</field>
+        <field name="slide_id" ref="slide_slide_demo_7_0"/>
+    </record>
+    <record id="slide_slide_demo_7_0_question_0_0" model="slide.answer">
+        <field name="text_value">Brussels</field>
+        <field name="is_correct" eval="True"/>
+        <field name="question_id" ref="slide_slide_demo_7_0_question_0"/>
+    </record>
+    <record id="slide_slide_demo_7_0_question_0_1" model="slide.answer">
+        <field name="text_value">Paris</field>
+        <field name="is_correct" eval="False"/>
+        <field name="question_id" ref="slide_slide_demo_7_0_question_0"/>
+    </record>
+
+    <record id="slide_slide_demo_7_0_question_1" model="slide.question">
+        <field name="question">What is the capital of Spain ?</field>
+        <field name="slide_id" ref="slide_slide_demo_7_0"/>
+    </record>
+    <record id="slide_slide_demo_7_0_question_1_0" model="slide.answer">
+        <field name="text_value">Lisbon</field>
+        <field name="is_correct" eval="False"/>
+        <field name="question_id" ref="slide_slide_demo_7_0_question_1"/>
+    </record>
+    <record id="slide_slide_demo_7_0_question_1_1" model="slide.answer">
+        <field name="text_value">Barcelona</field>
+        <field name="is_correct" eval="False"/>
+        <field name="question_id" ref="slide_slide_demo_7_0_question_1"/>
+    </record>
+    <record id="slide_slide_demo_7_0_question_1_2" model="slide.answer">
+        <field name="text_value">Madrid</field>
+        <field name="is_correct" eval="True"/>
+        <field name="question_id" ref="slide_slide_demo_7_0_question_1"/>
+    </record>
 </data></odoo>

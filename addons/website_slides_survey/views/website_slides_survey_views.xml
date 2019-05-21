@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="elearning_survey_view" model="ir.ui.view">
+            <field name="name">website.slides.survey.survey.user_input</field>
+            <field name="model">survey.user_input</field>
+            <field name="arch" type="xml">
+                <tree string="Certificates" create="false" edit="false">
+                    <field name="survey_id" string="Certificate"/>
+                    <field name="partner_id" string="Attendee"/>
+                    <field name="state"/>
+                    <field name="quizz_score"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="elearning_report_certificates_view" model="ir.ui.view">
+            <field name="name">website.slides.survey.report.certificate</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <tree string="Certificates" create="false" edit="false">
+                    <field name="survey_id" string="Certificate"/>
+                    <field name="channel_id" string="Course"/>
+                    <field name="nbr_trials" string="# Trials"/>
+                    <field name="nbr_success" string='# Success'/>
+                    <field name="avg_score" string='Avg Score'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="elearning_certificates_action" model="ir.actions.act_window">
+            <field name="name">Certificates</field>
+            <field name="res_model">survey.user_input</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="elearning_survey_view"/>
+            <field name="domain">[('slide_id.slide_type','=','certification')]</field>
+        </record>
+
+        <menuitem name="Certificates"
+        id="elearning_menu_certificates_action"
+        parent="website_slides.elearning_menu_people"
+        sequence="20"
+        action="elearning_certificates_action"/>
+
+        <record id="elearning_certif_action" model="ir.actions.act_window">
+            <field name="name">Certifications</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('slide_type','=','certification')]</field>
+            <field name="context">{'search_default_channel': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new certification
+                </p>
+            </field>
+            <field name="view_id" ref="website_slides.view_slide_slide_tree"/>
+        </record>
+
+        <menuitem name="Certifications"
+        id="elearning_menu_certif_action"
+        parent="website_slides.elearning_menu_courses"
+        sequence="30"
+        action="elearning_certif_action"/>
+
+        <record id="elearning_report_certif_action" model="ir.actions.act_window">
+            <field name="name">Certificates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="elearning_report_certificates_view"/>
+            <field name="domain">[('slide_type','=','certification')]</field>
+        </record>
+
+        <menuitem name="Certifications"
+        id="elearning_menu_report_certif_action"
+        parent="website_slides.elearning_menu_report"
+        sequence="40"
+        action="elearning_report_certif_action"/>
+    </data>
+</odoo>

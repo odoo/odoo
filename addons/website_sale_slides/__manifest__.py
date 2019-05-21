@@ -17,5 +17,6 @@
     ],
     'demo': [
         'data/website_sale_slides_demo.xml',
+        'data/website_sale_slides_report_demo.xml',
     ],
 }

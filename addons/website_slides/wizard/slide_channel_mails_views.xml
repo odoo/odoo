@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="elearning_course_mail_view_form" model="ir.ui.view">
+            <field name="name">elearning.mails.form</field>
+            <field name="model">elearning.mails</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email">
+                    <group col="1">
+                        <group col="2">
+                            <field name="channel_id"
+                                placeholder="Add a course"
+                                context="{'no_create_edit':True}"/>
+                            <field name="partner_ids"
+                                widget="many2many_tags_email"
+                                placeholder="Add existing contacts..."
+                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                        </group>
+                        <group col="2">
+                            <field name="subject" placeholder="Subject..."/>
+                        </group>
+                        <field name="body" options="{'style-inline': true}"/>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="template_id" label="Use template"/>
+                            </group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Send" name="action_send" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="elearning_mails_action" model="ir.actions.act_window">
+            <field name="name">Mails</field>
+            <field name="res_model">elearning.mails</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

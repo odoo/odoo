@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="elearning_report_courses_action" model="ir.actions.act_window">
+            <field name="name">Courses</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.channel</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="website_slides.elearning_report_courses_view"/>
+        </record>
+
+        <record id="elearning_report_contents_action" model="ir.actions.act_window">
+            <field name="name">Contents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="website_slides.view_slide_slide_graph"/>
+        </record>
+
+        <record id="elearning_report_crea_action" model="ir.actions.act_window">
+            <field name="name">Content Creation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="website_slides.website_slides_report_crea_view"/>
+        </record>
+
+        <record id="elearning_report_quiz_action" model="ir.actions.act_window">
+            <field name="name">Quizzes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="website_slides.website_slides_report_quiz_view"/>
+            <field name="domain">[('slide_type','=','quiz')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face" style="margin-top:33%">
+                    There is no quiz
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

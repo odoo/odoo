@@ -164,6 +164,21 @@ will learn the basics of wood characteristics.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
     </record>
 
+    <record id="slide_channel_demo_quiz" model="slide.channel">
+        <field name="name">Free Quizzes</field>
+        <field name="enroll">public</field>
+        <field name="channel_type">training</field>
+        <field name="allow_comment" eval="True"/>
+        <field name="promote_strategy">most_voted</field>
+        <field name="website_published" eval="True"/>
+        <field name="tag_ids" eval="[(5, 0),
+                                (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                (4, ref('website_slides.slide_channel_tag_other_0'))]"/>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_quiz.jpg"/>
+        <field name="description">A great way to test yourserlf.</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=31)"/>
+    </record>
+
     <record id="slide_tag_demo_cheatsheet" model="slide.tag">
         <field name="name">CheatSheet</field>
     </record>

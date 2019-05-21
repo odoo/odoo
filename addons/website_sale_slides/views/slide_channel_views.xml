@@ -12,5 +12,43 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="slide_channel_report_view" model="ir.ui.view">
+            <field name="name">slide.channel.report.view.inherit</field>
+            <field name="model">slide.channel</field>
+            <field name="inherit_id" ref="website_slides.elearning_report_courses_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='total_votes']" position="after">
+                    <field name="total_revenues"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_slide_channel_report_view" model="ir.ui.view">
+            <field name="name">sale.order.slide.channel.report</field>
+            <field name="model">sale.report</field>
+            <field name="arch" type="xml">
+                <graph string="Revenues">
+                    <field name="confirmation_date" type="row" interval="month"/>
+                    <field name="price_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="website_slides_revenues_report_action" model="ir.actions.act_window">
+            <field name="name">Revenues</field>
+            <field name="res_model">sale.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[("product_id.is_course","=",True),("confirmation_date","!=",False)]</field>
+            <field name="context">{'group_by':['confirmation_date','product_id']}</field>
+            <field name="view_id" ref="sale_order_slide_channel_report_view"/>
+        </record>
+
+        <menuitem name="Revenues"
+        id="elearning_menu_report_revenue_action"
+        parent="website_slides.elearning_menu_report"
+        sequence="30"
+        action="website_slides_revenues_report_action"/>
     </data>
 </odoo>

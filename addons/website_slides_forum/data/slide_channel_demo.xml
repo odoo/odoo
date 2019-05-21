@@ -15,4 +15,33 @@
         <field name="forum_id" ref="website_slides_forum.forum_forum_demo_channel_2"/>
 	</record>
 
+    <record id="question_0_demo_channel_0" model="forum.post">
+        <field name="name">What is the best fertilizer for tulips ?</field>
+        <field name="forum_id" ref="forum_forum_demo_channel_0"/>
+        <field name="views">2</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="write_uid" ref="base.user_admin"/>
+        <field name="content"><![CDATA[<p></p>]]></field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=31)"/>
+    </record>
+    <record id="question_0_demo_channel_2" model="forum.post">
+        <field name="name">Heigth of my tree...</field>
+        <field name="forum_id" ref="forum_forum_demo_channel_2"/>
+        <field name="views">1</field>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="write_uid" ref="base.user_demo"/>
+        <field name="content">
+            <![CDATA[<p>I have an oak in my garden since 1997 and I was wondering about the growth of this type of tree ?
+            Is there a way to accelerate the process ?</p>]]>
+        </field>
+    </record>
+
+    <record id="answer_0_demo_channel_0" model="forum.post">
+        <field name="forum_id" ref="forum_forum_demo_channel_0"/>
+        <field name="content">
+            <![CDATA[<p>You can use loam for tulips.</p>]]>
+        </field>
+        <field name="parent_id" ref="question_0_demo_channel_0"/>
+    </record>
+
 </data></odoo>

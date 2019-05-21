@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="module_category_elearning" model="ir.module.category">
+            <field name="name">eLearning</field>
+        </record>
+        <record id="group_mail_attendees" model="res.groups">
+            <field name="name">Mail Attendees Group</field>
+            <field name="category_id" ref="website_slides.module_category_elearning"/>
+        </record>
+    </data>
+</odoo>
+        

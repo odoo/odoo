@@ -151,6 +151,19 @@
             </field>
         </record>
 
+        <record id="elearning_report_courses_view" model="ir.ui.view">
+            <field name="name">slide.channel.report</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <tree string="Courses" create="false" default_order="total_views desc">
+                    <field name="name"/>
+                    <field name="total_views"/>
+                    <field name="members_count"/>
+                    <field name="total_votes"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="slide_channel_view_tree" model="ir.ui.view">
             <field name="name">slide.channel.tree</field>
             <field name="model">slide.channel</field>
@@ -158,11 +171,173 @@
                 <tree string="Channel">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="channel_type"/>
+                    <field name="user_id"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
+                    <field name="completion"/>
                     <field name="enroll"/>
                     <field name="promote_strategy"/>
+                    <field name="visibility"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_reviews_report" model="ir.ui.view">
+            <field name="name">slide.channel.reviews.report</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <kanban string="Reviews" edit="false" quick_create="false" create="false" readonly="1">
+                    <field name="name" readonly="1"/>
+                    <templates>
+                        <t t-name="kanban-box" t-if="record.last_review_date.raw_value" readonly="1">
+                            <div class="o_kanban_details">
+                                <p><b><field name="last_review_date" readonly="1"/></b></p>
+                                <field name="last_review_body" widget="html" readonly="1"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="elearning_overview_view" model="ir.ui.view">
+            <field name="name">slide.channel.overview</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_elearning_kanban breadcrumb_item active" edit="false">
+                    <field name="name"/>
+                    <field name="channel_type"/>
+                    <field name="visibility"/>
+                    <field name="total_views"/>
+                    <field name="rating_avg"/>
+                    <field name="total_time"/>
+                    <field name="members_count"/>
+                    <field name="running"/>
+                    <field name="has_certificate"/>
+                    <field name="nbr_completed"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card justify-content-around">
+                                <div class="o_dropdown_kanban dropdown" tabindex="-1">
+                                    <a class="dropdown-toggle o-no-caret btn visible" data-toggle="dropdown" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v" aria-hidden="false"/>
+                                    </a>
+                                    <div class="o_kanban_card_manage_pane o_dropdown_elearning dropdown-menu" role="menu" aria-labelledby="dLabel" style="left:auto;right:0px;">
+                                        <div class="row" style="padding:unset;">
+                                            <div class="col-12 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <a type="edit">
+                                                    <div role="menuitem" class="dropdown-item">
+                                                        Edit Course
+                                                    </div>
+                                                </a>
+                                                <a name="action_open_contents" type="object">
+                                                    <div role="menuitem" class="dropdown-item">
+                                                        Contents
+                                                    </div>
+                                                </a>
+                                                <a type="delete">
+                                                    <div role="menuitem" class="dropdown-item">
+                                                        Delete
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="o_kanban_card_manage_section row">
+                                            <div role="menuitem" class="col-12">
+                                                <ul class="oe_kanban_colorpicker" data-field="color" role="menu" style="margin:auto;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title mb16">
+                                        <div class="o_kanban_card_header_title">
+                                            <a name="action_open_edit_form" type="object">
+                                                <span><t t-esc="record.name.value"/></span>
+                                            </a>
+                                        </div>
+                                        <div t-if="record.tag_ids">
+                                            <field name="tag_ids" widget="many2many_tags"/>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <t t-esc="record.channel_type.value"/> - <t t-esc="record.visibility.value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left o_kanban_button_lesson">
+                                            <button class="btn btn-primary" name="action_new_lesson" type="object">New Lesson</button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span><label for="total_views">Views</label></span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="total_views"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span><label for="rating"><a name="action_open_rating" type="object">Rating</a></label></span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <t t-set="rating" t-value="record.rating_avg.value / 2"/>
+                                                    <t t-esc="rating"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span><label for="total_time">Watch Time</label></span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="total_time" widget="float_time"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>        
+                                </div>
+                                <div class="container o_kanban_card_footer">
+                                    <div class="col-4 o_kanban_info_divider o_kanban_stat_link">
+                                        <a name="action_redirect_to_members" type="object">
+                                            <div class="row">
+                                                <label class="o_kanban_field_center" for="members_count">TOTAL ATTENDEES</label>
+                                            </div>
+                                            <div class="row o_kanban_info">
+                                                <field name="members_count"/>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-4 o_kanban_info_divider o_kanban_stat_link">
+                                        <a name="action_redirect_to_running_members" type="object">
+                                            <div class="row">
+                                                <label class="o_kanban_field_center" for="running">RUNNING</label>
+                                            </div>
+                                            <div class="row o_kanban_info">
+                                                <field name="running"/>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-4 o_kanban_stat_link">
+                                        <a name="action_redirect_to_finished_members" type="object">
+                                            <div class="row">
+                                                <label class="o_kanban_field_center" t-if="record.has_certificate.raw_value == true" for="nbr_completed">CERTIFIED</label>
+                                                <label class="o_kanban_field_center" t-else="" for="nbr_completed">FINISHED</label>
+                                            </div>
+                                            <div class="row o_kanban_info">
+                                                <field name="nbr_completed"/>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -177,14 +352,45 @@
             </field>
         </record>
 
+        <record id="elearning_overview_action" model="ir.actions.act_window">
+            <field name="name">eLearning Overview</field>
+            <field name="res_model">slide.channel</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_ids" eval="[(5,0,0),
+                (0,0, {'view_mode': 'kanban', 'view_id': ref('elearning_overview_view')}),
+                (0,0, {'view_mode': 'tree', 'view_id': ref('slide_channel_view_tree')}),
+                (0,0, {'view_mode': 'form', 'view_id': ref('website_slides.view_slide_channel_form')})]"/>
+            <field name="search_view_id" ref="website_slides.slide_channel_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a channel
+                </p>
+            </field>
+        </record>
+
         <record id="action_slide_channels" model="ir.actions.act_window">
             <field name="name">Channels</field>
             <field name="res_model">slide.channel</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="website_slides.slide_channel_view_search"/>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_view_nocontent_smiling_face" style="margin-top:33%">
                     Create a channel
+                </p>
+            </field>
+            <field name="view_id" ref="website_slides.slide_channel_view_tree"/>
+        </record>
+
+        <record id="elearning_report_reviews_action" model="ir.actions.act_window">
+            <field name="name">Reviews</field>
+            <field name="res_model">slide.channel</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="website_slides.slide_channel_reviews_report"/>
+            <field name="context">{'group_by':'name'}</field>
+            <field name="domain">[('website_message_ids.body','!=',False)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    There is no review
                 </p>
             </field>
         </record>

@@ -156,10 +156,60 @@ class Slide(models.Model):
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+    # report quiz
+    quiz_trials = fields.Integer(compute="_compute_quiz_trials")
+    quiz_passed = fields.Integer(compute="_compute_quiz_passed")
+    avg_karma = fields.Float(compute="_compute_avg_karma", digits=(6,2))
+    avg_attempts = fields.Float(compute="_compute_avg_attempts", digits=(6,2))
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    @api.depends('slide_partner_ids')
+    def _compute_quiz_trials(self):
+        for slide in self:
+            tot = 0
+            for user in slide.slide_partner_ids:
+                tot += user.quiz_attempts_count
+            slide.quiz_trials = tot
+    
+    @api.depends('slide_partner_ids')
+    def _compute_quiz_passed(self):
+        for slide in self:
+            for user in slide.slide_partner_ids:
+                if user.completed:
+                    slide.quiz_passed += 1
+
+    @api.depends('partner_ids')
+    def _compute_avg_karma(self):
+        for slide in self:
+            avg = 0
+            for user in slide.slide_partner_ids:
+                if user.completed:
+                    if user.quiz_attempts_count == 0:
+                        continue
+                    elif user.quiz_attempts_count == 1:
+                        avg += slide.quiz_first_attempt_reward
+                    elif user.quiz_attempts_count == 2:
+                        avg += slide.quiz_second_attempt_reward
+                    elif user.quiz_attempts_count == 3:
+                        avg += slide.quiz_third_attempt_reward
+                    else:
+                        avg += slide.quiz_fourth_attempt_reward
+            if len(slide.partner_ids) > 0:
+                avg /= len(slide.partner_ids)
+            slide.avg_karma = avg
+
+    @api.depends('partner_ids')
+    def _compute_avg_attempts(self):
+        for slide in self:
+            avg = 0
+            for user in slide.slide_partner_ids:
+                avg += user.quiz_attempts_count
+            if len(slide.partner_ids) > 0:
+                avg /= len(slide.partner_ids)
+            slide.avg_attempts = avg
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):

@@ -27,10 +27,14 @@ Featuring
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/res_config_settings_views_elearning.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
         'views/slide_channel_tag_views.xml',
+        'security/website_slides_groups_settings.xml',
+        'wizard/slide_channel_mails_views.xml',
+        'views/website_slides_reports.xml',
         'views/website_slides_menu_views.xml',
         'views/website_slides_templates_homepage.xml',
         'views/website_slides_templates_course.xml',
@@ -39,6 +43,7 @@ Featuring
         'views/website_slides_templates_lesson_embed.xml',
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
+        'views/slide_channel_rating_views.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/ir_data.xml',
         'data/gamification_data.xml',
@@ -47,6 +52,9 @@ Featuring
         'data/website_data.xml',
         'security/ir.model.access.csv',
         'security/website_slides_security.xml'
+    ],
+    'qweb': [
+        'static/src/xml/kanban_template.xml',
     ],
     'demo': [
         'data/slide_channel_tag_demo.xml',

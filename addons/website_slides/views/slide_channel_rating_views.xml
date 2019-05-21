@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="website_slides_channel_rating_view" model="ir.ui.view">
+            <field name="name">slide.channel.rating.view</field>
+            <field name="model">rating.rating</field>
+            <field name="inherit_id" ref="rating.rating_rating_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_kanban_image')]" position="replace">
+                    <div class="o_kanban_image" style="width: 75px;height: 75px;margin-right: 10px;">
+                        <img class="o_kanban_image_inner_pic" t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)" t-att-alt="record.partner_id"/>
+                        <t t-set="rating_stars" t-value="record.rating.value / 2"/>
+                        <t t-set="empty_stars" t-value="5 - rating_stars"/>
+                        <div class="o_website_rating_static">
+                            <t t-foreach="rating_stars" t-as="star">
+                                <i class="fa fa-star" role="img"></i>
+                            </t>
+                            <t t-foreach="empty_stars" t-as="star">
+                                <i class="fa fa-star text-black-25" role="img"></i>
+                            </t>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <strong><field name="partner_id"/></strong>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

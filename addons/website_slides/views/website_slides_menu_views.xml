@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <menuitem name="eLearning"
+        id="elearning_menu_root"
+        web_icon="website_slides,static/description/icon.png"
+        groups="website.group_website_designer"
+        action="elearning_overview_action"/>
+
+        <!-- top menu for the elearning app -->
+        <menuitem name="Courses"
+        id="elearning_menu_courses"
+        parent="elearning_menu_root"/>
+
+        <menuitem name="People"
+        id="elearning_menu_people"
+        parent="elearning_menu_root"/>
+
+        <menuitem name="Forum"
+        id="elearning_menu_forum"
+        parent="elearning_menu_root"/>
+
+        <menuitem name="Communication"
+        id="elearning_menu_communication"
+        parent="elearning_menu_root"/>
+
+        <menuitem name="Reporting"
+        id="elearning_menu_report"
+        parent="elearning_menu_root"/>
+
+        <menuitem name="Configuration"
+        id="elearning_menu_config"
+        parent="elearning_menu_root"/>
+
+        <!-- sub menu courses -->
+        <menuitem name="Contents"
+        id="elearning_menu_contents_action"
+        parent="elearning_menu_courses"
+        sequence="20"
+        action="action_slides_slides"/>
+
+        <!-- sub menu people -->
+        <menuitem name="Attendees"
+        id="elearning_menu_partners_action"
+        parent="elearning_menu_people"
+        sequence="10"
+        action="slide_channel_partner_action"/>
+
+        <!-- sub menu communication -->
+        <menuitem name="Mails"
+        id="elearning_menu_mails_action"
+        parent="elearning_menu_communication"
+        sequence="10"
+        action="elearning_mails_action"
+        groups="group_mail_attendees"/>
+
+        <!-- sub menu reporting -->
+        <menuitem name="Courses"
+        id="elearning_menu_report_courses_action"
+        parent="elearning_menu_report"
+        sequence="10"
+        action="elearning_report_courses_action"/>
+
+        <menuitem name="Contents"
+        id="elearning_menu_report_contents_action"
+        parent="elearning_menu_report"
+        sequence="20"
+        action="elearning_report_contents_action"/>
+ 
+        <menuitem name="Content Creation"
+        id="elearning_menu_report_crea_action"
+        parent="elearning_menu_report"
+        sequence="50"
+        action="elearning_report_crea_action"/>
+
+        <menuitem name="Reviews"
+        id="elearning_menu_report_reviews_action"
+        parent="elearning_menu_report"
+        sequence="60"
+        action="elearning_report_reviews_action"/>
+
+        <menuitem name="Quizzes"
+        id="elearning_menu_report_quiz_action"
+        parent="elearning_menu_report"
+        sequence="70"
+        action="elearning_report_quiz_action"/>
+
+
+        <!-- sub menu configuration -->
+        <menuitem name="Settings"
+        id="elearning_menu_settings_action"
+        parent="elearning_menu_config"
+        sequence="10"
+        action="elearning_settings_action"/>
+
+        <menuitem name="Course Tags"
+        id="elearning_menu_course_tags_action"
+        parent="elearning_menu_config"
+        sequence="20"
+        action="website_slides.slide_channel_tag_action"/>
+
+        <record id="elearning_channel_filters_action" model="ir.actions.act_window">
+            <field name="name">Course Filters</field>
+            <field name="res_model">ir.filters</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('model_id','=','slide.channel')]</field>
+            <field name="context">{'search_default_my_filters': 1, 'search_default_model_id':'slide.channel', 'default_model_id':'slide.channel', 'default_user_id':uid}</field>
+        </record>
+
+        <menuitem name="Course Filters"
+        id="elearning_menu_filters_action"
+        parent="elearning_menu_config"
+        sequence="30"
+        action="elearning_channel_filters_action"/>
+
+        <menuitem name="Content Tags"
+        id="elearning_menu_content_tags_action"
+        parent="elearning_menu_config"
+        sequence="40"
+        action="website_slides.action_slide_tag"/>
+
         <menuitem name="Slides"
             id="menu_website_slides_root"
             sequence="32"

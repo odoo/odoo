@@ -15,12 +15,25 @@ class ChannelUsersRelation(models.Model):
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
 
-    channel_id = fields.Many2one('slide.channel', index=True, required=True)
+    channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete="cascade")
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     # Todo master: rename this field to avoid confusion between completion (%) and completed count (#)
     completion = fields.Integer('# Completed Slides', compute='_compute_completion', store=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     partner_email = fields.Char(related='partner_id.email', readonly=True)
+
+    partner_image_small = fields.Binary(related='partner_id.image_small', readonly=True)
+    user_id = fields.Many2one('res.users', compute="_compute_user_id")
+
+    description = fields.Text(related="channel_id.description", readonly=True)
+    tag_ids = fields.Many2many(related="channel_id.tag_ids", readonly=True)
+
+    @api.depends('partner_id')
+    def _compute_user_id(self):
+        for rec in self:
+            rec.user_id = -1
+            for user in rec.partner_id.user_ids:
+                rec.user_id = user
 
     @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'partner_id')
     def _compute_completion(self):
@@ -169,6 +182,41 @@ class Channel(models.Model):
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')
+    last_review_body = fields.Html(compute="_compute_last_review")
+    last_review_date = fields.Datetime(compute="_compute_last_review")
+    # overview
+    has_certificate = fields.Boolean(compute="_compute_has_certificate", default=False)
+    nbr_completed = fields.Integer(compute="_compute_nbr_completed", default=0)
+    running = fields.Integer(compute="_compute_running")
+    color = fields.Integer('Color Index', default=0)
+
+    @api.depends('channel_partner_ids')
+    def _compute_nbr_completed(self):
+        for record in self:
+            for partner in record.channel_partner_ids:
+                if partner.completed:
+                    record.nbr_completed += 1
+
+    @api.depends('slide_ids')
+    def _compute_has_certificate(self):
+        for record in self:
+            for slide in record.slide_ids:
+                if slide.slide_type == 'certification':
+                    record.has_certificate = True
+                    break
+
+    @api.depends('members_count', 'nbr_completed')
+    def _compute_running(self):
+        for record in self:
+            record.running = record.members_count - record.nbr_completed
+
+    @api.depends('message_ids')
+    def _compute_last_review(self):
+        for record in self:
+            last_review = record.message_ids[0]
+            if last_review.message_type == 'comment':
+                record.last_review_body = last_review.body
+                record.last_review_date = last_review.date
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -360,14 +408,30 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     @api.multi
-    def action_redirect_to_members(self):
+    def action_redirect_to_members(self, type='all'):
         action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['display_name'] = 'Attendees of ' + self.name
         action['view_mode'] = 'tree'
-        action['domain'] = [('channel_id', 'in', self.ids)]
+        if type == 'all':
+            action['domain'] = [('channel_id', 'in', self.ids)]
+        elif type == 'running':
+            action['display_name'] = 'Running attendees of ' + self.name
+            action['domain'] = ['&',('channel_id', 'in', self.ids),('completed', '=', False)]
+        elif type == 'finished':
+            action['display_name'] = 'Attendees of ' + self.name + ' - ' + (self.has_certificate and 'Certified' or 'Finished')
+            action['domain'] = ['&',('channel_id', 'in', self.ids),('completed', '=', True)]
         if len(self) == 1:
             action['context'] = {'default_channel_id': self.id}
 
         return action
+
+    @api.multi
+    def action_redirect_to_running_members(self):
+        return self.action_redirect_to_members('running')
+
+    @api.multi
+    def action_redirect_to_finished_members(self):
+        return self.action_redirect_to_members('finished')
 
     @api.multi
     def action_channel_invite(self):
@@ -468,6 +532,49 @@ class Channel(models.Model):
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+
+    def action_open_edit_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel',
+            'res_id': self.id,
+        }
+
+    def action_open_contents(self):
+        return {
+            'name': 'Contents of ' + self.name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'res_model': 'slide.slide',
+            'views': [
+                (self.env.ref('website_slides.view_slide_slide_tree').id,'tree'),
+                (self.env.ref('website_slides.view_slide_slide_form').id,'form')],
+            'domain': [('channel_id',"=",self.id)]
+        }
+
+    def action_new_lesson(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.slide',
+            'context': {'default_channel_id':self.id}
+        }
+
+    @api.multi
+    def action_open_rating(self):
+        return {
+            'name': 'Rating of ' + self.name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'kanban',
+            'res_model': 'rating.rating',
+            'view_id': self.env.ref('website_slides.website_slides_channel_rating_view').id,
+            'domain': [('res_name','=',self.name)],
+            'help': '<p class="o_view_nocontent_smiling_face">There is no rating for this course.</p>'
+        }
 
     # ---------------------------------------------------------
     # Rating Mixin API

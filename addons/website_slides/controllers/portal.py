@@ -12,6 +12,9 @@ class SlidesPortalChatter(PortalChatter):
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
         if res_model == 'slide.channel':
+            rating = request.env['rating.rating'].search([('res_model','=',res_model),('res_id','=',res_id)], limit=1)
+            rating.feedback = message
+            rating.partner_id = request.env.user.partner_id.id
             rating_value = kw.get('rating_value', False)
             slide_channel = request.env[res_model].sudo().browse(int(res_id))
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kw.get('pid')):

@@ -16,7 +16,7 @@
             <field name="name">slide.tag.tree</field>
             <field name="model">slide.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tags">
+                <tree string="Tags" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
@@ -203,7 +203,33 @@
                 <graph string="Graph of Slides">
                     <field name="date_published" interval="month" type="col"/>
                     <field name="channel_id" type="row"/>
+                    <field name="total_views" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="website_slides_report_crea_view" model="ir.ui.view">
+            <field name="name">slide.slide.crea.graph</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <graph string="Graph of Content Creation">
+                    <field name="create_date" interval="month" type="col"/>
+                    <field name="channel_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="website_slides_report_quiz_view" model="ir.ui.view">
+            <field name="name">slide.slide.quiz.report</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <tree string="Quizzes" create="false">
+                    <field name="name"/>
+                    <field name="quiz_trials" string="# Quiz Trials"/>
+                    <field name="quiz_passed" string="# Quiz Passed"/>
+                    <field name="avg_karma" string="Avg Karma"/>
+                    <field name="avg_attempts" string="Avg Attempts"/>
+                </tree>
             </field>
         </record>
 
@@ -213,10 +239,11 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{'search_default_channel': 1}</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_view_nocontent_smiling_face" style="margin-top:33%">
                     Add a new slide
                 </p>
             </field>
+            <field name="view_id" ref="website_slides.view_slide_slide_tree"/>
         </record>
     </data>
 </odoo>

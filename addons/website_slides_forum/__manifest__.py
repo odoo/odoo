@@ -15,7 +15,8 @@
         'views/slide_channel_views.xml',
         'views/website_slides_templates.xml',
         'views/assets.xml',
-        'views/website_slides_forum_templates.xml'
+        'views/website_slides_forum_templates.xml',
+        'views/website_slides_forum_views.xml',
     ],
     'demo': [
         'data/slide_channel_demo.xml',
