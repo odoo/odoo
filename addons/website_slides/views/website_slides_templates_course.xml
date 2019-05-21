@@ -112,7 +112,7 @@
                         <!-- ==== Header Left ==== -->
                         <div class="col-12 col-md-4 col-lg-3">
                             <div class="d-flex align-items-start justify-content-around h-100">
-                                <div class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0" t-attf-style="background-image:url(/web/image/slide.channel/#{channel.id}/image)" t-ignore="True"/>
+                                <span t-field="channel.image" t-options="{'widget': 'image', 'class': 'o_wslides_course_pict'}"/>
                             </div>
                         </div>
 
