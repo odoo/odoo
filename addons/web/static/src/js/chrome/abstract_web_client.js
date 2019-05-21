@@ -133,8 +133,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         // Update the user context with this configuration
         session.user_context.allowed_company_ids = stateCompanyIDS;
         $.bbq.pushState(state);
-        // Update favicon
-        $("link[type='image/x-icon']").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
 
         return session.is_bound
             .then(function () {

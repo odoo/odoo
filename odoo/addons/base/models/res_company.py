@@ -38,29 +38,6 @@ class Company(models.Model):
         currency_id = self.env['res.users'].browse(self._uid).company_id.currency_id
         return currency_id or self._get_euro()
 
-    def _get_default_favicon(self, original=False):
-        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
-        with tools.file_open(img_path, 'rb') as f:
-            if original:
-                return base64.b64encode(f.read())
-            # Modify the source image to change the color of the 'O'.
-            # This could seem overkill to modify the pixels 1 by 1, but
-            # Pillow doesn't provide an easy way to do it, and this 
-            # is acceptable for a 16x16 image.
-            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
-            original = Image.open(f)
-            new_image = Image.new('RGBA', original.size)
-            for y in range(original.size[1]):
-                for x in range(original.size[0]):
-                    pixel = original.getpixel((x, y))
-                    if pixel[0] == 0 and pixel[1] == 0 and pixel[2] == 0:
-                        new_image.putpixel((x, y), (0, 0, 0, 0))
-                    else:
-                        new_image.putpixel((x, y), (color[0], color[1], color[2], pixel[3]))
-            stream = io.BytesIO()
-            new_image.save(stream, format="ICO")
-            return base64.b64encode(stream.getvalue())
-
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
@@ -91,7 +68,6 @@ class Company(models.Model):
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     base_onboarding_company_state = fields.Selection([
         ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
-    favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
 
 
     _sql_constraints = [
@@ -209,8 +185,6 @@ class Company(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('favicon'):
-            vals['favicon'] = self._get_default_favicon()
         if not vals.get('name') or vals.get('partner_id'):
             self.clear_caches()
             return super(Company, self).create(vals)
