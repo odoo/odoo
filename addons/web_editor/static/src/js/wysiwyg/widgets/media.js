@@ -429,9 +429,10 @@ var FileWidget = SearchableMediaWidget.extend({
         this._highlightSelected();
 
         // adapt load more
+        var noLoadMoreButton = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY >= this.attachments.length;
         var noMoreImgToLoad = this.numberOfAttachmentsToDisplay >= this.attachments.length;
+        this.$('.o_load_done_msg').toggleClass('d-none', noLoadMoreButton || !noMoreImgToLoad);
         this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
-        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
     },
     /**
      * @private
@@ -683,7 +684,11 @@ var FileWidget = SearchableMediaWidget.extend({
                 }).then(function (prevented) {
                     if (_.isEmpty(prevented)) {
                         self.attachments = _.without(self.attachments, attachment);
-                        $a.closest('.o_existing_attachment_cell').remove();
+                        if (!self.attachments.length) {
+                            self._renderImages(); //render the message and image if empty
+                        } else {
+                            $a.closest('.o_existing_attachment_cell').remove();
+                        }
                         return;
                     }
                     self.$errorText.replaceWith(QWeb.render('wysiwyg.widgets.image.existing.error', {
