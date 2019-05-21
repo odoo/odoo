@@ -1,39 +1,41 @@
+.o_document_layout_company {
+    img {
+        max-height: 100px;
+    }
+    .o_document_layout_colors {
+        vertical-align: middle;
+        display: flex;
+        .btn-link {
+            font-size: 18px;
+            padding-top: 0;
+        }
+    }
+    .o_document_layout_colors .o_field_widget {
+        width: 30px;
+        margin-right: 5px;
+    }
+}
+
 .o_document_layout_preview {
     border: 1px solid;
     border-color: lightgray;
     padding: 15px;
 }
+
 .o_document_layout_preview_logo img {
     padding-left: 5px;
     max-height: 45px;
 }
 
-.o_document_layout_layout {
+
+.o_preview_header, .o_preview_footer {
+    .header_top {
+        text-align: right;
+    }
     display: flex;
-    .o_document_layout_config {
-        &:first-child {
-            margin-right: 10px;
-        }
-        .o_field_widget {
-            display: inline;
-        }
-
-        img {
-            box-shadow: 0 2px 6px gray;
-        }
-        button {
-            text-align: left;
-            padding: 5px 0;
-        }
-    }
-}
-
-.o_document_layout_colors {
-    .o_field_widget {
-        display: inline;
-    }
-    .btn-link {
-        display: block;
+    * {
+        flex: 1;
+        padding: 0 5px 0 5px;
     }
 }
 
@@ -41,6 +43,9 @@
     .header {
         * {
             padding: 5px;
+        }
+        strong {
+            padding: 0;
         }
         h2 {
             padding-top: 50px;
@@ -50,6 +55,9 @@
         margin-bottom: 10px;
         * {
             padding: 5px;
+        }
+        strong {
+            padding: 0;
         }
     }
     .footer {

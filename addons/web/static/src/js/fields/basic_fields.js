@@ -3026,19 +3026,6 @@ var FieldColor = AbstractField.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-    * @private
-    * @override
-    */
-    init: function (parent) {
-        this._super.apply(this, arguments);
-        this.defaultColor = '#000000'
-    },
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -3047,7 +3034,8 @@ var FieldColor = AbstractField.extend({
     * @override
     */
     _render: function () {
-        this.$('.o_field_color').css('background-color', this.value || this.defaultColor);
+        this._super.apply(this, arguments);
+        this.$('.o_field_color').css('background-color', this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -3059,8 +3047,7 @@ var FieldColor = AbstractField.extend({
     * @param {Event} ev
     */
     _onColorClick: function (ev) {
-        ev.stopPropagation();
-        this.colorpicker = new ColorpickerDialog(this, {defaultColor: this.value || this.defaultColor}).open();
+        this.colorpicker = new ColorpickerDialog(this, {defaultColor: this.value}).open();
     },
     /**
     * @private

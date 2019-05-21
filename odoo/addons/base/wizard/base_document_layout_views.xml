@@ -8,41 +8,41 @@
                 <form class="o_document_layout">
                     <group>
                         <group class="o_document_layout_company">
-                            <label for="external_report_layout_id" string="Layout" />
-                            <div class="o_document_layout_layout">
-                                <div class="o_document_layout_config">
-                                    <field name="external_report_layout_id" invisible="1" />
-                                    <field name="report_layout_id" widget="radio" />
-                                </div>
-                                <div class="o_document_layout_config">
-                                    <field name="logo" widget="image" />
-                                    <button name="detect_colors" string="Identify dominant colors" type="object" class="btn btn-link" icon="fa-arrow-right"
-                                        attrs="{'invisible': [('logo', '=', False)]}" noclose="1"/>
-                                </div>
-                            </div>
+                            <field name="external_report_layout_id" invisible="1" />
+                            <field name="report_layout_id" widget="radio" string="Layout" />
+                            <field name="logo" widget="image" />
                             <label for="primary_color" string="Colors" />
                             <div class="o_document_layout_colors">
-                                <field name="custom_primary" invisible="1"/>
-                                <field name="custom_secondary" invisible="1"/>
-                                <field name="primary_color" widget="color" context="{'user_selected': True}" />
-                                <field name="secondary_color" widget="color" context="{'user_selected': True}" />
-                                <button name="reset_colors" string="Reset to default" type="object" class="btn btn-link" icon="fa-arrow-right" noclose="1"/>
+                                <field name="custom_colors" invisible="1"/>
+                                <field name="primary_color" widget="color" title="Change primary color" />
+                                <field name="secondary_color" widget="color" title="Change secondary color" />
+                                <button name="reset_colors" type="object" class="btn-link" title="Reset default colors"
+                                    aria-label="Reset colors" noclose="1" attrs="{'invisible': [('custom_colors', '=', False)]}">
+                                    <i class="fa fa-refresh"></i>
+                                </button>
                             </div>
                             <field name="font" widget="selection" />
                             <field name="report_header" string="Tagline" widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
-                            <field name="paperformat_id" widget="selection" />
+                            <field name="paperformat_id" />
                         </group>
                         <group>
                             <div class="o_document_layout_preview">
-                                <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
+                                <field name="header_in_footer" invisible="1" />
+                                <div class="o_preview_header">
+                                    <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
+                                    <field name="preview_header" class="header_top" attrs="{'invisible': [('header_in_footer', '=', True)]}" />
+                                </div>
                                 <field name="preview" widget="html" class="o_document_layout_preview_html" />
+                                <div class="o_preview_footer">
+                                    <field name="preview_footer" />
+                                    <field name="preview_header" attrs="{'invisible': [('header_in_footer', '=', False)]}" />
+                                </div>
                             </div>
                         </group>
                     </group>
                     <footer>
-                        <button special="save" string="Save" class="btn btn-primary" type="object" />
-                        <button name="download_preview" string="Preview" action="ir_action_report" invisible="1" />
+                        <button special="save" string="Save" class="btn-primary" type="object" />
                         <button special="cancel" string="Cancel" />
                     </footer>
                 </form>

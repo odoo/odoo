@@ -57,22 +57,24 @@ class BaseDocumentLayout(models.TransientModel):
     company_id = fields.Many2one('res.company', required=True)
 
     logo = fields.Binary(related='company_id.logo', readonly=False)
-    preview_logo = fields.Binary(related='logo', readonly=False, string="Preview logo")
+    preview_logo = fields.Binary(related='logo', string="Preview logo")
     report_header = fields.Text(related='company_id.report_header', readonly=False)
     report_footer = fields.Text(related='company_id.report_footer', readonly=False)
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
-    external_report_layout_id = fields.Many2one(
-        related='company_id.external_report_layout_id', readonly=False)
+    external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', readonly=False)
 
     font = fields.Selection(related='company_id.font', readonly=False)
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
-    custom_primary = fields.Boolean(compute="_compute_custom_colors", default=False)
-    custom_secondary = fields.Boolean(compute="_compute_custom_colors", default=False)
+    custom_colors = fields.Boolean(compute="_compute_custom_colors")
 
     report_layout_id = fields.Many2one('report.layout', compute="_compute_report_layout_id", readonly=False)
     preview = fields.Html(compute='_compute_preview')
+    preview_header = fields.Text(compute="_compute_header")
+    preview_footer = fields.Text(compute="_compute_footer")
+
+    header_in_footer = fields.Boolean(compute="_compute_header_in_footer")
 
     @api.depends('company_id')
     def _compute_report_layout_id(self):
@@ -81,11 +83,15 @@ class BaseDocumentLayout(models.TransientModel):
                 ('view_id.key', '=', wizard.company_id.external_report_layout_id.key)
             ])
 
+    @api.depends('report_layout_id')
+    def _compute_header_in_footer(self):
+        for wizard in self:
+            wizard.header_in_footer = (wizard.report_layout_id.name == 'Clean')
+
     @api.depends('primary_color', 'secondary_color')
     def _compute_custom_colors(self):
         for wizard in self:
-            wizard.custom_primary = wizard.primary_color != wizard.report_layout_id.primary_color
-            wizard.custom_secondary = wizard.secondary_color != wizard.report_layout_id.secondary_color
+            wizard.custom_colors = wizard.primary_color != wizard.report_layout_id.primary_color or wizard.secondary_color != wizard.report_layout_id.secondary_color
 
     @api.depends('logo', 'font')
     def _compute_preview(self):
@@ -95,6 +101,20 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.preview = ir_qweb.render('web.layout_preview', {
                 'company': wizard,
             })
+    
+    @api.depends('report_header')
+    def _compute_header(self):
+        for wizard in self:
+            header = wizard.report_header
+            lines = [header[i:i+30] for i in range(0, len(header), 30)]
+            wizard.preview_header = '\n'.join(lines[:2])
+
+    @api.depends('report_footer')
+    def _compute_footer(self):
+        for wizard in self:
+            footer = wizard.report_footer
+            lines = [footer[i:i+30] for i in range(0, len(footer), 30)]
+            wizard.preview_footer = '\n'.join(lines[:3])
 
     @api.onchange('primary_color', 'secondary_color')
     def onchange_colors(self):
@@ -104,28 +124,18 @@ class BaseDocumentLayout(models.TransientModel):
     @api.onchange('report_layout_id')
     def onchange_report_layout_id(self):
         for wizard in self:
-            is_primary_default = not wizard.custom_primary
-            is_secondary_default = not wizard.custom_secondary
-
-            if is_primary_default:
+            if not wizard.custom_colors:
                 wizard.primary_color = wizard.report_layout_id.primary_color
-            if is_secondary_default:
                 wizard.secondary_color = wizard.report_layout_id.secondary_color
             wizard.external_report_layout_id = wizard.report_layout_id.view_id
             wizard._compute_preview()
 
-    @api.multi
-    def reset_colors(self):
-        """ set the colors to the current layout default colors """
-        for wizard in self:
-            wizard.primary_color = wizard.report_layout_id.primary_color
-            wizard.secondary_color = wizard.report_layout_id.secondary_color
-
-    @api.multi
-    def detect_colors(self):
+    @api.onchange('logo')
+    def onchange_logo(self):
         """ Identify dominant colors of the logo """
         for wizard in self:
-            margin = 80
+            margin = 50
+            white_threshold = 245
 
             # Compute image
             image = tools.base64_to_image(wizard.logo).resize((40, 40))
@@ -136,21 +146,20 @@ class BaseDocumentLayout(models.TransientModel):
             w, h = image.size
             colors = []
             for color in converted.getcolors(w * h):
-                if not(transparent and color[1][0] > 240 and color[1][1] > 240 and color[1][2] > 240) and color[1][3] > 0:
+                if not(transparent and color[1][0] > white_threshold and
+                       color[1][1] > white_threshold and color[1][2] > white_threshold) and color[1][3] > 0:
                     colors.append(color)
 
             primary, remaining = average_dominant_color(colors, margin)
-            secondary = average_dominant_color(remaining, margin)[0] if len(remaining) > 0 else primary
+            secondary = average_dominant_color(remaining, margin)[
+                0] if len(remaining) > 0 else primary
 
             wizard.primary_color = rgb_to_hex(primary)
             wizard.secondary_color = rgb_to_hex(secondary)
 
     @api.multi
-    def download_preview(self):
-        # TODO download preview
+    def reset_colors(self):
+        """ set the colors to the current layout default colors """
         for wizard in self:
-            pass
-            # ReportController = next(x for x in http.controllers_per_module.get(
-            #     'web') if x[0] == 'odoo.addons.web.controllers.main.ReportController')[1]
-            # ReportController.report_download(
-            #     ["/report/pdf/account.report_invoice_with_payments/3", "qweb-pdf"])
+            wizard.primary_color = wizard.report_layout_id.primary_color
+            wizard.secondary_color = wizard.report_layout_id.secondary_color

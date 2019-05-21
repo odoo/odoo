@@ -426,6 +426,7 @@
         <t t-if="company.report_layout_id.name == 'Clean'"><t t-set="table_border_color" t-value="company.secondary_color" /></t>
 
         <div t-attf-class="page o_preview_{{company.report_layout_id.name}}_layout" t-attf-style="font-family: {{company.font}};">
+            <!-- <img class="o_document_layout_preview_logo" t-attf-src="data:image/svg+xml;base64, {{company.logo}}" alt="logo" /> -->
             <div class="header" style="border-top: 1px solid;">
                 <h2 t-attf-style="color: {{company.primary_color}}">Invoice INV/2019/0005</h2>
                 <div class="row o_layout_information">
@@ -437,7 +438,7 @@
                     </div>
                     <div class="col-auto">
                         <strong>
-                            <span t-attf-style="color: {{company.secondary_color}}">Payment Terms</span>
+                            <span t-attf-style="color: {{company.secondary_color}}">Payment Terms:</span>
                         </strong>
                         <p>End of the month</p>
                     </div>
