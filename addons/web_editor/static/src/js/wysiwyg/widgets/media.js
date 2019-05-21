@@ -821,6 +821,14 @@ var DocumentWidget = FileWidget.extend({
         this.$addUrlButton.text((isURL && isImage) ? _t("Add as image") : _t("Add document"));
         this.$urlWarning.toggleClass('d-none', !isURL || !isImage);
     },
+    /**
+     * @override
+     */
+    _getAttachmentsDomain: function (needle) {
+        var domain = this._super.apply(this, arguments);
+        // the assets should not be part of the documents
+        return domain.concat('!', utils.assetsDomain());
+    },
 });
 
 /**
