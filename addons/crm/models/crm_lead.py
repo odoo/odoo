@@ -855,23 +855,22 @@ class Lead(models.Model):
             :param customer : res.partner record
             :param team_id : identifier of the Sales Team to determine the stage
         """
-        if not team_id:
-            team_id = self.team_id.id if self.team_id else False
-        value = {
-            'planned_revenue': self.planned_revenue,
-            'probability': self.probability,
-            'name': self.name,
+        new_team_id = team_id if team_id else self.team_id.id
+        upd_values = {}
+        if customer:
+            upd_values.update(self._onchange_partner_id_values(customer and customer.id))
+        upd_values['email_from'] = upd_values['email_from'] if upd_values.get('email_from') else self.email_from
+        upd_values['phone'] = upd_values['phone'] if upd_values.get('phone') else self.phone
+        upd_values.update({
             'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
-            'email_from': customer and customer.email or self.email_from,
-            'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
-        }
+        })
         if not self.stage_id:
-            stage = self._stage_find(team_id=team_id)
-            value['stage_id'] = stage.id
-        return value
+            stage = self._stage_find(team_id=new_team_id)
+            upd_values['stage_id'] = stage.id
+        return upd_values
 
     def convert_opportunity(self, partner_id, user_ids=False, team_id=False):
         customer = False
