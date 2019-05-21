@@ -239,10 +239,11 @@
                                                     <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
                                                         t-att-rowspan="td_product['y'] != 1 and td_product['y']"
                                                         t-attf-class="oe_product #{td_product['class']}">
-                                                        <div t-attf-class="o_wsale_product_grid_filler o_wsale_product_grid_filler_#{td_product['x']}_#{td_product['y']}"/>
-                                                        <t t-call="website_sale.products_item">
-                                                            <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
-                                                        </t>
+                                                        <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                            <t t-call="website_sale.products_item">
+                                                                <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
+                                                            </t>
+                                                        </div>
                                                     </td>
                                                 </t>
                                                 <td t-else=""/>
