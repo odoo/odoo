@@ -1582,18 +1582,16 @@
                             </span>
                         </t>
                     </div>
-                    <t t-if="widget.toggle_company">
-                        <div class="ml-auto pl-3 pr-3 border border-top-0 border-right-0 border-bottom-0 toggle_company o_py">
-                            <span style="height: 2rem;">
-                                <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
-                                    <i class="fa fa-fw fa-check-square pt-2"></i>
-                                </t>
-                                <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
-                                    <i class="fa fa-fw fa-square-o pt-2"></i>
-                                </t>
-                            </span>
-                        </div>
-                    </t>
+                    <div class="ml-auto pl-3 pr-3 border border-top-0 border-right-0 border-bottom-0 toggle_company o_py">
+                        <span style="height: 2rem;">
+                            <t t-if="widget.allowed_company_ids.includes(company[0].toString())">
+                                <i class="fa fa-fw fa-check-square pt-2"></i>
+                            </t>
+                            <t t-if="!widget.allowed_company_ids.includes(company[0].toString())">
+                                <i class="fa fa-fw fa-square-o pt-2"></i>
+                            </t>
+                        </span>
+                    </div>
                 </div>
             </t>
         </div>
