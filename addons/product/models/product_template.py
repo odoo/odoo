@@ -830,9 +830,16 @@ class ProductTemplate(models.Model):
             # combination has different values than the ones configured on the template
             return False
 
-        if not self.has_dynamic_attributes() and not self._get_variant_for_combination(combination):
-            # the variant has been deleted
-            return False
+        variant = self._get_variant_for_combination(combination)
+
+        if self.has_dynamic_attributes():
+            if variant and not variant.active:
+                # dynamic and the variant has been archived
+                return False
+        else:
+            if not variant or not variant.active:
+                # not dynamic, the variant has been archived or deleted
+                return False
 
         exclusions = self._get_own_attribute_exclusions()
         if exclusions:
@@ -848,11 +855,6 @@ class ProductTemplate(models.Model):
             for exclusion in parent_exclusions:
                 if exclusion in combination.ids:
                     return False
-
-        filtered_combination = combination._without_no_variant_attributes()
-        archived_combinations = self._get_archived_combinations()
-        if archived_combinations and filtered_combination.ids in archived_combinations:
-            return False
 
         return True
 
@@ -887,7 +889,7 @@ class ProductTemplate(models.Model):
         for pav in attribute_values:
             domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
 
-        res = self.env['product.product'].with_context(active_test=False).search(domain)
+        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.
