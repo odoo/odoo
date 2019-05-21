@@ -44,8 +44,8 @@ class SendSMS(models.TransientModel):
                 return number
             if not phonenumbers.is_possible_number(phone_nbr) or not phonenumbers.is_valid_number(phone_nbr):
                 return number
-            phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
-            return phonenumbers.format_number(phone_nbr, phone_fmt).replace(' ', '')
+            phone_fmt = phonenumbers.PhoneNumberFormat.E164
+            return phonenumbers.format_number(phone_nbr, phone_fmt)
         else:
             return number
 
