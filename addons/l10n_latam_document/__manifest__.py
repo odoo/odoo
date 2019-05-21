@@ -15,6 +15,7 @@
         'views/account_invoice_view.xml',
         'views/report_invoice.xml',
         'views/menuitem.xml',
+        'views/ir_sequence_view.xml',
         # 'views/account_portal_templates.xml',
         'report/invoice_report_view.xml',
         'data/mail_template_invoice.xml',

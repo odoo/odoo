@@ -51,7 +51,7 @@ class AccountInvoiceRefund(models.TransientModel):
         for rec in self:
             invoice = rec.l10n_ar_invoice_id
             if not invoice:
-                return True
+                continue
             invoice_type = TYPE2REFUND[invoice.type]
             res = invoice._get_available_document_types(
                 invoice.journal_id, invoice_type, invoice.partner_id)

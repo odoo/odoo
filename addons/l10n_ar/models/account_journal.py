@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountJournal(models.Model):
@@ -33,11 +33,11 @@ class AccountJournal(models.Model):
     )
     l10n_ar_sequence_ids = fields.One2many(
         'ir.sequence',
+        'l10n_latam_journal_id',
     )
-    l10n_ar_document_type_ids = fields.One2many(
-        'l10n_latam.document.type',
-    )
-    unified_book = fields.Boolean(
+    l10n_ar_share_sequences = fields.Boolean(
+        'Unified Book',
+        help='Use same sequence for documents with the same letter',
     )
 
     def get_journal_letter(self, counterpart_partner=False):
@@ -122,7 +122,7 @@ class AccountJournal(models.Model):
         """ Return the match sequences for the given journal and invoice
         """
         self.ensure_one()
-        if self.unified_book:
+        if self.l10n_ar_share_sequences:
             return self.l10n_ar_sequence_ids.filtered(
                 lambda x: x.l10n_ar_letter == invoice.l10n_ar_letter)
 
@@ -133,4 +133,61 @@ class AccountJournal(models.Model):
     def create_document_type_sequences(self):
         """ Search if exist, it need to me updated? (can be?), or create
         """
-        return True
+        self.ensure_one()
+        if self.company_id.country_id.code != 'AR':
+            return super().create_document_type_sequences()
+        if not self.type == 'sale':
+            return False
+        if not self.l10n_latam_use_documents:
+            return False
+
+        sequences = self.l10n_ar_sequence_ids
+        if sequences:
+            if sequences.filtered(lambda x: x.number_next_actual > 1):
+                raise ValidationError(_(
+                    'Can not update the document type sequences since has'
+                    'been already used'))
+            else:
+                sequences.unlink()
+
+        # Create Sequences
+        letters = self.get_journal_letter()
+        internal_types = ['invoice', 'debit_note', 'credit_note']
+        domain = [
+            ('country_id.code', '=', 'AR'),
+            ('internal_type', 'in', internal_types),
+            '|', ('l10n_ar_letter', '=', False),
+            ('l10n_ar_letter', 'in', letters),
+        ]
+        codes = self.get_journal_codes()
+        if codes:
+            domain.append(('code', 'in', codes))
+        documents = self.env['l10n_latam.document.type']
+
+        if self.l10n_ar_share_sequences:
+            documents = documents.read_group(
+                domain, ['id', 'l10n_ar_letter'], ['l10n_ar_letter'])
+            # fields = ['id'], groupby=['l10n_ar_letter']
+            # def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+
+        else:
+            documents = documents.search(domain)
+
+        for document in documents:
+            sequences |= self.env['ir.sequence'].create(
+                document.get_document_sequence_vals(self))
+        return sequences
+
+    @api.constrains('type', 'l10n_ar_afip_pos_system',
+                    'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences')
+    def check_sequences(self):
+        """ Create / Update the Document Sequences """
+        for rec in self.filtered(lambda x: x.type == 'sale'):
+            rec.create_document_type_sequences()
+
+    @api.constrains('l10n_ar_afip_pos_number')
+    def check_afip_pos_number(self):
+        missing_pos_number = self.filtered(
+            lambda x: x.type == 'sale' and x.l10n_ar_afip_pos_number == 0)
+        if missing_pos_number:
+            raise ValidationError(_('Please define a valid AFIP POS number'))

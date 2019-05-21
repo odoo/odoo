@@ -9,4 +9,5 @@ class IrSequence(models.Model):
 
     l10n_ar_letter = fields.Selection(
         L10nLatamDocumentType._l10n_ar_letters,
+        'Letter',
     )

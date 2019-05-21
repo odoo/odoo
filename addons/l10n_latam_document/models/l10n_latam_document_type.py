@@ -80,3 +80,12 @@ class L10nLatamAccountDocmentType(models.Model):
         """
         self.ensure_one()
         return self.env['account.tax']
+
+    @api.multi
+    def get_document_sequence_vals(self, journal):
+        self.ensure_one()
+        return {
+            'name': '%s - %s' % (journal.name, self.name),
+            'padding': 8,
+            'prefix': self.code,
+        }

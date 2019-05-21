@@ -78,7 +78,7 @@ class AccountInvoice(models.Model):
         compute='_compute_l10n_ar_afip_concept',
         inverse='_inverse_l10n_ar_afip_concept',
         selection=afip_invoice_concepts,
-        string="AFIP Concept",
+        string="Computed AFIP Concept",
         help="A concept is suggested regarding the type of the products on the"
         " invoice but it is allowed to force a different type if required.",
         readonly=True,
@@ -257,20 +257,14 @@ class AccountInvoice(models.Model):
                 AccountInvoice, self).get_localization_invoice_vals()
 
     @api.model
-    def _get_available_document_types(
-            self, journal, invoice_type, partner):
+    def _get_available_document_types(self, journal, invoice_type, partner):
         if journal.company_id.country_id.code != 'AR':
-            return super(
-                AccountInvoice, self)._get_available_document_types(
-                    journal, invoice_type, partner)
+            return super(AccountInvoice, self)._get_available_document_types(
+                journal, invoice_type, partner)
 
-        document_types = document_type = self.env[
-            'l10n_latam.document.type']
-
+        document_types = document_type = self.env['l10n_latam.document.type']
         commercial_partner = partner.commercial_partner_id
-
         if journal.l10n_latam_use_documents and commercial_partner:
-
             letters = journal.get_journal_letter(
                 counterpart_partner=commercial_partner)
 

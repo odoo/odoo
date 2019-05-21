@@ -12,6 +12,9 @@
             <field name="type" position="after">
                 <field name="l10n_latam_use_documents" attrs="{'invisible': [('type','not in',['purchase','sale','purchase_refund','sale_refund'])]}"/>
             </field>
+            <notebook position="before">
+                <button name="create_document_type_sequences" type="object" string="Create Sequences" groups="base.group_no_one"/>
+            </notebook>
         </field>
     </record>
 

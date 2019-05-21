@@ -46,18 +46,28 @@ class L10nLatamDocumentType(models.Model):
         help='Cero o No cero según lo requiere la declaración del CITI compras'
     )
 
-    # TODO esto tiene que cambiar
-    # @api.multi
-    # def get_document_sequence_vals(self, journal):
-    #     vals = super(L10nLatamDocumentType, self).get_document_sequence_vals(
-    #         journal)
-    #     if self.country_id.code == 'AR':
-    #         vals.update({
-    #             'padding': 8,
-    #             'implementation': 'no_gap',
-    #             'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
-    #         })
-    #     return vals
+    @api.multi
+    def get_document_sequence_vals(self, journal):
+        """ Values to create the sequences
+        """
+        values = super(
+            L10nLatamDocumentType, self).get_document_sequence_vals(journal)
+        if self.country_id.code == 'AR':
+            values.update({
+                'padding': 8,
+                'implementation': 'no_gap',
+                'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
+                'l10n_latam_journal_id': journal.id,
+            })
+            if journal.l10n_ar_share_sequences:
+                values.update({
+                    'l10n_ar_letter': self.l10n_ar_letter,
+                })
+            else:
+                values.update({
+                    'l10n_latam_document_type_id': self.id,
+                })
+        return values
 
     @api.multi
     def get_taxes_included(self):
