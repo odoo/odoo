@@ -243,8 +243,8 @@ class Users(models.Model):
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id.id,
-        help='The company this user is currently working for.', context={'user_preference': True})
+    company_id = fields.Many2one('res.company', string='Default Company', required=True, default=lambda self: self.env.company_id.id,
+        help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company_id.ids)
 
