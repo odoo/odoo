@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
+    _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
 
     @api.model
     def _get_default_faq(self):

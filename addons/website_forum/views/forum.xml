@@ -32,12 +32,15 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                        <field name="description"/>
+                        <field name="image" widget="image" options="{'preview_image': 'image_medium'}" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                         <group>
+                            <field name="description"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                         </group>
                         <notebook>
