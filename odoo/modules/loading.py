@@ -246,17 +246,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # update made to the schema or data so the tests can run
             # (separately in their own transaction)
             cr.commit()
-            if demo_loaded:
-                # launch tests only in demo mode, allowing tests to use demo data.
-                if tools.config.options['test_enable']:
-                    # Yamel test
-                    report.record_result(load_test(idref, mode))
-                    # Python tests
-                    env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                    report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
-                    # tests may have reset the environment
-                    env = api.Environment(cr, SUPERUSER_ID, {})
-                    module = env['ir.module.module'].browse(module_id)
+
+            if tools.config.options['test_enable']:
+                report.record_result(load_test(idref, mode))
+                # Python tests
+                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+                report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                # tests may have reset the environment
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                module = env['ir.module.module'].browse(module_id)
 
             processed_modules.append(package.name)
 
