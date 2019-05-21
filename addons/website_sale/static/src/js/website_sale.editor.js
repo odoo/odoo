@@ -98,6 +98,13 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
+        this.$el.filter('.o_wsale_ppr_submenu').toggleClass('d-none', listLayoutEnabled);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -209,6 +216,14 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         }));
 
         return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
+        this.$el.find('.o_wsale_soptions_menu_sizes').closest('.dropdown-submenu')
+            .toggleClass('d-none', listLayoutEnabled);
     },
 
     //--------------------------------------------------------------------------
