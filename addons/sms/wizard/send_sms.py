@@ -83,7 +83,7 @@ class SendSMS(models.TransientModel):
         return result
 
     def action_send_sms(self):
-        numbers = self.recipients.split(',')
+        numbers = [number.strip() for number in self.recipients.split(',') if number.strip()]
 
         active_model = self.env.context.get('active_model')
         model = self.env[active_model]
