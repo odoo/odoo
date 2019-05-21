@@ -45,51 +45,22 @@
     z-index: 1;
 
     .o_nocontent_help {
-        pointer-events: auto;
-        max-width: 650px;
-        margin: auto;
-        padding: 15px;
-        z-index: 1000;
-        text-align: center;
-        color: $o-tooltip-text-color;
-        font-size: 115%;
-
-        > p:first-of-type {
-            margin-top: 0;
-            color: $o-tooltip-title-text-color;
-            font-weight: bold;
-            font-size: 125%;
-        }
-
-        a {
-            cursor: pointer;
-        }
-
-        @mixin o-init-image {
-            content: "";
-            display: block;
-            margin: auto;
-            background-size: cover;
-        }
+        @include o-nocontent-empty;
 
         .o_view_nocontent_smiling_face:before {
-            @include o-init-image;
+            @extend %o-nocontent-init-image;
             @include size(120px, 140px);
             background: transparent url(/web/static/src/img/smiling_face.svg) no-repeat center;
         }
 
         .o_view_nocontent_neutral_face:before {
-            @include o-init-image;
+            @extend %o-nocontent-init-image;
             @include size(120px, 140px);
             background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
         }
 
         .o_view_nocontent_empty_folder:before {
-            @include o-init-image;
-            @include size(120px, 80px);
-            margin-top: 30px;
-            margin-bottom: 30px;
-            background: transparent url(/web/static/src/img/empty_folder.svg) no-repeat center;
+            @extend %o-nocontent-empty-document;
         }
 
         .o_empty_custom_dashboard {

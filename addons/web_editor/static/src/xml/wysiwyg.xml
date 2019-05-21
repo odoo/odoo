@@ -100,7 +100,7 @@
             <div class="form-text o_we_error_text"/>
             <div class="o_we_existing_attachments"/>
             <div class="mt-4 text-center mx-auto">
-                <button class="btn btn-primary o_load_more" type="button">Load more...</button>
+                <button class="btn btn-primary o_load_more d-none" type="button">Load more...</button>
                 <div class="mt-4 o_load_done_msg d-none">
                     <span><i>All images have been loaded</i></span>
                 </div>
@@ -224,7 +224,11 @@
 
     <t t-name="wysiwyg.widgets.image.existing.attachments">
         <div class="o_we_existing_attachments o_we_images">
-            <ol class="d-flex flex-wrap mx-auto my-0 p-2">
+            <div t-if="!attachments.length" class="o_nocontent_help">
+                <p class="o_empty_folder_image">No images found.</p>
+                <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
+            </div>
+            <ol t-else="" class="d-flex flex-wrap mx-auto my-0 p-2">
                 <t t-foreach="attachments" t-as="attachment">
                     <t t-call="wysiwyg.widgets.image.existing.attachment"/>
                 </t>
@@ -244,7 +248,11 @@
 
     <t t-name="wysiwyg.widgets.document.existing.attachments">
         <div class="o_we_existing_attachments o_we_documents">
-            <div class="row mx-auto">
+            <div t-if="!attachments.length" class="o_nocontent_help">
+                <p class="o_empty_folder_image">No documents found.</p>
+                <p class="o_empty_folder_subtitle">You can upload documents with the button located in the top left of the screen.</p>
+            </div>
+            <div t-else="" class="row mx-auto">
                 <t t-foreach="attachments" t-as="attachment">
                     <div class="col-2 o_existing_attachment_cell o_we_attachment_highlight my-2" t-att-data-id="attachment.id">
                         <t t-call="wysiwyg.widgets.file.existing.remove"/>

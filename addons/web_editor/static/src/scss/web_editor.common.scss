@@ -378,3 +378,11 @@ a.o_underline {
         }
     }
 }
+
+.o_nocontent_help {
+    @include o-nocontent-empty;
+
+    .o_empty_folder_image:before {
+        @extend %o-nocontent-empty-document;
+    }
+}
