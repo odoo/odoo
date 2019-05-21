@@ -514,7 +514,7 @@ class DurationConverter(models.AbstractModel):
         options = super(DurationConverter, self).get_available_options()
         unit = [[u[0], _(u[0])] for u in TIMEDELTA_UNITS]
         options.update(
-            digital=dict(type="boolean", string=_('Digital formating')),
+            digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
             round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formating."), default_value='second'),
         )
@@ -637,8 +637,8 @@ class Contact(models.AbstractModel):
             separator=dict(type='string', string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
             no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
-            phone_icons=dict(type='boolean', string=_('Displayed phone icons'), description=_("Display the phone icons even if no_marker is True")),
-            country_image=dict(type='boolean', string=_('Displayed contry image'), description=_("Display the country image if the field is present on the record")),
+            phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
+            country_image=dict(type='boolean', string=_('Display country image'), description=_("Display the country image if the field is present on the record")),
         )
         return options
 
