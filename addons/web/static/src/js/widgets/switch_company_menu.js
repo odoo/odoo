@@ -31,7 +31,6 @@ var SwitchCompanyMenu = Widget.extend({
         this._onSwitchCompanyClick = _.debounce(this._onSwitchCompanyClick, 1500, true);
         this.allowed_company_ids = String(session.user_context.allowed_company_ids).split(',');
         this.user_companies = session.user_companies.allowed_companies;
-        this.toggle_company = session.toggle_company;
 
         var hash = $.bbq.getState()
         if (!hash.cids || hash.cids === undefined) {
