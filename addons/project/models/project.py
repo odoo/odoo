@@ -22,9 +22,6 @@ class ProjectTaskType(models.Model):
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids)
-    legend_priority = fields.Char(
-        string='Starred Explanation', translate=True,
-        help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
