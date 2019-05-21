@@ -24,13 +24,15 @@ class TestPricelist(TransactionCase):
                     'base': 'list_price',  # based on public price
                     'price_discount': 10,
                     'product_id': self.usb_adapter.id,
-                    'applied_on': '0_product_variant',
+                    'applied_on': '1_product',
+                    'product_tmpl_id': self.usb_adapter.product_tmpl_id.id,
                 }), (0, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price',  # based on public price
                     'price_surcharge': -0.5,
                     'product_id': self.datacard.id,
-                    'applied_on': '0_product_variant',
+                    'product_tmpl_id': self.datacard.product_tmpl_id.id,
+                    'applied_on': '1_product',
                 })]
         })
 
@@ -83,12 +85,13 @@ class TestPricelist(TransactionCase):
 
         self.env['product.pricelist.item'].create({
             'pricelist_id': self.public_pricelist.id,
-            'applied_on': '0_product_variant',
+            'applied_on': '1_product',
             'compute_price': 'formula',
             'base': 'list_price',  # based on public price
             'min_quantity': 3,  # min = 3 tonnes
             'price_surcharge': -10,  # -10 EUR / tonne
-            'product_id': spam_id.id
+            'product_id': spam_id.id,
+            'product_tmpl_id': spam_id.product_tmpl_id.id
         })
         pricelist = self.public_pricelist
 

@@ -28,8 +28,8 @@
                         <group>
                             <field name="applied_on" widget="radio"/>
                             <field name="categ_id" attrs="{'invisible':[('applied_on', '!=', '2_product_category')], 'required':[('applied_on', '=', '2_product_category')]}"/>
-                            <field name="product_tmpl_id" attrs="{'invisible':[('applied_on', '!=', '1_product')],'required':[('applied_on', '=', '1_product')]}" string="Product"/>
-                            <field name="product_id" attrs="{'invisible':[('applied_on', '!=', '0_product_variant')],'required':[('applied_on', '=', '0_product_variant')]}" string="Product Variant"/>
+                            <field name="product_tmpl_id" attrs="{'invisible':[('applied_on', '!=', '1_product')],'required':[('applied_on', '=', '1_product')]}" string="Product" domain="[('sale_ok','=',True)]"/>
+                            <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" attrs="{'invisible':[('applied_on', '!=', '1_product')]}" string="Product Variant" groups="product.group_product_variant"/>
                         </group>
                         <group>
                             <field name="min_quantity"/>
@@ -154,6 +154,7 @@
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_pricelist_item">
                                 <tree string="Pricelist Items">
                                     <field name="name" string="Applicable On"/>
+                                    <field name="product_id" groups="product.group_product_variant"/>
                                     <field name="min_quantity"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
