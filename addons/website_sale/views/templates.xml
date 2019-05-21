@@ -278,8 +278,8 @@
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
             <t t-set="list_price_desc_label">Catalog price: High to Low</t>
             <t t-set="list_price_asc_label">Catalog price: Low to High</t>
-            <t t-set="name_asc_label">Name - A to Z</t>
-            <t t-set="name_desc_label">Name - Z to A</t>
+            <t t-set="name_asc_label">Name: A to Z</t>
+            <t t-set="name_desc_label">Name: Z to A</t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
