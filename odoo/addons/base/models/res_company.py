@@ -155,7 +155,7 @@ class Company(models.Model):
     @api.depends('partner_id', 'partner_id.image')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image, (180, None))
+            company.logo_web = tools.image_process(company.partner_id.image, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
