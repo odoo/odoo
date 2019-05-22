@@ -100,8 +100,8 @@ class AccountInvoice(models.Model):
         'l10n_latam_sequence_id.number_next_actual',
     )
     def compute_l10n_latam_next_number(self):
-        """ Show next number only for invoices without number and on draft state
-        """
+        """ Show next number only for invoices without number and on draft
+        state """
         for invoice in self.filtered(
                 lambda x: not x.display_name and x.state == 'draft'):
             if invoice.l10n_latam_use_documents:
@@ -115,7 +115,7 @@ class AccountInvoice(models.Model):
                 sequence = invoice.journal_id.sequence_id
             # we must check if sequence use date ranges
             if not sequence.use_date_range:
-                invoice.next_number = sequence.number_next_actual
+                invoice.l10n_latam_next_number = sequence.number_next_actual
             else:
                 dt = fields.Date.today()
                 if self.env.context.get('ir_sequence_date'):
@@ -126,7 +126,7 @@ class AccountInvoice(models.Model):
                     ('date_to', '>=', dt)], limit=1)
                 if not seq_date:
                     seq_date = sequence._create_date_range_seq(dt)
-                invoice.next_number = seq_date.number_next_actual
+                invoice.l10n_latam_next_number = seq_date.number_next_actual
 
     @api.multi
     def name_get(self):
