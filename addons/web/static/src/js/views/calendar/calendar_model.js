@@ -307,7 +307,7 @@ return AbstractModel.extend({
      * Toggle the sidebar (containing the mini calendar)
      */
     toggleFullWidth: function () {
-        var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
+        var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== true;
         this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
     },
     /**
@@ -439,7 +439,7 @@ return AbstractModel.extend({
      */
     _loadCalendar: function () {
         var self = this;
-        this.data.fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') === 'true';
+        this.data.fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') === true;
         this.data.fc_options = this._getFullCalendarOptions();
 
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));

@@ -1,11 +1,13 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var time = require('web.time');
 var session = require('web.session');
@@ -2600,6 +2602,44 @@ QUnit.module('Views', {
             'The day should be in the given locale specific format');
 
         moment.locale(initialLocale);
+
+        calendar.destroy();
+    });
+
+    QUnit.test('calendar sidebar toggle', function (assert) {
+        assert.expect(5);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start_date">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            services: {
+                local_storage: AbstractStorageService.extend({storage: new RamStorage()}),
+            },
+        });
+
+        var fullWidth = calendar.call('local_storage', 'getItem', 'calendar_fullWidth');
+        assert.strictEqual(fullWidth, undefined,
+            "calendar_fullWidth should be undefined in local storage");
+        assert.containsNone(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be opened");
+
+        // click on close
+        testUtils.dom.click(calendar.$('.o_calendar_sidebar_toggler'));
+        fullWidth = calendar.call('local_storage', 'getItem', 'calendar_fullWidth');
+        assert.strictEqual(fullWidth, true,
+            "calendar_fullWidth should be true in local storage");
+        assert.containsOnce(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be hidden");
+
+        // reload calendar view and check calendar view has still full width
+        calendar.reload();
+        assert.containsOnce(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be hidden");
 
         calendar.destroy();
     });
