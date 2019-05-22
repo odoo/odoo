@@ -649,28 +649,14 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      * @private
      */
     _onConvertMegaMenuButtonClick: function (ev) {
-        var $menu = $(ev.currentTarget).closest('[data-menu-id]');
-        var menuID = $menu.data('menu-id');
-        if (_.str.startsWith(menuID, 'new-')) {
-            menuID = $(ev.currentTarget).closest('li').data('menu-id');
-            this.flat[menuID].is_mega_menu = !this.flat[menuID].is_mega_menu;
-            renderMenu(this.flat[menuID]);
-        } else {
-            var menuItem = this.flat[menuID];
-            this._rpc({
-                model: 'website.menu',
-                method: 'toggle_mega_menu',
-                args: [menuItem.id],
-            }).then(function (isMegaMenu) {
-                menuItem['is_mega_menu'] = isMegaMenu;
-                renderMenu(menuItem);
-            });
-        }
-
-        function renderMenu(data) {
-            $(ev.currentTarget).closest('.input-group')
-                .replaceWith(qweb.render('website.contentMenu.dialog.submenu', { submenu: data }));
-        }
+        var $btn = $(ev.currentTarget);
+        var menuData = this.flat[$btn.closest('[data-menu-id]').data('menuId')];
+        menuData['is_mega_menu'] = !menuData['is_mega_menu'];
+        $btn.closest('.input-group').replaceWith(
+            qweb.render('website.contentMenu.dialog.submenu', {
+                submenu: menuData,
+            })
+        );
     },
 });
 

@@ -144,8 +144,6 @@ class Menu(models.Model):
             # new menu are prefixed by new-
             if isinstance(mid, str):
                 new_menu = self.create({'name': menu['name'], 'website_id': website_id})
-                if menu['is_mega_menu']:
-                    new_menu.toggle_mega_menu()
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
@@ -161,16 +159,17 @@ class Menu(models.Model):
                     menu['url'] = page.url
                 elif menu_id.page_id:
                     menu_id.page_id.write({'url': menu['url']})
-            menu.pop('is_mega_menu')
+
+            is_mega_menu = menu.pop('is_mega_menu')
+            if is_mega_menu != bool(menu_id.mega_menu_content):
+                content = False
+                if is_mega_menu:
+                    content = self.env['ir.ui.view'].render_template('website.default_mega_menu')
+                menu.update({
+                    'mega_menu_classes': False,
+                    'mega_menu_content': content,
+                })
+
             menu_id.write(menu)
 
         return True
-
-    @api.multi
-    def toggle_mega_menu(self):
-        self.mega_menu_classes = False
-        if self.mega_menu_content:
-            self.mega_menu_content = False
-        else:
-            self.mega_menu_content = self.env['ir.ui.view'].render_template('website.default_mega_menu')
-        return bool(self.mega_menu_content)

@@ -54,28 +54,9 @@ Wysiwyg.include({
     start: function () {
         var self = this;
         return this._super().then(function () {
-            if (!self.snippets) {
-                return;
-            }
-            var $editable = $(self._summernote.layoutInfo.editable);
-            self.snippets.setSelectorEditableArea(self.$el, self.selectorEditableArea);
-            return self.snippets.insertBefore(self.$el).then(function () {
-                self.$el.before(self.snippets.$el);
-                var $wrap = $('<div class="o_wrap_editable_snippets"/>');
-                $wrap.on('scroll', function (event) {
-                    self._summernote.triggerEvent('scroll', event);
-                });
-                var $contents = self.snippets.$el.siblings('#oe_manipulators')
-                    .addClass('o_wysiwyg_to_remove').attr('contentEditable', false);
-                $wrap.append($contents);
-                $editable.before($wrap);
-                $wrap.append($editable);
-                setTimeout(function () { // add a set timeout for the transition
-                    self.snippets.$el.addClass('o_loaded');
-                    self.$el.addClass('o_snippets_loaded');
-                    self.trigger_up('snippets_loaded', self.snippets.$el);
-                });
-            });
+            // FIXME should wait for the promise but this induces an ugly
+            // flickering if doing so
+            self._insertSnippetsMenu();
         });
     },
 
@@ -124,6 +105,40 @@ Wysiwyg.include({
         return Promise.all(defs)
             .then(this.snippets.cleanForSave.bind(this.snippets))
             .then(this._super.bind(this));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _insertSnippetsMenu: function () {
+        var self = this;
+        if (!this.snippets) {
+            return Promise.resolve();
+        }
+        var $editable = $(this._summernote.layoutInfo.editable);
+        this.snippets.setSelectorEditableArea(this.$el, this.selectorEditableArea);
+        return this.snippets.insertBefore(this.$el).then(function () {
+            self.$el.before(self.snippets.$el);
+            var $wrap = $('<div class="o_wrap_editable_snippets"/>');
+            $wrap.on('scroll', function (event) {
+                self._summernote.triggerEvent('scroll', event);
+            });
+            var $contents = self.snippets.$el.siblings('#oe_manipulators')
+                .addClass('o_wysiwyg_to_remove').attr('contentEditable', false);
+            $wrap.append($contents);
+            $editable.before($wrap);
+            $wrap.append($editable);
+            setTimeout(function () { // add a set timeout for the transition
+                self.snippets.$el.addClass('o_loaded');
+                self.$el.addClass('o_snippets_loaded');
+                self.trigger_up('snippets_loaded', self.snippets.$el);
+            });
+        });
     },
 
     //--------------------------------------------------------------------------

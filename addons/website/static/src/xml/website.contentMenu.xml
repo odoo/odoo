@@ -14,11 +14,12 @@
                 <i t-if="submenu.is_homepage" class="fa fa-home ml-3" role="img" aria-label="Home" title="Home"/>
             </span>
             <span class="input-group-append">
-                <t t-set="is_mega_menu">
+                <t t-set="mega_menu_title">
                     <t t-if="submenu.is_mega_menu">Remove Mega Menu</t>
                     <t t-else="">Convert into Mega Menu</t>
                 </t>
-                <button type="button" class="btn btn-info js_convert_mega_menu fa fa-sitemap" t-att-aria-label="is_mega_menu.trim()" t-att-title="is_mega_menu.trim()"/>
+                <t t-set="mega_menu_title" t-value="mega_menu_title.trim()"/>
+                <button type="button" class="btn btn-info js_convert_mega_menu fa fa-sitemap" t-att-aria-label="mega_menu_title" t-att-title="mega_menu_title"/>
                 <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit menu" title="Edit menu"/>
                 <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete menu" title="Delete menu"/>
             </span>

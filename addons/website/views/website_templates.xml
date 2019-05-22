@@ -158,10 +158,11 @@
         </ul>
     </li>
     <li t-if="submenu.mega_menu_content" class="nav-item dropdown position-static">
-        <a href="#" class="nav-link dropdown-toggle o_dropdown_toggle_megamenu" data-toggle="dropdown">
+        <a href="#" class="nav-link dropdown-toggle o_megamenu_dropdown_toggle" data-toggle="dropdown">
             <span t-field="submenu.name"/>
         </a>
-        <div t-attf-class="#{submenu.mega_menu_classes or 'dropdown-menu w-100 dropdown_mega_menu text-center'}" t-field="submenu.mega_menu_content" t-attf-data-megaMenuClasses="#{submenu.mega_menu_classes or 'dropdown-menu w-100 dropdown_mega_menu text-center'}"/>
+        <div t-attf-class="#{submenu.mega_menu_classes or 'dropdown-menu w-100 p-0 dropdown_mega_menu'}"
+            t-field="submenu.mega_menu_content"/>
     </li>
 </template>
 
@@ -304,8 +305,8 @@
 
 <!-- Default template Mega Menu -->
 <template id="default_mega_menu" name="Mega Menu">
-    <div class="s_mega_menu m-2 p-2">
-        <div class="s_mega_menu_content container">
+    <section class="s_mega_menu text-center">
+        <div class="container">
             <div class="row s_mega_menu_columns">
                 <t t-foreach="3" t-as="o">
                     <div class="s_mega_menu_col col">
@@ -323,7 +324,7 @@
                 </t>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
