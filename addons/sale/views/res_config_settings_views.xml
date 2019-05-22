@@ -417,6 +417,23 @@
                             </div>
                         </div>
                     </div>
+                    <h2 class="mt32">Connectors</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_sale_amazon" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_sale_amazon"/>
+                                <div class="text-muted">
+                                    Import Amazon orders and sync deliveries
+                                </div>
+                                <div class="content-group"
+                                     name="amazon_connector"
+                                     attrs="{'invisible': [('module_sale_amazon', '=', False)]}"/>
+                            </div>
+                        </div>
+                    </div>
                     <div id="sale_ebay"/>
                 </div>
             </xpath>
