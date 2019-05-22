@@ -61,10 +61,13 @@ class L10nLatamDocumentType(models.Model):
             })
             if journal.l10n_ar_share_sequences:
                 values.update({
+                    'name': '%s - Letter %s Documents' % (
+                        journal.name, self.l10n_ar_letter),
                     'l10n_ar_letter': self.l10n_ar_letter,
                 })
             else:
                 values.update({
+                    'name': '%s - %s' % (journal.name, self.name),
                     'l10n_latam_document_type_id': self.id,
                 })
         return values

@@ -16,10 +16,7 @@
                 <field name="l10n_ar_sequence_ids" attrs="{'invisible':['|', '|', ('l10n_latam_country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False), ('type', '!=', 'sale')], 'required':[('l10n_latam_country_code', '=', 'AR'), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]}">
                     <tree>
                         <field name="name"/>
-                        <field name="prefix"/>
                         <field name="number_next_actual"/>
-                        <field name="l10n_latam_document_type_id"/>
-                        <field name="l10n_ar_letter"/>
                     </tree>
                 </field>
             </button>

@@ -48,17 +48,11 @@ class AccountJournal(models.Model):
             counterpart_partner=counterpart_partner)
 
     @api.model
-    def _get_journal_letter(
-            self, journal_type, company, counterpart_partner=False):
-        """ Regarding the AFIP responsability of the company and the type of
-        journal (sale/purchase), get the allowed letters.
-        Optionally, receive the counterpart partner (customer/supplier) and
-        get the allowed letters to work with him.
-        This method is used to populate document types on journals and also
-        to filter document types on specific invoices to/from customer/supplier
+    def _get_letters_data(self):
+        """ Dictionary the the information about the letters, which
+        responsability can used and the kind of operation received/issued
         """
-        # TODO mover a otro lado este dict
-        letters_data = {
+        res = {
             'issued': {
                 '1': ['A', 'B', 'E'],
                 '1FM': ['B', 'M'],
@@ -84,6 +78,19 @@ class AccountJournal(models.Model):
                 '13': ['B', 'C'],
             },
         }
+        return res
+
+    @api.model
+    def _get_journal_letter(
+            self, journal_type, company, counterpart_partner=False):
+        """ Regarding the AFIP responsability of the company and the type of
+        journal (sale/purchase), get the allowed letters.
+        Optionally, receive the counterpart partner (customer/supplier) and
+        get the allowed letters to work with him.
+        This method is used to populate document types on journals and also
+        to filter document types on specific invoices to/from customer/supplier
+        """
+        letters_data = self._get_letters_data()
         if not company.l10n_ar_afip_responsability_type:
             raise UserError(_(
                 'Need to configure your company AFIP responsability first!'))
@@ -145,8 +152,8 @@ class AccountJournal(models.Model):
         if sequences:
             if sequences.filtered(lambda x: x.number_next_actual > 1):
                 raise ValidationError(_(
-                    'Can not update the document type sequences since has'
-                    'been already used'))
+                    'Can not update journal AFIP Configuration when already'
+                    ' has validated invoices'))
             else:
                 sequences.unlink()
 
@@ -162,18 +169,15 @@ class AccountJournal(models.Model):
         codes = self.get_journal_codes()
         if codes:
             domain.append(('code', 'in', codes))
-        documents = self.env['l10n_latam.document.type']
-
-        if self.l10n_ar_share_sequences:
-            documents = documents.read_group(
-                domain, ['id', 'l10n_ar_letter'], ['l10n_ar_letter'])
-            # fields = ['id'], groupby=['l10n_ar_letter']
-            # def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-
-        else:
-            documents = documents.search(domain)
-
+        documents = self.env['l10n_latam.document.type'].search(domain)
+        sequence_obj = self.env['ir.sequence']
         for document in documents:
+            if self.l10n_ar_share_sequences:
+                letter_sequence = sequence_obj.search([
+                    ('l10n_ar_letter', '=', document.l10n_ar_letter)])
+                if letter_sequence:
+                    continue
+
             sequences |= self.env['ir.sequence'].create(
                 document.get_document_sequence_vals(self))
         return sequences

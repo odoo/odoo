@@ -67,7 +67,8 @@ class AccountInvoiceRefund(models.TransientModel):
             refund_document_number=self.l10n_latam_document_number,
         )).compute_refund(mode=mode)
 
+    @api.depends('l10n_latam_document_type_id')
     def compute_l10n_latam_sequence(self):
-        # TODO this one need to be defined
         for rec in self:
-            rec.l10n_latam_sequence_id = False
+            rec.l10n_latam_sequence_id = \
+                rec.l10n_ar_invoice_id.get_document_type_sequence(rec)
