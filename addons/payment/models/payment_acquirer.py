@@ -53,7 +53,7 @@ class PaymentAcquirer(models.Model):
        model (see fields definition).
 
     Each acquirer should also define controllers to handle communication between
-    OpenERP and the acquirer. It generally consists in return urls given to the
+    Odoo and the acquirer. It generally consists in return urls given to the
     button form and that the acquirer uses to send the customer back after the
     transaction, with transaction details given as a POST request.
     """
@@ -225,7 +225,6 @@ class PaymentAcquirer(models.Model):
         """
         return dict(authorize=[], tokenize=[], fees=[])
 
-    @api.multi
     def _prepare_account_journal_vals(self):
         '''Prepare the values to create the acquirer's journal.
         :return: a dictionary to create a account.journal record.
