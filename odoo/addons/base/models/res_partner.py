@@ -48,7 +48,7 @@ class FormatAddressMixin(models.AbstractModel):
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.company_id.country_id.address_view_id
+        address_view_id = self.env.company.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
@@ -139,7 +139,7 @@ class Partner(models.Model):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
     def _default_company(self):
-        return self.env.company_id
+        return self.env.company
 
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}

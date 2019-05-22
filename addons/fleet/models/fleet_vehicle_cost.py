@@ -32,7 +32,7 @@ class FleetVehicleCost(models.Model):
     contract_id = fields.Many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost')
     auto_generated = fields.Boolean('Automatically Generated', readonly=True)
     description = fields.Char("Cost Description")
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     def _get_odometer(self):

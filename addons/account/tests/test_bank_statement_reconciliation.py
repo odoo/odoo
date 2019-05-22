@@ -70,7 +70,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         vals = {'partner_id': self.partner.id,
                 'type': 'out_invoice',
                 'name': '-',
-                'currency_id': self.env.company_id.currency_id.id,
+                'currency_id': self.env.company.currency_id.id,
                 }
         # new creates a temporary record to apply the on_change afterwards
         invoice = self.i_model.new(vals)

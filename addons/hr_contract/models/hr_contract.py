@@ -63,7 +63,7 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company_id.resource_calendar_id.id)
+        default=lambda self: self.env.company.resource_calendar_id.id)
     wage = fields.Monetary('Wage', digits=(16, 2), required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
@@ -76,7 +76,7 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states',
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company_id)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)

@@ -15,10 +15,10 @@ class AccountInvoiceReport(models.Model):
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        user_currency_id = self.env.company_id.currency_id
+        user_currency_id = self.env.company.currency_id
         currency_rate_id = self.env['res.currency.rate'].search([
             ('rate', '=', 1),
-            '|', ('company_id', '=', self.env.company_id.id), ('company_id', '=', False)], limit=1)
+            '|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)], limit=1)
         base_currency_id = currency_rate_id.currency_id
         for record in self:
             date = record.date or fields.Date.today()

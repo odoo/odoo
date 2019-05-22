@@ -22,7 +22,7 @@ class MrpRouting(models.Model):
         copy=True, oldname='workcenter_lines')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id)
+        default=lambda self: self.env.company)
 
     @api.model
     def create(self, vals):

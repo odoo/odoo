@@ -18,7 +18,7 @@ class MrpUnbuild(models.Model):
             stock_location.check_access_rule('read')
             return stock_location.id
         except (AttributeError, AccessError):
-            return self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1).lot_stock_id.id
+            return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id.id
 
     def _get_default_location_dest_id(self):
         stock_location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
@@ -26,7 +26,7 @@ class MrpUnbuild(models.Model):
             stock_location.check_access_rule('read')
             return stock_location.id
         except (AttributeError, AccessError):
-            return self.env['stock.warehouse'].search([('company_id', '=', self.env.company_id.id)], limit=1).lot_stock_id.id
+            return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id.id
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
