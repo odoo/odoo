@@ -784,6 +784,8 @@ class Environment(Mapping):
 
     def __new__(cls, cr, uid, context):
         assert context is not None
+        assert 'allowed_company_ids' in context, "You have to specify the 'allowed_company_ids' in the context"
+
         args = (cr, uid, context)
 
         # if env already exists, return it
