@@ -10,8 +10,8 @@ from odoo.addons.web.controllers.main import WebClient, Home
 
 class Routing(Home):
 
-    @http.route('/website/translations', type='json', auth="public", website=True)
-    def get_website_translations(self, lang, mods=None):
+    @http.route('/website/translations/<string:unique>', type='http', auth="public", website=True)
+    def get_website_translations(self, unique, lang, mods=None):
         Modules = request.env['ir.module.module'].sudo()
         IrHttp = request.env['ir.http'].sudo()
         domain = IrHttp._get_translation_frontend_modules_domain()
@@ -20,4 +20,4 @@ class Routing(Home):
         ).mapped('name')
         if mods:
             modules += mods
-        return WebClient().translations(mods=modules, lang=lang)
+        return WebClient().translations(unique, mods=','.join(modules), lang=lang)

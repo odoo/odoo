@@ -36,7 +36,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
@@ -62,6 +62,9 @@ env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
+
+# 1 year cache for content (menus, translations, static qweb)
+CONTENT_MAXAGE = 60 * 60 * 24 * 356
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
@@ -451,6 +454,23 @@ class Home(http.Controller):
         except AccessError:
             return werkzeug.utils.redirect('/web/login?error=access')
 
+    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
+    def web_load_menus(self, unique):
+        """
+        Loads the menus for the webclient
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :return: the menus (including the images in Base64)
+        """
+        menus = request.env["ir.ui.menu"].load_menus(request.debug)
+        body = json.dumps(menus, default=ustr)
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=31536000'),
+        ])
+        return response
+
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
         ensure_db()
@@ -549,18 +569,14 @@ class WebClient(http.Controller):
             ('Cache-Control', 'max-age=36000'),
         ])
 
-    @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
-    def qweb(self, mods=None, db=None):
+    @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
+    def qweb(self, unique, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
-        last_modified = get_last_modified(files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_xml(files)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'text/xml')]),
-            last_modified, checksum)
+        content, _dummy = concat_xml(files)
+        return request.make_response(content, [
+                ('Content-Type', 'text/xml'),
+                ('Cache-Control','public, max-age=' + str(CONTENT_MAXAGE))
+            ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods):
@@ -585,41 +601,34 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="none")
-    def translations(self, mods=None, lang=None):
-        request.disable_db = False
-        if mods is None:
-            mods = [x['name'] for x in request.env['ir.module.module'].sudo().search_read(
-                [('state', '=', 'installed')], ['name'])]
-        if lang is None:
-            lang = request.context["lang"]
-        langs = request.env['res.lang'].sudo().search([("code", "=", lang)])
-        lang_params = None
-        if langs:
-            lang_params = langs.read([
-                "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
-            lang_params['week_start'] = int(lang_params['week_start'])
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="none")
+    def translations(self, unique, mods=None, lang=None):
+        """
+        Load the translations for the specified language and modules
 
-        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
-        # done server-side when the language is loaded, so we only need to load the user's lang.
-        translations_per_module = {}
-        messages = request.env['ir.translation'].sudo().search_read([
-            ('module', 'in', mods), ('lang', '=', lang),
-            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
-            ('value', '!=', '')],
-            ['module', 'src', 'value', 'lang'], order='module')
-        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod, {'messages': []})
-            translations_per_module[mod]['messages'].extend({
-                'id': m['src'],
-                'string': m['value']}
-                for m in msg_group)
-        return {
+        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param mods: the modules, a comma separated list
+        :param lang: the language of the user
+        :return:
+        """
+        request.disable_db = False
+
+        if mods:
+            mods = mods.split(',')
+        translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
+
+        body = json.dumps({
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-        }
+        })
+        response = request.make_response(body, [
+            # this method must specify a content-type application/json instead of using the default text/html set because
+            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+            ('Content-Type', 'application/json'),
+            ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
+        ])
+        return response
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):

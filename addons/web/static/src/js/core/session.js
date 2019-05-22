@@ -241,8 +241,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_qweb: function (mods) {
+        var self = this;
         var lock = this.qweb_mutex.exec(function () {
-            return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
+            var cacheId = self.cache_hashes && self.cache_hashes.qweb;
+            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
+            return $.get(route).then(function (doc) {
                 if (!doc) { return; }
                 qweb.add_template(doc);
             });
@@ -344,10 +347,18 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     getTZOffset: function (date) {
         return -new Date(date).getTimezoneOffset();
     },
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+    /**
+     * Replaces the value of a key in cache_hashes (the hash of some resource computed on the back-end by a unique value
+     * @param {string} key the key in the cache_hashes to invalidate
+     */
+    invalidateCacheKey: function(key) {
+        if (this.cache_hashes && this.cache_hashes[key]) {
+            this.cache_hashes[key] = Date.now();
+        }
+    },
 
     /**
      * Reload the currencies (initially given in session_info). This is meant to
