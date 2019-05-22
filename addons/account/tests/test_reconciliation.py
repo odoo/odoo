@@ -2055,3 +2055,83 @@ class TestReconciliationExec(TestReconciliation):
         pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line1.reconciled)
         self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
+
+    def test_reconciliation_process_move_lines_with_mixed_currencies(self):
+        # Delete any old rate - to make sure that we use the ones we need.
+        old_rates = self.env['res.currency.rate'].search(
+            [('currency_id', '=', self.currency_usd_id)])
+        old_rates.unlink()
+
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 2,
+        })
+
+        move_product = self.env['account.move'].create({
+            'ref': 'move product',
+        })
+        move_product_lines = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'move_id': move_product.id,
+                'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+                'debit': 20,
+                'credit': 0,
+            },
+            {
+                'name': 'line receivable',
+                'move_id': move_product.id,
+                'account_id': self.account_rcv.id,
+                'debit': 0,
+                'credit': 20,
+            }
+        ])
+        move_product.post()
+
+        move_payment = self.env['account.move'].create({
+            'ref': 'move payment',
+        })
+        liquidity_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1)
+        move_payment_lines = self.env['account.move.line'].create([
+            {
+                'name': 'line product',
+                'move_id': move_payment.id,
+                'account_id': liquidity_account.id,
+                'debit': 10.0,
+                'credit': 0,
+                'amount_currency': 20,
+                'currency_id': self.currency_usd_id,
+            },
+            {
+                'name': 'line product',
+                'move_id': move_payment.id,
+                'account_id': self.account_rcv.id,
+                'debit': 0,
+                'credit': 10.0,
+                'amount_currency': -20,
+                'currency_id': self.currency_usd_id,
+            }
+        ])
+        move_product.post()
+
+        # We are reconciling a move line in currency A with a move line in currency B and putting
+        # the rest in a writeoff, this test ensure that the debit/credit value of the writeoff is
+        # correctly computed in company currency.
+        self.env['account.reconciliation.widget'].process_move_lines([{
+            'id': False,
+            'type': False,
+            'mv_line_ids': [move_payment_lines[1].id, move_product_lines[1].id],
+            'new_mv_line_dicts': [{
+                'account_id': liquidity_account.id,
+                'analytic_tag_ids': [6, None, []],
+                'credit': 0,
+                'date': time.strftime('%Y') + '-01-01',
+                'debit': 15.0,
+                'journal_id': self.env['account.journal'].search([('type', '=', 'sale')], limit=1).id,
+                'name': 'writeoff',
+            }],
+        }])
+
+        writeoff_line = self.env['account.move.line'].search([('name', '=', 'writeoff')])
+        self.assertEquals(writeoff_line.credit, 15.0)
