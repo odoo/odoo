@@ -204,7 +204,11 @@ class ProductProduct(models.Model):
             new_standard_price = candidate.unit_cost
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
-            value_taken_on_candidate = qty_taken_on_candidate * candidate.unit_cost
+            candidate_unit_cost = candidate.unit_cost
+            if candidate.stock_valuation_layer_ids:
+                candidate_unit_cost += sum(candidate.stock_valuation_layer_ids.mapped('value')) / candidate.remaining_qty
+
+            value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
             candidate_vals = {
                 'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
             }
