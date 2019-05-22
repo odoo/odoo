@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 
 
-class MailCancelResend(models.TransientModel):
+class MailResendCancel(models.TransientModel):
     _name = 'mail.resend.cancel'
     _description = 'Dismiss notification for resend by model'
 
@@ -26,7 +26,7 @@ class MailCancelResend(models.TransientModel):
                                 FROM mail_message_res_partner_needaction_rel notif
                                 JOIN mail_message mes
                                     ON notif.mail_message_id = mes.id
-                                WHERE notif.email_status IN ('bounce', 'exception')
+                                WHERE notif.notification_status IN ('bounce', 'exception')
                                     AND mes.model = %s
                                     AND mes.author_id = %s
                             """, (wizard.model, author_id))
@@ -34,6 +34,6 @@ class MailCancelResend(models.TransientModel):
             notif_ids = [row[0] for row in res]
             messages_ids = list(set([row[1] for row in res]))
             if notif_ids:
-                self.env["mail.notification"].browse(notif_ids).sudo().write({'email_status': 'canceled'})
-                self.env["mail.message"].browse(messages_ids)._notify_failure_update()
+                self.env["mail.notification"].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
+                self.env["mail.message"].browse(messages_ids)._notify_mail_failure_update()
         return {'type': 'ir.actions.act_window_close'}
