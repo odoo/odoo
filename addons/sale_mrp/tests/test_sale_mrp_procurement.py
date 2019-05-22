@@ -31,7 +31,6 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.standard_price = 189.0
         product.type = 'product'
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
@@ -39,6 +38,10 @@ class TestSaleMrpProcurement(TransactionCase):
         product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
         product_template_slidermobile0 = product.save()
+
+        std_price_wiz = Form(self.env['stock.change.standard.price'].with_context(active_id=product_template_slidermobile0.id, active_model='product.template'))
+        std_price_wiz.new_price = 189
+        std_price_wiz.save()
 
         product_component = Form(self.env['product.product'])
         product_component.name = 'Battery'
