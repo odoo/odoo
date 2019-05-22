@@ -75,9 +75,11 @@
                                 <group groups="product.group_product_pricelist">
                                     <div name="pricelist_item" groups="product.group_product_pricelist">
                                         <separator string="Pricing"/>
-                                        <field name="item_ids" nolabel="1" mode="tree,kanban" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
+                                        <field name="item_ids" nolabel="1" mode="tree,kanban" context="{'default_base':'list_price', 'default_applied_on' :'1_product', 'default_product_tmpl_id': id}">
                                             <tree string="Pricelist Items" editable="bottom">
                                                 <field name="pricelist_id" string="Pricelist" required='1'/>
+                                                <field name="product_tmpl_id" invisible="1"/>
+                                                <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" />
                                                 <field name="currency_id" invisible="1"/>
                                                 <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                                 <field name="min_quantity"/>
@@ -399,17 +401,17 @@
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_read_only oe_inline" readonly="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
-                <field name="item_ids" position="inside">
-                    <field name="pricelist_item_ids" widget="many2many">
-                        <tree string="Pricelist Items">
+                <field name="item_ids" position="replace">
+                    <field name="pricelist_item_ids" context="{'default_base':'list_price', 'default_applied_on' :'1_product', 'default_product_tmpl_id': product_tmpl_id}" mode="tree,kanban">
+                        <tree string="Pricelist Items" editable="bottom">
                             <field name="pricelist_id"/>
-                            <field name="name" string="Applicable On"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="product_tmpl_id" invisible="1"/>
+                            <field name="fixed_price" string="Price"/>
                             <field name="min_quantity"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="price" string="Price"/>
                             <field name="base" invisible="1"/>
-                            <field name="sequence" invisible="1"/>
                             <field name="price_discount" invisible="1"/>
                             <field name="applied_on" invisible="1"/>
                             <field name="compute_price" invisible="1"/>

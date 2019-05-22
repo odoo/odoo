@@ -49,13 +49,15 @@ class TestUi(odoo.tests.HttpCase):
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.wall_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.small_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.small_shelf_product_template').id,
             })],
         })
 
@@ -64,18 +66,21 @@ class TestUi(odoo.tests.HttpCase):
             'item_ids': [(0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 100,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.wall_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.small_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.small_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.magnetic_board').id,
+                'product_tmpl_id': env.ref('point_of_sale.magnetic_board_product_template').id,
             })],
         })
 
@@ -85,34 +90,39 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'formula',
                 'price_discount': 6,
                 'price_surcharge': 5,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.wall_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.small_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.small_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.magnetic_board').id,
+                'product_tmpl_id': env.ref('point_of_sale.magnetic_board_product_template').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.monitor_stand').id,
+                'product_tmpl_id': env.ref('point_of_sale.monitor_stand_product_template').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'product_id': env.ref('point_of_sale.desk_pad').id,
+                'product_tmpl_id': env.ref('point_of_sale.desk_pad_product_template').id,
             })],
         })
 
@@ -121,21 +131,24 @@ class TestUi(odoo.tests.HttpCase):
             'item_ids': [(0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'min_quantity': 2,
                 'product_id': env.ref('point_of_sale.wall_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'min_quantity': 1,
                 'product_id': env.ref('point_of_sale.wall_shelf').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
-                'applied_on': '0_product_variant',
+                'applied_on': '1_product',
                 'min_quantity': 2,
                 'product_id': env.ref('point_of_sale.product_product_consumable').id,
+                'product_tmpl_id': env.ref('point_of_sale.product_product_consumable_product_template').id,
             })],
         })
 
