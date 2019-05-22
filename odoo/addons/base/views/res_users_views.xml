@@ -329,6 +329,60 @@
         </record>
         <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users" sequence="0"/>
 
+
+        <record id="action_res_users_keys_description" model="ir.actions.act_window">
+            <field name="name">API Key: description input wizard</field>
+            <field name="res_model">res.users.apikeys.description</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="form_res_users_key_description" model="ir.ui.view">
+            <field name="name">API Key: description input form</field>
+            <field name="model">res.users.apikeys.description</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                    <p>Enter a description of and purpose for the key.</p>
+                    <p>
+                        It is very important that this description be clear
+                        and complete, <strong>it will be the only way to
+                        identify the key once created</strong>.
+                    </p>
+                    <field name="name"/>
+                    <footer>
+                        <button name="make_key" type="object" string="Make key" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="form_res_users_key_show" model="ir.ui.view">
+            <field name="name">API Key: show</field>
+            <field name="model">res.users.apikeys.show</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <p>
+                            Here is your new API key, use it instead of a
+                            password when doing RPC access. Your login is still
+                            necessary.
+                        </p>
+                        <p><field name="key" readonly="True"/></p>
+                        <p class="bg-warning">
+                            This key will not be re-issued, and provides all
+                            access to your user account, it is very important to
+                            properly note and store it.
+                        </p>
+                        <footer>
+                            <button special="cancel" string="Close"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="view_users_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form</field>
             <field name="model">res.users</field>
@@ -339,22 +393,45 @@
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
-                    <group name="preferences">
-                        <group>
-                            <field name="email" widget="email" readonly="0"/>
-                            <field name="company_id" options="{'no_create': True}" readonly="0"
-                                groups="base.group_multi_company"/>
-                        </group>
-                        <group>
-                            <field name="lang" readonly="0" placeholder="System (English)"/>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                            <field name="tz_offset" invisible="1"/>
-                        </group>
-                    </group>
-                    <group name="preference_contact"></group>
-                    <group name="signature">
-                        <field name="signature" readonly="0"/>
-                    </group>
+                    <notebook>
+                        <page string="Preferences">
+                            <group name="preferences">
+                                <group>
+                                    <field name="email" widget="email" readonly="0"/>
+                                    <field name="company_id" options="{'no_create': True}" readonly="0"
+                                        groups="base.group_multi_company"/>
+                                </group>
+                                <group>
+                                    <field name="lang" readonly="0" placeholder="System (English)"/>
+                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                    <field name="tz_offset" invisible="1"/>
+                                </group>
+                            </group>
+                            <group name="preference_contact"></group>
+                            <group name="signature">
+                                <field name="signature" readonly="0"/>
+                            </group>
+                        </page>
+                        <page string="Developer settings">
+                            <group>
+                                <group>
+                                    <field name="api_keys_only_explicit"
+                                           readonly="0"
+                                           string="Require API key"
+                                           help="Only allow API (RPC) access using API keys, not login/password"/>
+                                </group>
+                            </group>
+                            <group>
+                                <label for="api_key_ids">API Keys</label>
+                                <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
+                                    <tree editable="bottom" create="false">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                                <button string="Add Key" type="action" name="%(action_res_users_keys_description)d"/>
+                            </group>
+                        </page>
+                    </notebook>
                     <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
@@ -378,6 +455,25 @@
             <field name="act_window_id" ref="action_res_users_my"/>
         </record>
 
+        <record model="ir.ui.view" id="view_apikeys">
+            <field name="name">API Keys Listing</field>
+            <field name="model">res.users.apikeys</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false" delete="true" editable="bottom">
+                    <field name="user_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_apikeys_admin">
+            <field name="name">API Keys Listing</field>
+            <field name="res_model">res.users.apikeys</field>
+            <field name="target">new</field>
+            <field name="view_mode">tree</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="view_id" ref="base.view_apikeys"/>
+        </record>
 
     </data>
 </odoo>

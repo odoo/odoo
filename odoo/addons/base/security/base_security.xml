@@ -170,6 +170,28 @@
             <field eval="True" name="global"/>
             <field name="domain_force">[('company_ids', 'in', company_ids)]</field>
         </record>
+
+        <!-- rules for API token -->
+        <record id="api_key_user" model="ir.rule">
+            <field name="name">Users can read and delete their own keys</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[
+                (4, ref('base.group_public')),
+                (4, ref('base.group_portal')),
+                (4, ref('base.group_user')),
+            ]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+        <record id="api_key_admin" model="ir.rule">
+            <field name="name">Administrators can invalidate (delete) user keys</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
     </data>
 </odoo>
 

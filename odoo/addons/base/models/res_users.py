@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import binascii
 import contextlib
+import os
 
 import pytz
 import datetime
@@ -1347,3 +1349,115 @@ class ChangePasswordUser(models.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
+
+# API keys support
+API_KEY_SIZE = 20 # in bytes
+INDEX_SIZE = 8 # in hex digits, so 4 bytes, or 20% of the key
+KEY_CRYPT_CONTEXT = passlib.context.CryptContext(
+    # default is 29000 rounds which is 25~50ms, which is probably unnecessary
+    # given in this case all the keys are completely random data: dictionary
+    # attacks on API keys isn't much of a concern
+    ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
+)
+class APIKeysUser(models.Model):
+    _inherit = 'res.users'
+
+    api_keys_only_explicit = fields.Boolean()
+    # so it's possible to add or replace
+    api_keys_only = fields.Boolean(compute='_compute_keys_only')
+    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
+
+    def __init__(self, pool, cr):
+        """ Override of __init__ to allow user to set its github_login. """
+        init_res = super().__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_keys_only_explicit', 'api_key_ids']
+        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + [
+            'api_keys_only_explicit', 'api_keys_only', 'api_key_ids'
+        ]
+        return init_res
+
+    @api.multi
+    def write(self, vals):
+        r = super().write(vals)
+        # needs to invalidate the UID cache as this potentially makes
+        # previously valid auth invalid
+        if 'api_keys_only_explicit' in vals:
+            self.clear_caches()
+        return r
+
+    @api.depends('api_keys_only_explicit')
+    def _compute_keys_only(self):
+        for u in self:
+            u.api_keys_only |= u.api_keys_only_explicit
+
+    def _check_credentials_api(self, password, user_agent_env):
+        if not self.env.user.api_keys_only:
+            try:
+                return super()._check_credentials_api(password, user_agent_env)
+            except AccessDenied:
+                pass
+
+        self.env.cr.execute('''
+        SELECT key FROM res_users_apikeys WHERE user_id = %s AND index = %s
+        ''', [self.env.uid, password[:INDEX_SIZE]])
+        for [key] in self.env.cr.fetchall():
+            if KEY_CRYPT_CONTEXT.verify(password, key):
+                break
+        else:
+            raise AccessDenied()
+
+class APIKeys(models.Model):
+    _name = _description = 'res.users.apikeys'
+    _auto = False # so we can have a secret column
+
+    name = fields.Char("Description", required=True, readonly=True)
+    user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
+
+    def init(self):
+        self.env.cr.execute("""
+        CREATE TABLE IF NOT EXISTS {table} (
+            id serial primary key,
+            name varchar not null,
+            user_id integer not null REFERENCES res_users(id),
+            index varchar not null CHECK (char_length(index) = {index_size}),
+            key varchar not null
+        );
+        CREATE INDEX ON {table} (user_id, index);
+        """.format(table=self._table, index_size=INDEX_SIZE))
+
+    def unlink(self):
+        self.clear_caches()
+        return super().unlink()
+
+class APIKeyDescription(models.TransientModel):
+    _name = _description = 'res.users.apikeys.description'
+
+    name = fields.Char("Description", required=True)
+
+    @api.multi
+    def make_key(self):
+        # only create keys for users who can delete their keys
+        self.env['res.users.apikeys'].check_access_rights('unlink')
+        # no need to clear the LRU when *adding* a key, only when removing
+        k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        self.env.cr.execute("""
+        INSERT INTO res_users_apikeys (name, user_id, key, index)
+        VALUES (%s, %s, %s, %s)
+        RETURNING id
+        """, [self.name, self.env.user.id, KEY_CRYPT_CONTEXT.encrypt(k), k[:INDEX_SIZE]])
+        self.env['res.users.apikeys'].invalidate_cache(ids=self.env.cr.fetchone())
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.apikeys.show',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                'default_key': k,
+            }
+        }
+class APIKeyShow(models.AbstractModel):
+    _name = _description = 'res.users.apikeys.show'
+
+    key = fields.Char(readonly=True)
