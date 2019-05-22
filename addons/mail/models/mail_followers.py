@@ -81,7 +81,7 @@ class Followers(models.Model):
     # Private tools methods to fetch followers data
     # --------------------------------------------------
 
-    def _get_recipient_data(self, records, subtype_id, pids=None, cids=None):
+    def _get_recipient_data(self, records, message_type, subtype_id, pids=None, cids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
         Purpose of this method is to fetch all data necessary to notify recipients
         in a single query. It fetches data from
@@ -92,6 +92,7 @@ class Followers(models.Model):
          * channels if cids is given;
 
         :param records: fetch data from followers of records that follow subtype_id;
+        :param message_type: mail.message.message_type in order to allow custom behavior depending on it (SMS for example);
         :param subtype_id: mail.message.subtype to check against followers;
         :param pids: additional set of partner IDs from which to fetch recipient data;
         :param cids: additional set of channel IDs from which to fetch recipient data;
