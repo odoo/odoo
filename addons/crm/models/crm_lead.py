@@ -53,15 +53,6 @@ class Lead(models.Model):
     _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _primary_email = 'email_from'
 
-    def _default_probability(self):
-        if 'default_stage_id' in self._context:
-            stage_id = self._context.get('default_stage_id')
-        else:
-            stage_id = self._default_stage_id()
-        if stage_id:
-            return self.env['crm.stage'].browse(stage_id).probability
-        return 10
-
     def _default_stage_id(self):
         team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
@@ -100,7 +91,7 @@ class Lead(models.Model):
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
 
     # Only used for type opportunity
-    probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
+    probability = fields.Float('Probability', group_operator="avg", default=10.0)
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
@@ -196,21 +187,6 @@ class Lead(models.Model):
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
-    @api.model
-    def _onchange_stage_id_values(self, stage_id):
-        """ returns the new values when stage_id has changed """
-        if not stage_id:
-            return {}
-        stage = self.env['crm.stage'].browse(stage_id)
-        if stage.on_change:
-            return {'probability': stage.probability}
-        return {}
-
-    @api.onchange('stage_id')
-    def _onchange_stage_id(self):
-        values = self._onchange_stage_id_values(self.stage_id.id)
-        self.update(values)
-
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """
         if partner_id:
@@ -300,14 +276,6 @@ class Lead(models.Model):
     # ----------------------------------------
 
     @api.model
-    def name_create(self, name):
-        res = super(Lead, self).name_create(name)
-
-        # update the probability of the lead if the stage is set to update it automatically
-        self.browse(res[0])._onchange_stage_id()
-        return res
-
-    @api.model
     def create(self, vals):
         # set up context used to find the lead's Sales Team which is needed
         # to correctly set the default stage_id
@@ -329,19 +297,22 @@ class Lead(models.Model):
 
     @api.multi
     def write(self, vals):
-        # stage change: update date_last_stage_update
+        # stage change:
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
+            stage_id = self.env['crm.stage'].browse(vals['stage_id'])
+            if stage_id.is_won:
+                vals.update({'probability': 100})
         # Only write the 'date_open' if no salesperson was assigned.
         if vals.get('user_id') and 'date_open' not in vals and not self.mapped('user_id'):
             vals['date_open'] = fields.Datetime.now()
         # stage change with new stage: update probability and date_closed
-        if vals.get('stage_id') and 'probability' not in vals:
-            vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
         elif 'probability' in vals:
             vals['date_closed'] = False
+        if vals.get('user_id') and 'date_open' not in vals:
+            vals['date_open'] = fields.Datetime.now()
         return super(Lead, self).write(vals)
 
     @api.multi
@@ -385,7 +356,7 @@ class Lead(models.Model):
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
-            stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
+            stage_id = lead._stage_find(domain=[('is_won', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
 
         return True
@@ -477,14 +448,6 @@ class Lead(models.Model):
             'target': 'inline',
             'context': {'default_type': 'opportunity'}
         }
-
-    def toggle_active(self):
-        """ When re-activating leads and opportunities set their probability
-        to the default stage one. """
-        res = super(Lead, self).toggle_active()
-        for lead in self.filtered(lambda lead: lead.active and lead.stage_id.probability):
-            lead.probability = lead.stage_id.probability
-        return res
 
     # ----------------------------------------
     # Business Methods
@@ -686,13 +649,10 @@ class Lead(models.Model):
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
         # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
-        # The confidence level increases with the stage sequence, except when the stage probability is 0.0 (Lost cases)
-        # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
+        # The confidence level increases with the stage sequence
+        # An Opportunity always has higher confidence level than a lead
         def opps_key(opportunity):
-            sequence = -1
-            if opportunity.stage_id.on_change:
-                sequence = opportunity.stage_id.sequence
-            return (sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id
+            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity.id
         opportunities = self.sorted(key=opps_key, reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
@@ -778,8 +738,6 @@ class Lead(models.Model):
         if not self.stage_id:
             stage = self._stage_find(team_id=team_id)
             value['stage_id'] = stage.id
-            if stage:
-                value['probability'] = stage.probability
         return value
 
     @api.multi
@@ -1042,7 +1000,7 @@ class Lead(models.Model):
                     if date_deadline < today:
                         result['activity']['overdue'] += 1
             # Won in Opportunities
-            if opp.date_closed and opp.stage_id.probability == 100:
+            if opp.date_closed and opp.stage_id.is_won:
                 date_closed = fields.Date.from_string(opp.date_closed)
                 if today.replace(day=1) <= date_closed <= today:
                     if opp.planned_revenue:
@@ -1122,7 +1080,7 @@ class Lead(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.probability == 100 and self.stage_id and self.stage_id.on_change:
+        if 'stage_id' in init_values and self.probability == 100 and self.stage_id:
             return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
             return self.env.ref('crm.mt_lead_lost')
