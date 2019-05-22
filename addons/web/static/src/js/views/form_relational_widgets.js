@@ -177,7 +177,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
                 }
             }
         };
-        this.$input.keydown(input_changed);
         this.$input.change(input_changed);
         this.$input.on('click', function() {
             if (self.$input.autocomplete("widget").is(":visible")) {
@@ -310,6 +309,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             if (e.which === 13) { // ENTER
                 if (isSelecting)
                     e.stopPropagation();
+            }
+            else {
+                input_changed();
             }
             isSelecting = false;
         });
