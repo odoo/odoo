@@ -57,6 +57,7 @@ class ResConfigSettings(models.TransientModel):
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
+    module_sale_amazon = fields.Boolean("Amazon Sync")
 
     automatic_invoice = fields.Boolean("Automatic Invoice",
                                        help="The invoice is generated automatically and available in the customer portal "
