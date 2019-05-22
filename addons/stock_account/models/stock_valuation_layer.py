@@ -22,6 +22,8 @@ class StockValuationLayer(models.Model):
     value = fields.Monetary('Total Value', readonly=True)
     remaining_qty = fields.Float(digits=0, readonly=True)
     description = fields.Char('Description', readonly=True)
+    stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked Stock Valuation Layer', readonly=True)
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True)
 

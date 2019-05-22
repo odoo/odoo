@@ -9,12 +9,6 @@ from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    landed_cost_value = fields.Float('Landed Cost')
-
-
 class LandedCost(models.Model):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
@@ -53,6 +47,7 @@ class LandedCost(models.Model):
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string="Company",
         related='account_journal_id.company_id', readonly=False)
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
 
     @api.one
     @api.depends('cost_lines.price_unit')
@@ -101,25 +96,33 @@ class LandedCost(models.Model):
                 'line_ids': [],
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                # Prorate the value at what's still in stock
-                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
+                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
 
-                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
-                line.move_id.write({
-                    'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + line.additional_landed_cost,
-                    'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
+                # Prorate the value at what's still in stock
+                cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                valuation_layer = self.env['stock.valuation.layer'].create({
+                    'value': cost_to_add,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_valuation_layer_id': linked_layer.id,
+                    'description': cost.name,
+                    'stock_move_id': line.move_id.id,
+                    'product_id': line.move_id.product_id.id,
+                    'stock_landed_cost_id': self.id,
+                    'company_id': self.company_id.id,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
                 if line.move_id._is_in():
-                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                    qty_out = line.move_id.product_qty - remaining_qty
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -153,7 +156,7 @@ class LandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': move.product_qty,
-                'former_cost': move.value,
+                'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
                 'weight': move.product_id.weight * move.product_qty,
                 'volume': move.product_id.volume * move.product_qty
             }
@@ -226,6 +229,12 @@ class LandedCost(models.Model):
         for key, value in towrite_dict.items():
             AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
+
+    def action_view_stock_valuation_layers(self):
+        self.ensure_one()
+        domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
+        action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
+        return dict(action, domain=domain)
 
 
 class LandedCostLine(models.Model):
