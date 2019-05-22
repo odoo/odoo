@@ -36,7 +36,7 @@ class StockMove(models.Model):
         help="Move date: scheduled date until move is done, then date of actual move processing")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id,
+        default=lambda self: self.env.company,
         index=True, required=True)
     date_expected = fields.Datetime(
         'Expected Date', default=fields.Datetime.now, index=True, required=True,

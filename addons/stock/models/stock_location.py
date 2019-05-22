@@ -55,7 +55,7 @@ class Location(models.Model):
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id, index=True,
+        default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
@@ -191,7 +191,7 @@ class Route(models.Model):
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company_id, index=True,
+        default=lambda self: self.env.company, index=True,
         help='Leave this field empty if this route is shared between all companies')
     product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)

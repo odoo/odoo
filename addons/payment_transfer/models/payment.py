@@ -18,7 +18,7 @@ class TransferPaymentAcquirer(models.Model):
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
         # By default, the wire transfer method uses the default Bank journal.
-        company = company or self.env.company_id
+        company = company or self.env.company
         acquirers = self.env['payment.acquirer'].search(
             [('provider', '=', 'transfer'), ('journal_id', '=', False), ('company_id', '=', company.id)])
 
@@ -32,7 +32,7 @@ class TransferPaymentAcquirer(models.Model):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self):
-        company_id = self.env.company_id.id
+        company_id = self.env.company.id
         # filter only bank accounts marked as visible
         journals = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company_id)])
         accounts = journals.mapped('bank_account_id').name_get()

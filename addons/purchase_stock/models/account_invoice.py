@@ -12,7 +12,7 @@ class AccountInvoice(models.Model):
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
 
-        if self.env.company_id.anglo_saxon_accounting:
+        if self.env.company.anglo_saxon_accounting:
             if self.type in ['in_invoice', 'in_refund']:
                 for i_line in self.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(i_line, res))

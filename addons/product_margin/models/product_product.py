@@ -100,7 +100,7 @@ class ProductProduct(models.Model):
             if "force_company" in self.env.context:
                 company_id = self.env.context['force_company']
             else:
-                company_id = self.env.company_id.id
+                company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
             sqlstr = """

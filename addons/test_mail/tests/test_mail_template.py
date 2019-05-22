@@ -207,7 +207,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     def test_create_partner_from_tracking_multicompany(self):
         company1 = self.env['res.company'].create({'name': 'company1'})
         self.env.user.write({'company_ids': [(4, company1.id, False)]})
-        self.assertNotEqual(self.env.company_id, company1)
+        self.assertNotEqual(self.env.company, company1)
 
         email_new_partner = "diamonds@rust.com"
         Partner = self.env['res.partner']

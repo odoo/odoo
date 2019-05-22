@@ -142,7 +142,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.company_id.id), ('tax_exigibility', '=', 'on_payment')
+            ('company_id', '=', self.env.company.id), ('tax_exigibility', '=', 'on_payment')
         ], limit=1)
         if not self.tax_exigibility and tax:
             self.tax_exigibility = True

@@ -117,7 +117,7 @@ class AccountMove(models.Model):
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
-            raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet for the company %s. This mechanism only runs for journal entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.company_id.name)
+            raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet for the company %s. This mechanism only runs for journal entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.company.name)
         previous_hash = u''
         start_move_info = []
         for move in moves:

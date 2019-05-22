@@ -171,7 +171,7 @@ class AccountChartTemplate(models.Model):
         if request and 'allowed_company_ids' in dir(request):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            company = self.env.company_id
+            company = self.env.company
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
@@ -189,7 +189,7 @@ class AccountChartTemplate(models.Model):
         if request and 'allowed_company_ids' in dir(request):
             company = self.env['res.company'].browse(request.allowed_company_ids[0])
         else:
-            company = self.env.company_id
+            company = self.env.company
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():
