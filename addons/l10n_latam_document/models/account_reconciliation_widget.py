@@ -21,7 +21,7 @@ class AccountReconciliation(models.AbstractModel):
         _super = super(AccountReconciliation, self)
         _get_domain = _super._domain_move_lines_for_reconciliation
         domain = _get_domain(
-            self, st_line, aml_accounts, partner_id, excluded_ids=excluded_ids,
+            st_line, aml_accounts, partner_id, excluded_ids=excluded_ids,
             search_str=search_str)
         if not str and str != '/':
             return domain
