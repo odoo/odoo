@@ -1571,79 +1571,21 @@ class AccountInvoice(models.Model):
         This function is used in order to fix account.invoice.tax objects generated
         for refunds when tax amounts have been modified manually.
 
-        For example, a tax with the following tax repartition...
-        - INVOICE:
-            1) 30%
-            2) 70%
-        - REFUND
-            3) 40%
-            4) 60%
-
-        ... will group line 1) with line 3), and line 2) with lines 3) and 4).
-
-        :return: A dictionnary, with invoice repartition line ids as keys, and lists
-        of corresponding refund repartition line ids as values.
+        :return: A dictionnary, with invoice repartition line ids as keys, and refund
+        repartition lines as values
         """
         rslt = {}
         for tax in taxes:
-            inv_index = 0
-            ref_index = 0
-
-            tax_inv_lines = tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
-            tax_ref_lines = tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
-
-            amount_to_match = tax_inv_lines[inv_index].factor_percent
-            while inv_index < len(tax_inv_lines) or ref_index < len(tax_ref_lines):
-                inv_rep_line = inv_index < len(tax_inv_lines) and tax_inv_lines[inv_index] or tax_inv_lines[-1]
-                ref_rep_line = ref_index < len(tax_ref_lines) and tax_ref_lines[ref_index] or tax_ref_lines[-1]
-
-                rslt_list = rslt.get(inv_rep_line.id, [])
-                if ref_rep_line.id not in rslt_list:
-                    rslt_list.append(ref_rep_line.id)
-                    rslt[inv_rep_line.id] = rslt_list
-
-                if amount_to_match > 0:
-                    amount_to_match -= ref_rep_line.factor_percent
-                    ref_index += 1
-                elif amount_to_match < 0:
-                    amount_to_match += inv_rep_line.factor_percent
-                    inv_index +=1
-                else:
-                    inv_index += 1
-                    if inv_index < len(tax_inv_lines):
-                        amount_to_match = tax_inv_lines[inv_index].factor_percent
+            index = 0
+            while(index < len(tax.invoice_repartition_line_ids)):
+                # _validate_repartition_lines constraint on taxes ensure invoice and refund repartition are equal, and in the same order
+                inv_rep_ln = tax.invoice_repartition_line_ids[index]
+                ref_rep_ln = tax.refund_repartition_line_ids[index]
+                if inv_rep_ln.repartition_type == 'tax':
+                    rslt[inv_rep_ln.id] = ref_rep_ln
+                index += 1
 
         return rslt
-
-    def _group_tax_lines_by_repartition(self):
-        self.ensure_one()
-        rslt = {}
-        for tax_line in self.tax_line_ids:
-            rslt[tax_line.tax_repartition_line_id.id] = tax_line
-        return rslt
-
-    @api.model
-    def _fix_refund_tax_lines(self, invoice, refund):
-        """ Modifies the tax_line_ids of a draft refund invoice in order to make it
-        match the manual tax modifications that were made on its original invoice.
-        """
-        invoice_tax_lines_map = invoice._group_tax_lines_by_repartition()
-        refund_tax_lines_map = refund._group_tax_lines_by_repartition()
-        refund_repartition_map = self._create_refund_repartition_mapping(invoice.mapped('invoice_line_ids.invoice_line_tax_ids'))
-        computed_tax_values = invoice.get_taxes_values()
-
-        for tax_data in computed_tax_values.values():
-            rep_line_id = tax_data['tax_repartition_line_id']
-
-            matching_invoice_tax = invoice_tax_lines_map.get(rep_line_id)
-
-            if matching_invoice_tax:
-                ref_rep_line_id = refund_repartition_map[rep_line_id][0]
-                refund_tax_line = refund_tax_lines_map.get(ref_rep_line_id)
-                manual_difference = matching_invoice_tax.amount - tax_data['amount']
-
-                if not invoice.currency_id.is_zero(manual_difference):
-                    refund_tax_line.amount += manual_difference
 
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
@@ -1693,6 +1635,35 @@ class AccountInvoice(models.Model):
             values['date'] = date
         if description:
             values['name'] = description
+
+        # Treat refund tax lines.
+        # We copy them from the invoice and replace their account_id and
+        # tag_ids based on the refund repartition of the corresponding taxes.
+        tax_rep_ln_mapping = {}
+        for invoice_tax_entry in invoice.tax_line_ids:
+            if not invoice_tax_entry.tax_repartition_line_id.id in tax_rep_ln_mapping:
+                tax_rep_ln_mapping[invoice_tax_entry.tax_id.id] = self._create_refund_repartition_mapping(invoice_tax_entry.tax_id)
+
+        tax_line_vals = []
+        for invoice_tax_entry in invoice.tax_line_ids:
+            ref_rep_ln = tax_rep_ln_mapping[invoice_tax_entry.tax_id.id][invoice_tax_entry.tax_repartition_line_id.id]
+            tax_line_vals.append({
+                'name': invoice_tax_entry.name,
+                'tax_id': invoice_tax_entry.tax_id.id,
+                'tax_repartition_line_id': ref_rep_ln.id,
+                'account_id': ref_rep_ln.account_id.id or invoice_tax_entry.account_id.id, # If the refund repartition line has no account set, we use the one from the original invoice
+                'account_analytic_id': invoice_tax_entry.account_analytic_id.id,
+                'analytic_tag_ids': [(6, 0, invoice_tax_entry.analytic_tag_ids.ids)],
+                'amount': invoice_tax_entry.amount,
+                'amount_rounding': invoice_tax_entry.amount_rounding,
+                'manual': invoice_tax_entry.manual,
+                'sequence': invoice_tax_entry.sequence,
+                'base': invoice_tax_entry.base,
+                'tax_ids': [(6, 0, invoice_tax_entry.tax_ids.ids)],
+                'tag_ids': [(6, 0, ref_rep_ln.tag_ids.ids)],
+            })
+        values['tax_line_ids'] = [(0, 0, tax_line_val) for tax_line_val in tax_line_vals]
+
         return values
 
     @api.multi
@@ -1708,7 +1679,6 @@ class AccountInvoice(models.Model):
                 message = _("This customer invoice credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
             else:
                 message = _("This vendor bill credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
-                self._fix_refund_tax_lines(invoice, refund_invoice)
 
             refund_invoice.message_post(body=message)
             new_invoices += refund_invoice
